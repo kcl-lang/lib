@@ -1,6 +1,8 @@
 package kclvm_artifact
 
 import (
+	"bytes"
+	"fmt"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -22,18 +24,13 @@ func InstallKclvm(installRoot string) error {
 	}
 	binPath := filepath.Join(installRoot, "bin")
 	os.Setenv("PATH", os.Getenv("PATH")+":"+binPath)
-	err = installBin(binPath, "kcl", kclScript)
-	if err != nil {
-		return err
-	}
-	err = installBin(binPath, "kclvm", kclvmScript)
-	if err != nil {
-		return err
-	}
 
 	// Run KCL CLI to install dependencies.
-	cmd := exec.Command("kcl")
-	err = cmd.Start()
+	err = installBin(binPath, "kcl", kclScript, true)
+	if err != nil {
+		return err
+	}
+	err = installBin(binPath, "kclvm", kclvmScript, false)
 	if err != nil {
 		return err
 	}
@@ -70,6 +67,9 @@ func installLib(libDir, libName string, content []byte) error {
 			return err
 		}
 		libFile, err := os.Create(libFullPath)
+		defer func() {
+			libFile.Close()
+		}()
 		if err != nil {
 			return err
 		}
@@ -80,7 +80,7 @@ func installLib(libDir, libName string, content []byte) error {
 	}
 	return err
 }
-func installBin(binDir, binName string, content []byte) error {
+func installBin(binDir, binName string, content []byte, dryRun bool) error {
 	binPath := findPath(binName)
 	if binPath == "" {
 		binPath = filepath.Join(binDir, binName)
@@ -89,6 +89,9 @@ func installBin(binDir, binName string, content []byte) error {
 			return err
 		}
 		binFile, err := os.Create(binPath)
+		defer func() {
+			binFile.Close()
+		}()
 		if err != nil {
 			return err
 		}
@@ -98,6 +101,20 @@ func installBin(binDir, binName string, content []byte) error {
 		}
 		fileMode := os.FileMode(0777)
 		os.Chmod(binPath, fileMode)
+
+		if dryRun {
+			binFile.Close()
+			cmd := exec.Command(binPath)
+			var errBuf bytes.Buffer
+			cmd.Stderr = &errBuf
+			err = cmd.Run()
+			if errBuf.Len() != 0 {
+				return fmt.Errorf("%s", errBuf.String())
+			}
+			if err != nil {
+				return err
+			}
+		}
 	}
 	return nil
 }
