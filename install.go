@@ -30,7 +30,16 @@ func InstallKclvm(installRoot string) error {
 	if err != nil {
 		return err
 	}
+
+	// Run KCL CLI to install dependencies.
+	cmd := exec.Command("kcl")
+	err = cmd.Start()
+	if err != nil {
+		return err
+	}
+
 	err = installLib(binPath, "kclvm_cli_cdylib", kclvmCliLib)
+
 	return err
 }
 
