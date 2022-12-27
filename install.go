@@ -26,13 +26,21 @@ func InstallKclvm(installRoot string) error {
 	os.Setenv("PATH", os.Getenv("PATH")+":"+binPath)
 
 	// Run KCL CLI to install dependencies.
-	err = installBin(binPath, "kcl", kclScript, true)
-	if err != nil {
-		return err
+	scripts := map[string][]byte{
+		"kcl":        kclScript,
+		"kclvm":      kclvmScript,
+		"kcl-doc":    kclDocScript,
+		"kcl-fmt":    kclFmtScript,
+		"kcl-lint":   kclLintScript,
+		"kcl-plugin": kclPluginScript,
+		"kcl-test":   kclTestScript,
+		"kcl-vet":    kclVetScript,
 	}
-	err = installBin(binPath, "kclvm", kclvmScript, false)
-	if err != nil {
-		return err
+	for n, script := range scripts {
+		err := installBin(binPath, n, script, true)
+		if err != nil {
+			return err
+		}
 	}
 
 	err = installLib(binPath, "kclvm_cli_cdylib", kclvmCliLib)
