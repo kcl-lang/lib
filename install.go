@@ -56,6 +56,12 @@ func InstallKclvm(installRoot string) error {
 func CleanInstall() {
 	kclScript = nil
 	kclvmScript = nil
+	kclDocScript = nil
+	kclFmtScript = nil
+	kclLintScript = nil
+	kclPluginScript = nil
+	kclTestScript = nil
+	kclVetScript = nil
 	kclvmCliLib = nil
 }
 
