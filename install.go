@@ -25,9 +25,7 @@ func InstallKclvm(installRoot string) error {
 	binPath := filepath.Join(installRoot, "bin")
 	os.Setenv("PATH", os.Getenv("PATH")+":"+binPath)
 
-	// Run KCL CLI to install dependencies.
 	scripts := map[string][]byte{
-		"kcl":        kclScript,
 		"kclvm":      kclvmScript,
 		"kcl-doc":    kclDocScript,
 		"kcl-fmt":    kclFmtScript,
