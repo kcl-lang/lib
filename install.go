@@ -26,6 +26,7 @@ func InstallKclvm(installRoot string) error {
 	os.Setenv("PATH", os.Getenv("PATH")+":"+binPath)
 
 	scripts := map[string][]byte{
+		"kcl":        kclScript,
 		"kclvm":      kclvmScript,
 		"kcl-doc":    kclDocScript,
 		"kcl-fmt":    kclFmtScript,
@@ -35,18 +36,25 @@ func InstallKclvm(installRoot string) error {
 		"kcl-vet":    kclVetScript,
 	}
 	for n, script := range scripts {
-		err := installBin(binPath, n, script, false)
+		err := installBin(binPath, n, script)
 		if err != nil {
 			return err
 		}
 	}
+
 	// Run KCL CLI to install dependencies.
-	err = installBin(binPath, "kcl", kclScript, true)
+	cmd := exec.Command("kcl")
+	var errBuf bytes.Buffer
+	cmd.Stderr = &errBuf
+	err = cmd.Run()
+	if errBuf.Len() != 0 {
+		return fmt.Errorf("%s", errBuf.String())
+	}
 	if err != nil {
 		return err
 	}
 
-	err = installLib(binPath, "kclvm_cli_cdylib", kclvmCliLib)
+	err = installLib(binPath, "kclvm_cli_cdylib")
 
 	return err
 }
@@ -63,43 +71,12 @@ func CleanInstall() {
 	kclvmCliLib = nil
 }
 
-func installLib(libDir, libName string, content []byte) error {
-	libFullName := ""
-	switch runtime.GOOS {
-	case "darwin":
-		libFullName = "lib" + libName + ".dylib"
-	case "linux":
-		libFullName = "lib" + libName + ".so"
-	case "windows":
-		libFullName = libName + ".dll"
-	}
-	libFullPath := filepath.Join(libDir, libFullName)
-	_, err := os.Stat(libFullPath)
-	if err == nil {
-		return nil
-	}
-	if os.IsNotExist(err) {
-		err = os.MkdirAll(libDir, 0777)
-		if err != nil {
-			return err
-		}
-		libFile, err := os.Create(libFullPath)
-		defer func() {
-			libFile.Close()
-		}()
-		if err != nil {
-			return err
-		}
-		_, err = libFile.Write(content)
-		if err != nil {
-			return err
-		}
-	}
-	return err
-}
-func installBin(binDir, binName string, content []byte, dryRun bool) error {
+func installBin(binDir, binName string, content []byte) error {
 	binPath := findPath(binName)
 	if binPath == "" {
+		if runtime.GOOS == "windows" {
+			binName += ".exe"
+		}
 		binPath = filepath.Join(binDir, binName)
 		err := os.MkdirAll(binDir, 0777)
 		if err != nil {
@@ -118,20 +95,6 @@ func installBin(binDir, binName string, content []byte, dryRun bool) error {
 		}
 		fileMode := os.FileMode(0777)
 		os.Chmod(binPath, fileMode)
-
-		if dryRun {
-			binFile.Close()
-			cmd := exec.Command(binPath)
-			var errBuf bytes.Buffer
-			cmd.Stderr = &errBuf
-			err = cmd.Run()
-			if errBuf.Len() != 0 {
-				return fmt.Errorf("%s", errBuf.String())
-			}
-			if err != nil {
-				return err
-			}
-		}
 	}
 	return nil
 }
