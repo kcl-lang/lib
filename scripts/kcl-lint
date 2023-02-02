@@ -16,7 +16,7 @@ fi
 
 is_kclvm_installed=$($python3_bin -c "import pkgutil; print(bool(pkgutil.find_loader('kclvm')))")
 # once: pip install
-if  [$is_kclvm_installed -eq "False" ] ; then
+if [ "$is_kclvm_installed"x = "False"x ]; then
     mkdir -pv $kclvm_install_dir/lib/site-packages/
     # check python3 version
     $python3_bin -c "import sys; sys.exit(0) if sys.version_info>=(3,7,3) else (print('please install python 3.7.3+') or sys.exit(1))"
