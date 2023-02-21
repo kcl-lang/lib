@@ -23,7 +23,7 @@ func InstallKclvm(installRoot string) error {
 		return err
 	}
 	binPath := filepath.Join(installRoot, "bin")
-	os.Setenv("PATH", os.Getenv("PATH")+":"+binPath)
+	os.Setenv("PATH", os.Getenv("PATH")+string(os.PathListSeparator)+binPath)
 
 	scripts := map[string][]byte{
 		"kcl":        kclScript,
