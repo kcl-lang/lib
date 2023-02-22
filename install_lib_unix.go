@@ -11,9 +11,9 @@ func installLib(libDir, libName string) error {
 	libFullName := "lib" + libName
 	switch runtime.GOOS {
 	case "darwin":
-		libFullName = libName + ".dylib"
+		libFullName = libFullName + ".dylib"
 	case "linux":
-		libFullName = libName + ".so"
+		libFullName = libFullName + ".so"
 	}
 	return writeLib(libDir, libFullName, kclvmCliLib)
 }
