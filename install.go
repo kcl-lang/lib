@@ -35,11 +35,17 @@ func InstallKclvm(installRoot string) error {
 		"kcl-test":   kclTestScript,
 		"kcl-vet":    kclVetScript,
 	}
+	// Install binaries.
 	for n, script := range scripts {
 		err := installBin(binPath, n, script)
 		if err != nil {
 			return err
 		}
+	}
+	// Install kclvm libs.
+	err = installLib(binPath, "kclvm_cli_cdylib")
+	if err != nil {
+		return err
 	}
 
 	// Run KCL CLI to install dependencies.
@@ -50,11 +56,6 @@ func InstallKclvm(installRoot string) error {
 	if errBuf.Len() != 0 {
 		return fmt.Errorf("%s", errBuf.String())
 	}
-	if err != nil {
-		return err
-	}
-
-	err = installLib(binPath, "kclvm_cli_cdylib")
 
 	return err
 }
