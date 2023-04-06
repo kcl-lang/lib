@@ -24,4 +24,5 @@ __pycache__
 !lib/**/*.dll
 !lib/**/*.lib
 !lib/**/*.so
+!lib/**/*.exe
 !scripts/*.exe
