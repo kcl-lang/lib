@@ -1,8 +1,6 @@
 package kclvm_artifact
 
 import (
-	"bytes"
-	"fmt"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -114,18 +112,6 @@ func InstallKclvmPy(installRoot string) error {
 		}
 		// Install kclvm libs.
 		err = installLib(binPath, "kclvm_cli_cdylib")
-		if err != nil {
-			return err
-		}
-
-		// Run KCL CLI to install dependencies.
-		cmd := exec.Command("kcl")
-		var errBuf bytes.Buffer
-		cmd.Stderr = &errBuf
-		err = cmd.Run()
-		if errBuf.Len() != 0 {
-			return fmt.Errorf("%s", errBuf.String())
-		}
 		if err != nil {
 			return err
 		}
