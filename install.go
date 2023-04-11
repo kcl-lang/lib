@@ -47,27 +47,29 @@ func InstallKclvm(installRoot string) error {
 
 	kclvmVersionPath := filepath.Join(binPath, "kclvm.version")
 
-	ok, err := checkVersion(kclvmVersionPath)
+	versionMatched, err := checkVersion(kclvmVersionPath)
 
 	if err != nil {
 		return err
 	}
 
-	if !ok {
-		// Install kclvm binary.
-		err = installBin(binPath, "kclvm_cli", kclvmCliBin)
-		if err != nil {
-			return err
-		}
-		// Install kclvm libs.
-		err = installLib(binPath, "kclvm_cli_cdylib")
-		if err != nil {
-			return err
-		}
+	// Install kclvm binary.
+	err = installBin(binPath, "kclvm_cli", kclvmCliBin, versionMatched)
+	if err != nil {
+		return err
+	}
+	// Install kclvm libs.
+	err = installLib(binPath, "kclvm_cli_cdylib", versionMatched)
+	if err != nil {
+		return err
+	}
+
+	if !versionMatched {
 		err = os.WriteFile(kclvmVersionPath, []byte(KCLVM_VERSION), os.FileMode(os.O_WRONLY|os.O_TRUNC))
 		if err != nil {
 			return err
 		}
+
 	}
 
 	os.Setenv("PATH", os.Getenv("PATH")+string(os.PathListSeparator)+binPath)
@@ -84,7 +86,7 @@ func InstallKclvmPy(installRoot string) error {
 
 	kclvmVersionPath := filepath.Join(binPath, "kclvm.version")
 
-	ok, err := checkVersion(kclvmVersionPath)
+	versionMatched, err := checkVersion(kclvmVersionPath)
 
 	if err != nil {
 		return err
@@ -92,35 +94,37 @@ func InstallKclvmPy(installRoot string) error {
 
 	os.Setenv("PATH", os.Getenv("PATH")+string(os.PathListSeparator)+binPath)
 
-	if !ok {
-		scripts := map[string][]byte{
-			"kcl":        kclScript,
-			"kclvm":      kclvmScript,
-			"kcl-doc":    kclDocScript,
-			"kcl-fmt":    kclFmtScript,
-			"kcl-lint":   kclLintScript,
-			"kcl-plugin": kclPluginScript,
-			"kcl-test":   kclTestScript,
-			"kcl-vet":    kclVetScript,
-		}
-		// Install binaries.
-		for n, script := range scripts {
-			err := installBin(binPath, n, script)
-			if err != nil {
-				return err
-			}
-		}
-		// Install kclvm libs.
-		err = installLib(binPath, "kclvm_cli_cdylib")
-		if err != nil {
-			return err
-		}
-
-		err = os.WriteFile(kclvmVersionPath, []byte(KCLVM_VERSION), os.FileMode(os.O_WRONLY|os.O_TRUNC))
+	scripts := map[string][]byte{
+		"kcl":        kclScript,
+		"kclvm":      kclvmScript,
+		"kcl-doc":    kclDocScript,
+		"kcl-fmt":    kclFmtScript,
+		"kcl-lint":   kclLintScript,
+		"kcl-plugin": kclPluginScript,
+		"kcl-test":   kclTestScript,
+		"kcl-vet":    kclVetScript,
+	}
+	// Install binaries.
+	for n, script := range scripts {
+		err := installBin(binPath, n, script, versionMatched)
 		if err != nil {
 			return err
 		}
 	}
+	// Install kclvm libs.
+	err = installLib(binPath, "kclvm_cli_cdylib", versionMatched)
+	if err != nil {
+		return err
+	}
+
+	if !versionMatched {
+		err = os.WriteFile(kclvmVersionPath, []byte(KCLVM_VERSION), os.FileMode(os.O_WRONLY|os.O_TRUNC))
+		if err != nil {
+			return err
+		}
+
+	}
+
 	os.Setenv("PATH", os.Getenv("PATH")+string(os.PathListSeparator)+binPath)
 	return nil
 }
@@ -137,9 +141,9 @@ func CleanInstall() {
 	kclvmCliLib = nil
 }
 
-func installBin(binDir, binName string, content []byte) error {
+func installBin(binDir, binName string, content []byte, versionMatched bool) error {
 	binPath := findPath(binName)
-	if binPath == "" {
+	if binPath == "" || !versionMatched {
 		if runtime.GOOS == "windows" {
 			binName += ".exe"
 		}
