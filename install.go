@@ -7,7 +7,7 @@ import (
 	"runtime"
 )
 
-const KCLVM_VERSION = "v0.4.6-alpha.2"
+const KCLVM_VERSION = "v0.4.6-beta.1"
 
 func findPath(name string) string {
 
