@@ -8,9 +8,6 @@ import (
 func writeLib(libDir, libFullName string, content []byte, versionMatched bool) error {
 	libFullPath := filepath.Join(libDir, libFullName)
 	_, err := os.Stat(libFullPath)
-	if err == nil {
-		return nil
-	}
 	if os.IsNotExist(err) || !versionMatched {
 		err = os.MkdirAll(libDir, 0777)
 		if err != nil {
