@@ -17,11 +17,15 @@ func findPath(name string) string {
 	return ""
 }
 
-func checkVersion(kclvmVersionPath string) (bool, error) {
-
+func checkVersion(kclvmVersionDir string) (bool, error) {
+	kclvmVersionPath := filepath.Join(kclvmVersionDir, "kclvm.version")
 	_, err := os.Stat(kclvmVersionPath)
 
 	if os.IsNotExist(err) {
+		err := os.MkdirAll(kclvmVersionDir, 0777)
+		if err != nil {
+			return false, err
+		}
 		versionFile, err := os.Create(kclvmVersionPath)
 		defer func() {
 			versionFile.Close()
@@ -45,9 +49,7 @@ func InstallKclvm(installRoot string) error {
 	}
 	binPath := filepath.Join(installRoot, "bin")
 
-	kclvmVersionPath := filepath.Join(binPath, "kclvm.version")
-
-	versionMatched, err := checkVersion(kclvmVersionPath)
+	versionMatched, err := checkVersion(binPath)
 
 	if err != nil {
 		return err
@@ -65,6 +67,7 @@ func InstallKclvm(installRoot string) error {
 	}
 
 	if !versionMatched {
+		kclvmVersionPath := filepath.Join(binPath, "kclvm.version")
 		err = os.WriteFile(kclvmVersionPath, []byte(KCLVM_VERSION), os.FileMode(os.O_WRONLY|os.O_TRUNC))
 		if err != nil {
 			return err
