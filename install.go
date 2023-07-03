@@ -7,10 +7,9 @@ import (
 	"runtime"
 )
 
-const KCLVM_VERSION = "v0.5.0-alpha.4"
+const KCLVM_VERSION = "v0.5.0-beta.1"
 
 func findPath(name string) string {
-
 	if path, err := exec.LookPath(name); err == nil {
 		return path
 	}

@@ -1,3 +1,3 @@
-# kclvm-artifact-go
+# kcl-artifact-go
 
-Embed kclvm artifact for go
+Embed kcl artifact for go
