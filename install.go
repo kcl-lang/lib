@@ -1,6 +1,7 @@
 package kclvm_artifact
 
 import (
+	"fmt"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -37,7 +38,7 @@ func checkVersion(kclvmVersionDir string) (bool, error) {
 		return false, err
 	}
 
-	return KCLVM_VERSION == string(version), nil
+	return fmt.Sprintf("%s-%s-%s", KCLVM_VERSION, runtime.GOOS, runtime.GOARCH) == string(version), nil
 
 }
 
