@@ -68,7 +68,7 @@ func InstallKclvm(installRoot string) error {
 
 	if !versionMatched {
 		kclvmVersionPath := filepath.Join(binPath, "kclvm.version")
-		err = os.WriteFile(kclvmVersionPath, []byte(KCLVM_VERSION), os.FileMode(os.O_WRONLY|os.O_TRUNC))
+		err = os.WriteFile(kclvmVersionPath, []byte(fmt.Sprintf("%s-%s-%s", KCLVM_VERSION, runtime.GOOS, runtime.GOARCH)), os.FileMode(os.O_WRONLY|os.O_TRUNC))
 		if err != nil {
 			return err
 		}
@@ -120,7 +120,7 @@ func InstallKclvmPy(installRoot string) error {
 	}
 
 	if !versionMatched {
-		err = os.WriteFile(kclvmVersionPath, []byte(KCLVM_VERSION), os.FileMode(os.O_WRONLY|os.O_TRUNC))
+		err = os.WriteFile(kclvmVersionPath, []byte(fmt.Sprintf("%s-%s-%s", KCLVM_VERSION, runtime.GOOS, runtime.GOARCH)), os.FileMode(os.O_WRONLY|os.O_TRUNC))
 		if err != nil {
 			return err
 		}
