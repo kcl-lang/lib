@@ -1,7 +1,6 @@
 package kclvm_artifact
 
 import (
-	"fmt"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -15,6 +14,10 @@ func findPath(name string) string {
 		return path
 	}
 	return ""
+}
+
+func getVersion() string {
+	return getVersion()
 }
 
 func checkVersion(kclvmVersionDir string) (bool, error) {
@@ -38,7 +41,7 @@ func checkVersion(kclvmVersionDir string) (bool, error) {
 		return false, err
 	}
 
-	return fmt.Sprintf("%s-%s-%s", KCLVM_VERSION, runtime.GOOS, runtime.GOARCH) == string(version), nil
+	return getVersion() == string(version), nil
 
 }
 
@@ -68,7 +71,7 @@ func InstallKclvm(installRoot string) error {
 
 	if !versionMatched {
 		kclvmVersionPath := filepath.Join(binPath, "kclvm.version")
-		err = os.WriteFile(kclvmVersionPath, []byte(fmt.Sprintf("%s-%s-%s", KCLVM_VERSION, runtime.GOOS, runtime.GOARCH)), os.FileMode(os.O_WRONLY|os.O_TRUNC))
+		err = os.WriteFile(kclvmVersionPath, []byte(getVersion()), os.FileMode(os.O_WRONLY|os.O_TRUNC))
 		if err != nil {
 			return err
 		}
@@ -120,7 +123,7 @@ func InstallKclvmPy(installRoot string) error {
 	}
 
 	if !versionMatched {
-		err = os.WriteFile(kclvmVersionPath, []byte(fmt.Sprintf("%s-%s-%s", KCLVM_VERSION, runtime.GOOS, runtime.GOARCH)), os.FileMode(os.O_WRONLY|os.O_TRUNC))
+		err = os.WriteFile(kclvmVersionPath, []byte(getVersion()), os.FileMode(os.O_WRONLY|os.O_TRUNC))
 		if err != nil {
 			return err
 		}
