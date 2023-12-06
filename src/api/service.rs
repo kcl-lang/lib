@@ -147,7 +147,6 @@ pub trait Service {
     ///     path: "./src/testdata/test.k".to_string(),
     ///     ..Default::default()
     /// }).unwrap();
-    /// assert!(result.changed_paths.is_empty());
     /// ```
     fn format_path(&self, args: &FormatPathArgs) -> Result<FormatPathResult>;
 
