@@ -11,7 +11,7 @@
 //! ```rust
 //! use kcl_lang::*;
 //! use std::path::Path;
-//! use anyhow::Result
+//! use anyhow::Result;
 //!
 //! fn main() -> Result<()> {
 //!     let api = API::new()?;
