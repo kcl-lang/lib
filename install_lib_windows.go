@@ -1,4 +1,4 @@
-package kclvm_artifact
+package lib
 
 func installLib(libDir, libName string, versionMatched bool) error {
 	libFullName := libName + ".dll"

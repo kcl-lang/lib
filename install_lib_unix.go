@@ -1,7 +1,7 @@
 //go:build linux || darwin
 // +build linux darwin
 
-package kclvm_artifact
+package lib
 
 import (
 	"runtime"

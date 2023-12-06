@@ -5,7 +5,7 @@
 ### How to Use
 
 ```shell
-cargo add kcl-lang
+cargo add --git https://github.com/kcl-lang/lib --branch main
 ```
 
 Write the Code
@@ -32,7 +32,7 @@ fn main() -> Result<()> {
 ### How to Use
 
 ```shell
-go get kcl-lang.io/kcl-artifact-go
+go get kcl-lang.io/lib
 ```
 
 Write the Code
@@ -41,7 +41,7 @@ Write the Code
 package main
 
 import (
-	artifact "kcl-lang.io/kcl-artifact-go"
+	artifact "kcl-lang.io/lib"
 )
 
 func main() {

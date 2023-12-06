@@ -1,4 +1,4 @@
-package kclvm_artifact
+package lib
 
 import (
 	"os"

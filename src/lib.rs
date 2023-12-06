@@ -3,7 +3,7 @@
 //! ## How to Use
 //!
 //! ```no_check,no_run
-//! cargo add kcl
+//! cargo add --git https://github.com/kcl-lang/lib --branch main
 //! ```
 //!
 //! Write the Code
