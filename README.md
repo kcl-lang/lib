@@ -1,4 +1,4 @@
-# KCL Artifact for SDKs
+# KCL Artifact Library for SDKs
 
 ## Rust
 
@@ -41,11 +41,11 @@ Write the Code
 package main
 
 import (
-	artifact "kcl-lang.io/lib"
+	"kcl-lang.io/lib"
 )
 
 func main() {
-    path = "path/to/install"
-    _ := artifact.InstallKclvm(path)
+    path = "path/to/install/lib"
+    _ := lib.InstallKclvm(path)
 }
 ```
