@@ -15,6 +15,18 @@ zz_*
 *.lock
 .kclvm
 
+# KCL cache and temp output
+.kclvm
+.kclvm_cov
+*.dylib
+*.so
+*.dll
+*.lock
+*.ll
+*.ll.lock
+_a.out.*
+_a.out_*.*
+
 **/target/
 **/.DS_Store
 **/.vscode
