@@ -16,7 +16,7 @@
 //! fn main() -> Result<()> {
 //!     let api = API::new()?;
 //!     let args = &ExecProgramArgs {
-//!         work_dir: Path::new(".").join("src").join("testdata").canonicalize().unwrap().display().to_string(),
+//!         work_dir: Path::new(".").join("testdata").canonicalize().unwrap().display().to_string(),
 //!         k_filename_list: vec!["test.k".to_string()],
 //!         ..Default::default()
 //!     };

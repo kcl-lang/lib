@@ -13,7 +13,7 @@ pub trait Service {
     /// // File case
     /// let api = API::new().unwrap();
     /// let args = &ExecProgramArgs {
-    ///     work_dir: Path::new(".").join("src").join("testdata").canonicalize().unwrap().display().to_string(),
+    ///     work_dir: Path::new(".").join("testdata").canonicalize().unwrap().display().to_string(),
     ///     k_filename_list: vec!["test.k".to_string()],
     ///     ..Default::default()
     /// };
@@ -55,7 +55,7 @@ pub trait Service {
     ///
     /// let api = API::new().unwrap();
     /// let args = &OverrideFileArgs {
-    ///     file: "./src/testdata/test.k".to_string(),
+    ///     file: "./testdata/test.k".to_string(),
     ///     specs: vec!["alice.age=18".to_string()],
     ///     import_paths: vec![],
     ///     ..Default::default()
@@ -84,7 +84,7 @@ pub trait Service {
     /// use std::path::Path;
     ///
     /// let api = API::new().unwrap();
-    /// let work_dir_parent = Path::new(".").join("src").join("testdata").join("get_schema_ty");
+    /// let work_dir_parent = Path::new(".").join("testdata").join("get_schema_ty");
     /// let args = ExecProgramArgs {
     ///     work_dir: work_dir_parent.join("aaa").canonicalize().unwrap().display().to_string(),
     ///     k_filename_list: vec![
@@ -144,7 +144,7 @@ pub trait Service {
     ///
     /// let api = API::new().unwrap();
     /// let result = api.format_path(&FormatPathArgs {
-    ///     path: "./src/testdata/test.k".to_string(),
+    ///     path: "./testdata/test.k".to_string(),
     ///     ..Default::default()
     /// }).unwrap();
     /// ```
@@ -160,7 +160,7 @@ pub trait Service {
     ///
     /// let api = API::new().unwrap();
     /// let result = api.lint_path(&LintPathArgs {
-    ///     paths: vec!["./src/testdata/test-lint.k".to_string()],
+    ///     paths: vec!["./testdata/test-lint.k".to_string()],
     ///     ..Default::default()
     /// }).unwrap();
     /// assert_eq!(result.results, vec!["Module 'math' imported but unused".to_string()]);
@@ -222,8 +222,8 @@ pub trait Service {
     ///
     /// let api = API::new().unwrap();
     /// let result = api.load_settings_files(&LoadSettingsFilesArgs {
-    ///     files: vec!["./src/testdata/settings/kcl.yaml".to_string()],
-    ///     work_dir: "./src/testdata/settings".to_string(),
+    ///     files: vec!["./testdata/settings/kcl.yaml".to_string()],
+    ///     work_dir: "./testdata/settings".to_string(),
     ///     ..Default::default()
     /// }).unwrap();
     /// assert_eq!(result.kcl_options.len(), 1);
@@ -242,15 +242,15 @@ pub trait Service {
     /// #
     /// # let api = API::new().unwrap();
     /// # // before test, load template from .bak
-    /// # let path = PathBuf::from(".").join("src").join("testdata").join("rename_doc").join("main.k");
+    /// # let path = PathBuf::from(".").join("testdata").join("rename_doc").join("main.k");
     /// # let backup_path = path.with_extension("bak");
     /// # let content = fs::read_to_string(backup_path.clone()).unwrap();
     /// # fs::write(path.clone(), content).unwrap();
     ///
     /// let result = api.rename(&RenameArgs {
-    ///     package_root: "./src/testdata/rename_doc".to_string(),
+    ///     package_root: "./testdata/rename_doc".to_string(),
     ///     symbol_path: "a".to_string(),
-    ///     file_paths: vec!["./src/testdata/rename_doc/main.k".to_string()],
+    ///     file_paths: vec!["./testdata/rename_doc/main.k".to_string()],
     ///     new_name: "a2".to_string(),
     /// }).unwrap();
     /// assert_eq!(result.changed_files.len(), 1);
@@ -270,7 +270,7 @@ pub trait Service {
     ///
     /// let api = API::new().unwrap();
     /// let result = api.rename_code(&RenameCodeArgs {
-    ///     package_root: "./src/testdata/rename".to_string(),
+    ///     package_root: "./testdata/rename".to_string(),
     ///     symbol_path: "a".to_string(),
     ///     source_codes: vec![("main.k".to_string(), "a = 1\nb = a".to_string())].into_iter().collect(),
     ///     new_name: "a2".to_string(),
@@ -288,7 +288,7 @@ pub trait Service {
     ///
     /// let api = API::new().unwrap();
     /// let result = api.test(&TestArgs {
-    ///     pkg_list: vec!["./src/testdata/testing/module/...".to_string()],
+    ///     pkg_list: vec!["./testdata/testing/module/...".to_string()],
     ///     ..TestArgs::default()
     /// }).unwrap();
     /// assert_eq!(result.info.len(), 2);
