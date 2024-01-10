@@ -1,0 +1,13 @@
+[package]
+name = "kcl-lib-jni"
+publish = false
+version = "0.1.0"
+
+[lib]
+crate-type = ["cdylib"]
+doc = false
+
+[dependencies]
+jni = "0.21.1"
+anyhow = "1"
+kcl-lang = {path = "../"}

@@ -45,6 +45,25 @@ impl Caller {
         }
     }
 
+    fn call_native(&self, name: &[u8], args: &[u8]) -> Result<&[u8]> {
+        let _lock = self.mutex.lock().unwrap();
+        let result_ptr = unsafe {
+            let args = CString::new(args)?;
+            let call = CString::new(name)?;
+            let service_call: libloading::Symbol<
+                unsafe extern "C" fn(
+                    serv: *mut ServiceHandler,
+                    call: *const c_char,
+                    args: *const c_char,
+                ) -> *const c_char,
+            > = self.lib.get(b"kclvm_service_call")?;
+
+            service_call(self.handler, call.as_ptr(), args.as_ptr()) as *mut i8
+        };
+        let result = unsafe { CStr::from_ptr(result_ptr) };
+        Ok(result.to_bytes())
+    }
+
     fn call<A, R>(&self, name: &str, args: &A) -> Result<R>
     where
         A: Message + DeserializeOwned,
@@ -86,6 +105,10 @@ impl API {
     pub fn new() -> Result<Self> {
         let caller = Caller::new()?;
         Ok(Self { caller })
+    }
+
+    pub fn call_native(&self, name: &[u8], args: &[u8]) -> Result<&[u8]> {
+        self.caller.call_native(name, args)
     }
 }
 
