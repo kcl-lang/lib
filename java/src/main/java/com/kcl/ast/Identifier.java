@@ -1,0 +1,56 @@
+package com.kcl.ast;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonTypeName;
+
+// Identifier class
+@JsonTypeName("Identifier")
+class Identifier extends Expr {
+    @JsonProperty("names")
+    private List<Node<String>> names;
+
+    @JsonProperty("pkgpath")
+    private String pkgpath;
+
+    @JsonProperty("ctx")
+    private ExprContext ctx;
+
+    // Method to get combined name
+    public String getName() {
+        return names.stream()
+                    .map(Node::getNode)
+                    .collect(Collectors.joining("."));
+    }
+
+    // Method to get list of names
+    public List<String> getNames() {
+        return names.stream()
+                    .map(Node::getNode)
+                    .collect(Collectors.toList());
+    }
+
+	public void setNames(List<Node<String>> names) {
+		this.names = names;
+	}
+
+	public String getPkgpath() {
+		return pkgpath;
+	}
+
+	public void setPkgpath(String pkgpath) {
+		this.pkgpath = pkgpath;
+	}
+
+	public ExprContext getCtx() {
+		return ctx;
+	}
+
+	public void setCtx(ExprContext ctx) {
+		this.ctx = ctx;
+	}
+
+    // ... Constructor, getters, setters ...
+}

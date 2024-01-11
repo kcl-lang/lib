@@ -3,17 +3,57 @@ package com.kcl.api;
 import com.kcl.api.Spec.*;
 
 public class API implements Service {
-    static {
-        // Load the dynamic library (the .dll, .so, or .dylib file)
-        System.loadLibrary("kcl_lib_jni");
-    }
+	static {
+		// Load the dynamic library (the .dll, .so, or .dylib file)
+		System.loadLibrary("kcl_lib_jni");
+	}
 
-    private native byte[] callNative(byte[] call, byte[] args);
+	private native byte[] callNative(byte[] call, byte[] args);
 
-    // Example method that calls a native function
-    public ExecProgram_Result execProgram(ExecProgram_Args args) throws Exception {
-        return ExecProgram_Result.parseFrom(call("KclvmService.ExecProgram", args.toByteArray()));
-    }
+	public API() {
+	}
+
+	/**
+	 * Parses a program given a set of file paths and returns the result.
+	 * *
+	 * <p>
+	 * Example usage:
+	 * 
+	 * <pre>{@code
+	 * 
+	 * import com.kcl.api.*;
+	 * import com.kcl.ast.*;
+	 * import com.kcl.util.JsonUtil;
+	 * 
+	 * // Create an instance of the API class
+	 * API api = new API();
+	 * // Parse the program by providing the file paths to the API
+	 * ParseProgram_Result result = api.parseProgram(
+	 *     ParseProgram_Args.newBuilder().addPaths("a.k").build()
+	 * );
+	 * // Print the JSON representation of the AST (Abstract Syntax Tree)
+	 * System.out.println(result.getAstJson());
+	 * // Deserialize the JSON string into a Program object
+	 * Program program = JsonUtil.deserializeProgram(result.getAstJson());
+	 * }</pre>
+	 * 
+	 * @param args the arguments specifying the file paths to be parsed.
+	 * @return the result of parsing the program and parse errors, including the AST in JSON format.
+	 * @throws Exception if an error occurs during the remote procedure call.
+	 */
+	@Override
+	public ParseProgram_Result parseProgram(ParseProgram_Args args) throws Exception {
+		return ParseProgram_Result.parseFrom(call("KclvmService.ParseProgram", args.toByteArray()));
+	}
+
+	@Override
+	public ParseFile_Result parseFile(ParseFile_Args args) throws Exception {
+		return ParseFile_Result.parseFrom(call("KclvmService.ParseFile", args.toByteArray()));
+	}
+
+	public ExecProgram_Result execProgram(ExecProgram_Args args) throws Exception {
+		return ExecProgram_Result.parseFrom(call("KclvmService.ExecProgram", args.toByteArray()));
+	}
 
 	@Override
 	public OverrideFile_Result overrideFile(OverrideFile_Args args) throws Exception {
@@ -65,26 +105,26 @@ public class API implements Service {
 		return Test_Result.parseFrom(call("KclvmService.Test", args.toByteArray()));
 	}
 
-    private byte[] call(String name, byte[] args) throws Exception {
-        byte[] result = callNative(name.getBytes(), args);
-        if (result != null && startsWith(result, "ERROR")) {
-            throw new Error(result.toString());
-        }
-        return result;
-    }
+	private byte[] call(String name, byte[] args) throws Exception {
+		byte[] result = callNative(name.getBytes(), args);
+		if (result != null && startsWith(result, "ERROR")) {
+			throw new java.lang.Error(result.toString());
+		}
+		return result;
+	}
 
-    static boolean startsWith(byte[] array, String prefix) {
-        byte[] prefixBytes = prefix.getBytes();
-        if (array.length < prefixBytes.length) {
-            return false;
-        }
+	static boolean startsWith(byte[] array, String prefix) {
+		byte[] prefixBytes = prefix.getBytes();
+		if (array.length < prefixBytes.length) {
+			return false;
+		}
 
-        for (int i = 0; i < prefixBytes.length; i++) {
-            if (array[i] != prefixBytes[i]) {
-                return false;
-            }
-        }
+		for (int i = 0; i < prefixBytes.length; i++) {
+			if (array[i] != prefixBytes[i]) {
+				return false;
+			}
+		}
 
-        return true;
-    }
+		return true;
+	}
 }

@@ -3,6 +3,12 @@ package com.kcl.api;
 import com.kcl.api.Spec.*;
 
 public interface Service {
+    // Parse KCL single file AST JSON string
+    ParseFile_Result parseFile(ParseFile_Args args) throws Exception;
+
+    // Parse KCL program AST JSON string
+    ParseProgram_Result parseProgram(ParseProgram_Args args) throws Exception;
+
     // Execute KCL file with args
     ExecProgram_Result execProgram(ExecProgram_Args args) throws Exception;
 

@@ -1,0 +1,103 @@
+package com.kcl.ast;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonSerialize
+@JsonDeserialize
+public class Node<T> {
+    @JsonIgnore
+    private AstIndex id;
+
+    @JsonProperty("node")
+    private T node;
+
+    @JsonProperty("filename")
+    private String filename;
+
+    @JsonProperty("line")
+    private long line;
+
+    @JsonProperty("column")
+    private long column;
+
+    @JsonProperty("end_line")
+    private long endLine;
+
+    @JsonProperty("end_column")
+    private long endColumn;
+
+    public long getEndColumn() {
+		return endColumn;
+	}
+
+	public void setEndColumn(long endColumn) {
+		this.endColumn = endColumn;
+	}
+
+    public Node() {}
+
+	public Node(AstIndex id, T node, String filename, long line, long column, long endLine, long endColumn) {
+        this.id = id;
+        this.node = node;
+        this.filename = filename;
+        this.line = line;
+        this.column = column;
+        this.endLine = endLine;
+        this.endColumn = endColumn;
+    }
+
+	public AstIndex getId() {
+		return id;
+	}
+
+	public void setId(AstIndex id) {
+		this.id = id;
+	}
+
+	public T getNode() {
+		return node;
+	}
+
+	public void setNode(T node) {
+		this.node = node;
+	}
+
+	public String getFilename() {
+		return filename;
+	}
+
+	public void setFilename(String filename) {
+		this.filename = filename;
+	}
+
+	public long getLine() {
+		return line;
+	}
+
+	public void setLine(long line) {
+		this.line = line;
+	}
+
+	public long getColumn() {
+		return column;
+	}
+
+	public void setColumn(long column) {
+		this.column = column;
+	}
+
+	public long getEndLine() {
+		return endLine;
+	}
+
+	public void setEndLine(long endLine) {
+		this.endLine = endLine;
+	}
+
+    // Getters and setters...
+}
