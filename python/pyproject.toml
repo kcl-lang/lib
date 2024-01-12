@@ -1,5 +1,5 @@
 [project]
-name = "kcl_py"
+name = "kcl_py_lib"
 version = "0.7.2"
 description = "KCL Artifact Library for Python"
 authors = [
