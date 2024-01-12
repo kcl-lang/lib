@@ -305,3 +305,7 @@ pub trait Service {
 pub(crate) struct ServiceHandler {
     _agent: u64,
 }
+
+unsafe impl Send for ServiceHandler {}
+
+unsafe impl Sync for ServiceHandler {}

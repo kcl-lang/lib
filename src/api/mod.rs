@@ -26,6 +26,9 @@ struct Caller {
     handler: *mut ServiceHandler,
 }
 
+unsafe impl Send for Caller {}
+unsafe impl Sync for Caller {}
+
 impl Caller {
     fn new() -> Result<Self> {
         unsafe {

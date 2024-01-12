@@ -1,8 +1,8 @@
 import ctypes
 import tempfile
 import threading
-from kcl_py.bootstrap import (lib_full_name, install_kclvm)
-from .gpyrpc_pb2 import *
+from kcl_py_lib.bootstrap import (lib_full_name, install_kclvm)
+from .spec_pb2 import *
 from ctypes import c_char_p, c_void_p
 import google.protobuf.json_format as json_format
 from google.protobuf import message as _message
@@ -25,6 +25,12 @@ class API:
     """
     def __init__(self):
         self.caller = Caller()
+
+    def parse_file(self, args: ParseFile_Args) -> ParseFile_Result:
+        return self.caller.call("KclvmService.ParseFile", args)
+
+    def parse_program(self, args: ParseProgram_Args) -> ParseProgram_Result:
+        return self.caller.call("KclvmService.ParseProgram", args)
 
     def exec_program(self, args: ExecProgram_Args) -> ExecProgram_Result:
         return self.caller.call("KclvmService.ExecProgram", args)
@@ -103,6 +109,10 @@ class Caller:
     def create_method_req_message(self, method: str) -> _message.Message:
         if method in ["Ping", "KclvmService.Ping"]:
             return Ping_Args()
+        if method in ["ParseFile", "KclvmService.ParseFile"]:
+            return ParseFile_Args()
+        if method in ["ParseProgram", "KclvmService.ParseProgram"]:
+            return ParseProgram_Args()
         if method in ["ExecProgram", "KclvmService.ExecProgram"]:
             return ExecProgram_Args()
         if method in ["ResetPlugin", "KclvmService.ResetPlugin"]:
@@ -130,6 +140,10 @@ class Caller:
     def create_method_resp_message(self, method: str) -> _message.Message:
         if method in ["Ping", "KclvmService.Ping"]:
             return Ping_Result()
+        if method in ["ParseFile", "KclvmService.ParseFile"]:
+            return ParseFile_Result()
+        if method in ["ParseProgram", "KclvmService.ParseProgram"]:
+            return ParseProgram_Result()
         if method in ["ExecProgram", "KclvmService.ExecProgram"]:
             return ExecProgram_Result()
         if method in ["ResetPlugin", "KclvmService.ResetPlugin"]:

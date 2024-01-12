@@ -38,7 +38,8 @@ public class API implements Service {
 	 * }</pre>
 	 * 
 	 * @param args the arguments specifying the file paths to be parsed.
-	 * @return the result of parsing the program and parse errors, including the AST in JSON format.
+	 * @return the result of parsing the program and parse errors, including the AST
+	 *         in JSON format.
 	 * @throws Exception if an error occurs during the remote procedure call.
 	 */
 	@Override
