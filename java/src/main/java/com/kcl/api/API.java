@@ -70,9 +70,9 @@ public class API implements Service {
 	 * result.getSymbolsMap().values().forEach(s -> System.out.println(s));
 	 * }</pre>
 	 * 
-	 * @param args the arguments specifying the file paths to be parsed.
-	 * @return the result of parsing the program and parse errors, including the AST
-	 *         in JSON format.
+	 * @param args the arguments specifying the file paths to be parsed and resolved.
+	 * @return the result of parsing the program and parse errors, type errors, including
+	 *         the AST in JSON format and symbol, type and definition information.
 	 * @throws Exception if an error occurs during the remote procedure call.
 	 */
 	@Override
