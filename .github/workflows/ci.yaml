@@ -57,7 +57,7 @@ jobs:
         with:
           python-version: '3.9'
       - name: Python code test
-        run: cd python && python3 -m pip install pytest && python3 -m pytest
+        run: cd python && python3 -m pip install -r ./scripts/requirements.txt && python3 -m pytest
 
   java-test:
     permissions:
