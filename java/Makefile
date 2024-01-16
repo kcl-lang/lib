@@ -5,4 +5,4 @@ deps:
 	cp ./target/release/libkcl_lib_jni.* .
 
 build: deps
-	mvn -B install -U
+	mvn -B install -U -Djava.library.path=.
