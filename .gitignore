@@ -21,6 +21,7 @@ zz_*
 *.dylib
 *.so
 *.dll
+*.d
 *.lock
 *.ll
 *.ll.lock
