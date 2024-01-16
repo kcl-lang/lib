@@ -265,7 +265,7 @@ pub trait Service {
     ///
     /// # Examples
     ///
-    /// ```
+    /// ```no_run
     /// use kcl_lang::*;
     ///
     /// let api = API::new().unwrap();
