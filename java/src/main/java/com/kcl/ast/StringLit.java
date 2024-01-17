@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 
 // StringLit class equivalent in Java
 @JsonTypeName("String")
-public class StringLit extends Literal {
+public class StringLit extends Expr {
     private boolean isLongString;
     private String rawValue;
     private String value;

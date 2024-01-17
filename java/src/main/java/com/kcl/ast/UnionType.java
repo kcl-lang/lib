@@ -7,15 +7,26 @@ import java.util.List;;
 // UnionType class equivalent in Java
 @JsonTypeName("Union")
 public class UnionType extends Type {
-    public List<NodeRef<Type>> getTypeElements() {
-		return typeElements;
+	public static class UnionTypeValue {
+
+		public List<NodeRef<Type>> getTypeElements() {
+			return typeElements;
+		}
+
+		public void setTypeElements(List<NodeRef<Type>> typeElements) {
+			this.typeElements = typeElements;
+		}
+
+		private List<NodeRef<Type>> typeElements;
 	}
 
-	public void setTypeElements(List<NodeRef<Type>> typeElements) {
-		this.typeElements = typeElements;
+	public UnionTypeValue getValue() {
+		return value;
 	}
 
-	private List<NodeRef<Type>> typeElements;
+	public void setValue(UnionTypeValue data) {
+		this.value = data;
+	}
 
-    // Constructor, getters, and setters...
+	UnionTypeValue value;
 }

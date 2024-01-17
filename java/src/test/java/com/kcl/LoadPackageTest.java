@@ -17,7 +17,8 @@ public class LoadPackageTest {
                 LoadPackage_Args.newBuilder().setResolveAst(true).setParseArgs(
                         ParseProgram_Args.newBuilder().addPaths("./src/test_data/schema.k").build())
                         .build());
-        Program program = JsonUtil.deserializeProgram(result.getProgram());
+        String programString = result.getProgram();
+        Program program = JsonUtil.deserializeProgram(programString);
         System.out.println(program.getRoot());
         result.getSymbolsMap().values().forEach(s -> System.out.println(s));
     }

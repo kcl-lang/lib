@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 @JsonTypeName("Import")
 public class ImportStmt extends Stmt {
     @JsonProperty("path")
-    private Node<String> path;
+    private NodeRef<String> path;
 
     @JsonProperty("rawpath")
     private String rawpath;
@@ -16,16 +16,16 @@ public class ImportStmt extends Stmt {
     private String name;
 
     @JsonProperty("asname")
-    private Node<String> asname;
+    private NodeRef<String> asname;
 
     @JsonProperty("pkg_name")
     private String pkgName;
 
-	public Node<String> getPath() {
+	public NodeRef<String> getPath() {
 		return path;
 	}
 
-	public void setPath(Node<String> path) {
+	public void setPath(NodeRef<String> path) {
 		this.path = path;
 	}
 
@@ -45,11 +45,11 @@ public class ImportStmt extends Stmt {
 		this.name = name;
 	}
 
-	public Node<String> getAsname() {
+	public NodeRef<String> getAsname() {
 		return asname;
 	}
 
-	public void setAsname(Node<String> asname) {
+	public void setAsname(NodeRef<String> asname) {
 		this.asname = asname;
 	}
 

@@ -3,9 +3,7 @@ package com.kcl.ast;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 
-// Keyword class equivalent in Java
-@JsonTypeName("Keyword")
-public class Keyword extends Expr {
+public class Keyword {
     @JsonProperty("arg")
     private NodeRef<Identifier> arg;
 

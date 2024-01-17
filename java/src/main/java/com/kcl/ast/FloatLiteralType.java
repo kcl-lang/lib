@@ -3,7 +3,7 @@ package com.kcl.ast;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 
 @JsonTypeName("Float")
-public class FloatLiteralType extends LiteralType {
+public class FloatLiteralType extends LiteralTypeValue {
     private double value;
 
 	public double getValue() {

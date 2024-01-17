@@ -4,13 +4,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonTypeName;
 
-// Identifier class
-@JsonTypeName("Identifier")
-class Identifier extends Expr {
+public class Identifier {
     @JsonProperty("names")
-    private List<Node<String>> names;
+    private List<NodeRef<String>> names;
 
     @JsonProperty("pkgpath")
     private String pkgpath;
@@ -32,7 +29,7 @@ class Identifier extends Expr {
                     .collect(Collectors.toList());
     }
 
-	public void setNames(List<Node<String>> names) {
+	public void setNames(List<NodeRef<String>> names) {
 		this.names = names;
 	}
 

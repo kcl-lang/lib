@@ -5,15 +5,26 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 // NamedType class placeholder
 @JsonTypeName("Named")
 public class NamedType extends Type {
-    private Identifier identifier;
+	public static class NamedTypeValue {
+		private Identifier identifier;
 
-	public Identifier getIdentifier() {
-		return identifier;
+		public Identifier getIdentifier() {
+			return identifier;
+		}
+
+		public void setIdentifier(Identifier identifier) {
+			this.identifier = identifier;
+		}
 	}
 
-	public void setIdentifier(Identifier identifier) {
-		this.identifier = identifier;
+	NamedTypeValue value;
+
+	public NamedTypeValue getValue() {
+		return value;
 	}
 
-    // Constructor, getters, and setters...
+	public void setValue(NamedTypeValue data) {
+		this.value = data;
+	}
+
 }

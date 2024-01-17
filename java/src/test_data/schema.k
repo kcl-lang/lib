@@ -1,6 +1,9 @@
 schema AppConfig:
-    replicas: int
+    replicas: int = 1
+    int_lit_ty_attr: 1 = 1
+
+a = 1
 
 app: AppConfig {
-    replicas: 2
+    replicas: a + 1
 }

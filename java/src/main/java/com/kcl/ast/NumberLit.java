@@ -6,7 +6,7 @@ import java.util.Optional;
 
 // NumberLit class equivalent in Java
 @JsonTypeName("Number")
-public class NumberLit extends Literal {
+public class NumberLit extends Expr {
     private Optional<NumberBinarySuffix> binarySuffix;
     private NumberLitValue value;
 	public Optional<NumberBinarySuffix> getBinarySuffix() {
