@@ -1,6 +1,6 @@
 [project]
-name = "kcl_py_lib"
-version = "0.7.2"
+name = "kcl_lib"
+version = "0.7.5"
 description = "KCL Artifact Library for Python"
 authors = [
     { name="KCL Authors", email="" }

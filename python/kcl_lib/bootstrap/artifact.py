@@ -7,10 +7,16 @@ import os
 TEST_LIB_ROOT = pathlib.Path(__file__).parent.parent.parent.parent
 # Release
 _lib_root = os.environ.get("KCL_LIB_ROOT")
-LIB_ROOT = pathlib.Path(_lib_root) if _lib_root else pathlib.Path(__file__).parent.parent.parent.parent
+LIB_ROOT = (
+    pathlib.Path(_lib_root)
+    if _lib_root
+    else pathlib.Path(__file__).parent.parent.parent.parent
+)
+
 
 def is_amd64_arch():
-    return platform.machine() in ['x86_64', 'AMD64']
+    return platform.machine() in ["x86_64", "AMD64"]
+
 
 if sys.platform == "darwin":
     if is_amd64_arch():
