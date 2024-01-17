@@ -3,9 +3,11 @@ package com.kcl.ast;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonTypeName;
 
 // SchemaAttr class equivalent in Java
-public class SchemaAttr {
+@JsonTypeName("SchemaAttr")
+public class SchemaAttr extends Stmt {
     @JsonProperty("doc")
     private String doc;
 

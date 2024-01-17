@@ -9,6 +9,9 @@ public interface Service {
     // Parse KCL program AST JSON string
     ParseProgram_Result parseProgram(ParseProgram_Args args) throws Exception;
 
+    // Loads KCL package and returns the AST, symbol, type, definition information.
+    LoadPackage_Result loadPackage(LoadPackage_Args args) throws Exception;
+
     // Execute KCL file with args
     ExecProgram_Result execProgram(ExecProgram_Args args) throws Exception;
 

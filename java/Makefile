@@ -1,5 +1,8 @@
-build:
-	mvn -B install -U -DskipTests=true
+default: build
 
-test:
-	
+deps:
+	cargo build --release
+	cp ./target/release/libkcl_lib_jni.* .
+
+build: deps
+	mvn -B install -U -Djava.library.path=.

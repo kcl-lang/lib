@@ -29,7 +29,7 @@ public class API implements Service {
 	 * API api = new API();
 	 * // Parse the program by providing the file paths to the API
 	 * ParseProgram_Result result = api.parseProgram(
-	 *     ParseProgram_Args.newBuilder().addPaths("a.k").build()
+	 *     ParseProgram_Args.newBuilder().addPaths("path/to/kcl.k").build()
 	 * );
 	 * // Print the JSON representation of the AST (Abstract Syntax Tree)
 	 * System.out.println(result.getAstJson());
@@ -50,6 +50,34 @@ public class API implements Service {
 	@Override
 	public ParseFile_Result parseFile(ParseFile_Args args) throws Exception {
 		return ParseFile_Result.parseFrom(call("KclvmService.ParseFile", args.toByteArray()));
+	}
+
+	/**
+	 * Loads KCL package and returns the AST, symbol, type, definition information.
+	 * *
+	 * <p>
+	 * Example usage:
+	 * 
+	 * <pre>{@code
+	 * 
+	 * import com.kcl.api.*;
+	 *
+	 * API api = new API();
+	 * LoadPackage_Result result = api.loadPackage(
+	 *     LoadPackage_Args.newBuilder().setResolveAst(true).setParseArgs(
+	 *     ParseProgram_Args.newBuilder().addPaths("/path/to/kcl.k").build())
+	 *     .build());
+	 * result.getSymbolsMap().values().forEach(s -> System.out.println(s));
+	 * }</pre>
+	 * 
+	 * @param args the arguments specifying the file paths to be parsed and resolved.
+	 * @return the result of parsing the program and parse errors, type errors, including
+	 *         the AST in JSON format and symbol, type and definition information.
+	 * @throws Exception if an error occurs during the remote procedure call.
+	 */
+	@Override
+	public LoadPackage_Result loadPackage(LoadPackage_Args args) throws Exception {
+		return LoadPackage_Result.parseFrom(call("KclvmService.LoadPackage", args.toByteArray()));
 	}
 
 	public ExecProgram_Result execProgram(ExecProgram_Args args) throws Exception {

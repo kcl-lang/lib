@@ -10502,7 +10502,7 @@ public final class Spec {
 
     /**
      * <pre>
-     * Return the files in the order they should be compiled
+     * Returns the files in the order they should be compiled
      * </pre>
      *
      * <code>repeated string paths = 2;</code>
@@ -10512,7 +10512,7 @@ public final class Spec {
         getPathsList();
     /**
      * <pre>
-     * Return the files in the order they should be compiled
+     * Returns the files in the order they should be compiled
      * </pre>
      *
      * <code>repeated string paths = 2;</code>
@@ -10521,7 +10521,7 @@ public final class Spec {
     int getPathsCount();
     /**
      * <pre>
-     * Return the files in the order they should be compiled
+     * Returns the files in the order they should be compiled
      * </pre>
      *
      * <code>repeated string paths = 2;</code>
@@ -10531,7 +10531,7 @@ public final class Spec {
     java.lang.String getPaths(int index);
     /**
      * <pre>
-     * Return the files in the order they should be compiled
+     * Returns the files in the order they should be compiled
      * </pre>
      *
      * <code>repeated string paths = 2;</code>
@@ -10746,7 +10746,7 @@ public final class Spec {
     private com.google.protobuf.LazyStringList paths_;
     /**
      * <pre>
-     * Return the files in the order they should be compiled
+     * Returns the files in the order they should be compiled
      * </pre>
      *
      * <code>repeated string paths = 2;</code>
@@ -10758,7 +10758,7 @@ public final class Spec {
     }
     /**
      * <pre>
-     * Return the files in the order they should be compiled
+     * Returns the files in the order they should be compiled
      * </pre>
      *
      * <code>repeated string paths = 2;</code>
@@ -10769,7 +10769,7 @@ public final class Spec {
     }
     /**
      * <pre>
-     * Return the files in the order they should be compiled
+     * Returns the files in the order they should be compiled
      * </pre>
      *
      * <code>repeated string paths = 2;</code>
@@ -10781,7 +10781,7 @@ public final class Spec {
     }
     /**
      * <pre>
-     * Return the files in the order they should be compiled
+     * Returns the files in the order they should be compiled
      * </pre>
      *
      * <code>repeated string paths = 2;</code>
@@ -11351,7 +11351,7 @@ public final class Spec {
       }
       /**
        * <pre>
-       * Return the files in the order they should be compiled
+       * Returns the files in the order they should be compiled
        * </pre>
        *
        * <code>repeated string paths = 2;</code>
@@ -11363,7 +11363,7 @@ public final class Spec {
       }
       /**
        * <pre>
-       * Return the files in the order they should be compiled
+       * Returns the files in the order they should be compiled
        * </pre>
        *
        * <code>repeated string paths = 2;</code>
@@ -11374,7 +11374,7 @@ public final class Spec {
       }
       /**
        * <pre>
-       * Return the files in the order they should be compiled
+       * Returns the files in the order they should be compiled
        * </pre>
        *
        * <code>repeated string paths = 2;</code>
@@ -11386,7 +11386,7 @@ public final class Spec {
       }
       /**
        * <pre>
-       * Return the files in the order they should be compiled
+       * Returns the files in the order they should be compiled
        * </pre>
        *
        * <code>repeated string paths = 2;</code>
@@ -11399,7 +11399,7 @@ public final class Spec {
       }
       /**
        * <pre>
-       * Return the files in the order they should be compiled
+       * Returns the files in the order they should be compiled
        * </pre>
        *
        * <code>repeated string paths = 2;</code>
@@ -11419,7 +11419,7 @@ public final class Spec {
       }
       /**
        * <pre>
-       * Return the files in the order they should be compiled
+       * Returns the files in the order they should be compiled
        * </pre>
        *
        * <code>repeated string paths = 2;</code>
@@ -11438,7 +11438,7 @@ public final class Spec {
       }
       /**
        * <pre>
-       * Return the files in the order they should be compiled
+       * Returns the files in the order they should be compiled
        * </pre>
        *
        * <code>repeated string paths = 2;</code>
@@ -11455,7 +11455,7 @@ public final class Spec {
       }
       /**
        * <pre>
-       * Return the files in the order they should be compiled
+       * Returns the files in the order they should be compiled
        * </pre>
        *
        * <code>repeated string paths = 2;</code>
@@ -11469,7 +11469,7 @@ public final class Spec {
       }
       /**
        * <pre>
-       * Return the files in the order they should be compiled
+       * Returns the files in the order they should be compiled
        * </pre>
        *
        * <code>repeated string paths = 2;</code>
@@ -11847,6 +11847,5649 @@ public final class Spec {
 
     @java.lang.Override
     public com.kcl.api.Spec.ParseProgram_Result getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
+  }
+
+  public interface LoadPackage_ArgsOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:com.kcl.api.LoadPackage_Args)
+      com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <code>.com.kcl.api.ParseProgram_Args parse_args = 1;</code>
+     * @return Whether the parseArgs field is set.
+     */
+    boolean hasParseArgs();
+    /**
+     * <code>.com.kcl.api.ParseProgram_Args parse_args = 1;</code>
+     * @return The parseArgs.
+     */
+    com.kcl.api.Spec.ParseProgram_Args getParseArgs();
+    /**
+     * <code>.com.kcl.api.ParseProgram_Args parse_args = 1;</code>
+     */
+    com.kcl.api.Spec.ParseProgram_ArgsOrBuilder getParseArgsOrBuilder();
+
+    /**
+     * <code>bool resolve_ast = 2;</code>
+     * @return The resolveAst.
+     */
+    boolean getResolveAst();
+
+    /**
+     * <code>bool load_builtin = 3;</code>
+     * @return The loadBuiltin.
+     */
+    boolean getLoadBuiltin();
+  }
+  /**
+   * Protobuf type {@code com.kcl.api.LoadPackage_Args}
+   */
+  public static final class LoadPackage_Args extends
+      com.google.protobuf.GeneratedMessageV3 implements
+      // @@protoc_insertion_point(message_implements:com.kcl.api.LoadPackage_Args)
+      LoadPackage_ArgsOrBuilder {
+  private static final long serialVersionUID = 0L;
+    // Use LoadPackage_Args.newBuilder() to construct.
+    private LoadPackage_Args(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
+    }
+    private LoadPackage_Args() {
+    }
+
+    @java.lang.Override
+    @SuppressWarnings({"unused"})
+    protected java.lang.Object newInstance(
+        UnusedPrivateParameter unused) {
+      return new LoadPackage_Args();
+    }
+
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return this.unknownFields;
+    }
+    private LoadPackage_Args(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      this();
+      if (extensionRegistry == null) {
+        throw new java.lang.NullPointerException();
+      }
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            case 10: {
+              com.kcl.api.Spec.ParseProgram_Args.Builder subBuilder = null;
+              if (parseArgs_ != null) {
+                subBuilder = parseArgs_.toBuilder();
+              }
+              parseArgs_ = input.readMessage(com.kcl.api.Spec.ParseProgram_Args.parser(), extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom(parseArgs_);
+                parseArgs_ = subBuilder.buildPartial();
+              }
+
+              break;
+            }
+            case 16: {
+
+              resolveAst_ = input.readBool();
+              break;
+            }
+            case 24: {
+
+              loadBuiltin_ = input.readBool();
+              break;
+            }
+            default: {
+              if (!parseUnknownField(
+                  input, unknownFields, extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e).setUnfinishedMessage(this);
+      } finally {
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return com.kcl.api.Spec.internal_static_com_kcl_api_LoadPackage_Args_descriptor;
+    }
+
+    @java.lang.Override
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return com.kcl.api.Spec.internal_static_com_kcl_api_LoadPackage_Args_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              com.kcl.api.Spec.LoadPackage_Args.class, com.kcl.api.Spec.LoadPackage_Args.Builder.class);
+    }
+
+    public static final int PARSE_ARGS_FIELD_NUMBER = 1;
+    private com.kcl.api.Spec.ParseProgram_Args parseArgs_;
+    /**
+     * <code>.com.kcl.api.ParseProgram_Args parse_args = 1;</code>
+     * @return Whether the parseArgs field is set.
+     */
+    @java.lang.Override
+    public boolean hasParseArgs() {
+      return parseArgs_ != null;
+    }
+    /**
+     * <code>.com.kcl.api.ParseProgram_Args parse_args = 1;</code>
+     * @return The parseArgs.
+     */
+    @java.lang.Override
+    public com.kcl.api.Spec.ParseProgram_Args getParseArgs() {
+      return parseArgs_ == null ? com.kcl.api.Spec.ParseProgram_Args.getDefaultInstance() : parseArgs_;
+    }
+    /**
+     * <code>.com.kcl.api.ParseProgram_Args parse_args = 1;</code>
+     */
+    @java.lang.Override
+    public com.kcl.api.Spec.ParseProgram_ArgsOrBuilder getParseArgsOrBuilder() {
+      return getParseArgs();
+    }
+
+    public static final int RESOLVE_AST_FIELD_NUMBER = 2;
+    private boolean resolveAst_;
+    /**
+     * <code>bool resolve_ast = 2;</code>
+     * @return The resolveAst.
+     */
+    @java.lang.Override
+    public boolean getResolveAst() {
+      return resolveAst_;
+    }
+
+    public static final int LOAD_BUILTIN_FIELD_NUMBER = 3;
+    private boolean loadBuiltin_;
+    /**
+     * <code>bool load_builtin = 3;</code>
+     * @return The loadBuiltin.
+     */
+    @java.lang.Override
+    public boolean getLoadBuiltin() {
+      return loadBuiltin_;
+    }
+
+    private byte memoizedIsInitialized = -1;
+    @java.lang.Override
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    @java.lang.Override
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      if (parseArgs_ != null) {
+        output.writeMessage(1, getParseArgs());
+      }
+      if (resolveAst_ != false) {
+        output.writeBool(2, resolveAst_);
+      }
+      if (loadBuiltin_ != false) {
+        output.writeBool(3, loadBuiltin_);
+      }
+      unknownFields.writeTo(output);
+    }
+
+    @java.lang.Override
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (parseArgs_ != null) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(1, getParseArgs());
+      }
+      if (resolveAst_ != false) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBoolSize(2, resolveAst_);
+      }
+      if (loadBuiltin_ != false) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBoolSize(3, loadBuiltin_);
+      }
+      size += unknownFields.getSerializedSize();
+      memoizedSize = size;
+      return size;
+    }
+
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof com.kcl.api.Spec.LoadPackage_Args)) {
+        return super.equals(obj);
+      }
+      com.kcl.api.Spec.LoadPackage_Args other = (com.kcl.api.Spec.LoadPackage_Args) obj;
+
+      if (hasParseArgs() != other.hasParseArgs()) return false;
+      if (hasParseArgs()) {
+        if (!getParseArgs()
+            .equals(other.getParseArgs())) return false;
+      }
+      if (getResolveAst()
+          != other.getResolveAst()) return false;
+      if (getLoadBuiltin()
+          != other.getLoadBuiltin()) return false;
+      if (!unknownFields.equals(other.unknownFields)) return false;
+      return true;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptor().hashCode();
+      if (hasParseArgs()) {
+        hash = (37 * hash) + PARSE_ARGS_FIELD_NUMBER;
+        hash = (53 * hash) + getParseArgs().hashCode();
+      }
+      hash = (37 * hash) + RESOLVE_AST_FIELD_NUMBER;
+      hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
+          getResolveAst());
+      hash = (37 * hash) + LOAD_BUILTIN_FIELD_NUMBER;
+      hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
+          getLoadBuiltin());
+      hash = (29 * hash) + unknownFields.hashCode();
+      memoizedHashCode = hash;
+      return hash;
+    }
+
+    public static com.kcl.api.Spec.LoadPackage_Args parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.kcl.api.Spec.LoadPackage_Args parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.kcl.api.Spec.LoadPackage_Args parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.kcl.api.Spec.LoadPackage_Args parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.kcl.api.Spec.LoadPackage_Args parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.kcl.api.Spec.LoadPackage_Args parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.kcl.api.Spec.LoadPackage_Args parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static com.kcl.api.Spec.LoadPackage_Args parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static com.kcl.api.Spec.LoadPackage_Args parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
+    }
+    public static com.kcl.api.Spec.LoadPackage_Args parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static com.kcl.api.Spec.LoadPackage_Args parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static com.kcl.api.Spec.LoadPackage_Args parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    @java.lang.Override
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(com.kcl.api.Spec.LoadPackage_Args prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    @java.lang.Override
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code com.kcl.api.LoadPackage_Args}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:com.kcl.api.LoadPackage_Args)
+        com.kcl.api.Spec.LoadPackage_ArgsOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return com.kcl.api.Spec.internal_static_com_kcl_api_LoadPackage_Args_descriptor;
+      }
+
+      @java.lang.Override
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return com.kcl.api.Spec.internal_static_com_kcl_api_LoadPackage_Args_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                com.kcl.api.Spec.LoadPackage_Args.class, com.kcl.api.Spec.LoadPackage_Args.Builder.class);
+      }
+
+      // Construct using com.kcl.api.Spec.LoadPackage_Args.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessageV3
+                .alwaysUseFieldBuilders) {
+        }
+      }
+      @java.lang.Override
+      public Builder clear() {
+        super.clear();
+        if (parseArgsBuilder_ == null) {
+          parseArgs_ = null;
+        } else {
+          parseArgs_ = null;
+          parseArgsBuilder_ = null;
+        }
+        resolveAst_ = false;
+
+        loadBuiltin_ = false;
+
+        return this;
+      }
+
+      @java.lang.Override
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return com.kcl.api.Spec.internal_static_com_kcl_api_LoadPackage_Args_descriptor;
+      }
+
+      @java.lang.Override
+      public com.kcl.api.Spec.LoadPackage_Args getDefaultInstanceForType() {
+        return com.kcl.api.Spec.LoadPackage_Args.getDefaultInstance();
+      }
+
+      @java.lang.Override
+      public com.kcl.api.Spec.LoadPackage_Args build() {
+        com.kcl.api.Spec.LoadPackage_Args result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      @java.lang.Override
+      public com.kcl.api.Spec.LoadPackage_Args buildPartial() {
+        com.kcl.api.Spec.LoadPackage_Args result = new com.kcl.api.Spec.LoadPackage_Args(this);
+        if (parseArgsBuilder_ == null) {
+          result.parseArgs_ = parseArgs_;
+        } else {
+          result.parseArgs_ = parseArgsBuilder_.build();
+        }
+        result.resolveAst_ = resolveAst_;
+        result.loadBuiltin_ = loadBuiltin_;
+        onBuilt();
+        return result;
+      }
+
+      @java.lang.Override
+      public Builder clone() {
+        return super.clone();
+      }
+      @java.lang.Override
+      public Builder setField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.setField(field, value);
+      }
+      @java.lang.Override
+      public Builder clearField(
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return super.clearField(field);
+      }
+      @java.lang.Override
+      public Builder clearOneof(
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return super.clearOneof(oneof);
+      }
+      @java.lang.Override
+      public Builder setRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, java.lang.Object value) {
+        return super.setRepeatedField(field, index, value);
+      }
+      @java.lang.Override
+      public Builder addRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.addRepeatedField(field, value);
+      }
+      @java.lang.Override
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof com.kcl.api.Spec.LoadPackage_Args) {
+          return mergeFrom((com.kcl.api.Spec.LoadPackage_Args)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(com.kcl.api.Spec.LoadPackage_Args other) {
+        if (other == com.kcl.api.Spec.LoadPackage_Args.getDefaultInstance()) return this;
+        if (other.hasParseArgs()) {
+          mergeParseArgs(other.getParseArgs());
+        }
+        if (other.getResolveAst() != false) {
+          setResolveAst(other.getResolveAst());
+        }
+        if (other.getLoadBuiltin() != false) {
+          setLoadBuiltin(other.getLoadBuiltin());
+        }
+        this.mergeUnknownFields(other.unknownFields);
+        onChanged();
+        return this;
+      }
+
+      @java.lang.Override
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      @java.lang.Override
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        com.kcl.api.Spec.LoadPackage_Args parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (com.kcl.api.Spec.LoadPackage_Args) e.getUnfinishedMessage();
+          throw e.unwrapIOException();
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+
+      private com.kcl.api.Spec.ParseProgram_Args parseArgs_;
+      private com.google.protobuf.SingleFieldBuilderV3<
+          com.kcl.api.Spec.ParseProgram_Args, com.kcl.api.Spec.ParseProgram_Args.Builder, com.kcl.api.Spec.ParseProgram_ArgsOrBuilder> parseArgsBuilder_;
+      /**
+       * <code>.com.kcl.api.ParseProgram_Args parse_args = 1;</code>
+       * @return Whether the parseArgs field is set.
+       */
+      public boolean hasParseArgs() {
+        return parseArgsBuilder_ != null || parseArgs_ != null;
+      }
+      /**
+       * <code>.com.kcl.api.ParseProgram_Args parse_args = 1;</code>
+       * @return The parseArgs.
+       */
+      public com.kcl.api.Spec.ParseProgram_Args getParseArgs() {
+        if (parseArgsBuilder_ == null) {
+          return parseArgs_ == null ? com.kcl.api.Spec.ParseProgram_Args.getDefaultInstance() : parseArgs_;
+        } else {
+          return parseArgsBuilder_.getMessage();
+        }
+      }
+      /**
+       * <code>.com.kcl.api.ParseProgram_Args parse_args = 1;</code>
+       */
+      public Builder setParseArgs(com.kcl.api.Spec.ParseProgram_Args value) {
+        if (parseArgsBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          parseArgs_ = value;
+          onChanged();
+        } else {
+          parseArgsBuilder_.setMessage(value);
+        }
+
+        return this;
+      }
+      /**
+       * <code>.com.kcl.api.ParseProgram_Args parse_args = 1;</code>
+       */
+      public Builder setParseArgs(
+          com.kcl.api.Spec.ParseProgram_Args.Builder builderForValue) {
+        if (parseArgsBuilder_ == null) {
+          parseArgs_ = builderForValue.build();
+          onChanged();
+        } else {
+          parseArgsBuilder_.setMessage(builderForValue.build());
+        }
+
+        return this;
+      }
+      /**
+       * <code>.com.kcl.api.ParseProgram_Args parse_args = 1;</code>
+       */
+      public Builder mergeParseArgs(com.kcl.api.Spec.ParseProgram_Args value) {
+        if (parseArgsBuilder_ == null) {
+          if (parseArgs_ != null) {
+            parseArgs_ =
+              com.kcl.api.Spec.ParseProgram_Args.newBuilder(parseArgs_).mergeFrom(value).buildPartial();
+          } else {
+            parseArgs_ = value;
+          }
+          onChanged();
+        } else {
+          parseArgsBuilder_.mergeFrom(value);
+        }
+
+        return this;
+      }
+      /**
+       * <code>.com.kcl.api.ParseProgram_Args parse_args = 1;</code>
+       */
+      public Builder clearParseArgs() {
+        if (parseArgsBuilder_ == null) {
+          parseArgs_ = null;
+          onChanged();
+        } else {
+          parseArgs_ = null;
+          parseArgsBuilder_ = null;
+        }
+
+        return this;
+      }
+      /**
+       * <code>.com.kcl.api.ParseProgram_Args parse_args = 1;</code>
+       */
+      public com.kcl.api.Spec.ParseProgram_Args.Builder getParseArgsBuilder() {
+        
+        onChanged();
+        return getParseArgsFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>.com.kcl.api.ParseProgram_Args parse_args = 1;</code>
+       */
+      public com.kcl.api.Spec.ParseProgram_ArgsOrBuilder getParseArgsOrBuilder() {
+        if (parseArgsBuilder_ != null) {
+          return parseArgsBuilder_.getMessageOrBuilder();
+        } else {
+          return parseArgs_ == null ?
+              com.kcl.api.Spec.ParseProgram_Args.getDefaultInstance() : parseArgs_;
+        }
+      }
+      /**
+       * <code>.com.kcl.api.ParseProgram_Args parse_args = 1;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilderV3<
+          com.kcl.api.Spec.ParseProgram_Args, com.kcl.api.Spec.ParseProgram_Args.Builder, com.kcl.api.Spec.ParseProgram_ArgsOrBuilder> 
+          getParseArgsFieldBuilder() {
+        if (parseArgsBuilder_ == null) {
+          parseArgsBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+              com.kcl.api.Spec.ParseProgram_Args, com.kcl.api.Spec.ParseProgram_Args.Builder, com.kcl.api.Spec.ParseProgram_ArgsOrBuilder>(
+                  getParseArgs(),
+                  getParentForChildren(),
+                  isClean());
+          parseArgs_ = null;
+        }
+        return parseArgsBuilder_;
+      }
+
+      private boolean resolveAst_ ;
+      /**
+       * <code>bool resolve_ast = 2;</code>
+       * @return The resolveAst.
+       */
+      @java.lang.Override
+      public boolean getResolveAst() {
+        return resolveAst_;
+      }
+      /**
+       * <code>bool resolve_ast = 2;</code>
+       * @param value The resolveAst to set.
+       * @return This builder for chaining.
+       */
+      public Builder setResolveAst(boolean value) {
+        
+        resolveAst_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>bool resolve_ast = 2;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearResolveAst() {
+        
+        resolveAst_ = false;
+        onChanged();
+        return this;
+      }
+
+      private boolean loadBuiltin_ ;
+      /**
+       * <code>bool load_builtin = 3;</code>
+       * @return The loadBuiltin.
+       */
+      @java.lang.Override
+      public boolean getLoadBuiltin() {
+        return loadBuiltin_;
+      }
+      /**
+       * <code>bool load_builtin = 3;</code>
+       * @param value The loadBuiltin to set.
+       * @return This builder for chaining.
+       */
+      public Builder setLoadBuiltin(boolean value) {
+        
+        loadBuiltin_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>bool load_builtin = 3;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearLoadBuiltin() {
+        
+        loadBuiltin_ = false;
+        onChanged();
+        return this;
+      }
+      @java.lang.Override
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.setUnknownFields(unknownFields);
+      }
+
+      @java.lang.Override
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.mergeUnknownFields(unknownFields);
+      }
+
+
+      // @@protoc_insertion_point(builder_scope:com.kcl.api.LoadPackage_Args)
+    }
+
+    // @@protoc_insertion_point(class_scope:com.kcl.api.LoadPackage_Args)
+    private static final com.kcl.api.Spec.LoadPackage_Args DEFAULT_INSTANCE;
+    static {
+      DEFAULT_INSTANCE = new com.kcl.api.Spec.LoadPackage_Args();
+    }
+
+    public static com.kcl.api.Spec.LoadPackage_Args getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    private static final com.google.protobuf.Parser<LoadPackage_Args>
+        PARSER = new com.google.protobuf.AbstractParser<LoadPackage_Args>() {
+      @java.lang.Override
+      public LoadPackage_Args parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new LoadPackage_Args(input, extensionRegistry);
+      }
+    };
+
+    public static com.google.protobuf.Parser<LoadPackage_Args> parser() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<LoadPackage_Args> getParserForType() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.kcl.api.Spec.LoadPackage_Args getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
+  }
+
+  public interface LoadPackage_ResultOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:com.kcl.api.LoadPackage_Result)
+      com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <pre>
+     * JSON string value
+     * </pre>
+     *
+     * <code>string program = 1;</code>
+     * @return The program.
+     */
+    java.lang.String getProgram();
+    /**
+     * <pre>
+     * JSON string value
+     * </pre>
+     *
+     * <code>string program = 1;</code>
+     * @return The bytes for program.
+     */
+    com.google.protobuf.ByteString
+        getProgramBytes();
+
+    /**
+     * <pre>
+     * Returns the files in the order they should be compiled
+     * </pre>
+     *
+     * <code>repeated string paths = 2;</code>
+     * @return A list containing the paths.
+     */
+    java.util.List<java.lang.String>
+        getPathsList();
+    /**
+     * <pre>
+     * Returns the files in the order they should be compiled
+     * </pre>
+     *
+     * <code>repeated string paths = 2;</code>
+     * @return The count of paths.
+     */
+    int getPathsCount();
+    /**
+     * <pre>
+     * Returns the files in the order they should be compiled
+     * </pre>
+     *
+     * <code>repeated string paths = 2;</code>
+     * @param index The index of the element to return.
+     * @return The paths at the given index.
+     */
+    java.lang.String getPaths(int index);
+    /**
+     * <pre>
+     * Returns the files in the order they should be compiled
+     * </pre>
+     *
+     * <code>repeated string paths = 2;</code>
+     * @param index The index of the value to return.
+     * @return The bytes of the paths at the given index.
+     */
+    com.google.protobuf.ByteString
+        getPathsBytes(int index);
+
+    /**
+     * <pre>
+     * Map key is the AST index UUID string.
+     * </pre>
+     *
+     * <code>map&lt;string, .com.kcl.api.SymbolIndex&gt; node_symbol_map = 3;</code>
+     */
+    int getNodeSymbolMapCount();
+    /**
+     * <pre>
+     * Map key is the AST index UUID string.
+     * </pre>
+     *
+     * <code>map&lt;string, .com.kcl.api.SymbolIndex&gt; node_symbol_map = 3;</code>
+     */
+    boolean containsNodeSymbolMap(
+        java.lang.String key);
+    /**
+     * Use {@link #getNodeSymbolMapMap()} instead.
+     */
+    @java.lang.Deprecated
+    java.util.Map<java.lang.String, com.kcl.api.Spec.SymbolIndex>
+    getNodeSymbolMap();
+    /**
+     * <pre>
+     * Map key is the AST index UUID string.
+     * </pre>
+     *
+     * <code>map&lt;string, .com.kcl.api.SymbolIndex&gt; node_symbol_map = 3;</code>
+     */
+    java.util.Map<java.lang.String, com.kcl.api.Spec.SymbolIndex>
+    getNodeSymbolMapMap();
+    /**
+     * <pre>
+     * Map key is the AST index UUID string.
+     * </pre>
+     *
+     * <code>map&lt;string, .com.kcl.api.SymbolIndex&gt; node_symbol_map = 3;</code>
+     */
+
+    com.kcl.api.Spec.SymbolIndex getNodeSymbolMapOrDefault(
+        java.lang.String key,
+        com.kcl.api.Spec.SymbolIndex defaultValue);
+    /**
+     * <pre>
+     * Map key is the AST index UUID string.
+     * </pre>
+     *
+     * <code>map&lt;string, .com.kcl.api.SymbolIndex&gt; node_symbol_map = 3;</code>
+     */
+
+    com.kcl.api.Spec.SymbolIndex getNodeSymbolMapOrThrow(
+        java.lang.String key);
+
+    /**
+     * <pre>
+     * Map key is the SymbolIndex json string.
+     * </pre>
+     *
+     * <code>map&lt;string, .com.kcl.api.Symbol&gt; symbols = 4;</code>
+     */
+    int getSymbolsCount();
+    /**
+     * <pre>
+     * Map key is the SymbolIndex json string.
+     * </pre>
+     *
+     * <code>map&lt;string, .com.kcl.api.Symbol&gt; symbols = 4;</code>
+     */
+    boolean containsSymbols(
+        java.lang.String key);
+    /**
+     * Use {@link #getSymbolsMap()} instead.
+     */
+    @java.lang.Deprecated
+    java.util.Map<java.lang.String, com.kcl.api.Spec.Symbol>
+    getSymbols();
+    /**
+     * <pre>
+     * Map key is the SymbolIndex json string.
+     * </pre>
+     *
+     * <code>map&lt;string, .com.kcl.api.Symbol&gt; symbols = 4;</code>
+     */
+    java.util.Map<java.lang.String, com.kcl.api.Spec.Symbol>
+    getSymbolsMap();
+    /**
+     * <pre>
+     * Map key is the SymbolIndex json string.
+     * </pre>
+     *
+     * <code>map&lt;string, .com.kcl.api.Symbol&gt; symbols = 4;</code>
+     */
+
+    com.kcl.api.Spec.Symbol getSymbolsOrDefault(
+        java.lang.String key,
+        com.kcl.api.Spec.Symbol defaultValue);
+    /**
+     * <pre>
+     * Map key is the SymbolIndex json string.
+     * </pre>
+     *
+     * <code>map&lt;string, .com.kcl.api.Symbol&gt; symbols = 4;</code>
+     */
+
+    com.kcl.api.Spec.Symbol getSymbolsOrThrow(
+        java.lang.String key);
+
+    /**
+     * <pre>
+     * Parse errors
+     * </pre>
+     *
+     * <code>repeated .com.kcl.api.Error parse_errors = 5;</code>
+     */
+    java.util.List<com.kcl.api.Spec.Error> 
+        getParseErrorsList();
+    /**
+     * <pre>
+     * Parse errors
+     * </pre>
+     *
+     * <code>repeated .com.kcl.api.Error parse_errors = 5;</code>
+     */
+    com.kcl.api.Spec.Error getParseErrors(int index);
+    /**
+     * <pre>
+     * Parse errors
+     * </pre>
+     *
+     * <code>repeated .com.kcl.api.Error parse_errors = 5;</code>
+     */
+    int getParseErrorsCount();
+    /**
+     * <pre>
+     * Parse errors
+     * </pre>
+     *
+     * <code>repeated .com.kcl.api.Error parse_errors = 5;</code>
+     */
+    java.util.List<? extends com.kcl.api.Spec.ErrorOrBuilder> 
+        getParseErrorsOrBuilderList();
+    /**
+     * <pre>
+     * Parse errors
+     * </pre>
+     *
+     * <code>repeated .com.kcl.api.Error parse_errors = 5;</code>
+     */
+    com.kcl.api.Spec.ErrorOrBuilder getParseErrorsOrBuilder(
+        int index);
+
+    /**
+     * <pre>
+     * Parse errors
+     * </pre>
+     *
+     * <code>repeated .com.kcl.api.Error type_errors = 6;</code>
+     */
+    java.util.List<com.kcl.api.Spec.Error> 
+        getTypeErrorsList();
+    /**
+     * <pre>
+     * Parse errors
+     * </pre>
+     *
+     * <code>repeated .com.kcl.api.Error type_errors = 6;</code>
+     */
+    com.kcl.api.Spec.Error getTypeErrors(int index);
+    /**
+     * <pre>
+     * Parse errors
+     * </pre>
+     *
+     * <code>repeated .com.kcl.api.Error type_errors = 6;</code>
+     */
+    int getTypeErrorsCount();
+    /**
+     * <pre>
+     * Parse errors
+     * </pre>
+     *
+     * <code>repeated .com.kcl.api.Error type_errors = 6;</code>
+     */
+    java.util.List<? extends com.kcl.api.Spec.ErrorOrBuilder> 
+        getTypeErrorsOrBuilderList();
+    /**
+     * <pre>
+     * Parse errors
+     * </pre>
+     *
+     * <code>repeated .com.kcl.api.Error type_errors = 6;</code>
+     */
+    com.kcl.api.Spec.ErrorOrBuilder getTypeErrorsOrBuilder(
+        int index);
+  }
+  /**
+   * Protobuf type {@code com.kcl.api.LoadPackage_Result}
+   */
+  public static final class LoadPackage_Result extends
+      com.google.protobuf.GeneratedMessageV3 implements
+      // @@protoc_insertion_point(message_implements:com.kcl.api.LoadPackage_Result)
+      LoadPackage_ResultOrBuilder {
+  private static final long serialVersionUID = 0L;
+    // Use LoadPackage_Result.newBuilder() to construct.
+    private LoadPackage_Result(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
+    }
+    private LoadPackage_Result() {
+      program_ = "";
+      paths_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+      parseErrors_ = java.util.Collections.emptyList();
+      typeErrors_ = java.util.Collections.emptyList();
+    }
+
+    @java.lang.Override
+    @SuppressWarnings({"unused"})
+    protected java.lang.Object newInstance(
+        UnusedPrivateParameter unused) {
+      return new LoadPackage_Result();
+    }
+
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return this.unknownFields;
+    }
+    private LoadPackage_Result(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      this();
+      if (extensionRegistry == null) {
+        throw new java.lang.NullPointerException();
+      }
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            case 10: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              program_ = s;
+              break;
+            }
+            case 18: {
+              java.lang.String s = input.readStringRequireUtf8();
+              if (!((mutable_bitField0_ & 0x00000001) != 0)) {
+                paths_ = new com.google.protobuf.LazyStringArrayList();
+                mutable_bitField0_ |= 0x00000001;
+              }
+              paths_.add(s);
+              break;
+            }
+            case 26: {
+              if (!((mutable_bitField0_ & 0x00000002) != 0)) {
+                nodeSymbolMap_ = com.google.protobuf.MapField.newMapField(
+                    NodeSymbolMapDefaultEntryHolder.defaultEntry);
+                mutable_bitField0_ |= 0x00000002;
+              }
+              com.google.protobuf.MapEntry<java.lang.String, com.kcl.api.Spec.SymbolIndex>
+              nodeSymbolMap__ = input.readMessage(
+                  NodeSymbolMapDefaultEntryHolder.defaultEntry.getParserForType(), extensionRegistry);
+              nodeSymbolMap_.getMutableMap().put(
+                  nodeSymbolMap__.getKey(), nodeSymbolMap__.getValue());
+              break;
+            }
+            case 34: {
+              if (!((mutable_bitField0_ & 0x00000004) != 0)) {
+                symbols_ = com.google.protobuf.MapField.newMapField(
+                    SymbolsDefaultEntryHolder.defaultEntry);
+                mutable_bitField0_ |= 0x00000004;
+              }
+              com.google.protobuf.MapEntry<java.lang.String, com.kcl.api.Spec.Symbol>
+              symbols__ = input.readMessage(
+                  SymbolsDefaultEntryHolder.defaultEntry.getParserForType(), extensionRegistry);
+              symbols_.getMutableMap().put(
+                  symbols__.getKey(), symbols__.getValue());
+              break;
+            }
+            case 42: {
+              if (!((mutable_bitField0_ & 0x00000008) != 0)) {
+                parseErrors_ = new java.util.ArrayList<com.kcl.api.Spec.Error>();
+                mutable_bitField0_ |= 0x00000008;
+              }
+              parseErrors_.add(
+                  input.readMessage(com.kcl.api.Spec.Error.parser(), extensionRegistry));
+              break;
+            }
+            case 50: {
+              if (!((mutable_bitField0_ & 0x00000010) != 0)) {
+                typeErrors_ = new java.util.ArrayList<com.kcl.api.Spec.Error>();
+                mutable_bitField0_ |= 0x00000010;
+              }
+              typeErrors_.add(
+                  input.readMessage(com.kcl.api.Spec.Error.parser(), extensionRegistry));
+              break;
+            }
+            default: {
+              if (!parseUnknownField(
+                  input, unknownFields, extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e).setUnfinishedMessage(this);
+      } finally {
+        if (((mutable_bitField0_ & 0x00000001) != 0)) {
+          paths_ = paths_.getUnmodifiableView();
+        }
+        if (((mutable_bitField0_ & 0x00000008) != 0)) {
+          parseErrors_ = java.util.Collections.unmodifiableList(parseErrors_);
+        }
+        if (((mutable_bitField0_ & 0x00000010) != 0)) {
+          typeErrors_ = java.util.Collections.unmodifiableList(typeErrors_);
+        }
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return com.kcl.api.Spec.internal_static_com_kcl_api_LoadPackage_Result_descriptor;
+    }
+
+    @SuppressWarnings({"rawtypes"})
+    @java.lang.Override
+    protected com.google.protobuf.MapField internalGetMapField(
+        int number) {
+      switch (number) {
+        case 3:
+          return internalGetNodeSymbolMap();
+        case 4:
+          return internalGetSymbols();
+        default:
+          throw new RuntimeException(
+              "Invalid map field number: " + number);
+      }
+    }
+    @java.lang.Override
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return com.kcl.api.Spec.internal_static_com_kcl_api_LoadPackage_Result_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              com.kcl.api.Spec.LoadPackage_Result.class, com.kcl.api.Spec.LoadPackage_Result.Builder.class);
+    }
+
+    public static final int PROGRAM_FIELD_NUMBER = 1;
+    private volatile java.lang.Object program_;
+    /**
+     * <pre>
+     * JSON string value
+     * </pre>
+     *
+     * <code>string program = 1;</code>
+     * @return The program.
+     */
+    @java.lang.Override
+    public java.lang.String getProgram() {
+      java.lang.Object ref = program_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        program_ = s;
+        return s;
+      }
+    }
+    /**
+     * <pre>
+     * JSON string value
+     * </pre>
+     *
+     * <code>string program = 1;</code>
+     * @return The bytes for program.
+     */
+    @java.lang.Override
+    public com.google.protobuf.ByteString
+        getProgramBytes() {
+      java.lang.Object ref = program_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        program_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int PATHS_FIELD_NUMBER = 2;
+    private com.google.protobuf.LazyStringList paths_;
+    /**
+     * <pre>
+     * Returns the files in the order they should be compiled
+     * </pre>
+     *
+     * <code>repeated string paths = 2;</code>
+     * @return A list containing the paths.
+     */
+    public com.google.protobuf.ProtocolStringList
+        getPathsList() {
+      return paths_;
+    }
+    /**
+     * <pre>
+     * Returns the files in the order they should be compiled
+     * </pre>
+     *
+     * <code>repeated string paths = 2;</code>
+     * @return The count of paths.
+     */
+    public int getPathsCount() {
+      return paths_.size();
+    }
+    /**
+     * <pre>
+     * Returns the files in the order they should be compiled
+     * </pre>
+     *
+     * <code>repeated string paths = 2;</code>
+     * @param index The index of the element to return.
+     * @return The paths at the given index.
+     */
+    public java.lang.String getPaths(int index) {
+      return paths_.get(index);
+    }
+    /**
+     * <pre>
+     * Returns the files in the order they should be compiled
+     * </pre>
+     *
+     * <code>repeated string paths = 2;</code>
+     * @param index The index of the value to return.
+     * @return The bytes of the paths at the given index.
+     */
+    public com.google.protobuf.ByteString
+        getPathsBytes(int index) {
+      return paths_.getByteString(index);
+    }
+
+    public static final int NODE_SYMBOL_MAP_FIELD_NUMBER = 3;
+    private static final class NodeSymbolMapDefaultEntryHolder {
+      static final com.google.protobuf.MapEntry<
+          java.lang.String, com.kcl.api.Spec.SymbolIndex> defaultEntry =
+              com.google.protobuf.MapEntry
+              .<java.lang.String, com.kcl.api.Spec.SymbolIndex>newDefaultInstance(
+                  com.kcl.api.Spec.internal_static_com_kcl_api_LoadPackage_Result_NodeSymbolMapEntry_descriptor, 
+                  com.google.protobuf.WireFormat.FieldType.STRING,
+                  "",
+                  com.google.protobuf.WireFormat.FieldType.MESSAGE,
+                  com.kcl.api.Spec.SymbolIndex.getDefaultInstance());
+    }
+    private com.google.protobuf.MapField<
+        java.lang.String, com.kcl.api.Spec.SymbolIndex> nodeSymbolMap_;
+    private com.google.protobuf.MapField<java.lang.String, com.kcl.api.Spec.SymbolIndex>
+    internalGetNodeSymbolMap() {
+      if (nodeSymbolMap_ == null) {
+        return com.google.protobuf.MapField.emptyMapField(
+            NodeSymbolMapDefaultEntryHolder.defaultEntry);
+      }
+      return nodeSymbolMap_;
+    }
+
+    public int getNodeSymbolMapCount() {
+      return internalGetNodeSymbolMap().getMap().size();
+    }
+    /**
+     * <pre>
+     * Map key is the AST index UUID string.
+     * </pre>
+     *
+     * <code>map&lt;string, .com.kcl.api.SymbolIndex&gt; node_symbol_map = 3;</code>
+     */
+
+    @java.lang.Override
+    public boolean containsNodeSymbolMap(
+        java.lang.String key) {
+      if (key == null) { throw new NullPointerException("map key"); }
+      return internalGetNodeSymbolMap().getMap().containsKey(key);
+    }
+    /**
+     * Use {@link #getNodeSymbolMapMap()} instead.
+     */
+    @java.lang.Override
+    @java.lang.Deprecated
+    public java.util.Map<java.lang.String, com.kcl.api.Spec.SymbolIndex> getNodeSymbolMap() {
+      return getNodeSymbolMapMap();
+    }
+    /**
+     * <pre>
+     * Map key is the AST index UUID string.
+     * </pre>
+     *
+     * <code>map&lt;string, .com.kcl.api.SymbolIndex&gt; node_symbol_map = 3;</code>
+     */
+    @java.lang.Override
+
+    public java.util.Map<java.lang.String, com.kcl.api.Spec.SymbolIndex> getNodeSymbolMapMap() {
+      return internalGetNodeSymbolMap().getMap();
+    }
+    /**
+     * <pre>
+     * Map key is the AST index UUID string.
+     * </pre>
+     *
+     * <code>map&lt;string, .com.kcl.api.SymbolIndex&gt; node_symbol_map = 3;</code>
+     */
+    @java.lang.Override
+
+    public com.kcl.api.Spec.SymbolIndex getNodeSymbolMapOrDefault(
+        java.lang.String key,
+        com.kcl.api.Spec.SymbolIndex defaultValue) {
+      if (key == null) { throw new NullPointerException("map key"); }
+      java.util.Map<java.lang.String, com.kcl.api.Spec.SymbolIndex> map =
+          internalGetNodeSymbolMap().getMap();
+      return map.containsKey(key) ? map.get(key) : defaultValue;
+    }
+    /**
+     * <pre>
+     * Map key is the AST index UUID string.
+     * </pre>
+     *
+     * <code>map&lt;string, .com.kcl.api.SymbolIndex&gt; node_symbol_map = 3;</code>
+     */
+    @java.lang.Override
+
+    public com.kcl.api.Spec.SymbolIndex getNodeSymbolMapOrThrow(
+        java.lang.String key) {
+      if (key == null) { throw new NullPointerException("map key"); }
+      java.util.Map<java.lang.String, com.kcl.api.Spec.SymbolIndex> map =
+          internalGetNodeSymbolMap().getMap();
+      if (!map.containsKey(key)) {
+        throw new java.lang.IllegalArgumentException();
+      }
+      return map.get(key);
+    }
+
+    public static final int SYMBOLS_FIELD_NUMBER = 4;
+    private static final class SymbolsDefaultEntryHolder {
+      static final com.google.protobuf.MapEntry<
+          java.lang.String, com.kcl.api.Spec.Symbol> defaultEntry =
+              com.google.protobuf.MapEntry
+              .<java.lang.String, com.kcl.api.Spec.Symbol>newDefaultInstance(
+                  com.kcl.api.Spec.internal_static_com_kcl_api_LoadPackage_Result_SymbolsEntry_descriptor, 
+                  com.google.protobuf.WireFormat.FieldType.STRING,
+                  "",
+                  com.google.protobuf.WireFormat.FieldType.MESSAGE,
+                  com.kcl.api.Spec.Symbol.getDefaultInstance());
+    }
+    private com.google.protobuf.MapField<
+        java.lang.String, com.kcl.api.Spec.Symbol> symbols_;
+    private com.google.protobuf.MapField<java.lang.String, com.kcl.api.Spec.Symbol>
+    internalGetSymbols() {
+      if (symbols_ == null) {
+        return com.google.protobuf.MapField.emptyMapField(
+            SymbolsDefaultEntryHolder.defaultEntry);
+      }
+      return symbols_;
+    }
+
+    public int getSymbolsCount() {
+      return internalGetSymbols().getMap().size();
+    }
+    /**
+     * <pre>
+     * Map key is the SymbolIndex json string.
+     * </pre>
+     *
+     * <code>map&lt;string, .com.kcl.api.Symbol&gt; symbols = 4;</code>
+     */
+
+    @java.lang.Override
+    public boolean containsSymbols(
+        java.lang.String key) {
+      if (key == null) { throw new NullPointerException("map key"); }
+      return internalGetSymbols().getMap().containsKey(key);
+    }
+    /**
+     * Use {@link #getSymbolsMap()} instead.
+     */
+    @java.lang.Override
+    @java.lang.Deprecated
+    public java.util.Map<java.lang.String, com.kcl.api.Spec.Symbol> getSymbols() {
+      return getSymbolsMap();
+    }
+    /**
+     * <pre>
+     * Map key is the SymbolIndex json string.
+     * </pre>
+     *
+     * <code>map&lt;string, .com.kcl.api.Symbol&gt; symbols = 4;</code>
+     */
+    @java.lang.Override
+
+    public java.util.Map<java.lang.String, com.kcl.api.Spec.Symbol> getSymbolsMap() {
+      return internalGetSymbols().getMap();
+    }
+    /**
+     * <pre>
+     * Map key is the SymbolIndex json string.
+     * </pre>
+     *
+     * <code>map&lt;string, .com.kcl.api.Symbol&gt; symbols = 4;</code>
+     */
+    @java.lang.Override
+
+    public com.kcl.api.Spec.Symbol getSymbolsOrDefault(
+        java.lang.String key,
+        com.kcl.api.Spec.Symbol defaultValue) {
+      if (key == null) { throw new NullPointerException("map key"); }
+      java.util.Map<java.lang.String, com.kcl.api.Spec.Symbol> map =
+          internalGetSymbols().getMap();
+      return map.containsKey(key) ? map.get(key) : defaultValue;
+    }
+    /**
+     * <pre>
+     * Map key is the SymbolIndex json string.
+     * </pre>
+     *
+     * <code>map&lt;string, .com.kcl.api.Symbol&gt; symbols = 4;</code>
+     */
+    @java.lang.Override
+
+    public com.kcl.api.Spec.Symbol getSymbolsOrThrow(
+        java.lang.String key) {
+      if (key == null) { throw new NullPointerException("map key"); }
+      java.util.Map<java.lang.String, com.kcl.api.Spec.Symbol> map =
+          internalGetSymbols().getMap();
+      if (!map.containsKey(key)) {
+        throw new java.lang.IllegalArgumentException();
+      }
+      return map.get(key);
+    }
+
+    public static final int PARSE_ERRORS_FIELD_NUMBER = 5;
+    private java.util.List<com.kcl.api.Spec.Error> parseErrors_;
+    /**
+     * <pre>
+     * Parse errors
+     * </pre>
+     *
+     * <code>repeated .com.kcl.api.Error parse_errors = 5;</code>
+     */
+    @java.lang.Override
+    public java.util.List<com.kcl.api.Spec.Error> getParseErrorsList() {
+      return parseErrors_;
+    }
+    /**
+     * <pre>
+     * Parse errors
+     * </pre>
+     *
+     * <code>repeated .com.kcl.api.Error parse_errors = 5;</code>
+     */
+    @java.lang.Override
+    public java.util.List<? extends com.kcl.api.Spec.ErrorOrBuilder> 
+        getParseErrorsOrBuilderList() {
+      return parseErrors_;
+    }
+    /**
+     * <pre>
+     * Parse errors
+     * </pre>
+     *
+     * <code>repeated .com.kcl.api.Error parse_errors = 5;</code>
+     */
+    @java.lang.Override
+    public int getParseErrorsCount() {
+      return parseErrors_.size();
+    }
+    /**
+     * <pre>
+     * Parse errors
+     * </pre>
+     *
+     * <code>repeated .com.kcl.api.Error parse_errors = 5;</code>
+     */
+    @java.lang.Override
+    public com.kcl.api.Spec.Error getParseErrors(int index) {
+      return parseErrors_.get(index);
+    }
+    /**
+     * <pre>
+     * Parse errors
+     * </pre>
+     *
+     * <code>repeated .com.kcl.api.Error parse_errors = 5;</code>
+     */
+    @java.lang.Override
+    public com.kcl.api.Spec.ErrorOrBuilder getParseErrorsOrBuilder(
+        int index) {
+      return parseErrors_.get(index);
+    }
+
+    public static final int TYPE_ERRORS_FIELD_NUMBER = 6;
+    private java.util.List<com.kcl.api.Spec.Error> typeErrors_;
+    /**
+     * <pre>
+     * Parse errors
+     * </pre>
+     *
+     * <code>repeated .com.kcl.api.Error type_errors = 6;</code>
+     */
+    @java.lang.Override
+    public java.util.List<com.kcl.api.Spec.Error> getTypeErrorsList() {
+      return typeErrors_;
+    }
+    /**
+     * <pre>
+     * Parse errors
+     * </pre>
+     *
+     * <code>repeated .com.kcl.api.Error type_errors = 6;</code>
+     */
+    @java.lang.Override
+    public java.util.List<? extends com.kcl.api.Spec.ErrorOrBuilder> 
+        getTypeErrorsOrBuilderList() {
+      return typeErrors_;
+    }
+    /**
+     * <pre>
+     * Parse errors
+     * </pre>
+     *
+     * <code>repeated .com.kcl.api.Error type_errors = 6;</code>
+     */
+    @java.lang.Override
+    public int getTypeErrorsCount() {
+      return typeErrors_.size();
+    }
+    /**
+     * <pre>
+     * Parse errors
+     * </pre>
+     *
+     * <code>repeated .com.kcl.api.Error type_errors = 6;</code>
+     */
+    @java.lang.Override
+    public com.kcl.api.Spec.Error getTypeErrors(int index) {
+      return typeErrors_.get(index);
+    }
+    /**
+     * <pre>
+     * Parse errors
+     * </pre>
+     *
+     * <code>repeated .com.kcl.api.Error type_errors = 6;</code>
+     */
+    @java.lang.Override
+    public com.kcl.api.Spec.ErrorOrBuilder getTypeErrorsOrBuilder(
+        int index) {
+      return typeErrors_.get(index);
+    }
+
+    private byte memoizedIsInitialized = -1;
+    @java.lang.Override
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    @java.lang.Override
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(program_)) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 1, program_);
+      }
+      for (int i = 0; i < paths_.size(); i++) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 2, paths_.getRaw(i));
+      }
+      com.google.protobuf.GeneratedMessageV3
+        .serializeStringMapTo(
+          output,
+          internalGetNodeSymbolMap(),
+          NodeSymbolMapDefaultEntryHolder.defaultEntry,
+          3);
+      com.google.protobuf.GeneratedMessageV3
+        .serializeStringMapTo(
+          output,
+          internalGetSymbols(),
+          SymbolsDefaultEntryHolder.defaultEntry,
+          4);
+      for (int i = 0; i < parseErrors_.size(); i++) {
+        output.writeMessage(5, parseErrors_.get(i));
+      }
+      for (int i = 0; i < typeErrors_.size(); i++) {
+        output.writeMessage(6, typeErrors_.get(i));
+      }
+      unknownFields.writeTo(output);
+    }
+
+    @java.lang.Override
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(program_)) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, program_);
+      }
+      {
+        int dataSize = 0;
+        for (int i = 0; i < paths_.size(); i++) {
+          dataSize += computeStringSizeNoTag(paths_.getRaw(i));
+        }
+        size += dataSize;
+        size += 1 * getPathsList().size();
+      }
+      for (java.util.Map.Entry<java.lang.String, com.kcl.api.Spec.SymbolIndex> entry
+           : internalGetNodeSymbolMap().getMap().entrySet()) {
+        com.google.protobuf.MapEntry<java.lang.String, com.kcl.api.Spec.SymbolIndex>
+        nodeSymbolMap__ = NodeSymbolMapDefaultEntryHolder.defaultEntry.newBuilderForType()
+            .setKey(entry.getKey())
+            .setValue(entry.getValue())
+            .build();
+        size += com.google.protobuf.CodedOutputStream
+            .computeMessageSize(3, nodeSymbolMap__);
+      }
+      for (java.util.Map.Entry<java.lang.String, com.kcl.api.Spec.Symbol> entry
+           : internalGetSymbols().getMap().entrySet()) {
+        com.google.protobuf.MapEntry<java.lang.String, com.kcl.api.Spec.Symbol>
+        symbols__ = SymbolsDefaultEntryHolder.defaultEntry.newBuilderForType()
+            .setKey(entry.getKey())
+            .setValue(entry.getValue())
+            .build();
+        size += com.google.protobuf.CodedOutputStream
+            .computeMessageSize(4, symbols__);
+      }
+      for (int i = 0; i < parseErrors_.size(); i++) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(5, parseErrors_.get(i));
+      }
+      for (int i = 0; i < typeErrors_.size(); i++) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(6, typeErrors_.get(i));
+      }
+      size += unknownFields.getSerializedSize();
+      memoizedSize = size;
+      return size;
+    }
+
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof com.kcl.api.Spec.LoadPackage_Result)) {
+        return super.equals(obj);
+      }
+      com.kcl.api.Spec.LoadPackage_Result other = (com.kcl.api.Spec.LoadPackage_Result) obj;
+
+      if (!getProgram()
+          .equals(other.getProgram())) return false;
+      if (!getPathsList()
+          .equals(other.getPathsList())) return false;
+      if (!internalGetNodeSymbolMap().equals(
+          other.internalGetNodeSymbolMap())) return false;
+      if (!internalGetSymbols().equals(
+          other.internalGetSymbols())) return false;
+      if (!getParseErrorsList()
+          .equals(other.getParseErrorsList())) return false;
+      if (!getTypeErrorsList()
+          .equals(other.getTypeErrorsList())) return false;
+      if (!unknownFields.equals(other.unknownFields)) return false;
+      return true;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptor().hashCode();
+      hash = (37 * hash) + PROGRAM_FIELD_NUMBER;
+      hash = (53 * hash) + getProgram().hashCode();
+      if (getPathsCount() > 0) {
+        hash = (37 * hash) + PATHS_FIELD_NUMBER;
+        hash = (53 * hash) + getPathsList().hashCode();
+      }
+      if (!internalGetNodeSymbolMap().getMap().isEmpty()) {
+        hash = (37 * hash) + NODE_SYMBOL_MAP_FIELD_NUMBER;
+        hash = (53 * hash) + internalGetNodeSymbolMap().hashCode();
+      }
+      if (!internalGetSymbols().getMap().isEmpty()) {
+        hash = (37 * hash) + SYMBOLS_FIELD_NUMBER;
+        hash = (53 * hash) + internalGetSymbols().hashCode();
+      }
+      if (getParseErrorsCount() > 0) {
+        hash = (37 * hash) + PARSE_ERRORS_FIELD_NUMBER;
+        hash = (53 * hash) + getParseErrorsList().hashCode();
+      }
+      if (getTypeErrorsCount() > 0) {
+        hash = (37 * hash) + TYPE_ERRORS_FIELD_NUMBER;
+        hash = (53 * hash) + getTypeErrorsList().hashCode();
+      }
+      hash = (29 * hash) + unknownFields.hashCode();
+      memoizedHashCode = hash;
+      return hash;
+    }
+
+    public static com.kcl.api.Spec.LoadPackage_Result parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.kcl.api.Spec.LoadPackage_Result parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.kcl.api.Spec.LoadPackage_Result parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.kcl.api.Spec.LoadPackage_Result parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.kcl.api.Spec.LoadPackage_Result parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.kcl.api.Spec.LoadPackage_Result parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.kcl.api.Spec.LoadPackage_Result parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static com.kcl.api.Spec.LoadPackage_Result parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static com.kcl.api.Spec.LoadPackage_Result parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
+    }
+    public static com.kcl.api.Spec.LoadPackage_Result parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static com.kcl.api.Spec.LoadPackage_Result parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static com.kcl.api.Spec.LoadPackage_Result parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    @java.lang.Override
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(com.kcl.api.Spec.LoadPackage_Result prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    @java.lang.Override
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code com.kcl.api.LoadPackage_Result}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:com.kcl.api.LoadPackage_Result)
+        com.kcl.api.Spec.LoadPackage_ResultOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return com.kcl.api.Spec.internal_static_com_kcl_api_LoadPackage_Result_descriptor;
+      }
+
+      @SuppressWarnings({"rawtypes"})
+      protected com.google.protobuf.MapField internalGetMapField(
+          int number) {
+        switch (number) {
+          case 3:
+            return internalGetNodeSymbolMap();
+          case 4:
+            return internalGetSymbols();
+          default:
+            throw new RuntimeException(
+                "Invalid map field number: " + number);
+        }
+      }
+      @SuppressWarnings({"rawtypes"})
+      protected com.google.protobuf.MapField internalGetMutableMapField(
+          int number) {
+        switch (number) {
+          case 3:
+            return internalGetMutableNodeSymbolMap();
+          case 4:
+            return internalGetMutableSymbols();
+          default:
+            throw new RuntimeException(
+                "Invalid map field number: " + number);
+        }
+      }
+      @java.lang.Override
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return com.kcl.api.Spec.internal_static_com_kcl_api_LoadPackage_Result_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                com.kcl.api.Spec.LoadPackage_Result.class, com.kcl.api.Spec.LoadPackage_Result.Builder.class);
+      }
+
+      // Construct using com.kcl.api.Spec.LoadPackage_Result.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessageV3
+                .alwaysUseFieldBuilders) {
+          getParseErrorsFieldBuilder();
+          getTypeErrorsFieldBuilder();
+        }
+      }
+      @java.lang.Override
+      public Builder clear() {
+        super.clear();
+        program_ = "";
+
+        paths_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00000001);
+        internalGetMutableNodeSymbolMap().clear();
+        internalGetMutableSymbols().clear();
+        if (parseErrorsBuilder_ == null) {
+          parseErrors_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000008);
+        } else {
+          parseErrorsBuilder_.clear();
+        }
+        if (typeErrorsBuilder_ == null) {
+          typeErrors_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000010);
+        } else {
+          typeErrorsBuilder_.clear();
+        }
+        return this;
+      }
+
+      @java.lang.Override
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return com.kcl.api.Spec.internal_static_com_kcl_api_LoadPackage_Result_descriptor;
+      }
+
+      @java.lang.Override
+      public com.kcl.api.Spec.LoadPackage_Result getDefaultInstanceForType() {
+        return com.kcl.api.Spec.LoadPackage_Result.getDefaultInstance();
+      }
+
+      @java.lang.Override
+      public com.kcl.api.Spec.LoadPackage_Result build() {
+        com.kcl.api.Spec.LoadPackage_Result result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      @java.lang.Override
+      public com.kcl.api.Spec.LoadPackage_Result buildPartial() {
+        com.kcl.api.Spec.LoadPackage_Result result = new com.kcl.api.Spec.LoadPackage_Result(this);
+        int from_bitField0_ = bitField0_;
+        result.program_ = program_;
+        if (((bitField0_ & 0x00000001) != 0)) {
+          paths_ = paths_.getUnmodifiableView();
+          bitField0_ = (bitField0_ & ~0x00000001);
+        }
+        result.paths_ = paths_;
+        result.nodeSymbolMap_ = internalGetNodeSymbolMap();
+        result.nodeSymbolMap_.makeImmutable();
+        result.symbols_ = internalGetSymbols();
+        result.symbols_.makeImmutable();
+        if (parseErrorsBuilder_ == null) {
+          if (((bitField0_ & 0x00000008) != 0)) {
+            parseErrors_ = java.util.Collections.unmodifiableList(parseErrors_);
+            bitField0_ = (bitField0_ & ~0x00000008);
+          }
+          result.parseErrors_ = parseErrors_;
+        } else {
+          result.parseErrors_ = parseErrorsBuilder_.build();
+        }
+        if (typeErrorsBuilder_ == null) {
+          if (((bitField0_ & 0x00000010) != 0)) {
+            typeErrors_ = java.util.Collections.unmodifiableList(typeErrors_);
+            bitField0_ = (bitField0_ & ~0x00000010);
+          }
+          result.typeErrors_ = typeErrors_;
+        } else {
+          result.typeErrors_ = typeErrorsBuilder_.build();
+        }
+        onBuilt();
+        return result;
+      }
+
+      @java.lang.Override
+      public Builder clone() {
+        return super.clone();
+      }
+      @java.lang.Override
+      public Builder setField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.setField(field, value);
+      }
+      @java.lang.Override
+      public Builder clearField(
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return super.clearField(field);
+      }
+      @java.lang.Override
+      public Builder clearOneof(
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return super.clearOneof(oneof);
+      }
+      @java.lang.Override
+      public Builder setRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, java.lang.Object value) {
+        return super.setRepeatedField(field, index, value);
+      }
+      @java.lang.Override
+      public Builder addRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.addRepeatedField(field, value);
+      }
+      @java.lang.Override
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof com.kcl.api.Spec.LoadPackage_Result) {
+          return mergeFrom((com.kcl.api.Spec.LoadPackage_Result)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(com.kcl.api.Spec.LoadPackage_Result other) {
+        if (other == com.kcl.api.Spec.LoadPackage_Result.getDefaultInstance()) return this;
+        if (!other.getProgram().isEmpty()) {
+          program_ = other.program_;
+          onChanged();
+        }
+        if (!other.paths_.isEmpty()) {
+          if (paths_.isEmpty()) {
+            paths_ = other.paths_;
+            bitField0_ = (bitField0_ & ~0x00000001);
+          } else {
+            ensurePathsIsMutable();
+            paths_.addAll(other.paths_);
+          }
+          onChanged();
+        }
+        internalGetMutableNodeSymbolMap().mergeFrom(
+            other.internalGetNodeSymbolMap());
+        internalGetMutableSymbols().mergeFrom(
+            other.internalGetSymbols());
+        if (parseErrorsBuilder_ == null) {
+          if (!other.parseErrors_.isEmpty()) {
+            if (parseErrors_.isEmpty()) {
+              parseErrors_ = other.parseErrors_;
+              bitField0_ = (bitField0_ & ~0x00000008);
+            } else {
+              ensureParseErrorsIsMutable();
+              parseErrors_.addAll(other.parseErrors_);
+            }
+            onChanged();
+          }
+        } else {
+          if (!other.parseErrors_.isEmpty()) {
+            if (parseErrorsBuilder_.isEmpty()) {
+              parseErrorsBuilder_.dispose();
+              parseErrorsBuilder_ = null;
+              parseErrors_ = other.parseErrors_;
+              bitField0_ = (bitField0_ & ~0x00000008);
+              parseErrorsBuilder_ = 
+                com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
+                   getParseErrorsFieldBuilder() : null;
+            } else {
+              parseErrorsBuilder_.addAllMessages(other.parseErrors_);
+            }
+          }
+        }
+        if (typeErrorsBuilder_ == null) {
+          if (!other.typeErrors_.isEmpty()) {
+            if (typeErrors_.isEmpty()) {
+              typeErrors_ = other.typeErrors_;
+              bitField0_ = (bitField0_ & ~0x00000010);
+            } else {
+              ensureTypeErrorsIsMutable();
+              typeErrors_.addAll(other.typeErrors_);
+            }
+            onChanged();
+          }
+        } else {
+          if (!other.typeErrors_.isEmpty()) {
+            if (typeErrorsBuilder_.isEmpty()) {
+              typeErrorsBuilder_.dispose();
+              typeErrorsBuilder_ = null;
+              typeErrors_ = other.typeErrors_;
+              bitField0_ = (bitField0_ & ~0x00000010);
+              typeErrorsBuilder_ = 
+                com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
+                   getTypeErrorsFieldBuilder() : null;
+            } else {
+              typeErrorsBuilder_.addAllMessages(other.typeErrors_);
+            }
+          }
+        }
+        this.mergeUnknownFields(other.unknownFields);
+        onChanged();
+        return this;
+      }
+
+      @java.lang.Override
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      @java.lang.Override
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        com.kcl.api.Spec.LoadPackage_Result parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (com.kcl.api.Spec.LoadPackage_Result) e.getUnfinishedMessage();
+          throw e.unwrapIOException();
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int bitField0_;
+
+      private java.lang.Object program_ = "";
+      /**
+       * <pre>
+       * JSON string value
+       * </pre>
+       *
+       * <code>string program = 1;</code>
+       * @return The program.
+       */
+      public java.lang.String getProgram() {
+        java.lang.Object ref = program_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          program_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <pre>
+       * JSON string value
+       * </pre>
+       *
+       * <code>string program = 1;</code>
+       * @return The bytes for program.
+       */
+      public com.google.protobuf.ByteString
+          getProgramBytes() {
+        java.lang.Object ref = program_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          program_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <pre>
+       * JSON string value
+       * </pre>
+       *
+       * <code>string program = 1;</code>
+       * @param value The program to set.
+       * @return This builder for chaining.
+       */
+      public Builder setProgram(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        program_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * JSON string value
+       * </pre>
+       *
+       * <code>string program = 1;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearProgram() {
+        
+        program_ = getDefaultInstance().getProgram();
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * JSON string value
+       * </pre>
+       *
+       * <code>string program = 1;</code>
+       * @param value The bytes for program to set.
+       * @return This builder for chaining.
+       */
+      public Builder setProgramBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        program_ = value;
+        onChanged();
+        return this;
+      }
+
+      private com.google.protobuf.LazyStringList paths_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+      private void ensurePathsIsMutable() {
+        if (!((bitField0_ & 0x00000001) != 0)) {
+          paths_ = new com.google.protobuf.LazyStringArrayList(paths_);
+          bitField0_ |= 0x00000001;
+         }
+      }
+      /**
+       * <pre>
+       * Returns the files in the order they should be compiled
+       * </pre>
+       *
+       * <code>repeated string paths = 2;</code>
+       * @return A list containing the paths.
+       */
+      public com.google.protobuf.ProtocolStringList
+          getPathsList() {
+        return paths_.getUnmodifiableView();
+      }
+      /**
+       * <pre>
+       * Returns the files in the order they should be compiled
+       * </pre>
+       *
+       * <code>repeated string paths = 2;</code>
+       * @return The count of paths.
+       */
+      public int getPathsCount() {
+        return paths_.size();
+      }
+      /**
+       * <pre>
+       * Returns the files in the order they should be compiled
+       * </pre>
+       *
+       * <code>repeated string paths = 2;</code>
+       * @param index The index of the element to return.
+       * @return The paths at the given index.
+       */
+      public java.lang.String getPaths(int index) {
+        return paths_.get(index);
+      }
+      /**
+       * <pre>
+       * Returns the files in the order they should be compiled
+       * </pre>
+       *
+       * <code>repeated string paths = 2;</code>
+       * @param index The index of the value to return.
+       * @return The bytes of the paths at the given index.
+       */
+      public com.google.protobuf.ByteString
+          getPathsBytes(int index) {
+        return paths_.getByteString(index);
+      }
+      /**
+       * <pre>
+       * Returns the files in the order they should be compiled
+       * </pre>
+       *
+       * <code>repeated string paths = 2;</code>
+       * @param index The index to set the value at.
+       * @param value The paths to set.
+       * @return This builder for chaining.
+       */
+      public Builder setPaths(
+          int index, java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensurePathsIsMutable();
+        paths_.set(index, value);
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * Returns the files in the order they should be compiled
+       * </pre>
+       *
+       * <code>repeated string paths = 2;</code>
+       * @param value The paths to add.
+       * @return This builder for chaining.
+       */
+      public Builder addPaths(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensurePathsIsMutable();
+        paths_.add(value);
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * Returns the files in the order they should be compiled
+       * </pre>
+       *
+       * <code>repeated string paths = 2;</code>
+       * @param values The paths to add.
+       * @return This builder for chaining.
+       */
+      public Builder addAllPaths(
+          java.lang.Iterable<java.lang.String> values) {
+        ensurePathsIsMutable();
+        com.google.protobuf.AbstractMessageLite.Builder.addAll(
+            values, paths_);
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * Returns the files in the order they should be compiled
+       * </pre>
+       *
+       * <code>repeated string paths = 2;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearPaths() {
+        paths_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00000001);
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * Returns the files in the order they should be compiled
+       * </pre>
+       *
+       * <code>repeated string paths = 2;</code>
+       * @param value The bytes of the paths to add.
+       * @return This builder for chaining.
+       */
+      public Builder addPathsBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        ensurePathsIsMutable();
+        paths_.add(value);
+        onChanged();
+        return this;
+      }
+
+      private com.google.protobuf.MapField<
+          java.lang.String, com.kcl.api.Spec.SymbolIndex> nodeSymbolMap_;
+      private com.google.protobuf.MapField<java.lang.String, com.kcl.api.Spec.SymbolIndex>
+      internalGetNodeSymbolMap() {
+        if (nodeSymbolMap_ == null) {
+          return com.google.protobuf.MapField.emptyMapField(
+              NodeSymbolMapDefaultEntryHolder.defaultEntry);
+        }
+        return nodeSymbolMap_;
+      }
+      private com.google.protobuf.MapField<java.lang.String, com.kcl.api.Spec.SymbolIndex>
+      internalGetMutableNodeSymbolMap() {
+        onChanged();;
+        if (nodeSymbolMap_ == null) {
+          nodeSymbolMap_ = com.google.protobuf.MapField.newMapField(
+              NodeSymbolMapDefaultEntryHolder.defaultEntry);
+        }
+        if (!nodeSymbolMap_.isMutable()) {
+          nodeSymbolMap_ = nodeSymbolMap_.copy();
+        }
+        return nodeSymbolMap_;
+      }
+
+      public int getNodeSymbolMapCount() {
+        return internalGetNodeSymbolMap().getMap().size();
+      }
+      /**
+       * <pre>
+       * Map key is the AST index UUID string.
+       * </pre>
+       *
+       * <code>map&lt;string, .com.kcl.api.SymbolIndex&gt; node_symbol_map = 3;</code>
+       */
+
+      @java.lang.Override
+      public boolean containsNodeSymbolMap(
+          java.lang.String key) {
+        if (key == null) { throw new NullPointerException("map key"); }
+        return internalGetNodeSymbolMap().getMap().containsKey(key);
+      }
+      /**
+       * Use {@link #getNodeSymbolMapMap()} instead.
+       */
+      @java.lang.Override
+      @java.lang.Deprecated
+      public java.util.Map<java.lang.String, com.kcl.api.Spec.SymbolIndex> getNodeSymbolMap() {
+        return getNodeSymbolMapMap();
+      }
+      /**
+       * <pre>
+       * Map key is the AST index UUID string.
+       * </pre>
+       *
+       * <code>map&lt;string, .com.kcl.api.SymbolIndex&gt; node_symbol_map = 3;</code>
+       */
+      @java.lang.Override
+
+      public java.util.Map<java.lang.String, com.kcl.api.Spec.SymbolIndex> getNodeSymbolMapMap() {
+        return internalGetNodeSymbolMap().getMap();
+      }
+      /**
+       * <pre>
+       * Map key is the AST index UUID string.
+       * </pre>
+       *
+       * <code>map&lt;string, .com.kcl.api.SymbolIndex&gt; node_symbol_map = 3;</code>
+       */
+      @java.lang.Override
+
+      public com.kcl.api.Spec.SymbolIndex getNodeSymbolMapOrDefault(
+          java.lang.String key,
+          com.kcl.api.Spec.SymbolIndex defaultValue) {
+        if (key == null) { throw new NullPointerException("map key"); }
+        java.util.Map<java.lang.String, com.kcl.api.Spec.SymbolIndex> map =
+            internalGetNodeSymbolMap().getMap();
+        return map.containsKey(key) ? map.get(key) : defaultValue;
+      }
+      /**
+       * <pre>
+       * Map key is the AST index UUID string.
+       * </pre>
+       *
+       * <code>map&lt;string, .com.kcl.api.SymbolIndex&gt; node_symbol_map = 3;</code>
+       */
+      @java.lang.Override
+
+      public com.kcl.api.Spec.SymbolIndex getNodeSymbolMapOrThrow(
+          java.lang.String key) {
+        if (key == null) { throw new NullPointerException("map key"); }
+        java.util.Map<java.lang.String, com.kcl.api.Spec.SymbolIndex> map =
+            internalGetNodeSymbolMap().getMap();
+        if (!map.containsKey(key)) {
+          throw new java.lang.IllegalArgumentException();
+        }
+        return map.get(key);
+      }
+
+      public Builder clearNodeSymbolMap() {
+        internalGetMutableNodeSymbolMap().getMutableMap()
+            .clear();
+        return this;
+      }
+      /**
+       * <pre>
+       * Map key is the AST index UUID string.
+       * </pre>
+       *
+       * <code>map&lt;string, .com.kcl.api.SymbolIndex&gt; node_symbol_map = 3;</code>
+       */
+
+      public Builder removeNodeSymbolMap(
+          java.lang.String key) {
+        if (key == null) { throw new NullPointerException("map key"); }
+        internalGetMutableNodeSymbolMap().getMutableMap()
+            .remove(key);
+        return this;
+      }
+      /**
+       * Use alternate mutation accessors instead.
+       */
+      @java.lang.Deprecated
+      public java.util.Map<java.lang.String, com.kcl.api.Spec.SymbolIndex>
+      getMutableNodeSymbolMap() {
+        return internalGetMutableNodeSymbolMap().getMutableMap();
+      }
+      /**
+       * <pre>
+       * Map key is the AST index UUID string.
+       * </pre>
+       *
+       * <code>map&lt;string, .com.kcl.api.SymbolIndex&gt; node_symbol_map = 3;</code>
+       */
+      public Builder putNodeSymbolMap(
+          java.lang.String key,
+          com.kcl.api.Spec.SymbolIndex value) {
+        if (key == null) { throw new NullPointerException("map key"); }
+        if (value == null) {
+  throw new NullPointerException("map value");
+}
+
+        internalGetMutableNodeSymbolMap().getMutableMap()
+            .put(key, value);
+        return this;
+      }
+      /**
+       * <pre>
+       * Map key is the AST index UUID string.
+       * </pre>
+       *
+       * <code>map&lt;string, .com.kcl.api.SymbolIndex&gt; node_symbol_map = 3;</code>
+       */
+
+      public Builder putAllNodeSymbolMap(
+          java.util.Map<java.lang.String, com.kcl.api.Spec.SymbolIndex> values) {
+        internalGetMutableNodeSymbolMap().getMutableMap()
+            .putAll(values);
+        return this;
+      }
+
+      private com.google.protobuf.MapField<
+          java.lang.String, com.kcl.api.Spec.Symbol> symbols_;
+      private com.google.protobuf.MapField<java.lang.String, com.kcl.api.Spec.Symbol>
+      internalGetSymbols() {
+        if (symbols_ == null) {
+          return com.google.protobuf.MapField.emptyMapField(
+              SymbolsDefaultEntryHolder.defaultEntry);
+        }
+        return symbols_;
+      }
+      private com.google.protobuf.MapField<java.lang.String, com.kcl.api.Spec.Symbol>
+      internalGetMutableSymbols() {
+        onChanged();;
+        if (symbols_ == null) {
+          symbols_ = com.google.protobuf.MapField.newMapField(
+              SymbolsDefaultEntryHolder.defaultEntry);
+        }
+        if (!symbols_.isMutable()) {
+          symbols_ = symbols_.copy();
+        }
+        return symbols_;
+      }
+
+      public int getSymbolsCount() {
+        return internalGetSymbols().getMap().size();
+      }
+      /**
+       * <pre>
+       * Map key is the SymbolIndex json string.
+       * </pre>
+       *
+       * <code>map&lt;string, .com.kcl.api.Symbol&gt; symbols = 4;</code>
+       */
+
+      @java.lang.Override
+      public boolean containsSymbols(
+          java.lang.String key) {
+        if (key == null) { throw new NullPointerException("map key"); }
+        return internalGetSymbols().getMap().containsKey(key);
+      }
+      /**
+       * Use {@link #getSymbolsMap()} instead.
+       */
+      @java.lang.Override
+      @java.lang.Deprecated
+      public java.util.Map<java.lang.String, com.kcl.api.Spec.Symbol> getSymbols() {
+        return getSymbolsMap();
+      }
+      /**
+       * <pre>
+       * Map key is the SymbolIndex json string.
+       * </pre>
+       *
+       * <code>map&lt;string, .com.kcl.api.Symbol&gt; symbols = 4;</code>
+       */
+      @java.lang.Override
+
+      public java.util.Map<java.lang.String, com.kcl.api.Spec.Symbol> getSymbolsMap() {
+        return internalGetSymbols().getMap();
+      }
+      /**
+       * <pre>
+       * Map key is the SymbolIndex json string.
+       * </pre>
+       *
+       * <code>map&lt;string, .com.kcl.api.Symbol&gt; symbols = 4;</code>
+       */
+      @java.lang.Override
+
+      public com.kcl.api.Spec.Symbol getSymbolsOrDefault(
+          java.lang.String key,
+          com.kcl.api.Spec.Symbol defaultValue) {
+        if (key == null) { throw new NullPointerException("map key"); }
+        java.util.Map<java.lang.String, com.kcl.api.Spec.Symbol> map =
+            internalGetSymbols().getMap();
+        return map.containsKey(key) ? map.get(key) : defaultValue;
+      }
+      /**
+       * <pre>
+       * Map key is the SymbolIndex json string.
+       * </pre>
+       *
+       * <code>map&lt;string, .com.kcl.api.Symbol&gt; symbols = 4;</code>
+       */
+      @java.lang.Override
+
+      public com.kcl.api.Spec.Symbol getSymbolsOrThrow(
+          java.lang.String key) {
+        if (key == null) { throw new NullPointerException("map key"); }
+        java.util.Map<java.lang.String, com.kcl.api.Spec.Symbol> map =
+            internalGetSymbols().getMap();
+        if (!map.containsKey(key)) {
+          throw new java.lang.IllegalArgumentException();
+        }
+        return map.get(key);
+      }
+
+      public Builder clearSymbols() {
+        internalGetMutableSymbols().getMutableMap()
+            .clear();
+        return this;
+      }
+      /**
+       * <pre>
+       * Map key is the SymbolIndex json string.
+       * </pre>
+       *
+       * <code>map&lt;string, .com.kcl.api.Symbol&gt; symbols = 4;</code>
+       */
+
+      public Builder removeSymbols(
+          java.lang.String key) {
+        if (key == null) { throw new NullPointerException("map key"); }
+        internalGetMutableSymbols().getMutableMap()
+            .remove(key);
+        return this;
+      }
+      /**
+       * Use alternate mutation accessors instead.
+       */
+      @java.lang.Deprecated
+      public java.util.Map<java.lang.String, com.kcl.api.Spec.Symbol>
+      getMutableSymbols() {
+        return internalGetMutableSymbols().getMutableMap();
+      }
+      /**
+       * <pre>
+       * Map key is the SymbolIndex json string.
+       * </pre>
+       *
+       * <code>map&lt;string, .com.kcl.api.Symbol&gt; symbols = 4;</code>
+       */
+      public Builder putSymbols(
+          java.lang.String key,
+          com.kcl.api.Spec.Symbol value) {
+        if (key == null) { throw new NullPointerException("map key"); }
+        if (value == null) {
+  throw new NullPointerException("map value");
+}
+
+        internalGetMutableSymbols().getMutableMap()
+            .put(key, value);
+        return this;
+      }
+      /**
+       * <pre>
+       * Map key is the SymbolIndex json string.
+       * </pre>
+       *
+       * <code>map&lt;string, .com.kcl.api.Symbol&gt; symbols = 4;</code>
+       */
+
+      public Builder putAllSymbols(
+          java.util.Map<java.lang.String, com.kcl.api.Spec.Symbol> values) {
+        internalGetMutableSymbols().getMutableMap()
+            .putAll(values);
+        return this;
+      }
+
+      private java.util.List<com.kcl.api.Spec.Error> parseErrors_ =
+        java.util.Collections.emptyList();
+      private void ensureParseErrorsIsMutable() {
+        if (!((bitField0_ & 0x00000008) != 0)) {
+          parseErrors_ = new java.util.ArrayList<com.kcl.api.Spec.Error>(parseErrors_);
+          bitField0_ |= 0x00000008;
+         }
+      }
+
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          com.kcl.api.Spec.Error, com.kcl.api.Spec.Error.Builder, com.kcl.api.Spec.ErrorOrBuilder> parseErrorsBuilder_;
+
+      /**
+       * <pre>
+       * Parse errors
+       * </pre>
+       *
+       * <code>repeated .com.kcl.api.Error parse_errors = 5;</code>
+       */
+      public java.util.List<com.kcl.api.Spec.Error> getParseErrorsList() {
+        if (parseErrorsBuilder_ == null) {
+          return java.util.Collections.unmodifiableList(parseErrors_);
+        } else {
+          return parseErrorsBuilder_.getMessageList();
+        }
+      }
+      /**
+       * <pre>
+       * Parse errors
+       * </pre>
+       *
+       * <code>repeated .com.kcl.api.Error parse_errors = 5;</code>
+       */
+      public int getParseErrorsCount() {
+        if (parseErrorsBuilder_ == null) {
+          return parseErrors_.size();
+        } else {
+          return parseErrorsBuilder_.getCount();
+        }
+      }
+      /**
+       * <pre>
+       * Parse errors
+       * </pre>
+       *
+       * <code>repeated .com.kcl.api.Error parse_errors = 5;</code>
+       */
+      public com.kcl.api.Spec.Error getParseErrors(int index) {
+        if (parseErrorsBuilder_ == null) {
+          return parseErrors_.get(index);
+        } else {
+          return parseErrorsBuilder_.getMessage(index);
+        }
+      }
+      /**
+       * <pre>
+       * Parse errors
+       * </pre>
+       *
+       * <code>repeated .com.kcl.api.Error parse_errors = 5;</code>
+       */
+      public Builder setParseErrors(
+          int index, com.kcl.api.Spec.Error value) {
+        if (parseErrorsBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureParseErrorsIsMutable();
+          parseErrors_.set(index, value);
+          onChanged();
+        } else {
+          parseErrorsBuilder_.setMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <pre>
+       * Parse errors
+       * </pre>
+       *
+       * <code>repeated .com.kcl.api.Error parse_errors = 5;</code>
+       */
+      public Builder setParseErrors(
+          int index, com.kcl.api.Spec.Error.Builder builderForValue) {
+        if (parseErrorsBuilder_ == null) {
+          ensureParseErrorsIsMutable();
+          parseErrors_.set(index, builderForValue.build());
+          onChanged();
+        } else {
+          parseErrorsBuilder_.setMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <pre>
+       * Parse errors
+       * </pre>
+       *
+       * <code>repeated .com.kcl.api.Error parse_errors = 5;</code>
+       */
+      public Builder addParseErrors(com.kcl.api.Spec.Error value) {
+        if (parseErrorsBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureParseErrorsIsMutable();
+          parseErrors_.add(value);
+          onChanged();
+        } else {
+          parseErrorsBuilder_.addMessage(value);
+        }
+        return this;
+      }
+      /**
+       * <pre>
+       * Parse errors
+       * </pre>
+       *
+       * <code>repeated .com.kcl.api.Error parse_errors = 5;</code>
+       */
+      public Builder addParseErrors(
+          int index, com.kcl.api.Spec.Error value) {
+        if (parseErrorsBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureParseErrorsIsMutable();
+          parseErrors_.add(index, value);
+          onChanged();
+        } else {
+          parseErrorsBuilder_.addMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <pre>
+       * Parse errors
+       * </pre>
+       *
+       * <code>repeated .com.kcl.api.Error parse_errors = 5;</code>
+       */
+      public Builder addParseErrors(
+          com.kcl.api.Spec.Error.Builder builderForValue) {
+        if (parseErrorsBuilder_ == null) {
+          ensureParseErrorsIsMutable();
+          parseErrors_.add(builderForValue.build());
+          onChanged();
+        } else {
+          parseErrorsBuilder_.addMessage(builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <pre>
+       * Parse errors
+       * </pre>
+       *
+       * <code>repeated .com.kcl.api.Error parse_errors = 5;</code>
+       */
+      public Builder addParseErrors(
+          int index, com.kcl.api.Spec.Error.Builder builderForValue) {
+        if (parseErrorsBuilder_ == null) {
+          ensureParseErrorsIsMutable();
+          parseErrors_.add(index, builderForValue.build());
+          onChanged();
+        } else {
+          parseErrorsBuilder_.addMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <pre>
+       * Parse errors
+       * </pre>
+       *
+       * <code>repeated .com.kcl.api.Error parse_errors = 5;</code>
+       */
+      public Builder addAllParseErrors(
+          java.lang.Iterable<? extends com.kcl.api.Spec.Error> values) {
+        if (parseErrorsBuilder_ == null) {
+          ensureParseErrorsIsMutable();
+          com.google.protobuf.AbstractMessageLite.Builder.addAll(
+              values, parseErrors_);
+          onChanged();
+        } else {
+          parseErrorsBuilder_.addAllMessages(values);
+        }
+        return this;
+      }
+      /**
+       * <pre>
+       * Parse errors
+       * </pre>
+       *
+       * <code>repeated .com.kcl.api.Error parse_errors = 5;</code>
+       */
+      public Builder clearParseErrors() {
+        if (parseErrorsBuilder_ == null) {
+          parseErrors_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000008);
+          onChanged();
+        } else {
+          parseErrorsBuilder_.clear();
+        }
+        return this;
+      }
+      /**
+       * <pre>
+       * Parse errors
+       * </pre>
+       *
+       * <code>repeated .com.kcl.api.Error parse_errors = 5;</code>
+       */
+      public Builder removeParseErrors(int index) {
+        if (parseErrorsBuilder_ == null) {
+          ensureParseErrorsIsMutable();
+          parseErrors_.remove(index);
+          onChanged();
+        } else {
+          parseErrorsBuilder_.remove(index);
+        }
+        return this;
+      }
+      /**
+       * <pre>
+       * Parse errors
+       * </pre>
+       *
+       * <code>repeated .com.kcl.api.Error parse_errors = 5;</code>
+       */
+      public com.kcl.api.Spec.Error.Builder getParseErrorsBuilder(
+          int index) {
+        return getParseErrorsFieldBuilder().getBuilder(index);
+      }
+      /**
+       * <pre>
+       * Parse errors
+       * </pre>
+       *
+       * <code>repeated .com.kcl.api.Error parse_errors = 5;</code>
+       */
+      public com.kcl.api.Spec.ErrorOrBuilder getParseErrorsOrBuilder(
+          int index) {
+        if (parseErrorsBuilder_ == null) {
+          return parseErrors_.get(index);  } else {
+          return parseErrorsBuilder_.getMessageOrBuilder(index);
+        }
+      }
+      /**
+       * <pre>
+       * Parse errors
+       * </pre>
+       *
+       * <code>repeated .com.kcl.api.Error parse_errors = 5;</code>
+       */
+      public java.util.List<? extends com.kcl.api.Spec.ErrorOrBuilder> 
+           getParseErrorsOrBuilderList() {
+        if (parseErrorsBuilder_ != null) {
+          return parseErrorsBuilder_.getMessageOrBuilderList();
+        } else {
+          return java.util.Collections.unmodifiableList(parseErrors_);
+        }
+      }
+      /**
+       * <pre>
+       * Parse errors
+       * </pre>
+       *
+       * <code>repeated .com.kcl.api.Error parse_errors = 5;</code>
+       */
+      public com.kcl.api.Spec.Error.Builder addParseErrorsBuilder() {
+        return getParseErrorsFieldBuilder().addBuilder(
+            com.kcl.api.Spec.Error.getDefaultInstance());
+      }
+      /**
+       * <pre>
+       * Parse errors
+       * </pre>
+       *
+       * <code>repeated .com.kcl.api.Error parse_errors = 5;</code>
+       */
+      public com.kcl.api.Spec.Error.Builder addParseErrorsBuilder(
+          int index) {
+        return getParseErrorsFieldBuilder().addBuilder(
+            index, com.kcl.api.Spec.Error.getDefaultInstance());
+      }
+      /**
+       * <pre>
+       * Parse errors
+       * </pre>
+       *
+       * <code>repeated .com.kcl.api.Error parse_errors = 5;</code>
+       */
+      public java.util.List<com.kcl.api.Spec.Error.Builder> 
+           getParseErrorsBuilderList() {
+        return getParseErrorsFieldBuilder().getBuilderList();
+      }
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          com.kcl.api.Spec.Error, com.kcl.api.Spec.Error.Builder, com.kcl.api.Spec.ErrorOrBuilder> 
+          getParseErrorsFieldBuilder() {
+        if (parseErrorsBuilder_ == null) {
+          parseErrorsBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
+              com.kcl.api.Spec.Error, com.kcl.api.Spec.Error.Builder, com.kcl.api.Spec.ErrorOrBuilder>(
+                  parseErrors_,
+                  ((bitField0_ & 0x00000008) != 0),
+                  getParentForChildren(),
+                  isClean());
+          parseErrors_ = null;
+        }
+        return parseErrorsBuilder_;
+      }
+
+      private java.util.List<com.kcl.api.Spec.Error> typeErrors_ =
+        java.util.Collections.emptyList();
+      private void ensureTypeErrorsIsMutable() {
+        if (!((bitField0_ & 0x00000010) != 0)) {
+          typeErrors_ = new java.util.ArrayList<com.kcl.api.Spec.Error>(typeErrors_);
+          bitField0_ |= 0x00000010;
+         }
+      }
+
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          com.kcl.api.Spec.Error, com.kcl.api.Spec.Error.Builder, com.kcl.api.Spec.ErrorOrBuilder> typeErrorsBuilder_;
+
+      /**
+       * <pre>
+       * Parse errors
+       * </pre>
+       *
+       * <code>repeated .com.kcl.api.Error type_errors = 6;</code>
+       */
+      public java.util.List<com.kcl.api.Spec.Error> getTypeErrorsList() {
+        if (typeErrorsBuilder_ == null) {
+          return java.util.Collections.unmodifiableList(typeErrors_);
+        } else {
+          return typeErrorsBuilder_.getMessageList();
+        }
+      }
+      /**
+       * <pre>
+       * Parse errors
+       * </pre>
+       *
+       * <code>repeated .com.kcl.api.Error type_errors = 6;</code>
+       */
+      public int getTypeErrorsCount() {
+        if (typeErrorsBuilder_ == null) {
+          return typeErrors_.size();
+        } else {
+          return typeErrorsBuilder_.getCount();
+        }
+      }
+      /**
+       * <pre>
+       * Parse errors
+       * </pre>
+       *
+       * <code>repeated .com.kcl.api.Error type_errors = 6;</code>
+       */
+      public com.kcl.api.Spec.Error getTypeErrors(int index) {
+        if (typeErrorsBuilder_ == null) {
+          return typeErrors_.get(index);
+        } else {
+          return typeErrorsBuilder_.getMessage(index);
+        }
+      }
+      /**
+       * <pre>
+       * Parse errors
+       * </pre>
+       *
+       * <code>repeated .com.kcl.api.Error type_errors = 6;</code>
+       */
+      public Builder setTypeErrors(
+          int index, com.kcl.api.Spec.Error value) {
+        if (typeErrorsBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureTypeErrorsIsMutable();
+          typeErrors_.set(index, value);
+          onChanged();
+        } else {
+          typeErrorsBuilder_.setMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <pre>
+       * Parse errors
+       * </pre>
+       *
+       * <code>repeated .com.kcl.api.Error type_errors = 6;</code>
+       */
+      public Builder setTypeErrors(
+          int index, com.kcl.api.Spec.Error.Builder builderForValue) {
+        if (typeErrorsBuilder_ == null) {
+          ensureTypeErrorsIsMutable();
+          typeErrors_.set(index, builderForValue.build());
+          onChanged();
+        } else {
+          typeErrorsBuilder_.setMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <pre>
+       * Parse errors
+       * </pre>
+       *
+       * <code>repeated .com.kcl.api.Error type_errors = 6;</code>
+       */
+      public Builder addTypeErrors(com.kcl.api.Spec.Error value) {
+        if (typeErrorsBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureTypeErrorsIsMutable();
+          typeErrors_.add(value);
+          onChanged();
+        } else {
+          typeErrorsBuilder_.addMessage(value);
+        }
+        return this;
+      }
+      /**
+       * <pre>
+       * Parse errors
+       * </pre>
+       *
+       * <code>repeated .com.kcl.api.Error type_errors = 6;</code>
+       */
+      public Builder addTypeErrors(
+          int index, com.kcl.api.Spec.Error value) {
+        if (typeErrorsBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureTypeErrorsIsMutable();
+          typeErrors_.add(index, value);
+          onChanged();
+        } else {
+          typeErrorsBuilder_.addMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <pre>
+       * Parse errors
+       * </pre>
+       *
+       * <code>repeated .com.kcl.api.Error type_errors = 6;</code>
+       */
+      public Builder addTypeErrors(
+          com.kcl.api.Spec.Error.Builder builderForValue) {
+        if (typeErrorsBuilder_ == null) {
+          ensureTypeErrorsIsMutable();
+          typeErrors_.add(builderForValue.build());
+          onChanged();
+        } else {
+          typeErrorsBuilder_.addMessage(builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <pre>
+       * Parse errors
+       * </pre>
+       *
+       * <code>repeated .com.kcl.api.Error type_errors = 6;</code>
+       */
+      public Builder addTypeErrors(
+          int index, com.kcl.api.Spec.Error.Builder builderForValue) {
+        if (typeErrorsBuilder_ == null) {
+          ensureTypeErrorsIsMutable();
+          typeErrors_.add(index, builderForValue.build());
+          onChanged();
+        } else {
+          typeErrorsBuilder_.addMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <pre>
+       * Parse errors
+       * </pre>
+       *
+       * <code>repeated .com.kcl.api.Error type_errors = 6;</code>
+       */
+      public Builder addAllTypeErrors(
+          java.lang.Iterable<? extends com.kcl.api.Spec.Error> values) {
+        if (typeErrorsBuilder_ == null) {
+          ensureTypeErrorsIsMutable();
+          com.google.protobuf.AbstractMessageLite.Builder.addAll(
+              values, typeErrors_);
+          onChanged();
+        } else {
+          typeErrorsBuilder_.addAllMessages(values);
+        }
+        return this;
+      }
+      /**
+       * <pre>
+       * Parse errors
+       * </pre>
+       *
+       * <code>repeated .com.kcl.api.Error type_errors = 6;</code>
+       */
+      public Builder clearTypeErrors() {
+        if (typeErrorsBuilder_ == null) {
+          typeErrors_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000010);
+          onChanged();
+        } else {
+          typeErrorsBuilder_.clear();
+        }
+        return this;
+      }
+      /**
+       * <pre>
+       * Parse errors
+       * </pre>
+       *
+       * <code>repeated .com.kcl.api.Error type_errors = 6;</code>
+       */
+      public Builder removeTypeErrors(int index) {
+        if (typeErrorsBuilder_ == null) {
+          ensureTypeErrorsIsMutable();
+          typeErrors_.remove(index);
+          onChanged();
+        } else {
+          typeErrorsBuilder_.remove(index);
+        }
+        return this;
+      }
+      /**
+       * <pre>
+       * Parse errors
+       * </pre>
+       *
+       * <code>repeated .com.kcl.api.Error type_errors = 6;</code>
+       */
+      public com.kcl.api.Spec.Error.Builder getTypeErrorsBuilder(
+          int index) {
+        return getTypeErrorsFieldBuilder().getBuilder(index);
+      }
+      /**
+       * <pre>
+       * Parse errors
+       * </pre>
+       *
+       * <code>repeated .com.kcl.api.Error type_errors = 6;</code>
+       */
+      public com.kcl.api.Spec.ErrorOrBuilder getTypeErrorsOrBuilder(
+          int index) {
+        if (typeErrorsBuilder_ == null) {
+          return typeErrors_.get(index);  } else {
+          return typeErrorsBuilder_.getMessageOrBuilder(index);
+        }
+      }
+      /**
+       * <pre>
+       * Parse errors
+       * </pre>
+       *
+       * <code>repeated .com.kcl.api.Error type_errors = 6;</code>
+       */
+      public java.util.List<? extends com.kcl.api.Spec.ErrorOrBuilder> 
+           getTypeErrorsOrBuilderList() {
+        if (typeErrorsBuilder_ != null) {
+          return typeErrorsBuilder_.getMessageOrBuilderList();
+        } else {
+          return java.util.Collections.unmodifiableList(typeErrors_);
+        }
+      }
+      /**
+       * <pre>
+       * Parse errors
+       * </pre>
+       *
+       * <code>repeated .com.kcl.api.Error type_errors = 6;</code>
+       */
+      public com.kcl.api.Spec.Error.Builder addTypeErrorsBuilder() {
+        return getTypeErrorsFieldBuilder().addBuilder(
+            com.kcl.api.Spec.Error.getDefaultInstance());
+      }
+      /**
+       * <pre>
+       * Parse errors
+       * </pre>
+       *
+       * <code>repeated .com.kcl.api.Error type_errors = 6;</code>
+       */
+      public com.kcl.api.Spec.Error.Builder addTypeErrorsBuilder(
+          int index) {
+        return getTypeErrorsFieldBuilder().addBuilder(
+            index, com.kcl.api.Spec.Error.getDefaultInstance());
+      }
+      /**
+       * <pre>
+       * Parse errors
+       * </pre>
+       *
+       * <code>repeated .com.kcl.api.Error type_errors = 6;</code>
+       */
+      public java.util.List<com.kcl.api.Spec.Error.Builder> 
+           getTypeErrorsBuilderList() {
+        return getTypeErrorsFieldBuilder().getBuilderList();
+      }
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          com.kcl.api.Spec.Error, com.kcl.api.Spec.Error.Builder, com.kcl.api.Spec.ErrorOrBuilder> 
+          getTypeErrorsFieldBuilder() {
+        if (typeErrorsBuilder_ == null) {
+          typeErrorsBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
+              com.kcl.api.Spec.Error, com.kcl.api.Spec.Error.Builder, com.kcl.api.Spec.ErrorOrBuilder>(
+                  typeErrors_,
+                  ((bitField0_ & 0x00000010) != 0),
+                  getParentForChildren(),
+                  isClean());
+          typeErrors_ = null;
+        }
+        return typeErrorsBuilder_;
+      }
+      @java.lang.Override
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.setUnknownFields(unknownFields);
+      }
+
+      @java.lang.Override
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.mergeUnknownFields(unknownFields);
+      }
+
+
+      // @@protoc_insertion_point(builder_scope:com.kcl.api.LoadPackage_Result)
+    }
+
+    // @@protoc_insertion_point(class_scope:com.kcl.api.LoadPackage_Result)
+    private static final com.kcl.api.Spec.LoadPackage_Result DEFAULT_INSTANCE;
+    static {
+      DEFAULT_INSTANCE = new com.kcl.api.Spec.LoadPackage_Result();
+    }
+
+    public static com.kcl.api.Spec.LoadPackage_Result getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    private static final com.google.protobuf.Parser<LoadPackage_Result>
+        PARSER = new com.google.protobuf.AbstractParser<LoadPackage_Result>() {
+      @java.lang.Override
+      public LoadPackage_Result parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new LoadPackage_Result(input, extensionRegistry);
+      }
+    };
+
+    public static com.google.protobuf.Parser<LoadPackage_Result> parser() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<LoadPackage_Result> getParserForType() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.kcl.api.Spec.LoadPackage_Result getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
+  }
+
+  public interface SymbolOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:com.kcl.api.Symbol)
+      com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <code>string ty = 1;</code>
+     * @return The ty.
+     */
+    java.lang.String getTy();
+    /**
+     * <code>string ty = 1;</code>
+     * @return The bytes for ty.
+     */
+    com.google.protobuf.ByteString
+        getTyBytes();
+
+    /**
+     * <code>string name = 2;</code>
+     * @return The name.
+     */
+    java.lang.String getName();
+    /**
+     * <code>string name = 2;</code>
+     * @return The bytes for name.
+     */
+    com.google.protobuf.ByteString
+        getNameBytes();
+
+    /**
+     * <code>.com.kcl.api.SymbolIndex owner = 3;</code>
+     * @return Whether the owner field is set.
+     */
+    boolean hasOwner();
+    /**
+     * <code>.com.kcl.api.SymbolIndex owner = 3;</code>
+     * @return The owner.
+     */
+    com.kcl.api.Spec.SymbolIndex getOwner();
+    /**
+     * <code>.com.kcl.api.SymbolIndex owner = 3;</code>
+     */
+    com.kcl.api.Spec.SymbolIndexOrBuilder getOwnerOrBuilder();
+
+    /**
+     * <code>.com.kcl.api.SymbolIndex def = 4;</code>
+     * @return Whether the def field is set.
+     */
+    boolean hasDef();
+    /**
+     * <code>.com.kcl.api.SymbolIndex def = 4;</code>
+     * @return The def.
+     */
+    com.kcl.api.Spec.SymbolIndex getDef();
+    /**
+     * <code>.com.kcl.api.SymbolIndex def = 4;</code>
+     */
+    com.kcl.api.Spec.SymbolIndexOrBuilder getDefOrBuilder();
+
+    /**
+     * <code>repeated .com.kcl.api.SymbolIndex attrs = 5;</code>
+     */
+    java.util.List<com.kcl.api.Spec.SymbolIndex> 
+        getAttrsList();
+    /**
+     * <code>repeated .com.kcl.api.SymbolIndex attrs = 5;</code>
+     */
+    com.kcl.api.Spec.SymbolIndex getAttrs(int index);
+    /**
+     * <code>repeated .com.kcl.api.SymbolIndex attrs = 5;</code>
+     */
+    int getAttrsCount();
+    /**
+     * <code>repeated .com.kcl.api.SymbolIndex attrs = 5;</code>
+     */
+    java.util.List<? extends com.kcl.api.Spec.SymbolIndexOrBuilder> 
+        getAttrsOrBuilderList();
+    /**
+     * <code>repeated .com.kcl.api.SymbolIndex attrs = 5;</code>
+     */
+    com.kcl.api.Spec.SymbolIndexOrBuilder getAttrsOrBuilder(
+        int index);
+
+    /**
+     * <code>bool is_global = 6;</code>
+     * @return The isGlobal.
+     */
+    boolean getIsGlobal();
+  }
+  /**
+   * Protobuf type {@code com.kcl.api.Symbol}
+   */
+  public static final class Symbol extends
+      com.google.protobuf.GeneratedMessageV3 implements
+      // @@protoc_insertion_point(message_implements:com.kcl.api.Symbol)
+      SymbolOrBuilder {
+  private static final long serialVersionUID = 0L;
+    // Use Symbol.newBuilder() to construct.
+    private Symbol(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
+    }
+    private Symbol() {
+      ty_ = "";
+      name_ = "";
+      attrs_ = java.util.Collections.emptyList();
+    }
+
+    @java.lang.Override
+    @SuppressWarnings({"unused"})
+    protected java.lang.Object newInstance(
+        UnusedPrivateParameter unused) {
+      return new Symbol();
+    }
+
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return this.unknownFields;
+    }
+    private Symbol(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      this();
+      if (extensionRegistry == null) {
+        throw new java.lang.NullPointerException();
+      }
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            case 10: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              ty_ = s;
+              break;
+            }
+            case 18: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              name_ = s;
+              break;
+            }
+            case 26: {
+              com.kcl.api.Spec.SymbolIndex.Builder subBuilder = null;
+              if (owner_ != null) {
+                subBuilder = owner_.toBuilder();
+              }
+              owner_ = input.readMessage(com.kcl.api.Spec.SymbolIndex.parser(), extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom(owner_);
+                owner_ = subBuilder.buildPartial();
+              }
+
+              break;
+            }
+            case 34: {
+              com.kcl.api.Spec.SymbolIndex.Builder subBuilder = null;
+              if (def_ != null) {
+                subBuilder = def_.toBuilder();
+              }
+              def_ = input.readMessage(com.kcl.api.Spec.SymbolIndex.parser(), extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom(def_);
+                def_ = subBuilder.buildPartial();
+              }
+
+              break;
+            }
+            case 42: {
+              if (!((mutable_bitField0_ & 0x00000001) != 0)) {
+                attrs_ = new java.util.ArrayList<com.kcl.api.Spec.SymbolIndex>();
+                mutable_bitField0_ |= 0x00000001;
+              }
+              attrs_.add(
+                  input.readMessage(com.kcl.api.Spec.SymbolIndex.parser(), extensionRegistry));
+              break;
+            }
+            case 48: {
+
+              isGlobal_ = input.readBool();
+              break;
+            }
+            default: {
+              if (!parseUnknownField(
+                  input, unknownFields, extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e).setUnfinishedMessage(this);
+      } finally {
+        if (((mutable_bitField0_ & 0x00000001) != 0)) {
+          attrs_ = java.util.Collections.unmodifiableList(attrs_);
+        }
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return com.kcl.api.Spec.internal_static_com_kcl_api_Symbol_descriptor;
+    }
+
+    @java.lang.Override
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return com.kcl.api.Spec.internal_static_com_kcl_api_Symbol_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              com.kcl.api.Spec.Symbol.class, com.kcl.api.Spec.Symbol.Builder.class);
+    }
+
+    public static final int TY_FIELD_NUMBER = 1;
+    private volatile java.lang.Object ty_;
+    /**
+     * <code>string ty = 1;</code>
+     * @return The ty.
+     */
+    @java.lang.Override
+    public java.lang.String getTy() {
+      java.lang.Object ref = ty_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        ty_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string ty = 1;</code>
+     * @return The bytes for ty.
+     */
+    @java.lang.Override
+    public com.google.protobuf.ByteString
+        getTyBytes() {
+      java.lang.Object ref = ty_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        ty_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int NAME_FIELD_NUMBER = 2;
+    private volatile java.lang.Object name_;
+    /**
+     * <code>string name = 2;</code>
+     * @return The name.
+     */
+    @java.lang.Override
+    public java.lang.String getName() {
+      java.lang.Object ref = name_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        name_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string name = 2;</code>
+     * @return The bytes for name.
+     */
+    @java.lang.Override
+    public com.google.protobuf.ByteString
+        getNameBytes() {
+      java.lang.Object ref = name_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        name_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int OWNER_FIELD_NUMBER = 3;
+    private com.kcl.api.Spec.SymbolIndex owner_;
+    /**
+     * <code>.com.kcl.api.SymbolIndex owner = 3;</code>
+     * @return Whether the owner field is set.
+     */
+    @java.lang.Override
+    public boolean hasOwner() {
+      return owner_ != null;
+    }
+    /**
+     * <code>.com.kcl.api.SymbolIndex owner = 3;</code>
+     * @return The owner.
+     */
+    @java.lang.Override
+    public com.kcl.api.Spec.SymbolIndex getOwner() {
+      return owner_ == null ? com.kcl.api.Spec.SymbolIndex.getDefaultInstance() : owner_;
+    }
+    /**
+     * <code>.com.kcl.api.SymbolIndex owner = 3;</code>
+     */
+    @java.lang.Override
+    public com.kcl.api.Spec.SymbolIndexOrBuilder getOwnerOrBuilder() {
+      return getOwner();
+    }
+
+    public static final int DEF_FIELD_NUMBER = 4;
+    private com.kcl.api.Spec.SymbolIndex def_;
+    /**
+     * <code>.com.kcl.api.SymbolIndex def = 4;</code>
+     * @return Whether the def field is set.
+     */
+    @java.lang.Override
+    public boolean hasDef() {
+      return def_ != null;
+    }
+    /**
+     * <code>.com.kcl.api.SymbolIndex def = 4;</code>
+     * @return The def.
+     */
+    @java.lang.Override
+    public com.kcl.api.Spec.SymbolIndex getDef() {
+      return def_ == null ? com.kcl.api.Spec.SymbolIndex.getDefaultInstance() : def_;
+    }
+    /**
+     * <code>.com.kcl.api.SymbolIndex def = 4;</code>
+     */
+    @java.lang.Override
+    public com.kcl.api.Spec.SymbolIndexOrBuilder getDefOrBuilder() {
+      return getDef();
+    }
+
+    public static final int ATTRS_FIELD_NUMBER = 5;
+    private java.util.List<com.kcl.api.Spec.SymbolIndex> attrs_;
+    /**
+     * <code>repeated .com.kcl.api.SymbolIndex attrs = 5;</code>
+     */
+    @java.lang.Override
+    public java.util.List<com.kcl.api.Spec.SymbolIndex> getAttrsList() {
+      return attrs_;
+    }
+    /**
+     * <code>repeated .com.kcl.api.SymbolIndex attrs = 5;</code>
+     */
+    @java.lang.Override
+    public java.util.List<? extends com.kcl.api.Spec.SymbolIndexOrBuilder> 
+        getAttrsOrBuilderList() {
+      return attrs_;
+    }
+    /**
+     * <code>repeated .com.kcl.api.SymbolIndex attrs = 5;</code>
+     */
+    @java.lang.Override
+    public int getAttrsCount() {
+      return attrs_.size();
+    }
+    /**
+     * <code>repeated .com.kcl.api.SymbolIndex attrs = 5;</code>
+     */
+    @java.lang.Override
+    public com.kcl.api.Spec.SymbolIndex getAttrs(int index) {
+      return attrs_.get(index);
+    }
+    /**
+     * <code>repeated .com.kcl.api.SymbolIndex attrs = 5;</code>
+     */
+    @java.lang.Override
+    public com.kcl.api.Spec.SymbolIndexOrBuilder getAttrsOrBuilder(
+        int index) {
+      return attrs_.get(index);
+    }
+
+    public static final int IS_GLOBAL_FIELD_NUMBER = 6;
+    private boolean isGlobal_;
+    /**
+     * <code>bool is_global = 6;</code>
+     * @return The isGlobal.
+     */
+    @java.lang.Override
+    public boolean getIsGlobal() {
+      return isGlobal_;
+    }
+
+    private byte memoizedIsInitialized = -1;
+    @java.lang.Override
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    @java.lang.Override
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(ty_)) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 1, ty_);
+      }
+      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(name_)) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 2, name_);
+      }
+      if (owner_ != null) {
+        output.writeMessage(3, getOwner());
+      }
+      if (def_ != null) {
+        output.writeMessage(4, getDef());
+      }
+      for (int i = 0; i < attrs_.size(); i++) {
+        output.writeMessage(5, attrs_.get(i));
+      }
+      if (isGlobal_ != false) {
+        output.writeBool(6, isGlobal_);
+      }
+      unknownFields.writeTo(output);
+    }
+
+    @java.lang.Override
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(ty_)) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, ty_);
+      }
+      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(name_)) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, name_);
+      }
+      if (owner_ != null) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(3, getOwner());
+      }
+      if (def_ != null) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(4, getDef());
+      }
+      for (int i = 0; i < attrs_.size(); i++) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(5, attrs_.get(i));
+      }
+      if (isGlobal_ != false) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBoolSize(6, isGlobal_);
+      }
+      size += unknownFields.getSerializedSize();
+      memoizedSize = size;
+      return size;
+    }
+
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof com.kcl.api.Spec.Symbol)) {
+        return super.equals(obj);
+      }
+      com.kcl.api.Spec.Symbol other = (com.kcl.api.Spec.Symbol) obj;
+
+      if (!getTy()
+          .equals(other.getTy())) return false;
+      if (!getName()
+          .equals(other.getName())) return false;
+      if (hasOwner() != other.hasOwner()) return false;
+      if (hasOwner()) {
+        if (!getOwner()
+            .equals(other.getOwner())) return false;
+      }
+      if (hasDef() != other.hasDef()) return false;
+      if (hasDef()) {
+        if (!getDef()
+            .equals(other.getDef())) return false;
+      }
+      if (!getAttrsList()
+          .equals(other.getAttrsList())) return false;
+      if (getIsGlobal()
+          != other.getIsGlobal()) return false;
+      if (!unknownFields.equals(other.unknownFields)) return false;
+      return true;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptor().hashCode();
+      hash = (37 * hash) + TY_FIELD_NUMBER;
+      hash = (53 * hash) + getTy().hashCode();
+      hash = (37 * hash) + NAME_FIELD_NUMBER;
+      hash = (53 * hash) + getName().hashCode();
+      if (hasOwner()) {
+        hash = (37 * hash) + OWNER_FIELD_NUMBER;
+        hash = (53 * hash) + getOwner().hashCode();
+      }
+      if (hasDef()) {
+        hash = (37 * hash) + DEF_FIELD_NUMBER;
+        hash = (53 * hash) + getDef().hashCode();
+      }
+      if (getAttrsCount() > 0) {
+        hash = (37 * hash) + ATTRS_FIELD_NUMBER;
+        hash = (53 * hash) + getAttrsList().hashCode();
+      }
+      hash = (37 * hash) + IS_GLOBAL_FIELD_NUMBER;
+      hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
+          getIsGlobal());
+      hash = (29 * hash) + unknownFields.hashCode();
+      memoizedHashCode = hash;
+      return hash;
+    }
+
+    public static com.kcl.api.Spec.Symbol parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.kcl.api.Spec.Symbol parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.kcl.api.Spec.Symbol parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.kcl.api.Spec.Symbol parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.kcl.api.Spec.Symbol parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.kcl.api.Spec.Symbol parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.kcl.api.Spec.Symbol parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static com.kcl.api.Spec.Symbol parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static com.kcl.api.Spec.Symbol parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
+    }
+    public static com.kcl.api.Spec.Symbol parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static com.kcl.api.Spec.Symbol parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static com.kcl.api.Spec.Symbol parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    @java.lang.Override
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(com.kcl.api.Spec.Symbol prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    @java.lang.Override
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code com.kcl.api.Symbol}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:com.kcl.api.Symbol)
+        com.kcl.api.Spec.SymbolOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return com.kcl.api.Spec.internal_static_com_kcl_api_Symbol_descriptor;
+      }
+
+      @java.lang.Override
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return com.kcl.api.Spec.internal_static_com_kcl_api_Symbol_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                com.kcl.api.Spec.Symbol.class, com.kcl.api.Spec.Symbol.Builder.class);
+      }
+
+      // Construct using com.kcl.api.Spec.Symbol.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessageV3
+                .alwaysUseFieldBuilders) {
+          getAttrsFieldBuilder();
+        }
+      }
+      @java.lang.Override
+      public Builder clear() {
+        super.clear();
+        ty_ = "";
+
+        name_ = "";
+
+        if (ownerBuilder_ == null) {
+          owner_ = null;
+        } else {
+          owner_ = null;
+          ownerBuilder_ = null;
+        }
+        if (defBuilder_ == null) {
+          def_ = null;
+        } else {
+          def_ = null;
+          defBuilder_ = null;
+        }
+        if (attrsBuilder_ == null) {
+          attrs_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000001);
+        } else {
+          attrsBuilder_.clear();
+        }
+        isGlobal_ = false;
+
+        return this;
+      }
+
+      @java.lang.Override
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return com.kcl.api.Spec.internal_static_com_kcl_api_Symbol_descriptor;
+      }
+
+      @java.lang.Override
+      public com.kcl.api.Spec.Symbol getDefaultInstanceForType() {
+        return com.kcl.api.Spec.Symbol.getDefaultInstance();
+      }
+
+      @java.lang.Override
+      public com.kcl.api.Spec.Symbol build() {
+        com.kcl.api.Spec.Symbol result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      @java.lang.Override
+      public com.kcl.api.Spec.Symbol buildPartial() {
+        com.kcl.api.Spec.Symbol result = new com.kcl.api.Spec.Symbol(this);
+        int from_bitField0_ = bitField0_;
+        result.ty_ = ty_;
+        result.name_ = name_;
+        if (ownerBuilder_ == null) {
+          result.owner_ = owner_;
+        } else {
+          result.owner_ = ownerBuilder_.build();
+        }
+        if (defBuilder_ == null) {
+          result.def_ = def_;
+        } else {
+          result.def_ = defBuilder_.build();
+        }
+        if (attrsBuilder_ == null) {
+          if (((bitField0_ & 0x00000001) != 0)) {
+            attrs_ = java.util.Collections.unmodifiableList(attrs_);
+            bitField0_ = (bitField0_ & ~0x00000001);
+          }
+          result.attrs_ = attrs_;
+        } else {
+          result.attrs_ = attrsBuilder_.build();
+        }
+        result.isGlobal_ = isGlobal_;
+        onBuilt();
+        return result;
+      }
+
+      @java.lang.Override
+      public Builder clone() {
+        return super.clone();
+      }
+      @java.lang.Override
+      public Builder setField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.setField(field, value);
+      }
+      @java.lang.Override
+      public Builder clearField(
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return super.clearField(field);
+      }
+      @java.lang.Override
+      public Builder clearOneof(
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return super.clearOneof(oneof);
+      }
+      @java.lang.Override
+      public Builder setRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, java.lang.Object value) {
+        return super.setRepeatedField(field, index, value);
+      }
+      @java.lang.Override
+      public Builder addRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.addRepeatedField(field, value);
+      }
+      @java.lang.Override
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof com.kcl.api.Spec.Symbol) {
+          return mergeFrom((com.kcl.api.Spec.Symbol)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(com.kcl.api.Spec.Symbol other) {
+        if (other == com.kcl.api.Spec.Symbol.getDefaultInstance()) return this;
+        if (!other.getTy().isEmpty()) {
+          ty_ = other.ty_;
+          onChanged();
+        }
+        if (!other.getName().isEmpty()) {
+          name_ = other.name_;
+          onChanged();
+        }
+        if (other.hasOwner()) {
+          mergeOwner(other.getOwner());
+        }
+        if (other.hasDef()) {
+          mergeDef(other.getDef());
+        }
+        if (attrsBuilder_ == null) {
+          if (!other.attrs_.isEmpty()) {
+            if (attrs_.isEmpty()) {
+              attrs_ = other.attrs_;
+              bitField0_ = (bitField0_ & ~0x00000001);
+            } else {
+              ensureAttrsIsMutable();
+              attrs_.addAll(other.attrs_);
+            }
+            onChanged();
+          }
+        } else {
+          if (!other.attrs_.isEmpty()) {
+            if (attrsBuilder_.isEmpty()) {
+              attrsBuilder_.dispose();
+              attrsBuilder_ = null;
+              attrs_ = other.attrs_;
+              bitField0_ = (bitField0_ & ~0x00000001);
+              attrsBuilder_ = 
+                com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
+                   getAttrsFieldBuilder() : null;
+            } else {
+              attrsBuilder_.addAllMessages(other.attrs_);
+            }
+          }
+        }
+        if (other.getIsGlobal() != false) {
+          setIsGlobal(other.getIsGlobal());
+        }
+        this.mergeUnknownFields(other.unknownFields);
+        onChanged();
+        return this;
+      }
+
+      @java.lang.Override
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      @java.lang.Override
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        com.kcl.api.Spec.Symbol parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (com.kcl.api.Spec.Symbol) e.getUnfinishedMessage();
+          throw e.unwrapIOException();
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int bitField0_;
+
+      private java.lang.Object ty_ = "";
+      /**
+       * <code>string ty = 1;</code>
+       * @return The ty.
+       */
+      public java.lang.String getTy() {
+        java.lang.Object ref = ty_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          ty_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>string ty = 1;</code>
+       * @return The bytes for ty.
+       */
+      public com.google.protobuf.ByteString
+          getTyBytes() {
+        java.lang.Object ref = ty_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          ty_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string ty = 1;</code>
+       * @param value The ty to set.
+       * @return This builder for chaining.
+       */
+      public Builder setTy(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        ty_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string ty = 1;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearTy() {
+        
+        ty_ = getDefaultInstance().getTy();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string ty = 1;</code>
+       * @param value The bytes for ty to set.
+       * @return This builder for chaining.
+       */
+      public Builder setTyBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        ty_ = value;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object name_ = "";
+      /**
+       * <code>string name = 2;</code>
+       * @return The name.
+       */
+      public java.lang.String getName() {
+        java.lang.Object ref = name_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          name_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>string name = 2;</code>
+       * @return The bytes for name.
+       */
+      public com.google.protobuf.ByteString
+          getNameBytes() {
+        java.lang.Object ref = name_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          name_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string name = 2;</code>
+       * @param value The name to set.
+       * @return This builder for chaining.
+       */
+      public Builder setName(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        name_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string name = 2;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearName() {
+        
+        name_ = getDefaultInstance().getName();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string name = 2;</code>
+       * @param value The bytes for name to set.
+       * @return This builder for chaining.
+       */
+      public Builder setNameBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        name_ = value;
+        onChanged();
+        return this;
+      }
+
+      private com.kcl.api.Spec.SymbolIndex owner_;
+      private com.google.protobuf.SingleFieldBuilderV3<
+          com.kcl.api.Spec.SymbolIndex, com.kcl.api.Spec.SymbolIndex.Builder, com.kcl.api.Spec.SymbolIndexOrBuilder> ownerBuilder_;
+      /**
+       * <code>.com.kcl.api.SymbolIndex owner = 3;</code>
+       * @return Whether the owner field is set.
+       */
+      public boolean hasOwner() {
+        return ownerBuilder_ != null || owner_ != null;
+      }
+      /**
+       * <code>.com.kcl.api.SymbolIndex owner = 3;</code>
+       * @return The owner.
+       */
+      public com.kcl.api.Spec.SymbolIndex getOwner() {
+        if (ownerBuilder_ == null) {
+          return owner_ == null ? com.kcl.api.Spec.SymbolIndex.getDefaultInstance() : owner_;
+        } else {
+          return ownerBuilder_.getMessage();
+        }
+      }
+      /**
+       * <code>.com.kcl.api.SymbolIndex owner = 3;</code>
+       */
+      public Builder setOwner(com.kcl.api.Spec.SymbolIndex value) {
+        if (ownerBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          owner_ = value;
+          onChanged();
+        } else {
+          ownerBuilder_.setMessage(value);
+        }
+
+        return this;
+      }
+      /**
+       * <code>.com.kcl.api.SymbolIndex owner = 3;</code>
+       */
+      public Builder setOwner(
+          com.kcl.api.Spec.SymbolIndex.Builder builderForValue) {
+        if (ownerBuilder_ == null) {
+          owner_ = builderForValue.build();
+          onChanged();
+        } else {
+          ownerBuilder_.setMessage(builderForValue.build());
+        }
+
+        return this;
+      }
+      /**
+       * <code>.com.kcl.api.SymbolIndex owner = 3;</code>
+       */
+      public Builder mergeOwner(com.kcl.api.Spec.SymbolIndex value) {
+        if (ownerBuilder_ == null) {
+          if (owner_ != null) {
+            owner_ =
+              com.kcl.api.Spec.SymbolIndex.newBuilder(owner_).mergeFrom(value).buildPartial();
+          } else {
+            owner_ = value;
+          }
+          onChanged();
+        } else {
+          ownerBuilder_.mergeFrom(value);
+        }
+
+        return this;
+      }
+      /**
+       * <code>.com.kcl.api.SymbolIndex owner = 3;</code>
+       */
+      public Builder clearOwner() {
+        if (ownerBuilder_ == null) {
+          owner_ = null;
+          onChanged();
+        } else {
+          owner_ = null;
+          ownerBuilder_ = null;
+        }
+
+        return this;
+      }
+      /**
+       * <code>.com.kcl.api.SymbolIndex owner = 3;</code>
+       */
+      public com.kcl.api.Spec.SymbolIndex.Builder getOwnerBuilder() {
+        
+        onChanged();
+        return getOwnerFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>.com.kcl.api.SymbolIndex owner = 3;</code>
+       */
+      public com.kcl.api.Spec.SymbolIndexOrBuilder getOwnerOrBuilder() {
+        if (ownerBuilder_ != null) {
+          return ownerBuilder_.getMessageOrBuilder();
+        } else {
+          return owner_ == null ?
+              com.kcl.api.Spec.SymbolIndex.getDefaultInstance() : owner_;
+        }
+      }
+      /**
+       * <code>.com.kcl.api.SymbolIndex owner = 3;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilderV3<
+          com.kcl.api.Spec.SymbolIndex, com.kcl.api.Spec.SymbolIndex.Builder, com.kcl.api.Spec.SymbolIndexOrBuilder> 
+          getOwnerFieldBuilder() {
+        if (ownerBuilder_ == null) {
+          ownerBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+              com.kcl.api.Spec.SymbolIndex, com.kcl.api.Spec.SymbolIndex.Builder, com.kcl.api.Spec.SymbolIndexOrBuilder>(
+                  getOwner(),
+                  getParentForChildren(),
+                  isClean());
+          owner_ = null;
+        }
+        return ownerBuilder_;
+      }
+
+      private com.kcl.api.Spec.SymbolIndex def_;
+      private com.google.protobuf.SingleFieldBuilderV3<
+          com.kcl.api.Spec.SymbolIndex, com.kcl.api.Spec.SymbolIndex.Builder, com.kcl.api.Spec.SymbolIndexOrBuilder> defBuilder_;
+      /**
+       * <code>.com.kcl.api.SymbolIndex def = 4;</code>
+       * @return Whether the def field is set.
+       */
+      public boolean hasDef() {
+        return defBuilder_ != null || def_ != null;
+      }
+      /**
+       * <code>.com.kcl.api.SymbolIndex def = 4;</code>
+       * @return The def.
+       */
+      public com.kcl.api.Spec.SymbolIndex getDef() {
+        if (defBuilder_ == null) {
+          return def_ == null ? com.kcl.api.Spec.SymbolIndex.getDefaultInstance() : def_;
+        } else {
+          return defBuilder_.getMessage();
+        }
+      }
+      /**
+       * <code>.com.kcl.api.SymbolIndex def = 4;</code>
+       */
+      public Builder setDef(com.kcl.api.Spec.SymbolIndex value) {
+        if (defBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          def_ = value;
+          onChanged();
+        } else {
+          defBuilder_.setMessage(value);
+        }
+
+        return this;
+      }
+      /**
+       * <code>.com.kcl.api.SymbolIndex def = 4;</code>
+       */
+      public Builder setDef(
+          com.kcl.api.Spec.SymbolIndex.Builder builderForValue) {
+        if (defBuilder_ == null) {
+          def_ = builderForValue.build();
+          onChanged();
+        } else {
+          defBuilder_.setMessage(builderForValue.build());
+        }
+
+        return this;
+      }
+      /**
+       * <code>.com.kcl.api.SymbolIndex def = 4;</code>
+       */
+      public Builder mergeDef(com.kcl.api.Spec.SymbolIndex value) {
+        if (defBuilder_ == null) {
+          if (def_ != null) {
+            def_ =
+              com.kcl.api.Spec.SymbolIndex.newBuilder(def_).mergeFrom(value).buildPartial();
+          } else {
+            def_ = value;
+          }
+          onChanged();
+        } else {
+          defBuilder_.mergeFrom(value);
+        }
+
+        return this;
+      }
+      /**
+       * <code>.com.kcl.api.SymbolIndex def = 4;</code>
+       */
+      public Builder clearDef() {
+        if (defBuilder_ == null) {
+          def_ = null;
+          onChanged();
+        } else {
+          def_ = null;
+          defBuilder_ = null;
+        }
+
+        return this;
+      }
+      /**
+       * <code>.com.kcl.api.SymbolIndex def = 4;</code>
+       */
+      public com.kcl.api.Spec.SymbolIndex.Builder getDefBuilder() {
+        
+        onChanged();
+        return getDefFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>.com.kcl.api.SymbolIndex def = 4;</code>
+       */
+      public com.kcl.api.Spec.SymbolIndexOrBuilder getDefOrBuilder() {
+        if (defBuilder_ != null) {
+          return defBuilder_.getMessageOrBuilder();
+        } else {
+          return def_ == null ?
+              com.kcl.api.Spec.SymbolIndex.getDefaultInstance() : def_;
+        }
+      }
+      /**
+       * <code>.com.kcl.api.SymbolIndex def = 4;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilderV3<
+          com.kcl.api.Spec.SymbolIndex, com.kcl.api.Spec.SymbolIndex.Builder, com.kcl.api.Spec.SymbolIndexOrBuilder> 
+          getDefFieldBuilder() {
+        if (defBuilder_ == null) {
+          defBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+              com.kcl.api.Spec.SymbolIndex, com.kcl.api.Spec.SymbolIndex.Builder, com.kcl.api.Spec.SymbolIndexOrBuilder>(
+                  getDef(),
+                  getParentForChildren(),
+                  isClean());
+          def_ = null;
+        }
+        return defBuilder_;
+      }
+
+      private java.util.List<com.kcl.api.Spec.SymbolIndex> attrs_ =
+        java.util.Collections.emptyList();
+      private void ensureAttrsIsMutable() {
+        if (!((bitField0_ & 0x00000001) != 0)) {
+          attrs_ = new java.util.ArrayList<com.kcl.api.Spec.SymbolIndex>(attrs_);
+          bitField0_ |= 0x00000001;
+         }
+      }
+
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          com.kcl.api.Spec.SymbolIndex, com.kcl.api.Spec.SymbolIndex.Builder, com.kcl.api.Spec.SymbolIndexOrBuilder> attrsBuilder_;
+
+      /**
+       * <code>repeated .com.kcl.api.SymbolIndex attrs = 5;</code>
+       */
+      public java.util.List<com.kcl.api.Spec.SymbolIndex> getAttrsList() {
+        if (attrsBuilder_ == null) {
+          return java.util.Collections.unmodifiableList(attrs_);
+        } else {
+          return attrsBuilder_.getMessageList();
+        }
+      }
+      /**
+       * <code>repeated .com.kcl.api.SymbolIndex attrs = 5;</code>
+       */
+      public int getAttrsCount() {
+        if (attrsBuilder_ == null) {
+          return attrs_.size();
+        } else {
+          return attrsBuilder_.getCount();
+        }
+      }
+      /**
+       * <code>repeated .com.kcl.api.SymbolIndex attrs = 5;</code>
+       */
+      public com.kcl.api.Spec.SymbolIndex getAttrs(int index) {
+        if (attrsBuilder_ == null) {
+          return attrs_.get(index);
+        } else {
+          return attrsBuilder_.getMessage(index);
+        }
+      }
+      /**
+       * <code>repeated .com.kcl.api.SymbolIndex attrs = 5;</code>
+       */
+      public Builder setAttrs(
+          int index, com.kcl.api.Spec.SymbolIndex value) {
+        if (attrsBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureAttrsIsMutable();
+          attrs_.set(index, value);
+          onChanged();
+        } else {
+          attrsBuilder_.setMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .com.kcl.api.SymbolIndex attrs = 5;</code>
+       */
+      public Builder setAttrs(
+          int index, com.kcl.api.Spec.SymbolIndex.Builder builderForValue) {
+        if (attrsBuilder_ == null) {
+          ensureAttrsIsMutable();
+          attrs_.set(index, builderForValue.build());
+          onChanged();
+        } else {
+          attrsBuilder_.setMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .com.kcl.api.SymbolIndex attrs = 5;</code>
+       */
+      public Builder addAttrs(com.kcl.api.Spec.SymbolIndex value) {
+        if (attrsBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureAttrsIsMutable();
+          attrs_.add(value);
+          onChanged();
+        } else {
+          attrsBuilder_.addMessage(value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .com.kcl.api.SymbolIndex attrs = 5;</code>
+       */
+      public Builder addAttrs(
+          int index, com.kcl.api.Spec.SymbolIndex value) {
+        if (attrsBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureAttrsIsMutable();
+          attrs_.add(index, value);
+          onChanged();
+        } else {
+          attrsBuilder_.addMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .com.kcl.api.SymbolIndex attrs = 5;</code>
+       */
+      public Builder addAttrs(
+          com.kcl.api.Spec.SymbolIndex.Builder builderForValue) {
+        if (attrsBuilder_ == null) {
+          ensureAttrsIsMutable();
+          attrs_.add(builderForValue.build());
+          onChanged();
+        } else {
+          attrsBuilder_.addMessage(builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .com.kcl.api.SymbolIndex attrs = 5;</code>
+       */
+      public Builder addAttrs(
+          int index, com.kcl.api.Spec.SymbolIndex.Builder builderForValue) {
+        if (attrsBuilder_ == null) {
+          ensureAttrsIsMutable();
+          attrs_.add(index, builderForValue.build());
+          onChanged();
+        } else {
+          attrsBuilder_.addMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .com.kcl.api.SymbolIndex attrs = 5;</code>
+       */
+      public Builder addAllAttrs(
+          java.lang.Iterable<? extends com.kcl.api.Spec.SymbolIndex> values) {
+        if (attrsBuilder_ == null) {
+          ensureAttrsIsMutable();
+          com.google.protobuf.AbstractMessageLite.Builder.addAll(
+              values, attrs_);
+          onChanged();
+        } else {
+          attrsBuilder_.addAllMessages(values);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .com.kcl.api.SymbolIndex attrs = 5;</code>
+       */
+      public Builder clearAttrs() {
+        if (attrsBuilder_ == null) {
+          attrs_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000001);
+          onChanged();
+        } else {
+          attrsBuilder_.clear();
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .com.kcl.api.SymbolIndex attrs = 5;</code>
+       */
+      public Builder removeAttrs(int index) {
+        if (attrsBuilder_ == null) {
+          ensureAttrsIsMutable();
+          attrs_.remove(index);
+          onChanged();
+        } else {
+          attrsBuilder_.remove(index);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .com.kcl.api.SymbolIndex attrs = 5;</code>
+       */
+      public com.kcl.api.Spec.SymbolIndex.Builder getAttrsBuilder(
+          int index) {
+        return getAttrsFieldBuilder().getBuilder(index);
+      }
+      /**
+       * <code>repeated .com.kcl.api.SymbolIndex attrs = 5;</code>
+       */
+      public com.kcl.api.Spec.SymbolIndexOrBuilder getAttrsOrBuilder(
+          int index) {
+        if (attrsBuilder_ == null) {
+          return attrs_.get(index);  } else {
+          return attrsBuilder_.getMessageOrBuilder(index);
+        }
+      }
+      /**
+       * <code>repeated .com.kcl.api.SymbolIndex attrs = 5;</code>
+       */
+      public java.util.List<? extends com.kcl.api.Spec.SymbolIndexOrBuilder> 
+           getAttrsOrBuilderList() {
+        if (attrsBuilder_ != null) {
+          return attrsBuilder_.getMessageOrBuilderList();
+        } else {
+          return java.util.Collections.unmodifiableList(attrs_);
+        }
+      }
+      /**
+       * <code>repeated .com.kcl.api.SymbolIndex attrs = 5;</code>
+       */
+      public com.kcl.api.Spec.SymbolIndex.Builder addAttrsBuilder() {
+        return getAttrsFieldBuilder().addBuilder(
+            com.kcl.api.Spec.SymbolIndex.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .com.kcl.api.SymbolIndex attrs = 5;</code>
+       */
+      public com.kcl.api.Spec.SymbolIndex.Builder addAttrsBuilder(
+          int index) {
+        return getAttrsFieldBuilder().addBuilder(
+            index, com.kcl.api.Spec.SymbolIndex.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .com.kcl.api.SymbolIndex attrs = 5;</code>
+       */
+      public java.util.List<com.kcl.api.Spec.SymbolIndex.Builder> 
+           getAttrsBuilderList() {
+        return getAttrsFieldBuilder().getBuilderList();
+      }
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          com.kcl.api.Spec.SymbolIndex, com.kcl.api.Spec.SymbolIndex.Builder, com.kcl.api.Spec.SymbolIndexOrBuilder> 
+          getAttrsFieldBuilder() {
+        if (attrsBuilder_ == null) {
+          attrsBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
+              com.kcl.api.Spec.SymbolIndex, com.kcl.api.Spec.SymbolIndex.Builder, com.kcl.api.Spec.SymbolIndexOrBuilder>(
+                  attrs_,
+                  ((bitField0_ & 0x00000001) != 0),
+                  getParentForChildren(),
+                  isClean());
+          attrs_ = null;
+        }
+        return attrsBuilder_;
+      }
+
+      private boolean isGlobal_ ;
+      /**
+       * <code>bool is_global = 6;</code>
+       * @return The isGlobal.
+       */
+      @java.lang.Override
+      public boolean getIsGlobal() {
+        return isGlobal_;
+      }
+      /**
+       * <code>bool is_global = 6;</code>
+       * @param value The isGlobal to set.
+       * @return This builder for chaining.
+       */
+      public Builder setIsGlobal(boolean value) {
+        
+        isGlobal_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>bool is_global = 6;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearIsGlobal() {
+        
+        isGlobal_ = false;
+        onChanged();
+        return this;
+      }
+      @java.lang.Override
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.setUnknownFields(unknownFields);
+      }
+
+      @java.lang.Override
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.mergeUnknownFields(unknownFields);
+      }
+
+
+      // @@protoc_insertion_point(builder_scope:com.kcl.api.Symbol)
+    }
+
+    // @@protoc_insertion_point(class_scope:com.kcl.api.Symbol)
+    private static final com.kcl.api.Spec.Symbol DEFAULT_INSTANCE;
+    static {
+      DEFAULT_INSTANCE = new com.kcl.api.Spec.Symbol();
+    }
+
+    public static com.kcl.api.Spec.Symbol getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    private static final com.google.protobuf.Parser<Symbol>
+        PARSER = new com.google.protobuf.AbstractParser<Symbol>() {
+      @java.lang.Override
+      public Symbol parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new Symbol(input, extensionRegistry);
+      }
+    };
+
+    public static com.google.protobuf.Parser<Symbol> parser() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<Symbol> getParserForType() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.kcl.api.Spec.Symbol getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
+  }
+
+  public interface SymbolIndexOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:com.kcl.api.SymbolIndex)
+      com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <code>uint64 i = 1;</code>
+     * @return The i.
+     */
+    long getI();
+
+    /**
+     * <code>uint64 g = 2;</code>
+     * @return The g.
+     */
+    long getG();
+
+    /**
+     * <code>string kind = 3;</code>
+     * @return The kind.
+     */
+    java.lang.String getKind();
+    /**
+     * <code>string kind = 3;</code>
+     * @return The bytes for kind.
+     */
+    com.google.protobuf.ByteString
+        getKindBytes();
+  }
+  /**
+   * Protobuf type {@code com.kcl.api.SymbolIndex}
+   */
+  public static final class SymbolIndex extends
+      com.google.protobuf.GeneratedMessageV3 implements
+      // @@protoc_insertion_point(message_implements:com.kcl.api.SymbolIndex)
+      SymbolIndexOrBuilder {
+  private static final long serialVersionUID = 0L;
+    // Use SymbolIndex.newBuilder() to construct.
+    private SymbolIndex(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
+    }
+    private SymbolIndex() {
+      kind_ = "";
+    }
+
+    @java.lang.Override
+    @SuppressWarnings({"unused"})
+    protected java.lang.Object newInstance(
+        UnusedPrivateParameter unused) {
+      return new SymbolIndex();
+    }
+
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return this.unknownFields;
+    }
+    private SymbolIndex(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      this();
+      if (extensionRegistry == null) {
+        throw new java.lang.NullPointerException();
+      }
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            case 8: {
+
+              i_ = input.readUInt64();
+              break;
+            }
+            case 16: {
+
+              g_ = input.readUInt64();
+              break;
+            }
+            case 26: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              kind_ = s;
+              break;
+            }
+            default: {
+              if (!parseUnknownField(
+                  input, unknownFields, extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e).setUnfinishedMessage(this);
+      } finally {
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return com.kcl.api.Spec.internal_static_com_kcl_api_SymbolIndex_descriptor;
+    }
+
+    @java.lang.Override
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return com.kcl.api.Spec.internal_static_com_kcl_api_SymbolIndex_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              com.kcl.api.Spec.SymbolIndex.class, com.kcl.api.Spec.SymbolIndex.Builder.class);
+    }
+
+    public static final int I_FIELD_NUMBER = 1;
+    private long i_;
+    /**
+     * <code>uint64 i = 1;</code>
+     * @return The i.
+     */
+    @java.lang.Override
+    public long getI() {
+      return i_;
+    }
+
+    public static final int G_FIELD_NUMBER = 2;
+    private long g_;
+    /**
+     * <code>uint64 g = 2;</code>
+     * @return The g.
+     */
+    @java.lang.Override
+    public long getG() {
+      return g_;
+    }
+
+    public static final int KIND_FIELD_NUMBER = 3;
+    private volatile java.lang.Object kind_;
+    /**
+     * <code>string kind = 3;</code>
+     * @return The kind.
+     */
+    @java.lang.Override
+    public java.lang.String getKind() {
+      java.lang.Object ref = kind_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        kind_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string kind = 3;</code>
+     * @return The bytes for kind.
+     */
+    @java.lang.Override
+    public com.google.protobuf.ByteString
+        getKindBytes() {
+      java.lang.Object ref = kind_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        kind_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    private byte memoizedIsInitialized = -1;
+    @java.lang.Override
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    @java.lang.Override
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      if (i_ != 0L) {
+        output.writeUInt64(1, i_);
+      }
+      if (g_ != 0L) {
+        output.writeUInt64(2, g_);
+      }
+      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(kind_)) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 3, kind_);
+      }
+      unknownFields.writeTo(output);
+    }
+
+    @java.lang.Override
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (i_ != 0L) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeUInt64Size(1, i_);
+      }
+      if (g_ != 0L) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeUInt64Size(2, g_);
+      }
+      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(kind_)) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, kind_);
+      }
+      size += unknownFields.getSerializedSize();
+      memoizedSize = size;
+      return size;
+    }
+
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof com.kcl.api.Spec.SymbolIndex)) {
+        return super.equals(obj);
+      }
+      com.kcl.api.Spec.SymbolIndex other = (com.kcl.api.Spec.SymbolIndex) obj;
+
+      if (getI()
+          != other.getI()) return false;
+      if (getG()
+          != other.getG()) return false;
+      if (!getKind()
+          .equals(other.getKind())) return false;
+      if (!unknownFields.equals(other.unknownFields)) return false;
+      return true;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptor().hashCode();
+      hash = (37 * hash) + I_FIELD_NUMBER;
+      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+          getI());
+      hash = (37 * hash) + G_FIELD_NUMBER;
+      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+          getG());
+      hash = (37 * hash) + KIND_FIELD_NUMBER;
+      hash = (53 * hash) + getKind().hashCode();
+      hash = (29 * hash) + unknownFields.hashCode();
+      memoizedHashCode = hash;
+      return hash;
+    }
+
+    public static com.kcl.api.Spec.SymbolIndex parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.kcl.api.Spec.SymbolIndex parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.kcl.api.Spec.SymbolIndex parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.kcl.api.Spec.SymbolIndex parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.kcl.api.Spec.SymbolIndex parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.kcl.api.Spec.SymbolIndex parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.kcl.api.Spec.SymbolIndex parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static com.kcl.api.Spec.SymbolIndex parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static com.kcl.api.Spec.SymbolIndex parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
+    }
+    public static com.kcl.api.Spec.SymbolIndex parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static com.kcl.api.Spec.SymbolIndex parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static com.kcl.api.Spec.SymbolIndex parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    @java.lang.Override
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(com.kcl.api.Spec.SymbolIndex prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    @java.lang.Override
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code com.kcl.api.SymbolIndex}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:com.kcl.api.SymbolIndex)
+        com.kcl.api.Spec.SymbolIndexOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return com.kcl.api.Spec.internal_static_com_kcl_api_SymbolIndex_descriptor;
+      }
+
+      @java.lang.Override
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return com.kcl.api.Spec.internal_static_com_kcl_api_SymbolIndex_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                com.kcl.api.Spec.SymbolIndex.class, com.kcl.api.Spec.SymbolIndex.Builder.class);
+      }
+
+      // Construct using com.kcl.api.Spec.SymbolIndex.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessageV3
+                .alwaysUseFieldBuilders) {
+        }
+      }
+      @java.lang.Override
+      public Builder clear() {
+        super.clear();
+        i_ = 0L;
+
+        g_ = 0L;
+
+        kind_ = "";
+
+        return this;
+      }
+
+      @java.lang.Override
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return com.kcl.api.Spec.internal_static_com_kcl_api_SymbolIndex_descriptor;
+      }
+
+      @java.lang.Override
+      public com.kcl.api.Spec.SymbolIndex getDefaultInstanceForType() {
+        return com.kcl.api.Spec.SymbolIndex.getDefaultInstance();
+      }
+
+      @java.lang.Override
+      public com.kcl.api.Spec.SymbolIndex build() {
+        com.kcl.api.Spec.SymbolIndex result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      @java.lang.Override
+      public com.kcl.api.Spec.SymbolIndex buildPartial() {
+        com.kcl.api.Spec.SymbolIndex result = new com.kcl.api.Spec.SymbolIndex(this);
+        result.i_ = i_;
+        result.g_ = g_;
+        result.kind_ = kind_;
+        onBuilt();
+        return result;
+      }
+
+      @java.lang.Override
+      public Builder clone() {
+        return super.clone();
+      }
+      @java.lang.Override
+      public Builder setField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.setField(field, value);
+      }
+      @java.lang.Override
+      public Builder clearField(
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return super.clearField(field);
+      }
+      @java.lang.Override
+      public Builder clearOneof(
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return super.clearOneof(oneof);
+      }
+      @java.lang.Override
+      public Builder setRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, java.lang.Object value) {
+        return super.setRepeatedField(field, index, value);
+      }
+      @java.lang.Override
+      public Builder addRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.addRepeatedField(field, value);
+      }
+      @java.lang.Override
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof com.kcl.api.Spec.SymbolIndex) {
+          return mergeFrom((com.kcl.api.Spec.SymbolIndex)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(com.kcl.api.Spec.SymbolIndex other) {
+        if (other == com.kcl.api.Spec.SymbolIndex.getDefaultInstance()) return this;
+        if (other.getI() != 0L) {
+          setI(other.getI());
+        }
+        if (other.getG() != 0L) {
+          setG(other.getG());
+        }
+        if (!other.getKind().isEmpty()) {
+          kind_ = other.kind_;
+          onChanged();
+        }
+        this.mergeUnknownFields(other.unknownFields);
+        onChanged();
+        return this;
+      }
+
+      @java.lang.Override
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      @java.lang.Override
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        com.kcl.api.Spec.SymbolIndex parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (com.kcl.api.Spec.SymbolIndex) e.getUnfinishedMessage();
+          throw e.unwrapIOException();
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+
+      private long i_ ;
+      /**
+       * <code>uint64 i = 1;</code>
+       * @return The i.
+       */
+      @java.lang.Override
+      public long getI() {
+        return i_;
+      }
+      /**
+       * <code>uint64 i = 1;</code>
+       * @param value The i to set.
+       * @return This builder for chaining.
+       */
+      public Builder setI(long value) {
+        
+        i_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>uint64 i = 1;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearI() {
+        
+        i_ = 0L;
+        onChanged();
+        return this;
+      }
+
+      private long g_ ;
+      /**
+       * <code>uint64 g = 2;</code>
+       * @return The g.
+       */
+      @java.lang.Override
+      public long getG() {
+        return g_;
+      }
+      /**
+       * <code>uint64 g = 2;</code>
+       * @param value The g to set.
+       * @return This builder for chaining.
+       */
+      public Builder setG(long value) {
+        
+        g_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>uint64 g = 2;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearG() {
+        
+        g_ = 0L;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object kind_ = "";
+      /**
+       * <code>string kind = 3;</code>
+       * @return The kind.
+       */
+      public java.lang.String getKind() {
+        java.lang.Object ref = kind_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          kind_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>string kind = 3;</code>
+       * @return The bytes for kind.
+       */
+      public com.google.protobuf.ByteString
+          getKindBytes() {
+        java.lang.Object ref = kind_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          kind_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string kind = 3;</code>
+       * @param value The kind to set.
+       * @return This builder for chaining.
+       */
+      public Builder setKind(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        kind_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string kind = 3;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearKind() {
+        
+        kind_ = getDefaultInstance().getKind();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string kind = 3;</code>
+       * @param value The bytes for kind to set.
+       * @return This builder for chaining.
+       */
+      public Builder setKindBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        kind_ = value;
+        onChanged();
+        return this;
+      }
+      @java.lang.Override
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.setUnknownFields(unknownFields);
+      }
+
+      @java.lang.Override
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.mergeUnknownFields(unknownFields);
+      }
+
+
+      // @@protoc_insertion_point(builder_scope:com.kcl.api.SymbolIndex)
+    }
+
+    // @@protoc_insertion_point(class_scope:com.kcl.api.SymbolIndex)
+    private static final com.kcl.api.Spec.SymbolIndex DEFAULT_INSTANCE;
+    static {
+      DEFAULT_INSTANCE = new com.kcl.api.Spec.SymbolIndex();
+    }
+
+    public static com.kcl.api.Spec.SymbolIndex getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    private static final com.google.protobuf.Parser<SymbolIndex>
+        PARSER = new com.google.protobuf.AbstractParser<SymbolIndex>() {
+      @java.lang.Override
+      public SymbolIndex parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new SymbolIndex(input, extensionRegistry);
+      }
+    };
+
+    public static com.google.protobuf.Parser<SymbolIndex> parser() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<SymbolIndex> getParserForType() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.kcl.api.Spec.SymbolIndex getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
 
@@ -48406,6 +54049,36 @@ public final class Spec {
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_com_kcl_api_ParseProgram_Result_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_com_kcl_api_LoadPackage_Args_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_com_kcl_api_LoadPackage_Args_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_com_kcl_api_LoadPackage_Result_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_com_kcl_api_LoadPackage_Result_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_com_kcl_api_LoadPackage_Result_NodeSymbolMapEntry_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_com_kcl_api_LoadPackage_Result_NodeSymbolMapEntry_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_com_kcl_api_LoadPackage_Result_SymbolsEntry_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_com_kcl_api_LoadPackage_Result_SymbolsEntry_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_com_kcl_api_Symbol_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_com_kcl_api_Symbol_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_com_kcl_api_SymbolIndex_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_com_kcl_api_SymbolIndex_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_com_kcl_api_ExecProgram_Args_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
@@ -48645,143 +54318,164 @@ public final class Spec {
       "\030\002 \003(\t\0226\n\rexternal_pkgs\030\003 \003(\0132\037.com.kcl." +
       "api.CmdExternalPkgSpec\"Z\n\023ParseProgram_R" +
       "esult\022\020\n\010ast_json\030\001 \001(\t\022\r\n\005paths\030\002 \003(\t\022\"" +
-      "\n\006errors\030\003 \003(\0132\022.com.kcl.api.Error\"\317\003\n\020E" +
-      "xecProgram_Args\022\020\n\010work_dir\030\001 \001(\t\022\027\n\017k_f" +
-      "ilename_list\030\002 \003(\t\022\023\n\013k_code_list\030\003 \003(\t\022" +
-      "%\n\004args\030\004 \003(\0132\027.com.kcl.api.CmdArgSpec\022/" +
-      "\n\toverrides\030\005 \003(\0132\034.com.kcl.api.CmdOverr" +
-      "ideSpec\022\033\n\023disable_yaml_result\030\006 \001(\010\022\032\n\022" +
-      "print_override_ast\030\007 \001(\010\022\032\n\022strict_range" +
-      "_check\030\010 \001(\010\022\024\n\014disable_none\030\t \001(\010\022\017\n\007ve" +
-      "rbose\030\n \001(\005\022\r\n\005debug\030\013 \001(\005\022\021\n\tsort_keys\030" +
-      "\014 \001(\010\0226\n\rexternal_pkgs\030\r \003(\0132\037.com.kcl.a" +
-      "pi.CmdExternalPkgSpec\022 \n\030include_schema_" +
-      "type_path\030\016 \001(\010\022\024\n\014compile_only\030\017 \001(\010\022\025\n" +
-      "\rpath_selector\030\021 \003(\t\"h\n\022ExecProgram_Resu" +
-      "lt\022\023\n\013json_result\030\001 \001(\t\022\023\n\013yaml_result\030\002" +
-      " \001(\t\022\023\n\013log_message\030\003 \001(\t\022\023\n\013err_message" +
-      "\030\004 \001(\t\"\'\n\020ResetPlugin_Args\022\023\n\013plugin_roo" +
-      "t\030\001 \001(\t\"\024\n\022ResetPlugin_Result\"!\n\017FormatC" +
-      "ode_Args\022\016\n\006source\030\001 \001(\t\"&\n\021FormatCode_R" +
-      "esult\022\021\n\tformatted\030\001 \001(\014\"\037\n\017FormatPath_A" +
-      "rgs\022\014\n\004path\030\001 \001(\t\"*\n\021FormatPath_Result\022\025" +
-      "\n\rchanged_paths\030\001 \003(\t\"\036\n\rLintPath_Args\022\r" +
-      "\n\005paths\030\001 \003(\t\"\"\n\017LintPath_Result\022\017\n\007resu" +
-      "lts\030\001 \003(\t\"F\n\021OverrideFile_Args\022\014\n\004file\030\001" +
-      " \001(\t\022\r\n\005specs\030\002 \003(\t\022\024\n\014import_paths\030\003 \003(" +
-      "\t\"%\n\023OverrideFile_Result\022\016\n\006result\030\001 \001(\010" +
-      "\"_\n\026GetFullSchemaType_Args\0220\n\texec_args\030" +
-      "\001 \001(\0132\035.com.kcl.api.ExecProgram_Args\022\023\n\013" +
-      "schema_name\030\002 \001(\t\"E\n\022GetSchemaType_Args\022" +
+      "\n\006errors\030\003 \003(\0132\022.com.kcl.api.Error\"q\n\020Lo" +
+      "adPackage_Args\0222\n\nparse_args\030\001 \001(\0132\036.com" +
+      ".kcl.api.ParseProgram_Args\022\023\n\013resolve_as" +
+      "t\030\002 \001(\010\022\024\n\014load_builtin\030\003 \001(\010\"\250\003\n\022LoadPa" +
+      "ckage_Result\022\017\n\007program\030\001 \001(\t\022\r\n\005paths\030\002" +
+      " \003(\t\022K\n\017node_symbol_map\030\003 \003(\01322.com.kcl." +
+      "api.LoadPackage_Result.NodeSymbolMapEntr" +
+      "y\022=\n\007symbols\030\004 \003(\0132,.com.kcl.api.LoadPac" +
+      "kage_Result.SymbolsEntry\022(\n\014parse_errors" +
+      "\030\005 \003(\0132\022.com.kcl.api.Error\022\'\n\013type_error" +
+      "s\030\006 \003(\0132\022.com.kcl.api.Error\032N\n\022NodeSymbo" +
+      "lMapEntry\022\013\n\003key\030\001 \001(\t\022\'\n\005value\030\002 \001(\0132\030." +
+      "com.kcl.api.SymbolIndex:\0028\001\032C\n\014SymbolsEn" +
+      "try\022\013\n\003key\030\001 \001(\t\022\"\n\005value\030\002 \001(\0132\023.com.kc" +
+      "l.api.Symbol:\0028\001\"\256\001\n\006Symbol\022\n\n\002ty\030\001 \001(\t\022" +
+      "\014\n\004name\030\002 \001(\t\022\'\n\005owner\030\003 \001(\0132\030.com.kcl.a" +
+      "pi.SymbolIndex\022%\n\003def\030\004 \001(\0132\030.com.kcl.ap" +
+      "i.SymbolIndex\022\'\n\005attrs\030\005 \003(\0132\030.com.kcl.a" +
+      "pi.SymbolIndex\022\021\n\tis_global\030\006 \001(\010\"1\n\013Sym" +
+      "bolIndex\022\t\n\001i\030\001 \001(\004\022\t\n\001g\030\002 \001(\004\022\014\n\004kind\030\003" +
+      " \001(\t\"\317\003\n\020ExecProgram_Args\022\020\n\010work_dir\030\001 " +
+      "\001(\t\022\027\n\017k_filename_list\030\002 \003(\t\022\023\n\013k_code_l" +
+      "ist\030\003 \003(\t\022%\n\004args\030\004 \003(\0132\027.com.kcl.api.Cm" +
+      "dArgSpec\022/\n\toverrides\030\005 \003(\0132\034.com.kcl.ap" +
+      "i.CmdOverrideSpec\022\033\n\023disable_yaml_result" +
+      "\030\006 \001(\010\022\032\n\022print_override_ast\030\007 \001(\010\022\032\n\022st" +
+      "rict_range_check\030\010 \001(\010\022\024\n\014disable_none\030\t" +
+      " \001(\010\022\017\n\007verbose\030\n \001(\005\022\r\n\005debug\030\013 \001(\005\022\021\n\t" +
+      "sort_keys\030\014 \001(\010\0226\n\rexternal_pkgs\030\r \003(\0132\037" +
+      ".com.kcl.api.CmdExternalPkgSpec\022 \n\030inclu" +
+      "de_schema_type_path\030\016 \001(\010\022\024\n\014compile_onl" +
+      "y\030\017 \001(\010\022\025\n\rpath_selector\030\021 \003(\t\"h\n\022ExecPr" +
+      "ogram_Result\022\023\n\013json_result\030\001 \001(\t\022\023\n\013yam" +
+      "l_result\030\002 \001(\t\022\023\n\013log_message\030\003 \001(\t\022\023\n\013e" +
+      "rr_message\030\004 \001(\t\"\'\n\020ResetPlugin_Args\022\023\n\013" +
+      "plugin_root\030\001 \001(\t\"\024\n\022ResetPlugin_Result\"" +
+      "!\n\017FormatCode_Args\022\016\n\006source\030\001 \001(\t\"&\n\021Fo" +
+      "rmatCode_Result\022\021\n\tformatted\030\001 \001(\014\"\037\n\017Fo" +
+      "rmatPath_Args\022\014\n\004path\030\001 \001(\t\"*\n\021FormatPat" +
+      "h_Result\022\025\n\rchanged_paths\030\001 \003(\t\"\036\n\rLintP" +
+      "ath_Args\022\r\n\005paths\030\001 \003(\t\"\"\n\017LintPath_Resu" +
+      "lt\022\017\n\007results\030\001 \003(\t\"F\n\021OverrideFile_Args" +
+      "\022\014\n\004file\030\001 \001(\t\022\r\n\005specs\030\002 \003(\t\022\024\n\014import_" +
+      "paths\030\003 \003(\t\"%\n\023OverrideFile_Result\022\016\n\006re" +
+      "sult\030\001 \001(\010\"_\n\026GetFullSchemaType_Args\0220\n\t" +
+      "exec_args\030\001 \001(\0132\035.com.kcl.api.ExecProgra" +
+      "m_Args\022\023\n\013schema_name\030\002 \001(\t\"E\n\022GetSchema" +
+      "Type_Args\022\014\n\004file\030\001 \001(\t\022\014\n\004code\030\002 \001(\t\022\023\n" +
+      "\013schema_name\030\003 \001(\t\"F\n\024GetSchemaType_Resu" +
+      "lt\022.\n\020schema_type_list\030\001 \003(\0132\024.com.kcl.a" +
+      "pi.KclType\"L\n\031GetSchemaTypeMapping_Args\022" +
       "\014\n\004file\030\001 \001(\t\022\014\n\004code\030\002 \001(\t\022\023\n\013schema_na" +
-      "me\030\003 \001(\t\"F\n\024GetSchemaType_Result\022.\n\020sche" +
-      "ma_type_list\030\001 \003(\0132\024.com.kcl.api.KclType" +
-      "\"L\n\031GetSchemaTypeMapping_Args\022\014\n\004file\030\001 " +
-      "\001(\t\022\014\n\004code\030\002 \001(\t\022\023\n\013schema_name\030\003 \001(\t\"\313" +
-      "\001\n\033GetSchemaTypeMapping_Result\022\\\n\023schema" +
-      "_type_mapping\030\001 \003(\0132?.com.kcl.api.GetSch" +
-      "emaTypeMapping_Result.SchemaTypeMappingE" +
-      "ntry\032N\n\026SchemaTypeMappingEntry\022\013\n\003key\030\001 " +
-      "\001(\t\022#\n\005value\030\002 \001(\0132\024.com.kcl.api.KclType" +
-      ":\0028\001\"u\n\021ValidateCode_Args\022\014\n\004data\030\001 \001(\t\022" +
-      "\014\n\004file\030\002 \001(\t\022\014\n\004code\030\003 \001(\t\022\016\n\006schema\030\004 " +
-      "\001(\t\022\026\n\016attribute_name\030\005 \001(\t\022\016\n\006format\030\006 " +
-      "\001(\t\";\n\023ValidateCode_Result\022\017\n\007success\030\001 " +
-      "\001(\010\022\023\n\013err_message\030\002 \001(\t\":\n\010Position\022\014\n\004" +
-      "line\030\001 \001(\003\022\016\n\006column\030\002 \001(\003\022\020\n\010filename\030\003" +
-      " \001(\t\"i\n\021ListDepFiles_Args\022\020\n\010work_dir\030\001 " +
-      "\001(\t\022\024\n\014use_abs_path\030\002 \001(\010\022\023\n\013include_all" +
-      "\030\003 \001(\010\022\027\n\017use_fast_parser\030\004 \001(\010\"F\n\023ListD" +
-      "epFiles_Result\022\017\n\007pkgroot\030\001 \001(\t\022\017\n\007pkgpa" +
-      "th\030\002 \001(\t\022\r\n\005files\030\003 \003(\t\"9\n\026LoadSettingsF" +
-      "iles_Args\022\020\n\010work_dir\030\001 \001(\t\022\r\n\005files\030\002 \003" +
-      "(\t\"{\n\030LoadSettingsFiles_Result\022/\n\017kcl_cl" +
-      "i_configs\030\001 \001(\0132\026.com.kcl.api.CliConfig\022" +
-      ".\n\013kcl_options\030\002 \003(\0132\031.com.kcl.api.KeyVa" +
-      "luePair\"\333\001\n\tCliConfig\022\r\n\005files\030\001 \003(\t\022\016\n\006" +
-      "output\030\002 \001(\t\022\021\n\toverrides\030\003 \003(\t\022\025\n\rpath_" +
-      "selector\030\004 \003(\t\022\032\n\022strict_range_check\030\005 \001" +
-      "(\010\022\024\n\014disable_none\030\006 \001(\010\022\017\n\007verbose\030\007 \001(" +
-      "\003\022\r\n\005debug\030\010 \001(\010\022\021\n\tsort_keys\030\t \001(\010\022 \n\030i" +
-      "nclude_schema_type_path\030\n \001(\010\"*\n\014KeyValu" +
-      "ePair\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t\"^\n\013Ren" +
-      "ame_Args\022\024\n\014package_root\030\001 \001(\t\022\023\n\013symbol" +
-      "_path\030\002 \001(\t\022\022\n\nfile_paths\030\003 \003(\t\022\020\n\010new_n" +
-      "ame\030\004 \001(\t\"&\n\rRename_Result\022\025\n\rchanged_fi" +
-      "les\030\001 \003(\t\"\307\001\n\017RenameCode_Args\022\024\n\014package" +
-      "_root\030\001 \001(\t\022\023\n\013symbol_path\030\002 \001(\t\022C\n\014sour" +
-      "ce_codes\030\003 \003(\0132-.com.kcl.api.RenameCode_" +
-      "Args.SourceCodesEntry\022\020\n\010new_name\030\004 \001(\t\032" +
-      "2\n\020SourceCodesEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005valu" +
-      "e\030\002 \001(\t:\0028\001\"\221\001\n\021RenameCode_Result\022G\n\rcha" +
-      "nged_codes\030\001 \003(\01320.com.kcl.api.RenameCod" +
-      "e_Result.ChangedCodesEntry\0323\n\021ChangedCod" +
-      "esEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\"" +
-      "v\n\tTest_Args\0220\n\texec_args\030\001 \001(\0132\035.com.kc" +
-      "l.api.ExecProgram_Args\022\020\n\010pkg_list\030\002 \003(\t" +
-      "\022\022\n\nrun_regexp\030\003 \001(\t\022\021\n\tfail_fast\030\004 \001(\010\"" +
-      "6\n\013Test_Result\022\'\n\004info\030\002 \003(\0132\031.com.kcl.a" +
-      "pi.TestCaseInfo\"R\n\014TestCaseInfo\022\014\n\004name\030" +
-      "\001 \001(\t\022\r\n\005error\030\002 \001(\t\022\020\n\010duration\030\003 \001(\004\022\023" +
-      "\n\013log_message\030\004 \001(\t\"\310\004\n\007KclType\022\014\n\004type\030" +
-      "\001 \001(\t\022)\n\013union_types\030\002 \003(\0132\024.com.kcl.api" +
-      ".KclType\022\017\n\007default\030\003 \001(\t\022\023\n\013schema_name" +
-      "\030\004 \001(\t\022\022\n\nschema_doc\030\005 \001(\t\0228\n\nproperties" +
-      "\030\006 \003(\0132$.com.kcl.api.KclType.PropertiesE" +
-      "ntry\022\020\n\010required\030\007 \003(\t\022!\n\003key\030\010 \001(\0132\024.co" +
-      "m.kcl.api.KclType\022\"\n\004item\030\t \001(\0132\024.com.kc" +
-      "l.api.KclType\022\014\n\004line\030\n \001(\005\022*\n\ndecorator" +
-      "s\030\013 \003(\0132\026.com.kcl.api.Decorator\022\020\n\010filen" +
-      "ame\030\014 \001(\t\022\020\n\010pkg_path\030\r \001(\t\022\023\n\013descripti" +
-      "on\030\016 \001(\t\0224\n\010examples\030\017 \003(\0132\".com.kcl.api" +
-      ".KclType.ExamplesEntry\032G\n\017PropertiesEntr" +
-      "y\022\013\n\003key\030\001 \001(\t\022#\n\005value\030\002 \001(\0132\024.com.kcl." +
-      "api.KclType:\0028\001\032E\n\rExamplesEntry\022\013\n\003key\030" +
-      "\001 \001(\t\022#\n\005value\030\002 \001(\0132\024.com.kcl.api.Examp" +
-      "le:\0028\001\"\225\001\n\tDecorator\022\014\n\004name\030\001 \001(\t\022\021\n\tar" +
-      "guments\030\002 \003(\t\0226\n\010keywords\030\003 \003(\0132$.com.kc" +
-      "l.api.Decorator.KeywordsEntry\032/\n\rKeyword" +
-      "sEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\">" +
-      "\n\007Example\022\017\n\007summary\030\001 \001(\t\022\023\n\013descriptio" +
-      "n\030\002 \001(\t\022\r\n\005value\030\003 \001(\t2\226\001\n\016BuiltinServic" +
-      "e\0228\n\004Ping\022\026.com.kcl.api.Ping_Args\032\030.com." +
-      "kcl.api.Ping_Result\022J\n\nListMethod\022\034.com." +
-      "kcl.api.ListMethod_Args\032\036.com.kcl.api.Li" +
-      "stMethod_Result2\311\n\n\014KclvmService\0228\n\004Ping" +
-      "\022\026.com.kcl.api.Ping_Args\032\030.com.kcl.api.P" +
-      "ing_Result\022M\n\013ExecProgram\022\035.com.kcl.api." +
-      "ExecProgram_Args\032\037.com.kcl.api.ExecProgr" +
-      "am_Result\022G\n\tParseFile\022\033.com.kcl.api.Par" +
-      "seFile_Args\032\035.com.kcl.api.ParseFile_Resu" +
-      "lt\022P\n\014ParseProgram\022\036.com.kcl.api.ParsePr" +
-      "ogram_Args\032 .com.kcl.api.ParseProgram_Re" +
-      "sult\022J\n\nFormatCode\022\034.com.kcl.api.FormatC" +
-      "ode_Args\032\036.com.kcl.api.FormatCode_Result" +
-      "\022J\n\nFormatPath\022\034.com.kcl.api.FormatPath_" +
-      "Args\032\036.com.kcl.api.FormatPath_Result\022D\n\010" +
-      "LintPath\022\032.com.kcl.api.LintPath_Args\032\034.c" +
-      "om.kcl.api.LintPath_Result\022P\n\014OverrideFi" +
-      "le\022\036.com.kcl.api.OverrideFile_Args\032 .com" +
-      ".kcl.api.OverrideFile_Result\022S\n\rGetSchem" +
-      "aType\022\037.com.kcl.api.GetSchemaType_Args\032!" +
-      ".com.kcl.api.GetSchemaType_Result\022[\n\021Get" +
-      "FullSchemaType\022#.com.kcl.api.GetFullSche" +
-      "maType_Args\032!.com.kcl.api.GetSchemaType_" +
-      "Result\022h\n\024GetSchemaTypeMapping\022&.com.kcl" +
-      ".api.GetSchemaTypeMapping_Args\032(.com.kcl" +
-      ".api.GetSchemaTypeMapping_Result\022P\n\014Vali" +
-      "dateCode\022\036.com.kcl.api.ValidateCode_Args" +
-      "\032 .com.kcl.api.ValidateCode_Result\022P\n\014Li" +
-      "stDepFiles\022\036.com.kcl.api.ListDepFiles_Ar" +
-      "gs\032 .com.kcl.api.ListDepFiles_Result\022_\n\021" +
-      "LoadSettingsFiles\022#.com.kcl.api.LoadSett" +
-      "ingsFiles_Args\032%.com.kcl.api.LoadSetting" +
-      "sFiles_Result\022>\n\006Rename\022\030.com.kcl.api.Re" +
-      "name_Args\032\032.com.kcl.api.Rename_Result\022J\n" +
-      "\nRenameCode\022\034.com.kcl.api.RenameCode_Arg" +
-      "s\032\036.com.kcl.api.RenameCode_Result\0228\n\004Tes" +
-      "t\022\026.com.kcl.api.Test_Args\032\030.com.kcl.api." +
-      "Test_Resultb\006proto3"
+      "me\030\003 \001(\t\"\313\001\n\033GetSchemaTypeMapping_Result" +
+      "\022\\\n\023schema_type_mapping\030\001 \003(\0132?.com.kcl." +
+      "api.GetSchemaTypeMapping_Result.SchemaTy" +
+      "peMappingEntry\032N\n\026SchemaTypeMappingEntry" +
+      "\022\013\n\003key\030\001 \001(\t\022#\n\005value\030\002 \001(\0132\024.com.kcl.a" +
+      "pi.KclType:\0028\001\"u\n\021ValidateCode_Args\022\014\n\004d" +
+      "ata\030\001 \001(\t\022\014\n\004file\030\002 \001(\t\022\014\n\004code\030\003 \001(\t\022\016\n" +
+      "\006schema\030\004 \001(\t\022\026\n\016attribute_name\030\005 \001(\t\022\016\n" +
+      "\006format\030\006 \001(\t\";\n\023ValidateCode_Result\022\017\n\007" +
+      "success\030\001 \001(\010\022\023\n\013err_message\030\002 \001(\t\":\n\010Po" +
+      "sition\022\014\n\004line\030\001 \001(\003\022\016\n\006column\030\002 \001(\003\022\020\n\010" +
+      "filename\030\003 \001(\t\"i\n\021ListDepFiles_Args\022\020\n\010w" +
+      "ork_dir\030\001 \001(\t\022\024\n\014use_abs_path\030\002 \001(\010\022\023\n\013i" +
+      "nclude_all\030\003 \001(\010\022\027\n\017use_fast_parser\030\004 \001(" +
+      "\010\"F\n\023ListDepFiles_Result\022\017\n\007pkgroot\030\001 \001(" +
+      "\t\022\017\n\007pkgpath\030\002 \001(\t\022\r\n\005files\030\003 \003(\t\"9\n\026Loa" +
+      "dSettingsFiles_Args\022\020\n\010work_dir\030\001 \001(\t\022\r\n" +
+      "\005files\030\002 \003(\t\"{\n\030LoadSettingsFiles_Result" +
+      "\022/\n\017kcl_cli_configs\030\001 \001(\0132\026.com.kcl.api." +
+      "CliConfig\022.\n\013kcl_options\030\002 \003(\0132\031.com.kcl" +
+      ".api.KeyValuePair\"\333\001\n\tCliConfig\022\r\n\005files" +
+      "\030\001 \003(\t\022\016\n\006output\030\002 \001(\t\022\021\n\toverrides\030\003 \003(" +
+      "\t\022\025\n\rpath_selector\030\004 \003(\t\022\032\n\022strict_range" +
+      "_check\030\005 \001(\010\022\024\n\014disable_none\030\006 \001(\010\022\017\n\007ve" +
+      "rbose\030\007 \001(\003\022\r\n\005debug\030\010 \001(\010\022\021\n\tsort_keys\030" +
+      "\t \001(\010\022 \n\030include_schema_type_path\030\n \001(\010\"" +
+      "*\n\014KeyValuePair\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 " +
+      "\001(\t\"^\n\013Rename_Args\022\024\n\014package_root\030\001 \001(\t" +
+      "\022\023\n\013symbol_path\030\002 \001(\t\022\022\n\nfile_paths\030\003 \003(" +
+      "\t\022\020\n\010new_name\030\004 \001(\t\"&\n\rRename_Result\022\025\n\r" +
+      "changed_files\030\001 \003(\t\"\307\001\n\017RenameCode_Args\022" +
+      "\024\n\014package_root\030\001 \001(\t\022\023\n\013symbol_path\030\002 \001" +
+      "(\t\022C\n\014source_codes\030\003 \003(\0132-.com.kcl.api.R" +
+      "enameCode_Args.SourceCodesEntry\022\020\n\010new_n" +
+      "ame\030\004 \001(\t\0322\n\020SourceCodesEntry\022\013\n\003key\030\001 \001" +
+      "(\t\022\r\n\005value\030\002 \001(\t:\0028\001\"\221\001\n\021RenameCode_Res" +
+      "ult\022G\n\rchanged_codes\030\001 \003(\01320.com.kcl.api" +
+      ".RenameCode_Result.ChangedCodesEntry\0323\n\021" +
+      "ChangedCodesEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030" +
+      "\002 \001(\t:\0028\001\"v\n\tTest_Args\0220\n\texec_args\030\001 \001(" +
+      "\0132\035.com.kcl.api.ExecProgram_Args\022\020\n\010pkg_" +
+      "list\030\002 \003(\t\022\022\n\nrun_regexp\030\003 \001(\t\022\021\n\tfail_f" +
+      "ast\030\004 \001(\010\"6\n\013Test_Result\022\'\n\004info\030\002 \003(\0132\031" +
+      ".com.kcl.api.TestCaseInfo\"R\n\014TestCaseInf" +
+      "o\022\014\n\004name\030\001 \001(\t\022\r\n\005error\030\002 \001(\t\022\020\n\010durati" +
+      "on\030\003 \001(\004\022\023\n\013log_message\030\004 \001(\t\"\310\004\n\007KclTyp" +
+      "e\022\014\n\004type\030\001 \001(\t\022)\n\013union_types\030\002 \003(\0132\024.c" +
+      "om.kcl.api.KclType\022\017\n\007default\030\003 \001(\t\022\023\n\013s" +
+      "chema_name\030\004 \001(\t\022\022\n\nschema_doc\030\005 \001(\t\0228\n\n" +
+      "properties\030\006 \003(\0132$.com.kcl.api.KclType.P" +
+      "ropertiesEntry\022\020\n\010required\030\007 \003(\t\022!\n\003key\030" +
+      "\010 \001(\0132\024.com.kcl.api.KclType\022\"\n\004item\030\t \001(" +
+      "\0132\024.com.kcl.api.KclType\022\014\n\004line\030\n \001(\005\022*\n" +
+      "\ndecorators\030\013 \003(\0132\026.com.kcl.api.Decorato" +
+      "r\022\020\n\010filename\030\014 \001(\t\022\020\n\010pkg_path\030\r \001(\t\022\023\n" +
+      "\013description\030\016 \001(\t\0224\n\010examples\030\017 \003(\0132\".c" +
+      "om.kcl.api.KclType.ExamplesEntry\032G\n\017Prop" +
+      "ertiesEntry\022\013\n\003key\030\001 \001(\t\022#\n\005value\030\002 \001(\0132" +
+      "\024.com.kcl.api.KclType:\0028\001\032E\n\rExamplesEnt" +
+      "ry\022\013\n\003key\030\001 \001(\t\022#\n\005value\030\002 \001(\0132\024.com.kcl" +
+      ".api.Example:\0028\001\"\225\001\n\tDecorator\022\014\n\004name\030\001" +
+      " \001(\t\022\021\n\targuments\030\002 \003(\t\0226\n\010keywords\030\003 \003(" +
+      "\0132$.com.kcl.api.Decorator.KeywordsEntry\032" +
+      "/\n\rKeywordsEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002" +
+      " \001(\t:\0028\001\">\n\007Example\022\017\n\007summary\030\001 \001(\t\022\023\n\013" +
+      "description\030\002 \001(\t\022\r\n\005value\030\003 \001(\t2\226\001\n\016Bui" +
+      "ltinService\0228\n\004Ping\022\026.com.kcl.api.Ping_A" +
+      "rgs\032\030.com.kcl.api.Ping_Result\022J\n\nListMet" +
+      "hod\022\034.com.kcl.api.ListMethod_Args\032\036.com." +
+      "kcl.api.ListMethod_Result2\230\013\n\014KclvmServi" +
+      "ce\0228\n\004Ping\022\026.com.kcl.api.Ping_Args\032\030.com" +
+      ".kcl.api.Ping_Result\022M\n\013ExecProgram\022\035.co" +
+      "m.kcl.api.ExecProgram_Args\032\037.com.kcl.api" +
+      ".ExecProgram_Result\022G\n\tParseFile\022\033.com.k" +
+      "cl.api.ParseFile_Args\032\035.com.kcl.api.Pars" +
+      "eFile_Result\022P\n\014ParseProgram\022\036.com.kcl.a" +
+      "pi.ParseProgram_Args\032 .com.kcl.api.Parse" +
+      "Program_Result\022M\n\013LoadPackage\022\035.com.kcl." +
+      "api.LoadPackage_Args\032\037.com.kcl.api.LoadP" +
+      "ackage_Result\022J\n\nFormatCode\022\034.com.kcl.ap" +
+      "i.FormatCode_Args\032\036.com.kcl.api.FormatCo" +
+      "de_Result\022J\n\nFormatPath\022\034.com.kcl.api.Fo" +
+      "rmatPath_Args\032\036.com.kcl.api.FormatPath_R" +
+      "esult\022D\n\010LintPath\022\032.com.kcl.api.LintPath" +
+      "_Args\032\034.com.kcl.api.LintPath_Result\022P\n\014O" +
+      "verrideFile\022\036.com.kcl.api.OverrideFile_A" +
+      "rgs\032 .com.kcl.api.OverrideFile_Result\022S\n" +
+      "\rGetSchemaType\022\037.com.kcl.api.GetSchemaTy" +
+      "pe_Args\032!.com.kcl.api.GetSchemaType_Resu" +
+      "lt\022[\n\021GetFullSchemaType\022#.com.kcl.api.Ge" +
+      "tFullSchemaType_Args\032!.com.kcl.api.GetSc" +
+      "hemaType_Result\022h\n\024GetSchemaTypeMapping\022" +
+      "&.com.kcl.api.GetSchemaTypeMapping_Args\032" +
+      "(.com.kcl.api.GetSchemaTypeMapping_Resul" +
+      "t\022P\n\014ValidateCode\022\036.com.kcl.api.Validate" +
+      "Code_Args\032 .com.kcl.api.ValidateCode_Res" +
+      "ult\022P\n\014ListDepFiles\022\036.com.kcl.api.ListDe" +
+      "pFiles_Args\032 .com.kcl.api.ListDepFiles_R" +
+      "esult\022_\n\021LoadSettingsFiles\022#.com.kcl.api" +
+      ".LoadSettingsFiles_Args\032%.com.kcl.api.Lo" +
+      "adSettingsFiles_Result\022>\n\006Rename\022\030.com.k" +
+      "cl.api.Rename_Args\032\032.com.kcl.api.Rename_" +
+      "Result\022J\n\nRenameCode\022\034.com.kcl.api.Renam" +
+      "eCode_Args\032\036.com.kcl.api.RenameCode_Resu" +
+      "lt\0228\n\004Test\022\026.com.kcl.api.Test_Args\032\030.com" +
+      ".kcl.api.Test_Resultb\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -48865,104 +54559,140 @@ public final class Spec {
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_kcl_api_ParseProgram_Result_descriptor,
         new java.lang.String[] { "AstJson", "Paths", "Errors", });
-    internal_static_com_kcl_api_ExecProgram_Args_descriptor =
+    internal_static_com_kcl_api_LoadPackage_Args_descriptor =
       getDescriptor().getMessageTypes().get(13);
+    internal_static_com_kcl_api_LoadPackage_Args_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_com_kcl_api_LoadPackage_Args_descriptor,
+        new java.lang.String[] { "ParseArgs", "ResolveAst", "LoadBuiltin", });
+    internal_static_com_kcl_api_LoadPackage_Result_descriptor =
+      getDescriptor().getMessageTypes().get(14);
+    internal_static_com_kcl_api_LoadPackage_Result_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_com_kcl_api_LoadPackage_Result_descriptor,
+        new java.lang.String[] { "Program", "Paths", "NodeSymbolMap", "Symbols", "ParseErrors", "TypeErrors", });
+    internal_static_com_kcl_api_LoadPackage_Result_NodeSymbolMapEntry_descriptor =
+      internal_static_com_kcl_api_LoadPackage_Result_descriptor.getNestedTypes().get(0);
+    internal_static_com_kcl_api_LoadPackage_Result_NodeSymbolMapEntry_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_com_kcl_api_LoadPackage_Result_NodeSymbolMapEntry_descriptor,
+        new java.lang.String[] { "Key", "Value", });
+    internal_static_com_kcl_api_LoadPackage_Result_SymbolsEntry_descriptor =
+      internal_static_com_kcl_api_LoadPackage_Result_descriptor.getNestedTypes().get(1);
+    internal_static_com_kcl_api_LoadPackage_Result_SymbolsEntry_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_com_kcl_api_LoadPackage_Result_SymbolsEntry_descriptor,
+        new java.lang.String[] { "Key", "Value", });
+    internal_static_com_kcl_api_Symbol_descriptor =
+      getDescriptor().getMessageTypes().get(15);
+    internal_static_com_kcl_api_Symbol_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_com_kcl_api_Symbol_descriptor,
+        new java.lang.String[] { "Ty", "Name", "Owner", "Def", "Attrs", "IsGlobal", });
+    internal_static_com_kcl_api_SymbolIndex_descriptor =
+      getDescriptor().getMessageTypes().get(16);
+    internal_static_com_kcl_api_SymbolIndex_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_com_kcl_api_SymbolIndex_descriptor,
+        new java.lang.String[] { "I", "G", "Kind", });
+    internal_static_com_kcl_api_ExecProgram_Args_descriptor =
+      getDescriptor().getMessageTypes().get(17);
     internal_static_com_kcl_api_ExecProgram_Args_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_kcl_api_ExecProgram_Args_descriptor,
         new java.lang.String[] { "WorkDir", "KFilenameList", "KCodeList", "Args", "Overrides", "DisableYamlResult", "PrintOverrideAst", "StrictRangeCheck", "DisableNone", "Verbose", "Debug", "SortKeys", "ExternalPkgs", "IncludeSchemaTypePath", "CompileOnly", "PathSelector", });
     internal_static_com_kcl_api_ExecProgram_Result_descriptor =
-      getDescriptor().getMessageTypes().get(14);
+      getDescriptor().getMessageTypes().get(18);
     internal_static_com_kcl_api_ExecProgram_Result_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_kcl_api_ExecProgram_Result_descriptor,
         new java.lang.String[] { "JsonResult", "YamlResult", "LogMessage", "ErrMessage", });
     internal_static_com_kcl_api_ResetPlugin_Args_descriptor =
-      getDescriptor().getMessageTypes().get(15);
+      getDescriptor().getMessageTypes().get(19);
     internal_static_com_kcl_api_ResetPlugin_Args_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_kcl_api_ResetPlugin_Args_descriptor,
         new java.lang.String[] { "PluginRoot", });
     internal_static_com_kcl_api_ResetPlugin_Result_descriptor =
-      getDescriptor().getMessageTypes().get(16);
+      getDescriptor().getMessageTypes().get(20);
     internal_static_com_kcl_api_ResetPlugin_Result_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_kcl_api_ResetPlugin_Result_descriptor,
         new java.lang.String[] { });
     internal_static_com_kcl_api_FormatCode_Args_descriptor =
-      getDescriptor().getMessageTypes().get(17);
+      getDescriptor().getMessageTypes().get(21);
     internal_static_com_kcl_api_FormatCode_Args_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_kcl_api_FormatCode_Args_descriptor,
         new java.lang.String[] { "Source", });
     internal_static_com_kcl_api_FormatCode_Result_descriptor =
-      getDescriptor().getMessageTypes().get(18);
+      getDescriptor().getMessageTypes().get(22);
     internal_static_com_kcl_api_FormatCode_Result_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_kcl_api_FormatCode_Result_descriptor,
         new java.lang.String[] { "Formatted", });
     internal_static_com_kcl_api_FormatPath_Args_descriptor =
-      getDescriptor().getMessageTypes().get(19);
+      getDescriptor().getMessageTypes().get(23);
     internal_static_com_kcl_api_FormatPath_Args_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_kcl_api_FormatPath_Args_descriptor,
         new java.lang.String[] { "Path", });
     internal_static_com_kcl_api_FormatPath_Result_descriptor =
-      getDescriptor().getMessageTypes().get(20);
+      getDescriptor().getMessageTypes().get(24);
     internal_static_com_kcl_api_FormatPath_Result_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_kcl_api_FormatPath_Result_descriptor,
         new java.lang.String[] { "ChangedPaths", });
     internal_static_com_kcl_api_LintPath_Args_descriptor =
-      getDescriptor().getMessageTypes().get(21);
+      getDescriptor().getMessageTypes().get(25);
     internal_static_com_kcl_api_LintPath_Args_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_kcl_api_LintPath_Args_descriptor,
         new java.lang.String[] { "Paths", });
     internal_static_com_kcl_api_LintPath_Result_descriptor =
-      getDescriptor().getMessageTypes().get(22);
+      getDescriptor().getMessageTypes().get(26);
     internal_static_com_kcl_api_LintPath_Result_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_kcl_api_LintPath_Result_descriptor,
         new java.lang.String[] { "Results", });
     internal_static_com_kcl_api_OverrideFile_Args_descriptor =
-      getDescriptor().getMessageTypes().get(23);
+      getDescriptor().getMessageTypes().get(27);
     internal_static_com_kcl_api_OverrideFile_Args_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_kcl_api_OverrideFile_Args_descriptor,
         new java.lang.String[] { "File", "Specs", "ImportPaths", });
     internal_static_com_kcl_api_OverrideFile_Result_descriptor =
-      getDescriptor().getMessageTypes().get(24);
+      getDescriptor().getMessageTypes().get(28);
     internal_static_com_kcl_api_OverrideFile_Result_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_kcl_api_OverrideFile_Result_descriptor,
         new java.lang.String[] { "Result", });
     internal_static_com_kcl_api_GetFullSchemaType_Args_descriptor =
-      getDescriptor().getMessageTypes().get(25);
+      getDescriptor().getMessageTypes().get(29);
     internal_static_com_kcl_api_GetFullSchemaType_Args_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_kcl_api_GetFullSchemaType_Args_descriptor,
         new java.lang.String[] { "ExecArgs", "SchemaName", });
     internal_static_com_kcl_api_GetSchemaType_Args_descriptor =
-      getDescriptor().getMessageTypes().get(26);
+      getDescriptor().getMessageTypes().get(30);
     internal_static_com_kcl_api_GetSchemaType_Args_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_kcl_api_GetSchemaType_Args_descriptor,
         new java.lang.String[] { "File", "Code", "SchemaName", });
     internal_static_com_kcl_api_GetSchemaType_Result_descriptor =
-      getDescriptor().getMessageTypes().get(27);
+      getDescriptor().getMessageTypes().get(31);
     internal_static_com_kcl_api_GetSchemaType_Result_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_kcl_api_GetSchemaType_Result_descriptor,
         new java.lang.String[] { "SchemaTypeList", });
     internal_static_com_kcl_api_GetSchemaTypeMapping_Args_descriptor =
-      getDescriptor().getMessageTypes().get(28);
+      getDescriptor().getMessageTypes().get(32);
     internal_static_com_kcl_api_GetSchemaTypeMapping_Args_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_kcl_api_GetSchemaTypeMapping_Args_descriptor,
         new java.lang.String[] { "File", "Code", "SchemaName", });
     internal_static_com_kcl_api_GetSchemaTypeMapping_Result_descriptor =
-      getDescriptor().getMessageTypes().get(29);
+      getDescriptor().getMessageTypes().get(33);
     internal_static_com_kcl_api_GetSchemaTypeMapping_Result_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_kcl_api_GetSchemaTypeMapping_Result_descriptor,
@@ -48974,73 +54704,73 @@ public final class Spec {
         internal_static_com_kcl_api_GetSchemaTypeMapping_Result_SchemaTypeMappingEntry_descriptor,
         new java.lang.String[] { "Key", "Value", });
     internal_static_com_kcl_api_ValidateCode_Args_descriptor =
-      getDescriptor().getMessageTypes().get(30);
+      getDescriptor().getMessageTypes().get(34);
     internal_static_com_kcl_api_ValidateCode_Args_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_kcl_api_ValidateCode_Args_descriptor,
         new java.lang.String[] { "Data", "File", "Code", "Schema", "AttributeName", "Format", });
     internal_static_com_kcl_api_ValidateCode_Result_descriptor =
-      getDescriptor().getMessageTypes().get(31);
+      getDescriptor().getMessageTypes().get(35);
     internal_static_com_kcl_api_ValidateCode_Result_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_kcl_api_ValidateCode_Result_descriptor,
         new java.lang.String[] { "Success", "ErrMessage", });
     internal_static_com_kcl_api_Position_descriptor =
-      getDescriptor().getMessageTypes().get(32);
+      getDescriptor().getMessageTypes().get(36);
     internal_static_com_kcl_api_Position_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_kcl_api_Position_descriptor,
         new java.lang.String[] { "Line", "Column", "Filename", });
     internal_static_com_kcl_api_ListDepFiles_Args_descriptor =
-      getDescriptor().getMessageTypes().get(33);
+      getDescriptor().getMessageTypes().get(37);
     internal_static_com_kcl_api_ListDepFiles_Args_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_kcl_api_ListDepFiles_Args_descriptor,
         new java.lang.String[] { "WorkDir", "UseAbsPath", "IncludeAll", "UseFastParser", });
     internal_static_com_kcl_api_ListDepFiles_Result_descriptor =
-      getDescriptor().getMessageTypes().get(34);
+      getDescriptor().getMessageTypes().get(38);
     internal_static_com_kcl_api_ListDepFiles_Result_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_kcl_api_ListDepFiles_Result_descriptor,
         new java.lang.String[] { "Pkgroot", "Pkgpath", "Files", });
     internal_static_com_kcl_api_LoadSettingsFiles_Args_descriptor =
-      getDescriptor().getMessageTypes().get(35);
+      getDescriptor().getMessageTypes().get(39);
     internal_static_com_kcl_api_LoadSettingsFiles_Args_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_kcl_api_LoadSettingsFiles_Args_descriptor,
         new java.lang.String[] { "WorkDir", "Files", });
     internal_static_com_kcl_api_LoadSettingsFiles_Result_descriptor =
-      getDescriptor().getMessageTypes().get(36);
+      getDescriptor().getMessageTypes().get(40);
     internal_static_com_kcl_api_LoadSettingsFiles_Result_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_kcl_api_LoadSettingsFiles_Result_descriptor,
         new java.lang.String[] { "KclCliConfigs", "KclOptions", });
     internal_static_com_kcl_api_CliConfig_descriptor =
-      getDescriptor().getMessageTypes().get(37);
+      getDescriptor().getMessageTypes().get(41);
     internal_static_com_kcl_api_CliConfig_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_kcl_api_CliConfig_descriptor,
         new java.lang.String[] { "Files", "Output", "Overrides", "PathSelector", "StrictRangeCheck", "DisableNone", "Verbose", "Debug", "SortKeys", "IncludeSchemaTypePath", });
     internal_static_com_kcl_api_KeyValuePair_descriptor =
-      getDescriptor().getMessageTypes().get(38);
+      getDescriptor().getMessageTypes().get(42);
     internal_static_com_kcl_api_KeyValuePair_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_kcl_api_KeyValuePair_descriptor,
         new java.lang.String[] { "Key", "Value", });
     internal_static_com_kcl_api_Rename_Args_descriptor =
-      getDescriptor().getMessageTypes().get(39);
+      getDescriptor().getMessageTypes().get(43);
     internal_static_com_kcl_api_Rename_Args_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_kcl_api_Rename_Args_descriptor,
         new java.lang.String[] { "PackageRoot", "SymbolPath", "FilePaths", "NewName", });
     internal_static_com_kcl_api_Rename_Result_descriptor =
-      getDescriptor().getMessageTypes().get(40);
+      getDescriptor().getMessageTypes().get(44);
     internal_static_com_kcl_api_Rename_Result_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_kcl_api_Rename_Result_descriptor,
         new java.lang.String[] { "ChangedFiles", });
     internal_static_com_kcl_api_RenameCode_Args_descriptor =
-      getDescriptor().getMessageTypes().get(41);
+      getDescriptor().getMessageTypes().get(45);
     internal_static_com_kcl_api_RenameCode_Args_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_kcl_api_RenameCode_Args_descriptor,
@@ -49052,7 +54782,7 @@ public final class Spec {
         internal_static_com_kcl_api_RenameCode_Args_SourceCodesEntry_descriptor,
         new java.lang.String[] { "Key", "Value", });
     internal_static_com_kcl_api_RenameCode_Result_descriptor =
-      getDescriptor().getMessageTypes().get(42);
+      getDescriptor().getMessageTypes().get(46);
     internal_static_com_kcl_api_RenameCode_Result_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_kcl_api_RenameCode_Result_descriptor,
@@ -49064,25 +54794,25 @@ public final class Spec {
         internal_static_com_kcl_api_RenameCode_Result_ChangedCodesEntry_descriptor,
         new java.lang.String[] { "Key", "Value", });
     internal_static_com_kcl_api_Test_Args_descriptor =
-      getDescriptor().getMessageTypes().get(43);
+      getDescriptor().getMessageTypes().get(47);
     internal_static_com_kcl_api_Test_Args_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_kcl_api_Test_Args_descriptor,
         new java.lang.String[] { "ExecArgs", "PkgList", "RunRegexp", "FailFast", });
     internal_static_com_kcl_api_Test_Result_descriptor =
-      getDescriptor().getMessageTypes().get(44);
+      getDescriptor().getMessageTypes().get(48);
     internal_static_com_kcl_api_Test_Result_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_kcl_api_Test_Result_descriptor,
         new java.lang.String[] { "Info", });
     internal_static_com_kcl_api_TestCaseInfo_descriptor =
-      getDescriptor().getMessageTypes().get(45);
+      getDescriptor().getMessageTypes().get(49);
     internal_static_com_kcl_api_TestCaseInfo_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_kcl_api_TestCaseInfo_descriptor,
         new java.lang.String[] { "Name", "Error", "Duration", "LogMessage", });
     internal_static_com_kcl_api_KclType_descriptor =
-      getDescriptor().getMessageTypes().get(46);
+      getDescriptor().getMessageTypes().get(50);
     internal_static_com_kcl_api_KclType_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_kcl_api_KclType_descriptor,
@@ -49100,7 +54830,7 @@ public final class Spec {
         internal_static_com_kcl_api_KclType_ExamplesEntry_descriptor,
         new java.lang.String[] { "Key", "Value", });
     internal_static_com_kcl_api_Decorator_descriptor =
-      getDescriptor().getMessageTypes().get(47);
+      getDescriptor().getMessageTypes().get(51);
     internal_static_com_kcl_api_Decorator_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_kcl_api_Decorator_descriptor,
@@ -49112,7 +54842,7 @@ public final class Spec {
         internal_static_com_kcl_api_Decorator_KeywordsEntry_descriptor,
         new java.lang.String[] { "Key", "Value", });
     internal_static_com_kcl_api_Example_descriptor =
-      getDescriptor().getMessageTypes().get(48);
+      getDescriptor().getMessageTypes().get(52);
     internal_static_com_kcl_api_Example_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_kcl_api_Example_descriptor,
