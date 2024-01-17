@@ -1,20 +1,21 @@
 import ctypes
 import tempfile
 import threading
-from kcl_py_lib.bootstrap import (lib_full_name, install_kclvm)
+from kcl_lib.bootstrap import lib_full_name, install_kclvm
 from .spec_pb2 import *
 from ctypes import c_char_p, c_void_p
 import google.protobuf.json_format as json_format
 from google.protobuf import message as _message
 import os
 
+
 class API:
     """KCL APIs
-    
+
     Examples
     --------
     ```python
-    import kcl_py_lib.api as api
+    import kcl_lib.api as api
     # Call the `exec_program` method with appropriate arguments
     args = api.ExecProgram_Args(k_filename_list=["a.k"])
     # Usage
@@ -23,6 +24,7 @@ class API:
     print(result.yaml_result)
     ```
     """
+
     def __init__(self):
         self.caller = Caller()
 
@@ -75,6 +77,7 @@ class API:
     def call(self, function_name: str, args):
         return self.caller.call(function_name, args)
 
+
 class Caller:
     def __init__(self):
         self._dir = tempfile.TemporaryDirectory()
@@ -96,9 +99,11 @@ class Caller:
             # Assuming the library exposes a service call function
             self.lib.kclvm_service_call.argtypes = [c_void_p, c_char_p, c_char_p]
             self.lib.kclvm_service_call.restype = c_char_p
-            
+
             # Call the service function and get the result
-            result_ptr = self.lib.kclvm_service_call(self.handler, name.encode('utf-8'), args_serialized)
+            result_ptr = self.lib.kclvm_service_call(
+                self.handler, name.encode("utf-8"), args_serialized
+            )
             result = ctypes.cast(result_ptr, ctypes.c_char_p).value
             if result.startswith(b"ERROR"):
                 raise Exception(str(result))
@@ -172,7 +177,7 @@ class Caller:
             return Test_Result()
         raise Exception(f"unknown method: {method}")
 
-    #def __del__(self):
+    # def __del__(self):
     #    # Assuming the shared library exposes a function `kclvm_service_delete`
     #    self.lib.kclvm_service_delete.argtypes = [c_void_p]
     #    self.lib.kclvm_service_delete(self.handler)
