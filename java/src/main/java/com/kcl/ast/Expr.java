@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 // The base class for all expression types
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
 @JsonSubTypes({
-    @JsonSubTypes.Type(value = Identifier.class, name = "Identifier"),
+    @JsonSubTypes.Type(value = IdentifierExpr.class, name = "Identifier"),
     @JsonSubTypes.Type(value = UnaryExpr.class, name = "Unary"),
     @JsonSubTypes.Type(value = BinaryExpr.class, name = "Binary"),
     @JsonSubTypes.Type(value = IfExpr.class, name = "If"),
@@ -26,7 +26,6 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
     @JsonSubTypes.Type(value = CheckExpr.class, name = "Check"),
     @JsonSubTypes.Type(value = LambdaExpr.class, name = "Lambda"),
     @JsonSubTypes.Type(value = Subscript.class, name = "Subscript"),
-    @JsonSubTypes.Type(value = Keyword.class, name = "Keyword"),
     @JsonSubTypes.Type(value = Arguments.class, name = "Arguments"),
     @JsonSubTypes.Type(value = Compare.class, name = "Compare"),
     @JsonSubTypes.Type(value = NumberLit.class, name = "NumberLit"),
@@ -36,6 +35,6 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
     @JsonSubTypes.Type(value = FormattedValue.class, name = "FormattedValue"),
     @JsonSubTypes.Type(value = MissingExpr.class, name = "Missing"),
 })
-abstract class Expr {
+public abstract class Expr {
     // Common fields and methods for expressions if needed
 }

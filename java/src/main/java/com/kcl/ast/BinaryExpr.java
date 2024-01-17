@@ -10,7 +10,7 @@ public class BinaryExpr extends Expr {
     private NodeRef<Expr> left;
 
     @JsonProperty("op")
-    private BinOrCmpOp op;
+    private BinOp op;
 
     @JsonProperty("right")
     private NodeRef<Expr> right;
@@ -23,11 +23,11 @@ public class BinaryExpr extends Expr {
 		this.left = left;
 	}
 
-	public BinOrCmpOp getOp() {
+	public BinOp getOp() {
 		return op;
 	}
 
-	public void setOp(BinOrCmpOp op) {
+	public void setOp(BinOp op) {
 		this.op = op;
 	}
 

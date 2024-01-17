@@ -16,15 +16,13 @@ public class UnificationStmt extends Stmt {
 	}
 
 	@JsonProperty("value")
-    private NodeRef<SchemaExpr> value;
+    private NodeRef<SchemaConfig> value;
 
-	public NodeRef<SchemaExpr> getValue() {
+	public NodeRef<SchemaConfig> getValue() {
 		return value;
 	}
 
-	public void setValue(NodeRef<SchemaExpr> value) {
+	public void setValue(NodeRef<SchemaConfig> value) {
 		this.value = value;
 	}
-
-    // Constructor, getters, and setters...
 }

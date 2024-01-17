@@ -3,7 +3,7 @@ package com.kcl.ast;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 
 @JsonTypeName("Bool")
-public class BoolLiteralType extends LiteralType {
+public class BoolLiteralType extends LiteralTypeValue {
     private boolean value;
 
 	public boolean isValue() {

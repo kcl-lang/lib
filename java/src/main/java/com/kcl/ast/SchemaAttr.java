@@ -15,7 +15,7 @@ public class SchemaAttr extends Stmt {
     private NodeRef<String> name;
 
     @JsonProperty("op")
-    private BinOrAugOp op; // Nullable to represent Rust's Option
+    private AugOp op; // Nullable to represent Rust's Option
 
     @JsonProperty("value")
     private NodeRef<Expr> value; // Nullable to represent Rust's Option
@@ -45,11 +45,11 @@ public class SchemaAttr extends Stmt {
 		this.name = name;
 	}
 
-	public BinOrAugOp getOp() {
+	public AugOp getOp() {
 		return op;
 	}
 
-	public void setOp(BinOrAugOp op) {
+	public void setOp(AugOp op) {
 		this.op = op;
 	}
 
