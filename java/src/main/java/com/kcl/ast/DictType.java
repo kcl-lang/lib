@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 
 import java.util.Optional;
 
-// DictType class equivalent in Java
 @JsonTypeName("Dict")
 public class DictType extends Type {
 

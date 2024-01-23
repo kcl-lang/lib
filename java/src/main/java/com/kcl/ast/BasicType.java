@@ -2,7 +2,6 @@ package com.kcl.ast;
 
 import com.fasterxml.jackson.annotation.JsonTypeName;
 
-// BasicType enum equivalent in Java
 @JsonTypeName("Basic")
 public class BasicType extends Type {
     public static enum BasicTypeEnum {

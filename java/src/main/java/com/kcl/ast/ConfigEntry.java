@@ -2,19 +2,29 @@ package com.kcl.ast;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-// ConfigEntry class equivalent in Java
+/**
+ * ConfigExpr, e.g.
+ * 
+ * <pre>{@code
+{
+    attr1 = 1
+    attr2 += [0, 1]
+	attr3: {key = value}
+}
+ * }</pre>
+ */
 public class ConfigEntry {
-    @JsonProperty("key")
-    private NodeRef<Expr> key; // Nullable to represent Rust's Option
+	@JsonProperty("key")
+	private NodeRef<Expr> key;
 
-    @JsonProperty("value")
-    private NodeRef<Expr> value;
+	@JsonProperty("value")
+	private NodeRef<Expr> value;
 
-    @JsonProperty("operation")
-    private ConfigEntryOperation operation;
+	@JsonProperty("operation")
+	private ConfigEntryOperation operation;
 
-    @JsonProperty("insert_index")
-    private int insertIndex;
+	@JsonProperty("insert_index")
+	private int insertIndex;
 
 	public NodeRef<Expr> getKey() {
 		return key;
@@ -47,6 +57,4 @@ public class ConfigEntry {
 	public void setInsertIndex(int insertIndex) {
 		this.insertIndex = insertIndex;
 	}
-
-    // Constructor, getters, and setters...
 }

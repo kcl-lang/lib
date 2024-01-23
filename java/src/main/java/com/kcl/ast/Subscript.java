@@ -3,29 +3,38 @@ package com.kcl.ast;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 
-// Subscript class equivalent in Java
+/**
+ * Subscript, e.g.
+ * 
+ * <pre>{@code
+a[0]
+b["k"]
+c?[1]
+d[1:2:n]
+ *}</pre>
+ */
 @JsonTypeName("Subscript")
 public class Subscript extends Expr {
-    @JsonProperty("value")
-    private NodeRef<Expr> value;
+	@JsonProperty("value")
+	private NodeRef<Expr> value;
 
-    @JsonProperty("index")
-    private NodeRef<Expr> index; // Nullable to represent Rust's Option
+	@JsonProperty("index")
+	private NodeRef<Expr> index;
 
-    @JsonProperty("lower")
-    private NodeRef<Expr> lower; // Nullable to represent Rust's Option
+	@JsonProperty("lower")
+	private NodeRef<Expr> lower;
 
-    @JsonProperty("upper")
-    private NodeRef<Expr> upper; // Nullable to represent Rust's Option
+	@JsonProperty("upper")
+	private NodeRef<Expr> upper;
 
-    @JsonProperty("step")
-    private NodeRef<Expr> step; // Nullable to represent Rust's Option
+	@JsonProperty("step")
+	private NodeRef<Expr> step;
 
-    @JsonProperty("ctx")
-    private ExprContext ctx;
+	@JsonProperty("ctx")
+	private ExprContext ctx;
 
-    @JsonProperty("has_question")
-    private boolean hasQuestion;
+	@JsonProperty("has_question")
+	private boolean hasQuestion;
 
 	public NodeRef<Expr> getValue() {
 		return value;
@@ -83,5 +92,4 @@ public class Subscript extends Expr {
 		this.hasQuestion = hasQuestion;
 	}
 
-    // Constructor, getters, and setters...
 }

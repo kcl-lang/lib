@@ -4,16 +4,27 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.List;
 
-// AssignStmt class equivalent in Java
+/**
+ * AssignStmt represents an assignment, e.g.
+ * <p>
+ * <code>a: int = 1</code>
+ * </p>
+ * <p>
+ * <code>a = 1</code>
+ * </p>
+ * <p>
+ * <code>a = b = 1</code>
+ * </p>
+ */
 public class AssignStmt extends Stmt {
-    @JsonProperty("targets")
-    private List<NodeRef<Identifier>> targets;
+	@JsonProperty("targets")
+	private List<NodeRef<Identifier>> targets;
 
-    @JsonProperty("value")
-    private NodeRef<Expr> value;
+	@JsonProperty("value")
+	private NodeRef<Expr> value;
 
-    @JsonProperty("ty")
-    private NodeRef<Type> ty; // This is optional in Rust, so it can be null in Java
+	@JsonProperty("ty")
+	private NodeRef<Type> ty;
 
 	public List<NodeRef<Identifier>> getTargets() {
 		return targets;
@@ -38,6 +49,4 @@ public class AssignStmt extends Stmt {
 	public void setTy(NodeRef<Type> ty) {
 		this.ty = ty;
 	}
-
-    // Constructor, getters, and setters...
 }

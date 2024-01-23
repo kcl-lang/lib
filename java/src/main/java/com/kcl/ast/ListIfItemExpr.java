@@ -5,17 +5,23 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 
-// ListIfItemExpr class equivalent in Java
+/**
+ * ListIfItemExpr, e.g.
+ * 
+ * <pre>{@code
+ *[1, if True: 2, 3]
+ * }</pre>
+ */
 @JsonTypeName("ListIfItem")
 public class ListIfItemExpr extends Expr {
-    @JsonProperty("if_cond")
-    private NodeRef<Expr> ifCond;
+	@JsonProperty("if_cond")
+	private NodeRef<Expr> ifCond;
 
-    @JsonProperty("exprs")
-    private List<NodeRef<Expr>> exprs;
+	@JsonProperty("exprs")
+	private List<NodeRef<Expr>> exprs;
 
-    @JsonProperty("orelse")
-    private NodeRef<Expr> orelse; // Nullable to represent Rust's Option
+	@JsonProperty("orelse")
+	private NodeRef<Expr> orelse;
 
 	public NodeRef<Expr> getIfCond() {
 		return ifCond;
@@ -40,6 +46,4 @@ public class ListIfItemExpr extends Expr {
 	public void setOrelse(NodeRef<Expr> orelse) {
 		this.orelse = orelse;
 	}
-
-    // Constructor, getters, and setters...
 }

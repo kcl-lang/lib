@@ -5,7 +5,9 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-// Java equivalent of the Module struct in Rust
+/**
+ * Module is an abstract syntax tree for a single KCL file.
+ */
 public class Module {
     @JsonProperty("filename")
     private String filename;
@@ -31,7 +33,7 @@ public class Module {
         for (NodeRef<Stmt> stmt : body) {
             if (stmt.getNode() instanceof SchemaStmt) {
                 Stmt node = stmt.getNode();
-                SchemaStmt schemaStmt = (SchemaStmt)node;
+                SchemaStmt schemaStmt = (SchemaStmt) node;
                 stmts.add(schemaStmt);
             }
         }

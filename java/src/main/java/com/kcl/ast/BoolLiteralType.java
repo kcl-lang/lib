@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 
 @JsonTypeName("Bool")
 public class BoolLiteralType extends LiteralTypeValue {
-    private boolean value;
+	private boolean value;
 
 	public boolean isValue() {
 		return value;
@@ -14,5 +14,4 @@ public class BoolLiteralType extends LiteralTypeValue {
 		this.value = value;
 	}
 
-    // Constructor, getters, and setters...
 }

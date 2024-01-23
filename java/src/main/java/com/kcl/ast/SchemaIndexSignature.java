@@ -2,22 +2,29 @@ package com.kcl.ast;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-// SchemaIndexSignature class equivalent in Java
+/**
+ * SchemaIndexSignature, e.g.
+ * 
+ * <pre>{@code
+ *schema SchemaIndexSignatureExample:
+ *    [str]: int
+ *}</pre>
+ */
 public class SchemaIndexSignature {
-    @JsonProperty("key_name")
-    private String keyName; // Nullable to represent Rust's Option
+	@JsonProperty("key_name")
+	private String keyName;
 
-    @JsonProperty("value")
-    private NodeRef<Expr> value; // Nullable to represent Rust's Option
+	@JsonProperty("value")
+	private NodeRef<Expr> value;
 
-    @JsonProperty("any_other")
-    private boolean anyOther;
+	@JsonProperty("any_other")
+	private boolean anyOther;
 
-    @JsonProperty("key_ty")
-    private NodeRef<Type> keyTy;
+	@JsonProperty("key_ty")
+	private NodeRef<Type> keyTy;
 
-    @JsonProperty("value_ty")
-    private NodeRef<Type> valueTy;
+	@JsonProperty("value_ty")
+	private NodeRef<Type> valueTy;
 
 	public String getKeyName() {
 		return keyName;
@@ -58,6 +65,4 @@ public class SchemaIndexSignature {
 	public void setValueTy(NodeRef<Type> valueTy) {
 		this.valueTy = valueTy;
 	}
-
-    // Constructor, getters, and setters...
 }

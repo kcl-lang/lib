@@ -1,6 +1,5 @@
 package com.kcl.ast;
 
-// AugOp enum equivalent in Java
 public enum AugOp {
     Assign("="),
     Add("+="),
@@ -25,7 +24,7 @@ public enum AugOp {
     public String symbol() {
         return symbol;
     }
-    
+
     // Method to convert AugOp to BinOp, if possible
     public BinOp toBinOp() throws IllegalArgumentException {
         switch (this) {

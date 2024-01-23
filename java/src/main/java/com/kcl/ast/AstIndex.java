@@ -10,7 +10,7 @@ import java.util.UUID;
 @JsonSerialize
 @JsonDeserialize
 public class AstIndex {
-    public UUID getId() {
+	public UUID getId() {
 		return id;
 	}
 
@@ -20,9 +20,9 @@ public class AstIndex {
 
 	private UUID id;
 
-    public AstIndex() {
-        this.id = UUID.randomUUID();
-    }
+	public AstIndex() {
+		this.id = UUID.randomUUID();
+	}
 
 	@Override
 	public int hashCode() {
@@ -48,6 +48,4 @@ public class AstIndex {
 			return false;
 		return true;
 	}
-
-    // Getters and setters...
 }

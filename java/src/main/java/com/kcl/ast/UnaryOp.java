@@ -1,6 +1,5 @@
 package com.kcl.ast;
 
-// UnaryOp enum equivalent in Java
 public enum UnaryOp {
     UAdd("+"),
     USub("-"),

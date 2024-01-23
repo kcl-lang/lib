@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 
 @JsonTypeName("Cmp")
 public class CmpBinOrCmpOp extends BinOrCmpOp {
-    private CmpOp op;
+	private CmpOp op;
 
 	public CmpOp getOp() {
 		return op;
@@ -14,5 +14,4 @@ public class CmpBinOrCmpOp extends BinOrCmpOp {
 		this.op = op;
 	}
 
-    // Constructor, getters, and setters...
 }

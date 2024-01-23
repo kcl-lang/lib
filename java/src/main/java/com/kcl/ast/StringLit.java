@@ -2,19 +2,26 @@ package com.kcl.ast;
 
 import com.fasterxml.jackson.annotation.JsonTypeName;
 
-// StringLit class equivalent in Java
+/**
+ * StringLit, e.g.
+ * 
+ * <pre>{@code
+"string literal"
+"""long string literal"""
+ * }</pre>
+ */
 @JsonTypeName("String")
 public class StringLit extends Expr {
-    private boolean isLongString;
-    private String rawValue;
-    private String value;
+	private boolean isLongString;
+	private String rawValue;
+	private String value;
 
-    // Constructor that replicates the TryFrom implementation in Rust
-    public StringLit(String value) {
-        this.value = value;
-        this.rawValue = String.format("%s", value); // Adding quotes, escaping, etc., if needed
-        this.isLongString = false; // Determine based on actual logic (e.g., presence of line breaks)
-    }
+	// Constructor that replicates the TryFrom implementation in Rust
+	public StringLit(String value) {
+		this.value = value;
+		this.rawValue = String.format("%s", value); // Adding quotes, escaping, etc., if needed
+		this.isLongString = false; // Determine based on actual logic (e.g., presence of line breaks)
+	}
 
 	public boolean isLongString() {
 		return isLongString;
@@ -40,5 +47,4 @@ public class StringLit extends Expr {
 		this.value = value;
 	}
 
-    // Getters and setters...
 }

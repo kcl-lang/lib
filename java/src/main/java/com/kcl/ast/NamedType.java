@@ -2,7 +2,6 @@ package com.kcl.ast;
 
 import com.fasterxml.jackson.annotation.JsonTypeName;
 
-// NamedType class placeholder
 @JsonTypeName("Named")
 public class NamedType extends Type {
 	public static class NamedTypeValue {
@@ -26,5 +25,4 @@ public class NamedType extends Type {
 	public void setValue(NamedTypeValue data) {
 		this.value = data;
 	}
-
 }

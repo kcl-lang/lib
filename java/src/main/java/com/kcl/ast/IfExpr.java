@@ -3,17 +3,23 @@ package com.kcl.ast;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 
-// IfExpr class
+/**
+ * IfExpr, e.g.
+ * 
+ * <pre>{@code
+ *1 if condition else 2
+ * }</pre>
+ */
 @JsonTypeName("If")
 public class IfExpr extends Expr {
-    @JsonProperty("body")
-    private NodeRef<Expr> body;
+	@JsonProperty("body")
+	private NodeRef<Expr> body;
 
-    @JsonProperty("cond")
-    private NodeRef<Expr> cond;
+	@JsonProperty("cond")
+	private NodeRef<Expr> cond;
 
-    @JsonProperty("orelse")
-    private NodeRef<Expr> orelse;
+	@JsonProperty("orelse")
+	private NodeRef<Expr> orelse;
 
 	public NodeRef<Expr> getBody() {
 		return body;
@@ -38,6 +44,4 @@ public class IfExpr extends Expr {
 	public void setOrelse(NodeRef<Expr> orelse) {
 		this.orelse = orelse;
 	}
-
-    // ... Constructor, getters, setters ...
 }

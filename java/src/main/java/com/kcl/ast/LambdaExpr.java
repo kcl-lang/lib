@@ -5,17 +5,26 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 
-// LambdaExpr class equivalent in Java
+/**
+ * LambdaExpr, e.g.
+ * 
+ * <pre>{@code
+lambda x, y {
+    z = 2 * x
+    z + y
+}
+ * }</pre>
+ */
 @JsonTypeName("Lambda")
 public class LambdaExpr extends Expr {
-    @JsonProperty("args")
-    private NodeRef<Arguments> args; // Nullable to represent Rust's Option
+	@JsonProperty("args")
+	private NodeRef<Arguments> args;
 
-    @JsonProperty("body")
-    private List<NodeRef<Stmt>> body;
+	@JsonProperty("body")
+	private List<NodeRef<Stmt>> body;
 
-    @JsonProperty("return_ty")
-    private NodeRef<Type> returnTy; // Nullable to represent Rust's Option
+	@JsonProperty("return_ty")
+	private NodeRef<Type> returnTy;
 
 	public NodeRef<Arguments> getArgs() {
 		return args;
@@ -41,5 +50,4 @@ public class LambdaExpr extends Expr {
 		this.returnTy = returnTy;
 	}
 
-    // Constructor, getters, and setters...
 }

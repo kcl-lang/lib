@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 
 import java.util.List;;
 
-// UnionType class equivalent in Java
 @JsonTypeName("Union")
 public class UnionType extends Type {
 	public static class UnionTypeValue {

@@ -5,44 +5,64 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 
 import java.util.List;
 
-// SchemaStmt class equivalent in Java
+/**
+ * SchemaStmt, e.g.
+ * 
+ * <pre>
+ * {@code
+ *schema BaseSchema:
+ * 
+ *schema SchemaExample(BaseSchema)[arg: str]:
+ *    """Schema documents"""
+ *    attr?: str = arg
+ *    check:
+ *        len(attr) > 3 if attr, "Check failed message"
+ *
+ *mixin MixinExample for ProtocolExample:
+ *    attr: int
+ *
+ *protocol ProtocolExample:
+ *    attr: int
+ *}
+ * </pre>
+ */
 @JsonTypeName("Schema")
 public class SchemaStmt extends Stmt {
-    @JsonProperty("doc")
-    private NodeRef<String> doc;
+	@JsonProperty("doc")
+	private NodeRef<String> doc;
 
-    @JsonProperty("name")
-    private NodeRef<String> name;
+	@JsonProperty("name")
+	private NodeRef<String> name;
 
-    @JsonProperty("parent_name")
-    private NodeRef<Identifier> parentName;
+	@JsonProperty("parent_name")
+	private NodeRef<Identifier> parentName;
 
-    @JsonProperty("for_host_name")
-    private NodeRef<Identifier> forHostName;
+	@JsonProperty("for_host_name")
+	private NodeRef<Identifier> forHostName;
 
-    @JsonProperty("is_mixin")
-    private boolean isMixin;
+	@JsonProperty("is_mixin")
+	private boolean isMixin;
 
-    @JsonProperty("is_protocol")
-    private boolean isProtocol;
+	@JsonProperty("is_protocol")
+	private boolean isProtocol;
 
-    @JsonProperty("args")
-    private NodeRef<Arguments> args;
+	@JsonProperty("args")
+	private NodeRef<Arguments> args;
 
-    @JsonProperty("mixins")
-    private List<NodeRef<Identifier>> mixins;
+	@JsonProperty("mixins")
+	private List<NodeRef<Identifier>> mixins;
 
-    @JsonProperty("body")
-    private List<NodeRef<Stmt>> body;
+	@JsonProperty("body")
+	private List<NodeRef<Stmt>> body;
 
-    @JsonProperty("decorators")
-    private List<NodeRef<CallExpr>> decorators;
+	@JsonProperty("decorators")
+	private List<NodeRef<CallExpr>> decorators;
 
-    @JsonProperty("checks")
-    private List<NodeRef<CheckExpr>> checks;
+	@JsonProperty("checks")
+	private List<NodeRef<CheckExpr>> checks;
 
-    @JsonProperty("index_signature")
-    private NodeRef<SchemaIndexSignature> indexSignature;
+	@JsonProperty("index_signature")
+	private NodeRef<SchemaIndexSignature> indexSignature;
 
 	public NodeRef<String> getDoc() {
 		return doc;
@@ -139,6 +159,4 @@ public class SchemaStmt extends Stmt {
 	public void setIndexSignature(NodeRef<SchemaIndexSignature> indexSignature) {
 		this.indexSignature = indexSignature;
 	}
-
-    // Constructor, getters, and setters...
 }

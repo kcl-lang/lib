@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 
 @JsonTypeName("Aug")
 public class AugBinOrAugOp extends BinOrAugOp {
-    public AugOp getOp() {
+	public AugOp getOp() {
 		return op;
 	}
 
@@ -13,6 +13,4 @@ public class AugBinOrAugOp extends BinOrAugOp {
 	}
 
 	private AugOp op;
-
-    // Constructor, getters, and setters...
 }

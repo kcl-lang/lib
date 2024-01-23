@@ -2,7 +2,16 @@ package com.kcl.ast;
 
 import com.fasterxml.jackson.annotation.JsonTypeName;
 
-// NameConstant enum equivalent in Java
+/**
+ * NameConstant, e.g.
+ * 
+ * <pre>{@code
+True
+False
+None
+Undefined
+ * }</pre>
+ */
 @JsonTypeName("NameConstant")
 public enum NameConstant {
     True, False, None, Undefined;

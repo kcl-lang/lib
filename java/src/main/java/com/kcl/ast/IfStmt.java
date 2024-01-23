@@ -5,17 +5,31 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 
-// IfStmt class equivalent in Java
+/**
+ * IfStmt, e.g.
+ * <p>
+ * 
+ * <pre>{@code
+ * if condition1:
+ *     if condition2:
+ *         a = 1
+ * elif condition3:
+ *     b = 2
+ * else:
+ *     c = 3</code>
+ * }</pre>
+ * </p>
+ */
 @JsonTypeName("If")
 public class IfStmt extends Stmt {
-    @JsonProperty("body")
-    private List<NodeRef<Stmt>> body;
+	@JsonProperty("body")
+	private List<NodeRef<Stmt>> body;
 
-    @JsonProperty("cond")
-    private NodeRef<Expr> cond;
+	@JsonProperty("cond")
+	private NodeRef<Expr> cond;
 
-    @JsonProperty("orelse")
-    private List<NodeRef<Stmt>> orelse;
+	@JsonProperty("orelse")
+	private List<NodeRef<Stmt>> orelse;
 
 	public List<NodeRef<Stmt>> getBody() {
 		return body;
@@ -41,5 +55,5 @@ public class IfStmt extends Stmt {
 		this.orelse = orelse;
 	}
 
-    // Constructor, getters, and setters...
+	// Constructor, getters, and setters...
 }

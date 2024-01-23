@@ -2,12 +2,19 @@ package com.kcl.ast;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+/**
+ * Keyword, e.g.
+ * 
+ * <pre>{@code
+ * arg = value
+ * }</pre>
+ */
 public class Keyword {
-    @JsonProperty("arg")
-    private NodeRef<Identifier> arg;
+	@JsonProperty("arg")
+	private NodeRef<Identifier> arg;
 
-    @JsonProperty("value")
-    private NodeRef<Expr> value; // Nullable to represent Rust's Option
+	@JsonProperty("value")
+	private NodeRef<Expr> value;
 
 	public NodeRef<Identifier> getArg() {
 		return arg;
@@ -25,5 +32,4 @@ public class Keyword {
 		this.value = value;
 	}
 
-    // Constructor, getters, and setters...
 }
