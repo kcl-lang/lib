@@ -37,4 +37,52 @@ public class Module {
         }
         return stmts;
     }
+
+    public String getFilename() {
+        return filename;
+    }
+
+    public void setFilename(String filename) {
+        this.filename = filename;
+    }
+
+    public String getPkg() {
+        return pkg;
+    }
+
+    public void setPkg(String pkg) {
+        this.pkg = pkg;
+    }
+
+    public NodeRef<String> getDoc() {
+        return doc;
+    }
+
+    public void setDoc(NodeRef<String> doc) {
+        this.doc = doc;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public List<NodeRef<Stmt>> getBody() {
+        return body;
+    }
+
+    public void setBody(List<NodeRef<Stmt>> body) {
+        this.body = body;
+    }
+
+    public List<NodeRef<Comment>> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<NodeRef<Comment>> comments) {
+        this.comments = comments;
+    }
 }
