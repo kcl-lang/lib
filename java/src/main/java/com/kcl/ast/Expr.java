@@ -26,7 +26,6 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
     @JsonSubTypes.Type(value = CheckExpr.class, name = "Check"),
     @JsonSubTypes.Type(value = LambdaExpr.class, name = "Lambda"),
     @JsonSubTypes.Type(value = Subscript.class, name = "Subscript"),
-    @JsonSubTypes.Type(value = Arguments.class, name = "Arguments"),
     @JsonSubTypes.Type(value = Compare.class, name = "Compare"),
     @JsonSubTypes.Type(value = NumberLit.class, name = "NumberLit"),
     @JsonSubTypes.Type(value = StringLit.class, name = "StringLit"),

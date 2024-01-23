@@ -1,7 +1,6 @@
 package com.kcl.ast;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonTypeName;
 
 public class Keyword {
     @JsonProperty("arg")
