@@ -2,7 +2,6 @@ package com.kcl.loader;
 
 import java.io.Serializable;
 
-// Equivalent to Rust's SerializableSymbolRef struct
 public class SymbolRef implements Serializable {
     private long i;
     private long g;

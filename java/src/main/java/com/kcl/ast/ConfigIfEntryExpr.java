@@ -5,17 +5,27 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 
-// ConfigIfEntryExpr class equivalent in Java
+/**
+ * ConfigIfEntryExpr, e.g.
+ * 
+ * <pre>{@code
+{
+    k1 = 1
+    if condition:
+        k2 = 2
+}
+ * }</pre>
+ */
 @JsonTypeName("ConfigIfEntry")
 public class ConfigIfEntryExpr extends Expr {
-    @JsonProperty("if_cond")
-    private NodeRef<Expr> ifCond;
+	@JsonProperty("if_cond")
+	private NodeRef<Expr> ifCond;
 
-    @JsonProperty("items")
-    private List<NodeRef<ConfigEntry>> items;
+	@JsonProperty("items")
+	private List<NodeRef<ConfigEntry>> items;
 
-    @JsonProperty("orelse")
-    private NodeRef<Expr> orelse; // Nullable to represent Rust's Option
+	@JsonProperty("orelse")
+	private NodeRef<Expr> orelse;
 
 	public NodeRef<Expr> getIfCond() {
 		return ifCond;
@@ -40,6 +50,4 @@ public class ConfigIfEntryExpr extends Expr {
 	public void setOrelse(NodeRef<Expr> orelse) {
 		this.orelse = orelse;
 	}
-
-    // Constructor, getters, and setters...
 }

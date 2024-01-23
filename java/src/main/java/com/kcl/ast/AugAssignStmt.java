@@ -3,17 +3,25 @@ package com.kcl.ast;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 
-// AugAssignStmt class equivalent in Java
+/**
+ * AugAssignStmt represents an argument assignment, e.g.
+ * <p>
+ * <code>a += 1</code>
+ * </p>
+ * <p>
+ * <code>a -= 1</code>
+ * </p>
+ */
 @JsonTypeName("AugAssign")
 public class AugAssignStmt extends Stmt {
-    @JsonProperty("target")
-    private NodeRef<Identifier> target;
+	@JsonProperty("target")
+	private NodeRef<Identifier> target;
 
-    @JsonProperty("value")
-    private NodeRef<Expr> value;
+	@JsonProperty("value")
+	private NodeRef<Expr> value;
 
-    @JsonProperty("op")
-    private AugOp op;
+	@JsonProperty("op")
+	private AugOp op;
 
 	public NodeRef<Identifier> getTarget() {
 		return target;
@@ -38,6 +46,4 @@ public class AugAssignStmt extends Stmt {
 	public void setOp(AugOp op) {
 		this.op = op;
 	}
-
-    // Constructor, getters, and setters...
 }

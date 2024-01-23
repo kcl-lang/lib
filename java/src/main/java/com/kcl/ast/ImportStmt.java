@@ -3,23 +3,28 @@ package com.kcl.ast;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 
-// ImportStmt class equivalent in Java
+/**
+ * ImportStmt, e.g.
+ * <p>
+ * {@code import pkg as pkg_alias}
+ * </p>
+ */
 @JsonTypeName("Import")
 public class ImportStmt extends Stmt {
-    @JsonProperty("path")
-    private NodeRef<String> path;
+	@JsonProperty("path")
+	private NodeRef<String> path;
 
-    @JsonProperty("rawpath")
-    private String rawpath;
+	@JsonProperty("rawpath")
+	private String rawpath;
 
-    @JsonProperty("name")
-    private String name;
+	@JsonProperty("name")
+	private String name;
 
-    @JsonProperty("asname")
-    private NodeRef<String> asname;
+	@JsonProperty("asname")
+	private NodeRef<String> asname;
 
-    @JsonProperty("pkg_name")
-    private String pkgName;
+	@JsonProperty("pkg_name")
+	private String pkgName;
 
 	public NodeRef<String> getPath() {
 		return path;
@@ -60,6 +65,4 @@ public class ImportStmt extends Stmt {
 	public void setPkgName(String pkgName) {
 		this.pkgName = pkgName;
 	}
-
-    // Constructor, getters, and setters...
 }

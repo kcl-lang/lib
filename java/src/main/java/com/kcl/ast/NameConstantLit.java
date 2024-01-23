@@ -2,10 +2,19 @@ package com.kcl.ast;
 
 import com.fasterxml.jackson.annotation.JsonTypeName;
 
-// NameConstantLit class, assuming it's already defined
+/**
+ * NameConstant, e.g.
+ * 
+ * <pre>{@code
+True
+False
+None
+Undefined
+ * }</pre>
+ */
 @JsonTypeName("NameConstant")
 class NameConstantLit extends Expr {
-    private NameConstant value;
+	private NameConstant value;
 
 	public NameConstant getValue() {
 		return value;

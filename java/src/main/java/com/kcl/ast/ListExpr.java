@@ -5,14 +5,21 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 
-// ListExpr class equivalent in Java
+/**
+ * ListExpr, e.g.
+ * 
+ * <pre>{@code
+ *[1, 2, 3]
+ *[1, if True: 2, 3]
+ * }</pre>
+ */
 @JsonTypeName("List")
 public class ListExpr extends Expr {
-    @JsonProperty("elts")
-    private List<NodeRef<Expr>> elts;
+	@JsonProperty("elts")
+	private List<NodeRef<Expr>> elts;
 
-    @JsonProperty("ctx")
-    private ExprContext ctx;
+	@JsonProperty("ctx")
+	private ExprContext ctx;
 
 	public List<NodeRef<Expr>> getElts() {
 		return elts;
@@ -29,6 +36,4 @@ public class ListExpr extends Expr {
 	public void setCtx(ExprContext ctx) {
 		this.ctx = ctx;
 	}
-
-    // Constructor, getters, and setters...
 }

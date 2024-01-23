@@ -3,17 +3,23 @@ package com.kcl.ast;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 
-// CheckExpr class equivalent in Java
+/**
+ * CheckExpr, e.g.
+ * 
+ * <pre>{@code
+len(attr) > 3 if attr, "Check failed message"
+ * }</pre>
+ */
 @JsonTypeName("Check")
 public class CheckExpr extends Expr {
-    @JsonProperty("test")
-    private NodeRef<Expr> test;
+	@JsonProperty("test")
+	private NodeRef<Expr> test;
 
-    @JsonProperty("if_cond")
-    private NodeRef<Expr> ifCond; // Nullable to represent Rust's Option
+	@JsonProperty("if_cond")
+	private NodeRef<Expr> ifCond;
 
-    @JsonProperty("msg")
-    private NodeRef<Expr> msg; // Nullable to represent Rust's Option
+	@JsonProperty("msg")
+	private NodeRef<Expr> msg;
 
 	public NodeRef<Expr> getTest() {
 		return test;
@@ -38,6 +44,4 @@ public class CheckExpr extends Expr {
 	public void setMsg(NodeRef<Expr> msg) {
 		this.msg = msg;
 	}
-
-    // Constructor, getters, and setters...
 }

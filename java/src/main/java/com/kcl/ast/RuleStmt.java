@@ -5,29 +5,36 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 
-// RuleStmt class equivalent in Java
+/**
+ * RuleStmt, e.g.
+ * 
+ * <pre>{@code 
+ *rule RuleExample:
+ *    a > 1
+ *    b < 0}</pre>
+ */
 @JsonTypeName("Rule")
 public class RuleStmt extends Stmt {
-    @JsonProperty("doc")
-    private NodeRef<String> doc; // Nullable to represent Rust's Option
+	@JsonProperty("doc")
+	private NodeRef<String> doc;
 
-    @JsonProperty("name")
-    private NodeRef<String> name;
+	@JsonProperty("name")
+	private NodeRef<String> name;
 
-    @JsonProperty("parent_rules")
-    private List<NodeRef<Identifier>> parentRules;
+	@JsonProperty("parent_rules")
+	private List<NodeRef<Identifier>> parentRules;
 
-    @JsonProperty("decorators")
-    private List<NodeRef<CallExpr>> decorators;
+	@JsonProperty("decorators")
+	private List<NodeRef<CallExpr>> decorators;
 
-    @JsonProperty("checks")
-    private List<NodeRef<CheckExpr>> checks;
+	@JsonProperty("checks")
+	private List<NodeRef<CheckExpr>> checks;
 
-    @JsonProperty("args")
-    private NodeRef<Arguments> args; // Nullable to represent Rust's Option
+	@JsonProperty("args")
+	private NodeRef<Arguments> args;
 
-    @JsonProperty("for_host_name")
-    private NodeRef<Identifier> forHostName; // Nullable to represent Rust's Option
+	@JsonProperty("for_host_name")
+	private NodeRef<Identifier> forHostName;
 
 	public NodeRef<String> getDoc() {
 		return doc;
@@ -84,6 +91,4 @@ public class RuleStmt extends Stmt {
 	public void setForHostName(NodeRef<Identifier> forHostName) {
 		this.forHostName = forHostName;
 	}
-
-    // Constructor, getters, and setters...
 }

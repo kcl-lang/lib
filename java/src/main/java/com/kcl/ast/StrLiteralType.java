@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 
 @JsonTypeName("Str")
 public class StrLiteralType extends LiteralTypeValue {
-    private String value;
+	private String value;
 
 	public String getValue() {
 		return value;
@@ -14,5 +14,4 @@ public class StrLiteralType extends LiteralTypeValue {
 		this.value = value;
 	}
 
-    // Constructor, getters, and setters...
 }

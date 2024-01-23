@@ -3,20 +3,27 @@ package com.kcl.ast;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 
-// SelectorExpr class
+/**
+ * SelectorExpr, e.g.
+ * 
+ * <pre>{@code
+ *x.y
+ *x?.y
+ * }</pre>
+ */
 @JsonTypeName("Selector")
 public class SelectorExpr extends Expr {
-    @JsonProperty("value")
-    private NodeRef<Expr> value;
+	@JsonProperty("value")
+	private NodeRef<Expr> value;
 
-    @JsonProperty("attr")
-    private NodeRef<Identifier> attr;
+	@JsonProperty("attr")
+	private NodeRef<Identifier> attr;
 
-    @JsonProperty("ctx")
-    private ExprContext ctx;
+	@JsonProperty("ctx")
+	private ExprContext ctx;
 
-    @JsonProperty("has_question")
-    private boolean hasQuestion;
+	@JsonProperty("has_question")
+	private boolean hasQuestion;
 
 	public NodeRef<Expr> getValue() {
 		return value;
@@ -49,6 +56,4 @@ public class SelectorExpr extends Expr {
 	public void setHasQuestion(boolean hasQuestion) {
 		this.hasQuestion = hasQuestion;
 	}
-
-    // ... Constructor, getters, setters ...
 }

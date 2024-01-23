@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 
 @JsonTypeName("Float")
 public class FloatNumberLitValue extends NumberLitValue {
-    public double getValue() {
+	public double getValue() {
 		return value;
 	}
 
@@ -14,5 +14,4 @@ public class FloatNumberLitValue extends NumberLitValue {
 
 	private double value;
 
-    // Constructor, getters, and setters...
 }

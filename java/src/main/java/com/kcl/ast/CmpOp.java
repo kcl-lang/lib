@@ -1,6 +1,5 @@
 package com.kcl.ast;
 
-// CmpOp enum equivalent in Java
 public enum CmpOp {
     Eq("=="),
     NotEq("!="),

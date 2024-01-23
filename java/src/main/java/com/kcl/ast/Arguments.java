@@ -3,16 +3,24 @@ package com.kcl.ast;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
-// Arguments class equivalent in Java
+/**
+ * Arguments, e.g.
+ * 
+ * <pre>{@code
+lambda x: int = 1, y: int = 1 {
+    x + y
+}
+ * }</pre>
+ */
 public class Arguments {
-    @JsonProperty("args")
-    private List<NodeRef<Identifier>> args;
+	@JsonProperty("args")
+	private List<NodeRef<Identifier>> args;
 
-    @JsonProperty("defaults")
-    private List<NodeRef<Expr>> defaults; // List can contain nulls to represent Rust's Vec<Option<NodeRef<Expr>>>
+	@JsonProperty("defaults")
+	private List<NodeRef<Expr>> defaults; // List can contain nulls to represent Rust's Vec<Option<NodeRef<Expr>>>
 
-    @JsonProperty("ty_list")
-    private List<NodeRef<Type>> tyList; // List can contain nulls to represent Rust's Vec<Option<NodeRef<Type>>>
+	@JsonProperty("ty_list")
+	private List<NodeRef<Type>> tyList; // List can contain nulls to represent Rust's Vec<Option<NodeRef<Type>>>
 
 	public List<NodeRef<Identifier>> getArgs() {
 		return args;
@@ -37,7 +45,4 @@ public class Arguments {
 	public void setTyList(List<NodeRef<Type>> tyList) {
 		this.tyList = tyList;
 	}
-
-    // Constructor, getters, and setters...
-    // Additional methods as per Rust impl
 }

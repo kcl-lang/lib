@@ -9,28 +9,28 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 @JsonSerialize
 @JsonDeserialize
 public class Pos {
-    @JsonProperty("filename")
-    private String filename;
+	@JsonProperty("filename")
+	private String filename;
 
-    @JsonProperty("line")
-    private long line;
+	@JsonProperty("line")
+	private long line;
 
-    @JsonProperty("column")
-    private long column;
+	@JsonProperty("column")
+	private long column;
 
-    @JsonProperty("end_line")
-    private long endLine;
+	@JsonProperty("end_line")
+	private long endLine;
 
-    @JsonProperty("end_column")
-    private long endColumn;
+	@JsonProperty("end_column")
+	private long endColumn;
 
-    public Pos(String filename, long line, long column, long endLine, long endColumn) {
-        this.filename = filename;
-        this.line = line;
-        this.column = column;
-        this.endLine = endLine;
-        this.endColumn = endColumn;
-    }
+	public Pos(String filename, long line, long column, long endLine, long endColumn) {
+		this.filename = filename;
+		this.line = line;
+		this.column = column;
+		this.endLine = endLine;
+		this.endColumn = endColumn;
+	}
 
 	public String getFilename() {
 		return filename;
@@ -72,5 +72,4 @@ public class Pos {
 		this.endColumn = endColumn;
 	}
 
-    // Getters and setters...
 }

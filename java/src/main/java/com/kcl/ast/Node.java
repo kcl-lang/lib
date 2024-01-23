@@ -5,6 +5,13 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+/**
+ * Node is the file, line and column number information
+ * that all AST nodes need to contain.
+ * In fact, column and end_column are the counts of character,
+ * For example, `\t` is counted as 1 character, so it is recorded as 1 here, but
+ * generally col is 4.
+ */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonSerialize
 @JsonDeserialize

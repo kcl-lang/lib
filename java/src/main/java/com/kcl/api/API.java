@@ -21,20 +21,16 @@ public class API implements Service {
 	 * 
 	 * <pre>{@code
 	 * 
-	 * import com.kcl.api.*;
-	 * import com.kcl.ast.*;
-	 * import com.kcl.util.JsonUtil;
+	 *import com.kcl.api.*;
+	 *import com.kcl.ast.*;
+	 *import com.kcl.util.JsonUtil;
 	 * 
-	 * // Create an instance of the API class
-	 * API api = new API();
-	 * // Parse the program by providing the file paths to the API
-	 * ParseProgram_Result result = api.parseProgram(
-	 *     ParseProgram_Args.newBuilder().addPaths("path/to/kcl.k").build()
-	 * );
-	 * // Print the JSON representation of the AST (Abstract Syntax Tree)
-	 * System.out.println(result.getAstJson());
-	 * // Deserialize the JSON string into a Program object
-	 * Program program = JsonUtil.deserializeProgram(result.getAstJson());
+	 *API api = new API();
+	 *ParseProgram_Result result = api.parseProgram(
+	 *    ParseProgram_Args.newBuilder().addPaths("path/to/kcl.k").build()
+	 *);
+	 *System.out.println(result.getAstJson());
+	 *Program program = JsonUtil.deserializeProgram(result.getAstJson());
 	 * }</pre>
 	 * 
 	 * @param args the arguments specifying the file paths to be parsed.
@@ -70,8 +66,10 @@ public class API implements Service {
 	 * result.getSymbolsMap().values().forEach(s -> System.out.println(s));
 	 * }</pre>
 	 * 
-	 * @param args the arguments specifying the file paths to be parsed and resolved.
-	 * @return the result of parsing the program and parse errors, type errors, including
+	 * @param args the arguments specifying the file paths to be parsed and
+	 *             resolved.
+	 * @return the result of parsing the program and parse errors, type errors,
+	 *         including
 	 *         the AST in JSON format and symbol, type and definition information.
 	 * @throws Exception if an error occurs during the remote procedure call.
 	 */

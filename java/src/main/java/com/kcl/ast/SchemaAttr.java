@@ -5,29 +5,36 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 
-// SchemaAttr class equivalent in Java
+/**
+ * Schema attribute definitions
+ * 
+ * <pre>{@code
+ *schema SchemaAttrExample:
+ *    x: int
+ *    y: str}</pre>
+ */
 @JsonTypeName("SchemaAttr")
 public class SchemaAttr extends Stmt {
-    @JsonProperty("doc")
-    private String doc;
+	@JsonProperty("doc")
+	private String doc;
 
-    @JsonProperty("name")
-    private NodeRef<String> name;
+	@JsonProperty("name")
+	private NodeRef<String> name;
 
-    @JsonProperty("op")
-    private AugOp op; // Nullable to represent Rust's Option
+	@JsonProperty("op")
+	private AugOp op;
 
-    @JsonProperty("value")
-    private NodeRef<Expr> value; // Nullable to represent Rust's Option
+	@JsonProperty("value")
+	private NodeRef<Expr> value;
 
-    @JsonProperty("is_optional")
-    private boolean isOptional;
+	@JsonProperty("is_optional")
+	private boolean isOptional;
 
-    @JsonProperty("decorators")
-    private List<NodeRef<CallExpr>> decorators;
+	@JsonProperty("decorators")
+	private List<NodeRef<CallExpr>> decorators;
 
-    @JsonProperty("ty")
-    private NodeRef<Type> ty;
+	@JsonProperty("ty")
+	private NodeRef<Type> ty;
 
 	public String getDoc() {
 		return doc;
@@ -84,6 +91,4 @@ public class SchemaAttr extends Stmt {
 	public void setTy(NodeRef<Type> ty) {
 		this.ty = ty;
 	}
-
-    // Constructor, getters, and setters...
 }

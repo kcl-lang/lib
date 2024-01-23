@@ -4,16 +4,22 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-// CompClause class equivalent in Java
+/**
+ * ConfigIfEntryExpr, e.g.
+ * 
+ * <pre>{@code
+i, a in [1, 2, 3] if i > 1 and a > 1
+ * }</pre>
+ */
 public class CompClause {
-    @JsonProperty("targets")
-    private List<NodeRef<Identifier>> targets;
+	@JsonProperty("targets")
+	private List<NodeRef<Identifier>> targets;
 
-    @JsonProperty("iter")
-    private NodeRef<Expr> iter;
+	@JsonProperty("iter")
+	private NodeRef<Expr> iter;
 
-    @JsonProperty("ifs")
-    private List<NodeRef<Expr>> ifs;
+	@JsonProperty("ifs")
+	private List<NodeRef<Expr>> ifs;
 
 	public List<NodeRef<Identifier>> getTargets() {
 		return targets;
@@ -38,6 +44,4 @@ public class CompClause {
 	public void setIfs(List<NodeRef<Expr>> ifs) {
 		this.ifs = ifs;
 	}
-
-    // Constructor, getters, and setters...
 }

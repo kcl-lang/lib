@@ -5,17 +5,19 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 
-// JoinedString class equivalent in Java
+/**
+ * JoinedString, e.g. abc in the string interpolation "${var1} abc ${var2}"
+ */
 @JsonTypeName("JoinedString")
 public class JoinedString extends Expr {
-    @JsonProperty("is_long_string")
-    private boolean isLongString;
+	@JsonProperty("is_long_string")
+	private boolean isLongString;
 
-    @JsonProperty("values")
-    private List<NodeRef<Expr>> values;
+	@JsonProperty("values")
+	private List<NodeRef<Expr>> values;
 
-    @JsonProperty("raw_value")
-    private String rawValue;
+	@JsonProperty("raw_value")
+	private String rawValue;
 
 	public boolean isLongString() {
 		return isLongString;
@@ -41,5 +43,4 @@ public class JoinedString extends Expr {
 		this.rawValue = rawValue;
 	}
 
-    // Constructor, getters, and setters...
 }

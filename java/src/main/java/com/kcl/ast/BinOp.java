@@ -1,6 +1,5 @@
 package com.kcl.ast;
 
-// BinOp enum equivalent in Java
 public enum BinOp {
     Add("+"),
     Sub("-"),

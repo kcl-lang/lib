@@ -1,6 +1,5 @@
 package com.kcl.ast;
 
-// Enum for ConfigEntryOperation, corresponding to Rust enum
 public enum ConfigEntryOperation {
     Union, Override, Insert;
 

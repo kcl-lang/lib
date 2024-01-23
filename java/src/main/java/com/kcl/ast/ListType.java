@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 
 import java.util.Optional;
 
-// ListType class equivalent in Java
 @JsonTypeName("List")
 public class ListType extends Type {
 	public static class ListTypeValue {

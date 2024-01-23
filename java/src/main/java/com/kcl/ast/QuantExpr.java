@@ -5,26 +5,35 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 
-// QuantExpr class equivalent in Java
+/**
+ * QuantExpr, <op> <variables> in <target> {<test> <if_cond>} e.g.
+ * 
+ * <pre>{@code
+all x in collection {x > 0}
+any y in collection {y < 0}
+map x in collection {x + 1}
+filter x in collection {x > 1}
+ * }</pre>
+ */
 @JsonTypeName("Quant")
 public class QuantExpr extends Expr {
-    @JsonProperty("target")
-    private NodeRef<Expr> target;
+	@JsonProperty("target")
+	private NodeRef<Expr> target;
 
-    @JsonProperty("variables")
-    private List<NodeRef<Identifier>> variables;
+	@JsonProperty("variables")
+	private List<NodeRef<Identifier>> variables;
 
-    @JsonProperty("op")
-    private QuantOperation op;
+	@JsonProperty("op")
+	private QuantOperation op;
 
-    @JsonProperty("test")
-    private NodeRef<Expr> test;
+	@JsonProperty("test")
+	private NodeRef<Expr> test;
 
-    @JsonProperty("if_cond")
-    private NodeRef<Expr> ifCond; // Nullable to represent Rust's Option
+	@JsonProperty("if_cond")
+	private NodeRef<Expr> ifCond;
 
-    @JsonProperty("ctx")
-    private ExprContext ctx;
+	@JsonProperty("ctx")
+	private ExprContext ctx;
 
 	public NodeRef<Expr> getTarget() {
 		return target;
@@ -73,6 +82,4 @@ public class QuantExpr extends Expr {
 	public void setCtx(ExprContext ctx) {
 		this.ctx = ctx;
 	}
-
-    // Constructor, getters, and setters...
 }
