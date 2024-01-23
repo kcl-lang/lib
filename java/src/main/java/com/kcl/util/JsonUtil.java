@@ -3,6 +3,7 @@ package com.kcl.util;
 import java.io.IOException;
 
 import com.kcl.ast.Program;
+import com.kcl.loader.ScopeRef;
 import com.kcl.loader.SymbolRef;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -20,5 +21,12 @@ public class JsonUtil {
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
         return objectMapper.readValue(jsonString, SymbolRef.class);
+    }
+
+    public static ScopeRef deserializeScopeRef(String jsonString) throws IOException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
+        return objectMapper.readValue(jsonString, ScopeRef.class);
     }
 }

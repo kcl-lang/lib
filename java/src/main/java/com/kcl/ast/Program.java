@@ -40,5 +40,17 @@ public class Program {
 		this.pkgs = pkgs;
 	}
 
+	public List<Module> getMainPackage() {
+		return pkgs.get("__main__");
+	}
+
+	public Module getFirstModule() {
+		List<Module> modules = getMainPackage();
+		if (modules == null) {
+			return null;
+		}
+		return modules.get(0);
+	}
+
     // Other methods and logic...
 }

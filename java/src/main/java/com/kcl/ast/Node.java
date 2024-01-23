@@ -1,6 +1,5 @@
 package com.kcl.ast;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -10,28 +9,28 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 @JsonSerialize
 @JsonDeserialize
 public class Node<T> {
-    @JsonIgnore
-    private AstIndex id;
+	@JsonProperty("id")
+	private String id;
 
-    @JsonProperty("node")
-    private T node;
+	@JsonProperty("node")
+	private T node;
 
-    @JsonProperty("filename")
-    private String filename;
+	@JsonProperty("filename")
+	private String filename;
 
-    @JsonProperty("line")
-    private long line;
+	@JsonProperty("line")
+	private long line;
 
-    @JsonProperty("column")
-    private long column;
+	@JsonProperty("column")
+	private long column;
 
-    @JsonProperty("end_line")
-    private long endLine;
+	@JsonProperty("end_line")
+	private long endLine;
 
-    @JsonProperty("end_column")
-    private long endColumn;
+	@JsonProperty("end_column")
+	private long endColumn;
 
-    public long getEndColumn() {
+	public long getEndColumn() {
 		return endColumn;
 	}
 
@@ -39,23 +38,24 @@ public class Node<T> {
 		this.endColumn = endColumn;
 	}
 
-    public Node() {}
+	public Node() {
+	}
 
-	public Node(AstIndex id, T node, String filename, long line, long column, long endLine, long endColumn) {
-        this.id = id;
-        this.node = node;
-        this.filename = filename;
-        this.line = line;
-        this.column = column;
-        this.endLine = endLine;
-        this.endColumn = endColumn;
-    }
+	public Node(String id, T node, String filename, long line, long column, long endLine, long endColumn) {
+		this.id = id;
+		this.node = node;
+		this.filename = filename;
+		this.line = line;
+		this.column = column;
+		this.endLine = endLine;
+		this.endColumn = endColumn;
+	}
 
-	public AstIndex getId() {
+	public String getId() {
 		return id;
 	}
 
-	public void setId(AstIndex id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 
@@ -99,5 +99,5 @@ public class Node<T> {
 		this.endLine = endLine;
 	}
 
-    // Getters and setters...
+	// Getters and setters...
 }
