@@ -46,6 +46,8 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 @JsonTypeName("Program")
 public class Program {
 
+	public static String MAIN_PKG = "__main__";
+
 	@JsonProperty("root")
 	private String root;
 
@@ -73,7 +75,7 @@ public class Program {
 	}
 
 	public List<Module> getMainPackage() {
-		return pkgs.get("__main__");
+		return pkgs.get(MAIN_PKG);
 	}
 
 	public Module getFirstModule() {
@@ -83,6 +85,4 @@ public class Program {
 		}
 		return modules.get(0);
 	}
-
-	// Other methods and logic...
 }
