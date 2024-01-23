@@ -25,6 +25,10 @@ public class LoadPackageTest {
                 LoadPackage_Args.newBuilder().setResolveAst(true).setWithAstIndex(true).setParseArgs(
                         ParseProgram_Args.newBuilder().addPaths("./src/test_data/schema.k").build())
                         .build());
+        // Get parse errors
+        System.out.println(result.getParseErrorsList());
+        // Get Type errors
+        System.out.println(result.getTypeErrorsList());
         // Get AST
         Program program = JsonUtil.deserializeProgram(result.getProgram());
         System.out.println(program.getRoot());
