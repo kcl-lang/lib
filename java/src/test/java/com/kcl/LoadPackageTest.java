@@ -1,7 +1,6 @@
 package com.kcl;
 
-import java.util.Collection;
-
+import org.junit.Assert;
 import org.junit.Test;
 
 import com.kcl.api.API;
@@ -10,6 +9,7 @@ import com.kcl.api.Spec.LoadPackage_Result;
 import com.kcl.api.Spec.ParseProgram_Args;
 import com.kcl.api.Spec.Scope;
 import com.kcl.api.Spec.Symbol;
+import com.kcl.api.Spec.SymbolIndex;
 import com.kcl.ast.NodeRef;
 import com.kcl.ast.Program;
 import com.kcl.ast.Stmt;
@@ -26,31 +26,31 @@ public class LoadPackageTest {
                         ParseProgram_Args.newBuilder().addPaths("./src/test_data/schema.k").build())
                         .build());
         // Get parse errors
-        System.out.println(result.getParseErrorsList());
+        Assert.assertEquals(result.getParseErrorsList().size(), 0);
         // Get Type errors
-        System.out.println(result.getTypeErrorsList());
+        Assert.assertEquals(result.getTypeErrorsList().size(), 0);
         // Get AST
         Program program = JsonUtil.deserializeProgram(result.getProgram());
-        System.out.println(program.getRoot());
-        // Get symbols
-        Collection<Symbol> symbols = result.getSymbolsMap().values();
-        symbols.forEach(s -> System.out.println(s));
-        // Get scopes
-        Collection<Scope> scopes = result.getScopesMap().values();
-        scopes.forEach(s -> System.out.println(s));
+        Assert.assertTrue(program.getRoot().contains("test_data"));
         // Variable definitions in the main scope.
         Scope mainScope = SematicUtil.findMainPackageScope(result);
-        mainScope.getDefsList().forEach(s -> {
-            try {
-                System.out.println(SematicUtil.findSymbol(result, s));
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        });
         // Child scopes of the main scope.
-        System.out.println(mainScope.getChildrenList());
+        Assert.assertEquals(mainScope.getChildrenList().size(), 2);
         // Mapping AST node to Symbol type
         NodeRef<Stmt> stmt = program.getFirstModule().getBody().get(0);
-        System.out.println(SematicUtil.findSymbolByAstId(result, stmt.getId()));
+        Assert.assertTrue(SematicUtil.findSymbolByAstId(result, stmt.getId()).getName().contains("pkg"));
+        // Mapping symbol to AST node
+        SymbolIndex appSymbolIndex = mainScope.getDefs(1);
+        Symbol appSymbol = SematicUtil.findSymbol(result, appSymbolIndex);
+        Assert.assertEquals(appSymbol.getTy().getSchemaName(), "AppConfig");
+        // Query type symbol using variable type.
+        String schemaFullName = appSymbol.getTy().getPkgPath() + "." + appSymbol.getTy().getSchemaName();
+        Symbol appConfigSymbol = SematicUtil.findSymbol(result,
+                result.getFullyQualifiedNameMapOrDefault(schemaFullName, null));
+        Assert.assertEquals(appConfigSymbol.getTy().getSchemaName(), "AppConfig");
+        // Query AST node using the symbol
+        Assert.assertNotNull(SematicUtil.findNodeBySymbol(result, appSymbolIndex));
+        // Query Scope using the symbol
+        Assert.assertEquals(SematicUtil.findScopeBySymbol(result, appSymbolIndex).getDefsCount(), 2);
     }
 }

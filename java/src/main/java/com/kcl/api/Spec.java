@@ -12753,172 +12753,98 @@ public final class Spec {
 
     /**
      * <pre>
-     * Map key is the AST index UUID string.
+     * Parse errors
      * </pre>
      *
-     * <code>map&lt;string, .com.kcl.api.SymbolIndex&gt; node_symbol_map = 3;</code>
+     * <code>repeated .com.kcl.api.Error parse_errors = 3;</code>
      */
-    int getNodeSymbolMapCount();
+    java.util.List<com.kcl.api.Spec.Error> 
+        getParseErrorsList();
     /**
      * <pre>
-     * Map key is the AST index UUID string.
+     * Parse errors
      * </pre>
      *
-     * <code>map&lt;string, .com.kcl.api.SymbolIndex&gt; node_symbol_map = 3;</code>
+     * <code>repeated .com.kcl.api.Error parse_errors = 3;</code>
      */
-    boolean containsNodeSymbolMap(
-        java.lang.String key);
-    /**
-     * Use {@link #getNodeSymbolMapMap()} instead.
-     */
-    @java.lang.Deprecated
-    java.util.Map<java.lang.String, com.kcl.api.Spec.SymbolIndex>
-    getNodeSymbolMap();
+    com.kcl.api.Spec.Error getParseErrors(int index);
     /**
      * <pre>
-     * Map key is the AST index UUID string.
+     * Parse errors
      * </pre>
      *
-     * <code>map&lt;string, .com.kcl.api.SymbolIndex&gt; node_symbol_map = 3;</code>
+     * <code>repeated .com.kcl.api.Error parse_errors = 3;</code>
      */
-    java.util.Map<java.lang.String, com.kcl.api.Spec.SymbolIndex>
-    getNodeSymbolMapMap();
+    int getParseErrorsCount();
     /**
      * <pre>
-     * Map key is the AST index UUID string.
+     * Parse errors
      * </pre>
      *
-     * <code>map&lt;string, .com.kcl.api.SymbolIndex&gt; node_symbol_map = 3;</code>
+     * <code>repeated .com.kcl.api.Error parse_errors = 3;</code>
      */
-
-    com.kcl.api.Spec.SymbolIndex getNodeSymbolMapOrDefault(
-        java.lang.String key,
-        com.kcl.api.Spec.SymbolIndex defaultValue);
+    java.util.List<? extends com.kcl.api.Spec.ErrorOrBuilder> 
+        getParseErrorsOrBuilderList();
     /**
      * <pre>
-     * Map key is the AST index UUID string.
+     * Parse errors
      * </pre>
      *
-     * <code>map&lt;string, .com.kcl.api.SymbolIndex&gt; node_symbol_map = 3;</code>
+     * <code>repeated .com.kcl.api.Error parse_errors = 3;</code>
      */
-
-    com.kcl.api.Spec.SymbolIndex getNodeSymbolMapOrThrow(
-        java.lang.String key);
+    com.kcl.api.Spec.ErrorOrBuilder getParseErrorsOrBuilder(
+        int index);
 
     /**
      * <pre>
-     * Map key is the SymbolIndex json string.
+     * Type errors
      * </pre>
      *
-     * <code>map&lt;string, .com.kcl.api.Symbol&gt; symbols = 4;</code>
+     * <code>repeated .com.kcl.api.Error type_errors = 4;</code>
      */
-    int getSymbolsCount();
+    java.util.List<com.kcl.api.Spec.Error> 
+        getTypeErrorsList();
     /**
      * <pre>
-     * Map key is the SymbolIndex json string.
+     * Type errors
      * </pre>
      *
-     * <code>map&lt;string, .com.kcl.api.Symbol&gt; symbols = 4;</code>
+     * <code>repeated .com.kcl.api.Error type_errors = 4;</code>
      */
-    boolean containsSymbols(
-        java.lang.String key);
-    /**
-     * Use {@link #getSymbolsMap()} instead.
-     */
-    @java.lang.Deprecated
-    java.util.Map<java.lang.String, com.kcl.api.Spec.Symbol>
-    getSymbols();
+    com.kcl.api.Spec.Error getTypeErrors(int index);
     /**
      * <pre>
-     * Map key is the SymbolIndex json string.
+     * Type errors
      * </pre>
      *
-     * <code>map&lt;string, .com.kcl.api.Symbol&gt; symbols = 4;</code>
+     * <code>repeated .com.kcl.api.Error type_errors = 4;</code>
      */
-    java.util.Map<java.lang.String, com.kcl.api.Spec.Symbol>
-    getSymbolsMap();
+    int getTypeErrorsCount();
     /**
      * <pre>
-     * Map key is the SymbolIndex json string.
+     * Type errors
      * </pre>
      *
-     * <code>map&lt;string, .com.kcl.api.Symbol&gt; symbols = 4;</code>
+     * <code>repeated .com.kcl.api.Error type_errors = 4;</code>
      */
-
-    com.kcl.api.Spec.Symbol getSymbolsOrDefault(
-        java.lang.String key,
-        com.kcl.api.Spec.Symbol defaultValue);
+    java.util.List<? extends com.kcl.api.Spec.ErrorOrBuilder> 
+        getTypeErrorsOrBuilderList();
     /**
      * <pre>
-     * Map key is the SymbolIndex json string.
+     * Type errors
      * </pre>
      *
-     * <code>map&lt;string, .com.kcl.api.Symbol&gt; symbols = 4;</code>
+     * <code>repeated .com.kcl.api.Error type_errors = 4;</code>
      */
-
-    com.kcl.api.Spec.Symbol getSymbolsOrThrow(
-        java.lang.String key);
-
-    /**
-     * <pre>
-     * Map key is the package path.
-     * </pre>
-     *
-     * <code>map&lt;string, .com.kcl.api.ScopeIndex&gt; pkg_scope_map = 5;</code>
-     */
-    int getPkgScopeMapCount();
-    /**
-     * <pre>
-     * Map key is the package path.
-     * </pre>
-     *
-     * <code>map&lt;string, .com.kcl.api.ScopeIndex&gt; pkg_scope_map = 5;</code>
-     */
-    boolean containsPkgScopeMap(
-        java.lang.String key);
-    /**
-     * Use {@link #getPkgScopeMapMap()} instead.
-     */
-    @java.lang.Deprecated
-    java.util.Map<java.lang.String, com.kcl.api.Spec.ScopeIndex>
-    getPkgScopeMap();
-    /**
-     * <pre>
-     * Map key is the package path.
-     * </pre>
-     *
-     * <code>map&lt;string, .com.kcl.api.ScopeIndex&gt; pkg_scope_map = 5;</code>
-     */
-    java.util.Map<java.lang.String, com.kcl.api.Spec.ScopeIndex>
-    getPkgScopeMapMap();
-    /**
-     * <pre>
-     * Map key is the package path.
-     * </pre>
-     *
-     * <code>map&lt;string, .com.kcl.api.ScopeIndex&gt; pkg_scope_map = 5;</code>
-     */
-
-    com.kcl.api.Spec.ScopeIndex getPkgScopeMapOrDefault(
-        java.lang.String key,
-        com.kcl.api.Spec.ScopeIndex defaultValue);
-    /**
-     * <pre>
-     * Map key is the package path.
-     * </pre>
-     *
-     * <code>map&lt;string, .com.kcl.api.ScopeIndex&gt; pkg_scope_map = 5;</code>
-     */
-
-    com.kcl.api.Spec.ScopeIndex getPkgScopeMapOrThrow(
-        java.lang.String key);
+    com.kcl.api.Spec.ErrorOrBuilder getTypeErrorsOrBuilder(
+        int index);
 
     /**
      * <pre>
      * Map key is the ScopeIndex json string.
      * </pre>
      *
-     * <code>map&lt;string, .com.kcl.api.Scope&gt; scopes = 6;</code>
+     * <code>map&lt;string, .com.kcl.api.Scope&gt; scopes = 5;</code>
      */
     int getScopesCount();
     /**
@@ -12926,7 +12852,7 @@ public final class Spec {
      * Map key is the ScopeIndex json string.
      * </pre>
      *
-     * <code>map&lt;string, .com.kcl.api.Scope&gt; scopes = 6;</code>
+     * <code>map&lt;string, .com.kcl.api.Scope&gt; scopes = 5;</code>
      */
     boolean containsScopes(
         java.lang.String key);
@@ -12941,7 +12867,7 @@ public final class Spec {
      * Map key is the ScopeIndex json string.
      * </pre>
      *
-     * <code>map&lt;string, .com.kcl.api.Scope&gt; scopes = 6;</code>
+     * <code>map&lt;string, .com.kcl.api.Scope&gt; scopes = 5;</code>
      */
     java.util.Map<java.lang.String, com.kcl.api.Spec.Scope>
     getScopesMap();
@@ -12950,7 +12876,7 @@ public final class Spec {
      * Map key is the ScopeIndex json string.
      * </pre>
      *
-     * <code>map&lt;string, .com.kcl.api.Scope&gt; scopes = 6;</code>
+     * <code>map&lt;string, .com.kcl.api.Scope&gt; scopes = 5;</code>
      */
 
     com.kcl.api.Spec.Scope getScopesOrDefault(
@@ -12961,7 +12887,7 @@ public final class Spec {
      * Map key is the ScopeIndex json string.
      * </pre>
      *
-     * <code>map&lt;string, .com.kcl.api.Scope&gt; scopes = 6;</code>
+     * <code>map&lt;string, .com.kcl.api.Scope&gt; scopes = 5;</code>
      */
 
     com.kcl.api.Spec.Scope getScopesOrThrow(
@@ -12969,91 +12895,273 @@ public final class Spec {
 
     /**
      * <pre>
-     * Parse errors
+     * Map key is the SymbolIndex json string.
      * </pre>
      *
-     * <code>repeated .com.kcl.api.Error parse_errors = 7;</code>
+     * <code>map&lt;string, .com.kcl.api.Symbol&gt; symbols = 6;</code>
      */
-    java.util.List<com.kcl.api.Spec.Error> 
-        getParseErrorsList();
+    int getSymbolsCount();
     /**
      * <pre>
-     * Parse errors
+     * Map key is the SymbolIndex json string.
      * </pre>
      *
-     * <code>repeated .com.kcl.api.Error parse_errors = 7;</code>
+     * <code>map&lt;string, .com.kcl.api.Symbol&gt; symbols = 6;</code>
      */
-    com.kcl.api.Spec.Error getParseErrors(int index);
+    boolean containsSymbols(
+        java.lang.String key);
+    /**
+     * Use {@link #getSymbolsMap()} instead.
+     */
+    @java.lang.Deprecated
+    java.util.Map<java.lang.String, com.kcl.api.Spec.Symbol>
+    getSymbols();
     /**
      * <pre>
-     * Parse errors
+     * Map key is the SymbolIndex json string.
      * </pre>
      *
-     * <code>repeated .com.kcl.api.Error parse_errors = 7;</code>
+     * <code>map&lt;string, .com.kcl.api.Symbol&gt; symbols = 6;</code>
      */
-    int getParseErrorsCount();
+    java.util.Map<java.lang.String, com.kcl.api.Spec.Symbol>
+    getSymbolsMap();
     /**
      * <pre>
-     * Parse errors
+     * Map key is the SymbolIndex json string.
      * </pre>
      *
-     * <code>repeated .com.kcl.api.Error parse_errors = 7;</code>
+     * <code>map&lt;string, .com.kcl.api.Symbol&gt; symbols = 6;</code>
      */
-    java.util.List<? extends com.kcl.api.Spec.ErrorOrBuilder> 
-        getParseErrorsOrBuilderList();
+
+    com.kcl.api.Spec.Symbol getSymbolsOrDefault(
+        java.lang.String key,
+        com.kcl.api.Spec.Symbol defaultValue);
     /**
      * <pre>
-     * Parse errors
+     * Map key is the SymbolIndex json string.
      * </pre>
      *
-     * <code>repeated .com.kcl.api.Error parse_errors = 7;</code>
+     * <code>map&lt;string, .com.kcl.api.Symbol&gt; symbols = 6;</code>
      */
-    com.kcl.api.Spec.ErrorOrBuilder getParseErrorsOrBuilder(
-        int index);
+
+    com.kcl.api.Spec.Symbol getSymbolsOrThrow(
+        java.lang.String key);
 
     /**
      * <pre>
-     * Type errors
+     * Map key is the AST index UUID string.
      * </pre>
      *
-     * <code>repeated .com.kcl.api.Error type_errors = 8;</code>
+     * <code>map&lt;string, .com.kcl.api.SymbolIndex&gt; node_symbol_map = 7;</code>
      */
-    java.util.List<com.kcl.api.Spec.Error> 
-        getTypeErrorsList();
+    int getNodeSymbolMapCount();
     /**
      * <pre>
-     * Type errors
+     * Map key is the AST index UUID string.
      * </pre>
      *
-     * <code>repeated .com.kcl.api.Error type_errors = 8;</code>
+     * <code>map&lt;string, .com.kcl.api.SymbolIndex&gt; node_symbol_map = 7;</code>
      */
-    com.kcl.api.Spec.Error getTypeErrors(int index);
+    boolean containsNodeSymbolMap(
+        java.lang.String key);
+    /**
+     * Use {@link #getNodeSymbolMapMap()} instead.
+     */
+    @java.lang.Deprecated
+    java.util.Map<java.lang.String, com.kcl.api.Spec.SymbolIndex>
+    getNodeSymbolMap();
     /**
      * <pre>
-     * Type errors
+     * Map key is the AST index UUID string.
      * </pre>
      *
-     * <code>repeated .com.kcl.api.Error type_errors = 8;</code>
+     * <code>map&lt;string, .com.kcl.api.SymbolIndex&gt; node_symbol_map = 7;</code>
      */
-    int getTypeErrorsCount();
+    java.util.Map<java.lang.String, com.kcl.api.Spec.SymbolIndex>
+    getNodeSymbolMapMap();
     /**
      * <pre>
-     * Type errors
+     * Map key is the AST index UUID string.
      * </pre>
      *
-     * <code>repeated .com.kcl.api.Error type_errors = 8;</code>
+     * <code>map&lt;string, .com.kcl.api.SymbolIndex&gt; node_symbol_map = 7;</code>
      */
-    java.util.List<? extends com.kcl.api.Spec.ErrorOrBuilder> 
-        getTypeErrorsOrBuilderList();
+
+    com.kcl.api.Spec.SymbolIndex getNodeSymbolMapOrDefault(
+        java.lang.String key,
+        com.kcl.api.Spec.SymbolIndex defaultValue);
     /**
      * <pre>
-     * Type errors
+     * Map key is the AST index UUID string.
      * </pre>
      *
-     * <code>repeated .com.kcl.api.Error type_errors = 8;</code>
+     * <code>map&lt;string, .com.kcl.api.SymbolIndex&gt; node_symbol_map = 7;</code>
      */
-    com.kcl.api.Spec.ErrorOrBuilder getTypeErrorsOrBuilder(
-        int index);
+
+    com.kcl.api.Spec.SymbolIndex getNodeSymbolMapOrThrow(
+        java.lang.String key);
+
+    /**
+     * <pre>
+     * Map key is the SymbolIndex json string.
+     * </pre>
+     *
+     * <code>map&lt;string, string&gt; symbol_node_map = 8;</code>
+     */
+    int getSymbolNodeMapCount();
+    /**
+     * <pre>
+     * Map key is the SymbolIndex json string.
+     * </pre>
+     *
+     * <code>map&lt;string, string&gt; symbol_node_map = 8;</code>
+     */
+    boolean containsSymbolNodeMap(
+        java.lang.String key);
+    /**
+     * Use {@link #getSymbolNodeMapMap()} instead.
+     */
+    @java.lang.Deprecated
+    java.util.Map<java.lang.String, java.lang.String>
+    getSymbolNodeMap();
+    /**
+     * <pre>
+     * Map key is the SymbolIndex json string.
+     * </pre>
+     *
+     * <code>map&lt;string, string&gt; symbol_node_map = 8;</code>
+     */
+    java.util.Map<java.lang.String, java.lang.String>
+    getSymbolNodeMapMap();
+    /**
+     * <pre>
+     * Map key is the SymbolIndex json string.
+     * </pre>
+     *
+     * <code>map&lt;string, string&gt; symbol_node_map = 8;</code>
+     */
+
+    java.lang.String getSymbolNodeMapOrDefault(
+        java.lang.String key,
+        java.lang.String defaultValue);
+    /**
+     * <pre>
+     * Map key is the SymbolIndex json string.
+     * </pre>
+     *
+     * <code>map&lt;string, string&gt; symbol_node_map = 8;</code>
+     */
+
+    java.lang.String getSymbolNodeMapOrThrow(
+        java.lang.String key);
+
+    /**
+     * <pre>
+     * Map key is the fully_qualified_name e.g. `pkg.Name`
+     * </pre>
+     *
+     * <code>map&lt;string, .com.kcl.api.SymbolIndex&gt; fully_qualified_name_map = 9;</code>
+     */
+    int getFullyQualifiedNameMapCount();
+    /**
+     * <pre>
+     * Map key is the fully_qualified_name e.g. `pkg.Name`
+     * </pre>
+     *
+     * <code>map&lt;string, .com.kcl.api.SymbolIndex&gt; fully_qualified_name_map = 9;</code>
+     */
+    boolean containsFullyQualifiedNameMap(
+        java.lang.String key);
+    /**
+     * Use {@link #getFullyQualifiedNameMapMap()} instead.
+     */
+    @java.lang.Deprecated
+    java.util.Map<java.lang.String, com.kcl.api.Spec.SymbolIndex>
+    getFullyQualifiedNameMap();
+    /**
+     * <pre>
+     * Map key is the fully_qualified_name e.g. `pkg.Name`
+     * </pre>
+     *
+     * <code>map&lt;string, .com.kcl.api.SymbolIndex&gt; fully_qualified_name_map = 9;</code>
+     */
+    java.util.Map<java.lang.String, com.kcl.api.Spec.SymbolIndex>
+    getFullyQualifiedNameMapMap();
+    /**
+     * <pre>
+     * Map key is the fully_qualified_name e.g. `pkg.Name`
+     * </pre>
+     *
+     * <code>map&lt;string, .com.kcl.api.SymbolIndex&gt; fully_qualified_name_map = 9;</code>
+     */
+
+    com.kcl.api.Spec.SymbolIndex getFullyQualifiedNameMapOrDefault(
+        java.lang.String key,
+        com.kcl.api.Spec.SymbolIndex defaultValue);
+    /**
+     * <pre>
+     * Map key is the fully_qualified_name e.g. `pkg.Name`
+     * </pre>
+     *
+     * <code>map&lt;string, .com.kcl.api.SymbolIndex&gt; fully_qualified_name_map = 9;</code>
+     */
+
+    com.kcl.api.Spec.SymbolIndex getFullyQualifiedNameMapOrThrow(
+        java.lang.String key);
+
+    /**
+     * <pre>
+     * Map key is the package path.
+     * </pre>
+     *
+     * <code>map&lt;string, .com.kcl.api.ScopeIndex&gt; pkg_scope_map = 10;</code>
+     */
+    int getPkgScopeMapCount();
+    /**
+     * <pre>
+     * Map key is the package path.
+     * </pre>
+     *
+     * <code>map&lt;string, .com.kcl.api.ScopeIndex&gt; pkg_scope_map = 10;</code>
+     */
+    boolean containsPkgScopeMap(
+        java.lang.String key);
+    /**
+     * Use {@link #getPkgScopeMapMap()} instead.
+     */
+    @java.lang.Deprecated
+    java.util.Map<java.lang.String, com.kcl.api.Spec.ScopeIndex>
+    getPkgScopeMap();
+    /**
+     * <pre>
+     * Map key is the package path.
+     * </pre>
+     *
+     * <code>map&lt;string, .com.kcl.api.ScopeIndex&gt; pkg_scope_map = 10;</code>
+     */
+    java.util.Map<java.lang.String, com.kcl.api.Spec.ScopeIndex>
+    getPkgScopeMapMap();
+    /**
+     * <pre>
+     * Map key is the package path.
+     * </pre>
+     *
+     * <code>map&lt;string, .com.kcl.api.ScopeIndex&gt; pkg_scope_map = 10;</code>
+     */
+
+    com.kcl.api.Spec.ScopeIndex getPkgScopeMapOrDefault(
+        java.lang.String key,
+        com.kcl.api.Spec.ScopeIndex defaultValue);
+    /**
+     * <pre>
+     * Map key is the package path.
+     * </pre>
+     *
+     * <code>map&lt;string, .com.kcl.api.ScopeIndex&gt; pkg_scope_map = 10;</code>
+     */
+
+    com.kcl.api.Spec.ScopeIndex getPkgScopeMapOrThrow(
+        java.lang.String key);
   }
   /**
    * Protobuf type {@code com.kcl.api.LoadPackage_Result}
@@ -13122,48 +13230,27 @@ public final class Spec {
             }
             case 26: {
               if (!((mutable_bitField0_ & 0x00000002) != 0)) {
-                nodeSymbolMap_ = com.google.protobuf.MapField.newMapField(
-                    NodeSymbolMapDefaultEntryHolder.defaultEntry);
+                parseErrors_ = new java.util.ArrayList<com.kcl.api.Spec.Error>();
                 mutable_bitField0_ |= 0x00000002;
               }
-              com.google.protobuf.MapEntry<java.lang.String, com.kcl.api.Spec.SymbolIndex>
-              nodeSymbolMap__ = input.readMessage(
-                  NodeSymbolMapDefaultEntryHolder.defaultEntry.getParserForType(), extensionRegistry);
-              nodeSymbolMap_.getMutableMap().put(
-                  nodeSymbolMap__.getKey(), nodeSymbolMap__.getValue());
+              parseErrors_.add(
+                  input.readMessage(com.kcl.api.Spec.Error.parser(), extensionRegistry));
               break;
             }
             case 34: {
               if (!((mutable_bitField0_ & 0x00000004) != 0)) {
-                symbols_ = com.google.protobuf.MapField.newMapField(
-                    SymbolsDefaultEntryHolder.defaultEntry);
+                typeErrors_ = new java.util.ArrayList<com.kcl.api.Spec.Error>();
                 mutable_bitField0_ |= 0x00000004;
               }
-              com.google.protobuf.MapEntry<java.lang.String, com.kcl.api.Spec.Symbol>
-              symbols__ = input.readMessage(
-                  SymbolsDefaultEntryHolder.defaultEntry.getParserForType(), extensionRegistry);
-              symbols_.getMutableMap().put(
-                  symbols__.getKey(), symbols__.getValue());
+              typeErrors_.add(
+                  input.readMessage(com.kcl.api.Spec.Error.parser(), extensionRegistry));
               break;
             }
             case 42: {
               if (!((mutable_bitField0_ & 0x00000008) != 0)) {
-                pkgScopeMap_ = com.google.protobuf.MapField.newMapField(
-                    PkgScopeMapDefaultEntryHolder.defaultEntry);
-                mutable_bitField0_ |= 0x00000008;
-              }
-              com.google.protobuf.MapEntry<java.lang.String, com.kcl.api.Spec.ScopeIndex>
-              pkgScopeMap__ = input.readMessage(
-                  PkgScopeMapDefaultEntryHolder.defaultEntry.getParserForType(), extensionRegistry);
-              pkgScopeMap_.getMutableMap().put(
-                  pkgScopeMap__.getKey(), pkgScopeMap__.getValue());
-              break;
-            }
-            case 50: {
-              if (!((mutable_bitField0_ & 0x00000010) != 0)) {
                 scopes_ = com.google.protobuf.MapField.newMapField(
                     ScopesDefaultEntryHolder.defaultEntry);
-                mutable_bitField0_ |= 0x00000010;
+                mutable_bitField0_ |= 0x00000008;
               }
               com.google.protobuf.MapEntry<java.lang.String, com.kcl.api.Spec.Scope>
               scopes__ = input.readMessage(
@@ -13172,22 +13259,69 @@ public final class Spec {
                   scopes__.getKey(), scopes__.getValue());
               break;
             }
+            case 50: {
+              if (!((mutable_bitField0_ & 0x00000010) != 0)) {
+                symbols_ = com.google.protobuf.MapField.newMapField(
+                    SymbolsDefaultEntryHolder.defaultEntry);
+                mutable_bitField0_ |= 0x00000010;
+              }
+              com.google.protobuf.MapEntry<java.lang.String, com.kcl.api.Spec.Symbol>
+              symbols__ = input.readMessage(
+                  SymbolsDefaultEntryHolder.defaultEntry.getParserForType(), extensionRegistry);
+              symbols_.getMutableMap().put(
+                  symbols__.getKey(), symbols__.getValue());
+              break;
+            }
             case 58: {
               if (!((mutable_bitField0_ & 0x00000020) != 0)) {
-                parseErrors_ = new java.util.ArrayList<com.kcl.api.Spec.Error>();
+                nodeSymbolMap_ = com.google.protobuf.MapField.newMapField(
+                    NodeSymbolMapDefaultEntryHolder.defaultEntry);
                 mutable_bitField0_ |= 0x00000020;
               }
-              parseErrors_.add(
-                  input.readMessage(com.kcl.api.Spec.Error.parser(), extensionRegistry));
+              com.google.protobuf.MapEntry<java.lang.String, com.kcl.api.Spec.SymbolIndex>
+              nodeSymbolMap__ = input.readMessage(
+                  NodeSymbolMapDefaultEntryHolder.defaultEntry.getParserForType(), extensionRegistry);
+              nodeSymbolMap_.getMutableMap().put(
+                  nodeSymbolMap__.getKey(), nodeSymbolMap__.getValue());
               break;
             }
             case 66: {
               if (!((mutable_bitField0_ & 0x00000040) != 0)) {
-                typeErrors_ = new java.util.ArrayList<com.kcl.api.Spec.Error>();
+                symbolNodeMap_ = com.google.protobuf.MapField.newMapField(
+                    SymbolNodeMapDefaultEntryHolder.defaultEntry);
                 mutable_bitField0_ |= 0x00000040;
               }
-              typeErrors_.add(
-                  input.readMessage(com.kcl.api.Spec.Error.parser(), extensionRegistry));
+              com.google.protobuf.MapEntry<java.lang.String, java.lang.String>
+              symbolNodeMap__ = input.readMessage(
+                  SymbolNodeMapDefaultEntryHolder.defaultEntry.getParserForType(), extensionRegistry);
+              symbolNodeMap_.getMutableMap().put(
+                  symbolNodeMap__.getKey(), symbolNodeMap__.getValue());
+              break;
+            }
+            case 74: {
+              if (!((mutable_bitField0_ & 0x00000080) != 0)) {
+                fullyQualifiedNameMap_ = com.google.protobuf.MapField.newMapField(
+                    FullyQualifiedNameMapDefaultEntryHolder.defaultEntry);
+                mutable_bitField0_ |= 0x00000080;
+              }
+              com.google.protobuf.MapEntry<java.lang.String, com.kcl.api.Spec.SymbolIndex>
+              fullyQualifiedNameMap__ = input.readMessage(
+                  FullyQualifiedNameMapDefaultEntryHolder.defaultEntry.getParserForType(), extensionRegistry);
+              fullyQualifiedNameMap_.getMutableMap().put(
+                  fullyQualifiedNameMap__.getKey(), fullyQualifiedNameMap__.getValue());
+              break;
+            }
+            case 82: {
+              if (!((mutable_bitField0_ & 0x00000100) != 0)) {
+                pkgScopeMap_ = com.google.protobuf.MapField.newMapField(
+                    PkgScopeMapDefaultEntryHolder.defaultEntry);
+                mutable_bitField0_ |= 0x00000100;
+              }
+              com.google.protobuf.MapEntry<java.lang.String, com.kcl.api.Spec.ScopeIndex>
+              pkgScopeMap__ = input.readMessage(
+                  PkgScopeMapDefaultEntryHolder.defaultEntry.getParserForType(), extensionRegistry);
+              pkgScopeMap_.getMutableMap().put(
+                  pkgScopeMap__.getKey(), pkgScopeMap__.getValue());
               break;
             }
             default: {
@@ -13208,10 +13342,10 @@ public final class Spec {
         if (((mutable_bitField0_ & 0x00000001) != 0)) {
           paths_ = paths_.getUnmodifiableView();
         }
-        if (((mutable_bitField0_ & 0x00000020) != 0)) {
+        if (((mutable_bitField0_ & 0x00000002) != 0)) {
           parseErrors_ = java.util.Collections.unmodifiableList(parseErrors_);
         }
-        if (((mutable_bitField0_ & 0x00000040) != 0)) {
+        if (((mutable_bitField0_ & 0x00000004) != 0)) {
           typeErrors_ = java.util.Collections.unmodifiableList(typeErrors_);
         }
         this.unknownFields = unknownFields.build();
@@ -13228,14 +13362,18 @@ public final class Spec {
     protected com.google.protobuf.MapField internalGetMapField(
         int number) {
       switch (number) {
-        case 3:
-          return internalGetNodeSymbolMap();
-        case 4:
-          return internalGetSymbols();
         case 5:
-          return internalGetPkgScopeMap();
-        case 6:
           return internalGetScopes();
+        case 6:
+          return internalGetSymbols();
+        case 7:
+          return internalGetNodeSymbolMap();
+        case 8:
+          return internalGetSymbolNodeMap();
+        case 9:
+          return internalGetFullyQualifiedNameMap();
+        case 10:
+          return internalGetPkgScopeMap();
         default:
           throw new RuntimeException(
               "Invalid map field number: " + number);
@@ -13346,298 +13484,127 @@ public final class Spec {
       return paths_.getByteString(index);
     }
 
-    public static final int NODE_SYMBOL_MAP_FIELD_NUMBER = 3;
-    private static final class NodeSymbolMapDefaultEntryHolder {
-      static final com.google.protobuf.MapEntry<
-          java.lang.String, com.kcl.api.Spec.SymbolIndex> defaultEntry =
-              com.google.protobuf.MapEntry
-              .<java.lang.String, com.kcl.api.Spec.SymbolIndex>newDefaultInstance(
-                  com.kcl.api.Spec.internal_static_com_kcl_api_LoadPackage_Result_NodeSymbolMapEntry_descriptor, 
-                  com.google.protobuf.WireFormat.FieldType.STRING,
-                  "",
-                  com.google.protobuf.WireFormat.FieldType.MESSAGE,
-                  com.kcl.api.Spec.SymbolIndex.getDefaultInstance());
-    }
-    private com.google.protobuf.MapField<
-        java.lang.String, com.kcl.api.Spec.SymbolIndex> nodeSymbolMap_;
-    private com.google.protobuf.MapField<java.lang.String, com.kcl.api.Spec.SymbolIndex>
-    internalGetNodeSymbolMap() {
-      if (nodeSymbolMap_ == null) {
-        return com.google.protobuf.MapField.emptyMapField(
-            NodeSymbolMapDefaultEntryHolder.defaultEntry);
-      }
-      return nodeSymbolMap_;
-    }
-
-    public int getNodeSymbolMapCount() {
-      return internalGetNodeSymbolMap().getMap().size();
+    public static final int PARSE_ERRORS_FIELD_NUMBER = 3;
+    private java.util.List<com.kcl.api.Spec.Error> parseErrors_;
+    /**
+     * <pre>
+     * Parse errors
+     * </pre>
+     *
+     * <code>repeated .com.kcl.api.Error parse_errors = 3;</code>
+     */
+    @java.lang.Override
+    public java.util.List<com.kcl.api.Spec.Error> getParseErrorsList() {
+      return parseErrors_;
     }
     /**
      * <pre>
-     * Map key is the AST index UUID string.
+     * Parse errors
      * </pre>
      *
-     * <code>map&lt;string, .com.kcl.api.SymbolIndex&gt; node_symbol_map = 3;</code>
-     */
-
-    @java.lang.Override
-    public boolean containsNodeSymbolMap(
-        java.lang.String key) {
-      if (key == null) { throw new NullPointerException("map key"); }
-      return internalGetNodeSymbolMap().getMap().containsKey(key);
-    }
-    /**
-     * Use {@link #getNodeSymbolMapMap()} instead.
+     * <code>repeated .com.kcl.api.Error parse_errors = 3;</code>
      */
     @java.lang.Override
-    @java.lang.Deprecated
-    public java.util.Map<java.lang.String, com.kcl.api.Spec.SymbolIndex> getNodeSymbolMap() {
-      return getNodeSymbolMapMap();
+    public java.util.List<? extends com.kcl.api.Spec.ErrorOrBuilder> 
+        getParseErrorsOrBuilderList() {
+      return parseErrors_;
     }
     /**
      * <pre>
-     * Map key is the AST index UUID string.
+     * Parse errors
      * </pre>
      *
-     * <code>map&lt;string, .com.kcl.api.SymbolIndex&gt; node_symbol_map = 3;</code>
+     * <code>repeated .com.kcl.api.Error parse_errors = 3;</code>
      */
     @java.lang.Override
-
-    public java.util.Map<java.lang.String, com.kcl.api.Spec.SymbolIndex> getNodeSymbolMapMap() {
-      return internalGetNodeSymbolMap().getMap();
+    public int getParseErrorsCount() {
+      return parseErrors_.size();
     }
     /**
      * <pre>
-     * Map key is the AST index UUID string.
+     * Parse errors
      * </pre>
      *
-     * <code>map&lt;string, .com.kcl.api.SymbolIndex&gt; node_symbol_map = 3;</code>
+     * <code>repeated .com.kcl.api.Error parse_errors = 3;</code>
      */
     @java.lang.Override
-
-    public com.kcl.api.Spec.SymbolIndex getNodeSymbolMapOrDefault(
-        java.lang.String key,
-        com.kcl.api.Spec.SymbolIndex defaultValue) {
-      if (key == null) { throw new NullPointerException("map key"); }
-      java.util.Map<java.lang.String, com.kcl.api.Spec.SymbolIndex> map =
-          internalGetNodeSymbolMap().getMap();
-      return map.containsKey(key) ? map.get(key) : defaultValue;
+    public com.kcl.api.Spec.Error getParseErrors(int index) {
+      return parseErrors_.get(index);
     }
     /**
      * <pre>
-     * Map key is the AST index UUID string.
+     * Parse errors
      * </pre>
      *
-     * <code>map&lt;string, .com.kcl.api.SymbolIndex&gt; node_symbol_map = 3;</code>
+     * <code>repeated .com.kcl.api.Error parse_errors = 3;</code>
      */
     @java.lang.Override
-
-    public com.kcl.api.Spec.SymbolIndex getNodeSymbolMapOrThrow(
-        java.lang.String key) {
-      if (key == null) { throw new NullPointerException("map key"); }
-      java.util.Map<java.lang.String, com.kcl.api.Spec.SymbolIndex> map =
-          internalGetNodeSymbolMap().getMap();
-      if (!map.containsKey(key)) {
-        throw new java.lang.IllegalArgumentException();
-      }
-      return map.get(key);
+    public com.kcl.api.Spec.ErrorOrBuilder getParseErrorsOrBuilder(
+        int index) {
+      return parseErrors_.get(index);
     }
 
-    public static final int SYMBOLS_FIELD_NUMBER = 4;
-    private static final class SymbolsDefaultEntryHolder {
-      static final com.google.protobuf.MapEntry<
-          java.lang.String, com.kcl.api.Spec.Symbol> defaultEntry =
-              com.google.protobuf.MapEntry
-              .<java.lang.String, com.kcl.api.Spec.Symbol>newDefaultInstance(
-                  com.kcl.api.Spec.internal_static_com_kcl_api_LoadPackage_Result_SymbolsEntry_descriptor, 
-                  com.google.protobuf.WireFormat.FieldType.STRING,
-                  "",
-                  com.google.protobuf.WireFormat.FieldType.MESSAGE,
-                  com.kcl.api.Spec.Symbol.getDefaultInstance());
-    }
-    private com.google.protobuf.MapField<
-        java.lang.String, com.kcl.api.Spec.Symbol> symbols_;
-    private com.google.protobuf.MapField<java.lang.String, com.kcl.api.Spec.Symbol>
-    internalGetSymbols() {
-      if (symbols_ == null) {
-        return com.google.protobuf.MapField.emptyMapField(
-            SymbolsDefaultEntryHolder.defaultEntry);
-      }
-      return symbols_;
-    }
-
-    public int getSymbolsCount() {
-      return internalGetSymbols().getMap().size();
+    public static final int TYPE_ERRORS_FIELD_NUMBER = 4;
+    private java.util.List<com.kcl.api.Spec.Error> typeErrors_;
+    /**
+     * <pre>
+     * Type errors
+     * </pre>
+     *
+     * <code>repeated .com.kcl.api.Error type_errors = 4;</code>
+     */
+    @java.lang.Override
+    public java.util.List<com.kcl.api.Spec.Error> getTypeErrorsList() {
+      return typeErrors_;
     }
     /**
      * <pre>
-     * Map key is the SymbolIndex json string.
+     * Type errors
      * </pre>
      *
-     * <code>map&lt;string, .com.kcl.api.Symbol&gt; symbols = 4;</code>
-     */
-
-    @java.lang.Override
-    public boolean containsSymbols(
-        java.lang.String key) {
-      if (key == null) { throw new NullPointerException("map key"); }
-      return internalGetSymbols().getMap().containsKey(key);
-    }
-    /**
-     * Use {@link #getSymbolsMap()} instead.
+     * <code>repeated .com.kcl.api.Error type_errors = 4;</code>
      */
     @java.lang.Override
-    @java.lang.Deprecated
-    public java.util.Map<java.lang.String, com.kcl.api.Spec.Symbol> getSymbols() {
-      return getSymbolsMap();
+    public java.util.List<? extends com.kcl.api.Spec.ErrorOrBuilder> 
+        getTypeErrorsOrBuilderList() {
+      return typeErrors_;
     }
     /**
      * <pre>
-     * Map key is the SymbolIndex json string.
+     * Type errors
      * </pre>
      *
-     * <code>map&lt;string, .com.kcl.api.Symbol&gt; symbols = 4;</code>
+     * <code>repeated .com.kcl.api.Error type_errors = 4;</code>
      */
     @java.lang.Override
-
-    public java.util.Map<java.lang.String, com.kcl.api.Spec.Symbol> getSymbolsMap() {
-      return internalGetSymbols().getMap();
+    public int getTypeErrorsCount() {
+      return typeErrors_.size();
     }
     /**
      * <pre>
-     * Map key is the SymbolIndex json string.
+     * Type errors
      * </pre>
      *
-     * <code>map&lt;string, .com.kcl.api.Symbol&gt; symbols = 4;</code>
+     * <code>repeated .com.kcl.api.Error type_errors = 4;</code>
      */
     @java.lang.Override
-
-    public com.kcl.api.Spec.Symbol getSymbolsOrDefault(
-        java.lang.String key,
-        com.kcl.api.Spec.Symbol defaultValue) {
-      if (key == null) { throw new NullPointerException("map key"); }
-      java.util.Map<java.lang.String, com.kcl.api.Spec.Symbol> map =
-          internalGetSymbols().getMap();
-      return map.containsKey(key) ? map.get(key) : defaultValue;
+    public com.kcl.api.Spec.Error getTypeErrors(int index) {
+      return typeErrors_.get(index);
     }
     /**
      * <pre>
-     * Map key is the SymbolIndex json string.
+     * Type errors
      * </pre>
      *
-     * <code>map&lt;string, .com.kcl.api.Symbol&gt; symbols = 4;</code>
+     * <code>repeated .com.kcl.api.Error type_errors = 4;</code>
      */
     @java.lang.Override
-
-    public com.kcl.api.Spec.Symbol getSymbolsOrThrow(
-        java.lang.String key) {
-      if (key == null) { throw new NullPointerException("map key"); }
-      java.util.Map<java.lang.String, com.kcl.api.Spec.Symbol> map =
-          internalGetSymbols().getMap();
-      if (!map.containsKey(key)) {
-        throw new java.lang.IllegalArgumentException();
-      }
-      return map.get(key);
+    public com.kcl.api.Spec.ErrorOrBuilder getTypeErrorsOrBuilder(
+        int index) {
+      return typeErrors_.get(index);
     }
 
-    public static final int PKG_SCOPE_MAP_FIELD_NUMBER = 5;
-    private static final class PkgScopeMapDefaultEntryHolder {
-      static final com.google.protobuf.MapEntry<
-          java.lang.String, com.kcl.api.Spec.ScopeIndex> defaultEntry =
-              com.google.protobuf.MapEntry
-              .<java.lang.String, com.kcl.api.Spec.ScopeIndex>newDefaultInstance(
-                  com.kcl.api.Spec.internal_static_com_kcl_api_LoadPackage_Result_PkgScopeMapEntry_descriptor, 
-                  com.google.protobuf.WireFormat.FieldType.STRING,
-                  "",
-                  com.google.protobuf.WireFormat.FieldType.MESSAGE,
-                  com.kcl.api.Spec.ScopeIndex.getDefaultInstance());
-    }
-    private com.google.protobuf.MapField<
-        java.lang.String, com.kcl.api.Spec.ScopeIndex> pkgScopeMap_;
-    private com.google.protobuf.MapField<java.lang.String, com.kcl.api.Spec.ScopeIndex>
-    internalGetPkgScopeMap() {
-      if (pkgScopeMap_ == null) {
-        return com.google.protobuf.MapField.emptyMapField(
-            PkgScopeMapDefaultEntryHolder.defaultEntry);
-      }
-      return pkgScopeMap_;
-    }
-
-    public int getPkgScopeMapCount() {
-      return internalGetPkgScopeMap().getMap().size();
-    }
-    /**
-     * <pre>
-     * Map key is the package path.
-     * </pre>
-     *
-     * <code>map&lt;string, .com.kcl.api.ScopeIndex&gt; pkg_scope_map = 5;</code>
-     */
-
-    @java.lang.Override
-    public boolean containsPkgScopeMap(
-        java.lang.String key) {
-      if (key == null) { throw new NullPointerException("map key"); }
-      return internalGetPkgScopeMap().getMap().containsKey(key);
-    }
-    /**
-     * Use {@link #getPkgScopeMapMap()} instead.
-     */
-    @java.lang.Override
-    @java.lang.Deprecated
-    public java.util.Map<java.lang.String, com.kcl.api.Spec.ScopeIndex> getPkgScopeMap() {
-      return getPkgScopeMapMap();
-    }
-    /**
-     * <pre>
-     * Map key is the package path.
-     * </pre>
-     *
-     * <code>map&lt;string, .com.kcl.api.ScopeIndex&gt; pkg_scope_map = 5;</code>
-     */
-    @java.lang.Override
-
-    public java.util.Map<java.lang.String, com.kcl.api.Spec.ScopeIndex> getPkgScopeMapMap() {
-      return internalGetPkgScopeMap().getMap();
-    }
-    /**
-     * <pre>
-     * Map key is the package path.
-     * </pre>
-     *
-     * <code>map&lt;string, .com.kcl.api.ScopeIndex&gt; pkg_scope_map = 5;</code>
-     */
-    @java.lang.Override
-
-    public com.kcl.api.Spec.ScopeIndex getPkgScopeMapOrDefault(
-        java.lang.String key,
-        com.kcl.api.Spec.ScopeIndex defaultValue) {
-      if (key == null) { throw new NullPointerException("map key"); }
-      java.util.Map<java.lang.String, com.kcl.api.Spec.ScopeIndex> map =
-          internalGetPkgScopeMap().getMap();
-      return map.containsKey(key) ? map.get(key) : defaultValue;
-    }
-    /**
-     * <pre>
-     * Map key is the package path.
-     * </pre>
-     *
-     * <code>map&lt;string, .com.kcl.api.ScopeIndex&gt; pkg_scope_map = 5;</code>
-     */
-    @java.lang.Override
-
-    public com.kcl.api.Spec.ScopeIndex getPkgScopeMapOrThrow(
-        java.lang.String key) {
-      if (key == null) { throw new NullPointerException("map key"); }
-      java.util.Map<java.lang.String, com.kcl.api.Spec.ScopeIndex> map =
-          internalGetPkgScopeMap().getMap();
-      if (!map.containsKey(key)) {
-        throw new java.lang.IllegalArgumentException();
-      }
-      return map.get(key);
-    }
-
-    public static final int SCOPES_FIELD_NUMBER = 6;
+    public static final int SCOPES_FIELD_NUMBER = 5;
     private static final class ScopesDefaultEntryHolder {
       static final com.google.protobuf.MapEntry<
           java.lang.String, com.kcl.api.Spec.Scope> defaultEntry =
@@ -13668,7 +13635,7 @@ public final class Spec {
      * Map key is the ScopeIndex json string.
      * </pre>
      *
-     * <code>map&lt;string, .com.kcl.api.Scope&gt; scopes = 6;</code>
+     * <code>map&lt;string, .com.kcl.api.Scope&gt; scopes = 5;</code>
      */
 
     @java.lang.Override
@@ -13690,7 +13657,7 @@ public final class Spec {
      * Map key is the ScopeIndex json string.
      * </pre>
      *
-     * <code>map&lt;string, .com.kcl.api.Scope&gt; scopes = 6;</code>
+     * <code>map&lt;string, .com.kcl.api.Scope&gt; scopes = 5;</code>
      */
     @java.lang.Override
 
@@ -13702,7 +13669,7 @@ public final class Spec {
      * Map key is the ScopeIndex json string.
      * </pre>
      *
-     * <code>map&lt;string, .com.kcl.api.Scope&gt; scopes = 6;</code>
+     * <code>map&lt;string, .com.kcl.api.Scope&gt; scopes = 5;</code>
      */
     @java.lang.Override
 
@@ -13719,7 +13686,7 @@ public final class Spec {
      * Map key is the ScopeIndex json string.
      * </pre>
      *
-     * <code>map&lt;string, .com.kcl.api.Scope&gt; scopes = 6;</code>
+     * <code>map&lt;string, .com.kcl.api.Scope&gt; scopes = 5;</code>
      */
     @java.lang.Override
 
@@ -13734,124 +13701,489 @@ public final class Spec {
       return map.get(key);
     }
 
-    public static final int PARSE_ERRORS_FIELD_NUMBER = 7;
-    private java.util.List<com.kcl.api.Spec.Error> parseErrors_;
-    /**
-     * <pre>
-     * Parse errors
-     * </pre>
-     *
-     * <code>repeated .com.kcl.api.Error parse_errors = 7;</code>
-     */
-    @java.lang.Override
-    public java.util.List<com.kcl.api.Spec.Error> getParseErrorsList() {
-      return parseErrors_;
+    public static final int SYMBOLS_FIELD_NUMBER = 6;
+    private static final class SymbolsDefaultEntryHolder {
+      static final com.google.protobuf.MapEntry<
+          java.lang.String, com.kcl.api.Spec.Symbol> defaultEntry =
+              com.google.protobuf.MapEntry
+              .<java.lang.String, com.kcl.api.Spec.Symbol>newDefaultInstance(
+                  com.kcl.api.Spec.internal_static_com_kcl_api_LoadPackage_Result_SymbolsEntry_descriptor, 
+                  com.google.protobuf.WireFormat.FieldType.STRING,
+                  "",
+                  com.google.protobuf.WireFormat.FieldType.MESSAGE,
+                  com.kcl.api.Spec.Symbol.getDefaultInstance());
     }
-    /**
-     * <pre>
-     * Parse errors
-     * </pre>
-     *
-     * <code>repeated .com.kcl.api.Error parse_errors = 7;</code>
-     */
-    @java.lang.Override
-    public java.util.List<? extends com.kcl.api.Spec.ErrorOrBuilder> 
-        getParseErrorsOrBuilderList() {
-      return parseErrors_;
-    }
-    /**
-     * <pre>
-     * Parse errors
-     * </pre>
-     *
-     * <code>repeated .com.kcl.api.Error parse_errors = 7;</code>
-     */
-    @java.lang.Override
-    public int getParseErrorsCount() {
-      return parseErrors_.size();
-    }
-    /**
-     * <pre>
-     * Parse errors
-     * </pre>
-     *
-     * <code>repeated .com.kcl.api.Error parse_errors = 7;</code>
-     */
-    @java.lang.Override
-    public com.kcl.api.Spec.Error getParseErrors(int index) {
-      return parseErrors_.get(index);
-    }
-    /**
-     * <pre>
-     * Parse errors
-     * </pre>
-     *
-     * <code>repeated .com.kcl.api.Error parse_errors = 7;</code>
-     */
-    @java.lang.Override
-    public com.kcl.api.Spec.ErrorOrBuilder getParseErrorsOrBuilder(
-        int index) {
-      return parseErrors_.get(index);
+    private com.google.protobuf.MapField<
+        java.lang.String, com.kcl.api.Spec.Symbol> symbols_;
+    private com.google.protobuf.MapField<java.lang.String, com.kcl.api.Spec.Symbol>
+    internalGetSymbols() {
+      if (symbols_ == null) {
+        return com.google.protobuf.MapField.emptyMapField(
+            SymbolsDefaultEntryHolder.defaultEntry);
+      }
+      return symbols_;
     }
 
-    public static final int TYPE_ERRORS_FIELD_NUMBER = 8;
-    private java.util.List<com.kcl.api.Spec.Error> typeErrors_;
-    /**
-     * <pre>
-     * Type errors
-     * </pre>
-     *
-     * <code>repeated .com.kcl.api.Error type_errors = 8;</code>
-     */
-    @java.lang.Override
-    public java.util.List<com.kcl.api.Spec.Error> getTypeErrorsList() {
-      return typeErrors_;
+    public int getSymbolsCount() {
+      return internalGetSymbols().getMap().size();
     }
     /**
      * <pre>
-     * Type errors
+     * Map key is the SymbolIndex json string.
      * </pre>
      *
-     * <code>repeated .com.kcl.api.Error type_errors = 8;</code>
+     * <code>map&lt;string, .com.kcl.api.Symbol&gt; symbols = 6;</code>
+     */
+
+    @java.lang.Override
+    public boolean containsSymbols(
+        java.lang.String key) {
+      if (key == null) { throw new NullPointerException("map key"); }
+      return internalGetSymbols().getMap().containsKey(key);
+    }
+    /**
+     * Use {@link #getSymbolsMap()} instead.
      */
     @java.lang.Override
-    public java.util.List<? extends com.kcl.api.Spec.ErrorOrBuilder> 
-        getTypeErrorsOrBuilderList() {
-      return typeErrors_;
+    @java.lang.Deprecated
+    public java.util.Map<java.lang.String, com.kcl.api.Spec.Symbol> getSymbols() {
+      return getSymbolsMap();
     }
     /**
      * <pre>
-     * Type errors
+     * Map key is the SymbolIndex json string.
      * </pre>
      *
-     * <code>repeated .com.kcl.api.Error type_errors = 8;</code>
+     * <code>map&lt;string, .com.kcl.api.Symbol&gt; symbols = 6;</code>
      */
     @java.lang.Override
-    public int getTypeErrorsCount() {
-      return typeErrors_.size();
+
+    public java.util.Map<java.lang.String, com.kcl.api.Spec.Symbol> getSymbolsMap() {
+      return internalGetSymbols().getMap();
     }
     /**
      * <pre>
-     * Type errors
+     * Map key is the SymbolIndex json string.
      * </pre>
      *
-     * <code>repeated .com.kcl.api.Error type_errors = 8;</code>
+     * <code>map&lt;string, .com.kcl.api.Symbol&gt; symbols = 6;</code>
      */
     @java.lang.Override
-    public com.kcl.api.Spec.Error getTypeErrors(int index) {
-      return typeErrors_.get(index);
+
+    public com.kcl.api.Spec.Symbol getSymbolsOrDefault(
+        java.lang.String key,
+        com.kcl.api.Spec.Symbol defaultValue) {
+      if (key == null) { throw new NullPointerException("map key"); }
+      java.util.Map<java.lang.String, com.kcl.api.Spec.Symbol> map =
+          internalGetSymbols().getMap();
+      return map.containsKey(key) ? map.get(key) : defaultValue;
     }
     /**
      * <pre>
-     * Type errors
+     * Map key is the SymbolIndex json string.
      * </pre>
      *
-     * <code>repeated .com.kcl.api.Error type_errors = 8;</code>
+     * <code>map&lt;string, .com.kcl.api.Symbol&gt; symbols = 6;</code>
      */
     @java.lang.Override
-    public com.kcl.api.Spec.ErrorOrBuilder getTypeErrorsOrBuilder(
-        int index) {
-      return typeErrors_.get(index);
+
+    public com.kcl.api.Spec.Symbol getSymbolsOrThrow(
+        java.lang.String key) {
+      if (key == null) { throw new NullPointerException("map key"); }
+      java.util.Map<java.lang.String, com.kcl.api.Spec.Symbol> map =
+          internalGetSymbols().getMap();
+      if (!map.containsKey(key)) {
+        throw new java.lang.IllegalArgumentException();
+      }
+      return map.get(key);
+    }
+
+    public static final int NODE_SYMBOL_MAP_FIELD_NUMBER = 7;
+    private static final class NodeSymbolMapDefaultEntryHolder {
+      static final com.google.protobuf.MapEntry<
+          java.lang.String, com.kcl.api.Spec.SymbolIndex> defaultEntry =
+              com.google.protobuf.MapEntry
+              .<java.lang.String, com.kcl.api.Spec.SymbolIndex>newDefaultInstance(
+                  com.kcl.api.Spec.internal_static_com_kcl_api_LoadPackage_Result_NodeSymbolMapEntry_descriptor, 
+                  com.google.protobuf.WireFormat.FieldType.STRING,
+                  "",
+                  com.google.protobuf.WireFormat.FieldType.MESSAGE,
+                  com.kcl.api.Spec.SymbolIndex.getDefaultInstance());
+    }
+    private com.google.protobuf.MapField<
+        java.lang.String, com.kcl.api.Spec.SymbolIndex> nodeSymbolMap_;
+    private com.google.protobuf.MapField<java.lang.String, com.kcl.api.Spec.SymbolIndex>
+    internalGetNodeSymbolMap() {
+      if (nodeSymbolMap_ == null) {
+        return com.google.protobuf.MapField.emptyMapField(
+            NodeSymbolMapDefaultEntryHolder.defaultEntry);
+      }
+      return nodeSymbolMap_;
+    }
+
+    public int getNodeSymbolMapCount() {
+      return internalGetNodeSymbolMap().getMap().size();
+    }
+    /**
+     * <pre>
+     * Map key is the AST index UUID string.
+     * </pre>
+     *
+     * <code>map&lt;string, .com.kcl.api.SymbolIndex&gt; node_symbol_map = 7;</code>
+     */
+
+    @java.lang.Override
+    public boolean containsNodeSymbolMap(
+        java.lang.String key) {
+      if (key == null) { throw new NullPointerException("map key"); }
+      return internalGetNodeSymbolMap().getMap().containsKey(key);
+    }
+    /**
+     * Use {@link #getNodeSymbolMapMap()} instead.
+     */
+    @java.lang.Override
+    @java.lang.Deprecated
+    public java.util.Map<java.lang.String, com.kcl.api.Spec.SymbolIndex> getNodeSymbolMap() {
+      return getNodeSymbolMapMap();
+    }
+    /**
+     * <pre>
+     * Map key is the AST index UUID string.
+     * </pre>
+     *
+     * <code>map&lt;string, .com.kcl.api.SymbolIndex&gt; node_symbol_map = 7;</code>
+     */
+    @java.lang.Override
+
+    public java.util.Map<java.lang.String, com.kcl.api.Spec.SymbolIndex> getNodeSymbolMapMap() {
+      return internalGetNodeSymbolMap().getMap();
+    }
+    /**
+     * <pre>
+     * Map key is the AST index UUID string.
+     * </pre>
+     *
+     * <code>map&lt;string, .com.kcl.api.SymbolIndex&gt; node_symbol_map = 7;</code>
+     */
+    @java.lang.Override
+
+    public com.kcl.api.Spec.SymbolIndex getNodeSymbolMapOrDefault(
+        java.lang.String key,
+        com.kcl.api.Spec.SymbolIndex defaultValue) {
+      if (key == null) { throw new NullPointerException("map key"); }
+      java.util.Map<java.lang.String, com.kcl.api.Spec.SymbolIndex> map =
+          internalGetNodeSymbolMap().getMap();
+      return map.containsKey(key) ? map.get(key) : defaultValue;
+    }
+    /**
+     * <pre>
+     * Map key is the AST index UUID string.
+     * </pre>
+     *
+     * <code>map&lt;string, .com.kcl.api.SymbolIndex&gt; node_symbol_map = 7;</code>
+     */
+    @java.lang.Override
+
+    public com.kcl.api.Spec.SymbolIndex getNodeSymbolMapOrThrow(
+        java.lang.String key) {
+      if (key == null) { throw new NullPointerException("map key"); }
+      java.util.Map<java.lang.String, com.kcl.api.Spec.SymbolIndex> map =
+          internalGetNodeSymbolMap().getMap();
+      if (!map.containsKey(key)) {
+        throw new java.lang.IllegalArgumentException();
+      }
+      return map.get(key);
+    }
+
+    public static final int SYMBOL_NODE_MAP_FIELD_NUMBER = 8;
+    private static final class SymbolNodeMapDefaultEntryHolder {
+      static final com.google.protobuf.MapEntry<
+          java.lang.String, java.lang.String> defaultEntry =
+              com.google.protobuf.MapEntry
+              .<java.lang.String, java.lang.String>newDefaultInstance(
+                  com.kcl.api.Spec.internal_static_com_kcl_api_LoadPackage_Result_SymbolNodeMapEntry_descriptor, 
+                  com.google.protobuf.WireFormat.FieldType.STRING,
+                  "",
+                  com.google.protobuf.WireFormat.FieldType.STRING,
+                  "");
+    }
+    private com.google.protobuf.MapField<
+        java.lang.String, java.lang.String> symbolNodeMap_;
+    private com.google.protobuf.MapField<java.lang.String, java.lang.String>
+    internalGetSymbolNodeMap() {
+      if (symbolNodeMap_ == null) {
+        return com.google.protobuf.MapField.emptyMapField(
+            SymbolNodeMapDefaultEntryHolder.defaultEntry);
+      }
+      return symbolNodeMap_;
+    }
+
+    public int getSymbolNodeMapCount() {
+      return internalGetSymbolNodeMap().getMap().size();
+    }
+    /**
+     * <pre>
+     * Map key is the SymbolIndex json string.
+     * </pre>
+     *
+     * <code>map&lt;string, string&gt; symbol_node_map = 8;</code>
+     */
+
+    @java.lang.Override
+    public boolean containsSymbolNodeMap(
+        java.lang.String key) {
+      if (key == null) { throw new NullPointerException("map key"); }
+      return internalGetSymbolNodeMap().getMap().containsKey(key);
+    }
+    /**
+     * Use {@link #getSymbolNodeMapMap()} instead.
+     */
+    @java.lang.Override
+    @java.lang.Deprecated
+    public java.util.Map<java.lang.String, java.lang.String> getSymbolNodeMap() {
+      return getSymbolNodeMapMap();
+    }
+    /**
+     * <pre>
+     * Map key is the SymbolIndex json string.
+     * </pre>
+     *
+     * <code>map&lt;string, string&gt; symbol_node_map = 8;</code>
+     */
+    @java.lang.Override
+
+    public java.util.Map<java.lang.String, java.lang.String> getSymbolNodeMapMap() {
+      return internalGetSymbolNodeMap().getMap();
+    }
+    /**
+     * <pre>
+     * Map key is the SymbolIndex json string.
+     * </pre>
+     *
+     * <code>map&lt;string, string&gt; symbol_node_map = 8;</code>
+     */
+    @java.lang.Override
+
+    public java.lang.String getSymbolNodeMapOrDefault(
+        java.lang.String key,
+        java.lang.String defaultValue) {
+      if (key == null) { throw new NullPointerException("map key"); }
+      java.util.Map<java.lang.String, java.lang.String> map =
+          internalGetSymbolNodeMap().getMap();
+      return map.containsKey(key) ? map.get(key) : defaultValue;
+    }
+    /**
+     * <pre>
+     * Map key is the SymbolIndex json string.
+     * </pre>
+     *
+     * <code>map&lt;string, string&gt; symbol_node_map = 8;</code>
+     */
+    @java.lang.Override
+
+    public java.lang.String getSymbolNodeMapOrThrow(
+        java.lang.String key) {
+      if (key == null) { throw new NullPointerException("map key"); }
+      java.util.Map<java.lang.String, java.lang.String> map =
+          internalGetSymbolNodeMap().getMap();
+      if (!map.containsKey(key)) {
+        throw new java.lang.IllegalArgumentException();
+      }
+      return map.get(key);
+    }
+
+    public static final int FULLY_QUALIFIED_NAME_MAP_FIELD_NUMBER = 9;
+    private static final class FullyQualifiedNameMapDefaultEntryHolder {
+      static final com.google.protobuf.MapEntry<
+          java.lang.String, com.kcl.api.Spec.SymbolIndex> defaultEntry =
+              com.google.protobuf.MapEntry
+              .<java.lang.String, com.kcl.api.Spec.SymbolIndex>newDefaultInstance(
+                  com.kcl.api.Spec.internal_static_com_kcl_api_LoadPackage_Result_FullyQualifiedNameMapEntry_descriptor, 
+                  com.google.protobuf.WireFormat.FieldType.STRING,
+                  "",
+                  com.google.protobuf.WireFormat.FieldType.MESSAGE,
+                  com.kcl.api.Spec.SymbolIndex.getDefaultInstance());
+    }
+    private com.google.protobuf.MapField<
+        java.lang.String, com.kcl.api.Spec.SymbolIndex> fullyQualifiedNameMap_;
+    private com.google.protobuf.MapField<java.lang.String, com.kcl.api.Spec.SymbolIndex>
+    internalGetFullyQualifiedNameMap() {
+      if (fullyQualifiedNameMap_ == null) {
+        return com.google.protobuf.MapField.emptyMapField(
+            FullyQualifiedNameMapDefaultEntryHolder.defaultEntry);
+      }
+      return fullyQualifiedNameMap_;
+    }
+
+    public int getFullyQualifiedNameMapCount() {
+      return internalGetFullyQualifiedNameMap().getMap().size();
+    }
+    /**
+     * <pre>
+     * Map key is the fully_qualified_name e.g. `pkg.Name`
+     * </pre>
+     *
+     * <code>map&lt;string, .com.kcl.api.SymbolIndex&gt; fully_qualified_name_map = 9;</code>
+     */
+
+    @java.lang.Override
+    public boolean containsFullyQualifiedNameMap(
+        java.lang.String key) {
+      if (key == null) { throw new NullPointerException("map key"); }
+      return internalGetFullyQualifiedNameMap().getMap().containsKey(key);
+    }
+    /**
+     * Use {@link #getFullyQualifiedNameMapMap()} instead.
+     */
+    @java.lang.Override
+    @java.lang.Deprecated
+    public java.util.Map<java.lang.String, com.kcl.api.Spec.SymbolIndex> getFullyQualifiedNameMap() {
+      return getFullyQualifiedNameMapMap();
+    }
+    /**
+     * <pre>
+     * Map key is the fully_qualified_name e.g. `pkg.Name`
+     * </pre>
+     *
+     * <code>map&lt;string, .com.kcl.api.SymbolIndex&gt; fully_qualified_name_map = 9;</code>
+     */
+    @java.lang.Override
+
+    public java.util.Map<java.lang.String, com.kcl.api.Spec.SymbolIndex> getFullyQualifiedNameMapMap() {
+      return internalGetFullyQualifiedNameMap().getMap();
+    }
+    /**
+     * <pre>
+     * Map key is the fully_qualified_name e.g. `pkg.Name`
+     * </pre>
+     *
+     * <code>map&lt;string, .com.kcl.api.SymbolIndex&gt; fully_qualified_name_map = 9;</code>
+     */
+    @java.lang.Override
+
+    public com.kcl.api.Spec.SymbolIndex getFullyQualifiedNameMapOrDefault(
+        java.lang.String key,
+        com.kcl.api.Spec.SymbolIndex defaultValue) {
+      if (key == null) { throw new NullPointerException("map key"); }
+      java.util.Map<java.lang.String, com.kcl.api.Spec.SymbolIndex> map =
+          internalGetFullyQualifiedNameMap().getMap();
+      return map.containsKey(key) ? map.get(key) : defaultValue;
+    }
+    /**
+     * <pre>
+     * Map key is the fully_qualified_name e.g. `pkg.Name`
+     * </pre>
+     *
+     * <code>map&lt;string, .com.kcl.api.SymbolIndex&gt; fully_qualified_name_map = 9;</code>
+     */
+    @java.lang.Override
+
+    public com.kcl.api.Spec.SymbolIndex getFullyQualifiedNameMapOrThrow(
+        java.lang.String key) {
+      if (key == null) { throw new NullPointerException("map key"); }
+      java.util.Map<java.lang.String, com.kcl.api.Spec.SymbolIndex> map =
+          internalGetFullyQualifiedNameMap().getMap();
+      if (!map.containsKey(key)) {
+        throw new java.lang.IllegalArgumentException();
+      }
+      return map.get(key);
+    }
+
+    public static final int PKG_SCOPE_MAP_FIELD_NUMBER = 10;
+    private static final class PkgScopeMapDefaultEntryHolder {
+      static final com.google.protobuf.MapEntry<
+          java.lang.String, com.kcl.api.Spec.ScopeIndex> defaultEntry =
+              com.google.protobuf.MapEntry
+              .<java.lang.String, com.kcl.api.Spec.ScopeIndex>newDefaultInstance(
+                  com.kcl.api.Spec.internal_static_com_kcl_api_LoadPackage_Result_PkgScopeMapEntry_descriptor, 
+                  com.google.protobuf.WireFormat.FieldType.STRING,
+                  "",
+                  com.google.protobuf.WireFormat.FieldType.MESSAGE,
+                  com.kcl.api.Spec.ScopeIndex.getDefaultInstance());
+    }
+    private com.google.protobuf.MapField<
+        java.lang.String, com.kcl.api.Spec.ScopeIndex> pkgScopeMap_;
+    private com.google.protobuf.MapField<java.lang.String, com.kcl.api.Spec.ScopeIndex>
+    internalGetPkgScopeMap() {
+      if (pkgScopeMap_ == null) {
+        return com.google.protobuf.MapField.emptyMapField(
+            PkgScopeMapDefaultEntryHolder.defaultEntry);
+      }
+      return pkgScopeMap_;
+    }
+
+    public int getPkgScopeMapCount() {
+      return internalGetPkgScopeMap().getMap().size();
+    }
+    /**
+     * <pre>
+     * Map key is the package path.
+     * </pre>
+     *
+     * <code>map&lt;string, .com.kcl.api.ScopeIndex&gt; pkg_scope_map = 10;</code>
+     */
+
+    @java.lang.Override
+    public boolean containsPkgScopeMap(
+        java.lang.String key) {
+      if (key == null) { throw new NullPointerException("map key"); }
+      return internalGetPkgScopeMap().getMap().containsKey(key);
+    }
+    /**
+     * Use {@link #getPkgScopeMapMap()} instead.
+     */
+    @java.lang.Override
+    @java.lang.Deprecated
+    public java.util.Map<java.lang.String, com.kcl.api.Spec.ScopeIndex> getPkgScopeMap() {
+      return getPkgScopeMapMap();
+    }
+    /**
+     * <pre>
+     * Map key is the package path.
+     * </pre>
+     *
+     * <code>map&lt;string, .com.kcl.api.ScopeIndex&gt; pkg_scope_map = 10;</code>
+     */
+    @java.lang.Override
+
+    public java.util.Map<java.lang.String, com.kcl.api.Spec.ScopeIndex> getPkgScopeMapMap() {
+      return internalGetPkgScopeMap().getMap();
+    }
+    /**
+     * <pre>
+     * Map key is the package path.
+     * </pre>
+     *
+     * <code>map&lt;string, .com.kcl.api.ScopeIndex&gt; pkg_scope_map = 10;</code>
+     */
+    @java.lang.Override
+
+    public com.kcl.api.Spec.ScopeIndex getPkgScopeMapOrDefault(
+        java.lang.String key,
+        com.kcl.api.Spec.ScopeIndex defaultValue) {
+      if (key == null) { throw new NullPointerException("map key"); }
+      java.util.Map<java.lang.String, com.kcl.api.Spec.ScopeIndex> map =
+          internalGetPkgScopeMap().getMap();
+      return map.containsKey(key) ? map.get(key) : defaultValue;
+    }
+    /**
+     * <pre>
+     * Map key is the package path.
+     * </pre>
+     *
+     * <code>map&lt;string, .com.kcl.api.ScopeIndex&gt; pkg_scope_map = 10;</code>
+     */
+    @java.lang.Override
+
+    public com.kcl.api.Spec.ScopeIndex getPkgScopeMapOrThrow(
+        java.lang.String key) {
+      if (key == null) { throw new NullPointerException("map key"); }
+      java.util.Map<java.lang.String, com.kcl.api.Spec.ScopeIndex> map =
+          internalGetPkgScopeMap().getMap();
+      if (!map.containsKey(key)) {
+        throw new java.lang.IllegalArgumentException();
+      }
+      return map.get(key);
     }
 
     private byte memoizedIsInitialized = -1;
@@ -13874,36 +14206,48 @@ public final class Spec {
       for (int i = 0; i < paths_.size(); i++) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 2, paths_.getRaw(i));
       }
-      com.google.protobuf.GeneratedMessageV3
-        .serializeStringMapTo(
-          output,
-          internalGetNodeSymbolMap(),
-          NodeSymbolMapDefaultEntryHolder.defaultEntry,
-          3);
-      com.google.protobuf.GeneratedMessageV3
-        .serializeStringMapTo(
-          output,
-          internalGetSymbols(),
-          SymbolsDefaultEntryHolder.defaultEntry,
-          4);
-      com.google.protobuf.GeneratedMessageV3
-        .serializeStringMapTo(
-          output,
-          internalGetPkgScopeMap(),
-          PkgScopeMapDefaultEntryHolder.defaultEntry,
-          5);
+      for (int i = 0; i < parseErrors_.size(); i++) {
+        output.writeMessage(3, parseErrors_.get(i));
+      }
+      for (int i = 0; i < typeErrors_.size(); i++) {
+        output.writeMessage(4, typeErrors_.get(i));
+      }
       com.google.protobuf.GeneratedMessageV3
         .serializeStringMapTo(
           output,
           internalGetScopes(),
           ScopesDefaultEntryHolder.defaultEntry,
+          5);
+      com.google.protobuf.GeneratedMessageV3
+        .serializeStringMapTo(
+          output,
+          internalGetSymbols(),
+          SymbolsDefaultEntryHolder.defaultEntry,
           6);
-      for (int i = 0; i < parseErrors_.size(); i++) {
-        output.writeMessage(7, parseErrors_.get(i));
-      }
-      for (int i = 0; i < typeErrors_.size(); i++) {
-        output.writeMessage(8, typeErrors_.get(i));
-      }
+      com.google.protobuf.GeneratedMessageV3
+        .serializeStringMapTo(
+          output,
+          internalGetNodeSymbolMap(),
+          NodeSymbolMapDefaultEntryHolder.defaultEntry,
+          7);
+      com.google.protobuf.GeneratedMessageV3
+        .serializeStringMapTo(
+          output,
+          internalGetSymbolNodeMap(),
+          SymbolNodeMapDefaultEntryHolder.defaultEntry,
+          8);
+      com.google.protobuf.GeneratedMessageV3
+        .serializeStringMapTo(
+          output,
+          internalGetFullyQualifiedNameMap(),
+          FullyQualifiedNameMapDefaultEntryHolder.defaultEntry,
+          9);
+      com.google.protobuf.GeneratedMessageV3
+        .serializeStringMapTo(
+          output,
+          internalGetPkgScopeMap(),
+          PkgScopeMapDefaultEntryHolder.defaultEntry,
+          10);
       unknownFields.writeTo(output);
     }
 
@@ -13924,35 +14268,13 @@ public final class Spec {
         size += dataSize;
         size += 1 * getPathsList().size();
       }
-      for (java.util.Map.Entry<java.lang.String, com.kcl.api.Spec.SymbolIndex> entry
-           : internalGetNodeSymbolMap().getMap().entrySet()) {
-        com.google.protobuf.MapEntry<java.lang.String, com.kcl.api.Spec.SymbolIndex>
-        nodeSymbolMap__ = NodeSymbolMapDefaultEntryHolder.defaultEntry.newBuilderForType()
-            .setKey(entry.getKey())
-            .setValue(entry.getValue())
-            .build();
+      for (int i = 0; i < parseErrors_.size(); i++) {
         size += com.google.protobuf.CodedOutputStream
-            .computeMessageSize(3, nodeSymbolMap__);
+          .computeMessageSize(3, parseErrors_.get(i));
       }
-      for (java.util.Map.Entry<java.lang.String, com.kcl.api.Spec.Symbol> entry
-           : internalGetSymbols().getMap().entrySet()) {
-        com.google.protobuf.MapEntry<java.lang.String, com.kcl.api.Spec.Symbol>
-        symbols__ = SymbolsDefaultEntryHolder.defaultEntry.newBuilderForType()
-            .setKey(entry.getKey())
-            .setValue(entry.getValue())
-            .build();
+      for (int i = 0; i < typeErrors_.size(); i++) {
         size += com.google.protobuf.CodedOutputStream
-            .computeMessageSize(4, symbols__);
-      }
-      for (java.util.Map.Entry<java.lang.String, com.kcl.api.Spec.ScopeIndex> entry
-           : internalGetPkgScopeMap().getMap().entrySet()) {
-        com.google.protobuf.MapEntry<java.lang.String, com.kcl.api.Spec.ScopeIndex>
-        pkgScopeMap__ = PkgScopeMapDefaultEntryHolder.defaultEntry.newBuilderForType()
-            .setKey(entry.getKey())
-            .setValue(entry.getValue())
-            .build();
-        size += com.google.protobuf.CodedOutputStream
-            .computeMessageSize(5, pkgScopeMap__);
+          .computeMessageSize(4, typeErrors_.get(i));
       }
       for (java.util.Map.Entry<java.lang.String, com.kcl.api.Spec.Scope> entry
            : internalGetScopes().getMap().entrySet()) {
@@ -13962,15 +14284,57 @@ public final class Spec {
             .setValue(entry.getValue())
             .build();
         size += com.google.protobuf.CodedOutputStream
-            .computeMessageSize(6, scopes__);
+            .computeMessageSize(5, scopes__);
       }
-      for (int i = 0; i < parseErrors_.size(); i++) {
+      for (java.util.Map.Entry<java.lang.String, com.kcl.api.Spec.Symbol> entry
+           : internalGetSymbols().getMap().entrySet()) {
+        com.google.protobuf.MapEntry<java.lang.String, com.kcl.api.Spec.Symbol>
+        symbols__ = SymbolsDefaultEntryHolder.defaultEntry.newBuilderForType()
+            .setKey(entry.getKey())
+            .setValue(entry.getValue())
+            .build();
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(7, parseErrors_.get(i));
+            .computeMessageSize(6, symbols__);
       }
-      for (int i = 0; i < typeErrors_.size(); i++) {
+      for (java.util.Map.Entry<java.lang.String, com.kcl.api.Spec.SymbolIndex> entry
+           : internalGetNodeSymbolMap().getMap().entrySet()) {
+        com.google.protobuf.MapEntry<java.lang.String, com.kcl.api.Spec.SymbolIndex>
+        nodeSymbolMap__ = NodeSymbolMapDefaultEntryHolder.defaultEntry.newBuilderForType()
+            .setKey(entry.getKey())
+            .setValue(entry.getValue())
+            .build();
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(8, typeErrors_.get(i));
+            .computeMessageSize(7, nodeSymbolMap__);
+      }
+      for (java.util.Map.Entry<java.lang.String, java.lang.String> entry
+           : internalGetSymbolNodeMap().getMap().entrySet()) {
+        com.google.protobuf.MapEntry<java.lang.String, java.lang.String>
+        symbolNodeMap__ = SymbolNodeMapDefaultEntryHolder.defaultEntry.newBuilderForType()
+            .setKey(entry.getKey())
+            .setValue(entry.getValue())
+            .build();
+        size += com.google.protobuf.CodedOutputStream
+            .computeMessageSize(8, symbolNodeMap__);
+      }
+      for (java.util.Map.Entry<java.lang.String, com.kcl.api.Spec.SymbolIndex> entry
+           : internalGetFullyQualifiedNameMap().getMap().entrySet()) {
+        com.google.protobuf.MapEntry<java.lang.String, com.kcl.api.Spec.SymbolIndex>
+        fullyQualifiedNameMap__ = FullyQualifiedNameMapDefaultEntryHolder.defaultEntry.newBuilderForType()
+            .setKey(entry.getKey())
+            .setValue(entry.getValue())
+            .build();
+        size += com.google.protobuf.CodedOutputStream
+            .computeMessageSize(9, fullyQualifiedNameMap__);
+      }
+      for (java.util.Map.Entry<java.lang.String, com.kcl.api.Spec.ScopeIndex> entry
+           : internalGetPkgScopeMap().getMap().entrySet()) {
+        com.google.protobuf.MapEntry<java.lang.String, com.kcl.api.Spec.ScopeIndex>
+        pkgScopeMap__ = PkgScopeMapDefaultEntryHolder.defaultEntry.newBuilderForType()
+            .setKey(entry.getKey())
+            .setValue(entry.getValue())
+            .build();
+        size += com.google.protobuf.CodedOutputStream
+            .computeMessageSize(10, pkgScopeMap__);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -13991,18 +14355,22 @@ public final class Spec {
           .equals(other.getProgram())) return false;
       if (!getPathsList()
           .equals(other.getPathsList())) return false;
-      if (!internalGetNodeSymbolMap().equals(
-          other.internalGetNodeSymbolMap())) return false;
-      if (!internalGetSymbols().equals(
-          other.internalGetSymbols())) return false;
-      if (!internalGetPkgScopeMap().equals(
-          other.internalGetPkgScopeMap())) return false;
-      if (!internalGetScopes().equals(
-          other.internalGetScopes())) return false;
       if (!getParseErrorsList()
           .equals(other.getParseErrorsList())) return false;
       if (!getTypeErrorsList()
           .equals(other.getTypeErrorsList())) return false;
+      if (!internalGetScopes().equals(
+          other.internalGetScopes())) return false;
+      if (!internalGetSymbols().equals(
+          other.internalGetSymbols())) return false;
+      if (!internalGetNodeSymbolMap().equals(
+          other.internalGetNodeSymbolMap())) return false;
+      if (!internalGetSymbolNodeMap().equals(
+          other.internalGetSymbolNodeMap())) return false;
+      if (!internalGetFullyQualifiedNameMap().equals(
+          other.internalGetFullyQualifiedNameMap())) return false;
+      if (!internalGetPkgScopeMap().equals(
+          other.internalGetPkgScopeMap())) return false;
       if (!unknownFields.equals(other.unknownFields)) return false;
       return true;
     }
@@ -14020,22 +14388,6 @@ public final class Spec {
         hash = (37 * hash) + PATHS_FIELD_NUMBER;
         hash = (53 * hash) + getPathsList().hashCode();
       }
-      if (!internalGetNodeSymbolMap().getMap().isEmpty()) {
-        hash = (37 * hash) + NODE_SYMBOL_MAP_FIELD_NUMBER;
-        hash = (53 * hash) + internalGetNodeSymbolMap().hashCode();
-      }
-      if (!internalGetSymbols().getMap().isEmpty()) {
-        hash = (37 * hash) + SYMBOLS_FIELD_NUMBER;
-        hash = (53 * hash) + internalGetSymbols().hashCode();
-      }
-      if (!internalGetPkgScopeMap().getMap().isEmpty()) {
-        hash = (37 * hash) + PKG_SCOPE_MAP_FIELD_NUMBER;
-        hash = (53 * hash) + internalGetPkgScopeMap().hashCode();
-      }
-      if (!internalGetScopes().getMap().isEmpty()) {
-        hash = (37 * hash) + SCOPES_FIELD_NUMBER;
-        hash = (53 * hash) + internalGetScopes().hashCode();
-      }
       if (getParseErrorsCount() > 0) {
         hash = (37 * hash) + PARSE_ERRORS_FIELD_NUMBER;
         hash = (53 * hash) + getParseErrorsList().hashCode();
@@ -14043,6 +14395,30 @@ public final class Spec {
       if (getTypeErrorsCount() > 0) {
         hash = (37 * hash) + TYPE_ERRORS_FIELD_NUMBER;
         hash = (53 * hash) + getTypeErrorsList().hashCode();
+      }
+      if (!internalGetScopes().getMap().isEmpty()) {
+        hash = (37 * hash) + SCOPES_FIELD_NUMBER;
+        hash = (53 * hash) + internalGetScopes().hashCode();
+      }
+      if (!internalGetSymbols().getMap().isEmpty()) {
+        hash = (37 * hash) + SYMBOLS_FIELD_NUMBER;
+        hash = (53 * hash) + internalGetSymbols().hashCode();
+      }
+      if (!internalGetNodeSymbolMap().getMap().isEmpty()) {
+        hash = (37 * hash) + NODE_SYMBOL_MAP_FIELD_NUMBER;
+        hash = (53 * hash) + internalGetNodeSymbolMap().hashCode();
+      }
+      if (!internalGetSymbolNodeMap().getMap().isEmpty()) {
+        hash = (37 * hash) + SYMBOL_NODE_MAP_FIELD_NUMBER;
+        hash = (53 * hash) + internalGetSymbolNodeMap().hashCode();
+      }
+      if (!internalGetFullyQualifiedNameMap().getMap().isEmpty()) {
+        hash = (37 * hash) + FULLY_QUALIFIED_NAME_MAP_FIELD_NUMBER;
+        hash = (53 * hash) + internalGetFullyQualifiedNameMap().hashCode();
+      }
+      if (!internalGetPkgScopeMap().getMap().isEmpty()) {
+        hash = (37 * hash) + PKG_SCOPE_MAP_FIELD_NUMBER;
+        hash = (53 * hash) + internalGetPkgScopeMap().hashCode();
       }
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
@@ -14155,14 +14531,18 @@ public final class Spec {
       protected com.google.protobuf.MapField internalGetMapField(
           int number) {
         switch (number) {
-          case 3:
-            return internalGetNodeSymbolMap();
-          case 4:
-            return internalGetSymbols();
           case 5:
-            return internalGetPkgScopeMap();
-          case 6:
             return internalGetScopes();
+          case 6:
+            return internalGetSymbols();
+          case 7:
+            return internalGetNodeSymbolMap();
+          case 8:
+            return internalGetSymbolNodeMap();
+          case 9:
+            return internalGetFullyQualifiedNameMap();
+          case 10:
+            return internalGetPkgScopeMap();
           default:
             throw new RuntimeException(
                 "Invalid map field number: " + number);
@@ -14172,14 +14552,18 @@ public final class Spec {
       protected com.google.protobuf.MapField internalGetMutableMapField(
           int number) {
         switch (number) {
-          case 3:
-            return internalGetMutableNodeSymbolMap();
-          case 4:
-            return internalGetMutableSymbols();
           case 5:
-            return internalGetMutablePkgScopeMap();
-          case 6:
             return internalGetMutableScopes();
+          case 6:
+            return internalGetMutableSymbols();
+          case 7:
+            return internalGetMutableNodeSymbolMap();
+          case 8:
+            return internalGetMutableSymbolNodeMap();
+          case 9:
+            return internalGetMutableFullyQualifiedNameMap();
+          case 10:
+            return internalGetMutablePkgScopeMap();
           default:
             throw new RuntimeException(
                 "Invalid map field number: " + number);
@@ -14217,22 +14601,24 @@ public final class Spec {
 
         paths_ = com.google.protobuf.LazyStringArrayList.EMPTY;
         bitField0_ = (bitField0_ & ~0x00000001);
-        internalGetMutableNodeSymbolMap().clear();
-        internalGetMutableSymbols().clear();
-        internalGetMutablePkgScopeMap().clear();
-        internalGetMutableScopes().clear();
         if (parseErrorsBuilder_ == null) {
           parseErrors_ = java.util.Collections.emptyList();
-          bitField0_ = (bitField0_ & ~0x00000020);
+          bitField0_ = (bitField0_ & ~0x00000002);
         } else {
           parseErrorsBuilder_.clear();
         }
         if (typeErrorsBuilder_ == null) {
           typeErrors_ = java.util.Collections.emptyList();
-          bitField0_ = (bitField0_ & ~0x00000040);
+          bitField0_ = (bitField0_ & ~0x00000004);
         } else {
           typeErrorsBuilder_.clear();
         }
+        internalGetMutableScopes().clear();
+        internalGetMutableSymbols().clear();
+        internalGetMutableNodeSymbolMap().clear();
+        internalGetMutableSymbolNodeMap().clear();
+        internalGetMutableFullyQualifiedNameMap().clear();
+        internalGetMutablePkgScopeMap().clear();
         return this;
       }
 
@@ -14266,32 +14652,36 @@ public final class Spec {
           bitField0_ = (bitField0_ & ~0x00000001);
         }
         result.paths_ = paths_;
-        result.nodeSymbolMap_ = internalGetNodeSymbolMap();
-        result.nodeSymbolMap_.makeImmutable();
-        result.symbols_ = internalGetSymbols();
-        result.symbols_.makeImmutable();
-        result.pkgScopeMap_ = internalGetPkgScopeMap();
-        result.pkgScopeMap_.makeImmutable();
-        result.scopes_ = internalGetScopes();
-        result.scopes_.makeImmutable();
         if (parseErrorsBuilder_ == null) {
-          if (((bitField0_ & 0x00000020) != 0)) {
+          if (((bitField0_ & 0x00000002) != 0)) {
             parseErrors_ = java.util.Collections.unmodifiableList(parseErrors_);
-            bitField0_ = (bitField0_ & ~0x00000020);
+            bitField0_ = (bitField0_ & ~0x00000002);
           }
           result.parseErrors_ = parseErrors_;
         } else {
           result.parseErrors_ = parseErrorsBuilder_.build();
         }
         if (typeErrorsBuilder_ == null) {
-          if (((bitField0_ & 0x00000040) != 0)) {
+          if (((bitField0_ & 0x00000004) != 0)) {
             typeErrors_ = java.util.Collections.unmodifiableList(typeErrors_);
-            bitField0_ = (bitField0_ & ~0x00000040);
+            bitField0_ = (bitField0_ & ~0x00000004);
           }
           result.typeErrors_ = typeErrors_;
         } else {
           result.typeErrors_ = typeErrorsBuilder_.build();
         }
+        result.scopes_ = internalGetScopes();
+        result.scopes_.makeImmutable();
+        result.symbols_ = internalGetSymbols();
+        result.symbols_.makeImmutable();
+        result.nodeSymbolMap_ = internalGetNodeSymbolMap();
+        result.nodeSymbolMap_.makeImmutable();
+        result.symbolNodeMap_ = internalGetSymbolNodeMap();
+        result.symbolNodeMap_.makeImmutable();
+        result.fullyQualifiedNameMap_ = internalGetFullyQualifiedNameMap();
+        result.fullyQualifiedNameMap_.makeImmutable();
+        result.pkgScopeMap_ = internalGetPkgScopeMap();
+        result.pkgScopeMap_.makeImmutable();
         onBuilt();
         return result;
       }
@@ -14354,19 +14744,11 @@ public final class Spec {
           }
           onChanged();
         }
-        internalGetMutableNodeSymbolMap().mergeFrom(
-            other.internalGetNodeSymbolMap());
-        internalGetMutableSymbols().mergeFrom(
-            other.internalGetSymbols());
-        internalGetMutablePkgScopeMap().mergeFrom(
-            other.internalGetPkgScopeMap());
-        internalGetMutableScopes().mergeFrom(
-            other.internalGetScopes());
         if (parseErrorsBuilder_ == null) {
           if (!other.parseErrors_.isEmpty()) {
             if (parseErrors_.isEmpty()) {
               parseErrors_ = other.parseErrors_;
-              bitField0_ = (bitField0_ & ~0x00000020);
+              bitField0_ = (bitField0_ & ~0x00000002);
             } else {
               ensureParseErrorsIsMutable();
               parseErrors_.addAll(other.parseErrors_);
@@ -14379,7 +14761,7 @@ public final class Spec {
               parseErrorsBuilder_.dispose();
               parseErrorsBuilder_ = null;
               parseErrors_ = other.parseErrors_;
-              bitField0_ = (bitField0_ & ~0x00000020);
+              bitField0_ = (bitField0_ & ~0x00000002);
               parseErrorsBuilder_ = 
                 com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
                    getParseErrorsFieldBuilder() : null;
@@ -14392,7 +14774,7 @@ public final class Spec {
           if (!other.typeErrors_.isEmpty()) {
             if (typeErrors_.isEmpty()) {
               typeErrors_ = other.typeErrors_;
-              bitField0_ = (bitField0_ & ~0x00000040);
+              bitField0_ = (bitField0_ & ~0x00000004);
             } else {
               ensureTypeErrorsIsMutable();
               typeErrors_.addAll(other.typeErrors_);
@@ -14405,7 +14787,7 @@ public final class Spec {
               typeErrorsBuilder_.dispose();
               typeErrorsBuilder_ = null;
               typeErrors_ = other.typeErrors_;
-              bitField0_ = (bitField0_ & ~0x00000040);
+              bitField0_ = (bitField0_ & ~0x00000004);
               typeErrorsBuilder_ = 
                 com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
                    getTypeErrorsFieldBuilder() : null;
@@ -14414,6 +14796,18 @@ public final class Spec {
             }
           }
         }
+        internalGetMutableScopes().mergeFrom(
+            other.internalGetScopes());
+        internalGetMutableSymbols().mergeFrom(
+            other.internalGetSymbols());
+        internalGetMutableNodeSymbolMap().mergeFrom(
+            other.internalGetNodeSymbolMap());
+        internalGetMutableSymbolNodeMap().mergeFrom(
+            other.internalGetSymbolNodeMap());
+        internalGetMutableFullyQualifiedNameMap().mergeFrom(
+            other.internalGetFullyQualifiedNameMap());
+        internalGetMutablePkgScopeMap().mergeFrom(
+            other.internalGetPkgScopeMap());
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
         return this;
@@ -14686,120 +15080,744 @@ public final class Spec {
         return this;
       }
 
-      private com.google.protobuf.MapField<
-          java.lang.String, com.kcl.api.Spec.SymbolIndex> nodeSymbolMap_;
-      private com.google.protobuf.MapField<java.lang.String, com.kcl.api.Spec.SymbolIndex>
-      internalGetNodeSymbolMap() {
-        if (nodeSymbolMap_ == null) {
-          return com.google.protobuf.MapField.emptyMapField(
-              NodeSymbolMapDefaultEntryHolder.defaultEntry);
-        }
-        return nodeSymbolMap_;
-      }
-      private com.google.protobuf.MapField<java.lang.String, com.kcl.api.Spec.SymbolIndex>
-      internalGetMutableNodeSymbolMap() {
-        onChanged();;
-        if (nodeSymbolMap_ == null) {
-          nodeSymbolMap_ = com.google.protobuf.MapField.newMapField(
-              NodeSymbolMapDefaultEntryHolder.defaultEntry);
-        }
-        if (!nodeSymbolMap_.isMutable()) {
-          nodeSymbolMap_ = nodeSymbolMap_.copy();
-        }
-        return nodeSymbolMap_;
+      private java.util.List<com.kcl.api.Spec.Error> parseErrors_ =
+        java.util.Collections.emptyList();
+      private void ensureParseErrorsIsMutable() {
+        if (!((bitField0_ & 0x00000002) != 0)) {
+          parseErrors_ = new java.util.ArrayList<com.kcl.api.Spec.Error>(parseErrors_);
+          bitField0_ |= 0x00000002;
+         }
       }
 
-      public int getNodeSymbolMapCount() {
-        return internalGetNodeSymbolMap().getMap().size();
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          com.kcl.api.Spec.Error, com.kcl.api.Spec.Error.Builder, com.kcl.api.Spec.ErrorOrBuilder> parseErrorsBuilder_;
+
+      /**
+       * <pre>
+       * Parse errors
+       * </pre>
+       *
+       * <code>repeated .com.kcl.api.Error parse_errors = 3;</code>
+       */
+      public java.util.List<com.kcl.api.Spec.Error> getParseErrorsList() {
+        if (parseErrorsBuilder_ == null) {
+          return java.util.Collections.unmodifiableList(parseErrors_);
+        } else {
+          return parseErrorsBuilder_.getMessageList();
+        }
       }
       /**
        * <pre>
-       * Map key is the AST index UUID string.
+       * Parse errors
        * </pre>
        *
-       * <code>map&lt;string, .com.kcl.api.SymbolIndex&gt; node_symbol_map = 3;</code>
+       * <code>repeated .com.kcl.api.Error parse_errors = 3;</code>
+       */
+      public int getParseErrorsCount() {
+        if (parseErrorsBuilder_ == null) {
+          return parseErrors_.size();
+        } else {
+          return parseErrorsBuilder_.getCount();
+        }
+      }
+      /**
+       * <pre>
+       * Parse errors
+       * </pre>
+       *
+       * <code>repeated .com.kcl.api.Error parse_errors = 3;</code>
+       */
+      public com.kcl.api.Spec.Error getParseErrors(int index) {
+        if (parseErrorsBuilder_ == null) {
+          return parseErrors_.get(index);
+        } else {
+          return parseErrorsBuilder_.getMessage(index);
+        }
+      }
+      /**
+       * <pre>
+       * Parse errors
+       * </pre>
+       *
+       * <code>repeated .com.kcl.api.Error parse_errors = 3;</code>
+       */
+      public Builder setParseErrors(
+          int index, com.kcl.api.Spec.Error value) {
+        if (parseErrorsBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureParseErrorsIsMutable();
+          parseErrors_.set(index, value);
+          onChanged();
+        } else {
+          parseErrorsBuilder_.setMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <pre>
+       * Parse errors
+       * </pre>
+       *
+       * <code>repeated .com.kcl.api.Error parse_errors = 3;</code>
+       */
+      public Builder setParseErrors(
+          int index, com.kcl.api.Spec.Error.Builder builderForValue) {
+        if (parseErrorsBuilder_ == null) {
+          ensureParseErrorsIsMutable();
+          parseErrors_.set(index, builderForValue.build());
+          onChanged();
+        } else {
+          parseErrorsBuilder_.setMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <pre>
+       * Parse errors
+       * </pre>
+       *
+       * <code>repeated .com.kcl.api.Error parse_errors = 3;</code>
+       */
+      public Builder addParseErrors(com.kcl.api.Spec.Error value) {
+        if (parseErrorsBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureParseErrorsIsMutable();
+          parseErrors_.add(value);
+          onChanged();
+        } else {
+          parseErrorsBuilder_.addMessage(value);
+        }
+        return this;
+      }
+      /**
+       * <pre>
+       * Parse errors
+       * </pre>
+       *
+       * <code>repeated .com.kcl.api.Error parse_errors = 3;</code>
+       */
+      public Builder addParseErrors(
+          int index, com.kcl.api.Spec.Error value) {
+        if (parseErrorsBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureParseErrorsIsMutable();
+          parseErrors_.add(index, value);
+          onChanged();
+        } else {
+          parseErrorsBuilder_.addMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <pre>
+       * Parse errors
+       * </pre>
+       *
+       * <code>repeated .com.kcl.api.Error parse_errors = 3;</code>
+       */
+      public Builder addParseErrors(
+          com.kcl.api.Spec.Error.Builder builderForValue) {
+        if (parseErrorsBuilder_ == null) {
+          ensureParseErrorsIsMutable();
+          parseErrors_.add(builderForValue.build());
+          onChanged();
+        } else {
+          parseErrorsBuilder_.addMessage(builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <pre>
+       * Parse errors
+       * </pre>
+       *
+       * <code>repeated .com.kcl.api.Error parse_errors = 3;</code>
+       */
+      public Builder addParseErrors(
+          int index, com.kcl.api.Spec.Error.Builder builderForValue) {
+        if (parseErrorsBuilder_ == null) {
+          ensureParseErrorsIsMutable();
+          parseErrors_.add(index, builderForValue.build());
+          onChanged();
+        } else {
+          parseErrorsBuilder_.addMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <pre>
+       * Parse errors
+       * </pre>
+       *
+       * <code>repeated .com.kcl.api.Error parse_errors = 3;</code>
+       */
+      public Builder addAllParseErrors(
+          java.lang.Iterable<? extends com.kcl.api.Spec.Error> values) {
+        if (parseErrorsBuilder_ == null) {
+          ensureParseErrorsIsMutable();
+          com.google.protobuf.AbstractMessageLite.Builder.addAll(
+              values, parseErrors_);
+          onChanged();
+        } else {
+          parseErrorsBuilder_.addAllMessages(values);
+        }
+        return this;
+      }
+      /**
+       * <pre>
+       * Parse errors
+       * </pre>
+       *
+       * <code>repeated .com.kcl.api.Error parse_errors = 3;</code>
+       */
+      public Builder clearParseErrors() {
+        if (parseErrorsBuilder_ == null) {
+          parseErrors_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000002);
+          onChanged();
+        } else {
+          parseErrorsBuilder_.clear();
+        }
+        return this;
+      }
+      /**
+       * <pre>
+       * Parse errors
+       * </pre>
+       *
+       * <code>repeated .com.kcl.api.Error parse_errors = 3;</code>
+       */
+      public Builder removeParseErrors(int index) {
+        if (parseErrorsBuilder_ == null) {
+          ensureParseErrorsIsMutable();
+          parseErrors_.remove(index);
+          onChanged();
+        } else {
+          parseErrorsBuilder_.remove(index);
+        }
+        return this;
+      }
+      /**
+       * <pre>
+       * Parse errors
+       * </pre>
+       *
+       * <code>repeated .com.kcl.api.Error parse_errors = 3;</code>
+       */
+      public com.kcl.api.Spec.Error.Builder getParseErrorsBuilder(
+          int index) {
+        return getParseErrorsFieldBuilder().getBuilder(index);
+      }
+      /**
+       * <pre>
+       * Parse errors
+       * </pre>
+       *
+       * <code>repeated .com.kcl.api.Error parse_errors = 3;</code>
+       */
+      public com.kcl.api.Spec.ErrorOrBuilder getParseErrorsOrBuilder(
+          int index) {
+        if (parseErrorsBuilder_ == null) {
+          return parseErrors_.get(index);  } else {
+          return parseErrorsBuilder_.getMessageOrBuilder(index);
+        }
+      }
+      /**
+       * <pre>
+       * Parse errors
+       * </pre>
+       *
+       * <code>repeated .com.kcl.api.Error parse_errors = 3;</code>
+       */
+      public java.util.List<? extends com.kcl.api.Spec.ErrorOrBuilder> 
+           getParseErrorsOrBuilderList() {
+        if (parseErrorsBuilder_ != null) {
+          return parseErrorsBuilder_.getMessageOrBuilderList();
+        } else {
+          return java.util.Collections.unmodifiableList(parseErrors_);
+        }
+      }
+      /**
+       * <pre>
+       * Parse errors
+       * </pre>
+       *
+       * <code>repeated .com.kcl.api.Error parse_errors = 3;</code>
+       */
+      public com.kcl.api.Spec.Error.Builder addParseErrorsBuilder() {
+        return getParseErrorsFieldBuilder().addBuilder(
+            com.kcl.api.Spec.Error.getDefaultInstance());
+      }
+      /**
+       * <pre>
+       * Parse errors
+       * </pre>
+       *
+       * <code>repeated .com.kcl.api.Error parse_errors = 3;</code>
+       */
+      public com.kcl.api.Spec.Error.Builder addParseErrorsBuilder(
+          int index) {
+        return getParseErrorsFieldBuilder().addBuilder(
+            index, com.kcl.api.Spec.Error.getDefaultInstance());
+      }
+      /**
+       * <pre>
+       * Parse errors
+       * </pre>
+       *
+       * <code>repeated .com.kcl.api.Error parse_errors = 3;</code>
+       */
+      public java.util.List<com.kcl.api.Spec.Error.Builder> 
+           getParseErrorsBuilderList() {
+        return getParseErrorsFieldBuilder().getBuilderList();
+      }
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          com.kcl.api.Spec.Error, com.kcl.api.Spec.Error.Builder, com.kcl.api.Spec.ErrorOrBuilder> 
+          getParseErrorsFieldBuilder() {
+        if (parseErrorsBuilder_ == null) {
+          parseErrorsBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
+              com.kcl.api.Spec.Error, com.kcl.api.Spec.Error.Builder, com.kcl.api.Spec.ErrorOrBuilder>(
+                  parseErrors_,
+                  ((bitField0_ & 0x00000002) != 0),
+                  getParentForChildren(),
+                  isClean());
+          parseErrors_ = null;
+        }
+        return parseErrorsBuilder_;
+      }
+
+      private java.util.List<com.kcl.api.Spec.Error> typeErrors_ =
+        java.util.Collections.emptyList();
+      private void ensureTypeErrorsIsMutable() {
+        if (!((bitField0_ & 0x00000004) != 0)) {
+          typeErrors_ = new java.util.ArrayList<com.kcl.api.Spec.Error>(typeErrors_);
+          bitField0_ |= 0x00000004;
+         }
+      }
+
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          com.kcl.api.Spec.Error, com.kcl.api.Spec.Error.Builder, com.kcl.api.Spec.ErrorOrBuilder> typeErrorsBuilder_;
+
+      /**
+       * <pre>
+       * Type errors
+       * </pre>
+       *
+       * <code>repeated .com.kcl.api.Error type_errors = 4;</code>
+       */
+      public java.util.List<com.kcl.api.Spec.Error> getTypeErrorsList() {
+        if (typeErrorsBuilder_ == null) {
+          return java.util.Collections.unmodifiableList(typeErrors_);
+        } else {
+          return typeErrorsBuilder_.getMessageList();
+        }
+      }
+      /**
+       * <pre>
+       * Type errors
+       * </pre>
+       *
+       * <code>repeated .com.kcl.api.Error type_errors = 4;</code>
+       */
+      public int getTypeErrorsCount() {
+        if (typeErrorsBuilder_ == null) {
+          return typeErrors_.size();
+        } else {
+          return typeErrorsBuilder_.getCount();
+        }
+      }
+      /**
+       * <pre>
+       * Type errors
+       * </pre>
+       *
+       * <code>repeated .com.kcl.api.Error type_errors = 4;</code>
+       */
+      public com.kcl.api.Spec.Error getTypeErrors(int index) {
+        if (typeErrorsBuilder_ == null) {
+          return typeErrors_.get(index);
+        } else {
+          return typeErrorsBuilder_.getMessage(index);
+        }
+      }
+      /**
+       * <pre>
+       * Type errors
+       * </pre>
+       *
+       * <code>repeated .com.kcl.api.Error type_errors = 4;</code>
+       */
+      public Builder setTypeErrors(
+          int index, com.kcl.api.Spec.Error value) {
+        if (typeErrorsBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureTypeErrorsIsMutable();
+          typeErrors_.set(index, value);
+          onChanged();
+        } else {
+          typeErrorsBuilder_.setMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <pre>
+       * Type errors
+       * </pre>
+       *
+       * <code>repeated .com.kcl.api.Error type_errors = 4;</code>
+       */
+      public Builder setTypeErrors(
+          int index, com.kcl.api.Spec.Error.Builder builderForValue) {
+        if (typeErrorsBuilder_ == null) {
+          ensureTypeErrorsIsMutable();
+          typeErrors_.set(index, builderForValue.build());
+          onChanged();
+        } else {
+          typeErrorsBuilder_.setMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <pre>
+       * Type errors
+       * </pre>
+       *
+       * <code>repeated .com.kcl.api.Error type_errors = 4;</code>
+       */
+      public Builder addTypeErrors(com.kcl.api.Spec.Error value) {
+        if (typeErrorsBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureTypeErrorsIsMutable();
+          typeErrors_.add(value);
+          onChanged();
+        } else {
+          typeErrorsBuilder_.addMessage(value);
+        }
+        return this;
+      }
+      /**
+       * <pre>
+       * Type errors
+       * </pre>
+       *
+       * <code>repeated .com.kcl.api.Error type_errors = 4;</code>
+       */
+      public Builder addTypeErrors(
+          int index, com.kcl.api.Spec.Error value) {
+        if (typeErrorsBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureTypeErrorsIsMutable();
+          typeErrors_.add(index, value);
+          onChanged();
+        } else {
+          typeErrorsBuilder_.addMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <pre>
+       * Type errors
+       * </pre>
+       *
+       * <code>repeated .com.kcl.api.Error type_errors = 4;</code>
+       */
+      public Builder addTypeErrors(
+          com.kcl.api.Spec.Error.Builder builderForValue) {
+        if (typeErrorsBuilder_ == null) {
+          ensureTypeErrorsIsMutable();
+          typeErrors_.add(builderForValue.build());
+          onChanged();
+        } else {
+          typeErrorsBuilder_.addMessage(builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <pre>
+       * Type errors
+       * </pre>
+       *
+       * <code>repeated .com.kcl.api.Error type_errors = 4;</code>
+       */
+      public Builder addTypeErrors(
+          int index, com.kcl.api.Spec.Error.Builder builderForValue) {
+        if (typeErrorsBuilder_ == null) {
+          ensureTypeErrorsIsMutable();
+          typeErrors_.add(index, builderForValue.build());
+          onChanged();
+        } else {
+          typeErrorsBuilder_.addMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <pre>
+       * Type errors
+       * </pre>
+       *
+       * <code>repeated .com.kcl.api.Error type_errors = 4;</code>
+       */
+      public Builder addAllTypeErrors(
+          java.lang.Iterable<? extends com.kcl.api.Spec.Error> values) {
+        if (typeErrorsBuilder_ == null) {
+          ensureTypeErrorsIsMutable();
+          com.google.protobuf.AbstractMessageLite.Builder.addAll(
+              values, typeErrors_);
+          onChanged();
+        } else {
+          typeErrorsBuilder_.addAllMessages(values);
+        }
+        return this;
+      }
+      /**
+       * <pre>
+       * Type errors
+       * </pre>
+       *
+       * <code>repeated .com.kcl.api.Error type_errors = 4;</code>
+       */
+      public Builder clearTypeErrors() {
+        if (typeErrorsBuilder_ == null) {
+          typeErrors_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000004);
+          onChanged();
+        } else {
+          typeErrorsBuilder_.clear();
+        }
+        return this;
+      }
+      /**
+       * <pre>
+       * Type errors
+       * </pre>
+       *
+       * <code>repeated .com.kcl.api.Error type_errors = 4;</code>
+       */
+      public Builder removeTypeErrors(int index) {
+        if (typeErrorsBuilder_ == null) {
+          ensureTypeErrorsIsMutable();
+          typeErrors_.remove(index);
+          onChanged();
+        } else {
+          typeErrorsBuilder_.remove(index);
+        }
+        return this;
+      }
+      /**
+       * <pre>
+       * Type errors
+       * </pre>
+       *
+       * <code>repeated .com.kcl.api.Error type_errors = 4;</code>
+       */
+      public com.kcl.api.Spec.Error.Builder getTypeErrorsBuilder(
+          int index) {
+        return getTypeErrorsFieldBuilder().getBuilder(index);
+      }
+      /**
+       * <pre>
+       * Type errors
+       * </pre>
+       *
+       * <code>repeated .com.kcl.api.Error type_errors = 4;</code>
+       */
+      public com.kcl.api.Spec.ErrorOrBuilder getTypeErrorsOrBuilder(
+          int index) {
+        if (typeErrorsBuilder_ == null) {
+          return typeErrors_.get(index);  } else {
+          return typeErrorsBuilder_.getMessageOrBuilder(index);
+        }
+      }
+      /**
+       * <pre>
+       * Type errors
+       * </pre>
+       *
+       * <code>repeated .com.kcl.api.Error type_errors = 4;</code>
+       */
+      public java.util.List<? extends com.kcl.api.Spec.ErrorOrBuilder> 
+           getTypeErrorsOrBuilderList() {
+        if (typeErrorsBuilder_ != null) {
+          return typeErrorsBuilder_.getMessageOrBuilderList();
+        } else {
+          return java.util.Collections.unmodifiableList(typeErrors_);
+        }
+      }
+      /**
+       * <pre>
+       * Type errors
+       * </pre>
+       *
+       * <code>repeated .com.kcl.api.Error type_errors = 4;</code>
+       */
+      public com.kcl.api.Spec.Error.Builder addTypeErrorsBuilder() {
+        return getTypeErrorsFieldBuilder().addBuilder(
+            com.kcl.api.Spec.Error.getDefaultInstance());
+      }
+      /**
+       * <pre>
+       * Type errors
+       * </pre>
+       *
+       * <code>repeated .com.kcl.api.Error type_errors = 4;</code>
+       */
+      public com.kcl.api.Spec.Error.Builder addTypeErrorsBuilder(
+          int index) {
+        return getTypeErrorsFieldBuilder().addBuilder(
+            index, com.kcl.api.Spec.Error.getDefaultInstance());
+      }
+      /**
+       * <pre>
+       * Type errors
+       * </pre>
+       *
+       * <code>repeated .com.kcl.api.Error type_errors = 4;</code>
+       */
+      public java.util.List<com.kcl.api.Spec.Error.Builder> 
+           getTypeErrorsBuilderList() {
+        return getTypeErrorsFieldBuilder().getBuilderList();
+      }
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          com.kcl.api.Spec.Error, com.kcl.api.Spec.Error.Builder, com.kcl.api.Spec.ErrorOrBuilder> 
+          getTypeErrorsFieldBuilder() {
+        if (typeErrorsBuilder_ == null) {
+          typeErrorsBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
+              com.kcl.api.Spec.Error, com.kcl.api.Spec.Error.Builder, com.kcl.api.Spec.ErrorOrBuilder>(
+                  typeErrors_,
+                  ((bitField0_ & 0x00000004) != 0),
+                  getParentForChildren(),
+                  isClean());
+          typeErrors_ = null;
+        }
+        return typeErrorsBuilder_;
+      }
+
+      private com.google.protobuf.MapField<
+          java.lang.String, com.kcl.api.Spec.Scope> scopes_;
+      private com.google.protobuf.MapField<java.lang.String, com.kcl.api.Spec.Scope>
+      internalGetScopes() {
+        if (scopes_ == null) {
+          return com.google.protobuf.MapField.emptyMapField(
+              ScopesDefaultEntryHolder.defaultEntry);
+        }
+        return scopes_;
+      }
+      private com.google.protobuf.MapField<java.lang.String, com.kcl.api.Spec.Scope>
+      internalGetMutableScopes() {
+        onChanged();;
+        if (scopes_ == null) {
+          scopes_ = com.google.protobuf.MapField.newMapField(
+              ScopesDefaultEntryHolder.defaultEntry);
+        }
+        if (!scopes_.isMutable()) {
+          scopes_ = scopes_.copy();
+        }
+        return scopes_;
+      }
+
+      public int getScopesCount() {
+        return internalGetScopes().getMap().size();
+      }
+      /**
+       * <pre>
+       * Map key is the ScopeIndex json string.
+       * </pre>
+       *
+       * <code>map&lt;string, .com.kcl.api.Scope&gt; scopes = 5;</code>
        */
 
       @java.lang.Override
-      public boolean containsNodeSymbolMap(
+      public boolean containsScopes(
           java.lang.String key) {
         if (key == null) { throw new NullPointerException("map key"); }
-        return internalGetNodeSymbolMap().getMap().containsKey(key);
+        return internalGetScopes().getMap().containsKey(key);
       }
       /**
-       * Use {@link #getNodeSymbolMapMap()} instead.
+       * Use {@link #getScopesMap()} instead.
        */
       @java.lang.Override
       @java.lang.Deprecated
-      public java.util.Map<java.lang.String, com.kcl.api.Spec.SymbolIndex> getNodeSymbolMap() {
-        return getNodeSymbolMapMap();
+      public java.util.Map<java.lang.String, com.kcl.api.Spec.Scope> getScopes() {
+        return getScopesMap();
       }
       /**
        * <pre>
-       * Map key is the AST index UUID string.
+       * Map key is the ScopeIndex json string.
        * </pre>
        *
-       * <code>map&lt;string, .com.kcl.api.SymbolIndex&gt; node_symbol_map = 3;</code>
+       * <code>map&lt;string, .com.kcl.api.Scope&gt; scopes = 5;</code>
        */
       @java.lang.Override
 
-      public java.util.Map<java.lang.String, com.kcl.api.Spec.SymbolIndex> getNodeSymbolMapMap() {
-        return internalGetNodeSymbolMap().getMap();
+      public java.util.Map<java.lang.String, com.kcl.api.Spec.Scope> getScopesMap() {
+        return internalGetScopes().getMap();
       }
       /**
        * <pre>
-       * Map key is the AST index UUID string.
+       * Map key is the ScopeIndex json string.
        * </pre>
        *
-       * <code>map&lt;string, .com.kcl.api.SymbolIndex&gt; node_symbol_map = 3;</code>
+       * <code>map&lt;string, .com.kcl.api.Scope&gt; scopes = 5;</code>
        */
       @java.lang.Override
 
-      public com.kcl.api.Spec.SymbolIndex getNodeSymbolMapOrDefault(
+      public com.kcl.api.Spec.Scope getScopesOrDefault(
           java.lang.String key,
-          com.kcl.api.Spec.SymbolIndex defaultValue) {
+          com.kcl.api.Spec.Scope defaultValue) {
         if (key == null) { throw new NullPointerException("map key"); }
-        java.util.Map<java.lang.String, com.kcl.api.Spec.SymbolIndex> map =
-            internalGetNodeSymbolMap().getMap();
+        java.util.Map<java.lang.String, com.kcl.api.Spec.Scope> map =
+            internalGetScopes().getMap();
         return map.containsKey(key) ? map.get(key) : defaultValue;
       }
       /**
        * <pre>
-       * Map key is the AST index UUID string.
+       * Map key is the ScopeIndex json string.
        * </pre>
        *
-       * <code>map&lt;string, .com.kcl.api.SymbolIndex&gt; node_symbol_map = 3;</code>
+       * <code>map&lt;string, .com.kcl.api.Scope&gt; scopes = 5;</code>
        */
       @java.lang.Override
 
-      public com.kcl.api.Spec.SymbolIndex getNodeSymbolMapOrThrow(
+      public com.kcl.api.Spec.Scope getScopesOrThrow(
           java.lang.String key) {
         if (key == null) { throw new NullPointerException("map key"); }
-        java.util.Map<java.lang.String, com.kcl.api.Spec.SymbolIndex> map =
-            internalGetNodeSymbolMap().getMap();
+        java.util.Map<java.lang.String, com.kcl.api.Spec.Scope> map =
+            internalGetScopes().getMap();
         if (!map.containsKey(key)) {
           throw new java.lang.IllegalArgumentException();
         }
         return map.get(key);
       }
 
-      public Builder clearNodeSymbolMap() {
-        internalGetMutableNodeSymbolMap().getMutableMap()
+      public Builder clearScopes() {
+        internalGetMutableScopes().getMutableMap()
             .clear();
         return this;
       }
       /**
        * <pre>
-       * Map key is the AST index UUID string.
+       * Map key is the ScopeIndex json string.
        * </pre>
        *
-       * <code>map&lt;string, .com.kcl.api.SymbolIndex&gt; node_symbol_map = 3;</code>
+       * <code>map&lt;string, .com.kcl.api.Scope&gt; scopes = 5;</code>
        */
 
-      public Builder removeNodeSymbolMap(
+      public Builder removeScopes(
           java.lang.String key) {
         if (key == null) { throw new NullPointerException("map key"); }
-        internalGetMutableNodeSymbolMap().getMutableMap()
+        internalGetMutableScopes().getMutableMap()
             .remove(key);
         return this;
       }
@@ -14807,40 +15825,40 @@ public final class Spec {
        * Use alternate mutation accessors instead.
        */
       @java.lang.Deprecated
-      public java.util.Map<java.lang.String, com.kcl.api.Spec.SymbolIndex>
-      getMutableNodeSymbolMap() {
-        return internalGetMutableNodeSymbolMap().getMutableMap();
+      public java.util.Map<java.lang.String, com.kcl.api.Spec.Scope>
+      getMutableScopes() {
+        return internalGetMutableScopes().getMutableMap();
       }
       /**
        * <pre>
-       * Map key is the AST index UUID string.
+       * Map key is the ScopeIndex json string.
        * </pre>
        *
-       * <code>map&lt;string, .com.kcl.api.SymbolIndex&gt; node_symbol_map = 3;</code>
+       * <code>map&lt;string, .com.kcl.api.Scope&gt; scopes = 5;</code>
        */
-      public Builder putNodeSymbolMap(
+      public Builder putScopes(
           java.lang.String key,
-          com.kcl.api.Spec.SymbolIndex value) {
+          com.kcl.api.Spec.Scope value) {
         if (key == null) { throw new NullPointerException("map key"); }
         if (value == null) {
   throw new NullPointerException("map value");
 }
 
-        internalGetMutableNodeSymbolMap().getMutableMap()
+        internalGetMutableScopes().getMutableMap()
             .put(key, value);
         return this;
       }
       /**
        * <pre>
-       * Map key is the AST index UUID string.
+       * Map key is the ScopeIndex json string.
        * </pre>
        *
-       * <code>map&lt;string, .com.kcl.api.SymbolIndex&gt; node_symbol_map = 3;</code>
+       * <code>map&lt;string, .com.kcl.api.Scope&gt; scopes = 5;</code>
        */
 
-      public Builder putAllNodeSymbolMap(
-          java.util.Map<java.lang.String, com.kcl.api.Spec.SymbolIndex> values) {
-        internalGetMutableNodeSymbolMap().getMutableMap()
+      public Builder putAllScopes(
+          java.util.Map<java.lang.String, com.kcl.api.Spec.Scope> values) {
+        internalGetMutableScopes().getMutableMap()
             .putAll(values);
         return this;
       }
@@ -14876,7 +15894,7 @@ public final class Spec {
        * Map key is the SymbolIndex json string.
        * </pre>
        *
-       * <code>map&lt;string, .com.kcl.api.Symbol&gt; symbols = 4;</code>
+       * <code>map&lt;string, .com.kcl.api.Symbol&gt; symbols = 6;</code>
        */
 
       @java.lang.Override
@@ -14898,7 +15916,7 @@ public final class Spec {
        * Map key is the SymbolIndex json string.
        * </pre>
        *
-       * <code>map&lt;string, .com.kcl.api.Symbol&gt; symbols = 4;</code>
+       * <code>map&lt;string, .com.kcl.api.Symbol&gt; symbols = 6;</code>
        */
       @java.lang.Override
 
@@ -14910,7 +15928,7 @@ public final class Spec {
        * Map key is the SymbolIndex json string.
        * </pre>
        *
-       * <code>map&lt;string, .com.kcl.api.Symbol&gt; symbols = 4;</code>
+       * <code>map&lt;string, .com.kcl.api.Symbol&gt; symbols = 6;</code>
        */
       @java.lang.Override
 
@@ -14927,7 +15945,7 @@ public final class Spec {
        * Map key is the SymbolIndex json string.
        * </pre>
        *
-       * <code>map&lt;string, .com.kcl.api.Symbol&gt; symbols = 4;</code>
+       * <code>map&lt;string, .com.kcl.api.Symbol&gt; symbols = 6;</code>
        */
       @java.lang.Override
 
@@ -14952,7 +15970,7 @@ public final class Spec {
        * Map key is the SymbolIndex json string.
        * </pre>
        *
-       * <code>map&lt;string, .com.kcl.api.Symbol&gt; symbols = 4;</code>
+       * <code>map&lt;string, .com.kcl.api.Symbol&gt; symbols = 6;</code>
        */
 
       public Builder removeSymbols(
@@ -14975,7 +15993,7 @@ public final class Spec {
        * Map key is the SymbolIndex json string.
        * </pre>
        *
-       * <code>map&lt;string, .com.kcl.api.Symbol&gt; symbols = 4;</code>
+       * <code>map&lt;string, .com.kcl.api.Symbol&gt; symbols = 6;</code>
        */
       public Builder putSymbols(
           java.lang.String key,
@@ -14994,12 +16012,489 @@ public final class Spec {
        * Map key is the SymbolIndex json string.
        * </pre>
        *
-       * <code>map&lt;string, .com.kcl.api.Symbol&gt; symbols = 4;</code>
+       * <code>map&lt;string, .com.kcl.api.Symbol&gt; symbols = 6;</code>
        */
 
       public Builder putAllSymbols(
           java.util.Map<java.lang.String, com.kcl.api.Spec.Symbol> values) {
         internalGetMutableSymbols().getMutableMap()
+            .putAll(values);
+        return this;
+      }
+
+      private com.google.protobuf.MapField<
+          java.lang.String, com.kcl.api.Spec.SymbolIndex> nodeSymbolMap_;
+      private com.google.protobuf.MapField<java.lang.String, com.kcl.api.Spec.SymbolIndex>
+      internalGetNodeSymbolMap() {
+        if (nodeSymbolMap_ == null) {
+          return com.google.protobuf.MapField.emptyMapField(
+              NodeSymbolMapDefaultEntryHolder.defaultEntry);
+        }
+        return nodeSymbolMap_;
+      }
+      private com.google.protobuf.MapField<java.lang.String, com.kcl.api.Spec.SymbolIndex>
+      internalGetMutableNodeSymbolMap() {
+        onChanged();;
+        if (nodeSymbolMap_ == null) {
+          nodeSymbolMap_ = com.google.protobuf.MapField.newMapField(
+              NodeSymbolMapDefaultEntryHolder.defaultEntry);
+        }
+        if (!nodeSymbolMap_.isMutable()) {
+          nodeSymbolMap_ = nodeSymbolMap_.copy();
+        }
+        return nodeSymbolMap_;
+      }
+
+      public int getNodeSymbolMapCount() {
+        return internalGetNodeSymbolMap().getMap().size();
+      }
+      /**
+       * <pre>
+       * Map key is the AST index UUID string.
+       * </pre>
+       *
+       * <code>map&lt;string, .com.kcl.api.SymbolIndex&gt; node_symbol_map = 7;</code>
+       */
+
+      @java.lang.Override
+      public boolean containsNodeSymbolMap(
+          java.lang.String key) {
+        if (key == null) { throw new NullPointerException("map key"); }
+        return internalGetNodeSymbolMap().getMap().containsKey(key);
+      }
+      /**
+       * Use {@link #getNodeSymbolMapMap()} instead.
+       */
+      @java.lang.Override
+      @java.lang.Deprecated
+      public java.util.Map<java.lang.String, com.kcl.api.Spec.SymbolIndex> getNodeSymbolMap() {
+        return getNodeSymbolMapMap();
+      }
+      /**
+       * <pre>
+       * Map key is the AST index UUID string.
+       * </pre>
+       *
+       * <code>map&lt;string, .com.kcl.api.SymbolIndex&gt; node_symbol_map = 7;</code>
+       */
+      @java.lang.Override
+
+      public java.util.Map<java.lang.String, com.kcl.api.Spec.SymbolIndex> getNodeSymbolMapMap() {
+        return internalGetNodeSymbolMap().getMap();
+      }
+      /**
+       * <pre>
+       * Map key is the AST index UUID string.
+       * </pre>
+       *
+       * <code>map&lt;string, .com.kcl.api.SymbolIndex&gt; node_symbol_map = 7;</code>
+       */
+      @java.lang.Override
+
+      public com.kcl.api.Spec.SymbolIndex getNodeSymbolMapOrDefault(
+          java.lang.String key,
+          com.kcl.api.Spec.SymbolIndex defaultValue) {
+        if (key == null) { throw new NullPointerException("map key"); }
+        java.util.Map<java.lang.String, com.kcl.api.Spec.SymbolIndex> map =
+            internalGetNodeSymbolMap().getMap();
+        return map.containsKey(key) ? map.get(key) : defaultValue;
+      }
+      /**
+       * <pre>
+       * Map key is the AST index UUID string.
+       * </pre>
+       *
+       * <code>map&lt;string, .com.kcl.api.SymbolIndex&gt; node_symbol_map = 7;</code>
+       */
+      @java.lang.Override
+
+      public com.kcl.api.Spec.SymbolIndex getNodeSymbolMapOrThrow(
+          java.lang.String key) {
+        if (key == null) { throw new NullPointerException("map key"); }
+        java.util.Map<java.lang.String, com.kcl.api.Spec.SymbolIndex> map =
+            internalGetNodeSymbolMap().getMap();
+        if (!map.containsKey(key)) {
+          throw new java.lang.IllegalArgumentException();
+        }
+        return map.get(key);
+      }
+
+      public Builder clearNodeSymbolMap() {
+        internalGetMutableNodeSymbolMap().getMutableMap()
+            .clear();
+        return this;
+      }
+      /**
+       * <pre>
+       * Map key is the AST index UUID string.
+       * </pre>
+       *
+       * <code>map&lt;string, .com.kcl.api.SymbolIndex&gt; node_symbol_map = 7;</code>
+       */
+
+      public Builder removeNodeSymbolMap(
+          java.lang.String key) {
+        if (key == null) { throw new NullPointerException("map key"); }
+        internalGetMutableNodeSymbolMap().getMutableMap()
+            .remove(key);
+        return this;
+      }
+      /**
+       * Use alternate mutation accessors instead.
+       */
+      @java.lang.Deprecated
+      public java.util.Map<java.lang.String, com.kcl.api.Spec.SymbolIndex>
+      getMutableNodeSymbolMap() {
+        return internalGetMutableNodeSymbolMap().getMutableMap();
+      }
+      /**
+       * <pre>
+       * Map key is the AST index UUID string.
+       * </pre>
+       *
+       * <code>map&lt;string, .com.kcl.api.SymbolIndex&gt; node_symbol_map = 7;</code>
+       */
+      public Builder putNodeSymbolMap(
+          java.lang.String key,
+          com.kcl.api.Spec.SymbolIndex value) {
+        if (key == null) { throw new NullPointerException("map key"); }
+        if (value == null) {
+  throw new NullPointerException("map value");
+}
+
+        internalGetMutableNodeSymbolMap().getMutableMap()
+            .put(key, value);
+        return this;
+      }
+      /**
+       * <pre>
+       * Map key is the AST index UUID string.
+       * </pre>
+       *
+       * <code>map&lt;string, .com.kcl.api.SymbolIndex&gt; node_symbol_map = 7;</code>
+       */
+
+      public Builder putAllNodeSymbolMap(
+          java.util.Map<java.lang.String, com.kcl.api.Spec.SymbolIndex> values) {
+        internalGetMutableNodeSymbolMap().getMutableMap()
+            .putAll(values);
+        return this;
+      }
+
+      private com.google.protobuf.MapField<
+          java.lang.String, java.lang.String> symbolNodeMap_;
+      private com.google.protobuf.MapField<java.lang.String, java.lang.String>
+      internalGetSymbolNodeMap() {
+        if (symbolNodeMap_ == null) {
+          return com.google.protobuf.MapField.emptyMapField(
+              SymbolNodeMapDefaultEntryHolder.defaultEntry);
+        }
+        return symbolNodeMap_;
+      }
+      private com.google.protobuf.MapField<java.lang.String, java.lang.String>
+      internalGetMutableSymbolNodeMap() {
+        onChanged();;
+        if (symbolNodeMap_ == null) {
+          symbolNodeMap_ = com.google.protobuf.MapField.newMapField(
+              SymbolNodeMapDefaultEntryHolder.defaultEntry);
+        }
+        if (!symbolNodeMap_.isMutable()) {
+          symbolNodeMap_ = symbolNodeMap_.copy();
+        }
+        return symbolNodeMap_;
+      }
+
+      public int getSymbolNodeMapCount() {
+        return internalGetSymbolNodeMap().getMap().size();
+      }
+      /**
+       * <pre>
+       * Map key is the SymbolIndex json string.
+       * </pre>
+       *
+       * <code>map&lt;string, string&gt; symbol_node_map = 8;</code>
+       */
+
+      @java.lang.Override
+      public boolean containsSymbolNodeMap(
+          java.lang.String key) {
+        if (key == null) { throw new NullPointerException("map key"); }
+        return internalGetSymbolNodeMap().getMap().containsKey(key);
+      }
+      /**
+       * Use {@link #getSymbolNodeMapMap()} instead.
+       */
+      @java.lang.Override
+      @java.lang.Deprecated
+      public java.util.Map<java.lang.String, java.lang.String> getSymbolNodeMap() {
+        return getSymbolNodeMapMap();
+      }
+      /**
+       * <pre>
+       * Map key is the SymbolIndex json string.
+       * </pre>
+       *
+       * <code>map&lt;string, string&gt; symbol_node_map = 8;</code>
+       */
+      @java.lang.Override
+
+      public java.util.Map<java.lang.String, java.lang.String> getSymbolNodeMapMap() {
+        return internalGetSymbolNodeMap().getMap();
+      }
+      /**
+       * <pre>
+       * Map key is the SymbolIndex json string.
+       * </pre>
+       *
+       * <code>map&lt;string, string&gt; symbol_node_map = 8;</code>
+       */
+      @java.lang.Override
+
+      public java.lang.String getSymbolNodeMapOrDefault(
+          java.lang.String key,
+          java.lang.String defaultValue) {
+        if (key == null) { throw new NullPointerException("map key"); }
+        java.util.Map<java.lang.String, java.lang.String> map =
+            internalGetSymbolNodeMap().getMap();
+        return map.containsKey(key) ? map.get(key) : defaultValue;
+      }
+      /**
+       * <pre>
+       * Map key is the SymbolIndex json string.
+       * </pre>
+       *
+       * <code>map&lt;string, string&gt; symbol_node_map = 8;</code>
+       */
+      @java.lang.Override
+
+      public java.lang.String getSymbolNodeMapOrThrow(
+          java.lang.String key) {
+        if (key == null) { throw new NullPointerException("map key"); }
+        java.util.Map<java.lang.String, java.lang.String> map =
+            internalGetSymbolNodeMap().getMap();
+        if (!map.containsKey(key)) {
+          throw new java.lang.IllegalArgumentException();
+        }
+        return map.get(key);
+      }
+
+      public Builder clearSymbolNodeMap() {
+        internalGetMutableSymbolNodeMap().getMutableMap()
+            .clear();
+        return this;
+      }
+      /**
+       * <pre>
+       * Map key is the SymbolIndex json string.
+       * </pre>
+       *
+       * <code>map&lt;string, string&gt; symbol_node_map = 8;</code>
+       */
+
+      public Builder removeSymbolNodeMap(
+          java.lang.String key) {
+        if (key == null) { throw new NullPointerException("map key"); }
+        internalGetMutableSymbolNodeMap().getMutableMap()
+            .remove(key);
+        return this;
+      }
+      /**
+       * Use alternate mutation accessors instead.
+       */
+      @java.lang.Deprecated
+      public java.util.Map<java.lang.String, java.lang.String>
+      getMutableSymbolNodeMap() {
+        return internalGetMutableSymbolNodeMap().getMutableMap();
+      }
+      /**
+       * <pre>
+       * Map key is the SymbolIndex json string.
+       * </pre>
+       *
+       * <code>map&lt;string, string&gt; symbol_node_map = 8;</code>
+       */
+      public Builder putSymbolNodeMap(
+          java.lang.String key,
+          java.lang.String value) {
+        if (key == null) { throw new NullPointerException("map key"); }
+        if (value == null) {
+  throw new NullPointerException("map value");
+}
+
+        internalGetMutableSymbolNodeMap().getMutableMap()
+            .put(key, value);
+        return this;
+      }
+      /**
+       * <pre>
+       * Map key is the SymbolIndex json string.
+       * </pre>
+       *
+       * <code>map&lt;string, string&gt; symbol_node_map = 8;</code>
+       */
+
+      public Builder putAllSymbolNodeMap(
+          java.util.Map<java.lang.String, java.lang.String> values) {
+        internalGetMutableSymbolNodeMap().getMutableMap()
+            .putAll(values);
+        return this;
+      }
+
+      private com.google.protobuf.MapField<
+          java.lang.String, com.kcl.api.Spec.SymbolIndex> fullyQualifiedNameMap_;
+      private com.google.protobuf.MapField<java.lang.String, com.kcl.api.Spec.SymbolIndex>
+      internalGetFullyQualifiedNameMap() {
+        if (fullyQualifiedNameMap_ == null) {
+          return com.google.protobuf.MapField.emptyMapField(
+              FullyQualifiedNameMapDefaultEntryHolder.defaultEntry);
+        }
+        return fullyQualifiedNameMap_;
+      }
+      private com.google.protobuf.MapField<java.lang.String, com.kcl.api.Spec.SymbolIndex>
+      internalGetMutableFullyQualifiedNameMap() {
+        onChanged();;
+        if (fullyQualifiedNameMap_ == null) {
+          fullyQualifiedNameMap_ = com.google.protobuf.MapField.newMapField(
+              FullyQualifiedNameMapDefaultEntryHolder.defaultEntry);
+        }
+        if (!fullyQualifiedNameMap_.isMutable()) {
+          fullyQualifiedNameMap_ = fullyQualifiedNameMap_.copy();
+        }
+        return fullyQualifiedNameMap_;
+      }
+
+      public int getFullyQualifiedNameMapCount() {
+        return internalGetFullyQualifiedNameMap().getMap().size();
+      }
+      /**
+       * <pre>
+       * Map key is the fully_qualified_name e.g. `pkg.Name`
+       * </pre>
+       *
+       * <code>map&lt;string, .com.kcl.api.SymbolIndex&gt; fully_qualified_name_map = 9;</code>
+       */
+
+      @java.lang.Override
+      public boolean containsFullyQualifiedNameMap(
+          java.lang.String key) {
+        if (key == null) { throw new NullPointerException("map key"); }
+        return internalGetFullyQualifiedNameMap().getMap().containsKey(key);
+      }
+      /**
+       * Use {@link #getFullyQualifiedNameMapMap()} instead.
+       */
+      @java.lang.Override
+      @java.lang.Deprecated
+      public java.util.Map<java.lang.String, com.kcl.api.Spec.SymbolIndex> getFullyQualifiedNameMap() {
+        return getFullyQualifiedNameMapMap();
+      }
+      /**
+       * <pre>
+       * Map key is the fully_qualified_name e.g. `pkg.Name`
+       * </pre>
+       *
+       * <code>map&lt;string, .com.kcl.api.SymbolIndex&gt; fully_qualified_name_map = 9;</code>
+       */
+      @java.lang.Override
+
+      public java.util.Map<java.lang.String, com.kcl.api.Spec.SymbolIndex> getFullyQualifiedNameMapMap() {
+        return internalGetFullyQualifiedNameMap().getMap();
+      }
+      /**
+       * <pre>
+       * Map key is the fully_qualified_name e.g. `pkg.Name`
+       * </pre>
+       *
+       * <code>map&lt;string, .com.kcl.api.SymbolIndex&gt; fully_qualified_name_map = 9;</code>
+       */
+      @java.lang.Override
+
+      public com.kcl.api.Spec.SymbolIndex getFullyQualifiedNameMapOrDefault(
+          java.lang.String key,
+          com.kcl.api.Spec.SymbolIndex defaultValue) {
+        if (key == null) { throw new NullPointerException("map key"); }
+        java.util.Map<java.lang.String, com.kcl.api.Spec.SymbolIndex> map =
+            internalGetFullyQualifiedNameMap().getMap();
+        return map.containsKey(key) ? map.get(key) : defaultValue;
+      }
+      /**
+       * <pre>
+       * Map key is the fully_qualified_name e.g. `pkg.Name`
+       * </pre>
+       *
+       * <code>map&lt;string, .com.kcl.api.SymbolIndex&gt; fully_qualified_name_map = 9;</code>
+       */
+      @java.lang.Override
+
+      public com.kcl.api.Spec.SymbolIndex getFullyQualifiedNameMapOrThrow(
+          java.lang.String key) {
+        if (key == null) { throw new NullPointerException("map key"); }
+        java.util.Map<java.lang.String, com.kcl.api.Spec.SymbolIndex> map =
+            internalGetFullyQualifiedNameMap().getMap();
+        if (!map.containsKey(key)) {
+          throw new java.lang.IllegalArgumentException();
+        }
+        return map.get(key);
+      }
+
+      public Builder clearFullyQualifiedNameMap() {
+        internalGetMutableFullyQualifiedNameMap().getMutableMap()
+            .clear();
+        return this;
+      }
+      /**
+       * <pre>
+       * Map key is the fully_qualified_name e.g. `pkg.Name`
+       * </pre>
+       *
+       * <code>map&lt;string, .com.kcl.api.SymbolIndex&gt; fully_qualified_name_map = 9;</code>
+       */
+
+      public Builder removeFullyQualifiedNameMap(
+          java.lang.String key) {
+        if (key == null) { throw new NullPointerException("map key"); }
+        internalGetMutableFullyQualifiedNameMap().getMutableMap()
+            .remove(key);
+        return this;
+      }
+      /**
+       * Use alternate mutation accessors instead.
+       */
+      @java.lang.Deprecated
+      public java.util.Map<java.lang.String, com.kcl.api.Spec.SymbolIndex>
+      getMutableFullyQualifiedNameMap() {
+        return internalGetMutableFullyQualifiedNameMap().getMutableMap();
+      }
+      /**
+       * <pre>
+       * Map key is the fully_qualified_name e.g. `pkg.Name`
+       * </pre>
+       *
+       * <code>map&lt;string, .com.kcl.api.SymbolIndex&gt; fully_qualified_name_map = 9;</code>
+       */
+      public Builder putFullyQualifiedNameMap(
+          java.lang.String key,
+          com.kcl.api.Spec.SymbolIndex value) {
+        if (key == null) { throw new NullPointerException("map key"); }
+        if (value == null) {
+  throw new NullPointerException("map value");
+}
+
+        internalGetMutableFullyQualifiedNameMap().getMutableMap()
+            .put(key, value);
+        return this;
+      }
+      /**
+       * <pre>
+       * Map key is the fully_qualified_name e.g. `pkg.Name`
+       * </pre>
+       *
+       * <code>map&lt;string, .com.kcl.api.SymbolIndex&gt; fully_qualified_name_map = 9;</code>
+       */
+
+      public Builder putAllFullyQualifiedNameMap(
+          java.util.Map<java.lang.String, com.kcl.api.Spec.SymbolIndex> values) {
+        internalGetMutableFullyQualifiedNameMap().getMutableMap()
             .putAll(values);
         return this;
       }
@@ -15035,7 +16530,7 @@ public final class Spec {
        * Map key is the package path.
        * </pre>
        *
-       * <code>map&lt;string, .com.kcl.api.ScopeIndex&gt; pkg_scope_map = 5;</code>
+       * <code>map&lt;string, .com.kcl.api.ScopeIndex&gt; pkg_scope_map = 10;</code>
        */
 
       @java.lang.Override
@@ -15057,7 +16552,7 @@ public final class Spec {
        * Map key is the package path.
        * </pre>
        *
-       * <code>map&lt;string, .com.kcl.api.ScopeIndex&gt; pkg_scope_map = 5;</code>
+       * <code>map&lt;string, .com.kcl.api.ScopeIndex&gt; pkg_scope_map = 10;</code>
        */
       @java.lang.Override
 
@@ -15069,7 +16564,7 @@ public final class Spec {
        * Map key is the package path.
        * </pre>
        *
-       * <code>map&lt;string, .com.kcl.api.ScopeIndex&gt; pkg_scope_map = 5;</code>
+       * <code>map&lt;string, .com.kcl.api.ScopeIndex&gt; pkg_scope_map = 10;</code>
        */
       @java.lang.Override
 
@@ -15086,7 +16581,7 @@ public final class Spec {
        * Map key is the package path.
        * </pre>
        *
-       * <code>map&lt;string, .com.kcl.api.ScopeIndex&gt; pkg_scope_map = 5;</code>
+       * <code>map&lt;string, .com.kcl.api.ScopeIndex&gt; pkg_scope_map = 10;</code>
        */
       @java.lang.Override
 
@@ -15111,7 +16606,7 @@ public final class Spec {
        * Map key is the package path.
        * </pre>
        *
-       * <code>map&lt;string, .com.kcl.api.ScopeIndex&gt; pkg_scope_map = 5;</code>
+       * <code>map&lt;string, .com.kcl.api.ScopeIndex&gt; pkg_scope_map = 10;</code>
        */
 
       public Builder removePkgScopeMap(
@@ -15134,7 +16629,7 @@ public final class Spec {
        * Map key is the package path.
        * </pre>
        *
-       * <code>map&lt;string, .com.kcl.api.ScopeIndex&gt; pkg_scope_map = 5;</code>
+       * <code>map&lt;string, .com.kcl.api.ScopeIndex&gt; pkg_scope_map = 10;</code>
        */
       public Builder putPkgScopeMap(
           java.lang.String key,
@@ -15153,7 +16648,7 @@ public final class Spec {
        * Map key is the package path.
        * </pre>
        *
-       * <code>map&lt;string, .com.kcl.api.ScopeIndex&gt; pkg_scope_map = 5;</code>
+       * <code>map&lt;string, .com.kcl.api.ScopeIndex&gt; pkg_scope_map = 10;</code>
        */
 
       public Builder putAllPkgScopeMap(
@@ -15161,789 +16656,6 @@ public final class Spec {
         internalGetMutablePkgScopeMap().getMutableMap()
             .putAll(values);
         return this;
-      }
-
-      private com.google.protobuf.MapField<
-          java.lang.String, com.kcl.api.Spec.Scope> scopes_;
-      private com.google.protobuf.MapField<java.lang.String, com.kcl.api.Spec.Scope>
-      internalGetScopes() {
-        if (scopes_ == null) {
-          return com.google.protobuf.MapField.emptyMapField(
-              ScopesDefaultEntryHolder.defaultEntry);
-        }
-        return scopes_;
-      }
-      private com.google.protobuf.MapField<java.lang.String, com.kcl.api.Spec.Scope>
-      internalGetMutableScopes() {
-        onChanged();;
-        if (scopes_ == null) {
-          scopes_ = com.google.protobuf.MapField.newMapField(
-              ScopesDefaultEntryHolder.defaultEntry);
-        }
-        if (!scopes_.isMutable()) {
-          scopes_ = scopes_.copy();
-        }
-        return scopes_;
-      }
-
-      public int getScopesCount() {
-        return internalGetScopes().getMap().size();
-      }
-      /**
-       * <pre>
-       * Map key is the ScopeIndex json string.
-       * </pre>
-       *
-       * <code>map&lt;string, .com.kcl.api.Scope&gt; scopes = 6;</code>
-       */
-
-      @java.lang.Override
-      public boolean containsScopes(
-          java.lang.String key) {
-        if (key == null) { throw new NullPointerException("map key"); }
-        return internalGetScopes().getMap().containsKey(key);
-      }
-      /**
-       * Use {@link #getScopesMap()} instead.
-       */
-      @java.lang.Override
-      @java.lang.Deprecated
-      public java.util.Map<java.lang.String, com.kcl.api.Spec.Scope> getScopes() {
-        return getScopesMap();
-      }
-      /**
-       * <pre>
-       * Map key is the ScopeIndex json string.
-       * </pre>
-       *
-       * <code>map&lt;string, .com.kcl.api.Scope&gt; scopes = 6;</code>
-       */
-      @java.lang.Override
-
-      public java.util.Map<java.lang.String, com.kcl.api.Spec.Scope> getScopesMap() {
-        return internalGetScopes().getMap();
-      }
-      /**
-       * <pre>
-       * Map key is the ScopeIndex json string.
-       * </pre>
-       *
-       * <code>map&lt;string, .com.kcl.api.Scope&gt; scopes = 6;</code>
-       */
-      @java.lang.Override
-
-      public com.kcl.api.Spec.Scope getScopesOrDefault(
-          java.lang.String key,
-          com.kcl.api.Spec.Scope defaultValue) {
-        if (key == null) { throw new NullPointerException("map key"); }
-        java.util.Map<java.lang.String, com.kcl.api.Spec.Scope> map =
-            internalGetScopes().getMap();
-        return map.containsKey(key) ? map.get(key) : defaultValue;
-      }
-      /**
-       * <pre>
-       * Map key is the ScopeIndex json string.
-       * </pre>
-       *
-       * <code>map&lt;string, .com.kcl.api.Scope&gt; scopes = 6;</code>
-       */
-      @java.lang.Override
-
-      public com.kcl.api.Spec.Scope getScopesOrThrow(
-          java.lang.String key) {
-        if (key == null) { throw new NullPointerException("map key"); }
-        java.util.Map<java.lang.String, com.kcl.api.Spec.Scope> map =
-            internalGetScopes().getMap();
-        if (!map.containsKey(key)) {
-          throw new java.lang.IllegalArgumentException();
-        }
-        return map.get(key);
-      }
-
-      public Builder clearScopes() {
-        internalGetMutableScopes().getMutableMap()
-            .clear();
-        return this;
-      }
-      /**
-       * <pre>
-       * Map key is the ScopeIndex json string.
-       * </pre>
-       *
-       * <code>map&lt;string, .com.kcl.api.Scope&gt; scopes = 6;</code>
-       */
-
-      public Builder removeScopes(
-          java.lang.String key) {
-        if (key == null) { throw new NullPointerException("map key"); }
-        internalGetMutableScopes().getMutableMap()
-            .remove(key);
-        return this;
-      }
-      /**
-       * Use alternate mutation accessors instead.
-       */
-      @java.lang.Deprecated
-      public java.util.Map<java.lang.String, com.kcl.api.Spec.Scope>
-      getMutableScopes() {
-        return internalGetMutableScopes().getMutableMap();
-      }
-      /**
-       * <pre>
-       * Map key is the ScopeIndex json string.
-       * </pre>
-       *
-       * <code>map&lt;string, .com.kcl.api.Scope&gt; scopes = 6;</code>
-       */
-      public Builder putScopes(
-          java.lang.String key,
-          com.kcl.api.Spec.Scope value) {
-        if (key == null) { throw new NullPointerException("map key"); }
-        if (value == null) {
-  throw new NullPointerException("map value");
-}
-
-        internalGetMutableScopes().getMutableMap()
-            .put(key, value);
-        return this;
-      }
-      /**
-       * <pre>
-       * Map key is the ScopeIndex json string.
-       * </pre>
-       *
-       * <code>map&lt;string, .com.kcl.api.Scope&gt; scopes = 6;</code>
-       */
-
-      public Builder putAllScopes(
-          java.util.Map<java.lang.String, com.kcl.api.Spec.Scope> values) {
-        internalGetMutableScopes().getMutableMap()
-            .putAll(values);
-        return this;
-      }
-
-      private java.util.List<com.kcl.api.Spec.Error> parseErrors_ =
-        java.util.Collections.emptyList();
-      private void ensureParseErrorsIsMutable() {
-        if (!((bitField0_ & 0x00000020) != 0)) {
-          parseErrors_ = new java.util.ArrayList<com.kcl.api.Spec.Error>(parseErrors_);
-          bitField0_ |= 0x00000020;
-         }
-      }
-
-      private com.google.protobuf.RepeatedFieldBuilderV3<
-          com.kcl.api.Spec.Error, com.kcl.api.Spec.Error.Builder, com.kcl.api.Spec.ErrorOrBuilder> parseErrorsBuilder_;
-
-      /**
-       * <pre>
-       * Parse errors
-       * </pre>
-       *
-       * <code>repeated .com.kcl.api.Error parse_errors = 7;</code>
-       */
-      public java.util.List<com.kcl.api.Spec.Error> getParseErrorsList() {
-        if (parseErrorsBuilder_ == null) {
-          return java.util.Collections.unmodifiableList(parseErrors_);
-        } else {
-          return parseErrorsBuilder_.getMessageList();
-        }
-      }
-      /**
-       * <pre>
-       * Parse errors
-       * </pre>
-       *
-       * <code>repeated .com.kcl.api.Error parse_errors = 7;</code>
-       */
-      public int getParseErrorsCount() {
-        if (parseErrorsBuilder_ == null) {
-          return parseErrors_.size();
-        } else {
-          return parseErrorsBuilder_.getCount();
-        }
-      }
-      /**
-       * <pre>
-       * Parse errors
-       * </pre>
-       *
-       * <code>repeated .com.kcl.api.Error parse_errors = 7;</code>
-       */
-      public com.kcl.api.Spec.Error getParseErrors(int index) {
-        if (parseErrorsBuilder_ == null) {
-          return parseErrors_.get(index);
-        } else {
-          return parseErrorsBuilder_.getMessage(index);
-        }
-      }
-      /**
-       * <pre>
-       * Parse errors
-       * </pre>
-       *
-       * <code>repeated .com.kcl.api.Error parse_errors = 7;</code>
-       */
-      public Builder setParseErrors(
-          int index, com.kcl.api.Spec.Error value) {
-        if (parseErrorsBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          ensureParseErrorsIsMutable();
-          parseErrors_.set(index, value);
-          onChanged();
-        } else {
-          parseErrorsBuilder_.setMessage(index, value);
-        }
-        return this;
-      }
-      /**
-       * <pre>
-       * Parse errors
-       * </pre>
-       *
-       * <code>repeated .com.kcl.api.Error parse_errors = 7;</code>
-       */
-      public Builder setParseErrors(
-          int index, com.kcl.api.Spec.Error.Builder builderForValue) {
-        if (parseErrorsBuilder_ == null) {
-          ensureParseErrorsIsMutable();
-          parseErrors_.set(index, builderForValue.build());
-          onChanged();
-        } else {
-          parseErrorsBuilder_.setMessage(index, builderForValue.build());
-        }
-        return this;
-      }
-      /**
-       * <pre>
-       * Parse errors
-       * </pre>
-       *
-       * <code>repeated .com.kcl.api.Error parse_errors = 7;</code>
-       */
-      public Builder addParseErrors(com.kcl.api.Spec.Error value) {
-        if (parseErrorsBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          ensureParseErrorsIsMutable();
-          parseErrors_.add(value);
-          onChanged();
-        } else {
-          parseErrorsBuilder_.addMessage(value);
-        }
-        return this;
-      }
-      /**
-       * <pre>
-       * Parse errors
-       * </pre>
-       *
-       * <code>repeated .com.kcl.api.Error parse_errors = 7;</code>
-       */
-      public Builder addParseErrors(
-          int index, com.kcl.api.Spec.Error value) {
-        if (parseErrorsBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          ensureParseErrorsIsMutable();
-          parseErrors_.add(index, value);
-          onChanged();
-        } else {
-          parseErrorsBuilder_.addMessage(index, value);
-        }
-        return this;
-      }
-      /**
-       * <pre>
-       * Parse errors
-       * </pre>
-       *
-       * <code>repeated .com.kcl.api.Error parse_errors = 7;</code>
-       */
-      public Builder addParseErrors(
-          com.kcl.api.Spec.Error.Builder builderForValue) {
-        if (parseErrorsBuilder_ == null) {
-          ensureParseErrorsIsMutable();
-          parseErrors_.add(builderForValue.build());
-          onChanged();
-        } else {
-          parseErrorsBuilder_.addMessage(builderForValue.build());
-        }
-        return this;
-      }
-      /**
-       * <pre>
-       * Parse errors
-       * </pre>
-       *
-       * <code>repeated .com.kcl.api.Error parse_errors = 7;</code>
-       */
-      public Builder addParseErrors(
-          int index, com.kcl.api.Spec.Error.Builder builderForValue) {
-        if (parseErrorsBuilder_ == null) {
-          ensureParseErrorsIsMutable();
-          parseErrors_.add(index, builderForValue.build());
-          onChanged();
-        } else {
-          parseErrorsBuilder_.addMessage(index, builderForValue.build());
-        }
-        return this;
-      }
-      /**
-       * <pre>
-       * Parse errors
-       * </pre>
-       *
-       * <code>repeated .com.kcl.api.Error parse_errors = 7;</code>
-       */
-      public Builder addAllParseErrors(
-          java.lang.Iterable<? extends com.kcl.api.Spec.Error> values) {
-        if (parseErrorsBuilder_ == null) {
-          ensureParseErrorsIsMutable();
-          com.google.protobuf.AbstractMessageLite.Builder.addAll(
-              values, parseErrors_);
-          onChanged();
-        } else {
-          parseErrorsBuilder_.addAllMessages(values);
-        }
-        return this;
-      }
-      /**
-       * <pre>
-       * Parse errors
-       * </pre>
-       *
-       * <code>repeated .com.kcl.api.Error parse_errors = 7;</code>
-       */
-      public Builder clearParseErrors() {
-        if (parseErrorsBuilder_ == null) {
-          parseErrors_ = java.util.Collections.emptyList();
-          bitField0_ = (bitField0_ & ~0x00000020);
-          onChanged();
-        } else {
-          parseErrorsBuilder_.clear();
-        }
-        return this;
-      }
-      /**
-       * <pre>
-       * Parse errors
-       * </pre>
-       *
-       * <code>repeated .com.kcl.api.Error parse_errors = 7;</code>
-       */
-      public Builder removeParseErrors(int index) {
-        if (parseErrorsBuilder_ == null) {
-          ensureParseErrorsIsMutable();
-          parseErrors_.remove(index);
-          onChanged();
-        } else {
-          parseErrorsBuilder_.remove(index);
-        }
-        return this;
-      }
-      /**
-       * <pre>
-       * Parse errors
-       * </pre>
-       *
-       * <code>repeated .com.kcl.api.Error parse_errors = 7;</code>
-       */
-      public com.kcl.api.Spec.Error.Builder getParseErrorsBuilder(
-          int index) {
-        return getParseErrorsFieldBuilder().getBuilder(index);
-      }
-      /**
-       * <pre>
-       * Parse errors
-       * </pre>
-       *
-       * <code>repeated .com.kcl.api.Error parse_errors = 7;</code>
-       */
-      public com.kcl.api.Spec.ErrorOrBuilder getParseErrorsOrBuilder(
-          int index) {
-        if (parseErrorsBuilder_ == null) {
-          return parseErrors_.get(index);  } else {
-          return parseErrorsBuilder_.getMessageOrBuilder(index);
-        }
-      }
-      /**
-       * <pre>
-       * Parse errors
-       * </pre>
-       *
-       * <code>repeated .com.kcl.api.Error parse_errors = 7;</code>
-       */
-      public java.util.List<? extends com.kcl.api.Spec.ErrorOrBuilder> 
-           getParseErrorsOrBuilderList() {
-        if (parseErrorsBuilder_ != null) {
-          return parseErrorsBuilder_.getMessageOrBuilderList();
-        } else {
-          return java.util.Collections.unmodifiableList(parseErrors_);
-        }
-      }
-      /**
-       * <pre>
-       * Parse errors
-       * </pre>
-       *
-       * <code>repeated .com.kcl.api.Error parse_errors = 7;</code>
-       */
-      public com.kcl.api.Spec.Error.Builder addParseErrorsBuilder() {
-        return getParseErrorsFieldBuilder().addBuilder(
-            com.kcl.api.Spec.Error.getDefaultInstance());
-      }
-      /**
-       * <pre>
-       * Parse errors
-       * </pre>
-       *
-       * <code>repeated .com.kcl.api.Error parse_errors = 7;</code>
-       */
-      public com.kcl.api.Spec.Error.Builder addParseErrorsBuilder(
-          int index) {
-        return getParseErrorsFieldBuilder().addBuilder(
-            index, com.kcl.api.Spec.Error.getDefaultInstance());
-      }
-      /**
-       * <pre>
-       * Parse errors
-       * </pre>
-       *
-       * <code>repeated .com.kcl.api.Error parse_errors = 7;</code>
-       */
-      public java.util.List<com.kcl.api.Spec.Error.Builder> 
-           getParseErrorsBuilderList() {
-        return getParseErrorsFieldBuilder().getBuilderList();
-      }
-      private com.google.protobuf.RepeatedFieldBuilderV3<
-          com.kcl.api.Spec.Error, com.kcl.api.Spec.Error.Builder, com.kcl.api.Spec.ErrorOrBuilder> 
-          getParseErrorsFieldBuilder() {
-        if (parseErrorsBuilder_ == null) {
-          parseErrorsBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
-              com.kcl.api.Spec.Error, com.kcl.api.Spec.Error.Builder, com.kcl.api.Spec.ErrorOrBuilder>(
-                  parseErrors_,
-                  ((bitField0_ & 0x00000020) != 0),
-                  getParentForChildren(),
-                  isClean());
-          parseErrors_ = null;
-        }
-        return parseErrorsBuilder_;
-      }
-
-      private java.util.List<com.kcl.api.Spec.Error> typeErrors_ =
-        java.util.Collections.emptyList();
-      private void ensureTypeErrorsIsMutable() {
-        if (!((bitField0_ & 0x00000040) != 0)) {
-          typeErrors_ = new java.util.ArrayList<com.kcl.api.Spec.Error>(typeErrors_);
-          bitField0_ |= 0x00000040;
-         }
-      }
-
-      private com.google.protobuf.RepeatedFieldBuilderV3<
-          com.kcl.api.Spec.Error, com.kcl.api.Spec.Error.Builder, com.kcl.api.Spec.ErrorOrBuilder> typeErrorsBuilder_;
-
-      /**
-       * <pre>
-       * Type errors
-       * </pre>
-       *
-       * <code>repeated .com.kcl.api.Error type_errors = 8;</code>
-       */
-      public java.util.List<com.kcl.api.Spec.Error> getTypeErrorsList() {
-        if (typeErrorsBuilder_ == null) {
-          return java.util.Collections.unmodifiableList(typeErrors_);
-        } else {
-          return typeErrorsBuilder_.getMessageList();
-        }
-      }
-      /**
-       * <pre>
-       * Type errors
-       * </pre>
-       *
-       * <code>repeated .com.kcl.api.Error type_errors = 8;</code>
-       */
-      public int getTypeErrorsCount() {
-        if (typeErrorsBuilder_ == null) {
-          return typeErrors_.size();
-        } else {
-          return typeErrorsBuilder_.getCount();
-        }
-      }
-      /**
-       * <pre>
-       * Type errors
-       * </pre>
-       *
-       * <code>repeated .com.kcl.api.Error type_errors = 8;</code>
-       */
-      public com.kcl.api.Spec.Error getTypeErrors(int index) {
-        if (typeErrorsBuilder_ == null) {
-          return typeErrors_.get(index);
-        } else {
-          return typeErrorsBuilder_.getMessage(index);
-        }
-      }
-      /**
-       * <pre>
-       * Type errors
-       * </pre>
-       *
-       * <code>repeated .com.kcl.api.Error type_errors = 8;</code>
-       */
-      public Builder setTypeErrors(
-          int index, com.kcl.api.Spec.Error value) {
-        if (typeErrorsBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          ensureTypeErrorsIsMutable();
-          typeErrors_.set(index, value);
-          onChanged();
-        } else {
-          typeErrorsBuilder_.setMessage(index, value);
-        }
-        return this;
-      }
-      /**
-       * <pre>
-       * Type errors
-       * </pre>
-       *
-       * <code>repeated .com.kcl.api.Error type_errors = 8;</code>
-       */
-      public Builder setTypeErrors(
-          int index, com.kcl.api.Spec.Error.Builder builderForValue) {
-        if (typeErrorsBuilder_ == null) {
-          ensureTypeErrorsIsMutable();
-          typeErrors_.set(index, builderForValue.build());
-          onChanged();
-        } else {
-          typeErrorsBuilder_.setMessage(index, builderForValue.build());
-        }
-        return this;
-      }
-      /**
-       * <pre>
-       * Type errors
-       * </pre>
-       *
-       * <code>repeated .com.kcl.api.Error type_errors = 8;</code>
-       */
-      public Builder addTypeErrors(com.kcl.api.Spec.Error value) {
-        if (typeErrorsBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          ensureTypeErrorsIsMutable();
-          typeErrors_.add(value);
-          onChanged();
-        } else {
-          typeErrorsBuilder_.addMessage(value);
-        }
-        return this;
-      }
-      /**
-       * <pre>
-       * Type errors
-       * </pre>
-       *
-       * <code>repeated .com.kcl.api.Error type_errors = 8;</code>
-       */
-      public Builder addTypeErrors(
-          int index, com.kcl.api.Spec.Error value) {
-        if (typeErrorsBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          ensureTypeErrorsIsMutable();
-          typeErrors_.add(index, value);
-          onChanged();
-        } else {
-          typeErrorsBuilder_.addMessage(index, value);
-        }
-        return this;
-      }
-      /**
-       * <pre>
-       * Type errors
-       * </pre>
-       *
-       * <code>repeated .com.kcl.api.Error type_errors = 8;</code>
-       */
-      public Builder addTypeErrors(
-          com.kcl.api.Spec.Error.Builder builderForValue) {
-        if (typeErrorsBuilder_ == null) {
-          ensureTypeErrorsIsMutable();
-          typeErrors_.add(builderForValue.build());
-          onChanged();
-        } else {
-          typeErrorsBuilder_.addMessage(builderForValue.build());
-        }
-        return this;
-      }
-      /**
-       * <pre>
-       * Type errors
-       * </pre>
-       *
-       * <code>repeated .com.kcl.api.Error type_errors = 8;</code>
-       */
-      public Builder addTypeErrors(
-          int index, com.kcl.api.Spec.Error.Builder builderForValue) {
-        if (typeErrorsBuilder_ == null) {
-          ensureTypeErrorsIsMutable();
-          typeErrors_.add(index, builderForValue.build());
-          onChanged();
-        } else {
-          typeErrorsBuilder_.addMessage(index, builderForValue.build());
-        }
-        return this;
-      }
-      /**
-       * <pre>
-       * Type errors
-       * </pre>
-       *
-       * <code>repeated .com.kcl.api.Error type_errors = 8;</code>
-       */
-      public Builder addAllTypeErrors(
-          java.lang.Iterable<? extends com.kcl.api.Spec.Error> values) {
-        if (typeErrorsBuilder_ == null) {
-          ensureTypeErrorsIsMutable();
-          com.google.protobuf.AbstractMessageLite.Builder.addAll(
-              values, typeErrors_);
-          onChanged();
-        } else {
-          typeErrorsBuilder_.addAllMessages(values);
-        }
-        return this;
-      }
-      /**
-       * <pre>
-       * Type errors
-       * </pre>
-       *
-       * <code>repeated .com.kcl.api.Error type_errors = 8;</code>
-       */
-      public Builder clearTypeErrors() {
-        if (typeErrorsBuilder_ == null) {
-          typeErrors_ = java.util.Collections.emptyList();
-          bitField0_ = (bitField0_ & ~0x00000040);
-          onChanged();
-        } else {
-          typeErrorsBuilder_.clear();
-        }
-        return this;
-      }
-      /**
-       * <pre>
-       * Type errors
-       * </pre>
-       *
-       * <code>repeated .com.kcl.api.Error type_errors = 8;</code>
-       */
-      public Builder removeTypeErrors(int index) {
-        if (typeErrorsBuilder_ == null) {
-          ensureTypeErrorsIsMutable();
-          typeErrors_.remove(index);
-          onChanged();
-        } else {
-          typeErrorsBuilder_.remove(index);
-        }
-        return this;
-      }
-      /**
-       * <pre>
-       * Type errors
-       * </pre>
-       *
-       * <code>repeated .com.kcl.api.Error type_errors = 8;</code>
-       */
-      public com.kcl.api.Spec.Error.Builder getTypeErrorsBuilder(
-          int index) {
-        return getTypeErrorsFieldBuilder().getBuilder(index);
-      }
-      /**
-       * <pre>
-       * Type errors
-       * </pre>
-       *
-       * <code>repeated .com.kcl.api.Error type_errors = 8;</code>
-       */
-      public com.kcl.api.Spec.ErrorOrBuilder getTypeErrorsOrBuilder(
-          int index) {
-        if (typeErrorsBuilder_ == null) {
-          return typeErrors_.get(index);  } else {
-          return typeErrorsBuilder_.getMessageOrBuilder(index);
-        }
-      }
-      /**
-       * <pre>
-       * Type errors
-       * </pre>
-       *
-       * <code>repeated .com.kcl.api.Error type_errors = 8;</code>
-       */
-      public java.util.List<? extends com.kcl.api.Spec.ErrorOrBuilder> 
-           getTypeErrorsOrBuilderList() {
-        if (typeErrorsBuilder_ != null) {
-          return typeErrorsBuilder_.getMessageOrBuilderList();
-        } else {
-          return java.util.Collections.unmodifiableList(typeErrors_);
-        }
-      }
-      /**
-       * <pre>
-       * Type errors
-       * </pre>
-       *
-       * <code>repeated .com.kcl.api.Error type_errors = 8;</code>
-       */
-      public com.kcl.api.Spec.Error.Builder addTypeErrorsBuilder() {
-        return getTypeErrorsFieldBuilder().addBuilder(
-            com.kcl.api.Spec.Error.getDefaultInstance());
-      }
-      /**
-       * <pre>
-       * Type errors
-       * </pre>
-       *
-       * <code>repeated .com.kcl.api.Error type_errors = 8;</code>
-       */
-      public com.kcl.api.Spec.Error.Builder addTypeErrorsBuilder(
-          int index) {
-        return getTypeErrorsFieldBuilder().addBuilder(
-            index, com.kcl.api.Spec.Error.getDefaultInstance());
-      }
-      /**
-       * <pre>
-       * Type errors
-       * </pre>
-       *
-       * <code>repeated .com.kcl.api.Error type_errors = 8;</code>
-       */
-      public java.util.List<com.kcl.api.Spec.Error.Builder> 
-           getTypeErrorsBuilderList() {
-        return getTypeErrorsFieldBuilder().getBuilderList();
-      }
-      private com.google.protobuf.RepeatedFieldBuilderV3<
-          com.kcl.api.Spec.Error, com.kcl.api.Spec.Error.Builder, com.kcl.api.Spec.ErrorOrBuilder> 
-          getTypeErrorsFieldBuilder() {
-        if (typeErrorsBuilder_ == null) {
-          typeErrorsBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
-              com.kcl.api.Spec.Error, com.kcl.api.Spec.Error.Builder, com.kcl.api.Spec.ErrorOrBuilder>(
-                  typeErrors_,
-                  ((bitField0_ & 0x00000040) != 0),
-                  getParentForChildren(),
-                  isClean());
-          typeErrors_ = null;
-        }
-        return typeErrorsBuilder_;
       }
       @java.lang.Override
       public final Builder setUnknownFields(
@@ -16003,16 +16715,19 @@ public final class Spec {
       com.google.protobuf.MessageOrBuilder {
 
     /**
-     * <code>string ty = 1;</code>
+     * <code>.com.kcl.api.KclType ty = 1;</code>
+     * @return Whether the ty field is set.
+     */
+    boolean hasTy();
+    /**
+     * <code>.com.kcl.api.KclType ty = 1;</code>
      * @return The ty.
      */
-    java.lang.String getTy();
+    com.kcl.api.Spec.KclType getTy();
     /**
-     * <code>string ty = 1;</code>
-     * @return The bytes for ty.
+     * <code>.com.kcl.api.KclType ty = 1;</code>
      */
-    com.google.protobuf.ByteString
-        getTyBytes();
+    com.kcl.api.Spec.KclTypeOrBuilder getTyOrBuilder();
 
     /**
      * <code>string name = 2;</code>
@@ -16099,7 +16814,6 @@ public final class Spec {
       super(builder);
     }
     private Symbol() {
-      ty_ = "";
       name_ = "";
       attrs_ = java.util.Collections.emptyList();
     }
@@ -16136,9 +16850,16 @@ public final class Spec {
               done = true;
               break;
             case 10: {
-              java.lang.String s = input.readStringRequireUtf8();
+              com.kcl.api.Spec.KclType.Builder subBuilder = null;
+              if (ty_ != null) {
+                subBuilder = ty_.toBuilder();
+              }
+              ty_ = input.readMessage(com.kcl.api.Spec.KclType.parser(), extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom(ty_);
+                ty_ = subBuilder.buildPartial();
+              }
 
-              ty_ = s;
               break;
             }
             case 18: {
@@ -16223,41 +16944,29 @@ public final class Spec {
     }
 
     public static final int TY_FIELD_NUMBER = 1;
-    private volatile java.lang.Object ty_;
+    private com.kcl.api.Spec.KclType ty_;
     /**
-     * <code>string ty = 1;</code>
+     * <code>.com.kcl.api.KclType ty = 1;</code>
+     * @return Whether the ty field is set.
+     */
+    @java.lang.Override
+    public boolean hasTy() {
+      return ty_ != null;
+    }
+    /**
+     * <code>.com.kcl.api.KclType ty = 1;</code>
      * @return The ty.
      */
     @java.lang.Override
-    public java.lang.String getTy() {
-      java.lang.Object ref = ty_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        ty_ = s;
-        return s;
-      }
+    public com.kcl.api.Spec.KclType getTy() {
+      return ty_ == null ? com.kcl.api.Spec.KclType.getDefaultInstance() : ty_;
     }
     /**
-     * <code>string ty = 1;</code>
-     * @return The bytes for ty.
+     * <code>.com.kcl.api.KclType ty = 1;</code>
      */
     @java.lang.Override
-    public com.google.protobuf.ByteString
-        getTyBytes() {
-      java.lang.Object ref = ty_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        ty_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
+    public com.kcl.api.Spec.KclTypeOrBuilder getTyOrBuilder() {
+      return getTy();
     }
 
     public static final int NAME_FIELD_NUMBER = 2;
@@ -16415,8 +17124,8 @@ public final class Spec {
     @java.lang.Override
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
-      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(ty_)) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 1, ty_);
+      if (ty_ != null) {
+        output.writeMessage(1, getTy());
       }
       if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(name_)) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 2, name_);
@@ -16442,8 +17151,9 @@ public final class Spec {
       if (size != -1) return size;
 
       size = 0;
-      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(ty_)) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, ty_);
+      if (ty_ != null) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(1, getTy());
       }
       if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(name_)) {
         size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, name_);
@@ -16479,8 +17189,11 @@ public final class Spec {
       }
       com.kcl.api.Spec.Symbol other = (com.kcl.api.Spec.Symbol) obj;
 
-      if (!getTy()
-          .equals(other.getTy())) return false;
+      if (hasTy() != other.hasTy()) return false;
+      if (hasTy()) {
+        if (!getTy()
+            .equals(other.getTy())) return false;
+      }
       if (!getName()
           .equals(other.getName())) return false;
       if (hasOwner() != other.hasOwner()) return false;
@@ -16508,8 +17221,10 @@ public final class Spec {
       }
       int hash = 41;
       hash = (19 * hash) + getDescriptor().hashCode();
-      hash = (37 * hash) + TY_FIELD_NUMBER;
-      hash = (53 * hash) + getTy().hashCode();
+      if (hasTy()) {
+        hash = (37 * hash) + TY_FIELD_NUMBER;
+        hash = (53 * hash) + getTy().hashCode();
+      }
       hash = (37 * hash) + NAME_FIELD_NUMBER;
       hash = (53 * hash) + getName().hashCode();
       if (hasOwner()) {
@@ -16661,8 +17376,12 @@ public final class Spec {
       @java.lang.Override
       public Builder clear() {
         super.clear();
-        ty_ = "";
-
+        if (tyBuilder_ == null) {
+          ty_ = null;
+        } else {
+          ty_ = null;
+          tyBuilder_ = null;
+        }
         name_ = "";
 
         if (ownerBuilder_ == null) {
@@ -16712,7 +17431,11 @@ public final class Spec {
       public com.kcl.api.Spec.Symbol buildPartial() {
         com.kcl.api.Spec.Symbol result = new com.kcl.api.Spec.Symbol(this);
         int from_bitField0_ = bitField0_;
-        result.ty_ = ty_;
+        if (tyBuilder_ == null) {
+          result.ty_ = ty_;
+        } else {
+          result.ty_ = tyBuilder_.build();
+        }
         result.name_ = name_;
         if (ownerBuilder_ == null) {
           result.owner_ = owner_;
@@ -16782,9 +17505,8 @@ public final class Spec {
 
       public Builder mergeFrom(com.kcl.api.Spec.Symbol other) {
         if (other == com.kcl.api.Spec.Symbol.getDefaultInstance()) return this;
-        if (!other.getTy().isEmpty()) {
-          ty_ = other.ty_;
-          onChanged();
+        if (other.hasTy()) {
+          mergeTy(other.getTy());
         }
         if (!other.getName().isEmpty()) {
           name_ = other.name_;
@@ -16855,80 +17577,123 @@ public final class Spec {
       }
       private int bitField0_;
 
-      private java.lang.Object ty_ = "";
+      private com.kcl.api.Spec.KclType ty_;
+      private com.google.protobuf.SingleFieldBuilderV3<
+          com.kcl.api.Spec.KclType, com.kcl.api.Spec.KclType.Builder, com.kcl.api.Spec.KclTypeOrBuilder> tyBuilder_;
       /**
-       * <code>string ty = 1;</code>
+       * <code>.com.kcl.api.KclType ty = 1;</code>
+       * @return Whether the ty field is set.
+       */
+      public boolean hasTy() {
+        return tyBuilder_ != null || ty_ != null;
+      }
+      /**
+       * <code>.com.kcl.api.KclType ty = 1;</code>
        * @return The ty.
        */
-      public java.lang.String getTy() {
-        java.lang.Object ref = ty_;
-        if (!(ref instanceof java.lang.String)) {
-          com.google.protobuf.ByteString bs =
-              (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
-          ty_ = s;
-          return s;
+      public com.kcl.api.Spec.KclType getTy() {
+        if (tyBuilder_ == null) {
+          return ty_ == null ? com.kcl.api.Spec.KclType.getDefaultInstance() : ty_;
         } else {
-          return (java.lang.String) ref;
+          return tyBuilder_.getMessage();
         }
       }
       /**
-       * <code>string ty = 1;</code>
-       * @return The bytes for ty.
+       * <code>.com.kcl.api.KclType ty = 1;</code>
        */
-      public com.google.protobuf.ByteString
-          getTyBytes() {
-        java.lang.Object ref = ty_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          ty_ = b;
-          return b;
+      public Builder setTy(com.kcl.api.Spec.KclType value) {
+        if (tyBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ty_ = value;
+          onChanged();
         } else {
-          return (com.google.protobuf.ByteString) ref;
+          tyBuilder_.setMessage(value);
         }
+
+        return this;
       }
       /**
-       * <code>string ty = 1;</code>
-       * @param value The ty to set.
-       * @return This builder for chaining.
+       * <code>.com.kcl.api.KclType ty = 1;</code>
        */
       public Builder setTy(
-          java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  
-        ty_ = value;
-        onChanged();
+          com.kcl.api.Spec.KclType.Builder builderForValue) {
+        if (tyBuilder_ == null) {
+          ty_ = builderForValue.build();
+          onChanged();
+        } else {
+          tyBuilder_.setMessage(builderForValue.build());
+        }
+
         return this;
       }
       /**
-       * <code>string ty = 1;</code>
-       * @return This builder for chaining.
+       * <code>.com.kcl.api.KclType ty = 1;</code>
+       */
+      public Builder mergeTy(com.kcl.api.Spec.KclType value) {
+        if (tyBuilder_ == null) {
+          if (ty_ != null) {
+            ty_ =
+              com.kcl.api.Spec.KclType.newBuilder(ty_).mergeFrom(value).buildPartial();
+          } else {
+            ty_ = value;
+          }
+          onChanged();
+        } else {
+          tyBuilder_.mergeFrom(value);
+        }
+
+        return this;
+      }
+      /**
+       * <code>.com.kcl.api.KclType ty = 1;</code>
        */
       public Builder clearTy() {
-        
-        ty_ = getDefaultInstance().getTy();
-        onChanged();
+        if (tyBuilder_ == null) {
+          ty_ = null;
+          onChanged();
+        } else {
+          ty_ = null;
+          tyBuilder_ = null;
+        }
+
         return this;
       }
       /**
-       * <code>string ty = 1;</code>
-       * @param value The bytes for ty to set.
-       * @return This builder for chaining.
+       * <code>.com.kcl.api.KclType ty = 1;</code>
        */
-      public Builder setTyBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
+      public com.kcl.api.Spec.KclType.Builder getTyBuilder() {
         
-        ty_ = value;
         onChanged();
-        return this;
+        return getTyFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>.com.kcl.api.KclType ty = 1;</code>
+       */
+      public com.kcl.api.Spec.KclTypeOrBuilder getTyOrBuilder() {
+        if (tyBuilder_ != null) {
+          return tyBuilder_.getMessageOrBuilder();
+        } else {
+          return ty_ == null ?
+              com.kcl.api.Spec.KclType.getDefaultInstance() : ty_;
+        }
+      }
+      /**
+       * <code>.com.kcl.api.KclType ty = 1;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilderV3<
+          com.kcl.api.Spec.KclType, com.kcl.api.Spec.KclType.Builder, com.kcl.api.Spec.KclTypeOrBuilder> 
+          getTyFieldBuilder() {
+        if (tyBuilder_ == null) {
+          tyBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+              com.kcl.api.Spec.KclType, com.kcl.api.Spec.KclType.Builder, com.kcl.api.Spec.KclTypeOrBuilder>(
+                  getTy(),
+                  getParentForChildren(),
+                  isClean());
+          ty_ = null;
+        }
+        return tyBuilder_;
       }
 
       private java.lang.Object name_ = "";
@@ -57273,25 +58038,35 @@ public final class Spec {
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_com_kcl_api_LoadPackage_Result_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_com_kcl_api_LoadPackage_Result_NodeSymbolMapEntry_descriptor;
+    internal_static_com_kcl_api_LoadPackage_Result_ScopesEntry_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_com_kcl_api_LoadPackage_Result_NodeSymbolMapEntry_fieldAccessorTable;
+      internal_static_com_kcl_api_LoadPackage_Result_ScopesEntry_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_com_kcl_api_LoadPackage_Result_SymbolsEntry_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_com_kcl_api_LoadPackage_Result_SymbolsEntry_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_com_kcl_api_LoadPackage_Result_NodeSymbolMapEntry_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_com_kcl_api_LoadPackage_Result_NodeSymbolMapEntry_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_com_kcl_api_LoadPackage_Result_SymbolNodeMapEntry_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_com_kcl_api_LoadPackage_Result_SymbolNodeMapEntry_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_com_kcl_api_LoadPackage_Result_FullyQualifiedNameMapEntry_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_com_kcl_api_LoadPackage_Result_FullyQualifiedNameMapEntry_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_com_kcl_api_LoadPackage_Result_PkgScopeMapEntry_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_com_kcl_api_LoadPackage_Result_PkgScopeMapEntry_fieldAccessorTable;
-  private static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_com_kcl_api_LoadPackage_Result_ScopesEntry_descriptor;
-  private static final 
-    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_com_kcl_api_LoadPackage_Result_ScopesEntry_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_com_kcl_api_Symbol_descriptor;
   private static final 
@@ -57556,174 +58331,182 @@ public final class Spec {
       "oadPackage_Args\0222\n\nparse_args\030\001 \001(\0132\036.co" +
       "m.kcl.api.ParseProgram_Args\022\023\n\013resolve_a" +
       "st\030\002 \001(\010\022\024\n\014load_builtin\030\003 \001(\010\022\026\n\016with_a" +
-      "st_index\030\004 \001(\010\"\276\005\n\022LoadPackage_Result\022\017\n" +
-      "\007program\030\001 \001(\t\022\r\n\005paths\030\002 \003(\t\022K\n\017node_sy" +
-      "mbol_map\030\003 \003(\01322.com.kcl.api.LoadPackage" +
-      "_Result.NodeSymbolMapEntry\022=\n\007symbols\030\004 " +
-      "\003(\0132,.com.kcl.api.LoadPackage_Result.Sym" +
-      "bolsEntry\022G\n\rpkg_scope_map\030\005 \003(\01320.com.k" +
-      "cl.api.LoadPackage_Result.PkgScopeMapEnt" +
-      "ry\022;\n\006scopes\030\006 \003(\0132+.com.kcl.api.LoadPac" +
-      "kage_Result.ScopesEntry\022(\n\014parse_errors\030" +
-      "\007 \003(\0132\022.com.kcl.api.Error\022\'\n\013type_errors" +
-      "\030\010 \003(\0132\022.com.kcl.api.Error\032N\n\022NodeSymbol" +
-      "MapEntry\022\013\n\003key\030\001 \001(\t\022\'\n\005value\030\002 \001(\0132\030.c" +
-      "om.kcl.api.SymbolIndex:\0028\001\032C\n\014SymbolsEnt" +
-      "ry\022\013\n\003key\030\001 \001(\t\022\"\n\005value\030\002 \001(\0132\023.com.kcl" +
-      ".api.Symbol:\0028\001\032K\n\020PkgScopeMapEntry\022\013\n\003k" +
-      "ey\030\001 \001(\t\022&\n\005value\030\002 \001(\0132\027.com.kcl.api.Sc" +
-      "opeIndex:\0028\001\032A\n\013ScopesEntry\022\013\n\003key\030\001 \001(\t" +
-      "\022!\n\005value\030\002 \001(\0132\022.com.kcl.api.Scope:\0028\001\"" +
-      "\256\001\n\006Symbol\022\n\n\002ty\030\001 \001(\t\022\014\n\004name\030\002 \001(\t\022\'\n\005" +
-      "owner\030\003 \001(\0132\030.com.kcl.api.SymbolIndex\022%\n" +
-      "\003def\030\004 \001(\0132\030.com.kcl.api.SymbolIndex\022\'\n\005" +
-      "attrs\030\005 \003(\0132\030.com.kcl.api.SymbolIndex\022\021\n" +
-      "\tis_global\030\006 \001(\010\"\272\001\n\005Scope\022\014\n\004kind\030\001 \001(\t" +
-      "\022\'\n\006parent\030\002 \001(\0132\027.com.kcl.api.ScopeInde" +
-      "x\022\'\n\005owner\030\003 \001(\0132\030.com.kcl.api.SymbolInd" +
-      "ex\022)\n\010children\030\004 \003(\0132\027.com.kcl.api.Scope" +
-      "Index\022&\n\004defs\030\005 \003(\0132\030.com.kcl.api.Symbol" +
-      "Index\"1\n\013SymbolIndex\022\t\n\001i\030\001 \001(\004\022\t\n\001g\030\002 \001" +
-      "(\004\022\014\n\004kind\030\003 \001(\t\"0\n\nScopeIndex\022\t\n\001i\030\001 \001(" +
-      "\004\022\t\n\001g\030\002 \001(\004\022\014\n\004kind\030\003 \001(\t\"\317\003\n\020ExecProgr" +
-      "am_Args\022\020\n\010work_dir\030\001 \001(\t\022\027\n\017k_filename_" +
-      "list\030\002 \003(\t\022\023\n\013k_code_list\030\003 \003(\t\022%\n\004args\030" +
-      "\004 \003(\0132\027.com.kcl.api.CmdArgSpec\022/\n\toverri" +
-      "des\030\005 \003(\0132\034.com.kcl.api.CmdOverrideSpec\022" +
-      "\033\n\023disable_yaml_result\030\006 \001(\010\022\032\n\022print_ov" +
-      "erride_ast\030\007 \001(\010\022\032\n\022strict_range_check\030\010" +
-      " \001(\010\022\024\n\014disable_none\030\t \001(\010\022\017\n\007verbose\030\n " +
-      "\001(\005\022\r\n\005debug\030\013 \001(\005\022\021\n\tsort_keys\030\014 \001(\010\0226\n" +
-      "\rexternal_pkgs\030\r \003(\0132\037.com.kcl.api.CmdEx" +
-      "ternalPkgSpec\022 \n\030include_schema_type_pat" +
-      "h\030\016 \001(\010\022\024\n\014compile_only\030\017 \001(\010\022\025\n\rpath_se" +
-      "lector\030\021 \003(\t\"h\n\022ExecProgram_Result\022\023\n\013js" +
-      "on_result\030\001 \001(\t\022\023\n\013yaml_result\030\002 \001(\t\022\023\n\013" +
-      "log_message\030\003 \001(\t\022\023\n\013err_message\030\004 \001(\t\"\'" +
-      "\n\020ResetPlugin_Args\022\023\n\013plugin_root\030\001 \001(\t\"" +
-      "\024\n\022ResetPlugin_Result\"!\n\017FormatCode_Args" +
-      "\022\016\n\006source\030\001 \001(\t\"&\n\021FormatCode_Result\022\021\n" +
-      "\tformatted\030\001 \001(\014\"\037\n\017FormatPath_Args\022\014\n\004p" +
-      "ath\030\001 \001(\t\"*\n\021FormatPath_Result\022\025\n\rchange" +
-      "d_paths\030\001 \003(\t\"\036\n\rLintPath_Args\022\r\n\005paths\030" +
-      "\001 \003(\t\"\"\n\017LintPath_Result\022\017\n\007results\030\001 \003(" +
-      "\t\"F\n\021OverrideFile_Args\022\014\n\004file\030\001 \001(\t\022\r\n\005" +
-      "specs\030\002 \003(\t\022\024\n\014import_paths\030\003 \003(\t\"%\n\023Ove" +
-      "rrideFile_Result\022\016\n\006result\030\001 \001(\010\"_\n\026GetF" +
-      "ullSchemaType_Args\0220\n\texec_args\030\001 \001(\0132\035." +
-      "com.kcl.api.ExecProgram_Args\022\023\n\013schema_n" +
-      "ame\030\002 \001(\t\"E\n\022GetSchemaType_Args\022\014\n\004file\030" +
-      "\001 \001(\t\022\014\n\004code\030\002 \001(\t\022\023\n\013schema_name\030\003 \001(\t" +
-      "\"F\n\024GetSchemaType_Result\022.\n\020schema_type_" +
-      "list\030\001 \003(\0132\024.com.kcl.api.KclType\"L\n\031GetS" +
-      "chemaTypeMapping_Args\022\014\n\004file\030\001 \001(\t\022\014\n\004c" +
-      "ode\030\002 \001(\t\022\023\n\013schema_name\030\003 \001(\t\"\313\001\n\033GetSc" +
-      "hemaTypeMapping_Result\022\\\n\023schema_type_ma" +
-      "pping\030\001 \003(\0132?.com.kcl.api.GetSchemaTypeM" +
-      "apping_Result.SchemaTypeMappingEntry\032N\n\026" +
-      "SchemaTypeMappingEntry\022\013\n\003key\030\001 \001(\t\022#\n\005v" +
-      "alue\030\002 \001(\0132\024.com.kcl.api.KclType:\0028\001\"u\n\021" +
-      "ValidateCode_Args\022\014\n\004data\030\001 \001(\t\022\014\n\004file\030" +
-      "\002 \001(\t\022\014\n\004code\030\003 \001(\t\022\016\n\006schema\030\004 \001(\t\022\026\n\016a" +
-      "ttribute_name\030\005 \001(\t\022\016\n\006format\030\006 \001(\t\";\n\023V" +
-      "alidateCode_Result\022\017\n\007success\030\001 \001(\010\022\023\n\013e" +
-      "rr_message\030\002 \001(\t\":\n\010Position\022\014\n\004line\030\001 \001" +
-      "(\003\022\016\n\006column\030\002 \001(\003\022\020\n\010filename\030\003 \001(\t\"i\n\021" +
-      "ListDepFiles_Args\022\020\n\010work_dir\030\001 \001(\t\022\024\n\014u" +
-      "se_abs_path\030\002 \001(\010\022\023\n\013include_all\030\003 \001(\010\022\027" +
-      "\n\017use_fast_parser\030\004 \001(\010\"F\n\023ListDepFiles_" +
-      "Result\022\017\n\007pkgroot\030\001 \001(\t\022\017\n\007pkgpath\030\002 \001(\t" +
-      "\022\r\n\005files\030\003 \003(\t\"9\n\026LoadSettingsFiles_Arg" +
-      "s\022\020\n\010work_dir\030\001 \001(\t\022\r\n\005files\030\002 \003(\t\"{\n\030Lo" +
-      "adSettingsFiles_Result\022/\n\017kcl_cli_config" +
-      "s\030\001 \001(\0132\026.com.kcl.api.CliConfig\022.\n\013kcl_o" +
-      "ptions\030\002 \003(\0132\031.com.kcl.api.KeyValuePair\"" +
-      "\333\001\n\tCliConfig\022\r\n\005files\030\001 \003(\t\022\016\n\006output\030\002" +
-      " \001(\t\022\021\n\toverrides\030\003 \003(\t\022\025\n\rpath_selector" +
-      "\030\004 \003(\t\022\032\n\022strict_range_check\030\005 \001(\010\022\024\n\014di" +
-      "sable_none\030\006 \001(\010\022\017\n\007verbose\030\007 \001(\003\022\r\n\005deb" +
-      "ug\030\010 \001(\010\022\021\n\tsort_keys\030\t \001(\010\022 \n\030include_s" +
-      "chema_type_path\030\n \001(\010\"*\n\014KeyValuePair\022\013\n" +
-      "\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t\"^\n\013Rename_Args" +
-      "\022\024\n\014package_root\030\001 \001(\t\022\023\n\013symbol_path\030\002 " +
-      "\001(\t\022\022\n\nfile_paths\030\003 \003(\t\022\020\n\010new_name\030\004 \001(" +
-      "\t\"&\n\rRename_Result\022\025\n\rchanged_files\030\001 \003(" +
-      "\t\"\307\001\n\017RenameCode_Args\022\024\n\014package_root\030\001 " +
-      "\001(\t\022\023\n\013symbol_path\030\002 \001(\t\022C\n\014source_codes" +
-      "\030\003 \003(\0132-.com.kcl.api.RenameCode_Args.Sou" +
-      "rceCodesEntry\022\020\n\010new_name\030\004 \001(\t\0322\n\020Sourc" +
-      "eCodesEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:" +
-      "\0028\001\"\221\001\n\021RenameCode_Result\022G\n\rchanged_cod" +
-      "es\030\001 \003(\01320.com.kcl.api.RenameCode_Result" +
-      ".ChangedCodesEntry\0323\n\021ChangedCodesEntry\022" +
-      "\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\"v\n\tTest_" +
-      "Args\0220\n\texec_args\030\001 \001(\0132\035.com.kcl.api.Ex" +
-      "ecProgram_Args\022\020\n\010pkg_list\030\002 \003(\t\022\022\n\nrun_" +
-      "regexp\030\003 \001(\t\022\021\n\tfail_fast\030\004 \001(\010\"6\n\013Test_" +
-      "Result\022\'\n\004info\030\002 \003(\0132\031.com.kcl.api.TestC" +
-      "aseInfo\"R\n\014TestCaseInfo\022\014\n\004name\030\001 \001(\t\022\r\n" +
-      "\005error\030\002 \001(\t\022\020\n\010duration\030\003 \001(\004\022\023\n\013log_me" +
-      "ssage\030\004 \001(\t\"\310\004\n\007KclType\022\014\n\004type\030\001 \001(\t\022)\n" +
-      "\013union_types\030\002 \003(\0132\024.com.kcl.api.KclType" +
-      "\022\017\n\007default\030\003 \001(\t\022\023\n\013schema_name\030\004 \001(\t\022\022" +
-      "\n\nschema_doc\030\005 \001(\t\0228\n\nproperties\030\006 \003(\0132$" +
-      ".com.kcl.api.KclType.PropertiesEntry\022\020\n\010" +
-      "required\030\007 \003(\t\022!\n\003key\030\010 \001(\0132\024.com.kcl.ap" +
-      "i.KclType\022\"\n\004item\030\t \001(\0132\024.com.kcl.api.Kc" +
-      "lType\022\014\n\004line\030\n \001(\005\022*\n\ndecorators\030\013 \003(\0132" +
-      "\026.com.kcl.api.Decorator\022\020\n\010filename\030\014 \001(" +
-      "\t\022\020\n\010pkg_path\030\r \001(\t\022\023\n\013description\030\016 \001(\t" +
-      "\0224\n\010examples\030\017 \003(\0132\".com.kcl.api.KclType" +
-      ".ExamplesEntry\032G\n\017PropertiesEntry\022\013\n\003key" +
-      "\030\001 \001(\t\022#\n\005value\030\002 \001(\0132\024.com.kcl.api.KclT" +
-      "ype:\0028\001\032E\n\rExamplesEntry\022\013\n\003key\030\001 \001(\t\022#\n" +
-      "\005value\030\002 \001(\0132\024.com.kcl.api.Example:\0028\001\"\225" +
-      "\001\n\tDecorator\022\014\n\004name\030\001 \001(\t\022\021\n\targuments\030" +
-      "\002 \003(\t\0226\n\010keywords\030\003 \003(\0132$.com.kcl.api.De" +
-      "corator.KeywordsEntry\032/\n\rKeywordsEntry\022\013" +
-      "\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\">\n\007Exampl" +
-      "e\022\017\n\007summary\030\001 \001(\t\022\023\n\013description\030\002 \001(\t\022" +
-      "\r\n\005value\030\003 \001(\t2\226\001\n\016BuiltinService\0228\n\004Pin" +
-      "g\022\026.com.kcl.api.Ping_Args\032\030.com.kcl.api." +
-      "Ping_Result\022J\n\nListMethod\022\034.com.kcl.api." +
-      "ListMethod_Args\032\036.com.kcl.api.ListMethod" +
-      "_Result2\230\013\n\014KclvmService\0228\n\004Ping\022\026.com.k" +
-      "cl.api.Ping_Args\032\030.com.kcl.api.Ping_Resu" +
-      "lt\022M\n\013ExecProgram\022\035.com.kcl.api.ExecProg" +
-      "ram_Args\032\037.com.kcl.api.ExecProgram_Resul" +
-      "t\022G\n\tParseFile\022\033.com.kcl.api.ParseFile_A" +
-      "rgs\032\035.com.kcl.api.ParseFile_Result\022P\n\014Pa" +
-      "rseProgram\022\036.com.kcl.api.ParseProgram_Ar" +
-      "gs\032 .com.kcl.api.ParseProgram_Result\022M\n\013" +
-      "LoadPackage\022\035.com.kcl.api.LoadPackage_Ar" +
-      "gs\032\037.com.kcl.api.LoadPackage_Result\022J\n\nF" +
-      "ormatCode\022\034.com.kcl.api.FormatCode_Args\032" +
-      "\036.com.kcl.api.FormatCode_Result\022J\n\nForma" +
-      "tPath\022\034.com.kcl.api.FormatPath_Args\032\036.co" +
-      "m.kcl.api.FormatPath_Result\022D\n\010LintPath\022" +
-      "\032.com.kcl.api.LintPath_Args\032\034.com.kcl.ap" +
-      "i.LintPath_Result\022P\n\014OverrideFile\022\036.com." +
-      "kcl.api.OverrideFile_Args\032 .com.kcl.api." +
-      "OverrideFile_Result\022S\n\rGetSchemaType\022\037.c" +
-      "om.kcl.api.GetSchemaType_Args\032!.com.kcl." +
-      "api.GetSchemaType_Result\022[\n\021GetFullSchem" +
-      "aType\022#.com.kcl.api.GetFullSchemaType_Ar" +
-      "gs\032!.com.kcl.api.GetSchemaType_Result\022h\n" +
-      "\024GetSchemaTypeMapping\022&.com.kcl.api.GetS" +
-      "chemaTypeMapping_Args\032(.com.kcl.api.GetS" +
-      "chemaTypeMapping_Result\022P\n\014ValidateCode\022" +
-      "\036.com.kcl.api.ValidateCode_Args\032 .com.kc" +
-      "l.api.ValidateCode_Result\022P\n\014ListDepFile" +
-      "s\022\036.com.kcl.api.ListDepFiles_Args\032 .com." +
-      "kcl.api.ListDepFiles_Result\022_\n\021LoadSetti" +
-      "ngsFiles\022#.com.kcl.api.LoadSettingsFiles" +
-      "_Args\032%.com.kcl.api.LoadSettingsFiles_Re" +
-      "sult\022>\n\006Rename\022\030.com.kcl.api.Rename_Args" +
-      "\032\032.com.kcl.api.Rename_Result\022J\n\nRenameCo" +
-      "de\022\034.com.kcl.api.RenameCode_Args\032\036.com.k" +
-      "cl.api.RenameCode_Result\0228\n\004Test\022\026.com.k" +
-      "cl.api.Test_Args\032\030.com.kcl.api.Test_Resu" +
-      "ltb\006proto3"
+      "st_index\030\004 \001(\010\"\367\007\n\022LoadPackage_Result\022\017\n" +
+      "\007program\030\001 \001(\t\022\r\n\005paths\030\002 \003(\t\022(\n\014parse_e" +
+      "rrors\030\003 \003(\0132\022.com.kcl.api.Error\022\'\n\013type_" +
+      "errors\030\004 \003(\0132\022.com.kcl.api.Error\022;\n\006scop" +
+      "es\030\005 \003(\0132+.com.kcl.api.LoadPackage_Resul" +
+      "t.ScopesEntry\022=\n\007symbols\030\006 \003(\0132,.com.kcl" +
+      ".api.LoadPackage_Result.SymbolsEntry\022K\n\017" +
+      "node_symbol_map\030\007 \003(\01322.com.kcl.api.Load" +
+      "Package_Result.NodeSymbolMapEntry\022K\n\017sym" +
+      "bol_node_map\030\010 \003(\01322.com.kcl.api.LoadPac" +
+      "kage_Result.SymbolNodeMapEntry\022\\\n\030fully_" +
+      "qualified_name_map\030\t \003(\0132:.com.kcl.api.L" +
+      "oadPackage_Result.FullyQualifiedNameMapE" +
+      "ntry\022G\n\rpkg_scope_map\030\n \003(\01320.com.kcl.ap" +
+      "i.LoadPackage_Result.PkgScopeMapEntry\032A\n" +
+      "\013ScopesEntry\022\013\n\003key\030\001 \001(\t\022!\n\005value\030\002 \001(\013" +
+      "2\022.com.kcl.api.Scope:\0028\001\032C\n\014SymbolsEntry" +
+      "\022\013\n\003key\030\001 \001(\t\022\"\n\005value\030\002 \001(\0132\023.com.kcl.a" +
+      "pi.Symbol:\0028\001\032N\n\022NodeSymbolMapEntry\022\013\n\003k" +
+      "ey\030\001 \001(\t\022\'\n\005value\030\002 \001(\0132\030.com.kcl.api.Sy" +
+      "mbolIndex:\0028\001\0324\n\022SymbolNodeMapEntry\022\013\n\003k" +
+      "ey\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\032V\n\032FullyQual" +
+      "ifiedNameMapEntry\022\013\n\003key\030\001 \001(\t\022\'\n\005value\030" +
+      "\002 \001(\0132\030.com.kcl.api.SymbolIndex:\0028\001\032K\n\020P" +
+      "kgScopeMapEntry\022\013\n\003key\030\001 \001(\t\022&\n\005value\030\002 " +
+      "\001(\0132\027.com.kcl.api.ScopeIndex:\0028\001\"\304\001\n\006Sym" +
+      "bol\022 \n\002ty\030\001 \001(\0132\024.com.kcl.api.KclType\022\014\n" +
+      "\004name\030\002 \001(\t\022\'\n\005owner\030\003 \001(\0132\030.com.kcl.api" +
+      ".SymbolIndex\022%\n\003def\030\004 \001(\0132\030.com.kcl.api." +
+      "SymbolIndex\022\'\n\005attrs\030\005 \003(\0132\030.com.kcl.api" +
+      ".SymbolIndex\022\021\n\tis_global\030\006 \001(\010\"\272\001\n\005Scop" +
+      "e\022\014\n\004kind\030\001 \001(\t\022\'\n\006parent\030\002 \001(\0132\027.com.kc" +
+      "l.api.ScopeIndex\022\'\n\005owner\030\003 \001(\0132\030.com.kc" +
+      "l.api.SymbolIndex\022)\n\010children\030\004 \003(\0132\027.co" +
+      "m.kcl.api.ScopeIndex\022&\n\004defs\030\005 \003(\0132\030.com" +
+      ".kcl.api.SymbolIndex\"1\n\013SymbolIndex\022\t\n\001i" +
+      "\030\001 \001(\004\022\t\n\001g\030\002 \001(\004\022\014\n\004kind\030\003 \001(\t\"0\n\nScope" +
+      "Index\022\t\n\001i\030\001 \001(\004\022\t\n\001g\030\002 \001(\004\022\014\n\004kind\030\003 \001(" +
+      "\t\"\317\003\n\020ExecProgram_Args\022\020\n\010work_dir\030\001 \001(\t" +
+      "\022\027\n\017k_filename_list\030\002 \003(\t\022\023\n\013k_code_list" +
+      "\030\003 \003(\t\022%\n\004args\030\004 \003(\0132\027.com.kcl.api.CmdAr" +
+      "gSpec\022/\n\toverrides\030\005 \003(\0132\034.com.kcl.api.C" +
+      "mdOverrideSpec\022\033\n\023disable_yaml_result\030\006 " +
+      "\001(\010\022\032\n\022print_override_ast\030\007 \001(\010\022\032\n\022stric" +
+      "t_range_check\030\010 \001(\010\022\024\n\014disable_none\030\t \001(" +
+      "\010\022\017\n\007verbose\030\n \001(\005\022\r\n\005debug\030\013 \001(\005\022\021\n\tsor" +
+      "t_keys\030\014 \001(\010\0226\n\rexternal_pkgs\030\r \003(\0132\037.co" +
+      "m.kcl.api.CmdExternalPkgSpec\022 \n\030include_" +
+      "schema_type_path\030\016 \001(\010\022\024\n\014compile_only\030\017" +
+      " \001(\010\022\025\n\rpath_selector\030\021 \003(\t\"h\n\022ExecProgr" +
+      "am_Result\022\023\n\013json_result\030\001 \001(\t\022\023\n\013yaml_r" +
+      "esult\030\002 \001(\t\022\023\n\013log_message\030\003 \001(\t\022\023\n\013err_" +
+      "message\030\004 \001(\t\"\'\n\020ResetPlugin_Args\022\023\n\013plu" +
+      "gin_root\030\001 \001(\t\"\024\n\022ResetPlugin_Result\"!\n\017" +
+      "FormatCode_Args\022\016\n\006source\030\001 \001(\t\"&\n\021Forma" +
+      "tCode_Result\022\021\n\tformatted\030\001 \001(\014\"\037\n\017Forma" +
+      "tPath_Args\022\014\n\004path\030\001 \001(\t\"*\n\021FormatPath_R" +
+      "esult\022\025\n\rchanged_paths\030\001 \003(\t\"\036\n\rLintPath" +
+      "_Args\022\r\n\005paths\030\001 \003(\t\"\"\n\017LintPath_Result\022" +
+      "\017\n\007results\030\001 \003(\t\"F\n\021OverrideFile_Args\022\014\n" +
+      "\004file\030\001 \001(\t\022\r\n\005specs\030\002 \003(\t\022\024\n\014import_pat" +
+      "hs\030\003 \003(\t\"%\n\023OverrideFile_Result\022\016\n\006resul" +
+      "t\030\001 \001(\010\"_\n\026GetFullSchemaType_Args\0220\n\texe" +
+      "c_args\030\001 \001(\0132\035.com.kcl.api.ExecProgram_A" +
+      "rgs\022\023\n\013schema_name\030\002 \001(\t\"E\n\022GetSchemaTyp" +
+      "e_Args\022\014\n\004file\030\001 \001(\t\022\014\n\004code\030\002 \001(\t\022\023\n\013sc" +
+      "hema_name\030\003 \001(\t\"F\n\024GetSchemaType_Result\022" +
+      ".\n\020schema_type_list\030\001 \003(\0132\024.com.kcl.api." +
+      "KclType\"L\n\031GetSchemaTypeMapping_Args\022\014\n\004" +
+      "file\030\001 \001(\t\022\014\n\004code\030\002 \001(\t\022\023\n\013schema_name\030" +
+      "\003 \001(\t\"\313\001\n\033GetSchemaTypeMapping_Result\022\\\n" +
+      "\023schema_type_mapping\030\001 \003(\0132?.com.kcl.api" +
+      ".GetSchemaTypeMapping_Result.SchemaTypeM" +
+      "appingEntry\032N\n\026SchemaTypeMappingEntry\022\013\n" +
+      "\003key\030\001 \001(\t\022#\n\005value\030\002 \001(\0132\024.com.kcl.api." +
+      "KclType:\0028\001\"u\n\021ValidateCode_Args\022\014\n\004data" +
+      "\030\001 \001(\t\022\014\n\004file\030\002 \001(\t\022\014\n\004code\030\003 \001(\t\022\016\n\006sc" +
+      "hema\030\004 \001(\t\022\026\n\016attribute_name\030\005 \001(\t\022\016\n\006fo" +
+      "rmat\030\006 \001(\t\";\n\023ValidateCode_Result\022\017\n\007suc" +
+      "cess\030\001 \001(\010\022\023\n\013err_message\030\002 \001(\t\":\n\010Posit" +
+      "ion\022\014\n\004line\030\001 \001(\003\022\016\n\006column\030\002 \001(\003\022\020\n\010fil" +
+      "ename\030\003 \001(\t\"i\n\021ListDepFiles_Args\022\020\n\010work" +
+      "_dir\030\001 \001(\t\022\024\n\014use_abs_path\030\002 \001(\010\022\023\n\013incl" +
+      "ude_all\030\003 \001(\010\022\027\n\017use_fast_parser\030\004 \001(\010\"F" +
+      "\n\023ListDepFiles_Result\022\017\n\007pkgroot\030\001 \001(\t\022\017" +
+      "\n\007pkgpath\030\002 \001(\t\022\r\n\005files\030\003 \003(\t\"9\n\026LoadSe" +
+      "ttingsFiles_Args\022\020\n\010work_dir\030\001 \001(\t\022\r\n\005fi" +
+      "les\030\002 \003(\t\"{\n\030LoadSettingsFiles_Result\022/\n" +
+      "\017kcl_cli_configs\030\001 \001(\0132\026.com.kcl.api.Cli" +
+      "Config\022.\n\013kcl_options\030\002 \003(\0132\031.com.kcl.ap" +
+      "i.KeyValuePair\"\333\001\n\tCliConfig\022\r\n\005files\030\001 " +
+      "\003(\t\022\016\n\006output\030\002 \001(\t\022\021\n\toverrides\030\003 \003(\t\022\025" +
+      "\n\rpath_selector\030\004 \003(\t\022\032\n\022strict_range_ch" +
+      "eck\030\005 \001(\010\022\024\n\014disable_none\030\006 \001(\010\022\017\n\007verbo" +
+      "se\030\007 \001(\003\022\r\n\005debug\030\010 \001(\010\022\021\n\tsort_keys\030\t \001" +
+      "(\010\022 \n\030include_schema_type_path\030\n \001(\010\"*\n\014" +
+      "KeyValuePair\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t" +
+      "\"^\n\013Rename_Args\022\024\n\014package_root\030\001 \001(\t\022\023\n" +
+      "\013symbol_path\030\002 \001(\t\022\022\n\nfile_paths\030\003 \003(\t\022\020" +
+      "\n\010new_name\030\004 \001(\t\"&\n\rRename_Result\022\025\n\rcha" +
+      "nged_files\030\001 \003(\t\"\307\001\n\017RenameCode_Args\022\024\n\014" +
+      "package_root\030\001 \001(\t\022\023\n\013symbol_path\030\002 \001(\t\022" +
+      "C\n\014source_codes\030\003 \003(\0132-.com.kcl.api.Rena" +
+      "meCode_Args.SourceCodesEntry\022\020\n\010new_name" +
+      "\030\004 \001(\t\0322\n\020SourceCodesEntry\022\013\n\003key\030\001 \001(\t\022" +
+      "\r\n\005value\030\002 \001(\t:\0028\001\"\221\001\n\021RenameCode_Result" +
+      "\022G\n\rchanged_codes\030\001 \003(\01320.com.kcl.api.Re" +
+      "nameCode_Result.ChangedCodesEntry\0323\n\021Cha" +
+      "ngedCodesEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001" +
+      "(\t:\0028\001\"v\n\tTest_Args\0220\n\texec_args\030\001 \001(\0132\035" +
+      ".com.kcl.api.ExecProgram_Args\022\020\n\010pkg_lis" +
+      "t\030\002 \003(\t\022\022\n\nrun_regexp\030\003 \001(\t\022\021\n\tfail_fast" +
+      "\030\004 \001(\010\"6\n\013Test_Result\022\'\n\004info\030\002 \003(\0132\031.co" +
+      "m.kcl.api.TestCaseInfo\"R\n\014TestCaseInfo\022\014" +
+      "\n\004name\030\001 \001(\t\022\r\n\005error\030\002 \001(\t\022\020\n\010duration\030" +
+      "\003 \001(\004\022\023\n\013log_message\030\004 \001(\t\"\310\004\n\007KclType\022\014" +
+      "\n\004type\030\001 \001(\t\022)\n\013union_types\030\002 \003(\0132\024.com." +
+      "kcl.api.KclType\022\017\n\007default\030\003 \001(\t\022\023\n\013sche" +
+      "ma_name\030\004 \001(\t\022\022\n\nschema_doc\030\005 \001(\t\0228\n\npro" +
+      "perties\030\006 \003(\0132$.com.kcl.api.KclType.Prop" +
+      "ertiesEntry\022\020\n\010required\030\007 \003(\t\022!\n\003key\030\010 \001" +
+      "(\0132\024.com.kcl.api.KclType\022\"\n\004item\030\t \001(\0132\024" +
+      ".com.kcl.api.KclType\022\014\n\004line\030\n \001(\005\022*\n\nde" +
+      "corators\030\013 \003(\0132\026.com.kcl.api.Decorator\022\020" +
+      "\n\010filename\030\014 \001(\t\022\020\n\010pkg_path\030\r \001(\t\022\023\n\013de" +
+      "scription\030\016 \001(\t\0224\n\010examples\030\017 \003(\0132\".com." +
+      "kcl.api.KclType.ExamplesEntry\032G\n\017Propert" +
+      "iesEntry\022\013\n\003key\030\001 \001(\t\022#\n\005value\030\002 \001(\0132\024.c" +
+      "om.kcl.api.KclType:\0028\001\032E\n\rExamplesEntry\022" +
+      "\013\n\003key\030\001 \001(\t\022#\n\005value\030\002 \001(\0132\024.com.kcl.ap" +
+      "i.Example:\0028\001\"\225\001\n\tDecorator\022\014\n\004name\030\001 \001(" +
+      "\t\022\021\n\targuments\030\002 \003(\t\0226\n\010keywords\030\003 \003(\0132$" +
+      ".com.kcl.api.Decorator.KeywordsEntry\032/\n\r" +
+      "KeywordsEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(" +
+      "\t:\0028\001\">\n\007Example\022\017\n\007summary\030\001 \001(\t\022\023\n\013des" +
+      "cription\030\002 \001(\t\022\r\n\005value\030\003 \001(\t2\226\001\n\016Builti" +
+      "nService\0228\n\004Ping\022\026.com.kcl.api.Ping_Args" +
+      "\032\030.com.kcl.api.Ping_Result\022J\n\nListMethod" +
+      "\022\034.com.kcl.api.ListMethod_Args\032\036.com.kcl" +
+      ".api.ListMethod_Result2\230\013\n\014KclvmService\022" +
+      "8\n\004Ping\022\026.com.kcl.api.Ping_Args\032\030.com.kc" +
+      "l.api.Ping_Result\022M\n\013ExecProgram\022\035.com.k" +
+      "cl.api.ExecProgram_Args\032\037.com.kcl.api.Ex" +
+      "ecProgram_Result\022G\n\tParseFile\022\033.com.kcl." +
+      "api.ParseFile_Args\032\035.com.kcl.api.ParseFi" +
+      "le_Result\022P\n\014ParseProgram\022\036.com.kcl.api." +
+      "ParseProgram_Args\032 .com.kcl.api.ParsePro" +
+      "gram_Result\022M\n\013LoadPackage\022\035.com.kcl.api" +
+      ".LoadPackage_Args\032\037.com.kcl.api.LoadPack" +
+      "age_Result\022J\n\nFormatCode\022\034.com.kcl.api.F" +
+      "ormatCode_Args\032\036.com.kcl.api.FormatCode_" +
+      "Result\022J\n\nFormatPath\022\034.com.kcl.api.Forma" +
+      "tPath_Args\032\036.com.kcl.api.FormatPath_Resu" +
+      "lt\022D\n\010LintPath\022\032.com.kcl.api.LintPath_Ar" +
+      "gs\032\034.com.kcl.api.LintPath_Result\022P\n\014Over" +
+      "rideFile\022\036.com.kcl.api.OverrideFile_Args" +
+      "\032 .com.kcl.api.OverrideFile_Result\022S\n\rGe" +
+      "tSchemaType\022\037.com.kcl.api.GetSchemaType_" +
+      "Args\032!.com.kcl.api.GetSchemaType_Result\022" +
+      "[\n\021GetFullSchemaType\022#.com.kcl.api.GetFu" +
+      "llSchemaType_Args\032!.com.kcl.api.GetSchem" +
+      "aType_Result\022h\n\024GetSchemaTypeMapping\022&.c" +
+      "om.kcl.api.GetSchemaTypeMapping_Args\032(.c" +
+      "om.kcl.api.GetSchemaTypeMapping_Result\022P" +
+      "\n\014ValidateCode\022\036.com.kcl.api.ValidateCod" +
+      "e_Args\032 .com.kcl.api.ValidateCode_Result" +
+      "\022P\n\014ListDepFiles\022\036.com.kcl.api.ListDepFi" +
+      "les_Args\032 .com.kcl.api.ListDepFiles_Resu" +
+      "lt\022_\n\021LoadSettingsFiles\022#.com.kcl.api.Lo" +
+      "adSettingsFiles_Args\032%.com.kcl.api.LoadS" +
+      "ettingsFiles_Result\022>\n\006Rename\022\030.com.kcl." +
+      "api.Rename_Args\032\032.com.kcl.api.Rename_Res" +
+      "ult\022J\n\nRenameCode\022\034.com.kcl.api.RenameCo" +
+      "de_Args\032\036.com.kcl.api.RenameCode_Result\022" +
+      "8\n\004Test\022\026.com.kcl.api.Test_Args\032\030.com.kc" +
+      "l.api.Test_Resultb\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -57818,12 +58601,12 @@ public final class Spec {
     internal_static_com_kcl_api_LoadPackage_Result_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_kcl_api_LoadPackage_Result_descriptor,
-        new java.lang.String[] { "Program", "Paths", "NodeSymbolMap", "Symbols", "PkgScopeMap", "Scopes", "ParseErrors", "TypeErrors", });
-    internal_static_com_kcl_api_LoadPackage_Result_NodeSymbolMapEntry_descriptor =
+        new java.lang.String[] { "Program", "Paths", "ParseErrors", "TypeErrors", "Scopes", "Symbols", "NodeSymbolMap", "SymbolNodeMap", "FullyQualifiedNameMap", "PkgScopeMap", });
+    internal_static_com_kcl_api_LoadPackage_Result_ScopesEntry_descriptor =
       internal_static_com_kcl_api_LoadPackage_Result_descriptor.getNestedTypes().get(0);
-    internal_static_com_kcl_api_LoadPackage_Result_NodeSymbolMapEntry_fieldAccessorTable = new
+    internal_static_com_kcl_api_LoadPackage_Result_ScopesEntry_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_com_kcl_api_LoadPackage_Result_NodeSymbolMapEntry_descriptor,
+        internal_static_com_kcl_api_LoadPackage_Result_ScopesEntry_descriptor,
         new java.lang.String[] { "Key", "Value", });
     internal_static_com_kcl_api_LoadPackage_Result_SymbolsEntry_descriptor =
       internal_static_com_kcl_api_LoadPackage_Result_descriptor.getNestedTypes().get(1);
@@ -57831,17 +58614,29 @@ public final class Spec {
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_kcl_api_LoadPackage_Result_SymbolsEntry_descriptor,
         new java.lang.String[] { "Key", "Value", });
-    internal_static_com_kcl_api_LoadPackage_Result_PkgScopeMapEntry_descriptor =
+    internal_static_com_kcl_api_LoadPackage_Result_NodeSymbolMapEntry_descriptor =
       internal_static_com_kcl_api_LoadPackage_Result_descriptor.getNestedTypes().get(2);
+    internal_static_com_kcl_api_LoadPackage_Result_NodeSymbolMapEntry_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_com_kcl_api_LoadPackage_Result_NodeSymbolMapEntry_descriptor,
+        new java.lang.String[] { "Key", "Value", });
+    internal_static_com_kcl_api_LoadPackage_Result_SymbolNodeMapEntry_descriptor =
+      internal_static_com_kcl_api_LoadPackage_Result_descriptor.getNestedTypes().get(3);
+    internal_static_com_kcl_api_LoadPackage_Result_SymbolNodeMapEntry_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_com_kcl_api_LoadPackage_Result_SymbolNodeMapEntry_descriptor,
+        new java.lang.String[] { "Key", "Value", });
+    internal_static_com_kcl_api_LoadPackage_Result_FullyQualifiedNameMapEntry_descriptor =
+      internal_static_com_kcl_api_LoadPackage_Result_descriptor.getNestedTypes().get(4);
+    internal_static_com_kcl_api_LoadPackage_Result_FullyQualifiedNameMapEntry_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_com_kcl_api_LoadPackage_Result_FullyQualifiedNameMapEntry_descriptor,
+        new java.lang.String[] { "Key", "Value", });
+    internal_static_com_kcl_api_LoadPackage_Result_PkgScopeMapEntry_descriptor =
+      internal_static_com_kcl_api_LoadPackage_Result_descriptor.getNestedTypes().get(5);
     internal_static_com_kcl_api_LoadPackage_Result_PkgScopeMapEntry_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_kcl_api_LoadPackage_Result_PkgScopeMapEntry_descriptor,
-        new java.lang.String[] { "Key", "Value", });
-    internal_static_com_kcl_api_LoadPackage_Result_ScopesEntry_descriptor =
-      internal_static_com_kcl_api_LoadPackage_Result_descriptor.getNestedTypes().get(3);
-    internal_static_com_kcl_api_LoadPackage_Result_ScopesEntry_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_com_kcl_api_LoadPackage_Result_ScopesEntry_descriptor,
         new java.lang.String[] { "Key", "Value", });
     internal_static_com_kcl_api_Symbol_descriptor =
       getDescriptor().getMessageTypes().get(15);
