@@ -1,6 +1,6 @@
 # KCL Artifact Library for SDKs
 
-This repo mainly includes the binding of the low-level API and spec of the KCL Rust core, and the SDKs of various languages are based on this to encapsulate higher-level APIs.
+This repo mainly includes the binding of the low-level API and spec of the [KCL language core](https://github.com/kcl-lang/kcl), and the SDKs of various languages are based on this to encapsulate higher-level APIs.
 
 ## Rust
 
