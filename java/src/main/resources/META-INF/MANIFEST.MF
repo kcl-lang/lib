@@ -1,1 +1,1 @@
-Module-Name: kcl-java
+Module-Name: kcl-lib

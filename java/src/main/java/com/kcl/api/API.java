@@ -1,11 +1,58 @@
 package com.kcl.api;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.UncheckedIOException;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
+
 import com.kcl.api.Spec.*;
 
 public class API implements Service {
+    static String LIB_NAME = "kcl_lib_jni";
     static {
+        loadLibrary();
+    }
+
+    public static void loadLibrary() {
         // Load the dynamic library (the .dll, .so, or .dylib file)
-        System.loadLibrary("kcl_lib_jni");
+        try {
+            doLoadLibrary();
+        } catch (IOException e) {
+            throw new UncheckedIOException("Unable to load the KCL shared library", e);
+        }
+    }
+
+    private static void doLoadLibrary() throws IOException {
+        try {
+            // try dynamic library - the search path can be configured via "-Djava.library.path"
+            System.loadLibrary(LIB_NAME);
+            return;
+        } catch (UnsatisfiedLinkError ignore) {
+            // ignore - try to find native libraries from classpath
+        }
+        doLoadBundledLibrary();
+    }
+
+    private static void doLoadBundledLibrary() throws IOException {
+        final String libraryPath = bundledLibraryPath();
+        try (final InputStream is = API.class.getResourceAsStream(libraryPath)) {
+            if (is == null) {
+                throw new IOException("cannot find " + libraryPath);
+            }
+            final int dot = libraryPath.indexOf('.');
+            final File tmpFile = File.createTempFile(libraryPath.substring(0, dot), libraryPath.substring(dot));
+            tmpFile.deleteOnExit();
+            Files.copy(is, tmpFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+            System.load(tmpFile.getAbsolutePath());
+        }
+    }
+
+    private static String bundledLibraryPath() {
+        final String classifier = Environment.getClassifier();
+        final String libraryName = System.mapLibraryName(LIB_NAME);
+        return "/native/" + classifier + "/" + libraryName;
     }
 
     private native byte[] callNative(byte[] call, byte[] args);
