@@ -5,13 +5,19 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.kcl</groupId>
-    <artifactId>kcl-java-lib</artifactId>
-    <version>0.1.0</version>
+    <artifactId>kcl-lib</artifactId>
+    <version>0.7.5</version>
 
     <properties>
         <java.version>1.8</java.version>
         <surefire.version>2.20</surefire.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <exec-maven-plugin.version>3.1.0</exec-maven-plugin.version>
+
+        <cargo-build.profile>dev</cargo-build.profile>
+        <cargo-build.target/> <!-- override cargo build target; e.g., use musl instead -->
+        <jni.classifier>${os.detected.classifier}</jni.classifier>
+
     </properties>
     <dependencies>
         <!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-api -->
@@ -80,7 +86,40 @@
         </dependency>
     </dependencies>
     <build>
+        <extensions>
+          <extension>
+            <groupId>kr.motd.maven</groupId>
+            <artifactId>os-maven-plugin</artifactId>
+            <version>1.7.0</version>
+          </extension>
+        </extensions>
         <plugins>
+            <plugin>
+                <artifactId>exec-maven-plugin</artifactId>
+                <groupId>org.codehaus.mojo</groupId>
+                <version>${exec-maven-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>compile-native-code</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <executable>python3</executable>
+                            <arguments>
+                                <argument>${project.basedir}/scripts/build.py</argument>
+                                <argument>--classifier</argument>
+                                <argument>${jni.classifier}</argument>
+                                <argument>--target</argument>
+                                <argument>${cargo-build.target}</argument>
+                                <argument>--profile</argument>
+                                <argument>${cargo-build.profile}</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>net.revelc.code.formatter</groupId>
                 <artifactId>formatter-maven-plugin</artifactId>

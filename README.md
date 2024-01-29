@@ -56,15 +56,21 @@ import com.kcl.api.Spec.*;
 import com.kcl.ast.Program;
 import com.kcl.util.JsonUtil;
 
-API api = new API();
-LoadPackage_Result result = api.loadPackage(
-        LoadPackage_Args.newBuilder().setResolveAst(true).setParseArgs(
-                ParseProgram_Args.newBuilder().addPaths("./src/test_data/schema.k").build())
-                .build());
-String programString = result.getProgram();
-Program program = JsonUtil.deserializeProgram(programString);
-result.getSymbolsMap().values().forEach(s -> System.out.println(s));
+public class Main {
+    public void testProgramSymbols() throws Exception {
+        API api = new API();
+        LoadPackage_Result result = api.loadPackage(
+                LoadPackage_Args.newBuilder().setResolveAst(true).setParseArgs(
+                        ParseProgram_Args.newBuilder().addPaths("./src/test_data/schema.k").build())
+                        .build());
+        String programString = result.getProgram();
+        Program program = JsonUtil.deserializeProgram(programString);
+        result.getSymbolsMap().values().forEach(s -> System.out.println(s));
+    }
+}
 ```
+
+See [here](./java/README.md) for more information.
 
 ## Python
 
