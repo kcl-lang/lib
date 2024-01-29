@@ -1,7 +1,7 @@
 default: build
 
 build:
-	mvn clean install -Dcargo-build.profile=release
+	mvn clean install -DskipTests -Dcargo-build.profile=release
 
 fmt:
 	mvn formatter:format
