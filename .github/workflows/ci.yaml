@@ -63,12 +63,31 @@ jobs:
     permissions:
       actions: write  # for styfle/cancel-workflow-action to cancel/stop running workflows
       contents: read  # for actions/checkout to fetch code
-    name: "${{ matrix.root-pom }} on JDK ${{ matrix.java }}"
+    name: "${{ matrix.root-pom }} on JDK ${{ matrix.java }} for the classifier ${{ matrix.classifier }}"
     strategy:
       matrix:
-        java: [ 8, 11, 17 ]
-        root-pom: [ 'pom.xml' ]
-    runs-on: ubuntu-latest
+        include:
+          - os: ubuntu-latest
+            classifier: linux-x86_64
+            java: 8
+            root-pom: 'pom.xml'
+          - os: ubuntu-latest
+            classifier: linux-aarch_64
+            java: 8
+            root-pom: 'pom.xml'
+          - os: windows-latest
+            classifier: windows-x86_64
+            java: 8
+            root-pom: 'pom.xml'
+          - os: macos-latest
+            classifier: osx-x86_64
+            java: 8
+            root-pom: 'pom.xml'
+          - os: macos-latest
+            classifier: osx-aarch_64
+            java: 8
+            root-pom: 'pom.xml'
+    runs-on: ${{ matrix.os }}
     env:
       ROOT_POM: ${{ matrix.root-pom }}
     steps:
