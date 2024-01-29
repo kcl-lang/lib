@@ -4,10 +4,9 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 
 /**
  * Any type is the builtin any type annotation.
- * 
+ *
  * <p>
  * <code>a: any = 1</code>
- * </p>
  */
 @JsonTypeName("Any")
 public class AnyType extends Type {

@@ -5,21 +5,23 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 
 /**
  * ParenExpr, e.g.
- * 
- * <pre>{@code
+ *
+ * <pre>
+ * {@code
  * 1 + (2 - 3)
- * }</pre>
+ * }
+ * </pre>
  */
 @JsonTypeName("Paren")
 public class ParenExpr extends Expr {
-	@JsonProperty("expr")
-	private NodeRef<Expr> expr;
+    @JsonProperty("expr")
+    private NodeRef<Expr> expr;
 
-	public NodeRef<Expr> getExpr() {
-		return expr;
-	}
+    public NodeRef<Expr> getExpr() {
+        return expr;
+    }
 
-	public void setExpr(NodeRef<Expr> expr) {
-		this.expr = expr;
-	}
+    public void setExpr(NodeRef<Expr> expr) {
+        this.expr = expr;
+    }
 }

@@ -1,20 +1,21 @@
 package com.kcl.ast;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonTypeName;
-
 /**
  * Identifier, e.g.
- * 
- * <pre>{@code 
- *a
- *b
- *_c
- *pkg.a}
- *</pre>
+ *
+ * <pre>
+ * {@code
+ * a
+ * b
+ * _c
+ * pkg.a
+ * }
+ * </pre>
  */
 @JsonTypeName("Identifier")
 public class IdentifierExpr extends Expr {
@@ -29,16 +30,12 @@ public class IdentifierExpr extends Expr {
 
     // Method to get combined name
     public String getName() {
-        return names.stream()
-                .map(Node::getNode)
-                .collect(Collectors.joining("."));
+        return names.stream().map(Node::getNode).collect(Collectors.joining("."));
     }
 
     // Method to get list of names
     public List<String> getNames() {
-        return names.stream()
-                .map(Node::getNode)
-                .collect(Collectors.toList());
+        return names.stream().map(Node::getNode).collect(Collectors.toList());
     }
 
     public void setNames(List<NodeRef<String>> names) {

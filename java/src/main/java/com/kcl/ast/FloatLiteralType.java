@@ -4,14 +4,13 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 
 @JsonTypeName("Float")
 public class FloatLiteralType extends LiteralTypeValue {
-	private double value;
+    private double value;
 
-	public double getValue() {
-		return value;
-	}
+    public double getValue() {
+        return value;
+    }
 
-	public void setValue(double value) {
-		this.value = value;
-	}
-
+    public void setValue(double value) {
+        this.value = value;
+    }
 }

@@ -45,4 +45,3 @@ public interface Service {
     // Service for the testing tool
     Test_Result test(Test_Args args) throws Exception;
 }
-

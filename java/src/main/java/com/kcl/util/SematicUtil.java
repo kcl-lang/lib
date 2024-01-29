@@ -1,14 +1,13 @@
 package com.kcl.util;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import com.kcl.api.Spec.LoadPackage_Result;
 import com.kcl.api.Spec.Scope;
 import com.kcl.api.Spec.ScopeIndex;
 import com.kcl.api.Spec.Symbol;
 import com.kcl.api.Spec.SymbolIndex;
 import com.kcl.ast.Program;
+import java.util.HashMap;
+import java.util.Map;
 
 public class SematicUtil {
     static String indexStringFormat = "{\"i\":%d,\"g\":%d,\"kind\":\"%s\"}";
@@ -49,7 +48,7 @@ public class SematicUtil {
         if (result == null || index == null) {
             return null;
         }
-        for (ScopeIndex scopeIndex: result.getPkgScopeMapMap().values()) {
+        for (ScopeIndex scopeIndex : result.getPkgScopeMapMap().values()) {
             Scope scope = symbolCurrentScope(result, index, scopeIndex);
             if (scope != null) {
                 return scope;
@@ -63,33 +62,35 @@ public class SematicUtil {
             return null;
         }
         HashMap<SymbolIndex, ScopeIndex> map = new HashMap<>();
-        for (ScopeIndex scopeIndex: result.getPkgScopeMapMap().values()) {
+        for (ScopeIndex scopeIndex : result.getPkgScopeMapMap().values()) {
             constructSymbolScopeMap(map, result, scopeIndex);
         }
         return map;
     }
 
-    private static void constructSymbolScopeMap(Map<SymbolIndex, ScopeIndex> map, LoadPackage_Result result, ScopeIndex scopeIndex) throws Exception {
+    private static void constructSymbolScopeMap(Map<SymbolIndex, ScopeIndex> map, LoadPackage_Result result,
+            ScopeIndex scopeIndex) throws Exception {
         Scope scope = findScope(result, scopeIndex);
         if (scope != null) {
-            for (SymbolIndex index: scope.getDefsList()) {
+            for (SymbolIndex index : scope.getDefsList()) {
                 map.put(index, scopeIndex);
             }
-            for (ScopeIndex child: scope.getChildrenList()) {
+            for (ScopeIndex child : scope.getChildrenList()) {
                 constructSymbolScopeMap(map, result, child);
             }
         }
     }
 
-    private static Scope symbolCurrentScope(LoadPackage_Result result, SymbolIndex symbolIndex, ScopeIndex scopeIndex) throws Exception {
+    private static Scope symbolCurrentScope(LoadPackage_Result result, SymbolIndex symbolIndex, ScopeIndex scopeIndex)
+            throws Exception {
         Scope scope = findScope(result, scopeIndex);
         if (scope != null) {
-            for (SymbolIndex index: scope.getDefsList()) {
+            for (SymbolIndex index : scope.getDefsList()) {
                 if (symbolIndex.equals(index)) {
                     return scope;
                 }
             }
-            for (ScopeIndex child: scope.getChildrenList()) {
+            for (ScopeIndex child : scope.getChildrenList()) {
                 scope = symbolCurrentScope(result, symbolIndex, child);
                 if (scope != null) {
                     return scope;

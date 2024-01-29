@@ -1,19 +1,20 @@
 package com.kcl.ast;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 /**
  * Identifier, e.g.
- * 
- * <pre>{@code 
- *a
- *b
- *_c
- *pkg.a}
- *</pre>
+ *
+ * <pre>
+ * {@code
+ * a
+ * b
+ * _c
+ * pkg.a
+ * }
+ * </pre>
  */
 public class Identifier {
     @JsonProperty("names")
@@ -27,16 +28,12 @@ public class Identifier {
 
     // Method to get combined name
     public String getName() {
-        return names.stream()
-                .map(Node::getNode)
-                .collect(Collectors.joining("."));
+        return names.stream().map(Node::getNode).collect(Collectors.joining("."));
     }
 
     // Method to get list of names
     public List<String> getNames() {
-        return names.stream()
-                .map(Node::getNode)
-                .collect(Collectors.toList());
+        return names.stream().map(Node::getNode).collect(Collectors.toList());
     }
 
     public void setNames(List<NodeRef<String>> names) {

@@ -1,16 +1,7 @@
 package com.kcl.ast;
 
 public enum CmpOp {
-    Eq("=="),
-    NotEq("!="),
-    Lt("<"),
-    LtE("<="),
-    Gt(">"),
-    GtE(">="),
-    Is("is"),
-    In("in"),
-    NotIn("not in"),
-    Not("not"),
+    Eq("=="), NotEq("!="), Lt("<"), LtE("<="), Gt(">"), GtE(">="), Is("is"), In("in"), NotIn("not in"), Not("not"),
     IsNot("is not");
 
     private final String symbol;

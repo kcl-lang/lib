@@ -1,31 +1,30 @@
 package com.kcl.ast;
 
 import com.fasterxml.jackson.annotation.JsonTypeName;
-
-import java.util.List;;
+import java.util.List;
 
 @JsonTypeName("Union")
 public class UnionType extends Type {
-	public static class UnionTypeValue {
+    public static class UnionTypeValue {
 
-		public List<NodeRef<Type>> getTypeElements() {
-			return typeElements;
-		}
+        public List<NodeRef<Type>> getTypeElements() {
+            return typeElements;
+        }
 
-		public void setTypeElements(List<NodeRef<Type>> typeElements) {
-			this.typeElements = typeElements;
-		}
+        public void setTypeElements(List<NodeRef<Type>> typeElements) {
+            this.typeElements = typeElements;
+        }
 
-		private List<NodeRef<Type>> typeElements;
-	}
+        private List<NodeRef<Type>> typeElements;
+    }
 
-	public UnionTypeValue getValue() {
-		return value;
-	}
+    public UnionTypeValue getValue() {
+        return value;
+    }
 
-	public void setValue(UnionTypeValue data) {
-		this.value = data;
-	}
+    public void setValue(UnionTypeValue data) {
+        this.value = data;
+    }
 
-	UnionTypeValue value;
+    UnionTypeValue value;
 }

@@ -1,12 +1,11 @@
 package com.kcl.util;
 
-import java.io.IOException;
-
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kcl.ast.Program;
 import com.kcl.loader.ScopeRef;
 import com.kcl.loader.SymbolRef;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.DeserializationFeature;
+import java.io.IOException;
 
 public class JsonUtil {
     public static Program deserializeProgram(String jsonString) throws IOException {

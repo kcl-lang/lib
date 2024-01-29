@@ -1,21 +1,8 @@
 package com.kcl.ast;
 
 public enum BinOp {
-    Add("+"),
-    Sub("-"),
-    Mul("*"),
-    Div("/"),
-    Mod("%"),
-    Pow("**"),
-    FloorDiv("//"),
-    LShift("<<"),
-    RShift(">>"),
-    BitXor("^"),
-    BitAnd("&"),
-    BitOr("|"),
-    And("and"),
-    Or("or"),
-    As("as");
+    Add("+"), Sub("-"), Mul("*"), Div("/"), Mod("%"), Pow("**"), FloorDiv("//"), LShift("<<"), RShift(">>"),
+    BitXor("^"), BitAnd("&"), BitOr("|"), And("and"), Or("or"), As("as");
 
     private final String symbol;
 

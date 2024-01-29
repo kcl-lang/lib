@@ -9,67 +9,66 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 @JsonSerialize
 @JsonDeserialize
 public class Pos {
-	@JsonProperty("filename")
-	private String filename;
+    @JsonProperty("filename")
+    private String filename;
 
-	@JsonProperty("line")
-	private long line;
+    @JsonProperty("line")
+    private long line;
 
-	@JsonProperty("column")
-	private long column;
+    @JsonProperty("column")
+    private long column;
 
-	@JsonProperty("end_line")
-	private long endLine;
+    @JsonProperty("end_line")
+    private long endLine;
 
-	@JsonProperty("end_column")
-	private long endColumn;
+    @JsonProperty("end_column")
+    private long endColumn;
 
-	public Pos(String filename, long line, long column, long endLine, long endColumn) {
-		this.filename = filename;
-		this.line = line;
-		this.column = column;
-		this.endLine = endLine;
-		this.endColumn = endColumn;
-	}
+    public Pos(String filename, long line, long column, long endLine, long endColumn) {
+        this.filename = filename;
+        this.line = line;
+        this.column = column;
+        this.endLine = endLine;
+        this.endColumn = endColumn;
+    }
 
-	public String getFilename() {
-		return filename;
-	}
+    public String getFilename() {
+        return filename;
+    }
 
-	public void setFilename(String filename) {
-		this.filename = filename;
-	}
+    public void setFilename(String filename) {
+        this.filename = filename;
+    }
 
-	public long getLine() {
-		return line;
-	}
+    public long getLine() {
+        return line;
+    }
 
-	public void setLine(long line) {
-		this.line = line;
-	}
+    public void setLine(long line) {
+        this.line = line;
+    }
 
-	public long getColumn() {
-		return column;
-	}
+    public long getColumn() {
+        return column;
+    }
 
-	public void setColumn(long column) {
-		this.column = column;
-	}
+    public void setColumn(long column) {
+        this.column = column;
+    }
 
-	public long getEndLine() {
-		return endLine;
-	}
+    public long getEndLine() {
+        return endLine;
+    }
 
-	public void setEndLine(long endLine) {
-		this.endLine = endLine;
-	}
+    public void setEndLine(long endLine) {
+        this.endLine = endLine;
+    }
 
-	public long getEndColumn() {
-		return endColumn;
-	}
+    public long getEndColumn() {
+        return endColumn;
+    }
 
-	public void setEndColumn(long endColumn) {
-		this.endColumn = endColumn;
-	}
-
+    public void setEndColumn(long endColumn) {
+        this.endColumn = endColumn;
+    }
 }

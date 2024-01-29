@@ -1,8 +1,5 @@
 package com.kcl;
 
-import org.junit.Assert;
-import org.junit.Test;
-
 import com.kcl.api.API;
 import com.kcl.api.Spec.LoadPackage_Args;
 import com.kcl.api.Spec.LoadPackage_Result;
@@ -15,16 +12,17 @@ import com.kcl.ast.Program;
 import com.kcl.ast.Stmt;
 import com.kcl.util.JsonUtil;
 import com.kcl.util.SematicUtil;
+import org.junit.Assert;
+import org.junit.Test;
 
 public class LoadPackageTest {
     @Test
     public void testProgramSymbols() throws Exception {
         // API instance
         API api = new API();
-        LoadPackage_Result result = api.loadPackage(
-                LoadPackage_Args.newBuilder().setResolveAst(true).setWithAstIndex(true).setParseArgs(
-                        ParseProgram_Args.newBuilder().addPaths("./src/test_data/schema.k").build())
-                        .build());
+        LoadPackage_Result result = api.loadPackage(LoadPackage_Args.newBuilder().setResolveAst(true)
+                .setWithAstIndex(true)
+                .setParseArgs(ParseProgram_Args.newBuilder().addPaths("./src/test_data/schema.k").build()).build());
         // Get parse errors
         Assert.assertEquals(result.getParseErrorsList().size(), 0);
         // Get Type errors

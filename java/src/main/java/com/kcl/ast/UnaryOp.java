@@ -1,10 +1,7 @@
 package com.kcl.ast;
 
 public enum UnaryOp {
-    UAdd("+"),
-    USub("-"),
-    Invert("~"),
-    Not("not");
+    UAdd("+"), USub("-"), Invert("~"), Not("not");
 
     private final String symbol;
 

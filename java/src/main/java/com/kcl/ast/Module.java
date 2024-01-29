@@ -1,24 +1,26 @@
 package com.kcl.ast;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-/**
- * Module is an abstract syntax tree for a single KCL file.
- */
+/** Module is an abstract syntax tree for a single KCL file. */
 public class Module {
     @JsonProperty("filename")
     private String filename;
+
     @JsonProperty("pkg")
     private String pkg;
+
     @JsonProperty("doc")
     private NodeRef<String> doc;
+
     @JsonProperty("name")
     private String name;
+
     @JsonProperty("body")
     private List<NodeRef<Stmt>> body;
+
     @JsonProperty("comments")
     private List<NodeRef<Comment>> comments;
 
