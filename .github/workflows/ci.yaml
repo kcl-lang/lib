@@ -127,7 +127,7 @@ jobs:
       - name: 'Build and Deploy'
         shell: bash
         working-directory: java
-        run: make && make pkg
+        run: make # && make deploy
         env:
           CI_DEPLOY_USERNAME: ${{ secrets.NEXUS_STAGE_DEPLOYER_USER }}
           CI_DEPLOY_PASSWORD: ${{ secrets.NEXUS_STAGE_DEPLOYER_PW }}

@@ -8,3 +8,6 @@ fmt:
 
 pkg:
 	mvn clean package
+
+deploy:
+	mvn clean deploy
