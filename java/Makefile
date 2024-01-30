@@ -5,3 +5,6 @@ build:
 
 fmt:
 	mvn formatter:format
+
+pkg:
+	mvn clean package

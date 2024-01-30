@@ -103,6 +103,9 @@ jobs:
           java-version: ${{ matrix.java }}
           distribution: 'zulu'
           cache: 'maven'
+          server-id: sonatype-nexus-snapshots
+          server-username: CI_DEPLOY_USERNAME
+          server-password: CI_DEPLOY_PASSWORD
       - uses: actions/setup-python@v5
         with:
           python-version: '3.10'
@@ -121,7 +124,10 @@ jobs:
           # Setup for cargo
           echo "CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER=aarch64-linux-gnu-gcc" >> $GITHUB_ENV
 
-      - name: 'Test'
+      - name: 'Build and Deploy'
         shell: bash
         working-directory: java
-        run: make
+        run: make && make pkg
+        env:
+          CI_DEPLOY_USERNAME: ${{ secrets.NEXUS_STAGE_DEPLOYER_USER }}
+          CI_DEPLOY_PASSWORD: ${{ secrets.NEXUS_STAGE_DEPLOYER_PW }}
