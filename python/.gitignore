@@ -1,0 +1,14 @@
+/build/
+.vs/
+.vscode/
+.idea/
+
+# kcl files
+.pytest_cache
+__pycache__
+*.pyc
+build-result/
+dist/
+kcl_lib/lib
+kcl_lib.egg-info/
+.eggs/

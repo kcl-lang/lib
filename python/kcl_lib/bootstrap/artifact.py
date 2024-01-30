@@ -3,19 +3,19 @@ import sys
 import pathlib
 import os
 
-# Test Lib ROOT
-TEST_LIB_ROOT = pathlib.Path(__file__).parent.parent.parent.parent
-# Release
 _lib_root = os.environ.get("KCL_LIB_ROOT")
-LIB_ROOT = (
-    pathlib.Path(_lib_root)
-    if _lib_root
-    else pathlib.Path(__file__).parent.parent.parent.parent
-)
+if _lib_root:
+    LIB_ROOT = pathlib.Path(_lib_root)
+else:
+    # Test Lib ROOT
+    TEST_LIB_ROOT = pathlib.Path(__file__).parent.parent.parent.parent
+    LIB_ROOT = TEST_LIB_ROOT
+    if not TEST_LIB_ROOT.joinpath("lib").exists():
+        LIB_ROOT = pathlib.Path(__file__).parent.parent
 
 
 def is_amd64_arch():
-    return platform.machine() in ["x86_64", "AMD64"]
+    return platform.machine() in ["x86_64", "amd64", "AMD64"]
 
 
 if sys.platform == "darwin":
