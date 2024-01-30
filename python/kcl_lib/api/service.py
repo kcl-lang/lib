@@ -1,12 +1,16 @@
 import ctypes
 import tempfile
 import threading
-from kcl_lib.bootstrap import lib_full_name, install_kclvm
+import os
+from kcl_lib.bootstrap import (
+    KCLVM_CLI_INSTALL_PATH_ENV_VAR,
+    KCLVM_CLI_BIN_PATH_ENV_VAR,
+    lib_full_name,
+    install_kclvm,
+)
 from .spec_pb2 import *
 from ctypes import c_char_p, c_void_p
-import google.protobuf.json_format as json_format
 from google.protobuf import message as _message
-import os
 
 
 class API:
@@ -81,9 +85,16 @@ class API:
 class Caller:
     def __init__(self):
         self._dir = tempfile.TemporaryDirectory()
-        # Assuming `lib_full_name` returns the name of the shared library
-        install_kclvm(self._dir.name)
-        self.lib = ctypes.cdll.LoadLibrary(self._dir.name + "/bin/" + lib_full_name())
+        env_path = os.environ.get(KCLVM_CLI_BIN_PATH_ENV_VAR)
+        env_install_path = os.environ.get(KCLVM_CLI_INSTALL_PATH_ENV_VAR)
+        if env_path:
+            self.lib = ctypes.CDLL(os.path.join(env_path, lib_full_name()))
+        elif env_install_path:
+            install_kclvm(env_install_path)
+            self.lib = ctypes.CDLL(os.path.join(env_install_path, lib_full_name()))
+        else:
+            install_kclvm(self._dir.name)
+            self.lib = ctypes.CDLL(self._dir.name + "/bin/" + lib_full_name())
         # Assuming the shared library exposes a function `kclvm_service_new`
         self.lib.kclvm_service_new.argtypes = [ctypes.c_uint64]
         self.lib.kclvm_service_new.restype = ctypes.c_void_p

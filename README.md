@@ -50,6 +50,62 @@ func main() {
 
 ## Java
 
+### Maven
+
+Generally, you can first add the `os-maven-plugin` to automatically detect the classifier based on your platform:
+
+```xml
+<build>
+<extensions>
+  <extension>
+    <groupId>kr.motd.maven</groupId>
+    <artifactId>os-maven-plugin</artifactId>
+    <version>1.7.0</version>
+  </extension>
+</extensions>
+</build>
+```
+
+Then add the dependency to `kcl-lib` as follows:
+
+```xml
+<dependencies>
+<dependency>
+  <groupId>com.kcl</groupId>
+  <artifactId>kcl-lib</artifactId>
+  <version>${kcl_lib.version}</version>
+</dependency>
+<dependency>
+  <groupId>com.kcl</groupId>
+  <artifactId>kcl-lib</artifactId>
+  <version>${kcl_lib.version}</version>
+  <classifier>${os.detected.classifier}</classifier>
+</dependency>
+</dependencies>
+```
+
+### Gradle
+
+For Gradle, you can first add the `com.google.osdetector` to automatically detect the classifier based on your platform:
+
+
+```groovy
+plugins {
+    id "com.google.osdetector" version "1.7.3"
+}
+```
+
+Then add the dependency to `kcl-lib` as follows:
+
+```groovy
+dependencies {
+    implementation "com.kcl:kcl-lib:0.7.5"
+    implementation "com.kcl:kcl-lib:0.7.5:$osdetector.classifier"
+}
+```
+
+Write the code
+
 ```java
 import com.kcl.api.API;
 import com.kcl.api.Spec.*;
@@ -73,6 +129,12 @@ public class Main {
 See [here](./java/README.md) for more information.
 
 ## Python
+
+```shell
+python3 -m pip install kcl_lib
+```
+
+Write the code
 
 ```python
 import kcl_lib.api as api
