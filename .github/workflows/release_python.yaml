@@ -1,0 +1,31 @@
+name: Release Python
+on:
+  push:
+    tags:
+      - "v*"
+permissions:
+  contents: write
+jobs:
+  python-release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Git checkout
+        uses: actions/checkout@v2
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+      - name: Install dependencies
+        working-directory: python
+        run: |
+          python3 -m pip install -r ./scripts/requirements.txt
+          python3 -m pip install pytest
+          python3 -m pip install setuptools wheel twine
+      - name: Python code test
+        working-directory: python
+        run: python3 -m pytest
+      - name: Upload pypi
+        working-directory: python
+        env:
+          TWINE_USERNAME: __token__
+          TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
+        run: make dist
