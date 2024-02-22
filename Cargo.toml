@@ -1,6 +1,6 @@
 [package]
 name = "kcl-lang"
-version = "0.7.5"
+version = "0.8.0-alpha.1"
 edition = "2021"
 readme = "README.md"
 documentation = "kcl-lang.io"
