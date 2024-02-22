@@ -43,43 +43,27 @@ pub struct CmdOverrideSpec {
 #[derive(serde::Serialize, serde::Deserialize)]
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct KclError {
-    /// See kclvm/kcl/error/kcl_err_msg.py
+pub struct Error {
     #[prost(string, tag = "1")]
     #[serde(default)]
-    pub ewcode: ::prost::alloc::string::String,
+    pub level: ::prost::alloc::string::String,
     #[prost(string, tag = "2")]
     #[serde(default)]
-    pub name: ::prost::alloc::string::String,
-    #[prost(string, tag = "3")]
+    pub code: ::prost::alloc::string::String,
+    #[prost(message, repeated, tag = "3")]
     #[serde(default)]
-    pub msg: ::prost::alloc::string::String,
-    #[prost(message, repeated, tag = "4")]
-    #[serde(default)]
-    pub error_infos: ::prost::alloc::vec::Vec<KclErrorInfo>,
+    pub messages: ::prost::alloc::vec::Vec<Message>,
 }
 #[derive(serde::Serialize, serde::Deserialize)]
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct KclErrorInfo {
+pub struct Message {
     #[prost(string, tag = "1")]
     #[serde(default)]
-    pub err_level: ::prost::alloc::string::String,
-    #[prost(string, tag = "2")]
+    pub msg: ::prost::alloc::string::String,
+    #[prost(message, optional, tag = "2")]
     #[serde(default)]
-    pub arg_msg: ::prost::alloc::string::String,
-    #[prost(string, tag = "3")]
-    #[serde(default)]
-    pub filename: ::prost::alloc::string::String,
-    #[prost(string, tag = "4")]
-    #[serde(default)]
-    pub src_code: ::prost::alloc::string::String,
-    #[prost(string, tag = "5")]
-    #[serde(default)]
-    pub line_no: ::prost::alloc::string::String,
-    #[prost(string, tag = "6")]
-    #[serde(default)]
-    pub col_no: ::prost::alloc::string::String,
+    pub pos: ::core::option::Option<Position>,
 }
 #[derive(serde::Serialize, serde::Deserialize)]
 #[allow(clippy::derive_partial_eq_without_eq)]
@@ -113,45 +97,201 @@ pub struct ListMethodResult {
 #[derive(serde::Serialize, serde::Deserialize)]
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ParseFileAstArgs {
+pub struct ParseFileArgs {
     #[prost(string, tag = "1")]
     #[serde(default)]
-    pub filename: ::prost::alloc::string::String,
+    pub path: ::prost::alloc::string::String,
     #[prost(string, tag = "2")]
     #[serde(default)]
-    pub source_code: ::prost::alloc::string::String,
+    pub source: ::prost::alloc::string::String,
+    /// External packages path
+    #[prost(message, repeated, tag = "3")]
+    #[serde(default)]
+    pub external_pkgs: ::prost::alloc::vec::Vec<CmdExternalPkgSpec>,
 }
 #[derive(serde::Serialize, serde::Deserialize)]
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ParseFileAstResult {
-    /// json value
+pub struct ParseFileResult {
+    /// JSON string value
     #[prost(string, tag = "1")]
     #[serde(default)]
     pub ast_json: ::prost::alloc::string::String,
-    #[prost(message, optional, tag = "2")]
+    /// file dependency paths
+    #[prost(string, repeated, tag = "2")]
     #[serde(default)]
-    pub kcl_err: ::core::option::Option<KclError>,
+    pub deps: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// Parse errors
+    #[prost(message, repeated, tag = "3")]
+    #[serde(default)]
+    pub errors: ::prost::alloc::vec::Vec<Error>,
 }
 #[derive(serde::Serialize, serde::Deserialize)]
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ParseProgramAstArgs {
+pub struct ParseProgramArgs {
     #[prost(string, repeated, tag = "1")]
     #[serde(default)]
-    pub k_filename_list: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    pub paths: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    #[prost(string, repeated, tag = "2")]
+    #[serde(default)]
+    pub sources: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// External packages path
+    #[prost(message, repeated, tag = "3")]
+    #[serde(default)]
+    pub external_pkgs: ::prost::alloc::vec::Vec<CmdExternalPkgSpec>,
 }
 #[derive(serde::Serialize, serde::Deserialize)]
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ParseProgramAstResult {
-    /// json value
+pub struct ParseProgramResult {
+    /// JSON string value
     #[prost(string, tag = "1")]
     #[serde(default)]
     pub ast_json: ::prost::alloc::string::String,
+    /// Returns the files in the order they should be compiled
+    #[prost(string, repeated, tag = "2")]
+    #[serde(default)]
+    pub paths: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// Parse errors
+    #[prost(message, repeated, tag = "3")]
+    #[serde(default)]
+    pub errors: ::prost::alloc::vec::Vec<Error>,
+}
+#[derive(serde::Serialize, serde::Deserialize)]
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct LoadPackageArgs {
+    #[prost(message, optional, tag = "1")]
+    #[serde(default)]
+    pub parse_args: ::core::option::Option<ParseProgramArgs>,
+    #[prost(bool, tag = "2")]
+    #[serde(default)]
+    pub resolve_ast: bool,
+    #[prost(bool, tag = "3")]
+    #[serde(default)]
+    pub load_builtin: bool,
+    #[prost(bool, tag = "4")]
+    #[serde(default)]
+    pub with_ast_index: bool,
+}
+#[derive(serde::Serialize, serde::Deserialize)]
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct LoadPackageResult {
+    /// JSON string value
+    #[prost(string, tag = "1")]
+    #[serde(default)]
+    pub program: ::prost::alloc::string::String,
+    /// Returns the files in the order they should be compiled
+    #[prost(string, repeated, tag = "2")]
+    #[serde(default)]
+    pub paths: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// Parse errors
+    #[prost(message, repeated, tag = "3")]
+    #[serde(default)]
+    pub parse_errors: ::prost::alloc::vec::Vec<Error>,
+    /// Type errors
+    #[prost(message, repeated, tag = "4")]
+    #[serde(default)]
+    pub type_errors: ::prost::alloc::vec::Vec<Error>,
+    /// Map key is the ScopeIndex json string.
+    #[prost(map = "string, message", tag = "5")]
+    #[serde(default)]
+    pub scopes: ::std::collections::HashMap<::prost::alloc::string::String, Scope>,
+    /// Map key is the SymbolIndex json string.
+    #[prost(map = "string, message", tag = "6")]
+    #[serde(default)]
+    pub symbols: ::std::collections::HashMap<::prost::alloc::string::String, Symbol>,
+    /// Map key is the AST index UUID string.
+    #[prost(map = "string, message", tag = "7")]
+    #[serde(default)]
+    pub node_symbol_map: ::std::collections::HashMap<::prost::alloc::string::String, SymbolIndex>,
+    /// Map key is the SymbolIndex json string.
+    #[prost(map = "string, string", tag = "8")]
+    #[serde(default)]
+    pub symbol_node_map:
+        ::std::collections::HashMap<::prost::alloc::string::String, ::prost::alloc::string::String>,
+    /// Map key is the fully_qualified_name e.g. `pkg.Name`
+    #[prost(map = "string, message", tag = "9")]
+    #[serde(default)]
+    pub fully_qualified_name_map:
+        ::std::collections::HashMap<::prost::alloc::string::String, SymbolIndex>,
+    /// Map key is the package path.
+    #[prost(map = "string, message", tag = "10")]
+    #[serde(default)]
+    pub pkg_scope_map: ::std::collections::HashMap<::prost::alloc::string::String, ScopeIndex>,
+}
+#[derive(serde::Serialize, serde::Deserialize)]
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Symbol {
+    #[prost(message, optional, tag = "1")]
+    #[serde(default)]
+    pub ty: ::core::option::Option<KclType>,
+    #[prost(string, tag = "2")]
+    #[serde(default)]
+    pub name: ::prost::alloc::string::String,
+    #[prost(message, optional, tag = "3")]
+    #[serde(default)]
+    pub owner: ::core::option::Option<SymbolIndex>,
+    #[prost(message, optional, tag = "4")]
+    #[serde(default)]
+    pub def: ::core::option::Option<SymbolIndex>,
+    #[prost(message, repeated, tag = "5")]
+    #[serde(default)]
+    pub attrs: ::prost::alloc::vec::Vec<SymbolIndex>,
+    #[prost(bool, tag = "6")]
+    #[serde(default)]
+    pub is_global: bool,
+}
+#[derive(serde::Serialize, serde::Deserialize)]
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Scope {
+    #[prost(string, tag = "1")]
+    #[serde(default)]
+    pub kind: ::prost::alloc::string::String,
     #[prost(message, optional, tag = "2")]
     #[serde(default)]
-    pub kcl_err: ::core::option::Option<KclError>,
+    pub parent: ::core::option::Option<ScopeIndex>,
+    #[prost(message, optional, tag = "3")]
+    #[serde(default)]
+    pub owner: ::core::option::Option<SymbolIndex>,
+    #[prost(message, repeated, tag = "4")]
+    #[serde(default)]
+    pub children: ::prost::alloc::vec::Vec<ScopeIndex>,
+    #[prost(message, repeated, tag = "5")]
+    #[serde(default)]
+    pub defs: ::prost::alloc::vec::Vec<SymbolIndex>,
+}
+#[derive(serde::Serialize, serde::Deserialize)]
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct SymbolIndex {
+    #[prost(uint64, tag = "1")]
+    #[serde(default)]
+    pub i: u64,
+    #[prost(uint64, tag = "2")]
+    #[serde(default)]
+    pub g: u64,
+    #[prost(string, tag = "3")]
+    #[serde(default)]
+    pub kind: ::prost::alloc::string::String,
+}
+#[derive(serde::Serialize, serde::Deserialize)]
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ScopeIndex {
+    #[prost(uint64, tag = "1")]
+    #[serde(default)]
+    pub i: u64,
+    #[prost(uint64, tag = "2")]
+    #[serde(default)]
+    pub g: u64,
+    #[prost(string, tag = "3")]
+    #[serde(default)]
+    pub kind: ::prost::alloc::string::String,
 }
 #[derive(serde::Serialize, serde::Deserialize)]
 #[allow(clippy::derive_partial_eq_without_eq)]
@@ -210,10 +350,10 @@ pub struct ExecProgramArgs {
     #[prost(bool, tag = "15")]
     #[serde(default)]
     pub compile_only: bool,
-    /// Compile the dir recursively
+    /// Show hidden attributes
     #[prost(bool, tag = "16")]
     #[serde(default)]
-    pub recursive: bool,
+    pub show_hidden: bool,
     /// -S --path_selector
     #[prost(string, repeated, tag = "17")]
     #[serde(default)]
@@ -235,6 +375,36 @@ pub struct ExecProgramResult {
     #[prost(string, tag = "4")]
     #[serde(default)]
     pub err_message: ::prost::alloc::string::String,
+}
+#[derive(serde::Serialize, serde::Deserialize)]
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct BuildProgramArgs {
+    #[prost(message, optional, tag = "1")]
+    #[serde(default)]
+    pub exec_args: ::core::option::Option<ExecProgramArgs>,
+    #[prost(string, tag = "2")]
+    #[serde(default)]
+    pub output: ::prost::alloc::string::String,
+}
+#[derive(serde::Serialize, serde::Deserialize)]
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct BuildProgramResult {
+    #[prost(string, tag = "1")]
+    #[serde(default)]
+    pub path: ::prost::alloc::string::String,
+}
+#[derive(serde::Serialize, serde::Deserialize)]
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ExecArtifactArgs {
+    #[prost(string, tag = "1")]
+    #[serde(default)]
+    pub path: ::prost::alloc::string::String,
+    #[prost(message, optional, tag = "2")]
+    #[serde(default)]
+    pub exec_args: ::core::option::Option<ExecProgramArgs>,
 }
 #[derive(serde::Serialize, serde::Deserialize)]
 #[allow(clippy::derive_partial_eq_without_eq)]
@@ -507,6 +677,9 @@ pub struct CliConfig {
     #[serde(default)]
     pub sort_keys: bool,
     #[prost(bool, tag = "10")]
+    #[serde(default)]
+    pub show_hidden: bool,
+    #[prost(bool, tag = "11")]
     #[serde(default)]
     pub include_schema_type_path: bool,
 }

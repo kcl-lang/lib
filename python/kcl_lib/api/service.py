@@ -32,8 +32,8 @@ class API:
     def __init__(self):
         self.caller = Caller()
 
-    def parse_file(self, args: ParseFile_Args) -> ParseFile_Result:
-        return self.caller.call("KclvmService.ParseFile", args)
+    def ping(self, args: Ping_Args) -> Ping_Result:
+        return self.caller.call("KclvmService.Ping", args)
 
     def parse_program(self, args: ParseProgram_Args) -> ParseProgram_Result:
         return self.caller.call("KclvmService.ParseProgram", args)
@@ -41,14 +41,20 @@ class API:
     def exec_program(self, args: ExecProgram_Args) -> ExecProgram_Result:
         return self.caller.call("KclvmService.ExecProgram", args)
 
-    def override_file(self, args: OverrideFile_Args) -> OverrideFile_Result:
-        return self.caller.call("KclvmService.OverrideFile", args)
+    def build_program(self, args: BuildProgram_Args) -> BuildProgram_Result:
+        return self.caller.call("KclvmService.BuildProgram", args)
 
-    def get_full_schema_type(
-        self,
-        args: GetFullSchemaType_Args,
-    ) -> GetSchemaType_Result:
-        return self.caller.call("KclvmService.GetFullSchemaType", args)
+    def exec_artifact(self, args: ExecArtifact_Args) -> ExecProgram_Result:
+        return self.caller.call("KclvmService.ExecArtifact", args)
+
+    def parse_file(self, args: ParseFile_Args) -> ParseFile_Result:
+        return self.caller.call("KclvmService.ParseFile", args)
+
+    def parse_program(self, args: ParseProgram_Args) -> ParseProgram_Result:
+        return self.caller.call("KclvmService.ParseProgram", args)
+
+    def load_package(self, args: LoadPackage_Args) -> LoadPackage_Result:
+        return self.caller.call("KclvmService.LoadPackage", args)
 
     def format_code(self, args: FormatCode_Args) -> FormatCode_Result:
         return self.caller.call("KclvmService.FormatCode", args)
@@ -58,6 +64,15 @@ class API:
 
     def lint_path(self, args: LintPath_Args) -> LintPath_Result:
         return self.caller.call("KclvmService.LintPath", args)
+
+    def override_file(self, args: OverrideFile_Args) -> OverrideFile_Result:
+        return self.caller.call("KclvmService.OverrideFile", args)
+
+    def get_full_schema_type(
+        self,
+        args: GetFullSchemaType_Args,
+    ) -> GetSchemaType_Result:
+        return self.caller.call("KclvmService.GetFullSchemaType", args)
 
     def validate_code(self, args: ValidateCode_Args) -> ValidateCode_Result:
         return self.caller.call("KclvmService.ValidateCode", args)
@@ -125,14 +140,16 @@ class Caller:
     def create_method_req_message(self, method: str) -> _message.Message:
         if method in ["Ping", "KclvmService.Ping"]:
             return Ping_Args()
+        if method in ["ExecProgram", "KclvmService.ExecProgram"]:
+            return ExecProgram_Args()
+        if method in ["BuildProgram", "KclvmService.BuildProgram"]:
+            return BuildProgram_Args()
+        if method in ["ExecArtifact", "KclvmService.ExecArtifact"]:
+            return ExecArtifact_Args()
         if method in ["ParseFile", "KclvmService.ParseFile"]:
             return ParseFile_Args()
         if method in ["ParseProgram", "KclvmService.ParseProgram"]:
             return ParseProgram_Args()
-        if method in ["ExecProgram", "KclvmService.ExecProgram"]:
-            return ExecProgram_Args()
-        if method in ["ResetPlugin", "KclvmService.ResetPlugin"]:
-            return ResetPlugin_Args()
         if method in ["FormatCode", "KclvmService.FormatCode"]:
             return FormatCode_Args()
         if method in ["FormatPath", "KclvmService.FormatPath"]:
@@ -143,12 +160,18 @@ class Caller:
             return OverrideFile_Args()
         if method in ["GetSchemaType", "KclvmService.GetSchemaType"]:
             return GetSchemaType_Args()
+        if method in ["GetFullSchemaType", "KclvmService.GetFullSchemaType"]:
+            return GetFullSchemaType_Args()
         if method in ["ValidateCode", "KclvmService.ValidateCode"]:
             return ValidateCode_Args()
         if method in ["ListDepFiles", "KclvmService.ListDepFiles"]:
             return ListDepFiles_Args()
         if method in ["LoadSettingsFiles", "KclvmService.LoadSettingsFiles"]:
             return LoadSettingsFiles_Args()
+        if method in ["Rename", "KclvmService.Rename"]:
+            return Rename_Args()
+        if method in ["RenameCode", "KclvmService.RenameCode"]:
+            return RenameCode_Args()
         if method in ["Test", "KclvmService.Test"]:
             return Test_Args()
         raise Exception(f"unknown method: {method}")
@@ -156,14 +179,16 @@ class Caller:
     def create_method_resp_message(self, method: str) -> _message.Message:
         if method in ["Ping", "KclvmService.Ping"]:
             return Ping_Result()
+        if method in ["ExecProgram", "KclvmService.ExecProgram"]:
+            return ExecProgram_Result()
+        if method in ["BuildProgram", "KclvmService.BuildProgram"]:
+            return BuildProgram_Result()
+        if method in ["ExecArtifact", "KclvmService.ExecArtifact"]:
+            return ExecProgram_Result()
         if method in ["ParseFile", "KclvmService.ParseFile"]:
             return ParseFile_Result()
         if method in ["ParseProgram", "KclvmService.ParseProgram"]:
             return ParseProgram_Result()
-        if method in ["ExecProgram", "KclvmService.ExecProgram"]:
-            return ExecProgram_Result()
-        if method in ["ResetPlugin", "KclvmService.ResetPlugin"]:
-            return ResetPlugin_Result()
         if method in ["FormatCode", "KclvmService.FormatCode"]:
             return FormatCode_Result()
         if method in ["FormatPath", "KclvmService.FormatPath"]:
@@ -173,6 +198,8 @@ class Caller:
         if method in ["OverrideFile", "KclvmService.OverrideFile"]:
             return OverrideFile_Result()
         if method in ["GetSchemaType", "KclvmService.GetSchemaType"]:
+            return GetSchemaType_Result()
+        if method in ["GetFullSchemaType", "KclvmService.GetFullSchemaType"]:
             return GetSchemaType_Result()
         if method in ["ValidateCode", "KclvmService.ValidateCode"]:
             return ValidateCode_Result()
