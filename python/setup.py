@@ -62,6 +62,9 @@ if PLATFORM == "darwin":
     def cli_lib():
         return DARWIN_AMD64_CLI_LIB if is_amd64_arch() else DARWIN_ARM64_CLI_LIB
 
+    def lib_name():
+        return "libkclvm_cli_cdylib.dylib"
+
 elif PLATFORM.startswith("linux"):
     if is_amd64_arch():
         LINUX_AMD64_CLI_LIB = "lib/linux-amd64/libkclvm_cli_cdylib.so"
@@ -70,6 +73,9 @@ elif PLATFORM.startswith("linux"):
 
     def cli_lib():
         return LINUX_AMD64_CLI_LIB if is_amd64_arch() else LINUX_ARM64_CLI_LIB
+
+    def lib_name():
+        return "libkclvm_cli_cdylib.so"
 
 elif PLATFORM == "win32":
     if is_amd64_arch():
@@ -85,6 +91,12 @@ elif PLATFORM == "win32":
     def export_lib():
         return WINDOWS_AMD64_EXPORT_LIB if is_amd64_arch() else WINDOWS_ARM64_EXPORT_LIB
 
+    def lib_name():
+        return "kclvm_cli_cdylib.dll"
+
+    def export_lib_name():
+        return "kclvm_cli_cdylib.lib"
+
 else:
     raise f"Unsupported platform {PLATFORM}, expected win32, linux or darwin platform"
 
@@ -95,14 +107,15 @@ def copyfile(src: pathlib.Path, dst: pathlib.Path) -> str:
     return str(dst.relative_to(pathlib.Path(__file__).parent))
 
 
+# Copy libs to the kcl_lib/lib folder
 def copy_libs():
     source_dir = pathlib.Path(__file__).parent.parent
-    target_dir = pathlib.Path(__file__).parent.joinpath("kcl_lib")
+    target_dir = pathlib.Path(__file__).parent.joinpath("kcl_lib").joinpath("lib")
     data_files = []
-    data_files.append(copyfile(source_dir / cli_lib(), target_dir / cli_lib()))
+    data_files.append(copyfile(source_dir / cli_lib(), target_dir / lib_name()))
     if PLATFORM in ["windows"]:
         data_files.append(
-            copyfile(source_dir / export_lib(), target_dir / export_lib())
+            copyfile(source_dir / export_lib(), target_dir / export_lib_name())
         )
     return data_files
 
@@ -121,7 +134,7 @@ with open(require_path) as f:
 setup(
     name="kcl_lib",
     author="KCL Authors",
-    version="0.8.0-alpha.4",
+    version="0.8.0-alpha.5",
     license="Apache License 2.0",
     python_requires=">=3.7",
     description="KCL Artifact Library for Python",

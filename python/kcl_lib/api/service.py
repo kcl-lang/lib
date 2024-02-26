@@ -5,10 +5,11 @@ import os
 from kcl_lib.bootstrap import (
     KCLVM_CLI_INSTALL_PATH_ENV_VAR,
     KCLVM_CLI_BIN_PATH_ENV_VAR,
+    KCLVM_CLI_USE_RELEASE_ENV_VAR,
     lib_full_name,
     install_kclvm,
 )
-from kcl_lib.bootstrap.artifact import lib_path
+from kcl_lib.bootstrap.artifact import lib_path, LIB_ROOT
 from .spec_pb2 import *
 from ctypes import c_char_p, c_void_p
 from google.protobuf import message as _message
@@ -103,6 +104,7 @@ class Caller:
         self._dir = tempfile.TemporaryDirectory()
         env_path = os.environ.get(KCLVM_CLI_BIN_PATH_ENV_VAR)
         env_install_path = os.environ.get(KCLVM_CLI_INSTALL_PATH_ENV_VAR)
+        env_use_release = os.environ.get(KCLVM_CLI_USE_RELEASE_ENV_VAR)
         if env_path:
             self.lib = ctypes.CDLL(os.path.join(env_path, lib_full_name()))
         elif env_install_path:
@@ -110,6 +112,11 @@ class Caller:
             self.lib = ctypes.CDLL(
                 os.path.join(env_install_path, "bin", lib_full_name())
             )
+        elif env_use_release:
+            # The release lib is located at "kcl_lib/lib/"
+            lib_path = LIB_ROOT.joinpath("lib")
+            os.environ[KCLVM_CLI_BIN_PATH_ENV_VAR] = str(lib_path)
+            self.lib = ctypes.CDLL(str(lib_path.joinpath(lib_full_name())))
         else:
             # Install temp path.
             install_kclvm(self._dir.name)
