@@ -5,7 +5,7 @@ import os
 from kcl_lib.bootstrap import (
     KCLVM_CLI_INSTALL_PATH_ENV_VAR,
     KCLVM_CLI_BIN_PATH_ENV_VAR,
-    KCLVM_CLI_USE_RELEASE_ENV_VAR,
+    KCLVM_CLI_USE_TEST_ENV_VAR,
     lib_full_name,
     install_kclvm,
 )
@@ -104,7 +104,7 @@ class Caller:
         self._dir = tempfile.TemporaryDirectory()
         env_path = os.environ.get(KCLVM_CLI_BIN_PATH_ENV_VAR)
         env_install_path = os.environ.get(KCLVM_CLI_INSTALL_PATH_ENV_VAR)
-        env_use_release = os.environ.get(KCLVM_CLI_USE_RELEASE_ENV_VAR)
+        env_use_test = os.environ.get(KCLVM_CLI_USE_TEST_ENV_VAR)
         if env_path:
             self.lib = ctypes.CDLL(os.path.join(env_path, lib_full_name()))
         elif env_install_path:
@@ -112,15 +112,16 @@ class Caller:
             self.lib = ctypes.CDLL(
                 os.path.join(env_install_path, "bin", lib_full_name())
             )
-        elif env_use_release:
-            # The release lib is located at "kcl_lib/lib/"
-            lib_path = LIB_ROOT.joinpath("lib")
-            os.environ[KCLVM_CLI_BIN_PATH_ENV_VAR] = str(lib_path)
-            self.lib = ctypes.CDLL(str(lib_path.joinpath(lib_full_name())))
-        else:
+        # Default test cases
+        elif env_use_test:
             # Install temp path.
             install_kclvm(self._dir.name)
             self.lib = ctypes.CDLL(self._dir.name + "/bin/" + lib_full_name())
+        else:
+            # The release lib is located at "kcl_lib/bin/"
+            lib_path = LIB_ROOT.joinpath("bin")
+            os.environ[KCLVM_CLI_BIN_PATH_ENV_VAR] = str(lib_path)
+            self.lib = ctypes.CDLL(str(lib_path.joinpath(lib_full_name())))
         # Assuming the shared library exposes a function `kclvm_service_new`
         self.lib.kclvm_service_new.argtypes = [ctypes.c_uint64]
         self.lib.kclvm_service_new.restype = ctypes.c_void_p

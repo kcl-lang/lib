@@ -1,3 +1,9 @@
+import os
+import kcl_lib.bootstrap as bootstrap
+
+os.environ[bootstrap.KCLVM_CLI_USE_TEST_ENV_VAR] = "ok"
+
+
 def test_exec_api():
     import kcl_lib.api as api
 

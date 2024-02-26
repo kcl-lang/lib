@@ -107,13 +107,13 @@ def copyfile(src: pathlib.Path, dst: pathlib.Path) -> str:
     return str(dst.relative_to(pathlib.Path(__file__).parent))
 
 
-# Copy libs to the kcl_lib/lib folder
+# Copy libs to the kcl_lib/bin folder
 def copy_libs():
     source_dir = pathlib.Path(__file__).parent.parent
-    target_dir = pathlib.Path(__file__).parent.joinpath("kcl_lib").joinpath("lib")
+    target_dir = pathlib.Path(__file__).parent.joinpath("kcl_lib").joinpath("bin")
     data_files = []
     data_files.append(copyfile(source_dir / cli_lib(), target_dir / lib_name()))
-    if PLATFORM in ["windows"]:
+    if PLATFORM in ["win32", "windows"]:
         data_files.append(
             copyfile(source_dir / export_lib(), target_dir / export_lib_name())
         )
@@ -134,7 +134,7 @@ with open(require_path) as f:
 setup(
     name="kcl_lib",
     author="KCL Authors",
-    version="0.8.0-alpha.5",
+    version="0.8.0-alpha.6",
     license="Apache License 2.0",
     python_requires=">=3.7",
     description="KCL Artifact Library for Python",

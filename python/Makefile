@@ -4,9 +4,9 @@ dist:
 	rm -rf build
 	rm -rf dist
 	rm -rf kcl_lib.egg-info
-	rm -rf kcl_lib/lib/**
+	rm -rf kcl_lib/bin/**
 	for platform in $(PLATFORMS); do \
-		rm -rf build && rm -rf kcl_lib/lib && python3 setup.py bdist_wheel --plat-name $$platform; \
+		rm -rf build && rm -rf kcl_lib/bin && python3 setup.py bdist_wheel --plat-name $$platform; \
 	done
 	python3 -m twine upload dist/kcl_lib-*
 
