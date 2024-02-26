@@ -9,6 +9,6 @@ __pycache__
 *.pyc
 build-result/
 dist/
-kcl_lib/lib
+kcl_lib/bin
 kcl_lib.egg-info/
 .eggs/
