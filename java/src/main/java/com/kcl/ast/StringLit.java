@@ -18,11 +18,17 @@ public class StringLit extends Expr {
     private String rawValue;
     private String value;
 
+    public StringLit() {
+        this.value = "";
+        this.rawValue = "\"\"";
+        this.isLongString = false;
+    }
+
     // Constructor that replicates the TryFrom implementation in Rust
-    public StringLit(String value) {
+    public StringLit(String value, String rawValue, boolean isLongString) {
         this.value = value;
-        this.rawValue = String.format("%s", value); // Adding quotes, escaping, etc., if needed
-        this.isLongString = false; // Determine based on actual logic (e.g., presence of line breaks)
+        this.rawValue = rawValue;
+        this.isLongString = isLongString;
     }
 
     public boolean isLongString() {

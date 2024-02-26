@@ -33,7 +33,7 @@ public class SchemaAttr extends Stmt {
     private boolean isOptional;
 
     @JsonProperty("decorators")
-    private List<NodeRef<CallExpr>> decorators;
+    private List<NodeRef<Decorator>> decorators;
 
     @JsonProperty("ty")
     private NodeRef<Type> ty;
@@ -78,11 +78,11 @@ public class SchemaAttr extends Stmt {
         this.isOptional = isOptional;
     }
 
-    public List<NodeRef<CallExpr>> getDecorators() {
+    public List<NodeRef<Decorator>> getDecorators() {
         return decorators;
     }
 
-    public void setDecorators(List<NodeRef<CallExpr>> decorators) {
+    public void setDecorators(List<NodeRef<Decorator>> decorators) {
         this.decorators = decorators;
     }
 
