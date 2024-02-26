@@ -107,16 +107,13 @@ class Caller:
             self.lib = ctypes.CDLL(os.path.join(env_path, lib_full_name()))
         elif env_install_path:
             install_kclvm(env_install_path)
-            self.lib = ctypes.CDLL(os.path.join(env_install_path, lib_full_name()))
+            self.lib = ctypes.CDLL(
+                os.path.join(env_install_path, "bin", lib_full_name())
+            )
         else:
-            # Set the kcl lib and open it.
-            path = lib_path()
-            path_env = os.environ.get("PATH", "")
-            bin_path_str = str(path)
-            new_path_env = f"{path_env}{os.pathsep}{bin_path_str}"
-            os.environ["PATH"] = new_path_env
-            os.environ[KCLVM_CLI_BIN_PATH_ENV_VAR] = bin_path_str
-            self.lib = ctypes.CDLL(os.path.join(path, lib_full_name()))
+            # Install temp path.
+            install_kclvm(self._dir.name)
+            self.lib = ctypes.CDLL(self._dir.name + "/bin/" + lib_full_name())
         # Assuming the shared library exposes a function `kclvm_service_new`
         self.lib.kclvm_service_new.argtypes = [ctypes.c_uint64]
         self.lib.kclvm_service_new.restype = ctypes.c_void_p

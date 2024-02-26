@@ -1,4 +1,4 @@
-def test_parse_api():
+def test_exec_api():
     import kcl_lib.api as api
 
     # Call the `exec_program` method with appropriate arguments
