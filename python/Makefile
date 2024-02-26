@@ -12,3 +12,6 @@ dist:
 
 fmt:
 	python3 -m black .
+
+test:
+	python3 -m pip install pytest && python3 -m pytest

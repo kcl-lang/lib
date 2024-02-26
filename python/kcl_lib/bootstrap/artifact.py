@@ -29,6 +29,11 @@ if sys.platform == "darwin":
     def cli_lib():
         return DARWIN_AMD64_CLI_LIB if is_amd64_arch() else DARWIN_ARM64_CLI_LIB
 
+    def lib_path() -> str:
+        if is_amd64_arch():
+            return str(LIB_ROOT.joinpath("lib").joinpath("darwin-amd64"))
+        return str(LIB_ROOT.joinpath("lib").joinpath("darwin-arm64"))
+
 elif sys.platform.startswith("linux"):
     if is_amd64_arch():
         with open(f"{LIB_ROOT}/lib/linux-amd64/libkclvm_cli_cdylib.so", "rb") as f:
@@ -39,6 +44,11 @@ elif sys.platform.startswith("linux"):
 
     def cli_lib():
         return LINUX_AMD64_CLI_LIB if is_amd64_arch() else LINUX_ARM64_CLI_LIB
+
+    def lib_path() -> str:
+        if is_amd64_arch():
+            return str(LIB_ROOT.joinpath("lib").joinpath("linux-amd64"))
+        return str(LIB_ROOT.joinpath("lib").joinpath("linux-arm64"))
 
 elif sys.platform == "win32":
     if is_amd64_arch():
@@ -57,6 +67,11 @@ elif sys.platform == "win32":
 
     def export_lib():
         return WINDOWS_AMD64_EXPORT_LIB if is_amd64_arch() else WINDOWS_ARM64_EXPORT_LIB
+
+    def lib_path() -> str:
+        if is_amd64_arch():
+            return str(LIB_ROOT.joinpath("lib").joinpath("windows-amd64"))
+        return str(LIB_ROOT.joinpath("lib").joinpath("windows-arm64"))
 
 else:
     raise f"Unsupported platform {sys.platform}, expected win32, linux or darwin platform"
