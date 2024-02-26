@@ -12,8 +12,7 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
  * }
  * </pre>
  */
-@JsonTypeName("Check")
-public class CheckExpr extends Expr {
+public class CheckExpr {
     @JsonProperty("test")
     private NodeRef<Expr> test;
 

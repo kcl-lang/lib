@@ -55,7 +55,7 @@ public class SchemaStmt extends Stmt {
     private List<NodeRef<Stmt>> body;
 
     @JsonProperty("decorators")
-    private List<NodeRef<CallExpr>> decorators;
+    private List<NodeRef<Decorator>> decorators;
 
     @JsonProperty("checks")
     private List<NodeRef<CheckExpr>> checks;
@@ -135,11 +135,11 @@ public class SchemaStmt extends Stmt {
         this.body = body;
     }
 
-    public List<NodeRef<CallExpr>> getDecorators() {
+    public List<NodeRef<Decorator>> getDecorators() {
         return decorators;
     }
 
-    public void setDecorators(List<NodeRef<CallExpr>> decorators) {
+    public void setDecorators(List<NodeRef<Decorator>> decorators) {
         this.decorators = decorators;
     }
 

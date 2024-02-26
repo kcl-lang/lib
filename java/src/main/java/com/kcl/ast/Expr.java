@@ -22,7 +22,6 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
         @JsonSubTypes.Type(value = CompClause.class, name = "CompClause"),
         @JsonSubTypes.Type(value = SchemaExpr.class, name = "Schema"),
         @JsonSubTypes.Type(value = ConfigExpr.class, name = "Config"),
-        @JsonSubTypes.Type(value = CheckExpr.class, name = "Check"),
         @JsonSubTypes.Type(value = LambdaExpr.class, name = "Lambda"),
         @JsonSubTypes.Type(value = Subscript.class, name = "Subscript"),
         @JsonSubTypes.Type(value = Compare.class, name = "Compare"),
