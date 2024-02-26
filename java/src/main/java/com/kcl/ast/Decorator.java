@@ -4,13 +4,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
 /**
- * CallExpr, e.g.
+ * Decorator, e.g.
  *
  * <pre>
  * {@code
- * func1()
- * func2(1)
- * func3(x=2)
+ * deprecated(strict=True)
  * }
  * </pre>
  */
