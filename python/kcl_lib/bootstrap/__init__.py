@@ -3,7 +3,7 @@ import sys
 import platform
 from pathlib import Path
 
-KCLVM_VERSION = "0.8.0-alpha.5"  # You should replace this with actual version
+KCLVM_VERSION = "0.8.0-beta.1"  # You should replace this with actual version
 KCLVM_CLI_BIN_PATH_ENV_VAR = "KCLVM_CLI_BIN_PATH"
 KCLVM_CLI_INSTALL_PATH_ENV_VAR = "KCLVM_CLI_INSTALL_PATH"
 KCLVM_CLI_USE_TEST_ENV_VAR = "KCLVM_CLI_USE_TEST"
