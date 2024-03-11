@@ -56,6 +56,7 @@ public class API implements Service {
     }
 
     private native byte[] callNative(byte[] call, byte[] args);
+    private native byte[] loadPackageWithCache(byte[] args);
 
     public API() {
     }
@@ -132,6 +133,39 @@ public class API implements Service {
         return LoadPackage_Result.parseFrom(call("KclvmService.LoadPackage", args.toByteArray()));
     }
 
+    /**
+     * Loads KCL package with the internal cache and returns the AST, symbol, type, definition information. *
+     *
+     * <p>
+     * Example usage:
+     *
+     * <pre>
+     * {@code
+     * import com.kcl.api.*;
+     *
+     * API api = new API();
+     * LoadPackage_Result result = api.loadPackageWithCache(
+     *     LoadPackage_Args.newBuilder().setResolveAst(true).setParseArgs(
+     *     ParseProgram_Args.newBuilder().addPaths("/path/to/kcl.k").build())
+     *     .build());
+     * result.getSymbolsMap().values().forEach(s -> System.out.println(s));
+     * }
+     * </pre>
+     *
+     * @param args
+     *            the arguments specifying the file paths to be parsed and resolved.
+     * 
+     * @return the result of parsing the program and parse errors, type errors, including the AST in JSON format and
+     *         symbol, type and definition information.
+     * 
+     * @throws Exception
+     *             if an error occurs during the remote procedure call.
+     */
+    @Override
+    public LoadPackage_Result loadPackageWithCache(LoadPackage_Args args) throws Exception {
+        return LoadPackage_Result.parseFrom(callLoadPackageWithCache(args.toByteArray()));
+    }
+
     public ExecProgram_Result execProgram(ExecProgram_Args args) throws Exception {
         return ExecProgram_Result.parseFrom(call("KclvmService.ExecProgram", args.toByteArray()));
     }
@@ -188,6 +222,14 @@ public class API implements Service {
 
     private byte[] call(String name, byte[] args) throws Exception {
         byte[] result = callNative(name.getBytes(), args);
+        if (result != null && startsWith(result, "ERROR")) {
+            throw new java.lang.Error(result.toString());
+        }
+        return result;
+    }
+
+    private byte[] callLoadPackageWithCache(byte[] args) throws Exception {
+        byte[] result = loadPackageWithCache(args);
         if (result != null && startsWith(result, "ERROR")) {
             throw new java.lang.Error(result.toString());
         }
