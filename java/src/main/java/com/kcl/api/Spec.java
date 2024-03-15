@@ -16586,6 +16586,1969 @@ com.kcl.api.Spec.ScopeIndex defaultValue) {
 
   }
 
+  public interface ListOptions_ResultOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:com.kcl.api.ListOptions_Result)
+      com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <pre>
+     * Returns the files in the order they should be compiled
+     * </pre>
+     *
+     * <code>repeated .com.kcl.api.OptionHelp options = 2;</code>
+     */
+    java.util.List<com.kcl.api.Spec.OptionHelp> 
+        getOptionsList();
+    /**
+     * <pre>
+     * Returns the files in the order they should be compiled
+     * </pre>
+     *
+     * <code>repeated .com.kcl.api.OptionHelp options = 2;</code>
+     */
+    com.kcl.api.Spec.OptionHelp getOptions(int index);
+    /**
+     * <pre>
+     * Returns the files in the order they should be compiled
+     * </pre>
+     *
+     * <code>repeated .com.kcl.api.OptionHelp options = 2;</code>
+     */
+    int getOptionsCount();
+    /**
+     * <pre>
+     * Returns the files in the order they should be compiled
+     * </pre>
+     *
+     * <code>repeated .com.kcl.api.OptionHelp options = 2;</code>
+     */
+    java.util.List<? extends com.kcl.api.Spec.OptionHelpOrBuilder> 
+        getOptionsOrBuilderList();
+    /**
+     * <pre>
+     * Returns the files in the order they should be compiled
+     * </pre>
+     *
+     * <code>repeated .com.kcl.api.OptionHelp options = 2;</code>
+     */
+    com.kcl.api.Spec.OptionHelpOrBuilder getOptionsOrBuilder(
+        int index);
+  }
+  /**
+   * Protobuf type {@code com.kcl.api.ListOptions_Result}
+   */
+  public static final class ListOptions_Result extends
+      com.google.protobuf.GeneratedMessageV3 implements
+      // @@protoc_insertion_point(message_implements:com.kcl.api.ListOptions_Result)
+      ListOptions_ResultOrBuilder {
+  private static final long serialVersionUID = 0L;
+    // Use ListOptions_Result.newBuilder() to construct.
+    private ListOptions_Result(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
+    }
+    private ListOptions_Result() {
+      options_ = java.util.Collections.emptyList();
+    }
+
+    @java.lang.Override
+    @SuppressWarnings({"unused"})
+    protected java.lang.Object newInstance(
+        UnusedPrivateParameter unused) {
+      return new ListOptions_Result();
+    }
+
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return com.kcl.api.Spec.internal_static_com_kcl_api_ListOptions_Result_descriptor;
+    }
+
+    @java.lang.Override
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return com.kcl.api.Spec.internal_static_com_kcl_api_ListOptions_Result_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              com.kcl.api.Spec.ListOptions_Result.class, com.kcl.api.Spec.ListOptions_Result.Builder.class);
+    }
+
+    public static final int OPTIONS_FIELD_NUMBER = 2;
+    @SuppressWarnings("serial")
+    private java.util.List<com.kcl.api.Spec.OptionHelp> options_;
+    /**
+     * <pre>
+     * Returns the files in the order they should be compiled
+     * </pre>
+     *
+     * <code>repeated .com.kcl.api.OptionHelp options = 2;</code>
+     */
+    @java.lang.Override
+    public java.util.List<com.kcl.api.Spec.OptionHelp> getOptionsList() {
+      return options_;
+    }
+    /**
+     * <pre>
+     * Returns the files in the order they should be compiled
+     * </pre>
+     *
+     * <code>repeated .com.kcl.api.OptionHelp options = 2;</code>
+     */
+    @java.lang.Override
+    public java.util.List<? extends com.kcl.api.Spec.OptionHelpOrBuilder> 
+        getOptionsOrBuilderList() {
+      return options_;
+    }
+    /**
+     * <pre>
+     * Returns the files in the order they should be compiled
+     * </pre>
+     *
+     * <code>repeated .com.kcl.api.OptionHelp options = 2;</code>
+     */
+    @java.lang.Override
+    public int getOptionsCount() {
+      return options_.size();
+    }
+    /**
+     * <pre>
+     * Returns the files in the order they should be compiled
+     * </pre>
+     *
+     * <code>repeated .com.kcl.api.OptionHelp options = 2;</code>
+     */
+    @java.lang.Override
+    public com.kcl.api.Spec.OptionHelp getOptions(int index) {
+      return options_.get(index);
+    }
+    /**
+     * <pre>
+     * Returns the files in the order they should be compiled
+     * </pre>
+     *
+     * <code>repeated .com.kcl.api.OptionHelp options = 2;</code>
+     */
+    @java.lang.Override
+    public com.kcl.api.Spec.OptionHelpOrBuilder getOptionsOrBuilder(
+        int index) {
+      return options_.get(index);
+    }
+
+    private byte memoizedIsInitialized = -1;
+    @java.lang.Override
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    @java.lang.Override
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      for (int i = 0; i < options_.size(); i++) {
+        output.writeMessage(2, options_.get(i));
+      }
+      getUnknownFields().writeTo(output);
+    }
+
+    @java.lang.Override
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      for (int i = 0; i < options_.size(); i++) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(2, options_.get(i));
+      }
+      size += getUnknownFields().getSerializedSize();
+      memoizedSize = size;
+      return size;
+    }
+
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof com.kcl.api.Spec.ListOptions_Result)) {
+        return super.equals(obj);
+      }
+      com.kcl.api.Spec.ListOptions_Result other = (com.kcl.api.Spec.ListOptions_Result) obj;
+
+      if (!getOptionsList()
+          .equals(other.getOptionsList())) return false;
+      if (!getUnknownFields().equals(other.getUnknownFields())) return false;
+      return true;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptor().hashCode();
+      if (getOptionsCount() > 0) {
+        hash = (37 * hash) + OPTIONS_FIELD_NUMBER;
+        hash = (53 * hash) + getOptionsList().hashCode();
+      }
+      hash = (29 * hash) + getUnknownFields().hashCode();
+      memoizedHashCode = hash;
+      return hash;
+    }
+
+    public static com.kcl.api.Spec.ListOptions_Result parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.kcl.api.Spec.ListOptions_Result parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.kcl.api.Spec.ListOptions_Result parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.kcl.api.Spec.ListOptions_Result parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.kcl.api.Spec.ListOptions_Result parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.kcl.api.Spec.ListOptions_Result parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.kcl.api.Spec.ListOptions_Result parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static com.kcl.api.Spec.ListOptions_Result parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    public static com.kcl.api.Spec.ListOptions_Result parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
+    }
+
+    public static com.kcl.api.Spec.ListOptions_Result parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static com.kcl.api.Spec.ListOptions_Result parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static com.kcl.api.Spec.ListOptions_Result parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    @java.lang.Override
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(com.kcl.api.Spec.ListOptions_Result prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    @java.lang.Override
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code com.kcl.api.ListOptions_Result}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:com.kcl.api.ListOptions_Result)
+        com.kcl.api.Spec.ListOptions_ResultOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return com.kcl.api.Spec.internal_static_com_kcl_api_ListOptions_Result_descriptor;
+      }
+
+      @java.lang.Override
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return com.kcl.api.Spec.internal_static_com_kcl_api_ListOptions_Result_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                com.kcl.api.Spec.ListOptions_Result.class, com.kcl.api.Spec.ListOptions_Result.Builder.class);
+      }
+
+      // Construct using com.kcl.api.Spec.ListOptions_Result.newBuilder()
+      private Builder() {
+
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        super(parent);
+
+      }
+      @java.lang.Override
+      public Builder clear() {
+        super.clear();
+        bitField0_ = 0;
+        if (optionsBuilder_ == null) {
+          options_ = java.util.Collections.emptyList();
+        } else {
+          options_ = null;
+          optionsBuilder_.clear();
+        }
+        bitField0_ = (bitField0_ & ~0x00000001);
+        return this;
+      }
+
+      @java.lang.Override
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return com.kcl.api.Spec.internal_static_com_kcl_api_ListOptions_Result_descriptor;
+      }
+
+      @java.lang.Override
+      public com.kcl.api.Spec.ListOptions_Result getDefaultInstanceForType() {
+        return com.kcl.api.Spec.ListOptions_Result.getDefaultInstance();
+      }
+
+      @java.lang.Override
+      public com.kcl.api.Spec.ListOptions_Result build() {
+        com.kcl.api.Spec.ListOptions_Result result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      @java.lang.Override
+      public com.kcl.api.Spec.ListOptions_Result buildPartial() {
+        com.kcl.api.Spec.ListOptions_Result result = new com.kcl.api.Spec.ListOptions_Result(this);
+        buildPartialRepeatedFields(result);
+        if (bitField0_ != 0) { buildPartial0(result); }
+        onBuilt();
+        return result;
+      }
+
+      private void buildPartialRepeatedFields(com.kcl.api.Spec.ListOptions_Result result) {
+        if (optionsBuilder_ == null) {
+          if (((bitField0_ & 0x00000001) != 0)) {
+            options_ = java.util.Collections.unmodifiableList(options_);
+            bitField0_ = (bitField0_ & ~0x00000001);
+          }
+          result.options_ = options_;
+        } else {
+          result.options_ = optionsBuilder_.build();
+        }
+      }
+
+      private void buildPartial0(com.kcl.api.Spec.ListOptions_Result result) {
+        int from_bitField0_ = bitField0_;
+      }
+
+      @java.lang.Override
+      public Builder clone() {
+        return super.clone();
+      }
+      @java.lang.Override
+      public Builder setField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.setField(field, value);
+      }
+      @java.lang.Override
+      public Builder clearField(
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return super.clearField(field);
+      }
+      @java.lang.Override
+      public Builder clearOneof(
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return super.clearOneof(oneof);
+      }
+      @java.lang.Override
+      public Builder setRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, java.lang.Object value) {
+        return super.setRepeatedField(field, index, value);
+      }
+      @java.lang.Override
+      public Builder addRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.addRepeatedField(field, value);
+      }
+      @java.lang.Override
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof com.kcl.api.Spec.ListOptions_Result) {
+          return mergeFrom((com.kcl.api.Spec.ListOptions_Result)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(com.kcl.api.Spec.ListOptions_Result other) {
+        if (other == com.kcl.api.Spec.ListOptions_Result.getDefaultInstance()) return this;
+        if (optionsBuilder_ == null) {
+          if (!other.options_.isEmpty()) {
+            if (options_.isEmpty()) {
+              options_ = other.options_;
+              bitField0_ = (bitField0_ & ~0x00000001);
+            } else {
+              ensureOptionsIsMutable();
+              options_.addAll(other.options_);
+            }
+            onChanged();
+          }
+        } else {
+          if (!other.options_.isEmpty()) {
+            if (optionsBuilder_.isEmpty()) {
+              optionsBuilder_.dispose();
+              optionsBuilder_ = null;
+              options_ = other.options_;
+              bitField0_ = (bitField0_ & ~0x00000001);
+              optionsBuilder_ = 
+                com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
+                   getOptionsFieldBuilder() : null;
+            } else {
+              optionsBuilder_.addAllMessages(other.options_);
+            }
+          }
+        }
+        this.mergeUnknownFields(other.getUnknownFields());
+        onChanged();
+        return this;
+      }
+
+      @java.lang.Override
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      @java.lang.Override
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        if (extensionRegistry == null) {
+          throw new java.lang.NullPointerException();
+        }
+        try {
+          boolean done = false;
+          while (!done) {
+            int tag = input.readTag();
+            switch (tag) {
+              case 0:
+                done = true;
+                break;
+              case 18: {
+                com.kcl.api.Spec.OptionHelp m =
+                    input.readMessage(
+                        com.kcl.api.Spec.OptionHelp.parser(),
+                        extensionRegistry);
+                if (optionsBuilder_ == null) {
+                  ensureOptionsIsMutable();
+                  options_.add(m);
+                } else {
+                  optionsBuilder_.addMessage(m);
+                }
+                break;
+              } // case 18
+              default: {
+                if (!super.parseUnknownField(input, extensionRegistry, tag)) {
+                  done = true; // was an endgroup tag
+                }
+                break;
+              } // default:
+            } // switch (tag)
+          } // while (!done)
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          throw e.unwrapIOException();
+        } finally {
+          onChanged();
+        } // finally
+        return this;
+      }
+      private int bitField0_;
+
+      private java.util.List<com.kcl.api.Spec.OptionHelp> options_ =
+        java.util.Collections.emptyList();
+      private void ensureOptionsIsMutable() {
+        if (!((bitField0_ & 0x00000001) != 0)) {
+          options_ = new java.util.ArrayList<com.kcl.api.Spec.OptionHelp>(options_);
+          bitField0_ |= 0x00000001;
+         }
+      }
+
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          com.kcl.api.Spec.OptionHelp, com.kcl.api.Spec.OptionHelp.Builder, com.kcl.api.Spec.OptionHelpOrBuilder> optionsBuilder_;
+
+      /**
+       * <pre>
+       * Returns the files in the order they should be compiled
+       * </pre>
+       *
+       * <code>repeated .com.kcl.api.OptionHelp options = 2;</code>
+       */
+      public java.util.List<com.kcl.api.Spec.OptionHelp> getOptionsList() {
+        if (optionsBuilder_ == null) {
+          return java.util.Collections.unmodifiableList(options_);
+        } else {
+          return optionsBuilder_.getMessageList();
+        }
+      }
+      /**
+       * <pre>
+       * Returns the files in the order they should be compiled
+       * </pre>
+       *
+       * <code>repeated .com.kcl.api.OptionHelp options = 2;</code>
+       */
+      public int getOptionsCount() {
+        if (optionsBuilder_ == null) {
+          return options_.size();
+        } else {
+          return optionsBuilder_.getCount();
+        }
+      }
+      /**
+       * <pre>
+       * Returns the files in the order they should be compiled
+       * </pre>
+       *
+       * <code>repeated .com.kcl.api.OptionHelp options = 2;</code>
+       */
+      public com.kcl.api.Spec.OptionHelp getOptions(int index) {
+        if (optionsBuilder_ == null) {
+          return options_.get(index);
+        } else {
+          return optionsBuilder_.getMessage(index);
+        }
+      }
+      /**
+       * <pre>
+       * Returns the files in the order they should be compiled
+       * </pre>
+       *
+       * <code>repeated .com.kcl.api.OptionHelp options = 2;</code>
+       */
+      public Builder setOptions(
+          int index, com.kcl.api.Spec.OptionHelp value) {
+        if (optionsBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureOptionsIsMutable();
+          options_.set(index, value);
+          onChanged();
+        } else {
+          optionsBuilder_.setMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <pre>
+       * Returns the files in the order they should be compiled
+       * </pre>
+       *
+       * <code>repeated .com.kcl.api.OptionHelp options = 2;</code>
+       */
+      public Builder setOptions(
+          int index, com.kcl.api.Spec.OptionHelp.Builder builderForValue) {
+        if (optionsBuilder_ == null) {
+          ensureOptionsIsMutable();
+          options_.set(index, builderForValue.build());
+          onChanged();
+        } else {
+          optionsBuilder_.setMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <pre>
+       * Returns the files in the order they should be compiled
+       * </pre>
+       *
+       * <code>repeated .com.kcl.api.OptionHelp options = 2;</code>
+       */
+      public Builder addOptions(com.kcl.api.Spec.OptionHelp value) {
+        if (optionsBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureOptionsIsMutable();
+          options_.add(value);
+          onChanged();
+        } else {
+          optionsBuilder_.addMessage(value);
+        }
+        return this;
+      }
+      /**
+       * <pre>
+       * Returns the files in the order they should be compiled
+       * </pre>
+       *
+       * <code>repeated .com.kcl.api.OptionHelp options = 2;</code>
+       */
+      public Builder addOptions(
+          int index, com.kcl.api.Spec.OptionHelp value) {
+        if (optionsBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureOptionsIsMutable();
+          options_.add(index, value);
+          onChanged();
+        } else {
+          optionsBuilder_.addMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <pre>
+       * Returns the files in the order they should be compiled
+       * </pre>
+       *
+       * <code>repeated .com.kcl.api.OptionHelp options = 2;</code>
+       */
+      public Builder addOptions(
+          com.kcl.api.Spec.OptionHelp.Builder builderForValue) {
+        if (optionsBuilder_ == null) {
+          ensureOptionsIsMutable();
+          options_.add(builderForValue.build());
+          onChanged();
+        } else {
+          optionsBuilder_.addMessage(builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <pre>
+       * Returns the files in the order they should be compiled
+       * </pre>
+       *
+       * <code>repeated .com.kcl.api.OptionHelp options = 2;</code>
+       */
+      public Builder addOptions(
+          int index, com.kcl.api.Spec.OptionHelp.Builder builderForValue) {
+        if (optionsBuilder_ == null) {
+          ensureOptionsIsMutable();
+          options_.add(index, builderForValue.build());
+          onChanged();
+        } else {
+          optionsBuilder_.addMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <pre>
+       * Returns the files in the order they should be compiled
+       * </pre>
+       *
+       * <code>repeated .com.kcl.api.OptionHelp options = 2;</code>
+       */
+      public Builder addAllOptions(
+          java.lang.Iterable<? extends com.kcl.api.Spec.OptionHelp> values) {
+        if (optionsBuilder_ == null) {
+          ensureOptionsIsMutable();
+          com.google.protobuf.AbstractMessageLite.Builder.addAll(
+              values, options_);
+          onChanged();
+        } else {
+          optionsBuilder_.addAllMessages(values);
+        }
+        return this;
+      }
+      /**
+       * <pre>
+       * Returns the files in the order they should be compiled
+       * </pre>
+       *
+       * <code>repeated .com.kcl.api.OptionHelp options = 2;</code>
+       */
+      public Builder clearOptions() {
+        if (optionsBuilder_ == null) {
+          options_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000001);
+          onChanged();
+        } else {
+          optionsBuilder_.clear();
+        }
+        return this;
+      }
+      /**
+       * <pre>
+       * Returns the files in the order they should be compiled
+       * </pre>
+       *
+       * <code>repeated .com.kcl.api.OptionHelp options = 2;</code>
+       */
+      public Builder removeOptions(int index) {
+        if (optionsBuilder_ == null) {
+          ensureOptionsIsMutable();
+          options_.remove(index);
+          onChanged();
+        } else {
+          optionsBuilder_.remove(index);
+        }
+        return this;
+      }
+      /**
+       * <pre>
+       * Returns the files in the order they should be compiled
+       * </pre>
+       *
+       * <code>repeated .com.kcl.api.OptionHelp options = 2;</code>
+       */
+      public com.kcl.api.Spec.OptionHelp.Builder getOptionsBuilder(
+          int index) {
+        return getOptionsFieldBuilder().getBuilder(index);
+      }
+      /**
+       * <pre>
+       * Returns the files in the order they should be compiled
+       * </pre>
+       *
+       * <code>repeated .com.kcl.api.OptionHelp options = 2;</code>
+       */
+      public com.kcl.api.Spec.OptionHelpOrBuilder getOptionsOrBuilder(
+          int index) {
+        if (optionsBuilder_ == null) {
+          return options_.get(index);  } else {
+          return optionsBuilder_.getMessageOrBuilder(index);
+        }
+      }
+      /**
+       * <pre>
+       * Returns the files in the order they should be compiled
+       * </pre>
+       *
+       * <code>repeated .com.kcl.api.OptionHelp options = 2;</code>
+       */
+      public java.util.List<? extends com.kcl.api.Spec.OptionHelpOrBuilder> 
+           getOptionsOrBuilderList() {
+        if (optionsBuilder_ != null) {
+          return optionsBuilder_.getMessageOrBuilderList();
+        } else {
+          return java.util.Collections.unmodifiableList(options_);
+        }
+      }
+      /**
+       * <pre>
+       * Returns the files in the order they should be compiled
+       * </pre>
+       *
+       * <code>repeated .com.kcl.api.OptionHelp options = 2;</code>
+       */
+      public com.kcl.api.Spec.OptionHelp.Builder addOptionsBuilder() {
+        return getOptionsFieldBuilder().addBuilder(
+            com.kcl.api.Spec.OptionHelp.getDefaultInstance());
+      }
+      /**
+       * <pre>
+       * Returns the files in the order they should be compiled
+       * </pre>
+       *
+       * <code>repeated .com.kcl.api.OptionHelp options = 2;</code>
+       */
+      public com.kcl.api.Spec.OptionHelp.Builder addOptionsBuilder(
+          int index) {
+        return getOptionsFieldBuilder().addBuilder(
+            index, com.kcl.api.Spec.OptionHelp.getDefaultInstance());
+      }
+      /**
+       * <pre>
+       * Returns the files in the order they should be compiled
+       * </pre>
+       *
+       * <code>repeated .com.kcl.api.OptionHelp options = 2;</code>
+       */
+      public java.util.List<com.kcl.api.Spec.OptionHelp.Builder> 
+           getOptionsBuilderList() {
+        return getOptionsFieldBuilder().getBuilderList();
+      }
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          com.kcl.api.Spec.OptionHelp, com.kcl.api.Spec.OptionHelp.Builder, com.kcl.api.Spec.OptionHelpOrBuilder> 
+          getOptionsFieldBuilder() {
+        if (optionsBuilder_ == null) {
+          optionsBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
+              com.kcl.api.Spec.OptionHelp, com.kcl.api.Spec.OptionHelp.Builder, com.kcl.api.Spec.OptionHelpOrBuilder>(
+                  options_,
+                  ((bitField0_ & 0x00000001) != 0),
+                  getParentForChildren(),
+                  isClean());
+          options_ = null;
+        }
+        return optionsBuilder_;
+      }
+      @java.lang.Override
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.setUnknownFields(unknownFields);
+      }
+
+      @java.lang.Override
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.mergeUnknownFields(unknownFields);
+      }
+
+
+      // @@protoc_insertion_point(builder_scope:com.kcl.api.ListOptions_Result)
+    }
+
+    // @@protoc_insertion_point(class_scope:com.kcl.api.ListOptions_Result)
+    private static final com.kcl.api.Spec.ListOptions_Result DEFAULT_INSTANCE;
+    static {
+      DEFAULT_INSTANCE = new com.kcl.api.Spec.ListOptions_Result();
+    }
+
+    public static com.kcl.api.Spec.ListOptions_Result getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    private static final com.google.protobuf.Parser<ListOptions_Result>
+        PARSER = new com.google.protobuf.AbstractParser<ListOptions_Result>() {
+      @java.lang.Override
+      public ListOptions_Result parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        Builder builder = newBuilder();
+        try {
+          builder.mergeFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          throw e.setUnfinishedMessage(builder.buildPartial());
+        } catch (com.google.protobuf.UninitializedMessageException e) {
+          throw e.asInvalidProtocolBufferException().setUnfinishedMessage(builder.buildPartial());
+        } catch (java.io.IOException e) {
+          throw new com.google.protobuf.InvalidProtocolBufferException(e)
+              .setUnfinishedMessage(builder.buildPartial());
+        }
+        return builder.buildPartial();
+      }
+    };
+
+    public static com.google.protobuf.Parser<ListOptions_Result> parser() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<ListOptions_Result> getParserForType() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.kcl.api.Spec.ListOptions_Result getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
+  }
+
+  public interface OptionHelpOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:com.kcl.api.OptionHelp)
+      com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <code>string name = 1;</code>
+     * @return The name.
+     */
+    java.lang.String getName();
+    /**
+     * <code>string name = 1;</code>
+     * @return The bytes for name.
+     */
+    com.google.protobuf.ByteString
+        getNameBytes();
+
+    /**
+     * <code>string type = 2;</code>
+     * @return The type.
+     */
+    java.lang.String getType();
+    /**
+     * <code>string type = 2;</code>
+     * @return The bytes for type.
+     */
+    com.google.protobuf.ByteString
+        getTypeBytes();
+
+    /**
+     * <code>bool required = 3;</code>
+     * @return The required.
+     */
+    boolean getRequired();
+
+    /**
+     * <code>string default_value = 4;</code>
+     * @return The defaultValue.
+     */
+    java.lang.String getDefaultValue();
+    /**
+     * <code>string default_value = 4;</code>
+     * @return The bytes for defaultValue.
+     */
+    com.google.protobuf.ByteString
+        getDefaultValueBytes();
+
+    /**
+     * <code>string help = 5;</code>
+     * @return The help.
+     */
+    java.lang.String getHelp();
+    /**
+     * <code>string help = 5;</code>
+     * @return The bytes for help.
+     */
+    com.google.protobuf.ByteString
+        getHelpBytes();
+  }
+  /**
+   * Protobuf type {@code com.kcl.api.OptionHelp}
+   */
+  public static final class OptionHelp extends
+      com.google.protobuf.GeneratedMessageV3 implements
+      // @@protoc_insertion_point(message_implements:com.kcl.api.OptionHelp)
+      OptionHelpOrBuilder {
+  private static final long serialVersionUID = 0L;
+    // Use OptionHelp.newBuilder() to construct.
+    private OptionHelp(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
+    }
+    private OptionHelp() {
+      name_ = "";
+      type_ = "";
+      defaultValue_ = "";
+      help_ = "";
+    }
+
+    @java.lang.Override
+    @SuppressWarnings({"unused"})
+    protected java.lang.Object newInstance(
+        UnusedPrivateParameter unused) {
+      return new OptionHelp();
+    }
+
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return com.kcl.api.Spec.internal_static_com_kcl_api_OptionHelp_descriptor;
+    }
+
+    @java.lang.Override
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return com.kcl.api.Spec.internal_static_com_kcl_api_OptionHelp_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              com.kcl.api.Spec.OptionHelp.class, com.kcl.api.Spec.OptionHelp.Builder.class);
+    }
+
+    public static final int NAME_FIELD_NUMBER = 1;
+    @SuppressWarnings("serial")
+    private volatile java.lang.Object name_ = "";
+    /**
+     * <code>string name = 1;</code>
+     * @return The name.
+     */
+    @java.lang.Override
+    public java.lang.String getName() {
+      java.lang.Object ref = name_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        name_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string name = 1;</code>
+     * @return The bytes for name.
+     */
+    @java.lang.Override
+    public com.google.protobuf.ByteString
+        getNameBytes() {
+      java.lang.Object ref = name_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        name_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int TYPE_FIELD_NUMBER = 2;
+    @SuppressWarnings("serial")
+    private volatile java.lang.Object type_ = "";
+    /**
+     * <code>string type = 2;</code>
+     * @return The type.
+     */
+    @java.lang.Override
+    public java.lang.String getType() {
+      java.lang.Object ref = type_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        type_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string type = 2;</code>
+     * @return The bytes for type.
+     */
+    @java.lang.Override
+    public com.google.protobuf.ByteString
+        getTypeBytes() {
+      java.lang.Object ref = type_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        type_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int REQUIRED_FIELD_NUMBER = 3;
+    private boolean required_ = false;
+    /**
+     * <code>bool required = 3;</code>
+     * @return The required.
+     */
+    @java.lang.Override
+    public boolean getRequired() {
+      return required_;
+    }
+
+    public static final int DEFAULT_VALUE_FIELD_NUMBER = 4;
+    @SuppressWarnings("serial")
+    private volatile java.lang.Object defaultValue_ = "";
+    /**
+     * <code>string default_value = 4;</code>
+     * @return The defaultValue.
+     */
+    @java.lang.Override
+    public java.lang.String getDefaultValue() {
+      java.lang.Object ref = defaultValue_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        defaultValue_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string default_value = 4;</code>
+     * @return The bytes for defaultValue.
+     */
+    @java.lang.Override
+    public com.google.protobuf.ByteString
+        getDefaultValueBytes() {
+      java.lang.Object ref = defaultValue_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        defaultValue_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int HELP_FIELD_NUMBER = 5;
+    @SuppressWarnings("serial")
+    private volatile java.lang.Object help_ = "";
+    /**
+     * <code>string help = 5;</code>
+     * @return The help.
+     */
+    @java.lang.Override
+    public java.lang.String getHelp() {
+      java.lang.Object ref = help_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        help_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string help = 5;</code>
+     * @return The bytes for help.
+     */
+    @java.lang.Override
+    public com.google.protobuf.ByteString
+        getHelpBytes() {
+      java.lang.Object ref = help_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        help_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    private byte memoizedIsInitialized = -1;
+    @java.lang.Override
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    @java.lang.Override
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(name_)) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 1, name_);
+      }
+      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(type_)) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 2, type_);
+      }
+      if (required_ != false) {
+        output.writeBool(3, required_);
+      }
+      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(defaultValue_)) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 4, defaultValue_);
+      }
+      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(help_)) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 5, help_);
+      }
+      getUnknownFields().writeTo(output);
+    }
+
+    @java.lang.Override
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(name_)) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, name_);
+      }
+      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(type_)) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, type_);
+      }
+      if (required_ != false) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBoolSize(3, required_);
+      }
+      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(defaultValue_)) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(4, defaultValue_);
+      }
+      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(help_)) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(5, help_);
+      }
+      size += getUnknownFields().getSerializedSize();
+      memoizedSize = size;
+      return size;
+    }
+
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof com.kcl.api.Spec.OptionHelp)) {
+        return super.equals(obj);
+      }
+      com.kcl.api.Spec.OptionHelp other = (com.kcl.api.Spec.OptionHelp) obj;
+
+      if (!getName()
+          .equals(other.getName())) return false;
+      if (!getType()
+          .equals(other.getType())) return false;
+      if (getRequired()
+          != other.getRequired()) return false;
+      if (!getDefaultValue()
+          .equals(other.getDefaultValue())) return false;
+      if (!getHelp()
+          .equals(other.getHelp())) return false;
+      if (!getUnknownFields().equals(other.getUnknownFields())) return false;
+      return true;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptor().hashCode();
+      hash = (37 * hash) + NAME_FIELD_NUMBER;
+      hash = (53 * hash) + getName().hashCode();
+      hash = (37 * hash) + TYPE_FIELD_NUMBER;
+      hash = (53 * hash) + getType().hashCode();
+      hash = (37 * hash) + REQUIRED_FIELD_NUMBER;
+      hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
+          getRequired());
+      hash = (37 * hash) + DEFAULT_VALUE_FIELD_NUMBER;
+      hash = (53 * hash) + getDefaultValue().hashCode();
+      hash = (37 * hash) + HELP_FIELD_NUMBER;
+      hash = (53 * hash) + getHelp().hashCode();
+      hash = (29 * hash) + getUnknownFields().hashCode();
+      memoizedHashCode = hash;
+      return hash;
+    }
+
+    public static com.kcl.api.Spec.OptionHelp parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.kcl.api.Spec.OptionHelp parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.kcl.api.Spec.OptionHelp parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.kcl.api.Spec.OptionHelp parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.kcl.api.Spec.OptionHelp parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.kcl.api.Spec.OptionHelp parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.kcl.api.Spec.OptionHelp parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static com.kcl.api.Spec.OptionHelp parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    public static com.kcl.api.Spec.OptionHelp parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
+    }
+
+    public static com.kcl.api.Spec.OptionHelp parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static com.kcl.api.Spec.OptionHelp parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static com.kcl.api.Spec.OptionHelp parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    @java.lang.Override
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(com.kcl.api.Spec.OptionHelp prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    @java.lang.Override
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code com.kcl.api.OptionHelp}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:com.kcl.api.OptionHelp)
+        com.kcl.api.Spec.OptionHelpOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return com.kcl.api.Spec.internal_static_com_kcl_api_OptionHelp_descriptor;
+      }
+
+      @java.lang.Override
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return com.kcl.api.Spec.internal_static_com_kcl_api_OptionHelp_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                com.kcl.api.Spec.OptionHelp.class, com.kcl.api.Spec.OptionHelp.Builder.class);
+      }
+
+      // Construct using com.kcl.api.Spec.OptionHelp.newBuilder()
+      private Builder() {
+
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        super(parent);
+
+      }
+      @java.lang.Override
+      public Builder clear() {
+        super.clear();
+        bitField0_ = 0;
+        name_ = "";
+        type_ = "";
+        required_ = false;
+        defaultValue_ = "";
+        help_ = "";
+        return this;
+      }
+
+      @java.lang.Override
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return com.kcl.api.Spec.internal_static_com_kcl_api_OptionHelp_descriptor;
+      }
+
+      @java.lang.Override
+      public com.kcl.api.Spec.OptionHelp getDefaultInstanceForType() {
+        return com.kcl.api.Spec.OptionHelp.getDefaultInstance();
+      }
+
+      @java.lang.Override
+      public com.kcl.api.Spec.OptionHelp build() {
+        com.kcl.api.Spec.OptionHelp result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      @java.lang.Override
+      public com.kcl.api.Spec.OptionHelp buildPartial() {
+        com.kcl.api.Spec.OptionHelp result = new com.kcl.api.Spec.OptionHelp(this);
+        if (bitField0_ != 0) { buildPartial0(result); }
+        onBuilt();
+        return result;
+      }
+
+      private void buildPartial0(com.kcl.api.Spec.OptionHelp result) {
+        int from_bitField0_ = bitField0_;
+        if (((from_bitField0_ & 0x00000001) != 0)) {
+          result.name_ = name_;
+        }
+        if (((from_bitField0_ & 0x00000002) != 0)) {
+          result.type_ = type_;
+        }
+        if (((from_bitField0_ & 0x00000004) != 0)) {
+          result.required_ = required_;
+        }
+        if (((from_bitField0_ & 0x00000008) != 0)) {
+          result.defaultValue_ = defaultValue_;
+        }
+        if (((from_bitField0_ & 0x00000010) != 0)) {
+          result.help_ = help_;
+        }
+      }
+
+      @java.lang.Override
+      public Builder clone() {
+        return super.clone();
+      }
+      @java.lang.Override
+      public Builder setField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.setField(field, value);
+      }
+      @java.lang.Override
+      public Builder clearField(
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return super.clearField(field);
+      }
+      @java.lang.Override
+      public Builder clearOneof(
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return super.clearOneof(oneof);
+      }
+      @java.lang.Override
+      public Builder setRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, java.lang.Object value) {
+        return super.setRepeatedField(field, index, value);
+      }
+      @java.lang.Override
+      public Builder addRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.addRepeatedField(field, value);
+      }
+      @java.lang.Override
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof com.kcl.api.Spec.OptionHelp) {
+          return mergeFrom((com.kcl.api.Spec.OptionHelp)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(com.kcl.api.Spec.OptionHelp other) {
+        if (other == com.kcl.api.Spec.OptionHelp.getDefaultInstance()) return this;
+        if (!other.getName().isEmpty()) {
+          name_ = other.name_;
+          bitField0_ |= 0x00000001;
+          onChanged();
+        }
+        if (!other.getType().isEmpty()) {
+          type_ = other.type_;
+          bitField0_ |= 0x00000002;
+          onChanged();
+        }
+        if (other.getRequired() != false) {
+          setRequired(other.getRequired());
+        }
+        if (!other.getDefaultValue().isEmpty()) {
+          defaultValue_ = other.defaultValue_;
+          bitField0_ |= 0x00000008;
+          onChanged();
+        }
+        if (!other.getHelp().isEmpty()) {
+          help_ = other.help_;
+          bitField0_ |= 0x00000010;
+          onChanged();
+        }
+        this.mergeUnknownFields(other.getUnknownFields());
+        onChanged();
+        return this;
+      }
+
+      @java.lang.Override
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      @java.lang.Override
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        if (extensionRegistry == null) {
+          throw new java.lang.NullPointerException();
+        }
+        try {
+          boolean done = false;
+          while (!done) {
+            int tag = input.readTag();
+            switch (tag) {
+              case 0:
+                done = true;
+                break;
+              case 10: {
+                name_ = input.readStringRequireUtf8();
+                bitField0_ |= 0x00000001;
+                break;
+              } // case 10
+              case 18: {
+                type_ = input.readStringRequireUtf8();
+                bitField0_ |= 0x00000002;
+                break;
+              } // case 18
+              case 24: {
+                required_ = input.readBool();
+                bitField0_ |= 0x00000004;
+                break;
+              } // case 24
+              case 34: {
+                defaultValue_ = input.readStringRequireUtf8();
+                bitField0_ |= 0x00000008;
+                break;
+              } // case 34
+              case 42: {
+                help_ = input.readStringRequireUtf8();
+                bitField0_ |= 0x00000010;
+                break;
+              } // case 42
+              default: {
+                if (!super.parseUnknownField(input, extensionRegistry, tag)) {
+                  done = true; // was an endgroup tag
+                }
+                break;
+              } // default:
+            } // switch (tag)
+          } // while (!done)
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          throw e.unwrapIOException();
+        } finally {
+          onChanged();
+        } // finally
+        return this;
+      }
+      private int bitField0_;
+
+      private java.lang.Object name_ = "";
+      /**
+       * <code>string name = 1;</code>
+       * @return The name.
+       */
+      public java.lang.String getName() {
+        java.lang.Object ref = name_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          name_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>string name = 1;</code>
+       * @return The bytes for name.
+       */
+      public com.google.protobuf.ByteString
+          getNameBytes() {
+        java.lang.Object ref = name_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          name_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string name = 1;</code>
+       * @param value The name to set.
+       * @return This builder for chaining.
+       */
+      public Builder setName(
+          java.lang.String value) {
+        if (value == null) { throw new NullPointerException(); }
+        name_ = value;
+        bitField0_ |= 0x00000001;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string name = 1;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearName() {
+        name_ = getDefaultInstance().getName();
+        bitField0_ = (bitField0_ & ~0x00000001);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string name = 1;</code>
+       * @param value The bytes for name to set.
+       * @return This builder for chaining.
+       */
+      public Builder setNameBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) { throw new NullPointerException(); }
+        checkByteStringIsUtf8(value);
+        name_ = value;
+        bitField0_ |= 0x00000001;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object type_ = "";
+      /**
+       * <code>string type = 2;</code>
+       * @return The type.
+       */
+      public java.lang.String getType() {
+        java.lang.Object ref = type_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          type_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>string type = 2;</code>
+       * @return The bytes for type.
+       */
+      public com.google.protobuf.ByteString
+          getTypeBytes() {
+        java.lang.Object ref = type_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          type_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string type = 2;</code>
+       * @param value The type to set.
+       * @return This builder for chaining.
+       */
+      public Builder setType(
+          java.lang.String value) {
+        if (value == null) { throw new NullPointerException(); }
+        type_ = value;
+        bitField0_ |= 0x00000002;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string type = 2;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearType() {
+        type_ = getDefaultInstance().getType();
+        bitField0_ = (bitField0_ & ~0x00000002);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string type = 2;</code>
+       * @param value The bytes for type to set.
+       * @return This builder for chaining.
+       */
+      public Builder setTypeBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) { throw new NullPointerException(); }
+        checkByteStringIsUtf8(value);
+        type_ = value;
+        bitField0_ |= 0x00000002;
+        onChanged();
+        return this;
+      }
+
+      private boolean required_ ;
+      /**
+       * <code>bool required = 3;</code>
+       * @return The required.
+       */
+      @java.lang.Override
+      public boolean getRequired() {
+        return required_;
+      }
+      /**
+       * <code>bool required = 3;</code>
+       * @param value The required to set.
+       * @return This builder for chaining.
+       */
+      public Builder setRequired(boolean value) {
+
+        required_ = value;
+        bitField0_ |= 0x00000004;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>bool required = 3;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearRequired() {
+        bitField0_ = (bitField0_ & ~0x00000004);
+        required_ = false;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object defaultValue_ = "";
+      /**
+       * <code>string default_value = 4;</code>
+       * @return The defaultValue.
+       */
+      public java.lang.String getDefaultValue() {
+        java.lang.Object ref = defaultValue_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          defaultValue_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>string default_value = 4;</code>
+       * @return The bytes for defaultValue.
+       */
+      public com.google.protobuf.ByteString
+          getDefaultValueBytes() {
+        java.lang.Object ref = defaultValue_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          defaultValue_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string default_value = 4;</code>
+       * @param value The defaultValue to set.
+       * @return This builder for chaining.
+       */
+      public Builder setDefaultValue(
+          java.lang.String value) {
+        if (value == null) { throw new NullPointerException(); }
+        defaultValue_ = value;
+        bitField0_ |= 0x00000008;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string default_value = 4;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearDefaultValue() {
+        defaultValue_ = getDefaultInstance().getDefaultValue();
+        bitField0_ = (bitField0_ & ~0x00000008);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string default_value = 4;</code>
+       * @param value The bytes for defaultValue to set.
+       * @return This builder for chaining.
+       */
+      public Builder setDefaultValueBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) { throw new NullPointerException(); }
+        checkByteStringIsUtf8(value);
+        defaultValue_ = value;
+        bitField0_ |= 0x00000008;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object help_ = "";
+      /**
+       * <code>string help = 5;</code>
+       * @return The help.
+       */
+      public java.lang.String getHelp() {
+        java.lang.Object ref = help_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          help_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>string help = 5;</code>
+       * @return The bytes for help.
+       */
+      public com.google.protobuf.ByteString
+          getHelpBytes() {
+        java.lang.Object ref = help_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          help_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string help = 5;</code>
+       * @param value The help to set.
+       * @return This builder for chaining.
+       */
+      public Builder setHelp(
+          java.lang.String value) {
+        if (value == null) { throw new NullPointerException(); }
+        help_ = value;
+        bitField0_ |= 0x00000010;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string help = 5;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearHelp() {
+        help_ = getDefaultInstance().getHelp();
+        bitField0_ = (bitField0_ & ~0x00000010);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string help = 5;</code>
+       * @param value The bytes for help to set.
+       * @return This builder for chaining.
+       */
+      public Builder setHelpBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) { throw new NullPointerException(); }
+        checkByteStringIsUtf8(value);
+        help_ = value;
+        bitField0_ |= 0x00000010;
+        onChanged();
+        return this;
+      }
+      @java.lang.Override
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.setUnknownFields(unknownFields);
+      }
+
+      @java.lang.Override
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.mergeUnknownFields(unknownFields);
+      }
+
+
+      // @@protoc_insertion_point(builder_scope:com.kcl.api.OptionHelp)
+    }
+
+    // @@protoc_insertion_point(class_scope:com.kcl.api.OptionHelp)
+    private static final com.kcl.api.Spec.OptionHelp DEFAULT_INSTANCE;
+    static {
+      DEFAULT_INSTANCE = new com.kcl.api.Spec.OptionHelp();
+    }
+
+    public static com.kcl.api.Spec.OptionHelp getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    private static final com.google.protobuf.Parser<OptionHelp>
+        PARSER = new com.google.protobuf.AbstractParser<OptionHelp>() {
+      @java.lang.Override
+      public OptionHelp parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        Builder builder = newBuilder();
+        try {
+          builder.mergeFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          throw e.setUnfinishedMessage(builder.buildPartial());
+        } catch (com.google.protobuf.UninitializedMessageException e) {
+          throw e.asInvalidProtocolBufferException().setUnfinishedMessage(builder.buildPartial());
+        } catch (java.io.IOException e) {
+          throw new com.google.protobuf.InvalidProtocolBufferException(e)
+              .setUnfinishedMessage(builder.buildPartial());
+        }
+        return builder.buildPartial();
+      }
+    };
+
+    public static com.google.protobuf.Parser<OptionHelp> parser() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<OptionHelp> getParserForType() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.kcl.api.Spec.OptionHelp getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
+  }
+
   public interface SymbolOrBuilder extends
       // @@protoc_insertion_point(interface_extends:com.kcl.api.Symbol)
       com.google.protobuf.MessageOrBuilder {
@@ -59714,6 +61677,16 @@ java.lang.String defaultValue) {
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_com_kcl_api_LoadPackage_Result_PkgScopeMapEntry_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_com_kcl_api_ListOptions_Result_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_com_kcl_api_ListOptions_Result_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_com_kcl_api_OptionHelp_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_com_kcl_api_OptionHelp_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_com_kcl_api_Symbol_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
@@ -60017,168 +61990,174 @@ java.lang.String defaultValue) {
       "ifiedNameMapEntry\022\013\n\003key\030\001 \001(\t\022\'\n\005value\030" +
       "\002 \001(\0132\030.com.kcl.api.SymbolIndex:\0028\001\032K\n\020P" +
       "kgScopeMapEntry\022\013\n\003key\030\001 \001(\t\022&\n\005value\030\002 " +
-      "\001(\0132\027.com.kcl.api.ScopeIndex:\0028\001\"\304\001\n\006Sym" +
-      "bol\022 \n\002ty\030\001 \001(\0132\024.com.kcl.api.KclType\022\014\n" +
-      "\004name\030\002 \001(\t\022\'\n\005owner\030\003 \001(\0132\030.com.kcl.api" +
-      ".SymbolIndex\022%\n\003def\030\004 \001(\0132\030.com.kcl.api." +
-      "SymbolIndex\022\'\n\005attrs\030\005 \003(\0132\030.com.kcl.api" +
-      ".SymbolIndex\022\021\n\tis_global\030\006 \001(\010\"\272\001\n\005Scop" +
-      "e\022\014\n\004kind\030\001 \001(\t\022\'\n\006parent\030\002 \001(\0132\027.com.kc" +
-      "l.api.ScopeIndex\022\'\n\005owner\030\003 \001(\0132\030.com.kc" +
-      "l.api.SymbolIndex\022)\n\010children\030\004 \003(\0132\027.co" +
-      "m.kcl.api.ScopeIndex\022&\n\004defs\030\005 \003(\0132\030.com" +
-      ".kcl.api.SymbolIndex\"1\n\013SymbolIndex\022\t\n\001i" +
-      "\030\001 \001(\004\022\t\n\001g\030\002 \001(\004\022\014\n\004kind\030\003 \001(\t\"0\n\nScope" +
-      "Index\022\t\n\001i\030\001 \001(\004\022\t\n\001g\030\002 \001(\004\022\014\n\004kind\030\003 \001(" +
-      "\t\"\344\003\n\020ExecProgram_Args\022\020\n\010work_dir\030\001 \001(\t" +
-      "\022\027\n\017k_filename_list\030\002 \003(\t\022\023\n\013k_code_list" +
-      "\030\003 \003(\t\022%\n\004args\030\004 \003(\0132\027.com.kcl.api.CmdAr" +
-      "gSpec\022/\n\toverrides\030\005 \003(\0132\034.com.kcl.api.C" +
-      "mdOverrideSpec\022\033\n\023disable_yaml_result\030\006 " +
-      "\001(\010\022\032\n\022print_override_ast\030\007 \001(\010\022\032\n\022stric" +
-      "t_range_check\030\010 \001(\010\022\024\n\014disable_none\030\t \001(" +
-      "\010\022\017\n\007verbose\030\n \001(\005\022\r\n\005debug\030\013 \001(\005\022\021\n\tsor" +
-      "t_keys\030\014 \001(\010\0226\n\rexternal_pkgs\030\r \003(\0132\037.co" +
-      "m.kcl.api.CmdExternalPkgSpec\022 \n\030include_" +
-      "schema_type_path\030\016 \001(\010\022\024\n\014compile_only\030\017" +
-      " \001(\010\022\023\n\013show_hidden\030\020 \001(\010\022\025\n\rpath_select" +
-      "or\030\021 \003(\t\"h\n\022ExecProgram_Result\022\023\n\013json_r" +
-      "esult\030\001 \001(\t\022\023\n\013yaml_result\030\002 \001(\t\022\023\n\013log_" +
-      "message\030\003 \001(\t\022\023\n\013err_message\030\004 \001(\t\"U\n\021Bu" +
-      "ildProgram_Args\0220\n\texec_args\030\001 \001(\0132\035.com" +
-      ".kcl.api.ExecProgram_Args\022\016\n\006output\030\002 \001(" +
-      "\t\"#\n\023BuildProgram_Result\022\014\n\004path\030\001 \001(\t\"S" +
-      "\n\021ExecArtifact_Args\022\014\n\004path\030\001 \001(\t\0220\n\texe" +
-      "c_args\030\002 \001(\0132\035.com.kcl.api.ExecProgram_A" +
-      "rgs\"\'\n\020ResetPlugin_Args\022\023\n\013plugin_root\030\001" +
-      " \001(\t\"\024\n\022ResetPlugin_Result\"!\n\017FormatCode" +
-      "_Args\022\016\n\006source\030\001 \001(\t\"&\n\021FormatCode_Resu" +
-      "lt\022\021\n\tformatted\030\001 \001(\014\"\037\n\017FormatPath_Args" +
-      "\022\014\n\004path\030\001 \001(\t\"*\n\021FormatPath_Result\022\025\n\rc" +
-      "hanged_paths\030\001 \003(\t\"\036\n\rLintPath_Args\022\r\n\005p" +
-      "aths\030\001 \003(\t\"\"\n\017LintPath_Result\022\017\n\007results" +
-      "\030\001 \003(\t\"F\n\021OverrideFile_Args\022\014\n\004file\030\001 \001(" +
-      "\t\022\r\n\005specs\030\002 \003(\t\022\024\n\014import_paths\030\003 \003(\t\"%" +
-      "\n\023OverrideFile_Result\022\016\n\006result\030\001 \001(\010\"_\n" +
-      "\026GetFullSchemaType_Args\0220\n\texec_args\030\001 \001" +
-      "(\0132\035.com.kcl.api.ExecProgram_Args\022\023\n\013sch" +
-      "ema_name\030\002 \001(\t\"E\n\022GetSchemaType_Args\022\014\n\004" +
-      "file\030\001 \001(\t\022\014\n\004code\030\002 \001(\t\022\023\n\013schema_name\030" +
-      "\003 \001(\t\"F\n\024GetSchemaType_Result\022.\n\020schema_" +
-      "type_list\030\001 \003(\0132\024.com.kcl.api.KclType\"L\n" +
-      "\031GetSchemaTypeMapping_Args\022\014\n\004file\030\001 \001(\t" +
-      "\022\014\n\004code\030\002 \001(\t\022\023\n\013schema_name\030\003 \001(\t\"\313\001\n\033" +
-      "GetSchemaTypeMapping_Result\022\\\n\023schema_ty" +
-      "pe_mapping\030\001 \003(\0132?.com.kcl.api.GetSchema" +
-      "TypeMapping_Result.SchemaTypeMappingEntr" +
-      "y\032N\n\026SchemaTypeMappingEntry\022\013\n\003key\030\001 \001(\t" +
-      "\022#\n\005value\030\002 \001(\0132\024.com.kcl.api.KclType:\0028" +
-      "\001\"\207\001\n\021ValidateCode_Args\022\020\n\010datafile\030\001 \001(" +
-      "\t\022\014\n\004data\030\002 \001(\t\022\014\n\004file\030\003 \001(\t\022\014\n\004code\030\004 " +
-      "\001(\t\022\016\n\006schema\030\005 \001(\t\022\026\n\016attribute_name\030\006 " +
-      "\001(\t\022\016\n\006format\030\007 \001(\t\";\n\023ValidateCode_Resu" +
-      "lt\022\017\n\007success\030\001 \001(\010\022\023\n\013err_message\030\002 \001(\t" +
-      "\":\n\010Position\022\014\n\004line\030\001 \001(\003\022\016\n\006column\030\002 \001" +
-      "(\003\022\020\n\010filename\030\003 \001(\t\"i\n\021ListDepFiles_Arg" +
-      "s\022\020\n\010work_dir\030\001 \001(\t\022\024\n\014use_abs_path\030\002 \001(" +
-      "\010\022\023\n\013include_all\030\003 \001(\010\022\027\n\017use_fast_parse" +
-      "r\030\004 \001(\010\"F\n\023ListDepFiles_Result\022\017\n\007pkgroo" +
-      "t\030\001 \001(\t\022\017\n\007pkgpath\030\002 \001(\t\022\r\n\005files\030\003 \003(\t\"" +
-      "9\n\026LoadSettingsFiles_Args\022\020\n\010work_dir\030\001 " +
-      "\001(\t\022\r\n\005files\030\002 \003(\t\"{\n\030LoadSettingsFiles_" +
-      "Result\022/\n\017kcl_cli_configs\030\001 \001(\0132\026.com.kc" +
-      "l.api.CliConfig\022.\n\013kcl_options\030\002 \003(\0132\031.c" +
-      "om.kcl.api.KeyValuePair\"\360\001\n\tCliConfig\022\r\n" +
-      "\005files\030\001 \003(\t\022\016\n\006output\030\002 \001(\t\022\021\n\toverride" +
-      "s\030\003 \003(\t\022\025\n\rpath_selector\030\004 \003(\t\022\032\n\022strict" +
-      "_range_check\030\005 \001(\010\022\024\n\014disable_none\030\006 \001(\010" +
-      "\022\017\n\007verbose\030\007 \001(\003\022\r\n\005debug\030\010 \001(\010\022\021\n\tsort" +
-      "_keys\030\t \001(\010\022\023\n\013show_hidden\030\n \001(\010\022 \n\030incl" +
-      "ude_schema_type_path\030\013 \001(\010\"*\n\014KeyValuePa" +
-      "ir\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t\"^\n\013Rename" +
-      "_Args\022\024\n\014package_root\030\001 \001(\t\022\023\n\013symbol_pa" +
-      "th\030\002 \001(\t\022\022\n\nfile_paths\030\003 \003(\t\022\020\n\010new_name" +
-      "\030\004 \001(\t\"&\n\rRename_Result\022\025\n\rchanged_files" +
-      "\030\001 \003(\t\"\307\001\n\017RenameCode_Args\022\024\n\014package_ro" +
-      "ot\030\001 \001(\t\022\023\n\013symbol_path\030\002 \001(\t\022C\n\014source_" +
-      "codes\030\003 \003(\0132-.com.kcl.api.RenameCode_Arg" +
-      "s.SourceCodesEntry\022\020\n\010new_name\030\004 \001(\t\0322\n\020" +
-      "SourceCodesEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002" +
-      " \001(\t:\0028\001\"\221\001\n\021RenameCode_Result\022G\n\rchange" +
-      "d_codes\030\001 \003(\01320.com.kcl.api.RenameCode_R" +
-      "esult.ChangedCodesEntry\0323\n\021ChangedCodesE" +
-      "ntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\"v\n\t" +
-      "Test_Args\0220\n\texec_args\030\001 \001(\0132\035.com.kcl.a" +
-      "pi.ExecProgram_Args\022\020\n\010pkg_list\030\002 \003(\t\022\022\n" +
-      "\nrun_regexp\030\003 \001(\t\022\021\n\tfail_fast\030\004 \001(\010\"6\n\013" +
-      "Test_Result\022\'\n\004info\030\002 \003(\0132\031.com.kcl.api." +
-      "TestCaseInfo\"R\n\014TestCaseInfo\022\014\n\004name\030\001 \001" +
-      "(\t\022\r\n\005error\030\002 \001(\t\022\020\n\010duration\030\003 \001(\004\022\023\n\013l" +
-      "og_message\030\004 \001(\t\"\310\004\n\007KclType\022\014\n\004type\030\001 \001" +
-      "(\t\022)\n\013union_types\030\002 \003(\0132\024.com.kcl.api.Kc" +
-      "lType\022\017\n\007default\030\003 \001(\t\022\023\n\013schema_name\030\004 " +
-      "\001(\t\022\022\n\nschema_doc\030\005 \001(\t\0228\n\nproperties\030\006 " +
-      "\003(\0132$.com.kcl.api.KclType.PropertiesEntr" +
-      "y\022\020\n\010required\030\007 \003(\t\022!\n\003key\030\010 \001(\0132\024.com.k" +
-      "cl.api.KclType\022\"\n\004item\030\t \001(\0132\024.com.kcl.a" +
-      "pi.KclType\022\014\n\004line\030\n \001(\005\022*\n\ndecorators\030\013" +
-      " \003(\0132\026.com.kcl.api.Decorator\022\020\n\010filename" +
-      "\030\014 \001(\t\022\020\n\010pkg_path\030\r \001(\t\022\023\n\013description\030" +
-      "\016 \001(\t\0224\n\010examples\030\017 \003(\0132\".com.kcl.api.Kc" +
-      "lType.ExamplesEntry\032G\n\017PropertiesEntry\022\013" +
-      "\n\003key\030\001 \001(\t\022#\n\005value\030\002 \001(\0132\024.com.kcl.api" +
-      ".KclType:\0028\001\032E\n\rExamplesEntry\022\013\n\003key\030\001 \001" +
-      "(\t\022#\n\005value\030\002 \001(\0132\024.com.kcl.api.Example:" +
-      "\0028\001\"\225\001\n\tDecorator\022\014\n\004name\030\001 \001(\t\022\021\n\targum" +
-      "ents\030\002 \003(\t\0226\n\010keywords\030\003 \003(\0132$.com.kcl.a" +
-      "pi.Decorator.KeywordsEntry\032/\n\rKeywordsEn" +
-      "try\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\">\n\007E" +
-      "xample\022\017\n\007summary\030\001 \001(\t\022\023\n\013description\030\002" +
-      " \001(\t\022\r\n\005value\030\003 \001(\t2\226\001\n\016BuiltinService\0228" +
-      "\n\004Ping\022\026.com.kcl.api.Ping_Args\032\030.com.kcl" +
-      ".api.Ping_Result\022J\n\nListMethod\022\034.com.kcl" +
-      ".api.ListMethod_Args\032\036.com.kcl.api.ListM" +
-      "ethod_Result2\273\014\n\014KclvmService\0228\n\004Ping\022\026." +
-      "com.kcl.api.Ping_Args\032\030.com.kcl.api.Ping" +
-      "_Result\022M\n\013ExecProgram\022\035.com.kcl.api.Exe" +
-      "cProgram_Args\032\037.com.kcl.api.ExecProgram_" +
-      "Result\022P\n\014BuildProgram\022\036.com.kcl.api.Bui" +
-      "ldProgram_Args\032 .com.kcl.api.BuildProgra" +
-      "m_Result\022O\n\014ExecArtifact\022\036.com.kcl.api.E" +
-      "xecArtifact_Args\032\037.com.kcl.api.ExecProgr" +
-      "am_Result\022G\n\tParseFile\022\033.com.kcl.api.Par" +
-      "seFile_Args\032\035.com.kcl.api.ParseFile_Resu" +
-      "lt\022P\n\014ParseProgram\022\036.com.kcl.api.ParsePr" +
-      "ogram_Args\032 .com.kcl.api.ParseProgram_Re" +
-      "sult\022M\n\013LoadPackage\022\035.com.kcl.api.LoadPa" +
-      "ckage_Args\032\037.com.kcl.api.LoadPackage_Res" +
-      "ult\022J\n\nFormatCode\022\034.com.kcl.api.FormatCo" +
-      "de_Args\032\036.com.kcl.api.FormatCode_Result\022" +
-      "J\n\nFormatPath\022\034.com.kcl.api.FormatPath_A" +
-      "rgs\032\036.com.kcl.api.FormatPath_Result\022D\n\010L" +
-      "intPath\022\032.com.kcl.api.LintPath_Args\032\034.co" +
-      "m.kcl.api.LintPath_Result\022P\n\014OverrideFil" +
-      "e\022\036.com.kcl.api.OverrideFile_Args\032 .com." +
-      "kcl.api.OverrideFile_Result\022S\n\rGetSchema" +
-      "Type\022\037.com.kcl.api.GetSchemaType_Args\032!." +
-      "com.kcl.api.GetSchemaType_Result\022[\n\021GetF" +
-      "ullSchemaType\022#.com.kcl.api.GetFullSchem" +
-      "aType_Args\032!.com.kcl.api.GetSchemaType_R" +
-      "esult\022h\n\024GetSchemaTypeMapping\022&.com.kcl." +
-      "api.GetSchemaTypeMapping_Args\032(.com.kcl." +
-      "api.GetSchemaTypeMapping_Result\022P\n\014Valid" +
-      "ateCode\022\036.com.kcl.api.ValidateCode_Args\032" +
-      " .com.kcl.api.ValidateCode_Result\022P\n\014Lis" +
-      "tDepFiles\022\036.com.kcl.api.ListDepFiles_Arg" +
-      "s\032 .com.kcl.api.ListDepFiles_Result\022_\n\021L" +
-      "oadSettingsFiles\022#.com.kcl.api.LoadSetti" +
-      "ngsFiles_Args\032%.com.kcl.api.LoadSettings" +
-      "Files_Result\022>\n\006Rename\022\030.com.kcl.api.Ren" +
-      "ame_Args\032\032.com.kcl.api.Rename_Result\022J\n\n" +
-      "RenameCode\022\034.com.kcl.api.RenameCode_Args" +
-      "\032\036.com.kcl.api.RenameCode_Result\0228\n\004Test" +
-      "\022\026.com.kcl.api.Test_Args\032\030.com.kcl.api.T" +
-      "est_Resultb\006proto3"
+      "\001(\0132\027.com.kcl.api.ScopeIndex:\0028\001\">\n\022List" +
+      "Options_Result\022(\n\007options\030\002 \003(\0132\027.com.kc" +
+      "l.api.OptionHelp\"_\n\nOptionHelp\022\014\n\004name\030\001" +
+      " \001(\t\022\014\n\004type\030\002 \001(\t\022\020\n\010required\030\003 \001(\010\022\025\n\r" +
+      "default_value\030\004 \001(\t\022\014\n\004help\030\005 \001(\t\"\304\001\n\006Sy" +
+      "mbol\022 \n\002ty\030\001 \001(\0132\024.com.kcl.api.KclType\022\014" +
+      "\n\004name\030\002 \001(\t\022\'\n\005owner\030\003 \001(\0132\030.com.kcl.ap" +
+      "i.SymbolIndex\022%\n\003def\030\004 \001(\0132\030.com.kcl.api" +
+      ".SymbolIndex\022\'\n\005attrs\030\005 \003(\0132\030.com.kcl.ap" +
+      "i.SymbolIndex\022\021\n\tis_global\030\006 \001(\010\"\272\001\n\005Sco" +
+      "pe\022\014\n\004kind\030\001 \001(\t\022\'\n\006parent\030\002 \001(\0132\027.com.k" +
+      "cl.api.ScopeIndex\022\'\n\005owner\030\003 \001(\0132\030.com.k" +
+      "cl.api.SymbolIndex\022)\n\010children\030\004 \003(\0132\027.c" +
+      "om.kcl.api.ScopeIndex\022&\n\004defs\030\005 \003(\0132\030.co" +
+      "m.kcl.api.SymbolIndex\"1\n\013SymbolIndex\022\t\n\001" +
+      "i\030\001 \001(\004\022\t\n\001g\030\002 \001(\004\022\014\n\004kind\030\003 \001(\t\"0\n\nScop" +
+      "eIndex\022\t\n\001i\030\001 \001(\004\022\t\n\001g\030\002 \001(\004\022\014\n\004kind\030\003 \001" +
+      "(\t\"\344\003\n\020ExecProgram_Args\022\020\n\010work_dir\030\001 \001(" +
+      "\t\022\027\n\017k_filename_list\030\002 \003(\t\022\023\n\013k_code_lis" +
+      "t\030\003 \003(\t\022%\n\004args\030\004 \003(\0132\027.com.kcl.api.CmdA" +
+      "rgSpec\022/\n\toverrides\030\005 \003(\0132\034.com.kcl.api." +
+      "CmdOverrideSpec\022\033\n\023disable_yaml_result\030\006" +
+      " \001(\010\022\032\n\022print_override_ast\030\007 \001(\010\022\032\n\022stri" +
+      "ct_range_check\030\010 \001(\010\022\024\n\014disable_none\030\t \001" +
+      "(\010\022\017\n\007verbose\030\n \001(\005\022\r\n\005debug\030\013 \001(\005\022\021\n\tso" +
+      "rt_keys\030\014 \001(\010\0226\n\rexternal_pkgs\030\r \003(\0132\037.c" +
+      "om.kcl.api.CmdExternalPkgSpec\022 \n\030include" +
+      "_schema_type_path\030\016 \001(\010\022\024\n\014compile_only\030" +
+      "\017 \001(\010\022\023\n\013show_hidden\030\020 \001(\010\022\025\n\rpath_selec" +
+      "tor\030\021 \003(\t\"h\n\022ExecProgram_Result\022\023\n\013json_" +
+      "result\030\001 \001(\t\022\023\n\013yaml_result\030\002 \001(\t\022\023\n\013log" +
+      "_message\030\003 \001(\t\022\023\n\013err_message\030\004 \001(\t\"U\n\021B" +
+      "uildProgram_Args\0220\n\texec_args\030\001 \001(\0132\035.co" +
+      "m.kcl.api.ExecProgram_Args\022\016\n\006output\030\002 \001" +
+      "(\t\"#\n\023BuildProgram_Result\022\014\n\004path\030\001 \001(\t\"" +
+      "S\n\021ExecArtifact_Args\022\014\n\004path\030\001 \001(\t\0220\n\tex" +
+      "ec_args\030\002 \001(\0132\035.com.kcl.api.ExecProgram_" +
+      "Args\"\'\n\020ResetPlugin_Args\022\023\n\013plugin_root\030" +
+      "\001 \001(\t\"\024\n\022ResetPlugin_Result\"!\n\017FormatCod" +
+      "e_Args\022\016\n\006source\030\001 \001(\t\"&\n\021FormatCode_Res" +
+      "ult\022\021\n\tformatted\030\001 \001(\014\"\037\n\017FormatPath_Arg" +
+      "s\022\014\n\004path\030\001 \001(\t\"*\n\021FormatPath_Result\022\025\n\r" +
+      "changed_paths\030\001 \003(\t\"\036\n\rLintPath_Args\022\r\n\005" +
+      "paths\030\001 \003(\t\"\"\n\017LintPath_Result\022\017\n\007result" +
+      "s\030\001 \003(\t\"F\n\021OverrideFile_Args\022\014\n\004file\030\001 \001" +
+      "(\t\022\r\n\005specs\030\002 \003(\t\022\024\n\014import_paths\030\003 \003(\t\"" +
+      "%\n\023OverrideFile_Result\022\016\n\006result\030\001 \001(\010\"_" +
+      "\n\026GetFullSchemaType_Args\0220\n\texec_args\030\001 " +
+      "\001(\0132\035.com.kcl.api.ExecProgram_Args\022\023\n\013sc" +
+      "hema_name\030\002 \001(\t\"E\n\022GetSchemaType_Args\022\014\n" +
+      "\004file\030\001 \001(\t\022\014\n\004code\030\002 \001(\t\022\023\n\013schema_name" +
+      "\030\003 \001(\t\"F\n\024GetSchemaType_Result\022.\n\020schema" +
+      "_type_list\030\001 \003(\0132\024.com.kcl.api.KclType\"L" +
+      "\n\031GetSchemaTypeMapping_Args\022\014\n\004file\030\001 \001(" +
+      "\t\022\014\n\004code\030\002 \001(\t\022\023\n\013schema_name\030\003 \001(\t\"\313\001\n" +
+      "\033GetSchemaTypeMapping_Result\022\\\n\023schema_t" +
+      "ype_mapping\030\001 \003(\0132?.com.kcl.api.GetSchem" +
+      "aTypeMapping_Result.SchemaTypeMappingEnt" +
+      "ry\032N\n\026SchemaTypeMappingEntry\022\013\n\003key\030\001 \001(" +
+      "\t\022#\n\005value\030\002 \001(\0132\024.com.kcl.api.KclType:\002" +
+      "8\001\"\207\001\n\021ValidateCode_Args\022\020\n\010datafile\030\001 \001" +
+      "(\t\022\014\n\004data\030\002 \001(\t\022\014\n\004file\030\003 \001(\t\022\014\n\004code\030\004" +
+      " \001(\t\022\016\n\006schema\030\005 \001(\t\022\026\n\016attribute_name\030\006" +
+      " \001(\t\022\016\n\006format\030\007 \001(\t\";\n\023ValidateCode_Res" +
+      "ult\022\017\n\007success\030\001 \001(\010\022\023\n\013err_message\030\002 \001(" +
+      "\t\":\n\010Position\022\014\n\004line\030\001 \001(\003\022\016\n\006column\030\002 " +
+      "\001(\003\022\020\n\010filename\030\003 \001(\t\"i\n\021ListDepFiles_Ar" +
+      "gs\022\020\n\010work_dir\030\001 \001(\t\022\024\n\014use_abs_path\030\002 \001" +
+      "(\010\022\023\n\013include_all\030\003 \001(\010\022\027\n\017use_fast_pars" +
+      "er\030\004 \001(\010\"F\n\023ListDepFiles_Result\022\017\n\007pkgro" +
+      "ot\030\001 \001(\t\022\017\n\007pkgpath\030\002 \001(\t\022\r\n\005files\030\003 \003(\t" +
+      "\"9\n\026LoadSettingsFiles_Args\022\020\n\010work_dir\030\001" +
+      " \001(\t\022\r\n\005files\030\002 \003(\t\"{\n\030LoadSettingsFiles" +
+      "_Result\022/\n\017kcl_cli_configs\030\001 \001(\0132\026.com.k" +
+      "cl.api.CliConfig\022.\n\013kcl_options\030\002 \003(\0132\031." +
+      "com.kcl.api.KeyValuePair\"\360\001\n\tCliConfig\022\r" +
+      "\n\005files\030\001 \003(\t\022\016\n\006output\030\002 \001(\t\022\021\n\toverrid" +
+      "es\030\003 \003(\t\022\025\n\rpath_selector\030\004 \003(\t\022\032\n\022stric" +
+      "t_range_check\030\005 \001(\010\022\024\n\014disable_none\030\006 \001(" +
+      "\010\022\017\n\007verbose\030\007 \001(\003\022\r\n\005debug\030\010 \001(\010\022\021\n\tsor" +
+      "t_keys\030\t \001(\010\022\023\n\013show_hidden\030\n \001(\010\022 \n\030inc" +
+      "lude_schema_type_path\030\013 \001(\010\"*\n\014KeyValueP" +
+      "air\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t\"^\n\013Renam" +
+      "e_Args\022\024\n\014package_root\030\001 \001(\t\022\023\n\013symbol_p" +
+      "ath\030\002 \001(\t\022\022\n\nfile_paths\030\003 \003(\t\022\020\n\010new_nam" +
+      "e\030\004 \001(\t\"&\n\rRename_Result\022\025\n\rchanged_file" +
+      "s\030\001 \003(\t\"\307\001\n\017RenameCode_Args\022\024\n\014package_r" +
+      "oot\030\001 \001(\t\022\023\n\013symbol_path\030\002 \001(\t\022C\n\014source" +
+      "_codes\030\003 \003(\0132-.com.kcl.api.RenameCode_Ar" +
+      "gs.SourceCodesEntry\022\020\n\010new_name\030\004 \001(\t\0322\n" +
+      "\020SourceCodesEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030" +
+      "\002 \001(\t:\0028\001\"\221\001\n\021RenameCode_Result\022G\n\rchang" +
+      "ed_codes\030\001 \003(\01320.com.kcl.api.RenameCode_" +
+      "Result.ChangedCodesEntry\0323\n\021ChangedCodes" +
+      "Entry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\"v\n" +
+      "\tTest_Args\0220\n\texec_args\030\001 \001(\0132\035.com.kcl." +
+      "api.ExecProgram_Args\022\020\n\010pkg_list\030\002 \003(\t\022\022" +
+      "\n\nrun_regexp\030\003 \001(\t\022\021\n\tfail_fast\030\004 \001(\010\"6\n" +
+      "\013Test_Result\022\'\n\004info\030\002 \003(\0132\031.com.kcl.api" +
+      ".TestCaseInfo\"R\n\014TestCaseInfo\022\014\n\004name\030\001 " +
+      "\001(\t\022\r\n\005error\030\002 \001(\t\022\020\n\010duration\030\003 \001(\004\022\023\n\013" +
+      "log_message\030\004 \001(\t\"\310\004\n\007KclType\022\014\n\004type\030\001 " +
+      "\001(\t\022)\n\013union_types\030\002 \003(\0132\024.com.kcl.api.K" +
+      "clType\022\017\n\007default\030\003 \001(\t\022\023\n\013schema_name\030\004" +
+      " \001(\t\022\022\n\nschema_doc\030\005 \001(\t\0228\n\nproperties\030\006" +
+      " \003(\0132$.com.kcl.api.KclType.PropertiesEnt" +
+      "ry\022\020\n\010required\030\007 \003(\t\022!\n\003key\030\010 \001(\0132\024.com." +
+      "kcl.api.KclType\022\"\n\004item\030\t \001(\0132\024.com.kcl." +
+      "api.KclType\022\014\n\004line\030\n \001(\005\022*\n\ndecorators\030" +
+      "\013 \003(\0132\026.com.kcl.api.Decorator\022\020\n\010filenam" +
+      "e\030\014 \001(\t\022\020\n\010pkg_path\030\r \001(\t\022\023\n\013description" +
+      "\030\016 \001(\t\0224\n\010examples\030\017 \003(\0132\".com.kcl.api.K" +
+      "clType.ExamplesEntry\032G\n\017PropertiesEntry\022" +
+      "\013\n\003key\030\001 \001(\t\022#\n\005value\030\002 \001(\0132\024.com.kcl.ap" +
+      "i.KclType:\0028\001\032E\n\rExamplesEntry\022\013\n\003key\030\001 " +
+      "\001(\t\022#\n\005value\030\002 \001(\0132\024.com.kcl.api.Example" +
+      ":\0028\001\"\225\001\n\tDecorator\022\014\n\004name\030\001 \001(\t\022\021\n\targu" +
+      "ments\030\002 \003(\t\0226\n\010keywords\030\003 \003(\0132$.com.kcl." +
+      "api.Decorator.KeywordsEntry\032/\n\rKeywordsE" +
+      "ntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\">\n\007" +
+      "Example\022\017\n\007summary\030\001 \001(\t\022\023\n\013description\030" +
+      "\002 \001(\t\022\r\n\005value\030\003 \001(\t2\226\001\n\016BuiltinService\022" +
+      "8\n\004Ping\022\026.com.kcl.api.Ping_Args\032\030.com.kc" +
+      "l.api.Ping_Result\022J\n\nListMethod\022\034.com.kc" +
+      "l.api.ListMethod_Args\032\036.com.kcl.api.List" +
+      "Method_Result2\213\r\n\014KclvmService\0228\n\004Ping\022\026" +
+      ".com.kcl.api.Ping_Args\032\030.com.kcl.api.Pin" +
+      "g_Result\022M\n\013ExecProgram\022\035.com.kcl.api.Ex" +
+      "ecProgram_Args\032\037.com.kcl.api.ExecProgram" +
+      "_Result\022P\n\014BuildProgram\022\036.com.kcl.api.Bu" +
+      "ildProgram_Args\032 .com.kcl.api.BuildProgr" +
+      "am_Result\022O\n\014ExecArtifact\022\036.com.kcl.api." +
+      "ExecArtifact_Args\032\037.com.kcl.api.ExecProg" +
+      "ram_Result\022G\n\tParseFile\022\033.com.kcl.api.Pa" +
+      "rseFile_Args\032\035.com.kcl.api.ParseFile_Res" +
+      "ult\022P\n\014ParseProgram\022\036.com.kcl.api.ParseP" +
+      "rogram_Args\032 .com.kcl.api.ParseProgram_R" +
+      "esult\022M\n\013LoadPackage\022\035.com.kcl.api.LoadP" +
+      "ackage_Args\032\037.com.kcl.api.LoadPackage_Re" +
+      "sult\022N\n\013ListOptions\022\036.com.kcl.api.ParseP" +
+      "rogram_Args\032\037.com.kcl.api.ListOptions_Re" +
+      "sult\022J\n\nFormatCode\022\034.com.kcl.api.FormatC" +
+      "ode_Args\032\036.com.kcl.api.FormatCode_Result" +
+      "\022J\n\nFormatPath\022\034.com.kcl.api.FormatPath_" +
+      "Args\032\036.com.kcl.api.FormatPath_Result\022D\n\010" +
+      "LintPath\022\032.com.kcl.api.LintPath_Args\032\034.c" +
+      "om.kcl.api.LintPath_Result\022P\n\014OverrideFi" +
+      "le\022\036.com.kcl.api.OverrideFile_Args\032 .com" +
+      ".kcl.api.OverrideFile_Result\022S\n\rGetSchem" +
+      "aType\022\037.com.kcl.api.GetSchemaType_Args\032!" +
+      ".com.kcl.api.GetSchemaType_Result\022[\n\021Get" +
+      "FullSchemaType\022#.com.kcl.api.GetFullSche" +
+      "maType_Args\032!.com.kcl.api.GetSchemaType_" +
+      "Result\022h\n\024GetSchemaTypeMapping\022&.com.kcl" +
+      ".api.GetSchemaTypeMapping_Args\032(.com.kcl" +
+      ".api.GetSchemaTypeMapping_Result\022P\n\014Vali" +
+      "dateCode\022\036.com.kcl.api.ValidateCode_Args" +
+      "\032 .com.kcl.api.ValidateCode_Result\022P\n\014Li" +
+      "stDepFiles\022\036.com.kcl.api.ListDepFiles_Ar" +
+      "gs\032 .com.kcl.api.ListDepFiles_Result\022_\n\021" +
+      "LoadSettingsFiles\022#.com.kcl.api.LoadSett" +
+      "ingsFiles_Args\032%.com.kcl.api.LoadSetting" +
+      "sFiles_Result\022>\n\006Rename\022\030.com.kcl.api.Re" +
+      "name_Args\032\032.com.kcl.api.Rename_Result\022J\n" +
+      "\nRenameCode\022\034.com.kcl.api.RenameCode_Arg" +
+      "s\032\036.com.kcl.api.RenameCode_Result\0228\n\004Tes" +
+      "t\022\026.com.kcl.api.Test_Args\032\030.com.kcl.api." +
+      "Test_Resultb\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -60310,146 +62289,158 @@ java.lang.String defaultValue) {
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_kcl_api_LoadPackage_Result_PkgScopeMapEntry_descriptor,
         new java.lang.String[] { "Key", "Value", });
-    internal_static_com_kcl_api_Symbol_descriptor =
+    internal_static_com_kcl_api_ListOptions_Result_descriptor =
       getDescriptor().getMessageTypes().get(15);
+    internal_static_com_kcl_api_ListOptions_Result_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_com_kcl_api_ListOptions_Result_descriptor,
+        new java.lang.String[] { "Options", });
+    internal_static_com_kcl_api_OptionHelp_descriptor =
+      getDescriptor().getMessageTypes().get(16);
+    internal_static_com_kcl_api_OptionHelp_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_com_kcl_api_OptionHelp_descriptor,
+        new java.lang.String[] { "Name", "Type", "Required", "DefaultValue", "Help", });
+    internal_static_com_kcl_api_Symbol_descriptor =
+      getDescriptor().getMessageTypes().get(17);
     internal_static_com_kcl_api_Symbol_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_kcl_api_Symbol_descriptor,
         new java.lang.String[] { "Ty", "Name", "Owner", "Def", "Attrs", "IsGlobal", });
     internal_static_com_kcl_api_Scope_descriptor =
-      getDescriptor().getMessageTypes().get(16);
+      getDescriptor().getMessageTypes().get(18);
     internal_static_com_kcl_api_Scope_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_kcl_api_Scope_descriptor,
         new java.lang.String[] { "Kind", "Parent", "Owner", "Children", "Defs", });
     internal_static_com_kcl_api_SymbolIndex_descriptor =
-      getDescriptor().getMessageTypes().get(17);
+      getDescriptor().getMessageTypes().get(19);
     internal_static_com_kcl_api_SymbolIndex_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_kcl_api_SymbolIndex_descriptor,
         new java.lang.String[] { "I", "G", "Kind", });
     internal_static_com_kcl_api_ScopeIndex_descriptor =
-      getDescriptor().getMessageTypes().get(18);
+      getDescriptor().getMessageTypes().get(20);
     internal_static_com_kcl_api_ScopeIndex_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_kcl_api_ScopeIndex_descriptor,
         new java.lang.String[] { "I", "G", "Kind", });
     internal_static_com_kcl_api_ExecProgram_Args_descriptor =
-      getDescriptor().getMessageTypes().get(19);
+      getDescriptor().getMessageTypes().get(21);
     internal_static_com_kcl_api_ExecProgram_Args_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_kcl_api_ExecProgram_Args_descriptor,
         new java.lang.String[] { "WorkDir", "KFilenameList", "KCodeList", "Args", "Overrides", "DisableYamlResult", "PrintOverrideAst", "StrictRangeCheck", "DisableNone", "Verbose", "Debug", "SortKeys", "ExternalPkgs", "IncludeSchemaTypePath", "CompileOnly", "ShowHidden", "PathSelector", });
     internal_static_com_kcl_api_ExecProgram_Result_descriptor =
-      getDescriptor().getMessageTypes().get(20);
+      getDescriptor().getMessageTypes().get(22);
     internal_static_com_kcl_api_ExecProgram_Result_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_kcl_api_ExecProgram_Result_descriptor,
         new java.lang.String[] { "JsonResult", "YamlResult", "LogMessage", "ErrMessage", });
     internal_static_com_kcl_api_BuildProgram_Args_descriptor =
-      getDescriptor().getMessageTypes().get(21);
+      getDescriptor().getMessageTypes().get(23);
     internal_static_com_kcl_api_BuildProgram_Args_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_kcl_api_BuildProgram_Args_descriptor,
         new java.lang.String[] { "ExecArgs", "Output", });
     internal_static_com_kcl_api_BuildProgram_Result_descriptor =
-      getDescriptor().getMessageTypes().get(22);
+      getDescriptor().getMessageTypes().get(24);
     internal_static_com_kcl_api_BuildProgram_Result_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_kcl_api_BuildProgram_Result_descriptor,
         new java.lang.String[] { "Path", });
     internal_static_com_kcl_api_ExecArtifact_Args_descriptor =
-      getDescriptor().getMessageTypes().get(23);
+      getDescriptor().getMessageTypes().get(25);
     internal_static_com_kcl_api_ExecArtifact_Args_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_kcl_api_ExecArtifact_Args_descriptor,
         new java.lang.String[] { "Path", "ExecArgs", });
     internal_static_com_kcl_api_ResetPlugin_Args_descriptor =
-      getDescriptor().getMessageTypes().get(24);
+      getDescriptor().getMessageTypes().get(26);
     internal_static_com_kcl_api_ResetPlugin_Args_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_kcl_api_ResetPlugin_Args_descriptor,
         new java.lang.String[] { "PluginRoot", });
     internal_static_com_kcl_api_ResetPlugin_Result_descriptor =
-      getDescriptor().getMessageTypes().get(25);
+      getDescriptor().getMessageTypes().get(27);
     internal_static_com_kcl_api_ResetPlugin_Result_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_kcl_api_ResetPlugin_Result_descriptor,
         new java.lang.String[] { });
     internal_static_com_kcl_api_FormatCode_Args_descriptor =
-      getDescriptor().getMessageTypes().get(26);
+      getDescriptor().getMessageTypes().get(28);
     internal_static_com_kcl_api_FormatCode_Args_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_kcl_api_FormatCode_Args_descriptor,
         new java.lang.String[] { "Source", });
     internal_static_com_kcl_api_FormatCode_Result_descriptor =
-      getDescriptor().getMessageTypes().get(27);
+      getDescriptor().getMessageTypes().get(29);
     internal_static_com_kcl_api_FormatCode_Result_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_kcl_api_FormatCode_Result_descriptor,
         new java.lang.String[] { "Formatted", });
     internal_static_com_kcl_api_FormatPath_Args_descriptor =
-      getDescriptor().getMessageTypes().get(28);
+      getDescriptor().getMessageTypes().get(30);
     internal_static_com_kcl_api_FormatPath_Args_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_kcl_api_FormatPath_Args_descriptor,
         new java.lang.String[] { "Path", });
     internal_static_com_kcl_api_FormatPath_Result_descriptor =
-      getDescriptor().getMessageTypes().get(29);
+      getDescriptor().getMessageTypes().get(31);
     internal_static_com_kcl_api_FormatPath_Result_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_kcl_api_FormatPath_Result_descriptor,
         new java.lang.String[] { "ChangedPaths", });
     internal_static_com_kcl_api_LintPath_Args_descriptor =
-      getDescriptor().getMessageTypes().get(30);
+      getDescriptor().getMessageTypes().get(32);
     internal_static_com_kcl_api_LintPath_Args_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_kcl_api_LintPath_Args_descriptor,
         new java.lang.String[] { "Paths", });
     internal_static_com_kcl_api_LintPath_Result_descriptor =
-      getDescriptor().getMessageTypes().get(31);
+      getDescriptor().getMessageTypes().get(33);
     internal_static_com_kcl_api_LintPath_Result_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_kcl_api_LintPath_Result_descriptor,
         new java.lang.String[] { "Results", });
     internal_static_com_kcl_api_OverrideFile_Args_descriptor =
-      getDescriptor().getMessageTypes().get(32);
+      getDescriptor().getMessageTypes().get(34);
     internal_static_com_kcl_api_OverrideFile_Args_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_kcl_api_OverrideFile_Args_descriptor,
         new java.lang.String[] { "File", "Specs", "ImportPaths", });
     internal_static_com_kcl_api_OverrideFile_Result_descriptor =
-      getDescriptor().getMessageTypes().get(33);
+      getDescriptor().getMessageTypes().get(35);
     internal_static_com_kcl_api_OverrideFile_Result_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_kcl_api_OverrideFile_Result_descriptor,
         new java.lang.String[] { "Result", });
     internal_static_com_kcl_api_GetFullSchemaType_Args_descriptor =
-      getDescriptor().getMessageTypes().get(34);
+      getDescriptor().getMessageTypes().get(36);
     internal_static_com_kcl_api_GetFullSchemaType_Args_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_kcl_api_GetFullSchemaType_Args_descriptor,
         new java.lang.String[] { "ExecArgs", "SchemaName", });
     internal_static_com_kcl_api_GetSchemaType_Args_descriptor =
-      getDescriptor().getMessageTypes().get(35);
+      getDescriptor().getMessageTypes().get(37);
     internal_static_com_kcl_api_GetSchemaType_Args_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_kcl_api_GetSchemaType_Args_descriptor,
         new java.lang.String[] { "File", "Code", "SchemaName", });
     internal_static_com_kcl_api_GetSchemaType_Result_descriptor =
-      getDescriptor().getMessageTypes().get(36);
+      getDescriptor().getMessageTypes().get(38);
     internal_static_com_kcl_api_GetSchemaType_Result_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_kcl_api_GetSchemaType_Result_descriptor,
         new java.lang.String[] { "SchemaTypeList", });
     internal_static_com_kcl_api_GetSchemaTypeMapping_Args_descriptor =
-      getDescriptor().getMessageTypes().get(37);
+      getDescriptor().getMessageTypes().get(39);
     internal_static_com_kcl_api_GetSchemaTypeMapping_Args_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_kcl_api_GetSchemaTypeMapping_Args_descriptor,
         new java.lang.String[] { "File", "Code", "SchemaName", });
     internal_static_com_kcl_api_GetSchemaTypeMapping_Result_descriptor =
-      getDescriptor().getMessageTypes().get(38);
+      getDescriptor().getMessageTypes().get(40);
     internal_static_com_kcl_api_GetSchemaTypeMapping_Result_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_kcl_api_GetSchemaTypeMapping_Result_descriptor,
@@ -60461,73 +62452,73 @@ java.lang.String defaultValue) {
         internal_static_com_kcl_api_GetSchemaTypeMapping_Result_SchemaTypeMappingEntry_descriptor,
         new java.lang.String[] { "Key", "Value", });
     internal_static_com_kcl_api_ValidateCode_Args_descriptor =
-      getDescriptor().getMessageTypes().get(39);
+      getDescriptor().getMessageTypes().get(41);
     internal_static_com_kcl_api_ValidateCode_Args_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_kcl_api_ValidateCode_Args_descriptor,
         new java.lang.String[] { "Datafile", "Data", "File", "Code", "Schema", "AttributeName", "Format", });
     internal_static_com_kcl_api_ValidateCode_Result_descriptor =
-      getDescriptor().getMessageTypes().get(40);
+      getDescriptor().getMessageTypes().get(42);
     internal_static_com_kcl_api_ValidateCode_Result_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_kcl_api_ValidateCode_Result_descriptor,
         new java.lang.String[] { "Success", "ErrMessage", });
     internal_static_com_kcl_api_Position_descriptor =
-      getDescriptor().getMessageTypes().get(41);
+      getDescriptor().getMessageTypes().get(43);
     internal_static_com_kcl_api_Position_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_kcl_api_Position_descriptor,
         new java.lang.String[] { "Line", "Column", "Filename", });
     internal_static_com_kcl_api_ListDepFiles_Args_descriptor =
-      getDescriptor().getMessageTypes().get(42);
+      getDescriptor().getMessageTypes().get(44);
     internal_static_com_kcl_api_ListDepFiles_Args_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_kcl_api_ListDepFiles_Args_descriptor,
         new java.lang.String[] { "WorkDir", "UseAbsPath", "IncludeAll", "UseFastParser", });
     internal_static_com_kcl_api_ListDepFiles_Result_descriptor =
-      getDescriptor().getMessageTypes().get(43);
+      getDescriptor().getMessageTypes().get(45);
     internal_static_com_kcl_api_ListDepFiles_Result_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_kcl_api_ListDepFiles_Result_descriptor,
         new java.lang.String[] { "Pkgroot", "Pkgpath", "Files", });
     internal_static_com_kcl_api_LoadSettingsFiles_Args_descriptor =
-      getDescriptor().getMessageTypes().get(44);
+      getDescriptor().getMessageTypes().get(46);
     internal_static_com_kcl_api_LoadSettingsFiles_Args_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_kcl_api_LoadSettingsFiles_Args_descriptor,
         new java.lang.String[] { "WorkDir", "Files", });
     internal_static_com_kcl_api_LoadSettingsFiles_Result_descriptor =
-      getDescriptor().getMessageTypes().get(45);
+      getDescriptor().getMessageTypes().get(47);
     internal_static_com_kcl_api_LoadSettingsFiles_Result_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_kcl_api_LoadSettingsFiles_Result_descriptor,
         new java.lang.String[] { "KclCliConfigs", "KclOptions", });
     internal_static_com_kcl_api_CliConfig_descriptor =
-      getDescriptor().getMessageTypes().get(46);
+      getDescriptor().getMessageTypes().get(48);
     internal_static_com_kcl_api_CliConfig_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_kcl_api_CliConfig_descriptor,
         new java.lang.String[] { "Files", "Output", "Overrides", "PathSelector", "StrictRangeCheck", "DisableNone", "Verbose", "Debug", "SortKeys", "ShowHidden", "IncludeSchemaTypePath", });
     internal_static_com_kcl_api_KeyValuePair_descriptor =
-      getDescriptor().getMessageTypes().get(47);
+      getDescriptor().getMessageTypes().get(49);
     internal_static_com_kcl_api_KeyValuePair_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_kcl_api_KeyValuePair_descriptor,
         new java.lang.String[] { "Key", "Value", });
     internal_static_com_kcl_api_Rename_Args_descriptor =
-      getDescriptor().getMessageTypes().get(48);
+      getDescriptor().getMessageTypes().get(50);
     internal_static_com_kcl_api_Rename_Args_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_kcl_api_Rename_Args_descriptor,
         new java.lang.String[] { "PackageRoot", "SymbolPath", "FilePaths", "NewName", });
     internal_static_com_kcl_api_Rename_Result_descriptor =
-      getDescriptor().getMessageTypes().get(49);
+      getDescriptor().getMessageTypes().get(51);
     internal_static_com_kcl_api_Rename_Result_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_kcl_api_Rename_Result_descriptor,
         new java.lang.String[] { "ChangedFiles", });
     internal_static_com_kcl_api_RenameCode_Args_descriptor =
-      getDescriptor().getMessageTypes().get(50);
+      getDescriptor().getMessageTypes().get(52);
     internal_static_com_kcl_api_RenameCode_Args_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_kcl_api_RenameCode_Args_descriptor,
@@ -60539,7 +62530,7 @@ java.lang.String defaultValue) {
         internal_static_com_kcl_api_RenameCode_Args_SourceCodesEntry_descriptor,
         new java.lang.String[] { "Key", "Value", });
     internal_static_com_kcl_api_RenameCode_Result_descriptor =
-      getDescriptor().getMessageTypes().get(51);
+      getDescriptor().getMessageTypes().get(53);
     internal_static_com_kcl_api_RenameCode_Result_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_kcl_api_RenameCode_Result_descriptor,
@@ -60551,25 +62542,25 @@ java.lang.String defaultValue) {
         internal_static_com_kcl_api_RenameCode_Result_ChangedCodesEntry_descriptor,
         new java.lang.String[] { "Key", "Value", });
     internal_static_com_kcl_api_Test_Args_descriptor =
-      getDescriptor().getMessageTypes().get(52);
+      getDescriptor().getMessageTypes().get(54);
     internal_static_com_kcl_api_Test_Args_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_kcl_api_Test_Args_descriptor,
         new java.lang.String[] { "ExecArgs", "PkgList", "RunRegexp", "FailFast", });
     internal_static_com_kcl_api_Test_Result_descriptor =
-      getDescriptor().getMessageTypes().get(53);
+      getDescriptor().getMessageTypes().get(55);
     internal_static_com_kcl_api_Test_Result_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_kcl_api_Test_Result_descriptor,
         new java.lang.String[] { "Info", });
     internal_static_com_kcl_api_TestCaseInfo_descriptor =
-      getDescriptor().getMessageTypes().get(54);
+      getDescriptor().getMessageTypes().get(56);
     internal_static_com_kcl_api_TestCaseInfo_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_kcl_api_TestCaseInfo_descriptor,
         new java.lang.String[] { "Name", "Error", "Duration", "LogMessage", });
     internal_static_com_kcl_api_KclType_descriptor =
-      getDescriptor().getMessageTypes().get(55);
+      getDescriptor().getMessageTypes().get(57);
     internal_static_com_kcl_api_KclType_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_kcl_api_KclType_descriptor,
@@ -60587,7 +62578,7 @@ java.lang.String defaultValue) {
         internal_static_com_kcl_api_KclType_ExamplesEntry_descriptor,
         new java.lang.String[] { "Key", "Value", });
     internal_static_com_kcl_api_Decorator_descriptor =
-      getDescriptor().getMessageTypes().get(56);
+      getDescriptor().getMessageTypes().get(58);
     internal_static_com_kcl_api_Decorator_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_kcl_api_Decorator_descriptor,
@@ -60599,7 +62590,7 @@ java.lang.String defaultValue) {
         internal_static_com_kcl_api_Decorator_KeywordsEntry_descriptor,
         new java.lang.String[] { "Key", "Value", });
     internal_static_com_kcl_api_Example_descriptor =
-      getDescriptor().getMessageTypes().get(57);
+      getDescriptor().getMessageTypes().get(59);
     internal_static_com_kcl_api_Example_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_kcl_api_Example_descriptor,
