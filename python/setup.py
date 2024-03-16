@@ -134,7 +134,7 @@ with open(require_path) as f:
 setup(
     name="kcl_lib",
     author="KCL Authors",
-    version="0.8.0",
+    version="0.8.1",
     license="Apache License 2.0",
     python_requires=">=3.7",
     description="KCL Artifact Library for Python",
