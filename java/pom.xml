@@ -6,7 +6,7 @@
 
     <groupId>com.kcl</groupId>
     <artifactId>kcl-lib</artifactId>
-    <version>0.8.1</version>
+    <version>0.8.3</version>
     <name>KCL Arifact Library for Java</name>
     <description>
         KCL is an open-source constraint-based record and functional language mainly
