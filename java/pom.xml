@@ -184,6 +184,7 @@
                         <configuration>
                             <classifier>${jni.classifier}</classifier>
                             <includes>
+                                <include>**/*.class</include>  
                                 <include>native/**</include>
                             </includes>
                         </configuration>
