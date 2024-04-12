@@ -21,6 +21,9 @@ public interface Service {
     // Override KCL file with args
     OverrideFile_Result overrideFile(OverrideFile_Args args) throws Exception;
 
+    // List all the variables in the KCL file
+    ListVariables_Result listVariables(ListVariables_Args args) throws Exception;
+
     // Service for getting the full schema type list
     GetSchemaType_Result getFullSchemaType(GetFullSchemaType_Args args) throws Exception;
 

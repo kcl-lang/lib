@@ -1,0 +1,88 @@
+package com.kcl;
+
+import com.kcl.api.API;
+import com.kcl.api.Spec.LoadPackage_Args;
+import com.kcl.api.Spec.LoadPackage_Result;
+import com.kcl.api.Spec.OverrideFile_Args;
+import com.kcl.api.Spec.OverrideFile_Result;
+import com.kcl.api.Spec.ParseProgram_Args;
+import com.kcl.api.Spec.Scope;
+import com.kcl.api.Spec.Symbol;
+import com.kcl.api.Spec.SymbolIndex;
+import com.kcl.ast.NodeRef;
+import com.kcl.ast.Program;
+import com.kcl.ast.Stmt;
+import com.kcl.util.JsonUtil;
+import com.kcl.util.SematicUtil;
+
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
+import org.junit.Assert;
+import org.junit.Test;
+
+public class OverrideFileTest {
+    @Test
+    public void testListVariables() throws Exception {
+        // API instance
+        API api = new API();
+
+        // Define the variables to test and their expected results
+        String[] testCases = { ":a=2", ":b.a=[1, 2, 3]" };
+
+        Path source = Paths.get("./src/test_data/override_file/main.k.bk");
+        Path target = Paths.get("./src/test_data/override_file/main.k");
+        if (Files.exists(target)) {
+            Files.delete(target);
+        }
+        Files.copy(source, target);
+
+        for (String spec : testCases) {
+            OverrideFile_Result result = api.overrideFile(OverrideFile_Args.newBuilder()
+                    .setFile("./src/test_data/override_file/main.k").addSpecs(spec).build());
+
+            Assert.assertEquals(result.getResult(), true);
+        }
+        if (Files.exists(target)) {
+            Files.delete(target);
+        }
+    }
+
+    @Test
+    public void testProgramSymbolsWithCache() throws Exception {
+        // API instance
+        API api = new API();
+        // Note call `loadPackageWithCache` here.
+        LoadPackage_Result result = api.loadPackageWithCache(LoadPackage_Args.newBuilder().setResolveAst(true)
+                .setWithAstIndex(true)
+                .setParseArgs(ParseProgram_Args.newBuilder().addPaths("./src/test_data/schema.k").build()).build());
+        // Get parse errors
+        Assert.assertEquals(result.getParseErrorsList().size(), 0);
+        // Get Type errors
+        Assert.assertEquals(result.getTypeErrorsList().size(), 0);
+        // Get AST
+        Program program = JsonUtil.deserializeProgram(result.getProgram());
+        Assert.assertTrue(program.getRoot().contains("test_data"));
+        // Variable definitions in the main scope.
+        Scope mainScope = SematicUtil.findMainPackageScope(result);
+        // Child scopes of the main scope.
+        Assert.assertEquals(mainScope.getChildrenList().size(), 2);
+        // Mapping AST node to Symbol type
+        NodeRef<Stmt> stmt = program.getFirstModule().getBody().get(0);
+        Assert.assertTrue(SematicUtil.findSymbolByAstId(result, stmt.getId()).getName().contains("pkg"));
+        // Mapping symbol to AST node
+        SymbolIndex appSymbolIndex = mainScope.getDefs(1);
+        Symbol appSymbol = SematicUtil.findSymbol(result, appSymbolIndex);
+        Assert.assertEquals(appSymbol.getTy().getSchemaName(), "AppConfig");
+        // Query type symbol using variable type.
+        String schemaFullName = appSymbol.getTy().getPkgPath() + "." + appSymbol.getTy().getSchemaName();
+        Symbol appConfigSymbol = SematicUtil.findSymbol(result,
+                result.getFullyQualifiedNameMapOrDefault(schemaFullName, null));
+        Assert.assertEquals(appConfigSymbol.getTy().getSchemaName(), "AppConfig");
+        // Query AST node using the symbol
+        Assert.assertNotNull(SematicUtil.findNodeBySymbol(result, appSymbolIndex));
+        // Query Scope using the symbol
+        Assert.assertEquals(SematicUtil.findScopeBySymbol(result, appSymbolIndex).getDefsCount(), 2);
+    }
+}
