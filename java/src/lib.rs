@@ -12,7 +12,7 @@ use anyhow::Result;
 use jni::objects::{JByteArray, JClass, JObject};
 use jni::sys::jbyteArray;
 use jni::JNIEnv;
-use kcl_lang::API;
+use kcl_lang::call;
 use kclvm_api::gpyrpc::LoadPackageArgs;
 use kclvm_api::service::KclvmServiceImpl;
 use kclvm_parser::KCLModuleCache;
@@ -23,7 +23,6 @@ use prost::Message;
 use std::sync::Mutex;
 
 lazy_static! {
-    static ref API_INSTANCE: Mutex<OnceCell<API>> = Mutex::new(OnceCell::new());
     static ref MODULE_CACHE: Mutex<OnceCell<KCLModuleCache>> = Mutex::new(OnceCell::new());
     static ref SCOPE_CACHE: Mutex<OnceCell<KCLScopeCache>> = Mutex::new(OnceCell::new());
 }
@@ -54,11 +53,9 @@ pub extern "system" fn Java_com_kcl_api_API_loadPackageWithCache(
 }
 
 fn intern_call_native(env: &mut JNIEnv, name: JByteArray, args: JByteArray) -> Result<jbyteArray> {
-    let binding = API_INSTANCE.lock().unwrap();
-    let api = binding.get_or_init(|| kcl_lang::API::new().expect("Failed to create API instance"));
     let name = env.convert_byte_array(name)?;
     let args = env.convert_byte_array(args)?;
-    let result = api.call_native(&name, &args)?;
+    let result = call(&name, &args)?;
     let j_byte_array = env.byte_array_from_slice(&result)?;
     Ok(j_byte_array.into_raw())
 }
