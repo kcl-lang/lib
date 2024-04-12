@@ -23561,6 +23561,16 @@ com.kcl.api.Spec.ScopeIndex defaultValue) {
      */
     com.google.protobuf.ByteString
         getPathSelectorBytes(int index);
+
+    /**
+     * <pre>
+     * -K --fast_eval
+     * </pre>
+     *
+     * <code>bool fast_eval = 18;</code>
+     * @return The fastEval.
+     */
+    boolean getFastEval();
   }
   /**
    * Protobuf type {@code com.kcl.api.ExecProgram_Args}
@@ -24058,6 +24068,21 @@ com.kcl.api.Spec.ScopeIndex defaultValue) {
       return pathSelector_.getByteString(index);
     }
 
+    public static final int FAST_EVAL_FIELD_NUMBER = 18;
+    private boolean fastEval_ = false;
+    /**
+     * <pre>
+     * -K --fast_eval
+     * </pre>
+     *
+     * <code>bool fast_eval = 18;</code>
+     * @return The fastEval.
+     */
+    @java.lang.Override
+    public boolean getFastEval() {
+      return fastEval_;
+    }
+
     private byte memoizedIsInitialized = -1;
     @java.lang.Override
     public final boolean isInitialized() {
@@ -24122,6 +24147,9 @@ com.kcl.api.Spec.ScopeIndex defaultValue) {
       }
       for (int i = 0; i < pathSelector_.size(); i++) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 17, pathSelector_.getRaw(i));
+      }
+      if (fastEval_ != false) {
+        output.writeBool(18, fastEval_);
       }
       getUnknownFields().writeTo(output);
     }
@@ -24211,6 +24239,10 @@ com.kcl.api.Spec.ScopeIndex defaultValue) {
         size += dataSize;
         size += 2 * getPathSelectorList().size();
       }
+      if (fastEval_ != false) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBoolSize(18, fastEval_);
+      }
       size += getUnknownFields().getSerializedSize();
       memoizedSize = size;
       return size;
@@ -24260,6 +24292,8 @@ com.kcl.api.Spec.ScopeIndex defaultValue) {
           != other.getShowHidden()) return false;
       if (!getPathSelectorList()
           .equals(other.getPathSelectorList())) return false;
+      if (getFastEval()
+          != other.getFastEval()) return false;
       if (!getUnknownFields().equals(other.getUnknownFields())) return false;
       return true;
     }
@@ -24325,6 +24359,9 @@ com.kcl.api.Spec.ScopeIndex defaultValue) {
         hash = (37 * hash) + PATH_SELECTOR_FIELD_NUMBER;
         hash = (53 * hash) + getPathSelectorList().hashCode();
       }
+      hash = (37 * hash) + FAST_EVAL_FIELD_NUMBER;
+      hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
+          getFastEval());
       hash = (29 * hash) + getUnknownFields().hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -24494,6 +24531,7 @@ com.kcl.api.Spec.ScopeIndex defaultValue) {
         showHidden_ = false;
         pathSelector_ =
             com.google.protobuf.LazyStringArrayList.emptyList();
+        fastEval_ = false;
         return this;
       }
 
@@ -24602,6 +24640,9 @@ com.kcl.api.Spec.ScopeIndex defaultValue) {
         if (((from_bitField0_ & 0x00010000) != 0)) {
           pathSelector_.makeImmutable();
           result.pathSelector_ = pathSelector_;
+        }
+        if (((from_bitField0_ & 0x00020000) != 0)) {
+          result.fastEval_ = fastEval_;
         }
       }
 
@@ -24792,6 +24833,9 @@ com.kcl.api.Spec.ScopeIndex defaultValue) {
           }
           onChanged();
         }
+        if (other.getFastEval() != false) {
+          setFastEval(other.getFastEval());
+        }
         this.mergeUnknownFields(other.getUnknownFields());
         onChanged();
         return this;
@@ -24930,6 +24974,11 @@ com.kcl.api.Spec.ScopeIndex defaultValue) {
                 pathSelector_.add(s);
                 break;
               } // case 138
+              case 144: {
+                fastEval_ = input.readBool();
+                bitField0_ |= 0x00020000;
+                break;
+              } // case 144
               default: {
                 if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                   done = true; // was an endgroup tag
@@ -26592,6 +26641,50 @@ com.kcl.api.Spec.ScopeIndex defaultValue) {
         ensurePathSelectorIsMutable();
         pathSelector_.add(value);
         bitField0_ |= 0x00010000;
+        onChanged();
+        return this;
+      }
+
+      private boolean fastEval_ ;
+      /**
+       * <pre>
+       * -K --fast_eval
+       * </pre>
+       *
+       * <code>bool fast_eval = 18;</code>
+       * @return The fastEval.
+       */
+      @java.lang.Override
+      public boolean getFastEval() {
+        return fastEval_;
+      }
+      /**
+       * <pre>
+       * -K --fast_eval
+       * </pre>
+       *
+       * <code>bool fast_eval = 18;</code>
+       * @param value The fastEval to set.
+       * @return This builder for chaining.
+       */
+      public Builder setFastEval(boolean value) {
+
+        fastEval_ = value;
+        bitField0_ |= 0x00020000;
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * -K --fast_eval
+       * </pre>
+       *
+       * <code>bool fast_eval = 18;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearFastEval() {
+        bitField0_ = (bitField0_ & ~0x00020000);
+        fastEval_ = false;
         onChanged();
         return this;
       }
@@ -35571,6 +35664,2282 @@ com.kcl.api.Spec.ScopeIndex defaultValue) {
 
     @java.lang.Override
     public com.kcl.api.Spec.OverrideFile_Result getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
+  }
+
+  public interface ListVariables_ArgsOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:com.kcl.api.ListVariables_Args)
+      com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <code>string file = 1;</code>
+     * @return The file.
+     */
+    java.lang.String getFile();
+    /**
+     * <code>string file = 1;</code>
+     * @return The bytes for file.
+     */
+    com.google.protobuf.ByteString
+        getFileBytes();
+
+    /**
+     * <code>repeated string specs = 2;</code>
+     * @return A list containing the specs.
+     */
+    java.util.List<java.lang.String>
+        getSpecsList();
+    /**
+     * <code>repeated string specs = 2;</code>
+     * @return The count of specs.
+     */
+    int getSpecsCount();
+    /**
+     * <code>repeated string specs = 2;</code>
+     * @param index The index of the element to return.
+     * @return The specs at the given index.
+     */
+    java.lang.String getSpecs(int index);
+    /**
+     * <code>repeated string specs = 2;</code>
+     * @param index The index of the value to return.
+     * @return The bytes of the specs at the given index.
+     */
+    com.google.protobuf.ByteString
+        getSpecsBytes(int index);
+  }
+  /**
+   * Protobuf type {@code com.kcl.api.ListVariables_Args}
+   */
+  public static final class ListVariables_Args extends
+      com.google.protobuf.GeneratedMessageV3 implements
+      // @@protoc_insertion_point(message_implements:com.kcl.api.ListVariables_Args)
+      ListVariables_ArgsOrBuilder {
+  private static final long serialVersionUID = 0L;
+    // Use ListVariables_Args.newBuilder() to construct.
+    private ListVariables_Args(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
+    }
+    private ListVariables_Args() {
+      file_ = "";
+      specs_ =
+          com.google.protobuf.LazyStringArrayList.emptyList();
+    }
+
+    @java.lang.Override
+    @SuppressWarnings({"unused"})
+    protected java.lang.Object newInstance(
+        UnusedPrivateParameter unused) {
+      return new ListVariables_Args();
+    }
+
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return com.kcl.api.Spec.internal_static_com_kcl_api_ListVariables_Args_descriptor;
+    }
+
+    @java.lang.Override
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return com.kcl.api.Spec.internal_static_com_kcl_api_ListVariables_Args_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              com.kcl.api.Spec.ListVariables_Args.class, com.kcl.api.Spec.ListVariables_Args.Builder.class);
+    }
+
+    public static final int FILE_FIELD_NUMBER = 1;
+    @SuppressWarnings("serial")
+    private volatile java.lang.Object file_ = "";
+    /**
+     * <code>string file = 1;</code>
+     * @return The file.
+     */
+    @java.lang.Override
+    public java.lang.String getFile() {
+      java.lang.Object ref = file_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        file_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string file = 1;</code>
+     * @return The bytes for file.
+     */
+    @java.lang.Override
+    public com.google.protobuf.ByteString
+        getFileBytes() {
+      java.lang.Object ref = file_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        file_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int SPECS_FIELD_NUMBER = 2;
+    @SuppressWarnings("serial")
+    private com.google.protobuf.LazyStringArrayList specs_ =
+        com.google.protobuf.LazyStringArrayList.emptyList();
+    /**
+     * <code>repeated string specs = 2;</code>
+     * @return A list containing the specs.
+     */
+    public com.google.protobuf.ProtocolStringList
+        getSpecsList() {
+      return specs_;
+    }
+    /**
+     * <code>repeated string specs = 2;</code>
+     * @return The count of specs.
+     */
+    public int getSpecsCount() {
+      return specs_.size();
+    }
+    /**
+     * <code>repeated string specs = 2;</code>
+     * @param index The index of the element to return.
+     * @return The specs at the given index.
+     */
+    public java.lang.String getSpecs(int index) {
+      return specs_.get(index);
+    }
+    /**
+     * <code>repeated string specs = 2;</code>
+     * @param index The index of the value to return.
+     * @return The bytes of the specs at the given index.
+     */
+    public com.google.protobuf.ByteString
+        getSpecsBytes(int index) {
+      return specs_.getByteString(index);
+    }
+
+    private byte memoizedIsInitialized = -1;
+    @java.lang.Override
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    @java.lang.Override
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(file_)) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 1, file_);
+      }
+      for (int i = 0; i < specs_.size(); i++) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 2, specs_.getRaw(i));
+      }
+      getUnknownFields().writeTo(output);
+    }
+
+    @java.lang.Override
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(file_)) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, file_);
+      }
+      {
+        int dataSize = 0;
+        for (int i = 0; i < specs_.size(); i++) {
+          dataSize += computeStringSizeNoTag(specs_.getRaw(i));
+        }
+        size += dataSize;
+        size += 1 * getSpecsList().size();
+      }
+      size += getUnknownFields().getSerializedSize();
+      memoizedSize = size;
+      return size;
+    }
+
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof com.kcl.api.Spec.ListVariables_Args)) {
+        return super.equals(obj);
+      }
+      com.kcl.api.Spec.ListVariables_Args other = (com.kcl.api.Spec.ListVariables_Args) obj;
+
+      if (!getFile()
+          .equals(other.getFile())) return false;
+      if (!getSpecsList()
+          .equals(other.getSpecsList())) return false;
+      if (!getUnknownFields().equals(other.getUnknownFields())) return false;
+      return true;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptor().hashCode();
+      hash = (37 * hash) + FILE_FIELD_NUMBER;
+      hash = (53 * hash) + getFile().hashCode();
+      if (getSpecsCount() > 0) {
+        hash = (37 * hash) + SPECS_FIELD_NUMBER;
+        hash = (53 * hash) + getSpecsList().hashCode();
+      }
+      hash = (29 * hash) + getUnknownFields().hashCode();
+      memoizedHashCode = hash;
+      return hash;
+    }
+
+    public static com.kcl.api.Spec.ListVariables_Args parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.kcl.api.Spec.ListVariables_Args parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.kcl.api.Spec.ListVariables_Args parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.kcl.api.Spec.ListVariables_Args parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.kcl.api.Spec.ListVariables_Args parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.kcl.api.Spec.ListVariables_Args parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.kcl.api.Spec.ListVariables_Args parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static com.kcl.api.Spec.ListVariables_Args parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    public static com.kcl.api.Spec.ListVariables_Args parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
+    }
+
+    public static com.kcl.api.Spec.ListVariables_Args parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static com.kcl.api.Spec.ListVariables_Args parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static com.kcl.api.Spec.ListVariables_Args parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    @java.lang.Override
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(com.kcl.api.Spec.ListVariables_Args prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    @java.lang.Override
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code com.kcl.api.ListVariables_Args}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:com.kcl.api.ListVariables_Args)
+        com.kcl.api.Spec.ListVariables_ArgsOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return com.kcl.api.Spec.internal_static_com_kcl_api_ListVariables_Args_descriptor;
+      }
+
+      @java.lang.Override
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return com.kcl.api.Spec.internal_static_com_kcl_api_ListVariables_Args_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                com.kcl.api.Spec.ListVariables_Args.class, com.kcl.api.Spec.ListVariables_Args.Builder.class);
+      }
+
+      // Construct using com.kcl.api.Spec.ListVariables_Args.newBuilder()
+      private Builder() {
+
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        super(parent);
+
+      }
+      @java.lang.Override
+      public Builder clear() {
+        super.clear();
+        bitField0_ = 0;
+        file_ = "";
+        specs_ =
+            com.google.protobuf.LazyStringArrayList.emptyList();
+        return this;
+      }
+
+      @java.lang.Override
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return com.kcl.api.Spec.internal_static_com_kcl_api_ListVariables_Args_descriptor;
+      }
+
+      @java.lang.Override
+      public com.kcl.api.Spec.ListVariables_Args getDefaultInstanceForType() {
+        return com.kcl.api.Spec.ListVariables_Args.getDefaultInstance();
+      }
+
+      @java.lang.Override
+      public com.kcl.api.Spec.ListVariables_Args build() {
+        com.kcl.api.Spec.ListVariables_Args result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      @java.lang.Override
+      public com.kcl.api.Spec.ListVariables_Args buildPartial() {
+        com.kcl.api.Spec.ListVariables_Args result = new com.kcl.api.Spec.ListVariables_Args(this);
+        if (bitField0_ != 0) { buildPartial0(result); }
+        onBuilt();
+        return result;
+      }
+
+      private void buildPartial0(com.kcl.api.Spec.ListVariables_Args result) {
+        int from_bitField0_ = bitField0_;
+        if (((from_bitField0_ & 0x00000001) != 0)) {
+          result.file_ = file_;
+        }
+        if (((from_bitField0_ & 0x00000002) != 0)) {
+          specs_.makeImmutable();
+          result.specs_ = specs_;
+        }
+      }
+
+      @java.lang.Override
+      public Builder clone() {
+        return super.clone();
+      }
+      @java.lang.Override
+      public Builder setField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.setField(field, value);
+      }
+      @java.lang.Override
+      public Builder clearField(
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return super.clearField(field);
+      }
+      @java.lang.Override
+      public Builder clearOneof(
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return super.clearOneof(oneof);
+      }
+      @java.lang.Override
+      public Builder setRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, java.lang.Object value) {
+        return super.setRepeatedField(field, index, value);
+      }
+      @java.lang.Override
+      public Builder addRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.addRepeatedField(field, value);
+      }
+      @java.lang.Override
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof com.kcl.api.Spec.ListVariables_Args) {
+          return mergeFrom((com.kcl.api.Spec.ListVariables_Args)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(com.kcl.api.Spec.ListVariables_Args other) {
+        if (other == com.kcl.api.Spec.ListVariables_Args.getDefaultInstance()) return this;
+        if (!other.getFile().isEmpty()) {
+          file_ = other.file_;
+          bitField0_ |= 0x00000001;
+          onChanged();
+        }
+        if (!other.specs_.isEmpty()) {
+          if (specs_.isEmpty()) {
+            specs_ = other.specs_;
+            bitField0_ |= 0x00000002;
+          } else {
+            ensureSpecsIsMutable();
+            specs_.addAll(other.specs_);
+          }
+          onChanged();
+        }
+        this.mergeUnknownFields(other.getUnknownFields());
+        onChanged();
+        return this;
+      }
+
+      @java.lang.Override
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      @java.lang.Override
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        if (extensionRegistry == null) {
+          throw new java.lang.NullPointerException();
+        }
+        try {
+          boolean done = false;
+          while (!done) {
+            int tag = input.readTag();
+            switch (tag) {
+              case 0:
+                done = true;
+                break;
+              case 10: {
+                file_ = input.readStringRequireUtf8();
+                bitField0_ |= 0x00000001;
+                break;
+              } // case 10
+              case 18: {
+                java.lang.String s = input.readStringRequireUtf8();
+                ensureSpecsIsMutable();
+                specs_.add(s);
+                break;
+              } // case 18
+              default: {
+                if (!super.parseUnknownField(input, extensionRegistry, tag)) {
+                  done = true; // was an endgroup tag
+                }
+                break;
+              } // default:
+            } // switch (tag)
+          } // while (!done)
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          throw e.unwrapIOException();
+        } finally {
+          onChanged();
+        } // finally
+        return this;
+      }
+      private int bitField0_;
+
+      private java.lang.Object file_ = "";
+      /**
+       * <code>string file = 1;</code>
+       * @return The file.
+       */
+      public java.lang.String getFile() {
+        java.lang.Object ref = file_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          file_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>string file = 1;</code>
+       * @return The bytes for file.
+       */
+      public com.google.protobuf.ByteString
+          getFileBytes() {
+        java.lang.Object ref = file_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          file_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string file = 1;</code>
+       * @param value The file to set.
+       * @return This builder for chaining.
+       */
+      public Builder setFile(
+          java.lang.String value) {
+        if (value == null) { throw new NullPointerException(); }
+        file_ = value;
+        bitField0_ |= 0x00000001;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string file = 1;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearFile() {
+        file_ = getDefaultInstance().getFile();
+        bitField0_ = (bitField0_ & ~0x00000001);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string file = 1;</code>
+       * @param value The bytes for file to set.
+       * @return This builder for chaining.
+       */
+      public Builder setFileBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) { throw new NullPointerException(); }
+        checkByteStringIsUtf8(value);
+        file_ = value;
+        bitField0_ |= 0x00000001;
+        onChanged();
+        return this;
+      }
+
+      private com.google.protobuf.LazyStringArrayList specs_ =
+          com.google.protobuf.LazyStringArrayList.emptyList();
+      private void ensureSpecsIsMutable() {
+        if (!specs_.isModifiable()) {
+          specs_ = new com.google.protobuf.LazyStringArrayList(specs_);
+        }
+        bitField0_ |= 0x00000002;
+      }
+      /**
+       * <code>repeated string specs = 2;</code>
+       * @return A list containing the specs.
+       */
+      public com.google.protobuf.ProtocolStringList
+          getSpecsList() {
+        specs_.makeImmutable();
+        return specs_;
+      }
+      /**
+       * <code>repeated string specs = 2;</code>
+       * @return The count of specs.
+       */
+      public int getSpecsCount() {
+        return specs_.size();
+      }
+      /**
+       * <code>repeated string specs = 2;</code>
+       * @param index The index of the element to return.
+       * @return The specs at the given index.
+       */
+      public java.lang.String getSpecs(int index) {
+        return specs_.get(index);
+      }
+      /**
+       * <code>repeated string specs = 2;</code>
+       * @param index The index of the value to return.
+       * @return The bytes of the specs at the given index.
+       */
+      public com.google.protobuf.ByteString
+          getSpecsBytes(int index) {
+        return specs_.getByteString(index);
+      }
+      /**
+       * <code>repeated string specs = 2;</code>
+       * @param index The index to set the value at.
+       * @param value The specs to set.
+       * @return This builder for chaining.
+       */
+      public Builder setSpecs(
+          int index, java.lang.String value) {
+        if (value == null) { throw new NullPointerException(); }
+        ensureSpecsIsMutable();
+        specs_.set(index, value);
+        bitField0_ |= 0x00000002;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated string specs = 2;</code>
+       * @param value The specs to add.
+       * @return This builder for chaining.
+       */
+      public Builder addSpecs(
+          java.lang.String value) {
+        if (value == null) { throw new NullPointerException(); }
+        ensureSpecsIsMutable();
+        specs_.add(value);
+        bitField0_ |= 0x00000002;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated string specs = 2;</code>
+       * @param values The specs to add.
+       * @return This builder for chaining.
+       */
+      public Builder addAllSpecs(
+          java.lang.Iterable<java.lang.String> values) {
+        ensureSpecsIsMutable();
+        com.google.protobuf.AbstractMessageLite.Builder.addAll(
+            values, specs_);
+        bitField0_ |= 0x00000002;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated string specs = 2;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearSpecs() {
+        specs_ =
+          com.google.protobuf.LazyStringArrayList.emptyList();
+        bitField0_ = (bitField0_ & ~0x00000002);;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated string specs = 2;</code>
+       * @param value The bytes of the specs to add.
+       * @return This builder for chaining.
+       */
+      public Builder addSpecsBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) { throw new NullPointerException(); }
+        checkByteStringIsUtf8(value);
+        ensureSpecsIsMutable();
+        specs_.add(value);
+        bitField0_ |= 0x00000002;
+        onChanged();
+        return this;
+      }
+      @java.lang.Override
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.setUnknownFields(unknownFields);
+      }
+
+      @java.lang.Override
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.mergeUnknownFields(unknownFields);
+      }
+
+
+      // @@protoc_insertion_point(builder_scope:com.kcl.api.ListVariables_Args)
+    }
+
+    // @@protoc_insertion_point(class_scope:com.kcl.api.ListVariables_Args)
+    private static final com.kcl.api.Spec.ListVariables_Args DEFAULT_INSTANCE;
+    static {
+      DEFAULT_INSTANCE = new com.kcl.api.Spec.ListVariables_Args();
+    }
+
+    public static com.kcl.api.Spec.ListVariables_Args getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    private static final com.google.protobuf.Parser<ListVariables_Args>
+        PARSER = new com.google.protobuf.AbstractParser<ListVariables_Args>() {
+      @java.lang.Override
+      public ListVariables_Args parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        Builder builder = newBuilder();
+        try {
+          builder.mergeFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          throw e.setUnfinishedMessage(builder.buildPartial());
+        } catch (com.google.protobuf.UninitializedMessageException e) {
+          throw e.asInvalidProtocolBufferException().setUnfinishedMessage(builder.buildPartial());
+        } catch (java.io.IOException e) {
+          throw new com.google.protobuf.InvalidProtocolBufferException(e)
+              .setUnfinishedMessage(builder.buildPartial());
+        }
+        return builder.buildPartial();
+      }
+    };
+
+    public static com.google.protobuf.Parser<ListVariables_Args> parser() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<ListVariables_Args> getParserForType() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.kcl.api.Spec.ListVariables_Args getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
+  }
+
+  public interface ListVariables_ResultOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:com.kcl.api.ListVariables_Result)
+      com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <code>map&lt;string, .com.kcl.api.Variable&gt; variables = 1;</code>
+     */
+    int getVariablesCount();
+    /**
+     * <code>map&lt;string, .com.kcl.api.Variable&gt; variables = 1;</code>
+     */
+    boolean containsVariables(
+        java.lang.String key);
+    /**
+     * Use {@link #getVariablesMap()} instead.
+     */
+    @java.lang.Deprecated
+    java.util.Map<java.lang.String, com.kcl.api.Spec.Variable>
+    getVariables();
+    /**
+     * <code>map&lt;string, .com.kcl.api.Variable&gt; variables = 1;</code>
+     */
+    java.util.Map<java.lang.String, com.kcl.api.Spec.Variable>
+    getVariablesMap();
+    /**
+     * <code>map&lt;string, .com.kcl.api.Variable&gt; variables = 1;</code>
+     */
+    /* nullable */
+com.kcl.api.Spec.Variable getVariablesOrDefault(
+        java.lang.String key,
+        /* nullable */
+com.kcl.api.Spec.Variable defaultValue);
+    /**
+     * <code>map&lt;string, .com.kcl.api.Variable&gt; variables = 1;</code>
+     */
+    com.kcl.api.Spec.Variable getVariablesOrThrow(
+        java.lang.String key);
+
+    /**
+     * <code>repeated string unsupported_codes = 2;</code>
+     * @return A list containing the unsupportedCodes.
+     */
+    java.util.List<java.lang.String>
+        getUnsupportedCodesList();
+    /**
+     * <code>repeated string unsupported_codes = 2;</code>
+     * @return The count of unsupportedCodes.
+     */
+    int getUnsupportedCodesCount();
+    /**
+     * <code>repeated string unsupported_codes = 2;</code>
+     * @param index The index of the element to return.
+     * @return The unsupportedCodes at the given index.
+     */
+    java.lang.String getUnsupportedCodes(int index);
+    /**
+     * <code>repeated string unsupported_codes = 2;</code>
+     * @param index The index of the value to return.
+     * @return The bytes of the unsupportedCodes at the given index.
+     */
+    com.google.protobuf.ByteString
+        getUnsupportedCodesBytes(int index);
+  }
+  /**
+   * Protobuf type {@code com.kcl.api.ListVariables_Result}
+   */
+  public static final class ListVariables_Result extends
+      com.google.protobuf.GeneratedMessageV3 implements
+      // @@protoc_insertion_point(message_implements:com.kcl.api.ListVariables_Result)
+      ListVariables_ResultOrBuilder {
+  private static final long serialVersionUID = 0L;
+    // Use ListVariables_Result.newBuilder() to construct.
+    private ListVariables_Result(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
+    }
+    private ListVariables_Result() {
+      unsupportedCodes_ =
+          com.google.protobuf.LazyStringArrayList.emptyList();
+    }
+
+    @java.lang.Override
+    @SuppressWarnings({"unused"})
+    protected java.lang.Object newInstance(
+        UnusedPrivateParameter unused) {
+      return new ListVariables_Result();
+    }
+
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return com.kcl.api.Spec.internal_static_com_kcl_api_ListVariables_Result_descriptor;
+    }
+
+    @SuppressWarnings({"rawtypes"})
+    @java.lang.Override
+    protected com.google.protobuf.MapFieldReflectionAccessor internalGetMapFieldReflection(
+        int number) {
+      switch (number) {
+        case 1:
+          return internalGetVariables();
+        default:
+          throw new RuntimeException(
+              "Invalid map field number: " + number);
+      }
+    }
+    @java.lang.Override
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return com.kcl.api.Spec.internal_static_com_kcl_api_ListVariables_Result_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              com.kcl.api.Spec.ListVariables_Result.class, com.kcl.api.Spec.ListVariables_Result.Builder.class);
+    }
+
+    public static final int VARIABLES_FIELD_NUMBER = 1;
+    private static final class VariablesDefaultEntryHolder {
+      static final com.google.protobuf.MapEntry<
+          java.lang.String, com.kcl.api.Spec.Variable> defaultEntry =
+              com.google.protobuf.MapEntry
+              .<java.lang.String, com.kcl.api.Spec.Variable>newDefaultInstance(
+                  com.kcl.api.Spec.internal_static_com_kcl_api_ListVariables_Result_VariablesEntry_descriptor, 
+                  com.google.protobuf.WireFormat.FieldType.STRING,
+                  "",
+                  com.google.protobuf.WireFormat.FieldType.MESSAGE,
+                  com.kcl.api.Spec.Variable.getDefaultInstance());
+    }
+    @SuppressWarnings("serial")
+    private com.google.protobuf.MapField<
+        java.lang.String, com.kcl.api.Spec.Variable> variables_;
+    private com.google.protobuf.MapField<java.lang.String, com.kcl.api.Spec.Variable>
+    internalGetVariables() {
+      if (variables_ == null) {
+        return com.google.protobuf.MapField.emptyMapField(
+            VariablesDefaultEntryHolder.defaultEntry);
+      }
+      return variables_;
+    }
+    public int getVariablesCount() {
+      return internalGetVariables().getMap().size();
+    }
+    /**
+     * <code>map&lt;string, .com.kcl.api.Variable&gt; variables = 1;</code>
+     */
+    @java.lang.Override
+    public boolean containsVariables(
+        java.lang.String key) {
+      if (key == null) { throw new NullPointerException("map key"); }
+      return internalGetVariables().getMap().containsKey(key);
+    }
+    /**
+     * Use {@link #getVariablesMap()} instead.
+     */
+    @java.lang.Override
+    @java.lang.Deprecated
+    public java.util.Map<java.lang.String, com.kcl.api.Spec.Variable> getVariables() {
+      return getVariablesMap();
+    }
+    /**
+     * <code>map&lt;string, .com.kcl.api.Variable&gt; variables = 1;</code>
+     */
+    @java.lang.Override
+    public java.util.Map<java.lang.String, com.kcl.api.Spec.Variable> getVariablesMap() {
+      return internalGetVariables().getMap();
+    }
+    /**
+     * <code>map&lt;string, .com.kcl.api.Variable&gt; variables = 1;</code>
+     */
+    @java.lang.Override
+    public /* nullable */
+com.kcl.api.Spec.Variable getVariablesOrDefault(
+        java.lang.String key,
+        /* nullable */
+com.kcl.api.Spec.Variable defaultValue) {
+      if (key == null) { throw new NullPointerException("map key"); }
+      java.util.Map<java.lang.String, com.kcl.api.Spec.Variable> map =
+          internalGetVariables().getMap();
+      return map.containsKey(key) ? map.get(key) : defaultValue;
+    }
+    /**
+     * <code>map&lt;string, .com.kcl.api.Variable&gt; variables = 1;</code>
+     */
+    @java.lang.Override
+    public com.kcl.api.Spec.Variable getVariablesOrThrow(
+        java.lang.String key) {
+      if (key == null) { throw new NullPointerException("map key"); }
+      java.util.Map<java.lang.String, com.kcl.api.Spec.Variable> map =
+          internalGetVariables().getMap();
+      if (!map.containsKey(key)) {
+        throw new java.lang.IllegalArgumentException();
+      }
+      return map.get(key);
+    }
+
+    public static final int UNSUPPORTED_CODES_FIELD_NUMBER = 2;
+    @SuppressWarnings("serial")
+    private com.google.protobuf.LazyStringArrayList unsupportedCodes_ =
+        com.google.protobuf.LazyStringArrayList.emptyList();
+    /**
+     * <code>repeated string unsupported_codes = 2;</code>
+     * @return A list containing the unsupportedCodes.
+     */
+    public com.google.protobuf.ProtocolStringList
+        getUnsupportedCodesList() {
+      return unsupportedCodes_;
+    }
+    /**
+     * <code>repeated string unsupported_codes = 2;</code>
+     * @return The count of unsupportedCodes.
+     */
+    public int getUnsupportedCodesCount() {
+      return unsupportedCodes_.size();
+    }
+    /**
+     * <code>repeated string unsupported_codes = 2;</code>
+     * @param index The index of the element to return.
+     * @return The unsupportedCodes at the given index.
+     */
+    public java.lang.String getUnsupportedCodes(int index) {
+      return unsupportedCodes_.get(index);
+    }
+    /**
+     * <code>repeated string unsupported_codes = 2;</code>
+     * @param index The index of the value to return.
+     * @return The bytes of the unsupportedCodes at the given index.
+     */
+    public com.google.protobuf.ByteString
+        getUnsupportedCodesBytes(int index) {
+      return unsupportedCodes_.getByteString(index);
+    }
+
+    private byte memoizedIsInitialized = -1;
+    @java.lang.Override
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    @java.lang.Override
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      com.google.protobuf.GeneratedMessageV3
+        .serializeStringMapTo(
+          output,
+          internalGetVariables(),
+          VariablesDefaultEntryHolder.defaultEntry,
+          1);
+      for (int i = 0; i < unsupportedCodes_.size(); i++) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 2, unsupportedCodes_.getRaw(i));
+      }
+      getUnknownFields().writeTo(output);
+    }
+
+    @java.lang.Override
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      for (java.util.Map.Entry<java.lang.String, com.kcl.api.Spec.Variable> entry
+           : internalGetVariables().getMap().entrySet()) {
+        com.google.protobuf.MapEntry<java.lang.String, com.kcl.api.Spec.Variable>
+        variables__ = VariablesDefaultEntryHolder.defaultEntry.newBuilderForType()
+            .setKey(entry.getKey())
+            .setValue(entry.getValue())
+            .build();
+        size += com.google.protobuf.CodedOutputStream
+            .computeMessageSize(1, variables__);
+      }
+      {
+        int dataSize = 0;
+        for (int i = 0; i < unsupportedCodes_.size(); i++) {
+          dataSize += computeStringSizeNoTag(unsupportedCodes_.getRaw(i));
+        }
+        size += dataSize;
+        size += 1 * getUnsupportedCodesList().size();
+      }
+      size += getUnknownFields().getSerializedSize();
+      memoizedSize = size;
+      return size;
+    }
+
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof com.kcl.api.Spec.ListVariables_Result)) {
+        return super.equals(obj);
+      }
+      com.kcl.api.Spec.ListVariables_Result other = (com.kcl.api.Spec.ListVariables_Result) obj;
+
+      if (!internalGetVariables().equals(
+          other.internalGetVariables())) return false;
+      if (!getUnsupportedCodesList()
+          .equals(other.getUnsupportedCodesList())) return false;
+      if (!getUnknownFields().equals(other.getUnknownFields())) return false;
+      return true;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptor().hashCode();
+      if (!internalGetVariables().getMap().isEmpty()) {
+        hash = (37 * hash) + VARIABLES_FIELD_NUMBER;
+        hash = (53 * hash) + internalGetVariables().hashCode();
+      }
+      if (getUnsupportedCodesCount() > 0) {
+        hash = (37 * hash) + UNSUPPORTED_CODES_FIELD_NUMBER;
+        hash = (53 * hash) + getUnsupportedCodesList().hashCode();
+      }
+      hash = (29 * hash) + getUnknownFields().hashCode();
+      memoizedHashCode = hash;
+      return hash;
+    }
+
+    public static com.kcl.api.Spec.ListVariables_Result parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.kcl.api.Spec.ListVariables_Result parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.kcl.api.Spec.ListVariables_Result parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.kcl.api.Spec.ListVariables_Result parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.kcl.api.Spec.ListVariables_Result parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.kcl.api.Spec.ListVariables_Result parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.kcl.api.Spec.ListVariables_Result parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static com.kcl.api.Spec.ListVariables_Result parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    public static com.kcl.api.Spec.ListVariables_Result parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
+    }
+
+    public static com.kcl.api.Spec.ListVariables_Result parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static com.kcl.api.Spec.ListVariables_Result parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static com.kcl.api.Spec.ListVariables_Result parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    @java.lang.Override
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(com.kcl.api.Spec.ListVariables_Result prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    @java.lang.Override
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code com.kcl.api.ListVariables_Result}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:com.kcl.api.ListVariables_Result)
+        com.kcl.api.Spec.ListVariables_ResultOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return com.kcl.api.Spec.internal_static_com_kcl_api_ListVariables_Result_descriptor;
+      }
+
+      @SuppressWarnings({"rawtypes"})
+      protected com.google.protobuf.MapFieldReflectionAccessor internalGetMapFieldReflection(
+          int number) {
+        switch (number) {
+          case 1:
+            return internalGetVariables();
+          default:
+            throw new RuntimeException(
+                "Invalid map field number: " + number);
+        }
+      }
+      @SuppressWarnings({"rawtypes"})
+      protected com.google.protobuf.MapFieldReflectionAccessor internalGetMutableMapFieldReflection(
+          int number) {
+        switch (number) {
+          case 1:
+            return internalGetMutableVariables();
+          default:
+            throw new RuntimeException(
+                "Invalid map field number: " + number);
+        }
+      }
+      @java.lang.Override
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return com.kcl.api.Spec.internal_static_com_kcl_api_ListVariables_Result_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                com.kcl.api.Spec.ListVariables_Result.class, com.kcl.api.Spec.ListVariables_Result.Builder.class);
+      }
+
+      // Construct using com.kcl.api.Spec.ListVariables_Result.newBuilder()
+      private Builder() {
+
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        super(parent);
+
+      }
+      @java.lang.Override
+      public Builder clear() {
+        super.clear();
+        bitField0_ = 0;
+        internalGetMutableVariables().clear();
+        unsupportedCodes_ =
+            com.google.protobuf.LazyStringArrayList.emptyList();
+        return this;
+      }
+
+      @java.lang.Override
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return com.kcl.api.Spec.internal_static_com_kcl_api_ListVariables_Result_descriptor;
+      }
+
+      @java.lang.Override
+      public com.kcl.api.Spec.ListVariables_Result getDefaultInstanceForType() {
+        return com.kcl.api.Spec.ListVariables_Result.getDefaultInstance();
+      }
+
+      @java.lang.Override
+      public com.kcl.api.Spec.ListVariables_Result build() {
+        com.kcl.api.Spec.ListVariables_Result result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      @java.lang.Override
+      public com.kcl.api.Spec.ListVariables_Result buildPartial() {
+        com.kcl.api.Spec.ListVariables_Result result = new com.kcl.api.Spec.ListVariables_Result(this);
+        if (bitField0_ != 0) { buildPartial0(result); }
+        onBuilt();
+        return result;
+      }
+
+      private void buildPartial0(com.kcl.api.Spec.ListVariables_Result result) {
+        int from_bitField0_ = bitField0_;
+        if (((from_bitField0_ & 0x00000001) != 0)) {
+          result.variables_ = internalGetVariables().build(VariablesDefaultEntryHolder.defaultEntry);
+        }
+        if (((from_bitField0_ & 0x00000002) != 0)) {
+          unsupportedCodes_.makeImmutable();
+          result.unsupportedCodes_ = unsupportedCodes_;
+        }
+      }
+
+      @java.lang.Override
+      public Builder clone() {
+        return super.clone();
+      }
+      @java.lang.Override
+      public Builder setField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.setField(field, value);
+      }
+      @java.lang.Override
+      public Builder clearField(
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return super.clearField(field);
+      }
+      @java.lang.Override
+      public Builder clearOneof(
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return super.clearOneof(oneof);
+      }
+      @java.lang.Override
+      public Builder setRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, java.lang.Object value) {
+        return super.setRepeatedField(field, index, value);
+      }
+      @java.lang.Override
+      public Builder addRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.addRepeatedField(field, value);
+      }
+      @java.lang.Override
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof com.kcl.api.Spec.ListVariables_Result) {
+          return mergeFrom((com.kcl.api.Spec.ListVariables_Result)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(com.kcl.api.Spec.ListVariables_Result other) {
+        if (other == com.kcl.api.Spec.ListVariables_Result.getDefaultInstance()) return this;
+        internalGetMutableVariables().mergeFrom(
+            other.internalGetVariables());
+        bitField0_ |= 0x00000001;
+        if (!other.unsupportedCodes_.isEmpty()) {
+          if (unsupportedCodes_.isEmpty()) {
+            unsupportedCodes_ = other.unsupportedCodes_;
+            bitField0_ |= 0x00000002;
+          } else {
+            ensureUnsupportedCodesIsMutable();
+            unsupportedCodes_.addAll(other.unsupportedCodes_);
+          }
+          onChanged();
+        }
+        this.mergeUnknownFields(other.getUnknownFields());
+        onChanged();
+        return this;
+      }
+
+      @java.lang.Override
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      @java.lang.Override
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        if (extensionRegistry == null) {
+          throw new java.lang.NullPointerException();
+        }
+        try {
+          boolean done = false;
+          while (!done) {
+            int tag = input.readTag();
+            switch (tag) {
+              case 0:
+                done = true;
+                break;
+              case 10: {
+                com.google.protobuf.MapEntry<java.lang.String, com.kcl.api.Spec.Variable>
+                variables__ = input.readMessage(
+                    VariablesDefaultEntryHolder.defaultEntry.getParserForType(), extensionRegistry);
+                internalGetMutableVariables().ensureBuilderMap().put(
+                    variables__.getKey(), variables__.getValue());
+                bitField0_ |= 0x00000001;
+                break;
+              } // case 10
+              case 18: {
+                java.lang.String s = input.readStringRequireUtf8();
+                ensureUnsupportedCodesIsMutable();
+                unsupportedCodes_.add(s);
+                break;
+              } // case 18
+              default: {
+                if (!super.parseUnknownField(input, extensionRegistry, tag)) {
+                  done = true; // was an endgroup tag
+                }
+                break;
+              } // default:
+            } // switch (tag)
+          } // while (!done)
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          throw e.unwrapIOException();
+        } finally {
+          onChanged();
+        } // finally
+        return this;
+      }
+      private int bitField0_;
+
+      private static final class VariablesConverter implements com.google.protobuf.MapFieldBuilder.Converter<java.lang.String, com.kcl.api.Spec.VariableOrBuilder, com.kcl.api.Spec.Variable> {
+        @java.lang.Override
+        public com.kcl.api.Spec.Variable build(com.kcl.api.Spec.VariableOrBuilder val) {
+          if (val instanceof com.kcl.api.Spec.Variable) { return (com.kcl.api.Spec.Variable) val; }
+          return ((com.kcl.api.Spec.Variable.Builder) val).build();
+        }
+
+        @java.lang.Override
+        public com.google.protobuf.MapEntry<java.lang.String, com.kcl.api.Spec.Variable> defaultEntry() {
+          return VariablesDefaultEntryHolder.defaultEntry;
+        }
+      };
+      private static final VariablesConverter variablesConverter = new VariablesConverter();
+
+      private com.google.protobuf.MapFieldBuilder<
+          java.lang.String, com.kcl.api.Spec.VariableOrBuilder, com.kcl.api.Spec.Variable, com.kcl.api.Spec.Variable.Builder> variables_;
+      private com.google.protobuf.MapFieldBuilder<java.lang.String, com.kcl.api.Spec.VariableOrBuilder, com.kcl.api.Spec.Variable, com.kcl.api.Spec.Variable.Builder>
+          internalGetVariables() {
+        if (variables_ == null) {
+          return new com.google.protobuf.MapFieldBuilder<>(variablesConverter);
+        }
+        return variables_;
+      }
+      private com.google.protobuf.MapFieldBuilder<java.lang.String, com.kcl.api.Spec.VariableOrBuilder, com.kcl.api.Spec.Variable, com.kcl.api.Spec.Variable.Builder>
+          internalGetMutableVariables() {
+        if (variables_ == null) {
+          variables_ = new com.google.protobuf.MapFieldBuilder<>(variablesConverter);
+        }
+        bitField0_ |= 0x00000001;
+        onChanged();
+        return variables_;
+      }
+      public int getVariablesCount() {
+        return internalGetVariables().ensureBuilderMap().size();
+      }
+      /**
+       * <code>map&lt;string, .com.kcl.api.Variable&gt; variables = 1;</code>
+       */
+      @java.lang.Override
+      public boolean containsVariables(
+          java.lang.String key) {
+        if (key == null) { throw new NullPointerException("map key"); }
+        return internalGetVariables().ensureBuilderMap().containsKey(key);
+      }
+      /**
+       * Use {@link #getVariablesMap()} instead.
+       */
+      @java.lang.Override
+      @java.lang.Deprecated
+      public java.util.Map<java.lang.String, com.kcl.api.Spec.Variable> getVariables() {
+        return getVariablesMap();
+      }
+      /**
+       * <code>map&lt;string, .com.kcl.api.Variable&gt; variables = 1;</code>
+       */
+      @java.lang.Override
+      public java.util.Map<java.lang.String, com.kcl.api.Spec.Variable> getVariablesMap() {
+        return internalGetVariables().getImmutableMap();
+      }
+      /**
+       * <code>map&lt;string, .com.kcl.api.Variable&gt; variables = 1;</code>
+       */
+      @java.lang.Override
+      public /* nullable */
+com.kcl.api.Spec.Variable getVariablesOrDefault(
+          java.lang.String key,
+          /* nullable */
+com.kcl.api.Spec.Variable defaultValue) {
+        if (key == null) { throw new NullPointerException("map key"); }
+        java.util.Map<java.lang.String, com.kcl.api.Spec.VariableOrBuilder> map = internalGetMutableVariables().ensureBuilderMap();
+        return map.containsKey(key) ? variablesConverter.build(map.get(key)) : defaultValue;
+      }
+      /**
+       * <code>map&lt;string, .com.kcl.api.Variable&gt; variables = 1;</code>
+       */
+      @java.lang.Override
+      public com.kcl.api.Spec.Variable getVariablesOrThrow(
+          java.lang.String key) {
+        if (key == null) { throw new NullPointerException("map key"); }
+        java.util.Map<java.lang.String, com.kcl.api.Spec.VariableOrBuilder> map = internalGetMutableVariables().ensureBuilderMap();
+        if (!map.containsKey(key)) {
+          throw new java.lang.IllegalArgumentException();
+        }
+        return variablesConverter.build(map.get(key));
+      }
+      public Builder clearVariables() {
+        bitField0_ = (bitField0_ & ~0x00000001);
+        internalGetMutableVariables().clear();
+        return this;
+      }
+      /**
+       * <code>map&lt;string, .com.kcl.api.Variable&gt; variables = 1;</code>
+       */
+      public Builder removeVariables(
+          java.lang.String key) {
+        if (key == null) { throw new NullPointerException("map key"); }
+        internalGetMutableVariables().ensureBuilderMap()
+            .remove(key);
+        return this;
+      }
+      /**
+       * Use alternate mutation accessors instead.
+       */
+      @java.lang.Deprecated
+      public java.util.Map<java.lang.String, com.kcl.api.Spec.Variable>
+          getMutableVariables() {
+        bitField0_ |= 0x00000001;
+        return internalGetMutableVariables().ensureMessageMap();
+      }
+      /**
+       * <code>map&lt;string, .com.kcl.api.Variable&gt; variables = 1;</code>
+       */
+      public Builder putVariables(
+          java.lang.String key,
+          com.kcl.api.Spec.Variable value) {
+        if (key == null) { throw new NullPointerException("map key"); }
+        if (value == null) { throw new NullPointerException("map value"); }
+        internalGetMutableVariables().ensureBuilderMap()
+            .put(key, value);
+        bitField0_ |= 0x00000001;
+        return this;
+      }
+      /**
+       * <code>map&lt;string, .com.kcl.api.Variable&gt; variables = 1;</code>
+       */
+      public Builder putAllVariables(
+          java.util.Map<java.lang.String, com.kcl.api.Spec.Variable> values) {
+        for (java.util.Map.Entry<java.lang.String, com.kcl.api.Spec.Variable> e : values.entrySet()) {
+          if (e.getKey() == null || e.getValue() == null) {
+            throw new NullPointerException();
+          }
+        }
+        internalGetMutableVariables().ensureBuilderMap()
+            .putAll(values);
+        bitField0_ |= 0x00000001;
+        return this;
+      }
+      /**
+       * <code>map&lt;string, .com.kcl.api.Variable&gt; variables = 1;</code>
+       */
+      public com.kcl.api.Spec.Variable.Builder putVariablesBuilderIfAbsent(
+          java.lang.String key) {
+        java.util.Map<java.lang.String, com.kcl.api.Spec.VariableOrBuilder> builderMap = internalGetMutableVariables().ensureBuilderMap();
+        com.kcl.api.Spec.VariableOrBuilder entry = builderMap.get(key);
+        if (entry == null) {
+          entry = com.kcl.api.Spec.Variable.newBuilder();
+          builderMap.put(key, entry);
+        }
+        if (entry instanceof com.kcl.api.Spec.Variable) {
+          entry = ((com.kcl.api.Spec.Variable) entry).toBuilder();
+          builderMap.put(key, entry);
+        }
+        return (com.kcl.api.Spec.Variable.Builder) entry;
+      }
+
+      private com.google.protobuf.LazyStringArrayList unsupportedCodes_ =
+          com.google.protobuf.LazyStringArrayList.emptyList();
+      private void ensureUnsupportedCodesIsMutable() {
+        if (!unsupportedCodes_.isModifiable()) {
+          unsupportedCodes_ = new com.google.protobuf.LazyStringArrayList(unsupportedCodes_);
+        }
+        bitField0_ |= 0x00000002;
+      }
+      /**
+       * <code>repeated string unsupported_codes = 2;</code>
+       * @return A list containing the unsupportedCodes.
+       */
+      public com.google.protobuf.ProtocolStringList
+          getUnsupportedCodesList() {
+        unsupportedCodes_.makeImmutable();
+        return unsupportedCodes_;
+      }
+      /**
+       * <code>repeated string unsupported_codes = 2;</code>
+       * @return The count of unsupportedCodes.
+       */
+      public int getUnsupportedCodesCount() {
+        return unsupportedCodes_.size();
+      }
+      /**
+       * <code>repeated string unsupported_codes = 2;</code>
+       * @param index The index of the element to return.
+       * @return The unsupportedCodes at the given index.
+       */
+      public java.lang.String getUnsupportedCodes(int index) {
+        return unsupportedCodes_.get(index);
+      }
+      /**
+       * <code>repeated string unsupported_codes = 2;</code>
+       * @param index The index of the value to return.
+       * @return The bytes of the unsupportedCodes at the given index.
+       */
+      public com.google.protobuf.ByteString
+          getUnsupportedCodesBytes(int index) {
+        return unsupportedCodes_.getByteString(index);
+      }
+      /**
+       * <code>repeated string unsupported_codes = 2;</code>
+       * @param index The index to set the value at.
+       * @param value The unsupportedCodes to set.
+       * @return This builder for chaining.
+       */
+      public Builder setUnsupportedCodes(
+          int index, java.lang.String value) {
+        if (value == null) { throw new NullPointerException(); }
+        ensureUnsupportedCodesIsMutable();
+        unsupportedCodes_.set(index, value);
+        bitField0_ |= 0x00000002;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated string unsupported_codes = 2;</code>
+       * @param value The unsupportedCodes to add.
+       * @return This builder for chaining.
+       */
+      public Builder addUnsupportedCodes(
+          java.lang.String value) {
+        if (value == null) { throw new NullPointerException(); }
+        ensureUnsupportedCodesIsMutable();
+        unsupportedCodes_.add(value);
+        bitField0_ |= 0x00000002;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated string unsupported_codes = 2;</code>
+       * @param values The unsupportedCodes to add.
+       * @return This builder for chaining.
+       */
+      public Builder addAllUnsupportedCodes(
+          java.lang.Iterable<java.lang.String> values) {
+        ensureUnsupportedCodesIsMutable();
+        com.google.protobuf.AbstractMessageLite.Builder.addAll(
+            values, unsupportedCodes_);
+        bitField0_ |= 0x00000002;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated string unsupported_codes = 2;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearUnsupportedCodes() {
+        unsupportedCodes_ =
+          com.google.protobuf.LazyStringArrayList.emptyList();
+        bitField0_ = (bitField0_ & ~0x00000002);;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated string unsupported_codes = 2;</code>
+       * @param value The bytes of the unsupportedCodes to add.
+       * @return This builder for chaining.
+       */
+      public Builder addUnsupportedCodesBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) { throw new NullPointerException(); }
+        checkByteStringIsUtf8(value);
+        ensureUnsupportedCodesIsMutable();
+        unsupportedCodes_.add(value);
+        bitField0_ |= 0x00000002;
+        onChanged();
+        return this;
+      }
+      @java.lang.Override
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.setUnknownFields(unknownFields);
+      }
+
+      @java.lang.Override
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.mergeUnknownFields(unknownFields);
+      }
+
+
+      // @@protoc_insertion_point(builder_scope:com.kcl.api.ListVariables_Result)
+    }
+
+    // @@protoc_insertion_point(class_scope:com.kcl.api.ListVariables_Result)
+    private static final com.kcl.api.Spec.ListVariables_Result DEFAULT_INSTANCE;
+    static {
+      DEFAULT_INSTANCE = new com.kcl.api.Spec.ListVariables_Result();
+    }
+
+    public static com.kcl.api.Spec.ListVariables_Result getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    private static final com.google.protobuf.Parser<ListVariables_Result>
+        PARSER = new com.google.protobuf.AbstractParser<ListVariables_Result>() {
+      @java.lang.Override
+      public ListVariables_Result parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        Builder builder = newBuilder();
+        try {
+          builder.mergeFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          throw e.setUnfinishedMessage(builder.buildPartial());
+        } catch (com.google.protobuf.UninitializedMessageException e) {
+          throw e.asInvalidProtocolBufferException().setUnfinishedMessage(builder.buildPartial());
+        } catch (java.io.IOException e) {
+          throw new com.google.protobuf.InvalidProtocolBufferException(e)
+              .setUnfinishedMessage(builder.buildPartial());
+        }
+        return builder.buildPartial();
+      }
+    };
+
+    public static com.google.protobuf.Parser<ListVariables_Result> parser() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<ListVariables_Result> getParserForType() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.kcl.api.Spec.ListVariables_Result getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
+  }
+
+  public interface VariableOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:com.kcl.api.Variable)
+      com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <code>string value = 1;</code>
+     * @return The value.
+     */
+    java.lang.String getValue();
+    /**
+     * <code>string value = 1;</code>
+     * @return The bytes for value.
+     */
+    com.google.protobuf.ByteString
+        getValueBytes();
+  }
+  /**
+   * Protobuf type {@code com.kcl.api.Variable}
+   */
+  public static final class Variable extends
+      com.google.protobuf.GeneratedMessageV3 implements
+      // @@protoc_insertion_point(message_implements:com.kcl.api.Variable)
+      VariableOrBuilder {
+  private static final long serialVersionUID = 0L;
+    // Use Variable.newBuilder() to construct.
+    private Variable(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
+    }
+    private Variable() {
+      value_ = "";
+    }
+
+    @java.lang.Override
+    @SuppressWarnings({"unused"})
+    protected java.lang.Object newInstance(
+        UnusedPrivateParameter unused) {
+      return new Variable();
+    }
+
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return com.kcl.api.Spec.internal_static_com_kcl_api_Variable_descriptor;
+    }
+
+    @java.lang.Override
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return com.kcl.api.Spec.internal_static_com_kcl_api_Variable_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              com.kcl.api.Spec.Variable.class, com.kcl.api.Spec.Variable.Builder.class);
+    }
+
+    public static final int VALUE_FIELD_NUMBER = 1;
+    @SuppressWarnings("serial")
+    private volatile java.lang.Object value_ = "";
+    /**
+     * <code>string value = 1;</code>
+     * @return The value.
+     */
+    @java.lang.Override
+    public java.lang.String getValue() {
+      java.lang.Object ref = value_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        value_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string value = 1;</code>
+     * @return The bytes for value.
+     */
+    @java.lang.Override
+    public com.google.protobuf.ByteString
+        getValueBytes() {
+      java.lang.Object ref = value_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        value_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    private byte memoizedIsInitialized = -1;
+    @java.lang.Override
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    @java.lang.Override
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(value_)) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 1, value_);
+      }
+      getUnknownFields().writeTo(output);
+    }
+
+    @java.lang.Override
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(value_)) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, value_);
+      }
+      size += getUnknownFields().getSerializedSize();
+      memoizedSize = size;
+      return size;
+    }
+
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof com.kcl.api.Spec.Variable)) {
+        return super.equals(obj);
+      }
+      com.kcl.api.Spec.Variable other = (com.kcl.api.Spec.Variable) obj;
+
+      if (!getValue()
+          .equals(other.getValue())) return false;
+      if (!getUnknownFields().equals(other.getUnknownFields())) return false;
+      return true;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptor().hashCode();
+      hash = (37 * hash) + VALUE_FIELD_NUMBER;
+      hash = (53 * hash) + getValue().hashCode();
+      hash = (29 * hash) + getUnknownFields().hashCode();
+      memoizedHashCode = hash;
+      return hash;
+    }
+
+    public static com.kcl.api.Spec.Variable parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.kcl.api.Spec.Variable parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.kcl.api.Spec.Variable parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.kcl.api.Spec.Variable parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.kcl.api.Spec.Variable parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.kcl.api.Spec.Variable parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.kcl.api.Spec.Variable parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static com.kcl.api.Spec.Variable parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    public static com.kcl.api.Spec.Variable parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
+    }
+
+    public static com.kcl.api.Spec.Variable parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static com.kcl.api.Spec.Variable parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static com.kcl.api.Spec.Variable parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    @java.lang.Override
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(com.kcl.api.Spec.Variable prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    @java.lang.Override
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code com.kcl.api.Variable}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:com.kcl.api.Variable)
+        com.kcl.api.Spec.VariableOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return com.kcl.api.Spec.internal_static_com_kcl_api_Variable_descriptor;
+      }
+
+      @java.lang.Override
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return com.kcl.api.Spec.internal_static_com_kcl_api_Variable_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                com.kcl.api.Spec.Variable.class, com.kcl.api.Spec.Variable.Builder.class);
+      }
+
+      // Construct using com.kcl.api.Spec.Variable.newBuilder()
+      private Builder() {
+
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        super(parent);
+
+      }
+      @java.lang.Override
+      public Builder clear() {
+        super.clear();
+        bitField0_ = 0;
+        value_ = "";
+        return this;
+      }
+
+      @java.lang.Override
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return com.kcl.api.Spec.internal_static_com_kcl_api_Variable_descriptor;
+      }
+
+      @java.lang.Override
+      public com.kcl.api.Spec.Variable getDefaultInstanceForType() {
+        return com.kcl.api.Spec.Variable.getDefaultInstance();
+      }
+
+      @java.lang.Override
+      public com.kcl.api.Spec.Variable build() {
+        com.kcl.api.Spec.Variable result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      @java.lang.Override
+      public com.kcl.api.Spec.Variable buildPartial() {
+        com.kcl.api.Spec.Variable result = new com.kcl.api.Spec.Variable(this);
+        if (bitField0_ != 0) { buildPartial0(result); }
+        onBuilt();
+        return result;
+      }
+
+      private void buildPartial0(com.kcl.api.Spec.Variable result) {
+        int from_bitField0_ = bitField0_;
+        if (((from_bitField0_ & 0x00000001) != 0)) {
+          result.value_ = value_;
+        }
+      }
+
+      @java.lang.Override
+      public Builder clone() {
+        return super.clone();
+      }
+      @java.lang.Override
+      public Builder setField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.setField(field, value);
+      }
+      @java.lang.Override
+      public Builder clearField(
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return super.clearField(field);
+      }
+      @java.lang.Override
+      public Builder clearOneof(
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return super.clearOneof(oneof);
+      }
+      @java.lang.Override
+      public Builder setRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, java.lang.Object value) {
+        return super.setRepeatedField(field, index, value);
+      }
+      @java.lang.Override
+      public Builder addRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.addRepeatedField(field, value);
+      }
+      @java.lang.Override
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof com.kcl.api.Spec.Variable) {
+          return mergeFrom((com.kcl.api.Spec.Variable)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(com.kcl.api.Spec.Variable other) {
+        if (other == com.kcl.api.Spec.Variable.getDefaultInstance()) return this;
+        if (!other.getValue().isEmpty()) {
+          value_ = other.value_;
+          bitField0_ |= 0x00000001;
+          onChanged();
+        }
+        this.mergeUnknownFields(other.getUnknownFields());
+        onChanged();
+        return this;
+      }
+
+      @java.lang.Override
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      @java.lang.Override
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        if (extensionRegistry == null) {
+          throw new java.lang.NullPointerException();
+        }
+        try {
+          boolean done = false;
+          while (!done) {
+            int tag = input.readTag();
+            switch (tag) {
+              case 0:
+                done = true;
+                break;
+              case 10: {
+                value_ = input.readStringRequireUtf8();
+                bitField0_ |= 0x00000001;
+                break;
+              } // case 10
+              default: {
+                if (!super.parseUnknownField(input, extensionRegistry, tag)) {
+                  done = true; // was an endgroup tag
+                }
+                break;
+              } // default:
+            } // switch (tag)
+          } // while (!done)
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          throw e.unwrapIOException();
+        } finally {
+          onChanged();
+        } // finally
+        return this;
+      }
+      private int bitField0_;
+
+      private java.lang.Object value_ = "";
+      /**
+       * <code>string value = 1;</code>
+       * @return The value.
+       */
+      public java.lang.String getValue() {
+        java.lang.Object ref = value_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          value_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>string value = 1;</code>
+       * @return The bytes for value.
+       */
+      public com.google.protobuf.ByteString
+          getValueBytes() {
+        java.lang.Object ref = value_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          value_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string value = 1;</code>
+       * @param value The value to set.
+       * @return This builder for chaining.
+       */
+      public Builder setValue(
+          java.lang.String value) {
+        if (value == null) { throw new NullPointerException(); }
+        value_ = value;
+        bitField0_ |= 0x00000001;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string value = 1;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearValue() {
+        value_ = getDefaultInstance().getValue();
+        bitField0_ = (bitField0_ & ~0x00000001);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string value = 1;</code>
+       * @param value The bytes for value to set.
+       * @return This builder for chaining.
+       */
+      public Builder setValueBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) { throw new NullPointerException(); }
+        checkByteStringIsUtf8(value);
+        value_ = value;
+        bitField0_ |= 0x00000001;
+        onChanged();
+        return this;
+      }
+      @java.lang.Override
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.setUnknownFields(unknownFields);
+      }
+
+      @java.lang.Override
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.mergeUnknownFields(unknownFields);
+      }
+
+
+      // @@protoc_insertion_point(builder_scope:com.kcl.api.Variable)
+    }
+
+    // @@protoc_insertion_point(class_scope:com.kcl.api.Variable)
+    private static final com.kcl.api.Spec.Variable DEFAULT_INSTANCE;
+    static {
+      DEFAULT_INSTANCE = new com.kcl.api.Spec.Variable();
+    }
+
+    public static com.kcl.api.Spec.Variable getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    private static final com.google.protobuf.Parser<Variable>
+        PARSER = new com.google.protobuf.AbstractParser<Variable>() {
+      @java.lang.Override
+      public Variable parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        Builder builder = newBuilder();
+        try {
+          builder.mergeFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          throw e.setUnfinishedMessage(builder.buildPartial());
+        } catch (com.google.protobuf.UninitializedMessageException e) {
+          throw e.asInvalidProtocolBufferException().setUnfinishedMessage(builder.buildPartial());
+        } catch (java.io.IOException e) {
+          throw new com.google.protobuf.InvalidProtocolBufferException(e)
+              .setUnfinishedMessage(builder.buildPartial());
+        }
+        return builder.buildPartial();
+      }
+    };
+
+    public static com.google.protobuf.Parser<Variable> parser() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<Variable> getParserForType() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.kcl.api.Spec.Variable getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
 
@@ -45895,6 +48264,12 @@ com.kcl.api.Spec.KclType defaultValue) {
      * @return The includeSchemaTypePath.
      */
     boolean getIncludeSchemaTypePath();
+
+    /**
+     * <code>bool fast_eval = 12;</code>
+     * @return The fastEval.
+     */
+    boolean getFastEval();
   }
   /**
    * Protobuf type {@code com.kcl.api.CliConfig}
@@ -46165,6 +48540,17 @@ com.kcl.api.Spec.KclType defaultValue) {
       return includeSchemaTypePath_;
     }
 
+    public static final int FAST_EVAL_FIELD_NUMBER = 12;
+    private boolean fastEval_ = false;
+    /**
+     * <code>bool fast_eval = 12;</code>
+     * @return The fastEval.
+     */
+    @java.lang.Override
+    public boolean getFastEval() {
+      return fastEval_;
+    }
+
     private byte memoizedIsInitialized = -1;
     @java.lang.Override
     public final boolean isInitialized() {
@@ -46211,6 +48597,9 @@ com.kcl.api.Spec.KclType defaultValue) {
       }
       if (includeSchemaTypePath_ != false) {
         output.writeBool(11, includeSchemaTypePath_);
+      }
+      if (fastEval_ != false) {
+        output.writeBool(12, fastEval_);
       }
       getUnknownFields().writeTo(output);
     }
@@ -46276,6 +48665,10 @@ com.kcl.api.Spec.KclType defaultValue) {
         size += com.google.protobuf.CodedOutputStream
           .computeBoolSize(11, includeSchemaTypePath_);
       }
+      if (fastEval_ != false) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBoolSize(12, fastEval_);
+      }
       size += getUnknownFields().getSerializedSize();
       memoizedSize = size;
       return size;
@@ -46313,6 +48706,8 @@ com.kcl.api.Spec.KclType defaultValue) {
           != other.getShowHidden()) return false;
       if (getIncludeSchemaTypePath()
           != other.getIncludeSchemaTypePath()) return false;
+      if (getFastEval()
+          != other.getFastEval()) return false;
       if (!getUnknownFields().equals(other.getUnknownFields())) return false;
       return true;
     }
@@ -46359,6 +48754,9 @@ com.kcl.api.Spec.KclType defaultValue) {
       hash = (37 * hash) + INCLUDE_SCHEMA_TYPE_PATH_FIELD_NUMBER;
       hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
           getIncludeSchemaTypePath());
+      hash = (37 * hash) + FAST_EVAL_FIELD_NUMBER;
+      hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
+          getFastEval());
       hash = (29 * hash) + getUnknownFields().hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -46504,6 +48902,7 @@ com.kcl.api.Spec.KclType defaultValue) {
         sortKeys_ = false;
         showHidden_ = false;
         includeSchemaTypePath_ = false;
+        fastEval_ = false;
         return this;
       }
 
@@ -46572,6 +48971,9 @@ com.kcl.api.Spec.KclType defaultValue) {
         }
         if (((from_bitField0_ & 0x00000400) != 0)) {
           result.includeSchemaTypePath_ = includeSchemaTypePath_;
+        }
+        if (((from_bitField0_ & 0x00000800) != 0)) {
+          result.fastEval_ = fastEval_;
         }
       }
 
@@ -46675,6 +49077,9 @@ com.kcl.api.Spec.KclType defaultValue) {
         if (other.getIncludeSchemaTypePath() != false) {
           setIncludeSchemaTypePath(other.getIncludeSchemaTypePath());
         }
+        if (other.getFastEval() != false) {
+          setFastEval(other.getFastEval());
+        }
         this.mergeUnknownFields(other.getUnknownFields());
         onChanged();
         return this;
@@ -46759,6 +49164,11 @@ com.kcl.api.Spec.KclType defaultValue) {
                 bitField0_ |= 0x00000400;
                 break;
               } // case 88
+              case 96: {
+                fastEval_ = input.readBool();
+                bitField0_ |= 0x00000800;
+                break;
+              } // case 96
               default: {
                 if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                   done = true; // was an endgroup tag
@@ -47401,6 +49811,38 @@ com.kcl.api.Spec.KclType defaultValue) {
       public Builder clearIncludeSchemaTypePath() {
         bitField0_ = (bitField0_ & ~0x00000400);
         includeSchemaTypePath_ = false;
+        onChanged();
+        return this;
+      }
+
+      private boolean fastEval_ ;
+      /**
+       * <code>bool fast_eval = 12;</code>
+       * @return The fastEval.
+       */
+      @java.lang.Override
+      public boolean getFastEval() {
+        return fastEval_;
+      }
+      /**
+       * <code>bool fast_eval = 12;</code>
+       * @param value The fastEval to set.
+       * @return This builder for chaining.
+       */
+      public Builder setFastEval(boolean value) {
+
+        fastEval_ = value;
+        bitField0_ |= 0x00000800;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>bool fast_eval = 12;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearFastEval() {
+        bitField0_ = (bitField0_ & ~0x00000800);
+        fastEval_ = false;
         onChanged();
         return this;
       }
@@ -61782,6 +64224,26 @@ java.lang.String defaultValue) {
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_com_kcl_api_OverrideFile_Result_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_com_kcl_api_ListVariables_Args_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_com_kcl_api_ListVariables_Args_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_com_kcl_api_ListVariables_Result_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_com_kcl_api_ListVariables_Result_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_com_kcl_api_ListVariables_Result_VariablesEntry_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_com_kcl_api_ListVariables_Result_VariablesEntry_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_com_kcl_api_Variable_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_com_kcl_api_Variable_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_com_kcl_api_GetFullSchemaType_Args_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
@@ -62007,7 +64469,7 @@ java.lang.String defaultValue) {
       "m.kcl.api.SymbolIndex\"1\n\013SymbolIndex\022\t\n\001" +
       "i\030\001 \001(\004\022\t\n\001g\030\002 \001(\004\022\014\n\004kind\030\003 \001(\t\"0\n\nScop" +
       "eIndex\022\t\n\001i\030\001 \001(\004\022\t\n\001g\030\002 \001(\004\022\014\n\004kind\030\003 \001" +
-      "(\t\"\344\003\n\020ExecProgram_Args\022\020\n\010work_dir\030\001 \001(" +
+      "(\t\"\367\003\n\020ExecProgram_Args\022\020\n\010work_dir\030\001 \001(" +
       "\t\022\027\n\017k_filename_list\030\002 \003(\t\022\023\n\013k_code_lis" +
       "t\030\003 \003(\t\022%\n\004args\030\004 \003(\0132\027.com.kcl.api.CmdA" +
       "rgSpec\022/\n\toverrides\030\005 \003(\0132\034.com.kcl.api." +
@@ -62019,145 +64481,155 @@ java.lang.String defaultValue) {
       "om.kcl.api.CmdExternalPkgSpec\022 \n\030include" +
       "_schema_type_path\030\016 \001(\010\022\024\n\014compile_only\030" +
       "\017 \001(\010\022\023\n\013show_hidden\030\020 \001(\010\022\025\n\rpath_selec" +
-      "tor\030\021 \003(\t\"h\n\022ExecProgram_Result\022\023\n\013json_" +
-      "result\030\001 \001(\t\022\023\n\013yaml_result\030\002 \001(\t\022\023\n\013log" +
-      "_message\030\003 \001(\t\022\023\n\013err_message\030\004 \001(\t\"U\n\021B" +
-      "uildProgram_Args\0220\n\texec_args\030\001 \001(\0132\035.co" +
-      "m.kcl.api.ExecProgram_Args\022\016\n\006output\030\002 \001" +
-      "(\t\"#\n\023BuildProgram_Result\022\014\n\004path\030\001 \001(\t\"" +
-      "S\n\021ExecArtifact_Args\022\014\n\004path\030\001 \001(\t\0220\n\tex" +
-      "ec_args\030\002 \001(\0132\035.com.kcl.api.ExecProgram_" +
-      "Args\"\'\n\020ResetPlugin_Args\022\023\n\013plugin_root\030" +
-      "\001 \001(\t\"\024\n\022ResetPlugin_Result\"!\n\017FormatCod" +
-      "e_Args\022\016\n\006source\030\001 \001(\t\"&\n\021FormatCode_Res" +
-      "ult\022\021\n\tformatted\030\001 \001(\014\"\037\n\017FormatPath_Arg" +
-      "s\022\014\n\004path\030\001 \001(\t\"*\n\021FormatPath_Result\022\025\n\r" +
-      "changed_paths\030\001 \003(\t\"\036\n\rLintPath_Args\022\r\n\005" +
-      "paths\030\001 \003(\t\"\"\n\017LintPath_Result\022\017\n\007result" +
-      "s\030\001 \003(\t\"F\n\021OverrideFile_Args\022\014\n\004file\030\001 \001" +
-      "(\t\022\r\n\005specs\030\002 \003(\t\022\024\n\014import_paths\030\003 \003(\t\"" +
-      "%\n\023OverrideFile_Result\022\016\n\006result\030\001 \001(\010\"_" +
-      "\n\026GetFullSchemaType_Args\0220\n\texec_args\030\001 " +
-      "\001(\0132\035.com.kcl.api.ExecProgram_Args\022\023\n\013sc" +
-      "hema_name\030\002 \001(\t\"E\n\022GetSchemaType_Args\022\014\n" +
-      "\004file\030\001 \001(\t\022\014\n\004code\030\002 \001(\t\022\023\n\013schema_name" +
-      "\030\003 \001(\t\"F\n\024GetSchemaType_Result\022.\n\020schema" +
-      "_type_list\030\001 \003(\0132\024.com.kcl.api.KclType\"L" +
-      "\n\031GetSchemaTypeMapping_Args\022\014\n\004file\030\001 \001(" +
-      "\t\022\014\n\004code\030\002 \001(\t\022\023\n\013schema_name\030\003 \001(\t\"\313\001\n" +
-      "\033GetSchemaTypeMapping_Result\022\\\n\023schema_t" +
-      "ype_mapping\030\001 \003(\0132?.com.kcl.api.GetSchem" +
-      "aTypeMapping_Result.SchemaTypeMappingEnt" +
-      "ry\032N\n\026SchemaTypeMappingEntry\022\013\n\003key\030\001 \001(" +
-      "\t\022#\n\005value\030\002 \001(\0132\024.com.kcl.api.KclType:\002" +
-      "8\001\"\207\001\n\021ValidateCode_Args\022\020\n\010datafile\030\001 \001" +
-      "(\t\022\014\n\004data\030\002 \001(\t\022\014\n\004file\030\003 \001(\t\022\014\n\004code\030\004" +
-      " \001(\t\022\016\n\006schema\030\005 \001(\t\022\026\n\016attribute_name\030\006" +
-      " \001(\t\022\016\n\006format\030\007 \001(\t\";\n\023ValidateCode_Res" +
-      "ult\022\017\n\007success\030\001 \001(\010\022\023\n\013err_message\030\002 \001(" +
-      "\t\":\n\010Position\022\014\n\004line\030\001 \001(\003\022\016\n\006column\030\002 " +
-      "\001(\003\022\020\n\010filename\030\003 \001(\t\"i\n\021ListDepFiles_Ar" +
-      "gs\022\020\n\010work_dir\030\001 \001(\t\022\024\n\014use_abs_path\030\002 \001" +
-      "(\010\022\023\n\013include_all\030\003 \001(\010\022\027\n\017use_fast_pars" +
-      "er\030\004 \001(\010\"F\n\023ListDepFiles_Result\022\017\n\007pkgro" +
-      "ot\030\001 \001(\t\022\017\n\007pkgpath\030\002 \001(\t\022\r\n\005files\030\003 \003(\t" +
-      "\"9\n\026LoadSettingsFiles_Args\022\020\n\010work_dir\030\001" +
-      " \001(\t\022\r\n\005files\030\002 \003(\t\"{\n\030LoadSettingsFiles" +
-      "_Result\022/\n\017kcl_cli_configs\030\001 \001(\0132\026.com.k" +
-      "cl.api.CliConfig\022.\n\013kcl_options\030\002 \003(\0132\031." +
-      "com.kcl.api.KeyValuePair\"\360\001\n\tCliConfig\022\r" +
-      "\n\005files\030\001 \003(\t\022\016\n\006output\030\002 \001(\t\022\021\n\toverrid" +
-      "es\030\003 \003(\t\022\025\n\rpath_selector\030\004 \003(\t\022\032\n\022stric" +
-      "t_range_check\030\005 \001(\010\022\024\n\014disable_none\030\006 \001(" +
-      "\010\022\017\n\007verbose\030\007 \001(\003\022\r\n\005debug\030\010 \001(\010\022\021\n\tsor" +
-      "t_keys\030\t \001(\010\022\023\n\013show_hidden\030\n \001(\010\022 \n\030inc" +
-      "lude_schema_type_path\030\013 \001(\010\"*\n\014KeyValueP" +
-      "air\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t\"^\n\013Renam" +
-      "e_Args\022\024\n\014package_root\030\001 \001(\t\022\023\n\013symbol_p" +
-      "ath\030\002 \001(\t\022\022\n\nfile_paths\030\003 \003(\t\022\020\n\010new_nam" +
-      "e\030\004 \001(\t\"&\n\rRename_Result\022\025\n\rchanged_file" +
-      "s\030\001 \003(\t\"\307\001\n\017RenameCode_Args\022\024\n\014package_r" +
-      "oot\030\001 \001(\t\022\023\n\013symbol_path\030\002 \001(\t\022C\n\014source" +
-      "_codes\030\003 \003(\0132-.com.kcl.api.RenameCode_Ar" +
-      "gs.SourceCodesEntry\022\020\n\010new_name\030\004 \001(\t\0322\n" +
-      "\020SourceCodesEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030" +
-      "\002 \001(\t:\0028\001\"\221\001\n\021RenameCode_Result\022G\n\rchang" +
-      "ed_codes\030\001 \003(\01320.com.kcl.api.RenameCode_" +
-      "Result.ChangedCodesEntry\0323\n\021ChangedCodes" +
-      "Entry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\"v\n" +
-      "\tTest_Args\0220\n\texec_args\030\001 \001(\0132\035.com.kcl." +
-      "api.ExecProgram_Args\022\020\n\010pkg_list\030\002 \003(\t\022\022" +
-      "\n\nrun_regexp\030\003 \001(\t\022\021\n\tfail_fast\030\004 \001(\010\"6\n" +
-      "\013Test_Result\022\'\n\004info\030\002 \003(\0132\031.com.kcl.api" +
-      ".TestCaseInfo\"R\n\014TestCaseInfo\022\014\n\004name\030\001 " +
-      "\001(\t\022\r\n\005error\030\002 \001(\t\022\020\n\010duration\030\003 \001(\004\022\023\n\013" +
-      "log_message\030\004 \001(\t\"\310\004\n\007KclType\022\014\n\004type\030\001 " +
-      "\001(\t\022)\n\013union_types\030\002 \003(\0132\024.com.kcl.api.K" +
-      "clType\022\017\n\007default\030\003 \001(\t\022\023\n\013schema_name\030\004" +
-      " \001(\t\022\022\n\nschema_doc\030\005 \001(\t\0228\n\nproperties\030\006" +
-      " \003(\0132$.com.kcl.api.KclType.PropertiesEnt" +
-      "ry\022\020\n\010required\030\007 \003(\t\022!\n\003key\030\010 \001(\0132\024.com." +
-      "kcl.api.KclType\022\"\n\004item\030\t \001(\0132\024.com.kcl." +
-      "api.KclType\022\014\n\004line\030\n \001(\005\022*\n\ndecorators\030" +
-      "\013 \003(\0132\026.com.kcl.api.Decorator\022\020\n\010filenam" +
-      "e\030\014 \001(\t\022\020\n\010pkg_path\030\r \001(\t\022\023\n\013description" +
-      "\030\016 \001(\t\0224\n\010examples\030\017 \003(\0132\".com.kcl.api.K" +
-      "clType.ExamplesEntry\032G\n\017PropertiesEntry\022" +
+      "tor\030\021 \003(\t\022\021\n\tfast_eval\030\022 \001(\010\"h\n\022ExecProg" +
+      "ram_Result\022\023\n\013json_result\030\001 \001(\t\022\023\n\013yaml_" +
+      "result\030\002 \001(\t\022\023\n\013log_message\030\003 \001(\t\022\023\n\013err" +
+      "_message\030\004 \001(\t\"U\n\021BuildProgram_Args\0220\n\te" +
+      "xec_args\030\001 \001(\0132\035.com.kcl.api.ExecProgram" +
+      "_Args\022\016\n\006output\030\002 \001(\t\"#\n\023BuildProgram_Re" +
+      "sult\022\014\n\004path\030\001 \001(\t\"S\n\021ExecArtifact_Args\022" +
+      "\014\n\004path\030\001 \001(\t\0220\n\texec_args\030\002 \001(\0132\035.com.k" +
+      "cl.api.ExecProgram_Args\"\'\n\020ResetPlugin_A" +
+      "rgs\022\023\n\013plugin_root\030\001 \001(\t\"\024\n\022ResetPlugin_" +
+      "Result\"!\n\017FormatCode_Args\022\016\n\006source\030\001 \001(" +
+      "\t\"&\n\021FormatCode_Result\022\021\n\tformatted\030\001 \001(" +
+      "\014\"\037\n\017FormatPath_Args\022\014\n\004path\030\001 \001(\t\"*\n\021Fo" +
+      "rmatPath_Result\022\025\n\rchanged_paths\030\001 \003(\t\"\036" +
+      "\n\rLintPath_Args\022\r\n\005paths\030\001 \003(\t\"\"\n\017LintPa" +
+      "th_Result\022\017\n\007results\030\001 \003(\t\"F\n\021OverrideFi" +
+      "le_Args\022\014\n\004file\030\001 \001(\t\022\r\n\005specs\030\002 \003(\t\022\024\n\014" +
+      "import_paths\030\003 \003(\t\"%\n\023OverrideFile_Resul" +
+      "t\022\016\n\006result\030\001 \001(\010\"1\n\022ListVariables_Args\022" +
+      "\014\n\004file\030\001 \001(\t\022\r\n\005specs\030\002 \003(\t\"\277\001\n\024ListVar" +
+      "iables_Result\022C\n\tvariables\030\001 \003(\01320.com.k" +
+      "cl.api.ListVariables_Result.VariablesEnt" +
+      "ry\022\031\n\021unsupported_codes\030\002 \003(\t\032G\n\016Variabl" +
+      "esEntry\022\013\n\003key\030\001 \001(\t\022$\n\005value\030\002 \001(\0132\025.co" +
+      "m.kcl.api.Variable:\0028\001\"\031\n\010Variable\022\r\n\005va" +
+      "lue\030\001 \001(\t\"_\n\026GetFullSchemaType_Args\0220\n\te" +
+      "xec_args\030\001 \001(\0132\035.com.kcl.api.ExecProgram" +
+      "_Args\022\023\n\013schema_name\030\002 \001(\t\"E\n\022GetSchemaT" +
+      "ype_Args\022\014\n\004file\030\001 \001(\t\022\014\n\004code\030\002 \001(\t\022\023\n\013" +
+      "schema_name\030\003 \001(\t\"F\n\024GetSchemaType_Resul" +
+      "t\022.\n\020schema_type_list\030\001 \003(\0132\024.com.kcl.ap" +
+      "i.KclType\"L\n\031GetSchemaTypeMapping_Args\022\014" +
+      "\n\004file\030\001 \001(\t\022\014\n\004code\030\002 \001(\t\022\023\n\013schema_nam" +
+      "e\030\003 \001(\t\"\313\001\n\033GetSchemaTypeMapping_Result\022" +
+      "\\\n\023schema_type_mapping\030\001 \003(\0132?.com.kcl.a" +
+      "pi.GetSchemaTypeMapping_Result.SchemaTyp" +
+      "eMappingEntry\032N\n\026SchemaTypeMappingEntry\022" +
       "\013\n\003key\030\001 \001(\t\022#\n\005value\030\002 \001(\0132\024.com.kcl.ap" +
-      "i.KclType:\0028\001\032E\n\rExamplesEntry\022\013\n\003key\030\001 " +
-      "\001(\t\022#\n\005value\030\002 \001(\0132\024.com.kcl.api.Example" +
-      ":\0028\001\"\225\001\n\tDecorator\022\014\n\004name\030\001 \001(\t\022\021\n\targu" +
-      "ments\030\002 \003(\t\0226\n\010keywords\030\003 \003(\0132$.com.kcl." +
-      "api.Decorator.KeywordsEntry\032/\n\rKeywordsE" +
-      "ntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\">\n\007" +
-      "Example\022\017\n\007summary\030\001 \001(\t\022\023\n\013description\030" +
-      "\002 \001(\t\022\r\n\005value\030\003 \001(\t2\226\001\n\016BuiltinService\022" +
-      "8\n\004Ping\022\026.com.kcl.api.Ping_Args\032\030.com.kc" +
-      "l.api.Ping_Result\022J\n\nListMethod\022\034.com.kc" +
-      "l.api.ListMethod_Args\032\036.com.kcl.api.List" +
-      "Method_Result2\213\r\n\014KclvmService\0228\n\004Ping\022\026" +
-      ".com.kcl.api.Ping_Args\032\030.com.kcl.api.Pin" +
-      "g_Result\022M\n\013ExecProgram\022\035.com.kcl.api.Ex" +
-      "ecProgram_Args\032\037.com.kcl.api.ExecProgram" +
-      "_Result\022P\n\014BuildProgram\022\036.com.kcl.api.Bu" +
-      "ildProgram_Args\032 .com.kcl.api.BuildProgr" +
-      "am_Result\022O\n\014ExecArtifact\022\036.com.kcl.api." +
-      "ExecArtifact_Args\032\037.com.kcl.api.ExecProg" +
-      "ram_Result\022G\n\tParseFile\022\033.com.kcl.api.Pa" +
-      "rseFile_Args\032\035.com.kcl.api.ParseFile_Res" +
-      "ult\022P\n\014ParseProgram\022\036.com.kcl.api.ParseP" +
-      "rogram_Args\032 .com.kcl.api.ParseProgram_R" +
-      "esult\022M\n\013LoadPackage\022\035.com.kcl.api.LoadP" +
-      "ackage_Args\032\037.com.kcl.api.LoadPackage_Re" +
-      "sult\022N\n\013ListOptions\022\036.com.kcl.api.ParseP" +
-      "rogram_Args\032\037.com.kcl.api.ListOptions_Re" +
-      "sult\022J\n\nFormatCode\022\034.com.kcl.api.FormatC" +
-      "ode_Args\032\036.com.kcl.api.FormatCode_Result" +
-      "\022J\n\nFormatPath\022\034.com.kcl.api.FormatPath_" +
-      "Args\032\036.com.kcl.api.FormatPath_Result\022D\n\010" +
-      "LintPath\022\032.com.kcl.api.LintPath_Args\032\034.c" +
-      "om.kcl.api.LintPath_Result\022P\n\014OverrideFi" +
-      "le\022\036.com.kcl.api.OverrideFile_Args\032 .com" +
-      ".kcl.api.OverrideFile_Result\022S\n\rGetSchem" +
-      "aType\022\037.com.kcl.api.GetSchemaType_Args\032!" +
-      ".com.kcl.api.GetSchemaType_Result\022[\n\021Get" +
-      "FullSchemaType\022#.com.kcl.api.GetFullSche" +
-      "maType_Args\032!.com.kcl.api.GetSchemaType_" +
-      "Result\022h\n\024GetSchemaTypeMapping\022&.com.kcl" +
-      ".api.GetSchemaTypeMapping_Args\032(.com.kcl" +
-      ".api.GetSchemaTypeMapping_Result\022P\n\014Vali" +
-      "dateCode\022\036.com.kcl.api.ValidateCode_Args" +
-      "\032 .com.kcl.api.ValidateCode_Result\022P\n\014Li" +
-      "stDepFiles\022\036.com.kcl.api.ListDepFiles_Ar" +
-      "gs\032 .com.kcl.api.ListDepFiles_Result\022_\n\021" +
-      "LoadSettingsFiles\022#.com.kcl.api.LoadSett" +
-      "ingsFiles_Args\032%.com.kcl.api.LoadSetting" +
-      "sFiles_Result\022>\n\006Rename\022\030.com.kcl.api.Re" +
-      "name_Args\032\032.com.kcl.api.Rename_Result\022J\n" +
-      "\nRenameCode\022\034.com.kcl.api.RenameCode_Arg" +
-      "s\032\036.com.kcl.api.RenameCode_Result\0228\n\004Tes" +
-      "t\022\026.com.kcl.api.Test_Args\032\030.com.kcl.api." +
-      "Test_Resultb\006proto3"
+      "i.KclType:\0028\001\"\207\001\n\021ValidateCode_Args\022\020\n\010d" +
+      "atafile\030\001 \001(\t\022\014\n\004data\030\002 \001(\t\022\014\n\004file\030\003 \001(" +
+      "\t\022\014\n\004code\030\004 \001(\t\022\016\n\006schema\030\005 \001(\t\022\026\n\016attri" +
+      "bute_name\030\006 \001(\t\022\016\n\006format\030\007 \001(\t\";\n\023Valid" +
+      "ateCode_Result\022\017\n\007success\030\001 \001(\010\022\023\n\013err_m" +
+      "essage\030\002 \001(\t\":\n\010Position\022\014\n\004line\030\001 \001(\003\022\016" +
+      "\n\006column\030\002 \001(\003\022\020\n\010filename\030\003 \001(\t\"i\n\021List" +
+      "DepFiles_Args\022\020\n\010work_dir\030\001 \001(\t\022\024\n\014use_a" +
+      "bs_path\030\002 \001(\010\022\023\n\013include_all\030\003 \001(\010\022\027\n\017us" +
+      "e_fast_parser\030\004 \001(\010\"F\n\023ListDepFiles_Resu" +
+      "lt\022\017\n\007pkgroot\030\001 \001(\t\022\017\n\007pkgpath\030\002 \001(\t\022\r\n\005" +
+      "files\030\003 \003(\t\"9\n\026LoadSettingsFiles_Args\022\020\n" +
+      "\010work_dir\030\001 \001(\t\022\r\n\005files\030\002 \003(\t\"{\n\030LoadSe" +
+      "ttingsFiles_Result\022/\n\017kcl_cli_configs\030\001 " +
+      "\001(\0132\026.com.kcl.api.CliConfig\022.\n\013kcl_optio" +
+      "ns\030\002 \003(\0132\031.com.kcl.api.KeyValuePair\"\203\002\n\t" +
+      "CliConfig\022\r\n\005files\030\001 \003(\t\022\016\n\006output\030\002 \001(\t" +
+      "\022\021\n\toverrides\030\003 \003(\t\022\025\n\rpath_selector\030\004 \003" +
+      "(\t\022\032\n\022strict_range_check\030\005 \001(\010\022\024\n\014disabl" +
+      "e_none\030\006 \001(\010\022\017\n\007verbose\030\007 \001(\003\022\r\n\005debug\030\010" +
+      " \001(\010\022\021\n\tsort_keys\030\t \001(\010\022\023\n\013show_hidden\030\n" +
+      " \001(\010\022 \n\030include_schema_type_path\030\013 \001(\010\022\021" +
+      "\n\tfast_eval\030\014 \001(\010\"*\n\014KeyValuePair\022\013\n\003key" +
+      "\030\001 \001(\t\022\r\n\005value\030\002 \001(\t\"^\n\013Rename_Args\022\024\n\014" +
+      "package_root\030\001 \001(\t\022\023\n\013symbol_path\030\002 \001(\t\022" +
+      "\022\n\nfile_paths\030\003 \003(\t\022\020\n\010new_name\030\004 \001(\t\"&\n" +
+      "\rRename_Result\022\025\n\rchanged_files\030\001 \003(\t\"\307\001" +
+      "\n\017RenameCode_Args\022\024\n\014package_root\030\001 \001(\t\022" +
+      "\023\n\013symbol_path\030\002 \001(\t\022C\n\014source_codes\030\003 \003" +
+      "(\0132-.com.kcl.api.RenameCode_Args.SourceC" +
+      "odesEntry\022\020\n\010new_name\030\004 \001(\t\0322\n\020SourceCod" +
+      "esEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\"" +
+      "\221\001\n\021RenameCode_Result\022G\n\rchanged_codes\030\001" +
+      " \003(\01320.com.kcl.api.RenameCode_Result.Cha" +
+      "ngedCodesEntry\0323\n\021ChangedCodesEntry\022\013\n\003k" +
+      "ey\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\"v\n\tTest_Args" +
+      "\0220\n\texec_args\030\001 \001(\0132\035.com.kcl.api.ExecPr" +
+      "ogram_Args\022\020\n\010pkg_list\030\002 \003(\t\022\022\n\nrun_rege" +
+      "xp\030\003 \001(\t\022\021\n\tfail_fast\030\004 \001(\010\"6\n\013Test_Resu" +
+      "lt\022\'\n\004info\030\002 \003(\0132\031.com.kcl.api.TestCaseI" +
+      "nfo\"R\n\014TestCaseInfo\022\014\n\004name\030\001 \001(\t\022\r\n\005err" +
+      "or\030\002 \001(\t\022\020\n\010duration\030\003 \001(\004\022\023\n\013log_messag" +
+      "e\030\004 \001(\t\"\310\004\n\007KclType\022\014\n\004type\030\001 \001(\t\022)\n\013uni" +
+      "on_types\030\002 \003(\0132\024.com.kcl.api.KclType\022\017\n\007" +
+      "default\030\003 \001(\t\022\023\n\013schema_name\030\004 \001(\t\022\022\n\nsc" +
+      "hema_doc\030\005 \001(\t\0228\n\nproperties\030\006 \003(\0132$.com" +
+      ".kcl.api.KclType.PropertiesEntry\022\020\n\010requ" +
+      "ired\030\007 \003(\t\022!\n\003key\030\010 \001(\0132\024.com.kcl.api.Kc" +
+      "lType\022\"\n\004item\030\t \001(\0132\024.com.kcl.api.KclTyp" +
+      "e\022\014\n\004line\030\n \001(\005\022*\n\ndecorators\030\013 \003(\0132\026.co" +
+      "m.kcl.api.Decorator\022\020\n\010filename\030\014 \001(\t\022\020\n" +
+      "\010pkg_path\030\r \001(\t\022\023\n\013description\030\016 \001(\t\0224\n\010" +
+      "examples\030\017 \003(\0132\".com.kcl.api.KclType.Exa" +
+      "mplesEntry\032G\n\017PropertiesEntry\022\013\n\003key\030\001 \001" +
+      "(\t\022#\n\005value\030\002 \001(\0132\024.com.kcl.api.KclType:" +
+      "\0028\001\032E\n\rExamplesEntry\022\013\n\003key\030\001 \001(\t\022#\n\005val" +
+      "ue\030\002 \001(\0132\024.com.kcl.api.Example:\0028\001\"\225\001\n\tD" +
+      "ecorator\022\014\n\004name\030\001 \001(\t\022\021\n\targuments\030\002 \003(" +
+      "\t\0226\n\010keywords\030\003 \003(\0132$.com.kcl.api.Decora" +
+      "tor.KeywordsEntry\032/\n\rKeywordsEntry\022\013\n\003ke" +
+      "y\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\">\n\007Example\022\017\n" +
+      "\007summary\030\001 \001(\t\022\023\n\013description\030\002 \001(\t\022\r\n\005v" +
+      "alue\030\003 \001(\t2\226\001\n\016BuiltinService\0228\n\004Ping\022\026." +
+      "com.kcl.api.Ping_Args\032\030.com.kcl.api.Ping" +
+      "_Result\022J\n\nListMethod\022\034.com.kcl.api.List" +
+      "Method_Args\032\036.com.kcl.api.ListMethod_Res" +
+      "ult2\340\r\n\014KclvmService\0228\n\004Ping\022\026.com.kcl.a" +
+      "pi.Ping_Args\032\030.com.kcl.api.Ping_Result\022M" +
+      "\n\013ExecProgram\022\035.com.kcl.api.ExecProgram_" +
+      "Args\032\037.com.kcl.api.ExecProgram_Result\022P\n" +
+      "\014BuildProgram\022\036.com.kcl.api.BuildProgram" +
+      "_Args\032 .com.kcl.api.BuildProgram_Result\022" +
+      "O\n\014ExecArtifact\022\036.com.kcl.api.ExecArtifa" +
+      "ct_Args\032\037.com.kcl.api.ExecProgram_Result" +
+      "\022G\n\tParseFile\022\033.com.kcl.api.ParseFile_Ar" +
+      "gs\032\035.com.kcl.api.ParseFile_Result\022P\n\014Par" +
+      "seProgram\022\036.com.kcl.api.ParseProgram_Arg" +
+      "s\032 .com.kcl.api.ParseProgram_Result\022M\n\013L" +
+      "oadPackage\022\035.com.kcl.api.LoadPackage_Arg" +
+      "s\032\037.com.kcl.api.LoadPackage_Result\022N\n\013Li" +
+      "stOptions\022\036.com.kcl.api.ParseProgram_Arg" +
+      "s\032\037.com.kcl.api.ListOptions_Result\022S\n\rLi" +
+      "stVariables\022\037.com.kcl.api.ListVariables_" +
+      "Args\032!.com.kcl.api.ListVariables_Result\022" +
+      "J\n\nFormatCode\022\034.com.kcl.api.FormatCode_A" +
+      "rgs\032\036.com.kcl.api.FormatCode_Result\022J\n\nF" +
+      "ormatPath\022\034.com.kcl.api.FormatPath_Args\032" +
+      "\036.com.kcl.api.FormatPath_Result\022D\n\010LintP" +
+      "ath\022\032.com.kcl.api.LintPath_Args\032\034.com.kc" +
+      "l.api.LintPath_Result\022P\n\014OverrideFile\022\036." +
+      "com.kcl.api.OverrideFile_Args\032 .com.kcl." +
+      "api.OverrideFile_Result\022S\n\rGetSchemaType" +
+      "\022\037.com.kcl.api.GetSchemaType_Args\032!.com." +
+      "kcl.api.GetSchemaType_Result\022[\n\021GetFullS" +
+      "chemaType\022#.com.kcl.api.GetFullSchemaTyp" +
+      "e_Args\032!.com.kcl.api.GetSchemaType_Resul" +
+      "t\022h\n\024GetSchemaTypeMapping\022&.com.kcl.api." +
+      "GetSchemaTypeMapping_Args\032(.com.kcl.api." +
+      "GetSchemaTypeMapping_Result\022P\n\014ValidateC" +
+      "ode\022\036.com.kcl.api.ValidateCode_Args\032 .co" +
+      "m.kcl.api.ValidateCode_Result\022P\n\014ListDep" +
+      "Files\022\036.com.kcl.api.ListDepFiles_Args\032 ." +
+      "com.kcl.api.ListDepFiles_Result\022_\n\021LoadS" +
+      "ettingsFiles\022#.com.kcl.api.LoadSettingsF" +
+      "iles_Args\032%.com.kcl.api.LoadSettingsFile" +
+      "s_Result\022>\n\006Rename\022\030.com.kcl.api.Rename_" +
+      "Args\032\032.com.kcl.api.Rename_Result\022J\n\nRena" +
+      "meCode\022\034.com.kcl.api.RenameCode_Args\032\036.c" +
+      "om.kcl.api.RenameCode_Result\0228\n\004Test\022\026.c" +
+      "om.kcl.api.Test_Args\032\030.com.kcl.api.Test_" +
+      "Resultb\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -62330,7 +64802,7 @@ java.lang.String defaultValue) {
     internal_static_com_kcl_api_ExecProgram_Args_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_kcl_api_ExecProgram_Args_descriptor,
-        new java.lang.String[] { "WorkDir", "KFilenameList", "KCodeList", "Args", "Overrides", "DisableYamlResult", "PrintOverrideAst", "StrictRangeCheck", "DisableNone", "Verbose", "Debug", "SortKeys", "ExternalPkgs", "IncludeSchemaTypePath", "CompileOnly", "ShowHidden", "PathSelector", });
+        new java.lang.String[] { "WorkDir", "KFilenameList", "KCodeList", "Args", "Overrides", "DisableYamlResult", "PrintOverrideAst", "StrictRangeCheck", "DisableNone", "Verbose", "Debug", "SortKeys", "ExternalPkgs", "IncludeSchemaTypePath", "CompileOnly", "ShowHidden", "PathSelector", "FastEval", });
     internal_static_com_kcl_api_ExecProgram_Result_descriptor =
       getDescriptor().getMessageTypes().get(22);
     internal_static_com_kcl_api_ExecProgram_Result_fieldAccessorTable = new
@@ -62415,32 +64887,56 @@ java.lang.String defaultValue) {
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_kcl_api_OverrideFile_Result_descriptor,
         new java.lang.String[] { "Result", });
-    internal_static_com_kcl_api_GetFullSchemaType_Args_descriptor =
+    internal_static_com_kcl_api_ListVariables_Args_descriptor =
       getDescriptor().getMessageTypes().get(36);
+    internal_static_com_kcl_api_ListVariables_Args_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_com_kcl_api_ListVariables_Args_descriptor,
+        new java.lang.String[] { "File", "Specs", });
+    internal_static_com_kcl_api_ListVariables_Result_descriptor =
+      getDescriptor().getMessageTypes().get(37);
+    internal_static_com_kcl_api_ListVariables_Result_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_com_kcl_api_ListVariables_Result_descriptor,
+        new java.lang.String[] { "Variables", "UnsupportedCodes", });
+    internal_static_com_kcl_api_ListVariables_Result_VariablesEntry_descriptor =
+      internal_static_com_kcl_api_ListVariables_Result_descriptor.getNestedTypes().get(0);
+    internal_static_com_kcl_api_ListVariables_Result_VariablesEntry_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_com_kcl_api_ListVariables_Result_VariablesEntry_descriptor,
+        new java.lang.String[] { "Key", "Value", });
+    internal_static_com_kcl_api_Variable_descriptor =
+      getDescriptor().getMessageTypes().get(38);
+    internal_static_com_kcl_api_Variable_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_com_kcl_api_Variable_descriptor,
+        new java.lang.String[] { "Value", });
+    internal_static_com_kcl_api_GetFullSchemaType_Args_descriptor =
+      getDescriptor().getMessageTypes().get(39);
     internal_static_com_kcl_api_GetFullSchemaType_Args_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_kcl_api_GetFullSchemaType_Args_descriptor,
         new java.lang.String[] { "ExecArgs", "SchemaName", });
     internal_static_com_kcl_api_GetSchemaType_Args_descriptor =
-      getDescriptor().getMessageTypes().get(37);
+      getDescriptor().getMessageTypes().get(40);
     internal_static_com_kcl_api_GetSchemaType_Args_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_kcl_api_GetSchemaType_Args_descriptor,
         new java.lang.String[] { "File", "Code", "SchemaName", });
     internal_static_com_kcl_api_GetSchemaType_Result_descriptor =
-      getDescriptor().getMessageTypes().get(38);
+      getDescriptor().getMessageTypes().get(41);
     internal_static_com_kcl_api_GetSchemaType_Result_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_kcl_api_GetSchemaType_Result_descriptor,
         new java.lang.String[] { "SchemaTypeList", });
     internal_static_com_kcl_api_GetSchemaTypeMapping_Args_descriptor =
-      getDescriptor().getMessageTypes().get(39);
+      getDescriptor().getMessageTypes().get(42);
     internal_static_com_kcl_api_GetSchemaTypeMapping_Args_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_kcl_api_GetSchemaTypeMapping_Args_descriptor,
         new java.lang.String[] { "File", "Code", "SchemaName", });
     internal_static_com_kcl_api_GetSchemaTypeMapping_Result_descriptor =
-      getDescriptor().getMessageTypes().get(40);
+      getDescriptor().getMessageTypes().get(43);
     internal_static_com_kcl_api_GetSchemaTypeMapping_Result_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_kcl_api_GetSchemaTypeMapping_Result_descriptor,
@@ -62452,73 +64948,73 @@ java.lang.String defaultValue) {
         internal_static_com_kcl_api_GetSchemaTypeMapping_Result_SchemaTypeMappingEntry_descriptor,
         new java.lang.String[] { "Key", "Value", });
     internal_static_com_kcl_api_ValidateCode_Args_descriptor =
-      getDescriptor().getMessageTypes().get(41);
+      getDescriptor().getMessageTypes().get(44);
     internal_static_com_kcl_api_ValidateCode_Args_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_kcl_api_ValidateCode_Args_descriptor,
         new java.lang.String[] { "Datafile", "Data", "File", "Code", "Schema", "AttributeName", "Format", });
     internal_static_com_kcl_api_ValidateCode_Result_descriptor =
-      getDescriptor().getMessageTypes().get(42);
+      getDescriptor().getMessageTypes().get(45);
     internal_static_com_kcl_api_ValidateCode_Result_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_kcl_api_ValidateCode_Result_descriptor,
         new java.lang.String[] { "Success", "ErrMessage", });
     internal_static_com_kcl_api_Position_descriptor =
-      getDescriptor().getMessageTypes().get(43);
+      getDescriptor().getMessageTypes().get(46);
     internal_static_com_kcl_api_Position_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_kcl_api_Position_descriptor,
         new java.lang.String[] { "Line", "Column", "Filename", });
     internal_static_com_kcl_api_ListDepFiles_Args_descriptor =
-      getDescriptor().getMessageTypes().get(44);
+      getDescriptor().getMessageTypes().get(47);
     internal_static_com_kcl_api_ListDepFiles_Args_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_kcl_api_ListDepFiles_Args_descriptor,
         new java.lang.String[] { "WorkDir", "UseAbsPath", "IncludeAll", "UseFastParser", });
     internal_static_com_kcl_api_ListDepFiles_Result_descriptor =
-      getDescriptor().getMessageTypes().get(45);
+      getDescriptor().getMessageTypes().get(48);
     internal_static_com_kcl_api_ListDepFiles_Result_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_kcl_api_ListDepFiles_Result_descriptor,
         new java.lang.String[] { "Pkgroot", "Pkgpath", "Files", });
     internal_static_com_kcl_api_LoadSettingsFiles_Args_descriptor =
-      getDescriptor().getMessageTypes().get(46);
+      getDescriptor().getMessageTypes().get(49);
     internal_static_com_kcl_api_LoadSettingsFiles_Args_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_kcl_api_LoadSettingsFiles_Args_descriptor,
         new java.lang.String[] { "WorkDir", "Files", });
     internal_static_com_kcl_api_LoadSettingsFiles_Result_descriptor =
-      getDescriptor().getMessageTypes().get(47);
+      getDescriptor().getMessageTypes().get(50);
     internal_static_com_kcl_api_LoadSettingsFiles_Result_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_kcl_api_LoadSettingsFiles_Result_descriptor,
         new java.lang.String[] { "KclCliConfigs", "KclOptions", });
     internal_static_com_kcl_api_CliConfig_descriptor =
-      getDescriptor().getMessageTypes().get(48);
+      getDescriptor().getMessageTypes().get(51);
     internal_static_com_kcl_api_CliConfig_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_kcl_api_CliConfig_descriptor,
-        new java.lang.String[] { "Files", "Output", "Overrides", "PathSelector", "StrictRangeCheck", "DisableNone", "Verbose", "Debug", "SortKeys", "ShowHidden", "IncludeSchemaTypePath", });
+        new java.lang.String[] { "Files", "Output", "Overrides", "PathSelector", "StrictRangeCheck", "DisableNone", "Verbose", "Debug", "SortKeys", "ShowHidden", "IncludeSchemaTypePath", "FastEval", });
     internal_static_com_kcl_api_KeyValuePair_descriptor =
-      getDescriptor().getMessageTypes().get(49);
+      getDescriptor().getMessageTypes().get(52);
     internal_static_com_kcl_api_KeyValuePair_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_kcl_api_KeyValuePair_descriptor,
         new java.lang.String[] { "Key", "Value", });
     internal_static_com_kcl_api_Rename_Args_descriptor =
-      getDescriptor().getMessageTypes().get(50);
+      getDescriptor().getMessageTypes().get(53);
     internal_static_com_kcl_api_Rename_Args_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_kcl_api_Rename_Args_descriptor,
         new java.lang.String[] { "PackageRoot", "SymbolPath", "FilePaths", "NewName", });
     internal_static_com_kcl_api_Rename_Result_descriptor =
-      getDescriptor().getMessageTypes().get(51);
+      getDescriptor().getMessageTypes().get(54);
     internal_static_com_kcl_api_Rename_Result_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_kcl_api_Rename_Result_descriptor,
         new java.lang.String[] { "ChangedFiles", });
     internal_static_com_kcl_api_RenameCode_Args_descriptor =
-      getDescriptor().getMessageTypes().get(52);
+      getDescriptor().getMessageTypes().get(55);
     internal_static_com_kcl_api_RenameCode_Args_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_kcl_api_RenameCode_Args_descriptor,
@@ -62530,7 +65026,7 @@ java.lang.String defaultValue) {
         internal_static_com_kcl_api_RenameCode_Args_SourceCodesEntry_descriptor,
         new java.lang.String[] { "Key", "Value", });
     internal_static_com_kcl_api_RenameCode_Result_descriptor =
-      getDescriptor().getMessageTypes().get(53);
+      getDescriptor().getMessageTypes().get(56);
     internal_static_com_kcl_api_RenameCode_Result_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_kcl_api_RenameCode_Result_descriptor,
@@ -62542,25 +65038,25 @@ java.lang.String defaultValue) {
         internal_static_com_kcl_api_RenameCode_Result_ChangedCodesEntry_descriptor,
         new java.lang.String[] { "Key", "Value", });
     internal_static_com_kcl_api_Test_Args_descriptor =
-      getDescriptor().getMessageTypes().get(54);
+      getDescriptor().getMessageTypes().get(57);
     internal_static_com_kcl_api_Test_Args_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_kcl_api_Test_Args_descriptor,
         new java.lang.String[] { "ExecArgs", "PkgList", "RunRegexp", "FailFast", });
     internal_static_com_kcl_api_Test_Result_descriptor =
-      getDescriptor().getMessageTypes().get(55);
+      getDescriptor().getMessageTypes().get(58);
     internal_static_com_kcl_api_Test_Result_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_kcl_api_Test_Result_descriptor,
         new java.lang.String[] { "Info", });
     internal_static_com_kcl_api_TestCaseInfo_descriptor =
-      getDescriptor().getMessageTypes().get(56);
+      getDescriptor().getMessageTypes().get(59);
     internal_static_com_kcl_api_TestCaseInfo_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_kcl_api_TestCaseInfo_descriptor,
         new java.lang.String[] { "Name", "Error", "Duration", "LogMessage", });
     internal_static_com_kcl_api_KclType_descriptor =
-      getDescriptor().getMessageTypes().get(57);
+      getDescriptor().getMessageTypes().get(60);
     internal_static_com_kcl_api_KclType_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_kcl_api_KclType_descriptor,
@@ -62578,7 +65074,7 @@ java.lang.String defaultValue) {
         internal_static_com_kcl_api_KclType_ExamplesEntry_descriptor,
         new java.lang.String[] { "Key", "Value", });
     internal_static_com_kcl_api_Decorator_descriptor =
-      getDescriptor().getMessageTypes().get(58);
+      getDescriptor().getMessageTypes().get(61);
     internal_static_com_kcl_api_Decorator_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_kcl_api_Decorator_descriptor,
@@ -62590,7 +65086,7 @@ java.lang.String defaultValue) {
         internal_static_com_kcl_api_Decorator_KeywordsEntry_descriptor,
         new java.lang.String[] { "Key", "Value", });
     internal_static_com_kcl_api_Example_descriptor =
-      getDescriptor().getMessageTypes().get(59);
+      getDescriptor().getMessageTypes().get(62);
     internal_static_com_kcl_api_Example_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_kcl_api_Example_descriptor,

@@ -5,7 +5,7 @@ KCL Rust SDK
 ### How to Use
 
 ```shell
-cargo add --git https://github.com/kcl-lang/lib --branch main
+cargo add --git https://github.com/kcl-lang/lib
 ```
 
 Write the Code
@@ -15,7 +15,7 @@ use kcl_lang::*;
 use anyhow::Result;
 
 fn main() -> Result<()> {
-    let api = API::new()?;
+    let api = API::default();
     let args = &ExecProgramArgs {
         k_filename_list: vec!["main.k".to_string()],
         k_code_list: vec!["a = 1".to_string()],
