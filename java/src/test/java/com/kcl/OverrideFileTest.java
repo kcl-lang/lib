@@ -24,7 +24,7 @@ import org.junit.Test;
 
 public class OverrideFileTest {
     @Test
-    public void testListVariables() throws Exception {
+    public void testOverrideFile() throws Exception {
         // API instance
         API api = new API();
 
