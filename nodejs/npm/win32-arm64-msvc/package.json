@@ -1,0 +1,18 @@
+{
+  "name": "kcl-lib-win32-arm64-msvc",
+  "version": "0.0.0",
+  "os": [
+    "win32"
+  ],
+  "cpu": [
+    "arm64"
+  ],
+  "main": "kcl-lib.win32-arm64-msvc.node",
+  "files": [
+    "kcl-lib.win32-arm64-msvc.node"
+  ],
+  "license": "Apache-2.0",
+  "engines": {
+    "node": ">= 10"
+  }
+}

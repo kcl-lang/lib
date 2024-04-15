@@ -13,6 +13,10 @@ on:
     tags:
       - '*'
   pull_request:
+    branches:
+      - main
+    paths:
+      - "python/**"
   workflow_dispatch:
 
 permissions:

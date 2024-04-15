@@ -1,0 +1,73 @@
+{
+  "name": "kcl-lib",
+  "version": "0.8.4",
+  "license": "Apache-2.0",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "napi": {
+    "name": "kcl-lib",
+    "triples": {
+      "additional": [
+        "aarch64-apple-darwin",
+        "aarch64-unknown-linux-gnu",
+        "aarch64-unknown-linux-musl",
+        "aarch64-pc-windows-msvc",
+        "x86_64-unknown-linux-musl",
+        "universal-apple-darwin"
+      ]
+    }
+  },
+  "files": [
+    "index.d.ts",
+    "index.js",
+    "LICENSE",
+    "NOTICE"
+  ],
+  "devDependencies": {
+    "@napi-rs/cli": "^2.18.1",
+    "ava": "^6.0.1",
+    "prettier": "^2.8.4",
+    "typedoc": "^0.25",
+    "typescript": "^5.0.2"
+  },
+  "ava": {
+    "timeout": "3m"
+  },
+  "engines": {
+    "node": ">= 10"
+  },
+  "scripts": {
+    "build": "napi build --platform --release",
+    "build:debug": "napi build --platform",
+    "prepublishOnly": "napi prepublish -t npm",
+    "docs": "typedoc",
+    "test": "ava",
+    "format": "prettier --write .",
+    "universal": "napi universal",
+    "version": "napi version"
+  },
+  "prettier": {
+    "overrides": [
+      {
+        "files": "./**/*.{js,ts,mjs,jsx,tsx}",
+        "options": {
+          "arrowParens": "always",
+          "parser": "typescript",
+          "printWidth": 120,
+          "semi": false,
+          "singleQuote": true,
+          "tabWidth": 2,
+          "trailingComma": "all"
+        }
+      }
+    ]
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/",
+    "access": "public"
+  },
+  "packageManager": "pnpm@8.11.0",
+  "dependencies": {
+    "protobufjs": "^7.2.6"
+  }
+}

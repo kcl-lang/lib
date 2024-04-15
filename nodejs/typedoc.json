@@ -1,0 +1,16 @@
+{
+  "entryPoints": ["index.d.ts"],
+  "out": "docs",
+  "name": "KCL Programming Language Node.js Library",
+  "tsconfig": "tsconfig.json",
+  "excludePrivate": true,
+  "excludeProtected": true,
+  "excludeExternals": true,
+  "includeVersion": true,
+  "githubPages": false,
+  "theme": "kcl-lib",
+  "navigationLinks": {
+    "Homepage": "https://kcl-lang.io/",
+    "GitHub": "https://github.com/kcl-lang/kcl"
+  }
+}
