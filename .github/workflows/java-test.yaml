@@ -1,48 +1,24 @@
-name: CI
+name: java-test
+
 on:
-  pull_request:
   push:
     branches:
       - main
-      - "releases/*"
+      - master
+    tags:
+      - '*'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "java/**"
+  workflow_dispatch:
 
 permissions:
   contents: read
 
 jobs:
-  rust-test:
-    strategy:
-      matrix:
-        os: [macos-latest, ubuntu-latest, windows-latest]
-    runs-on: ${{ matrix.os }}
-    steps:
-      - name: Git checkout
-        uses: actions/checkout@v2
-      - name: Install rust nightly toolchain
-        uses: actions-rs/toolchain@v1
-        with:
-          toolchain: 1.74
-          override: true
-          components: clippy, rustfmt
-      - name: Rust code test
-        run: cargo test
-
-  go-test:
-    strategy:
-      matrix:
-        os: [macos-latest, ubuntu-latest, windows-latest]
-    runs-on: ${{ matrix.os }}
-    steps:
-      - name: Git checkout
-        uses: actions/checkout@v2
-      - name: Set up Go
-        uses: actions/setup-go@v2
-        with:
-          go-version: 1.21
-      - name: Go code test
-        run: go test ./...
-
-  java-test:
+  test:
     permissions:
       actions: write  # for styfle/cancel-workflow-action to cancel/stop running workflows
       contents: read  # for actions/checkout to fetch code
