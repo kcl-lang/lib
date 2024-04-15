@@ -85,7 +85,7 @@ jobs:
       - name: 'Build and Deploy'
         shell: bash
         working-directory: java
-        run: make # && make deploy
+        run: mvn clean install -DskipTests -Dcargo-build.profile=release -Djni.classifier=${{ matrix.classifier }} # && make deploy
         env:
           CI_DEPLOY_USERNAME: ${{ secrets.NEXUS_STAGE_DEPLOYER_USER }}
           CI_DEPLOY_PASSWORD: ${{ secrets.NEXUS_STAGE_DEPLOYER_PW }}
