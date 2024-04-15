@@ -56,6 +56,7 @@ public class API implements Service {
     }
 
     private native byte[] callNative(byte[] call, byte[] args);
+
     private native byte[] loadPackageWithCache(byte[] args);
 
     public API() {
@@ -131,6 +132,39 @@ public class API implements Service {
     @Override
     public LoadPackage_Result loadPackage(LoadPackage_Args args) throws Exception {
         return LoadPackage_Result.parseFrom(call("KclvmService.LoadPackage", args.toByteArray()));
+    }
+
+    /**
+     * List variables and return the code text*
+     *
+     * <p>
+     * Example usage:
+     *
+     * <pre>
+     * {@code
+     * import com.kcl.api.*;
+     *
+     * API api = new API();
+     * ListVariables_Result result = api.listVariables(
+     *     ListVariables_Args.newBuilder().setResolveAst(true).setParseArgs(
+     *     ParseProgram_Args.newBuilder().addPaths("/path/to/kcl.k").build())
+     *     .build());
+     * result.getSymbolsMap().values().forEach(s -> System.out.println(s));
+     * }
+     * </pre>
+     *
+     * @param args
+     *            the arguments specifying the file paths to be parsed and resolved.
+     * 
+     * @return the result of parsing the program and parse errors, type errors, including the AST in JSON format and
+     *         symbol, type and definition information.
+     * 
+     * @throws Exception
+     *             if an error occurs during the remote procedure call.
+     */
+    @Override
+    public ListVariables_Result listVariables(ListVariables_Args args) throws Exception {
+        return ListVariables_Result.parseFrom(call("KclvmService.ListVariables", args.toByteArray()));
     }
 
     /**

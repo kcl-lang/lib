@@ -11,3 +11,6 @@ pkg:
 
 deploy:
 	mvn clean deploy
+
+test:
+	mvn clean test
