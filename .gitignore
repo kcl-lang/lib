@@ -22,7 +22,6 @@ zz_*
 *.so
 *.dll
 *.d
-*.lock
 *.ll
 *.ll.lock
 _a.out.*

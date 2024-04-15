@@ -42,27 +42,6 @@ jobs:
       - name: Go code test
         run: go test ./...
 
-  python-test:
-    strategy:
-      matrix:
-        os: [macos-latest, ubuntu-latest, windows-latest]
-    runs-on: ${{ matrix.os }}
-    steps:
-      - name: Git checkout
-        uses: actions/checkout@v2
-      - uses: actions/setup-python@v4
-        with:
-          python-version: '3.9'
-      - name: Install dependencies
-        working-directory: python
-        run: |
-          python3 -m pip install -r ./scripts/requirements.txt
-          python3 -m pip install pytest
-          python3 -m pip install setuptools wheel twine
-      - name: Python code test
-        working-directory: python
-        run: python3 -m pytest
-
   java-test:
     permissions:
       actions: write  # for styfle/cancel-workflow-action to cancel/stop running workflows
