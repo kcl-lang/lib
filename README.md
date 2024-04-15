@@ -69,6 +69,19 @@ result = api.exec_program(args)
 print(result.yaml_result)
 ```
 
+## Node.js
+
+```ts
+import { execProgram, ExecProgramArgs } from 'kcl-lib'
+
+function main() {
+  const result = execProgram(ExecProgramArgs(['__test__/test_data/schema.k']))
+  console.log(result.yamlResult)
+}
+
+main();
+```
+
 ## License
 
 [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fkcl-lang%2Flib.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Fkcl-lang%2Flib?ref=badge_large)

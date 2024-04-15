@@ -1,0 +1,21 @@
+{
+  "name": "kcl-lib-linux-arm64-musl",
+  "version": "0.0.0",
+  "os": [
+    "linux"
+  ],
+  "cpu": [
+    "arm64"
+  ],
+  "main": "kcl-lib.linux-arm64-musl.node",
+  "files": [
+    "kcl-lib.linux-arm64-musl.node"
+  ],
+  "license": "Apache-2.0",
+  "engines": {
+    "node": ">= 10"
+  },
+  "libc": [
+    "musl"
+  ]
+}
