@@ -41,7 +41,7 @@ pub fn call<'a>(name: &'a [u8], args: &'a [u8]) -> Result<&'a [u8]> {
         let args = CString::new(args)?;
         let call = CString::new(name)?;
         let serv = kclvm_service_new(0);
-        kclvm_service_call(serv, call.as_ptr(), args.as_ptr()) as *mut i8
+        kclvm_service_call(serv, call.as_ptr(), args.as_ptr())
     };
     let result = unsafe { CStr::from_ptr(result_ptr) };
     Ok(result.to_bytes())

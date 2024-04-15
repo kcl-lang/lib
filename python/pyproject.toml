@@ -1,0 +1,37 @@
+[build-system]
+requires = ["maturin>=1.5,<2.0"]
+build-backend = "maturin"
+
+[project]
+name = "kcl_lib"
+requires-python = ">=3.8"
+classifiers = [
+    "Programming Language :: Rust",
+    "Programming Language :: Python :: Implementation :: CPython",
+    "Programming Language :: Python :: Implementation :: PyPy",
+]
+dynamic = ["version"]
+description = "KCL Programming Language Python Lib"
+license = { text = "Apache-2.0" }
+
+dependencies = [
+    "protobuf>=4.25.3"
+]
+
+[tool.maturin]
+features = ["pyo3/extension-module"]
+module-name = "kcl_lib._kcl_lib"
+python-source = "."
+
+[project.optional-dependencies]
+docs = ["pdoc"]
+lint = ["ruff"]
+test = ["pytest"]
+
+[project.urls]
+Documentation = "https://kcl-lang.io"
+Homepage = "https://kcl-lang.io"
+Repository = "https://github.com/kcl-lang/kcl"
+
+[tool.ruff.lint]
+ignore = ["F403", "F405"]
