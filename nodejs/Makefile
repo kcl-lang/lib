@@ -11,3 +11,6 @@ fmt:
 
 test:
 	pnpm test
+
+check:
+	cargo check
