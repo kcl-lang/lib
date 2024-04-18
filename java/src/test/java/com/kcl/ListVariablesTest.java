@@ -3,17 +3,6 @@ package com.kcl;
 import com.kcl.api.API;
 import com.kcl.api.Spec.ListVariables_Args;
 import com.kcl.api.Spec.ListVariables_Result;
-import com.kcl.api.Spec.LoadPackage_Args;
-import com.kcl.api.Spec.LoadPackage_Result;
-import com.kcl.api.Spec.ParseProgram_Args;
-import com.kcl.api.Spec.Scope;
-import com.kcl.api.Spec.Symbol;
-import com.kcl.api.Spec.SymbolIndex;
-import com.kcl.ast.NodeRef;
-import com.kcl.ast.Program;
-import com.kcl.ast.Stmt;
-import com.kcl.util.JsonUtil;
-import com.kcl.util.SematicUtil;
 import org.junit.Assert;
 import org.junit.Test;
 
