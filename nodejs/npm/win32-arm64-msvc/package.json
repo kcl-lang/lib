@@ -1,6 +1,7 @@
 {
-  "name": "kcl-lib-win32-arm64-msvc",
-  "version": "0.0.0",
+  "name": "@kcl-lang/lib-win32-arm64-msvc",
+  "repository": "https://github.com/kcl-lang/lib",
+  "version": "0.8.6-rc.1",
   "os": [
     "win32"
   ],
