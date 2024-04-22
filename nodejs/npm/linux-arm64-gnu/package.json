@@ -1,6 +1,7 @@
 {
-  "name": "kcl-lib-linux-arm64-gnu",
-  "version": "0.0.0",
+  "name": "@kcl-lang/lib-linux-arm64-gnu",
+  "repository": "https://github.com/kcl-lang/lib",
+  "version": "0.8.6-rc.1",
   "os": [
     "linux"
   ],

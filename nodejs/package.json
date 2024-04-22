@@ -1,19 +1,22 @@
 {
   "name": "kcl-lib",
-  "version": "0.8.5",
+  "version": "0.8.6-rc.1",
+  "repository": "https://github.com/kcl-lang/lib",
   "license": "Apache-2.0",
   "main": "index.js",
   "types": "index.d.ts",
   "napi": {
     "name": "kcl-lib",
+    "package": {
+      "name": "@kcl-lang/lib"
+    },
     "triples": {
       "additional": [
         "aarch64-apple-darwin",
         "aarch64-unknown-linux-gnu",
         "aarch64-unknown-linux-musl",
-        "aarch64-pc-windows-msvc",
         "x86_64-unknown-linux-musl",
-        "universal-apple-darwin"
+        "aarch64-pc-windows-msvc"
       ]
     }
   },
@@ -37,8 +40,8 @@
     "node": ">= 10"
   },
   "scripts": {
-    "build": "napi build --platform --release",
-    "build:debug": "napi build --platform",
+    "build": "napi build --platform --features \"${NAPI_FEATURES:-}\" --target \"${NAPI_TARGET:-}\" --release",
+    "build:debug": "napi build --platform --features \"${NAPI_FEATURES:-}\" --target \"${NAPI_TARGET:-}\"",
     "prepublishOnly": "napi prepublish -t npm",
     "docs": "typedoc",
     "test": "ava",

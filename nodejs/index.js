@@ -37,7 +37,7 @@ switch (platform) {
           if (localFileExisted) {
             nativeBinding = require('./kcl-lib.android-arm64.node')
           } else {
-            nativeBinding = require('kcl-lib-android-arm64')
+            nativeBinding = require('@kcl-lang/lib-android-arm64')
           }
         } catch (e) {
           loadError = e
@@ -49,7 +49,7 @@ switch (platform) {
           if (localFileExisted) {
             nativeBinding = require('./kcl-lib.android-arm-eabi.node')
           } else {
-            nativeBinding = require('kcl-lib-android-arm-eabi')
+            nativeBinding = require('@kcl-lang/lib-android-arm-eabi')
           }
         } catch (e) {
           loadError = e
@@ -67,7 +67,7 @@ switch (platform) {
           if (localFileExisted) {
             nativeBinding = require('./kcl-lib.win32-x64-msvc.node')
           } else {
-            nativeBinding = require('kcl-lib-win32-x64-msvc')
+            nativeBinding = require('@kcl-lang/lib-win32-x64-msvc')
           }
         } catch (e) {
           loadError = e
@@ -79,7 +79,7 @@ switch (platform) {
           if (localFileExisted) {
             nativeBinding = require('./kcl-lib.win32-ia32-msvc.node')
           } else {
-            nativeBinding = require('kcl-lib-win32-ia32-msvc')
+            nativeBinding = require('@kcl-lang/lib-win32-ia32-msvc')
           }
         } catch (e) {
           loadError = e
@@ -91,7 +91,7 @@ switch (platform) {
           if (localFileExisted) {
             nativeBinding = require('./kcl-lib.win32-arm64-msvc.node')
           } else {
-            nativeBinding = require('kcl-lib-win32-arm64-msvc')
+            nativeBinding = require('@kcl-lang/lib-win32-arm64-msvc')
           }
         } catch (e) {
           loadError = e
@@ -107,7 +107,7 @@ switch (platform) {
       if (localFileExisted) {
         nativeBinding = require('./kcl-lib.darwin-universal.node')
       } else {
-        nativeBinding = require('kcl-lib-darwin-universal')
+        nativeBinding = require('@kcl-lang/lib-darwin-universal')
       }
       break
     } catch {}
@@ -118,7 +118,7 @@ switch (platform) {
           if (localFileExisted) {
             nativeBinding = require('./kcl-lib.darwin-x64.node')
           } else {
-            nativeBinding = require('kcl-lib-darwin-x64')
+            nativeBinding = require('@kcl-lang/lib-darwin-x64')
           }
         } catch (e) {
           loadError = e
@@ -130,7 +130,7 @@ switch (platform) {
           if (localFileExisted) {
             nativeBinding = require('./kcl-lib.darwin-arm64.node')
           } else {
-            nativeBinding = require('kcl-lib-darwin-arm64')
+            nativeBinding = require('@kcl-lang/lib-darwin-arm64')
           }
         } catch (e) {
           loadError = e
@@ -149,7 +149,7 @@ switch (platform) {
       if (localFileExisted) {
         nativeBinding = require('./kcl-lib.freebsd-x64.node')
       } else {
-        nativeBinding = require('kcl-lib-freebsd-x64')
+        nativeBinding = require('@kcl-lang/lib-freebsd-x64')
       }
     } catch (e) {
       loadError = e
@@ -164,7 +164,7 @@ switch (platform) {
             if (localFileExisted) {
               nativeBinding = require('./kcl-lib.linux-x64-musl.node')
             } else {
-              nativeBinding = require('kcl-lib-linux-x64-musl')
+              nativeBinding = require('@kcl-lang/lib-linux-x64-musl')
             }
           } catch (e) {
             loadError = e
@@ -175,7 +175,7 @@ switch (platform) {
             if (localFileExisted) {
               nativeBinding = require('./kcl-lib.linux-x64-gnu.node')
             } else {
-              nativeBinding = require('kcl-lib-linux-x64-gnu')
+              nativeBinding = require('@kcl-lang/lib-linux-x64-gnu')
             }
           } catch (e) {
             loadError = e
@@ -189,7 +189,7 @@ switch (platform) {
             if (localFileExisted) {
               nativeBinding = require('./kcl-lib.linux-arm64-musl.node')
             } else {
-              nativeBinding = require('kcl-lib-linux-arm64-musl')
+              nativeBinding = require('@kcl-lang/lib-linux-arm64-musl')
             }
           } catch (e) {
             loadError = e
@@ -200,7 +200,7 @@ switch (platform) {
             if (localFileExisted) {
               nativeBinding = require('./kcl-lib.linux-arm64-gnu.node')
             } else {
-              nativeBinding = require('kcl-lib-linux-arm64-gnu')
+              nativeBinding = require('@kcl-lang/lib-linux-arm64-gnu')
             }
           } catch (e) {
             loadError = e
@@ -214,7 +214,7 @@ switch (platform) {
             if (localFileExisted) {
               nativeBinding = require('./kcl-lib.linux-arm-musleabihf.node')
             } else {
-              nativeBinding = require('kcl-lib-linux-arm-musleabihf')
+              nativeBinding = require('@kcl-lang/lib-linux-arm-musleabihf')
             }
           } catch (e) {
             loadError = e
@@ -225,7 +225,7 @@ switch (platform) {
             if (localFileExisted) {
               nativeBinding = require('./kcl-lib.linux-arm-gnueabihf.node')
             } else {
-              nativeBinding = require('kcl-lib-linux-arm-gnueabihf')
+              nativeBinding = require('@kcl-lang/lib-linux-arm-gnueabihf')
             }
           } catch (e) {
             loadError = e
@@ -239,7 +239,7 @@ switch (platform) {
             if (localFileExisted) {
               nativeBinding = require('./kcl-lib.linux-riscv64-musl.node')
             } else {
-              nativeBinding = require('kcl-lib-linux-riscv64-musl')
+              nativeBinding = require('@kcl-lang/lib-linux-riscv64-musl')
             }
           } catch (e) {
             loadError = e
@@ -250,7 +250,7 @@ switch (platform) {
             if (localFileExisted) {
               nativeBinding = require('./kcl-lib.linux-riscv64-gnu.node')
             } else {
-              nativeBinding = require('kcl-lib-linux-riscv64-gnu')
+              nativeBinding = require('@kcl-lang/lib-linux-riscv64-gnu')
             }
           } catch (e) {
             loadError = e
@@ -263,7 +263,7 @@ switch (platform) {
           if (localFileExisted) {
             nativeBinding = require('./kcl-lib.linux-s390x-gnu.node')
           } else {
-            nativeBinding = require('kcl-lib-linux-s390x-gnu')
+            nativeBinding = require('@kcl-lang/lib-linux-s390x-gnu')
           }
         } catch (e) {
           loadError = e
