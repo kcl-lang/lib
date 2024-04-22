@@ -8,11 +8,11 @@ npm install kcl-lib
 
 ## Quick Start
 
-```javascript
+```typescript
 import { execProgram, ExecProgramArgs } from "kcl-lib";
 
 function main() {
-  const result = execProgram(ExecProgramArgs(["__test__/test_data/schema.k"]));
+  const result = execProgram(new ExecProgramArgs(["schema.k"]));
   console.log(result.yamlResult);
 }
 
