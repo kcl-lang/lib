@@ -101,6 +101,13 @@
         </extensions>
         <resources>
             <resource>
+                <directory>native</directory>
+            </resource>
+            <resource>
+                <directory>native</directory>
+                <targetPath>native</targetPath>
+            </resource>
+            <resource>
                 <directory>src/main/resources</directory>
                 <filtering>true</filtering>
             </resource>
@@ -158,20 +165,6 @@
                     </execution>
                 </executions>
             </plugin>
-            <!--
-            <plugin>
-                <groupId>net.revelc.code.formatter</groupId>
-                <artifactId>formatter-maven-plugin</artifactId>
-                <version>2.17.1</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>format</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
@@ -180,19 +173,6 @@
                     <execution>
                         <id>default-jar</id>
                         <configuration>
-                            <excludes>
-                                <exclude>native/**</exclude>
-                            </excludes>
-                        </configuration>
-                    </execution>
-                    <!--  Generate the JAR that contains the native library in it.  -->
-                    <execution>
-                        <id>native-jar</id>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                        <configuration>
-                            <classifier>${jni.classifier}</classifier>
                             <includes>
                                 <include>**/*.class</include>
                                 <include>native/**</include>
@@ -266,15 +246,10 @@
         </profile>
     </profiles>
     <distributionManagement>
-        <snapshotRepository>
-            <id>sonatype-nexus-snapshots</id>
-            <name>Sonatype Nexus Snapshots</name>
-            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
-        </snapshotRepository>
         <repository>
-            <id>sonatype-nexus-staging</id>
-            <name>Nexus Release Repository</name>
-            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+            <id>github</id>
+            <name>GitHub Packages</name>
+            <url>https://maven.pkg.github.com/kcl-lang/lib</url>
         </repository>
     </distributionManagement>
 </project>

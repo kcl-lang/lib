@@ -14,9 +14,6 @@ on:
       - "java/**"
   workflow_dispatch:
 
-permissions:
-  contents: read
-
 jobs:
   test:
     permissions:
@@ -50,20 +47,19 @@ jobs:
     env:
       ROOT_POM: ${{ matrix.root-pom }}
     steps:
-      - name: 'Check out repository'
-        uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab
+      - uses: actions/checkout@v4
+
       - name: 'Set up JDK ${{ matrix.java }}'
         uses: actions/setup-java@5ffc13f4174014e2d4d4572b3d74c3fa61aeb2c2
         with:
           java-version: ${{ matrix.java }}
           distribution: 'zulu'
           cache: 'maven'
-          server-id: sonatype-nexus-snapshots
-          server-username: CI_DEPLOY_USERNAME
-          server-password: CI_DEPLOY_PASSWORD
+
       - uses: actions/setup-python@v5
         with:
           python-version: '3.10'
+
       - name: Install rust nightly toolchain
         uses: actions-rs/toolchain@v1
         with:
@@ -78,20 +74,80 @@ jobs:
           sudo apt-get install -y gcc-aarch64-linux-gnu g++-aarch64-linux-gnu
           # Setup for cargo
           echo "CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER=aarch64-linux-gnu-gcc" >> $GITHUB_ENV
+
       - name: 'Test'
         shell: bash
         working-directory: java
         run: make test
+
       - name: 'Build and Deploy'
         shell: bash
         working-directory: java
-        run: mvn clean install -DskipTests -Dcargo-build.profile=release -Djni.classifier=${{ matrix.classifier }} # && make deploy
-        env:
-          CI_DEPLOY_USERNAME: ${{ secrets.NEXUS_STAGE_DEPLOYER_USER }}
-          CI_DEPLOY_PASSWORD: ${{ secrets.NEXUS_STAGE_DEPLOYER_PW }}
+        run: |
+            mvn clean package -DskipTests=true -Djni.classifier=${{ matrix.classifier }} 
+
       - name: 'Upload artifact'
         uses: actions/upload-artifact@v3
         with:
-          name: java-artifact-${{ matrix.classifier }}
+          name: kcl-lib-${{ matrix.classifier }}
           path: |
-            java/target/*.jar
+            java/target/classes/native
+  
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    needs: [ test ]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 8
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '8'
+
+      - name: Download windows x86_64 lib
+        uses: actions/download-artifact@v3
+        with:
+          name: kcl-lib-windows-x86_64
+          path: java/native/windows-x86_64
+
+      - name: Download linux x86_64 lib
+        uses: actions/download-artifact@v3
+        with:
+          name: kcl-lib-linux-x86_64
+          path: java/native/linux-x86_64
+
+      - name: Download linux aarch_64 lib
+        uses: actions/download-artifact@v3
+        with:
+          name: kcl-lib-linux-aarch_64
+          path: java/native/linux-aarch_64
+
+      - name: Download darwin x86_64 lib
+        uses: actions/download-artifact@v3
+        with:
+          name: kcl-lib-osx-x86_64
+          path: java/native/osx-x86_64
+
+      - name: Download darwin aarch_64 lib
+        uses: actions/download-artifact@v3
+        with:
+          name: kcl-lib-osx-aarch_64
+          path: java/native/osx-aarch_64
+
+      - name: Deploy to Github Packages
+        working-directory: java
+        run: |
+          mvn clean package deploy -DskipTests=true -DserverId=github -s ../.github/mvn-settings.xml
+        env:
+          GITHUB_ACTOR: ${{ github.actor }}
+          GITHUB_TOKEN: ${{ github.token }}
+          
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: kcl-lib
+          path: java/target/*.jar
