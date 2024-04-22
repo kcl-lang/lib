@@ -1,0 +1,17 @@
+{
+  "name": "exec-program",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "build": "tsc",
+    "dev": "node ./dist/main.js"
+  },
+  "main": "./dist/main.js",
+  "types": "./dist/main.d.ts",
+  "files": [
+    "dist/"
+  ],
+  "dependencies": {
+    "kcl-lib": "0.8.6-rc.1"
+  }
+}
