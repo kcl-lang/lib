@@ -2,7 +2,9 @@
 
 This repo mainly includes the binding of the low-level API and spec of the [KCL language core](https://github.com/kcl-lang/kcl), and the SDKs of various languages are based on this to encapsulate higher-level APIs.
 
-## Rust
+## Bindings
+
+### Rust
 
 ```shell
 cargo add --git https://github.com/kcl-lang/lib
@@ -27,7 +29,7 @@ fn main() -> Result<()> {
 }
 ```
 
-## Go
+### Go
 
 ```shell
 go get kcl-lang.io/lib
@@ -48,14 +50,14 @@ func main() {
 }
 ```
 
-## Java
+### Java
 
 See [here](https://github.com/kcl-lang/kcl-java) for more information.
 
-## Python
+### Python
 
 ```shell
-python3 -m pip install kcl_lib
+python3 -m pip install kcl-lib
 ```
 
 Write the code
@@ -69,18 +71,28 @@ result = api.exec_program(args)
 print(result.yaml_result)
 ```
 
-## Node.js
+### Node.js
+
+```shell
+npm install kcl-lib
+```
+
+Write the code
 
 ```ts
 import { execProgram, ExecProgramArgs } from 'kcl-lib'
 
 function main() {
-  const result = execProgram(ExecProgramArgs(['__test__/test_data/schema.k']))
+  const result = execProgram(new ExecProgramArgs(['__test__/test_data/schema.k']))
   console.log(result.yamlResult)
 }
 
 main();
 ```
+
+## Documents
+
+See [here](https://www.kcl-lang.io/docs/reference/xlang-api/overview)
 
 ## License
 
