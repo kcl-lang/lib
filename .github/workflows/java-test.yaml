@@ -1,18 +1,18 @@
 name: java-test
 
-on:
-  push:
-    branches:
-      - main
-      - master
-    tags:
-      - '*'
-  pull_request:
-    branches:
-      - main
-    paths:
-      - "java/**"
-  workflow_dispatch:
+on: push
+  # push:
+  #   branches:
+  #     - main
+  #     - master
+  #   tags:
+  #     - '*'
+  # pull_request:
+  #   branches:
+  #     - main
+  #   paths:
+  #     - "java/**"
+  # workflow_dispatch:
 
 jobs:
   test:
@@ -112,31 +112,31 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: kcl-lib-windows-x86_64
-          path: java/native/windows-x86_64
+          path: java/native
 
       - name: Download linux x86_64 lib
         uses: actions/download-artifact@v3
         with:
           name: kcl-lib-linux-x86_64
-          path: java/native/linux-x86_64
+          path: java/native
 
       - name: Download linux aarch_64 lib
         uses: actions/download-artifact@v3
         with:
           name: kcl-lib-linux-aarch_64
-          path: java/native/linux-aarch_64
+          path: java/native
 
       - name: Download darwin x86_64 lib
         uses: actions/download-artifact@v3
         with:
           name: kcl-lib-osx-x86_64
-          path: java/native/osx-x86_64
+          path: java/native
 
       - name: Download darwin aarch_64 lib
         uses: actions/download-artifact@v3
         with:
           name: kcl-lib-osx-aarch_64
-          path: java/native/osx-aarch_64
+          path: java/native
 
       - name: Deploy to Github Packages
         working-directory: java
