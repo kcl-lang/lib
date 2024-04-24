@@ -74,6 +74,10 @@ jobs:
           sudo apt-get install -y gcc-aarch64-linux-gnu g++-aarch64-linux-gnu
           # Setup for cargo
           echo "CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER=aarch64-linux-gnu-gcc" >> $GITHUB_ENV
+      
+      - name: Setup windows MSVC build tools
+        if: "contains(matrix.classifier, 'windows-x86_64')"
+        uses: ilammy/msvc-dev-cmd@v1
 
       - name: 'Test'
         shell: bash
