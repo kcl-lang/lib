@@ -63,7 +63,7 @@ jobs:
       - name: Install rust nightly toolchain
         uses: actions-rs/toolchain@v1
         with:
-          toolchain: 1.74
+          toolchain: 1.77
           override: true
           components: clippy, rustfmt
 
@@ -75,10 +75,6 @@ jobs:
           # Setup for cargo
           echo "CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER=aarch64-linux-gnu-gcc" >> $GITHUB_ENV
       
-      - name: Setup windows MSVC build tools
-        if: "contains(matrix.classifier, 'windows-x86_64')"
-        uses: ilammy/msvc-dev-cmd@v1
-
       - name: 'Test'
         shell: bash
         working-directory: java
