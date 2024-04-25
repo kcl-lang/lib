@@ -138,16 +138,17 @@ jobs:
           name: kcl-lib-osx-aarch_64
           path: java/native
 
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: kcl-lib
+          path: java/target/*.jar
+
       - name: Deploy to Github Packages
         working-directory: java
         run: |
           mvn clean package deploy -DskipTests=true -DserverId=github -s ../.github/mvn-settings.xml
         env:
           GITHUB_ACTOR: ${{ github.actor }}
-          GITHUB_TOKEN: ${{ github.token }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           
-      - name: Upload artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: kcl-lib
-          path: java/target/*.jar
