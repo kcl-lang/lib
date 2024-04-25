@@ -84,7 +84,7 @@ jobs:
         shell: bash
         working-directory: java
         run: |
-            mvn clean package -DskipTests=true -Djni.classifier=${{ matrix.classifier }} 
+            mvn clean package -DskipTests=true -Djni.classifier=${{ matrix.classifier }} -Dcargo-build.profile=release
 
       - name: 'Upload artifact'
         uses: actions/upload-artifact@v3
