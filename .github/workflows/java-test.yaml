@@ -138,6 +138,11 @@ jobs:
           name: kcl-lib-osx-aarch_64
           path: java/native
 
+      - name: Deploy to Github Packages
+        working-directory: java
+        run: |
+          mvn clean package deploy -DskipTests=true
+
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
