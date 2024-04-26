@@ -152,8 +152,13 @@ jobs:
       - name: Deploy to Github Packages
         working-directory: java
         run: |
-          mvn clean package deploy -DskipTests=true -DserverId=github -s ../.github/mvn-settings.xml
+          mvn clean package deploy \
+            -DskipTests=true \
+            -Djni.classifier=${{ matrix.classifier }} \
+            -Dcargo-build.profile=release \
+            -DserverId=github \
+            -s ../.github/mvn-settings.xml
         env:
           GITHUB_ACTOR: ${{ github.actor }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.DEPLOY_ACCESS_TOKEN }}
           
