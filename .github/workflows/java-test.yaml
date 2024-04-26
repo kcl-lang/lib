@@ -149,9 +149,6 @@ jobs:
           name: kcl-lib
           path: java/target/*.jar
 
-      - name: Print repository owner
-        run: echo "Repository owner is ${{ github.repository_owner }} ${{ github.actor }}"
-
       - name: Deploy to Github Packages
         working-directory: java
         run: |
@@ -161,6 +158,6 @@ jobs:
             -DserverId=github \
             -s ../.github/mvn-settings.xml
         env:
-          GITHUB_ACTOR: ${{ github.repository_owner }}
+          GITHUB_ACTOR: ${{ secrets.MAVEN_DEPLOY_USER }}
           GITHUB_TOKEN: ${{ secrets.DEPLOY_ACCESS_TOKEN }}
           
