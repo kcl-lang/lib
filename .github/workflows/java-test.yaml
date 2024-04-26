@@ -154,7 +154,6 @@ jobs:
         run: |
           mvn clean package deploy \
             -DskipTests=true \
-            -Djni.classifier=${{ matrix.classifier }} \
             -Dcargo-build.profile=release \
             -DserverId=github \
             -s ../.github/mvn-settings.xml
