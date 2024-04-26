@@ -158,6 +158,6 @@ jobs:
             -DserverId=github \
             -s ../.github/mvn-settings.xml
         env:
-          GITHUB_ACTOR: ${{ github.actor }}
+          GITHUB_ACTOR: ${{ github.repository_owner }}
           GITHUB_TOKEN: ${{ secrets.DEPLOY_ACCESS_TOKEN }}
           
