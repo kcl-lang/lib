@@ -1,18 +1,18 @@
 name: java-test
 
-on:
-  push:
-    branches:
-      - main
-      - master
-    tags:
-      - '*'
-  pull_request:
-    branches:
-      - main
-    paths:
-      - "java/**"
-  workflow_dispatch:
+on: push
+  # push:
+  #   branches:
+  #     - main
+  #     - master
+  #   tags:
+  #     - '*'
+  # pull_request:
+  #   branches:
+  #     - main
+  #   paths:
+  #     - "java/**"
+  # workflow_dispatch:
 
 jobs:
   test:
@@ -23,10 +23,6 @@ jobs:
     strategy:
       matrix:
         include:
-          - os: ubuntu-latest
-            classifier: linux-x86_64
-            java: 8
-            root-pom: 'pom.xml'
           - os: ubuntu-latest
             classifier: linux-aarch_64
             java: 8
@@ -93,12 +89,77 @@ jobs:
           path: |
             java/target/classes/native
   
+  build-on-centos:
+    name: Build on CentOS 7
+    runs-on: ubuntu-latest
+    container:
+      image: "centos:7"
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name: Test and Build
+      run: |
+        yum makecache
+        yum install -y centos-release-scl-rh centos-release-scl
+        yum install -y devtoolset-10-gcc devtoolset-10-gcc-c++ devtoolset-10-make
+        yum install -y wget
+        yum install -y epel-release
+        yum install -y llvm clang llvm-devel
+        yum install -y gcc
+        source /opt/rh/devtoolset-10/enable
+        gcc --version
+        cat /etc/os-release
+
+    - name: Install Python 3
+      run: |
+        yum install -y python3 python3-devel python3-pip
+    
+    - name: Install Rust
+      run: |
+        curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+        mv $HOME/.cargo/bin/* /usr/bin/
+        rustc --version
+        cargo --version
+
+    - name: Install Java and Maven
+      run: |
+        yum install -y java-1.8.0-openjdk java-1.8.0-openjdk-devel
+        wget https://repo.huaweicloud.com/apache/maven/maven-3/3.9.6/binaries/apache-maven-3.9.6-bin.tar.gz
+        tar -xzf apache-maven-*.tar.gz
+        mkdir p /opt/maven
+        mv apache-maven-* /opt/maven
+        ln -s /opt/maven/apache-maven-3.9.6/bin/mvn /usr/bin/mvn
+        mvn --version
+
+    - name: Verify installed versions
+      run: |
+        gcc --version
+        llvm-config --version
+        python3 --version
+        rustc --version
+        mvn --version
+        cat /etc/os-release
+
+    - name: 'Build and Deploy'
+      shell: bash
+      working-directory: java
+      run: mvn clean package -DskipTests=true -Djni.classifier=linux-x86_64 -Dcargo-build.profile=release
+
+    - name: 'Upload artifact'
+      uses: actions/upload-artifact@v3
+      with:
+        name: kcl-lib-linux-x86_64
+        path: java/target/classes/native
+
+        
   deploy:
     runs-on: ubuntu-latest
     permissions:
       contents: read
       packages: write
-    needs: [ test ]
+    needs: [ test, build-on-centos ]
     steps:
       - uses: actions/checkout@v4
 
