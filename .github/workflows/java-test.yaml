@@ -79,8 +79,7 @@ jobs:
       - name: 'Build and Deploy'
         shell: bash
         working-directory: java
-        run: |
-            mvn clean package -DskipTests=true -Djni.classifier=${{ matrix.classifier }} -Dcargo-build.profile=release
+        run: mvn clean package -DskipTests=true -Djni.classifier=${{ matrix.classifier }} -Dcargo-build.profile=release
 
       - name: 'Upload artifact'
         uses: actions/upload-artifact@v3
@@ -99,17 +98,14 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v3
 
-    - name: Test and Build
+    - name: Prepare build environment
       run: |
         yum makecache
-        yum install -y centos-release-scl-rh centos-release-scl
-        yum install -y devtoolset-10-gcc devtoolset-10-gcc-c++ devtoolset-10-make
         yum install -y wget
+        yum install -y make
         yum install -y epel-release
         yum install -y llvm clang llvm-devel
-        yum install -y gcc
-        source /opt/rh/devtoolset-10/enable
-        gcc --version
+        yum install gcc gcc-c++ glibc-static -y 
         cat /etc/os-release
 
     - name: Install Python 3
@@ -142,6 +138,11 @@ jobs:
         mvn --version
         cat /etc/os-release
 
+    - name: 'Test'
+      shell: bash
+      working-directory: java
+      run: make test
+
     - name: 'Build and Deploy'
       shell: bash
       working-directory: java
@@ -159,6 +160,7 @@ jobs:
     permissions:
       contents: read
       packages: write
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     needs: [ test, build-on-centos ]
     steps:
       - uses: actions/checkout@v4
