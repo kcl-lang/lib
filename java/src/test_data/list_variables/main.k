@@ -70,3 +70,7 @@ c = C {
     a: {name: "Hello"}
     a: {ids: [7, 8, 9]}
 }
+
+c1 = C {}
+
+c2 = a.b.C {}
