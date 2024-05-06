@@ -160,7 +160,7 @@ jobs:
     permissions:
       contents: read
       packages: write
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    if: "startsWith(github.ref, 'refs/tags/')"
     needs: [ test, build-on-centos ]
     steps:
       - uses: actions/checkout@v4
