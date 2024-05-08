@@ -60698,6 +60698,25 @@ public final class Spec {
          * <code>map&lt;string, .com.kcl.api.Example&gt; examples = 15;</code>
          */
         com.kcl.api.Spec.Example getExamplesOrThrow(java.lang.String key);
+
+        /**
+         * <code>.com.kcl.api.KclType base_schema = 16;</code>
+         * 
+         * @return Whether the baseSchema field is set.
+         */
+        boolean hasBaseSchema();
+
+        /**
+         * <code>.com.kcl.api.KclType base_schema = 16;</code>
+         * 
+         * @return The baseSchema.
+         */
+        com.kcl.api.Spec.KclType getBaseSchema();
+
+        /**
+         * <code>.com.kcl.api.KclType base_schema = 16;</code>
+         */
+        com.kcl.api.Spec.KclTypeOrBuilder getBaseSchemaOrBuilder();
     }
 
     /**
@@ -61569,6 +61588,37 @@ public final class Spec {
             return map.get(key);
         }
 
+        public static final int BASE_SCHEMA_FIELD_NUMBER = 16;
+        private com.kcl.api.Spec.KclType baseSchema_;
+
+        /**
+         * <code>.com.kcl.api.KclType base_schema = 16;</code>
+         * 
+         * @return Whether the baseSchema field is set.
+         */
+        @java.lang.Override
+        public boolean hasBaseSchema() {
+            return ((bitField0_ & 0x00000004) != 0);
+        }
+
+        /**
+         * <code>.com.kcl.api.KclType base_schema = 16;</code>
+         * 
+         * @return The baseSchema.
+         */
+        @java.lang.Override
+        public com.kcl.api.Spec.KclType getBaseSchema() {
+            return baseSchema_ == null ? com.kcl.api.Spec.KclType.getDefaultInstance() : baseSchema_;
+        }
+
+        /**
+         * <code>.com.kcl.api.KclType base_schema = 16;</code>
+         */
+        @java.lang.Override
+        public com.kcl.api.Spec.KclTypeOrBuilder getBaseSchemaOrBuilder() {
+            return baseSchema_ == null ? com.kcl.api.Spec.KclType.getDefaultInstance() : baseSchema_;
+        }
+
         private byte memoizedIsInitialized = -1;
 
         @java.lang.Override
@@ -61628,6 +61678,9 @@ public final class Spec {
             }
             com.google.protobuf.GeneratedMessageV3.serializeStringMapTo(output, internalGetExamples(),
                     ExamplesDefaultEntryHolder.defaultEntry, 15);
+            if (((bitField0_ & 0x00000004) != 0)) {
+                output.writeMessage(16, getBaseSchema());
+            }
             getUnknownFields().writeTo(output);
         }
 
@@ -61694,6 +61747,9 @@ public final class Spec {
                         .newBuilderForType().setKey(entry.getKey()).setValue(entry.getValue()).build();
                 size += com.google.protobuf.CodedOutputStream.computeMessageSize(15, examples__);
             }
+            if (((bitField0_ & 0x00000004) != 0)) {
+                size += com.google.protobuf.CodedOutputStream.computeMessageSize(16, getBaseSchema());
+            }
             size += getUnknownFields().getSerializedSize();
             memoizedSize = size;
             return size;
@@ -61747,6 +61803,12 @@ public final class Spec {
                 return false;
             if (!internalGetExamples().equals(other.internalGetExamples()))
                 return false;
+            if (hasBaseSchema() != other.hasBaseSchema())
+                return false;
+            if (hasBaseSchema()) {
+                if (!getBaseSchema().equals(other.getBaseSchema()))
+                    return false;
+            }
             if (!getUnknownFields().equals(other.getUnknownFields()))
                 return false;
             return true;
@@ -61802,6 +61864,10 @@ public final class Spec {
             if (!internalGetExamples().getMap().isEmpty()) {
                 hash = (37 * hash) + EXAMPLES_FIELD_NUMBER;
                 hash = (53 * hash) + internalGetExamples().hashCode();
+            }
+            if (hasBaseSchema()) {
+                hash = (37 * hash) + BASE_SCHEMA_FIELD_NUMBER;
+                hash = (53 * hash) + getBaseSchema().hashCode();
             }
             hash = (29 * hash) + getUnknownFields().hashCode();
             memoizedHashCode = hash;
@@ -61952,6 +62018,7 @@ public final class Spec {
                     getKeyFieldBuilder();
                     getItemFieldBuilder();
                     getDecoratorsFieldBuilder();
+                    getBaseSchemaFieldBuilder();
                 }
             }
 
@@ -61994,6 +62061,11 @@ public final class Spec {
                 pkgPath_ = "";
                 description_ = "";
                 internalGetMutableExamples().clear();
+                baseSchema_ = null;
+                if (baseSchemaBuilder_ != null) {
+                    baseSchemaBuilder_.dispose();
+                    baseSchemaBuilder_ = null;
+                }
                 return this;
             }
 
@@ -62092,6 +62164,10 @@ public final class Spec {
                 }
                 if (((from_bitField0_ & 0x00004000) != 0)) {
                     result.examples_ = internalGetExamples().build(ExamplesDefaultEntryHolder.defaultEntry);
+                }
+                if (((from_bitField0_ & 0x00008000) != 0)) {
+                    result.baseSchema_ = baseSchemaBuilder_ == null ? baseSchema_ : baseSchemaBuilder_.build();
+                    to_bitField0_ |= 0x00000004;
                 }
                 result.bitField0_ |= to_bitField0_;
             }
@@ -62249,6 +62325,9 @@ public final class Spec {
                 }
                 internalGetMutableExamples().mergeFrom(other.internalGetExamples());
                 bitField0_ |= 0x00004000;
+                if (other.hasBaseSchema()) {
+                    mergeBaseSchema(other.getBaseSchema());
+                }
                 this.mergeUnknownFields(other.getUnknownFields());
                 onChanged();
                 return this;
@@ -62369,6 +62448,11 @@ public final class Spec {
                             bitField0_ |= 0x00004000;
                             break;
                         } // case 122
+                        case 130: {
+                            input.readMessage(getBaseSchemaFieldBuilder().getBuilder(), extensionRegistry);
+                            bitField0_ |= 0x00008000;
+                            break;
+                        } // case 130
                         default: {
                             if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                                 done = true; // was an endgroup tag
@@ -64686,6 +64770,129 @@ public final class Spec {
                     builderMap.put(key, entry);
                 }
                 return (com.kcl.api.Spec.Example.Builder) entry;
+            }
+
+            private com.kcl.api.Spec.KclType baseSchema_;
+            private com.google.protobuf.SingleFieldBuilderV3<com.kcl.api.Spec.KclType, com.kcl.api.Spec.KclType.Builder, com.kcl.api.Spec.KclTypeOrBuilder> baseSchemaBuilder_;
+
+            /**
+             * <code>.com.kcl.api.KclType base_schema = 16;</code>
+             * 
+             * @return Whether the baseSchema field is set.
+             */
+            public boolean hasBaseSchema() {
+                return ((bitField0_ & 0x00008000) != 0);
+            }
+
+            /**
+             * <code>.com.kcl.api.KclType base_schema = 16;</code>
+             * 
+             * @return The baseSchema.
+             */
+            public com.kcl.api.Spec.KclType getBaseSchema() {
+                if (baseSchemaBuilder_ == null) {
+                    return baseSchema_ == null ? com.kcl.api.Spec.KclType.getDefaultInstance() : baseSchema_;
+                } else {
+                    return baseSchemaBuilder_.getMessage();
+                }
+            }
+
+            /**
+             * <code>.com.kcl.api.KclType base_schema = 16;</code>
+             */
+            public Builder setBaseSchema(com.kcl.api.Spec.KclType value) {
+                if (baseSchemaBuilder_ == null) {
+                    if (value == null) {
+                        throw new NullPointerException();
+                    }
+                    baseSchema_ = value;
+                } else {
+                    baseSchemaBuilder_.setMessage(value);
+                }
+                bitField0_ |= 0x00008000;
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>.com.kcl.api.KclType base_schema = 16;</code>
+             */
+            public Builder setBaseSchema(com.kcl.api.Spec.KclType.Builder builderForValue) {
+                if (baseSchemaBuilder_ == null) {
+                    baseSchema_ = builderForValue.build();
+                } else {
+                    baseSchemaBuilder_.setMessage(builderForValue.build());
+                }
+                bitField0_ |= 0x00008000;
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>.com.kcl.api.KclType base_schema = 16;</code>
+             */
+            public Builder mergeBaseSchema(com.kcl.api.Spec.KclType value) {
+                if (baseSchemaBuilder_ == null) {
+                    if (((bitField0_ & 0x00008000) != 0) && baseSchema_ != null
+                            && baseSchema_ != com.kcl.api.Spec.KclType.getDefaultInstance()) {
+                        getBaseSchemaBuilder().mergeFrom(value);
+                    } else {
+                        baseSchema_ = value;
+                    }
+                } else {
+                    baseSchemaBuilder_.mergeFrom(value);
+                }
+                if (baseSchema_ != null) {
+                    bitField0_ |= 0x00008000;
+                    onChanged();
+                }
+                return this;
+            }
+
+            /**
+             * <code>.com.kcl.api.KclType base_schema = 16;</code>
+             */
+            public Builder clearBaseSchema() {
+                bitField0_ = (bitField0_ & ~0x00008000);
+                baseSchema_ = null;
+                if (baseSchemaBuilder_ != null) {
+                    baseSchemaBuilder_.dispose();
+                    baseSchemaBuilder_ = null;
+                }
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>.com.kcl.api.KclType base_schema = 16;</code>
+             */
+            public com.kcl.api.Spec.KclType.Builder getBaseSchemaBuilder() {
+                bitField0_ |= 0x00008000;
+                onChanged();
+                return getBaseSchemaFieldBuilder().getBuilder();
+            }
+
+            /**
+             * <code>.com.kcl.api.KclType base_schema = 16;</code>
+             */
+            public com.kcl.api.Spec.KclTypeOrBuilder getBaseSchemaOrBuilder() {
+                if (baseSchemaBuilder_ != null) {
+                    return baseSchemaBuilder_.getMessageOrBuilder();
+                } else {
+                    return baseSchema_ == null ? com.kcl.api.Spec.KclType.getDefaultInstance() : baseSchema_;
+                }
+            }
+
+            /**
+             * <code>.com.kcl.api.KclType base_schema = 16;</code>
+             */
+            private com.google.protobuf.SingleFieldBuilderV3<com.kcl.api.Spec.KclType, com.kcl.api.Spec.KclType.Builder, com.kcl.api.Spec.KclTypeOrBuilder> getBaseSchemaFieldBuilder() {
+                if (baseSchemaBuilder_ == null) {
+                    baseSchemaBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<com.kcl.api.Spec.KclType, com.kcl.api.Spec.KclType.Builder, com.kcl.api.Spec.KclTypeOrBuilder>(
+                            getBaseSchema(), getParentForChildren(), isClean());
+                    baseSchema_ = null;
+                }
+                return baseSchemaBuilder_;
             }
 
             @java.lang.Override
@@ -67187,7 +67394,7 @@ public final class Spec {
                 + "\004info\030\002 \003(\0132\031.com.kcl.api.TestCaseInfo\"R"
                 + "\n\014TestCaseInfo\022\014\n\004name\030\001 \001(\t\022\r\n\005error\030\002 "
                 + "\001(\t\022\020\n\010duration\030\003 \001(\004\022\023\n\013log_message\030\004 \001"
-                + "(\t\"\310\004\n\007KclType\022\014\n\004type\030\001 \001(\t\022)\n\013union_ty"
+                + "(\t\"\363\004\n\007KclType\022\014\n\004type\030\001 \001(\t\022)\n\013union_ty"
                 + "pes\030\002 \003(\0132\024.com.kcl.api.KclType\022\017\n\007defau"
                 + "lt\030\003 \001(\t\022\023\n\013schema_name\030\004 \001(\t\022\022\n\nschema_"
                 + "doc\030\005 \001(\t\0228\n\nproperties\030\006 \003(\0132$.com.kcl."
@@ -67198,56 +67405,56 @@ public final class Spec {
                 + ".api.Decorator\022\020\n\010filename\030\014 \001(\t\022\020\n\010pkg_"
                 + "path\030\r \001(\t\022\023\n\013description\030\016 \001(\t\0224\n\010examp"
                 + "les\030\017 \003(\0132\".com.kcl.api.KclType.Examples"
-                + "Entry\032G\n\017PropertiesEntry\022\013\n\003key\030\001 \001(\t\022#\n"
-                + "\005value\030\002 \001(\0132\024.com.kcl.api.KclType:\0028\001\032E"
-                + "\n\rExamplesEntry\022\013\n\003key\030\001 \001(\t\022#\n\005value\030\002 "
-                + "\001(\0132\024.com.kcl.api.Example:\0028\001\"\225\001\n\tDecora"
-                + "tor\022\014\n\004name\030\001 \001(\t\022\021\n\targuments\030\002 \003(\t\0226\n\010"
-                + "keywords\030\003 \003(\0132$.com.kcl.api.Decorator.K"
-                + "eywordsEntry\032/\n\rKeywordsEntry\022\013\n\003key\030\001 \001"
-                + "(\t\022\r\n\005value\030\002 \001(\t:\0028\001\">\n\007Example\022\017\n\007summ"
-                + "ary\030\001 \001(\t\022\023\n\013description\030\002 \001(\t\022\r\n\005value\030"
-                + "\003 \001(\t2\226\001\n\016BuiltinService\0228\n\004Ping\022\026.com.k"
-                + "cl.api.Ping_Args\032\030.com.kcl.api.Ping_Resu"
-                + "lt\022J\n\nListMethod\022\034.com.kcl.api.ListMetho"
-                + "d_Args\032\036.com.kcl.api.ListMethod_Result2\340"
-                + "\r\n\014KclvmService\0228\n\004Ping\022\026.com.kcl.api.Pi"
-                + "ng_Args\032\030.com.kcl.api.Ping_Result\022M\n\013Exe"
-                + "cProgram\022\035.com.kcl.api.ExecProgram_Args\032"
-                + "\037.com.kcl.api.ExecProgram_Result\022P\n\014Buil"
-                + "dProgram\022\036.com.kcl.api.BuildProgram_Args"
-                + "\032 .com.kcl.api.BuildProgram_Result\022O\n\014Ex"
-                + "ecArtifact\022\036.com.kcl.api.ExecArtifact_Ar"
-                + "gs\032\037.com.kcl.api.ExecProgram_Result\022G\n\tP"
-                + "arseFile\022\033.com.kcl.api.ParseFile_Args\032\035."
-                + "com.kcl.api.ParseFile_Result\022P\n\014ParsePro"
-                + "gram\022\036.com.kcl.api.ParseProgram_Args\032 .c"
-                + "om.kcl.api.ParseProgram_Result\022M\n\013LoadPa"
-                + "ckage\022\035.com.kcl.api.LoadPackage_Args\032\037.c"
-                + "om.kcl.api.LoadPackage_Result\022N\n\013ListOpt"
-                + "ions\022\036.com.kcl.api.ParseProgram_Args\032\037.c"
-                + "om.kcl.api.ListOptions_Result\022S\n\rListVar" + "iables\022\037.com.kcl.api.ListVariables_Args\032"
-                + "!.com.kcl.api.ListVariables_Result\022J\n\nFo"
-                + "rmatCode\022\034.com.kcl.api.FormatCode_Args\032\036"
-                + ".com.kcl.api.FormatCode_Result\022J\n\nFormat"
-                + "Path\022\034.com.kcl.api.FormatPath_Args\032\036.com"
-                + ".kcl.api.FormatPath_Result\022D\n\010LintPath\022\032"
-                + ".com.kcl.api.LintPath_Args\032\034.com.kcl.api"
-                + ".LintPath_Result\022P\n\014OverrideFile\022\036.com.k"
-                + "cl.api.OverrideFile_Args\032 .com.kcl.api.O" + "verrideFile_Result\022S\n\rGetSchemaType\022\037.co"
-                + "m.kcl.api.GetSchemaType_Args\032!.com.kcl.a" + "pi.GetSchemaType_Result\022[\n\021GetFullSchema"
-                + "Type\022#.com.kcl.api.GetFullSchemaType_Arg" + "s\032!.com.kcl.api.GetSchemaType_Result\022h\n\024"
-                + "GetSchemaTypeMapping\022&.com.kcl.api.GetSc" + "hemaTypeMapping_Args\032(.com.kcl.api.GetSc"
-                + "hemaTypeMapping_Result\022P\n\014ValidateCode\022\036"
-                + ".com.kcl.api.ValidateCode_Args\032 .com.kcl" + ".api.ValidateCode_Result\022P\n\014ListDepFiles"
-                + "\022\036.com.kcl.api.ListDepFiles_Args\032 .com.k"
-                + "cl.api.ListDepFiles_Result\022_\n\021LoadSettin" + "gsFiles\022#.com.kcl.api.LoadSettingsFiles_"
-                + "Args\032%.com.kcl.api.LoadSettingsFiles_Res"
-                + "ult\022>\n\006Rename\022\030.com.kcl.api.Rename_Args\032"
-                + "\032.com.kcl.api.Rename_Result\022J\n\nRenameCod"
-                + "e\022\034.com.kcl.api.RenameCode_Args\032\036.com.kc"
-                + "l.api.RenameCode_Result\0228\n\004Test\022\026.com.kc"
-                + "l.api.Test_Args\032\030.com.kcl.api.Test_Resul" + "tb\006proto3" };
+                + "Entry\022)\n\013base_schema\030\020 \001(\0132\024.com.kcl.api"
+                + ".KclType\032G\n\017PropertiesEntry\022\013\n\003key\030\001 \001(\t"
+                + "\022#\n\005value\030\002 \001(\0132\024.com.kcl.api.KclType:\0028"
+                + "\001\032E\n\rExamplesEntry\022\013\n\003key\030\001 \001(\t\022#\n\005value"
+                + "\030\002 \001(\0132\024.com.kcl.api.Example:\0028\001\"\225\001\n\tDec"
+                + "orator\022\014\n\004name\030\001 \001(\t\022\021\n\targuments\030\002 \003(\t\022"
+                + "6\n\010keywords\030\003 \003(\0132$.com.kcl.api.Decorato"
+                + "r.KeywordsEntry\032/\n\rKeywordsEntry\022\013\n\003key\030"
+                + "\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\">\n\007Example\022\017\n\007s"
+                + "ummary\030\001 \001(\t\022\023\n\013description\030\002 \001(\t\022\r\n\005val"
+                + "ue\030\003 \001(\t2\226\001\n\016BuiltinService\0228\n\004Ping\022\026.co"
+                + "m.kcl.api.Ping_Args\032\030.com.kcl.api.Ping_R"
+                + "esult\022J\n\nListMethod\022\034.com.kcl.api.ListMe"
+                + "thod_Args\032\036.com.kcl.api.ListMethod_Resul"
+                + "t2\340\r\n\014KclvmService\0228\n\004Ping\022\026.com.kcl.api"
+                + ".Ping_Args\032\030.com.kcl.api.Ping_Result\022M\n\013"
+                + "ExecProgram\022\035.com.kcl.api.ExecProgram_Ar"
+                + "gs\032\037.com.kcl.api.ExecProgram_Result\022P\n\014B"
+                + "uildProgram\022\036.com.kcl.api.BuildProgram_A" + "rgs\032 .com.kcl.api.BuildProgram_Result\022O\n"
+                + "\014ExecArtifact\022\036.com.kcl.api.ExecArtifact"
+                + "_Args\032\037.com.kcl.api.ExecProgram_Result\022G"
+                + "\n\tParseFile\022\033.com.kcl.api.ParseFile_Args"
+                + "\032\035.com.kcl.api.ParseFile_Result\022P\n\014Parse"
+                + "Program\022\036.com.kcl.api.ParseProgram_Args\032"
+                + " .com.kcl.api.ParseProgram_Result\022M\n\013Loa"
+                + "dPackage\022\035.com.kcl.api.LoadPackage_Args\032"
+                + "\037.com.kcl.api.LoadPackage_Result\022N\n\013List"
+                + "Options\022\036.com.kcl.api.ParseProgram_Args\032"
+                + "\037.com.kcl.api.ListOptions_Result\022S\n\rList" + "Variables\022\037.com.kcl.api.ListVariables_Ar"
+                + "gs\032!.com.kcl.api.ListVariables_Result\022J\n" + "\nFormatCode\022\034.com.kcl.api.FormatCode_Arg"
+                + "s\032\036.com.kcl.api.FormatCode_Result\022J\n\nFor"
+                + "matPath\022\034.com.kcl.api.FormatPath_Args\032\036."
+                + "com.kcl.api.FormatPath_Result\022D\n\010LintPat"
+                + "h\022\032.com.kcl.api.LintPath_Args\032\034.com.kcl."
+                + "api.LintPath_Result\022P\n\014OverrideFile\022\036.co"
+                + "m.kcl.api.OverrideFile_Args\032 .com.kcl.ap" + "i.OverrideFile_Result\022S\n\rGetSchemaType\022\037"
+                + ".com.kcl.api.GetSchemaType_Args\032!.com.kc" + "l.api.GetSchemaType_Result\022[\n\021GetFullSch"
+                + "emaType\022#.com.kcl.api.GetFullSchemaType_" + "Args\032!.com.kcl.api.GetSchemaType_Result\022"
+                + "h\n\024GetSchemaTypeMapping\022&.com.kcl.api.Ge" + "tSchemaTypeMapping_Args\032(.com.kcl.api.Ge"
+                + "tSchemaTypeMapping_Result\022P\n\014ValidateCod"
+                + "e\022\036.com.kcl.api.ValidateCode_Args\032 .com."
+                + "kcl.api.ValidateCode_Result\022P\n\014ListDepFi"
+                + "les\022\036.com.kcl.api.ListDepFiles_Args\032 .co"
+                + "m.kcl.api.ListDepFiles_Result\022_\n\021LoadSet" + "tingsFiles\022#.com.kcl.api.LoadSettingsFil"
+                + "es_Args\032%.com.kcl.api.LoadSettingsFiles_"
+                + "Result\022>\n\006Rename\022\030.com.kcl.api.Rename_Ar"
+                + "gs\032\032.com.kcl.api.Rename_Result\022J\n\nRename"
+                + "Code\022\034.com.kcl.api.RenameCode_Args\032\036.com"
+                + ".kcl.api.RenameCode_Result\0228\n\004Test\022\026.com"
+                + ".kcl.api.Test_Args\032\030.com.kcl.api.Test_Re" + "sultb\006proto3" };
         descriptor = com.google.protobuf.Descriptors.FileDescriptor.internalBuildGeneratedFileFrom(descriptorData,
                 new com.google.protobuf.Descriptors.FileDescriptor[] {});
         internal_static_com_kcl_api_CmdExternalPkgSpec_descriptor = getDescriptor().getMessageTypes().get(0);
@@ -67526,7 +67733,7 @@ public final class Spec {
                 internal_static_com_kcl_api_KclType_descriptor,
                 new java.lang.String[] { "Type", "UnionTypes", "Default", "SchemaName", "SchemaDoc", "Properties",
                         "Required", "Key", "Item", "Line", "Decorators", "Filename", "PkgPath", "Description",
-                        "Examples", });
+                        "Examples", "BaseSchema", });
         internal_static_com_kcl_api_KclType_PropertiesEntry_descriptor = internal_static_com_kcl_api_KclType_descriptor
                 .getNestedTypes().get(0);
         internal_static_com_kcl_api_KclType_PropertiesEntry_fieldAccessorTable = new com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
