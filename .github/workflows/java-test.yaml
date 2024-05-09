@@ -91,7 +91,7 @@ jobs:
   add-centos7-jni:
     runs-on: ubuntu-latest
     container:
-      image: "ghcr.io/zong-zhe/centos7:0.1.2"
+      image: "kcllang/kcl-java-builder-centos7:0.1.0"
       
     permissions:
       contents: read
