@@ -15,7 +15,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  test:
+  test-and-build:
     permissions:
       actions: write  # for styfle/cancel-workflow-action to cancel/stop running workflows
       contents: read  # for actions/checkout to fetch code
@@ -87,102 +87,24 @@ jobs:
           name: kcl-lib-${{ matrix.classifier }}
           path: |
             java/target/classes/native
-  
-  build-on-centos:
-    name: Build on CentOS 7
+          
+  add-centos7-jni:
     runs-on: ubuntu-latest
     container:
-      image: "centos:7"
-
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v3
-
-    - name: Prepare build environment
-      run: |
-        yum makecache
-        yum install -y wget
-        yum install -y make
-        yum install -y epel-release
-        yum install -y llvm clang llvm-devel
-        yum install gcc gcc-c++ glibc-static -y 
-        cat /etc/os-release
-
-    - name: Install Python 3
-      run: |
-        yum install -y python3 python3-devel python3-pip
-    
-    - name: Install Rust
-      run: |
-        curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
-        mv $HOME/.cargo/bin/* /usr/bin/
-        rustc --version
-        cargo --version
-
-    - name: Install Java and Maven
-      run: |
-        yum install -y java-1.8.0-openjdk java-1.8.0-openjdk-devel
-        wget https://repo.huaweicloud.com/apache/maven/maven-3/3.9.6/binaries/apache-maven-3.9.6-bin.tar.gz
-        tar -xzf apache-maven-*.tar.gz
-        mkdir p /opt/maven
-        mv apache-maven-* /opt/maven
-        ln -s /opt/maven/apache-maven-3.9.6/bin/mvn /usr/bin/mvn
-        mvn --version
-
-    - name: Verify installed versions
-      run: |
-        gcc --version
-        llvm-config --version
-        python3 --version
-        rustc --version
-        mvn --version
-        cat /etc/os-release
-
-    - name: 'Test'
-      shell: bash
-      working-directory: java
-      run: make test
-
-    - name: 'Build and Deploy'
-      shell: bash
-      working-directory: java
-      run: mvn clean package -DskipTests=true -Djni.classifier=linux-x86_64 -Dcargo-build.profile=release
-
-    - name: 'Upload artifact'
-      uses: actions/upload-artifact@v3
-      with:
-        name: kcl-lib-linux-x86_64
-        path: java/target/classes/native
-
-        
-  deploy:
-    runs-on: ubuntu-latest
+      image: "kcllang/kcl-java-builder-centos7:0.1.0"
+      
     permissions:
       contents: read
       packages: write
-    if: "startsWith(github.ref, 'refs/tags/')"
-    needs: [ test, build-on-centos ]
+    needs: [ test-and-build ]
     steps:
-      - uses: actions/checkout@v4
-
-      - name: Set up JDK 8
-        uses: actions/setup-java@v4
-        with:
-          distribution: 'temurin'
-          java-version: '8'
-          server-id: github # Value of the distributionManagement/repository/id field of the pom.xml
-          settings-path: ${{ github.workspace }} # location for the settings.xml file
+      - name: Checkout
+        uses: actions/checkout@v3
 
       - name: Download windows x86_64 lib
         uses: actions/download-artifact@v3
         with:
           name: kcl-lib-windows-x86_64
-          path: java/native
-
-      - name: Download linux x86_64 lib
-        uses: actions/download-artifact@v3
-        with:
-          name: kcl-lib-linux-x86_64
           path: java/native
 
       - name: Download linux aarch_64 lib
@@ -206,7 +128,7 @@ jobs:
       - name: Package Java artifact
         working-directory: java
         run: |
-          mvn clean package -DskipTests=true
+          rustup default stable && mvn package -DskipTests=true
 
       - name: Upload artifact
         uses: actions/upload-artifact@v3
@@ -214,11 +136,52 @@ jobs:
           name: kcl-lib
           path: java/target/*.jar
 
+  deploy:
+    runs-on: ubuntu-latest
+      
+    permissions:
+      contents: read
+      packages: write
+    if: "startsWith(github.ref, 'refs/tags/')"
+    needs: [ add-centos7-jni ]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Set up JDK 8
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '8'
+          server-id: github # Value of the distributionManagement/repository/id field of the pom.xml
+          settings-path: ${{ github.workspace }} # location for the settings.xml file
+
+      - name: Download Artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: kcl-lib
+          path: java/target/
+
       - name: Deploy to Github Packages
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         working-directory: java
         run: |
-          mvn clean package deploy \
+          mvn package deploy \
             -DskipTests=true \
+            -DskipCompile=true \
+            -Dcargo-build.profile=release \
+            -DserverId=github \
+            -s $GITHUB_WORKSPACE/settings.xml
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+
+      - name: Release to Github Packages
+        if: "startsWith(github.ref, 'refs/tags/')"
+        working-directory: java
+        run: |
+          mvn package deploy \
+            -DskipTests=true \
+            -DskipCompile=true \
             -Dcargo-build.profile=release \
             -DserverId=github \
             -s $GITHUB_WORKSPACE/settings.xml
