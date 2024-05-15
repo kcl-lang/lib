@@ -37826,6 +37826,31 @@ public final class Spec {
          * @return The bytes of the unsupportedCodes at the given index.
          */
         com.google.protobuf.ByteString getUnsupportedCodesBytes(int index);
+
+        /**
+         * <code>repeated .com.kcl.api.Error parse_errs = 3;</code>
+         */
+        java.util.List<com.kcl.api.Spec.Error> getParseErrsList();
+
+        /**
+         * <code>repeated .com.kcl.api.Error parse_errs = 3;</code>
+         */
+        com.kcl.api.Spec.Error getParseErrs(int index);
+
+        /**
+         * <code>repeated .com.kcl.api.Error parse_errs = 3;</code>
+         */
+        int getParseErrsCount();
+
+        /**
+         * <code>repeated .com.kcl.api.Error parse_errs = 3;</code>
+         */
+        java.util.List<? extends com.kcl.api.Spec.ErrorOrBuilder> getParseErrsOrBuilderList();
+
+        /**
+         * <code>repeated .com.kcl.api.Error parse_errs = 3;</code>
+         */
+        com.kcl.api.Spec.ErrorOrBuilder getParseErrsOrBuilder(int index);
     }
 
     /**
@@ -37843,6 +37868,7 @@ public final class Spec {
 
         private ListVariables_Result() {
             unsupportedCodes_ = com.google.protobuf.LazyStringArrayList.emptyList();
+            parseErrs_ = java.util.Collections.emptyList();
         }
 
         @java.lang.Override
@@ -38001,6 +38027,50 @@ public final class Spec {
             return unsupportedCodes_.getByteString(index);
         }
 
+        public static final int PARSE_ERRS_FIELD_NUMBER = 3;
+        @SuppressWarnings("serial")
+        private java.util.List<com.kcl.api.Spec.Error> parseErrs_;
+
+        /**
+         * <code>repeated .com.kcl.api.Error parse_errs = 3;</code>
+         */
+        @java.lang.Override
+        public java.util.List<com.kcl.api.Spec.Error> getParseErrsList() {
+            return parseErrs_;
+        }
+
+        /**
+         * <code>repeated .com.kcl.api.Error parse_errs = 3;</code>
+         */
+        @java.lang.Override
+        public java.util.List<? extends com.kcl.api.Spec.ErrorOrBuilder> getParseErrsOrBuilderList() {
+            return parseErrs_;
+        }
+
+        /**
+         * <code>repeated .com.kcl.api.Error parse_errs = 3;</code>
+         */
+        @java.lang.Override
+        public int getParseErrsCount() {
+            return parseErrs_.size();
+        }
+
+        /**
+         * <code>repeated .com.kcl.api.Error parse_errs = 3;</code>
+         */
+        @java.lang.Override
+        public com.kcl.api.Spec.Error getParseErrs(int index) {
+            return parseErrs_.get(index);
+        }
+
+        /**
+         * <code>repeated .com.kcl.api.Error parse_errs = 3;</code>
+         */
+        @java.lang.Override
+        public com.kcl.api.Spec.ErrorOrBuilder getParseErrsOrBuilder(int index) {
+            return parseErrs_.get(index);
+        }
+
         private byte memoizedIsInitialized = -1;
 
         @java.lang.Override
@@ -38021,6 +38091,9 @@ public final class Spec {
                     VariablesDefaultEntryHolder.defaultEntry, 1);
             for (int i = 0; i < unsupportedCodes_.size(); i++) {
                 com.google.protobuf.GeneratedMessageV3.writeString(output, 2, unsupportedCodes_.getRaw(i));
+            }
+            for (int i = 0; i < parseErrs_.size(); i++) {
+                output.writeMessage(3, parseErrs_.get(i));
             }
             getUnknownFields().writeTo(output);
         }
@@ -38046,6 +38119,9 @@ public final class Spec {
                 size += dataSize;
                 size += 1 * getUnsupportedCodesList().size();
             }
+            for (int i = 0; i < parseErrs_.size(); i++) {
+                size += com.google.protobuf.CodedOutputStream.computeMessageSize(3, parseErrs_.get(i));
+            }
             size += getUnknownFields().getSerializedSize();
             memoizedSize = size;
             return size;
@@ -38064,6 +38140,8 @@ public final class Spec {
             if (!internalGetVariables().equals(other.internalGetVariables()))
                 return false;
             if (!getUnsupportedCodesList().equals(other.getUnsupportedCodesList()))
+                return false;
+            if (!getParseErrsList().equals(other.getParseErrsList()))
                 return false;
             if (!getUnknownFields().equals(other.getUnknownFields()))
                 return false;
@@ -38084,6 +38162,10 @@ public final class Spec {
             if (getUnsupportedCodesCount() > 0) {
                 hash = (37 * hash) + UNSUPPORTED_CODES_FIELD_NUMBER;
                 hash = (53 * hash) + getUnsupportedCodesList().hashCode();
+            }
+            if (getParseErrsCount() > 0) {
+                hash = (37 * hash) + PARSE_ERRS_FIELD_NUMBER;
+                hash = (53 * hash) + getParseErrsList().hashCode();
             }
             hash = (29 * hash) + getUnknownFields().hashCode();
             memoizedHashCode = hash;
@@ -38231,6 +38313,13 @@ public final class Spec {
                 bitField0_ = 0;
                 internalGetMutableVariables().clear();
                 unsupportedCodes_ = com.google.protobuf.LazyStringArrayList.emptyList();
+                if (parseErrsBuilder_ == null) {
+                    parseErrs_ = java.util.Collections.emptyList();
+                } else {
+                    parseErrs_ = null;
+                    parseErrsBuilder_.clear();
+                }
+                bitField0_ = (bitField0_ & ~0x00000004);
                 return this;
             }
 
@@ -38256,11 +38345,24 @@ public final class Spec {
             @java.lang.Override
             public com.kcl.api.Spec.ListVariables_Result buildPartial() {
                 com.kcl.api.Spec.ListVariables_Result result = new com.kcl.api.Spec.ListVariables_Result(this);
+                buildPartialRepeatedFields(result);
                 if (bitField0_ != 0) {
                     buildPartial0(result);
                 }
                 onBuilt();
                 return result;
+            }
+
+            private void buildPartialRepeatedFields(com.kcl.api.Spec.ListVariables_Result result) {
+                if (parseErrsBuilder_ == null) {
+                    if (((bitField0_ & 0x00000004) != 0)) {
+                        parseErrs_ = java.util.Collections.unmodifiableList(parseErrs_);
+                        bitField0_ = (bitField0_ & ~0x00000004);
+                    }
+                    result.parseErrs_ = parseErrs_;
+                } else {
+                    result.parseErrs_ = parseErrsBuilder_.build();
+                }
             }
 
             private void buildPartial0(com.kcl.api.Spec.ListVariables_Result result) {
@@ -38331,6 +38433,31 @@ public final class Spec {
                     }
                     onChanged();
                 }
+                if (parseErrsBuilder_ == null) {
+                    if (!other.parseErrs_.isEmpty()) {
+                        if (parseErrs_.isEmpty()) {
+                            parseErrs_ = other.parseErrs_;
+                            bitField0_ = (bitField0_ & ~0x00000004);
+                        } else {
+                            ensureParseErrsIsMutable();
+                            parseErrs_.addAll(other.parseErrs_);
+                        }
+                        onChanged();
+                    }
+                } else {
+                    if (!other.parseErrs_.isEmpty()) {
+                        if (parseErrsBuilder_.isEmpty()) {
+                            parseErrsBuilder_.dispose();
+                            parseErrsBuilder_ = null;
+                            parseErrs_ = other.parseErrs_;
+                            bitField0_ = (bitField0_ & ~0x00000004);
+                            parseErrsBuilder_ = com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders
+                                    ? getParseErrsFieldBuilder() : null;
+                        } else {
+                            parseErrsBuilder_.addAllMessages(other.parseErrs_);
+                        }
+                    }
+                }
                 this.mergeUnknownFields(other.getUnknownFields());
                 onChanged();
                 return this;
@@ -38370,6 +38497,17 @@ public final class Spec {
                             unsupportedCodes_.add(s);
                             break;
                         } // case 18
+                        case 26: {
+                            com.kcl.api.Spec.Error m = input.readMessage(com.kcl.api.Spec.Error.parser(),
+                                    extensionRegistry);
+                            if (parseErrsBuilder_ == null) {
+                                ensureParseErrsIsMutable();
+                                parseErrs_.add(m);
+                            } else {
+                                parseErrsBuilder_.addMessage(m);
+                            }
+                            break;
+                        } // case 26
                         default: {
                             if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                                 done = true; // was an endgroup tag
@@ -38701,6 +38839,244 @@ public final class Spec {
                 bitField0_ |= 0x00000002;
                 onChanged();
                 return this;
+            }
+
+            private java.util.List<com.kcl.api.Spec.Error> parseErrs_ = java.util.Collections.emptyList();
+
+            private void ensureParseErrsIsMutable() {
+                if (!((bitField0_ & 0x00000004) != 0)) {
+                    parseErrs_ = new java.util.ArrayList<com.kcl.api.Spec.Error>(parseErrs_);
+                    bitField0_ |= 0x00000004;
+                }
+            }
+
+            private com.google.protobuf.RepeatedFieldBuilderV3<com.kcl.api.Spec.Error, com.kcl.api.Spec.Error.Builder, com.kcl.api.Spec.ErrorOrBuilder> parseErrsBuilder_;
+
+            /**
+             * <code>repeated .com.kcl.api.Error parse_errs = 3;</code>
+             */
+            public java.util.List<com.kcl.api.Spec.Error> getParseErrsList() {
+                if (parseErrsBuilder_ == null) {
+                    return java.util.Collections.unmodifiableList(parseErrs_);
+                } else {
+                    return parseErrsBuilder_.getMessageList();
+                }
+            }
+
+            /**
+             * <code>repeated .com.kcl.api.Error parse_errs = 3;</code>
+             */
+            public int getParseErrsCount() {
+                if (parseErrsBuilder_ == null) {
+                    return parseErrs_.size();
+                } else {
+                    return parseErrsBuilder_.getCount();
+                }
+            }
+
+            /**
+             * <code>repeated .com.kcl.api.Error parse_errs = 3;</code>
+             */
+            public com.kcl.api.Spec.Error getParseErrs(int index) {
+                if (parseErrsBuilder_ == null) {
+                    return parseErrs_.get(index);
+                } else {
+                    return parseErrsBuilder_.getMessage(index);
+                }
+            }
+
+            /**
+             * <code>repeated .com.kcl.api.Error parse_errs = 3;</code>
+             */
+            public Builder setParseErrs(int index, com.kcl.api.Spec.Error value) {
+                if (parseErrsBuilder_ == null) {
+                    if (value == null) {
+                        throw new NullPointerException();
+                    }
+                    ensureParseErrsIsMutable();
+                    parseErrs_.set(index, value);
+                    onChanged();
+                } else {
+                    parseErrsBuilder_.setMessage(index, value);
+                }
+                return this;
+            }
+
+            /**
+             * <code>repeated .com.kcl.api.Error parse_errs = 3;</code>
+             */
+            public Builder setParseErrs(int index, com.kcl.api.Spec.Error.Builder builderForValue) {
+                if (parseErrsBuilder_ == null) {
+                    ensureParseErrsIsMutable();
+                    parseErrs_.set(index, builderForValue.build());
+                    onChanged();
+                } else {
+                    parseErrsBuilder_.setMessage(index, builderForValue.build());
+                }
+                return this;
+            }
+
+            /**
+             * <code>repeated .com.kcl.api.Error parse_errs = 3;</code>
+             */
+            public Builder addParseErrs(com.kcl.api.Spec.Error value) {
+                if (parseErrsBuilder_ == null) {
+                    if (value == null) {
+                        throw new NullPointerException();
+                    }
+                    ensureParseErrsIsMutable();
+                    parseErrs_.add(value);
+                    onChanged();
+                } else {
+                    parseErrsBuilder_.addMessage(value);
+                }
+                return this;
+            }
+
+            /**
+             * <code>repeated .com.kcl.api.Error parse_errs = 3;</code>
+             */
+            public Builder addParseErrs(int index, com.kcl.api.Spec.Error value) {
+                if (parseErrsBuilder_ == null) {
+                    if (value == null) {
+                        throw new NullPointerException();
+                    }
+                    ensureParseErrsIsMutable();
+                    parseErrs_.add(index, value);
+                    onChanged();
+                } else {
+                    parseErrsBuilder_.addMessage(index, value);
+                }
+                return this;
+            }
+
+            /**
+             * <code>repeated .com.kcl.api.Error parse_errs = 3;</code>
+             */
+            public Builder addParseErrs(com.kcl.api.Spec.Error.Builder builderForValue) {
+                if (parseErrsBuilder_ == null) {
+                    ensureParseErrsIsMutable();
+                    parseErrs_.add(builderForValue.build());
+                    onChanged();
+                } else {
+                    parseErrsBuilder_.addMessage(builderForValue.build());
+                }
+                return this;
+            }
+
+            /**
+             * <code>repeated .com.kcl.api.Error parse_errs = 3;</code>
+             */
+            public Builder addParseErrs(int index, com.kcl.api.Spec.Error.Builder builderForValue) {
+                if (parseErrsBuilder_ == null) {
+                    ensureParseErrsIsMutable();
+                    parseErrs_.add(index, builderForValue.build());
+                    onChanged();
+                } else {
+                    parseErrsBuilder_.addMessage(index, builderForValue.build());
+                }
+                return this;
+            }
+
+            /**
+             * <code>repeated .com.kcl.api.Error parse_errs = 3;</code>
+             */
+            public Builder addAllParseErrs(java.lang.Iterable<? extends com.kcl.api.Spec.Error> values) {
+                if (parseErrsBuilder_ == null) {
+                    ensureParseErrsIsMutable();
+                    com.google.protobuf.AbstractMessageLite.Builder.addAll(values, parseErrs_);
+                    onChanged();
+                } else {
+                    parseErrsBuilder_.addAllMessages(values);
+                }
+                return this;
+            }
+
+            /**
+             * <code>repeated .com.kcl.api.Error parse_errs = 3;</code>
+             */
+            public Builder clearParseErrs() {
+                if (parseErrsBuilder_ == null) {
+                    parseErrs_ = java.util.Collections.emptyList();
+                    bitField0_ = (bitField0_ & ~0x00000004);
+                    onChanged();
+                } else {
+                    parseErrsBuilder_.clear();
+                }
+                return this;
+            }
+
+            /**
+             * <code>repeated .com.kcl.api.Error parse_errs = 3;</code>
+             */
+            public Builder removeParseErrs(int index) {
+                if (parseErrsBuilder_ == null) {
+                    ensureParseErrsIsMutable();
+                    parseErrs_.remove(index);
+                    onChanged();
+                } else {
+                    parseErrsBuilder_.remove(index);
+                }
+                return this;
+            }
+
+            /**
+             * <code>repeated .com.kcl.api.Error parse_errs = 3;</code>
+             */
+            public com.kcl.api.Spec.Error.Builder getParseErrsBuilder(int index) {
+                return getParseErrsFieldBuilder().getBuilder(index);
+            }
+
+            /**
+             * <code>repeated .com.kcl.api.Error parse_errs = 3;</code>
+             */
+            public com.kcl.api.Spec.ErrorOrBuilder getParseErrsOrBuilder(int index) {
+                if (parseErrsBuilder_ == null) {
+                    return parseErrs_.get(index);
+                } else {
+                    return parseErrsBuilder_.getMessageOrBuilder(index);
+                }
+            }
+
+            /**
+             * <code>repeated .com.kcl.api.Error parse_errs = 3;</code>
+             */
+            public java.util.List<? extends com.kcl.api.Spec.ErrorOrBuilder> getParseErrsOrBuilderList() {
+                if (parseErrsBuilder_ != null) {
+                    return parseErrsBuilder_.getMessageOrBuilderList();
+                } else {
+                    return java.util.Collections.unmodifiableList(parseErrs_);
+                }
+            }
+
+            /**
+             * <code>repeated .com.kcl.api.Error parse_errs = 3;</code>
+             */
+            public com.kcl.api.Spec.Error.Builder addParseErrsBuilder() {
+                return getParseErrsFieldBuilder().addBuilder(com.kcl.api.Spec.Error.getDefaultInstance());
+            }
+
+            /**
+             * <code>repeated .com.kcl.api.Error parse_errs = 3;</code>
+             */
+            public com.kcl.api.Spec.Error.Builder addParseErrsBuilder(int index) {
+                return getParseErrsFieldBuilder().addBuilder(index, com.kcl.api.Spec.Error.getDefaultInstance());
+            }
+
+            /**
+             * <code>repeated .com.kcl.api.Error parse_errs = 3;</code>
+             */
+            public java.util.List<com.kcl.api.Spec.Error.Builder> getParseErrsBuilderList() {
+                return getParseErrsFieldBuilder().getBuilderList();
+            }
+
+            private com.google.protobuf.RepeatedFieldBuilderV3<com.kcl.api.Spec.Error, com.kcl.api.Spec.Error.Builder, com.kcl.api.Spec.ErrorOrBuilder> getParseErrsFieldBuilder() {
+                if (parseErrsBuilder_ == null) {
+                    parseErrsBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<com.kcl.api.Spec.Error, com.kcl.api.Spec.Error.Builder, com.kcl.api.Spec.ErrorOrBuilder>(
+                            parseErrs_, ((bitField0_ & 0x00000004) != 0), getParentForChildren(), isClean());
+                    parseErrs_ = null;
+                }
+                return parseErrsBuilder_;
             }
 
             @java.lang.Override
@@ -67333,10 +67709,11 @@ public final class Spec {
                 + "le_Args\022\014\n\004file\030\001 \001(\t\022\r\n\005specs\030\002 \003(\t\022\024\n\014"
                 + "import_paths\030\003 \003(\t\"%\n\023OverrideFile_Resul"
                 + "t\022\016\n\006result\030\001 \001(\010\"1\n\022ListVariables_Args\022"
-                + "\014\n\004file\030\001 \001(\t\022\r\n\005specs\030\002 \003(\t\"\277\001\n\024ListVar"
+                + "\014\n\004file\030\001 \001(\t\022\r\n\005specs\030\002 \003(\t\"\347\001\n\024ListVar"
                 + "iables_Result\022C\n\tvariables\030\001 \003(\01320.com.k"
                 + "cl.api.ListVariables_Result.VariablesEnt"
-                + "ry\022\031\n\021unsupported_codes\030\002 \003(\t\032G\n\016Variabl"
+                + "ry\022\031\n\021unsupported_codes\030\002 \003(\t\022&\n\nparse_e"
+                + "rrs\030\003 \003(\0132\022.com.kcl.api.Error\032G\n\016Variabl"
                 + "esEntry\022\013\n\003key\030\001 \001(\t\022$\n\005value\030\002 \001(\0132\025.co"
                 + "m.kcl.api.Variable:\0028\001\"<\n\010Variable\022\r\n\005va"
                 + "lue\030\001 \001(\t\022\021\n\ttype_name\030\002 \001(\t\022\016\n\006op_sym\030\003"
@@ -67621,7 +67998,7 @@ public final class Spec {
         internal_static_com_kcl_api_ListVariables_Result_descriptor = getDescriptor().getMessageTypes().get(37);
         internal_static_com_kcl_api_ListVariables_Result_fieldAccessorTable = new com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
                 internal_static_com_kcl_api_ListVariables_Result_descriptor,
-                new java.lang.String[] { "Variables", "UnsupportedCodes", });
+                new java.lang.String[] { "Variables", "UnsupportedCodes", "ParseErrs", });
         internal_static_com_kcl_api_ListVariables_Result_VariablesEntry_descriptor = internal_static_com_kcl_api_ListVariables_Result_descriptor
                 .getNestedTypes().get(0);
         internal_static_com_kcl_api_ListVariables_Result_VariablesEntry_fieldAccessorTable = new com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
