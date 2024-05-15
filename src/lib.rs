@@ -29,7 +29,7 @@
 use std::ffi::{CStr, CString};
 
 pub use kclvm_api::gpyrpc::*;
-use kclvm_api::service::capi::{kclvm_service_call, kclvm_service_new};
+use kclvm_api::service::capi::{kclvm_service_call_with_length, kclvm_service_new};
 use kclvm_api::service::service_impl::KclvmServiceImpl;
 
 use anyhow::Result;
@@ -41,7 +41,8 @@ pub fn call<'a>(name: &'a [u8], args: &'a [u8]) -> Result<&'a [u8]> {
         let args = CString::new(args)?;
         let call = CString::new(name)?;
         let serv = kclvm_service_new(0);
-        kclvm_service_call(serv, call.as_ptr(), args.as_ptr())
+        let mut result_len: usize = 0;
+        kclvm_service_call_with_length(serv, call.as_ptr(), args.as_ptr(), &mut result_len)
     };
     let result = unsafe { CStr::from_ptr(result_ptr) };
     Ok(result.to_bytes())
