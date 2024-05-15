@@ -49,9 +49,10 @@ public class ListVariablesTest {
                 .setFile("./src/test_data/list_variables/invalid.k").addSpecs("a").build());
 
         Assert.assertEquals(result.getParseErrsCount(), 1);
-        Assert.assertEquals(result.getParseErrs(0).getLevel(), 1);
-        Assert.assertEquals(result.getParseErrs(0).getCode(), 1);
-        Assert.assertEquals(result.getParseErrs(0).getMessages(0).getPos().getFilename(), "./src/test_data/list_variables/invalid.k");
+        Assert.assertEquals(result.getParseErrs(0).getLevel(), "error");
+        Assert.assertEquals(result.getParseErrs(0).getCode(), "");
+        Assert.assertEquals(result.getParseErrs(0).getMessages(0).getPos().getFilename(),
+                "./src/test_data/list_variables/invalid.k");
         Assert.assertEquals(result.getParseErrs(0).getMessages(0).getPos().getLine(), 1);
         Assert.assertEquals(result.getParseErrs(0).getMessages(0).getPos().getColumn(), 3);
         Assert.assertEquals(result.getParseErrs(0).getMessages(0).getMsg(), "unexpected token ':'");
