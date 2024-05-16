@@ -1,10 +1,5 @@
-import ctypes
-import tempfile
-import threading
-import os
 import kcl_lib
 from .spec_pb2 import *
-from ctypes import c_char_p, c_void_p
 from google.protobuf import message as _message
 
 
@@ -23,6 +18,9 @@ class API:
     print(result.yaml_result)
     ```
     """
+
+    def __init__(self, plugin_agent: int = 0):
+        self.plugin_agent = plugin_agent
 
     def ping(self, args: Ping_Args) -> Ping_Result:
         return self.call("KclvmService.Ping", args)
@@ -50,7 +48,7 @@ class API:
 
     def list_options(self, args: ParseProgram_Args) -> ListOptions_Result:
         return self.call("KclvmService.ListOptions", args)
-    
+
     def list_variables(self, args: ListVariables_Args) -> ListVariables_Result:
         return self.call("KclvmService.ListVariables", args)
 
@@ -96,7 +94,9 @@ class API:
         args_serialized = args.SerializeToString()
 
         # Call the service function and get the result
-        result = kcl_lib.call(name.encode("utf-8"), args_serialized)
+        result = kcl_lib.call_with_plugin_agent(
+            name.encode("utf-8"), args_serialized, self.plugin_agent
+        )
         if result.startswith(b"ERROR"):
             raise Exception(str(result))
         msg = self.create_method_resp_message(name)
