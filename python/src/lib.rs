@@ -3,7 +3,7 @@ use pyo3::prelude::*;
 
 /// Formats the sum of two numbers as string.
 #[pyfunction]
-fn call<'a>(name: &'a [u8], args: &'a [u8]) -> PyResult<&'a [u8]> {
+fn call<'a>(name: &'a [u8], args: &'a [u8]) -> PyResult<Vec<u8>> {
     kcl_lang::call(name, args).map_err(|e| PyErr::new::<PyException, _>(e.to_string()))
 }
 
