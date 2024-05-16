@@ -1,6 +1,5 @@
+use napi::bindgen_prelude::*;
 use std::collections::HashMap;
-
-use napi::bindgen_prelude::Reference;
 
 #[napi(object)]
 pub struct CmdExternalPkgSpec {
@@ -90,6 +89,116 @@ pub struct ParseProgramResult {
     pub errors: Vec<Error>,
 }
 
+impl crate::spec::Error {
+    pub fn new(e: &kcl_lang::Error) -> Self {
+        Self {
+            level: e.level.clone(),
+            code: e.code.clone(),
+            messages: e
+                .messages
+                .iter()
+                .map(|m| Message {
+                    msg: m.msg.clone(),
+                    pos: m.pos.as_ref().map(|p| Position {
+                        line: p.line,
+                        column: p.column,
+                        filename: p.filename.clone(),
+                    }),
+                })
+                .collect(),
+        }
+    }
+}
+
+impl ScopeIndex {
+    pub fn new(v: &kcl_lang::ScopeIndex) -> Self {
+        ScopeIndex {
+            i: v.i as u32,
+            g: v.g as u32,
+            kind: v.kind.clone(),
+        }
+    }
+}
+
+impl SymbolIndex {
+    pub fn new(v: &kcl_lang::SymbolIndex) -> Self {
+        SymbolIndex {
+            i: v.i as u32,
+            g: v.g as u32,
+            kind: v.kind.clone(),
+        }
+    }
+}
+
+impl crate::spec::Symbol {
+    pub fn new(v: &kcl_lang::Symbol) -> Self {
+        crate::spec::Symbol {
+            ty: v.ty.as_ref().map(|ty| ty.r#type.clone()),
+            name: v.name.clone(),
+            owner: v.owner.as_ref().map(|v| SymbolIndex::new(v)),
+            def: v.def.as_ref().map(|v| SymbolIndex::new(v)),
+            attrs: v.attrs.iter().map(|v| SymbolIndex::new(v)).collect(),
+            is_global: v.is_global,
+        }
+    }
+}
+
+impl LoadPackageResult {
+    pub fn new(r: kcl_lang::LoadPackageResult) -> Self {
+        Self {
+            program: r.program,
+            paths: r.paths,
+            parse_errors: r
+                .parse_errors
+                .iter()
+                .map(|e| crate::spec::Error::new(e))
+                .collect(),
+            type_errors: r
+                .type_errors
+                .iter()
+                .map(|e| crate::spec::Error::new(e))
+                .collect(),
+            scopes: r
+                .scopes
+                .iter()
+                .map(|(k, v)| {
+                    (
+                        k.to_string(),
+                        Scope {
+                            kind: v.kind.clone(),
+                            parent: v.parent.as_ref().map(|v| ScopeIndex::new(&v)),
+                            owner: v.owner.as_ref().map(|v| SymbolIndex::new(&v)),
+                            children: v.children.iter().map(|v| ScopeIndex::new(v)).collect(),
+                            defs: v.defs.iter().map(|v| SymbolIndex::new(v)).collect(),
+                        },
+                    )
+                })
+                .collect(),
+            symbols: r
+                .symbols
+                .iter()
+                .map(|(k, v)| (k.clone(), crate::spec::Symbol::new(v)))
+                .collect(),
+            node_symbol_map: r
+                .node_symbol_map
+                .iter()
+                .map(|(k, v)| (k.clone(), SymbolIndex::new(v)))
+                .collect(),
+            symbol_node_map: r.symbol_node_map,
+            fully_qualified_name_map: r
+                .fully_qualified_name_map
+                .iter()
+                .map(|(k, v)| (k.to_string(), SymbolIndex::new(v)))
+                .collect(),
+            pkg_scope_map: r
+                .pkg_scope_map
+                .iter()
+                .map(|(k, v)| (k.to_string(), ScopeIndex::new(v)))
+                .collect(),
+        }
+    }
+}
+
 #[napi(object)]
 pub struct LoadPackageResult {
     /// JSON string value
@@ -170,6 +279,17 @@ pub struct ExecProgramResult {
     pub err_message: String,
 }
 
+impl ExecProgramResult {
+    pub fn new(r: kcl_lang::ExecProgramResult) -> Self {
+        Self {
+            json_result: r.json_result,
+            yaml_result: r.yaml_result,
+            log_message: r.log_message,
+            err_message: r.err_message,
+        }
+    }
+}
+
 #[napi(object)]
 pub struct BuildProgramResult {
     pub path: String,
@@ -215,26 +335,51 @@ pub struct LintPathResult {
 }
 
 #[napi(object)]
-pub struct OverrideFileArgs {
-    pub file: String,
-    pub specs: Vec<String>,
-    pub import_paths: Vec<String>,
-}
-
-#[napi(object)]
 pub struct OverrideFileResult {
     pub result: bool,
+}
+
+impl OverrideFileResult {
+    pub fn new(r: kcl_lang::OverrideFileResult) -> Self {
+        Self { result: r.result }
+    }
 }
 
 #[napi(object)]
 pub struct ListVariablesResult {
     pub variables: HashMap<String, Variable>,
     pub unsupported_codes: Vec<String>,
+    pub parse_errors: Vec<Error>,
 }
 
 #[napi(object)]
 pub struct Variable {
     pub value: String,
+}
+
+impl ListVariablesResult {
+    pub fn new(r: kcl_lang::ListVariablesResult) -> Self {
+        Self {
+            variables: r
+                .variables
+                .iter()
+                .map(|(k, v)| {
+                    (
+                        k.to_string(),
+                        Variable {
+                            value: v.value.to_string(),
+                        },
+                    )
+                })
+                .collect(),
+            unsupported_codes: r.unsupported_codes,
+            parse_errors: r
+                .parse_errors
+                .iter()
+                .map(|e| crate::spec::Error::new(e))
+                .collect(),
+        }
+    }
 }
 
 #[napi(object)]

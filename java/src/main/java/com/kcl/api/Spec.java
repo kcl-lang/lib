@@ -36499,27 +36499,27 @@ com.kcl.api.Spec.Variable defaultValue);
         getUnsupportedCodesBytes(int index);
 
     /**
-     * <code>repeated .com.kcl.api.Error parse_errs = 3;</code>
+     * <code>repeated .com.kcl.api.Error parse_errors = 3;</code>
      */
     java.util.List<com.kcl.api.Spec.Error> 
-        getParseErrsList();
+        getParseErrorsList();
     /**
-     * <code>repeated .com.kcl.api.Error parse_errs = 3;</code>
+     * <code>repeated .com.kcl.api.Error parse_errors = 3;</code>
      */
-    com.kcl.api.Spec.Error getParseErrs(int index);
+    com.kcl.api.Spec.Error getParseErrors(int index);
     /**
-     * <code>repeated .com.kcl.api.Error parse_errs = 3;</code>
+     * <code>repeated .com.kcl.api.Error parse_errors = 3;</code>
      */
-    int getParseErrsCount();
+    int getParseErrorsCount();
     /**
-     * <code>repeated .com.kcl.api.Error parse_errs = 3;</code>
+     * <code>repeated .com.kcl.api.Error parse_errors = 3;</code>
      */
     java.util.List<? extends com.kcl.api.Spec.ErrorOrBuilder> 
-        getParseErrsOrBuilderList();
+        getParseErrorsOrBuilderList();
     /**
-     * <code>repeated .com.kcl.api.Error parse_errs = 3;</code>
+     * <code>repeated .com.kcl.api.Error parse_errors = 3;</code>
      */
-    com.kcl.api.Spec.ErrorOrBuilder getParseErrsOrBuilder(
+    com.kcl.api.Spec.ErrorOrBuilder getParseErrorsOrBuilder(
         int index);
   }
   /**
@@ -36537,7 +36537,7 @@ com.kcl.api.Spec.Variable defaultValue);
     private ListVariables_Result() {
       unsupportedCodes_ =
           com.google.protobuf.LazyStringArrayList.emptyList();
-      parseErrs_ = java.util.Collections.emptyList();
+      parseErrors_ = java.util.Collections.emptyList();
     }
 
     @java.lang.Override
@@ -36688,45 +36688,45 @@ com.kcl.api.Spec.Variable defaultValue) {
       return unsupportedCodes_.getByteString(index);
     }
 
-    public static final int PARSE_ERRS_FIELD_NUMBER = 3;
+    public static final int PARSE_ERRORS_FIELD_NUMBER = 3;
     @SuppressWarnings("serial")
-    private java.util.List<com.kcl.api.Spec.Error> parseErrs_;
+    private java.util.List<com.kcl.api.Spec.Error> parseErrors_;
     /**
-     * <code>repeated .com.kcl.api.Error parse_errs = 3;</code>
+     * <code>repeated .com.kcl.api.Error parse_errors = 3;</code>
      */
     @java.lang.Override
-    public java.util.List<com.kcl.api.Spec.Error> getParseErrsList() {
-      return parseErrs_;
+    public java.util.List<com.kcl.api.Spec.Error> getParseErrorsList() {
+      return parseErrors_;
     }
     /**
-     * <code>repeated .com.kcl.api.Error parse_errs = 3;</code>
+     * <code>repeated .com.kcl.api.Error parse_errors = 3;</code>
      */
     @java.lang.Override
     public java.util.List<? extends com.kcl.api.Spec.ErrorOrBuilder> 
-        getParseErrsOrBuilderList() {
-      return parseErrs_;
+        getParseErrorsOrBuilderList() {
+      return parseErrors_;
     }
     /**
-     * <code>repeated .com.kcl.api.Error parse_errs = 3;</code>
+     * <code>repeated .com.kcl.api.Error parse_errors = 3;</code>
      */
     @java.lang.Override
-    public int getParseErrsCount() {
-      return parseErrs_.size();
+    public int getParseErrorsCount() {
+      return parseErrors_.size();
     }
     /**
-     * <code>repeated .com.kcl.api.Error parse_errs = 3;</code>
+     * <code>repeated .com.kcl.api.Error parse_errors = 3;</code>
      */
     @java.lang.Override
-    public com.kcl.api.Spec.Error getParseErrs(int index) {
-      return parseErrs_.get(index);
+    public com.kcl.api.Spec.Error getParseErrors(int index) {
+      return parseErrors_.get(index);
     }
     /**
-     * <code>repeated .com.kcl.api.Error parse_errs = 3;</code>
+     * <code>repeated .com.kcl.api.Error parse_errors = 3;</code>
      */
     @java.lang.Override
-    public com.kcl.api.Spec.ErrorOrBuilder getParseErrsOrBuilder(
+    public com.kcl.api.Spec.ErrorOrBuilder getParseErrorsOrBuilder(
         int index) {
-      return parseErrs_.get(index);
+      return parseErrors_.get(index);
     }
 
     private byte memoizedIsInitialized = -1;
@@ -36752,8 +36752,8 @@ com.kcl.api.Spec.Variable defaultValue) {
       for (int i = 0; i < unsupportedCodes_.size(); i++) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 2, unsupportedCodes_.getRaw(i));
       }
-      for (int i = 0; i < parseErrs_.size(); i++) {
-        output.writeMessage(3, parseErrs_.get(i));
+      for (int i = 0; i < parseErrors_.size(); i++) {
+        output.writeMessage(3, parseErrors_.get(i));
       }
       getUnknownFields().writeTo(output);
     }
@@ -36782,9 +36782,9 @@ com.kcl.api.Spec.Variable defaultValue) {
         size += dataSize;
         size += 1 * getUnsupportedCodesList().size();
       }
-      for (int i = 0; i < parseErrs_.size(); i++) {
+      for (int i = 0; i < parseErrors_.size(); i++) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(3, parseErrs_.get(i));
+          .computeMessageSize(3, parseErrors_.get(i));
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSize = size;
@@ -36805,8 +36805,8 @@ com.kcl.api.Spec.Variable defaultValue) {
           other.internalGetVariables())) return false;
       if (!getUnsupportedCodesList()
           .equals(other.getUnsupportedCodesList())) return false;
-      if (!getParseErrsList()
-          .equals(other.getParseErrsList())) return false;
+      if (!getParseErrorsList()
+          .equals(other.getParseErrorsList())) return false;
       if (!getUnknownFields().equals(other.getUnknownFields())) return false;
       return true;
     }
@@ -36826,9 +36826,9 @@ com.kcl.api.Spec.Variable defaultValue) {
         hash = (37 * hash) + UNSUPPORTED_CODES_FIELD_NUMBER;
         hash = (53 * hash) + getUnsupportedCodesList().hashCode();
       }
-      if (getParseErrsCount() > 0) {
-        hash = (37 * hash) + PARSE_ERRS_FIELD_NUMBER;
-        hash = (53 * hash) + getParseErrsList().hashCode();
+      if (getParseErrorsCount() > 0) {
+        hash = (37 * hash) + PARSE_ERRORS_FIELD_NUMBER;
+        hash = (53 * hash) + getParseErrorsList().hashCode();
       }
       hash = (29 * hash) + getUnknownFields().hashCode();
       memoizedHashCode = hash;
@@ -36986,11 +36986,11 @@ com.kcl.api.Spec.Variable defaultValue) {
         internalGetMutableVariables().clear();
         unsupportedCodes_ =
             com.google.protobuf.LazyStringArrayList.emptyList();
-        if (parseErrsBuilder_ == null) {
-          parseErrs_ = java.util.Collections.emptyList();
+        if (parseErrorsBuilder_ == null) {
+          parseErrors_ = java.util.Collections.emptyList();
         } else {
-          parseErrs_ = null;
-          parseErrsBuilder_.clear();
+          parseErrors_ = null;
+          parseErrorsBuilder_.clear();
         }
         bitField0_ = (bitField0_ & ~0x00000004);
         return this;
@@ -37026,14 +37026,14 @@ com.kcl.api.Spec.Variable defaultValue) {
       }
 
       private void buildPartialRepeatedFields(com.kcl.api.Spec.ListVariables_Result result) {
-        if (parseErrsBuilder_ == null) {
+        if (parseErrorsBuilder_ == null) {
           if (((bitField0_ & 0x00000004) != 0)) {
-            parseErrs_ = java.util.Collections.unmodifiableList(parseErrs_);
+            parseErrors_ = java.util.Collections.unmodifiableList(parseErrors_);
             bitField0_ = (bitField0_ & ~0x00000004);
           }
-          result.parseErrs_ = parseErrs_;
+          result.parseErrors_ = parseErrors_;
         } else {
-          result.parseErrs_ = parseErrsBuilder_.build();
+          result.parseErrors_ = parseErrorsBuilder_.build();
         }
       }
 
@@ -37105,29 +37105,29 @@ com.kcl.api.Spec.Variable defaultValue) {
           }
           onChanged();
         }
-        if (parseErrsBuilder_ == null) {
-          if (!other.parseErrs_.isEmpty()) {
-            if (parseErrs_.isEmpty()) {
-              parseErrs_ = other.parseErrs_;
+        if (parseErrorsBuilder_ == null) {
+          if (!other.parseErrors_.isEmpty()) {
+            if (parseErrors_.isEmpty()) {
+              parseErrors_ = other.parseErrors_;
               bitField0_ = (bitField0_ & ~0x00000004);
             } else {
-              ensureParseErrsIsMutable();
-              parseErrs_.addAll(other.parseErrs_);
+              ensureParseErrorsIsMutable();
+              parseErrors_.addAll(other.parseErrors_);
             }
             onChanged();
           }
         } else {
-          if (!other.parseErrs_.isEmpty()) {
-            if (parseErrsBuilder_.isEmpty()) {
-              parseErrsBuilder_.dispose();
-              parseErrsBuilder_ = null;
-              parseErrs_ = other.parseErrs_;
+          if (!other.parseErrors_.isEmpty()) {
+            if (parseErrorsBuilder_.isEmpty()) {
+              parseErrorsBuilder_.dispose();
+              parseErrorsBuilder_ = null;
+              parseErrors_ = other.parseErrors_;
               bitField0_ = (bitField0_ & ~0x00000004);
-              parseErrsBuilder_ = 
+              parseErrorsBuilder_ = 
                 com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
-                   getParseErrsFieldBuilder() : null;
+                   getParseErrorsFieldBuilder() : null;
             } else {
-              parseErrsBuilder_.addAllMessages(other.parseErrs_);
+              parseErrorsBuilder_.addAllMessages(other.parseErrors_);
             }
           }
         }
@@ -37177,11 +37177,11 @@ com.kcl.api.Spec.Variable defaultValue) {
                     input.readMessage(
                         com.kcl.api.Spec.Error.parser(),
                         extensionRegistry);
-                if (parseErrsBuilder_ == null) {
-                  ensureParseErrsIsMutable();
-                  parseErrs_.add(m);
+                if (parseErrorsBuilder_ == null) {
+                  ensureParseErrorsIsMutable();
+                  parseErrors_.add(m);
                 } else {
-                  parseErrsBuilder_.addMessage(m);
+                  parseErrorsBuilder_.addMessage(m);
                 }
                 break;
               } // case 26
@@ -37468,244 +37468,244 @@ com.kcl.api.Spec.Variable defaultValue) {
         return this;
       }
 
-      private java.util.List<com.kcl.api.Spec.Error> parseErrs_ =
+      private java.util.List<com.kcl.api.Spec.Error> parseErrors_ =
         java.util.Collections.emptyList();
-      private void ensureParseErrsIsMutable() {
+      private void ensureParseErrorsIsMutable() {
         if (!((bitField0_ & 0x00000004) != 0)) {
-          parseErrs_ = new java.util.ArrayList<com.kcl.api.Spec.Error>(parseErrs_);
+          parseErrors_ = new java.util.ArrayList<com.kcl.api.Spec.Error>(parseErrors_);
           bitField0_ |= 0x00000004;
          }
       }
 
       private com.google.protobuf.RepeatedFieldBuilderV3<
-          com.kcl.api.Spec.Error, com.kcl.api.Spec.Error.Builder, com.kcl.api.Spec.ErrorOrBuilder> parseErrsBuilder_;
+          com.kcl.api.Spec.Error, com.kcl.api.Spec.Error.Builder, com.kcl.api.Spec.ErrorOrBuilder> parseErrorsBuilder_;
 
       /**
-       * <code>repeated .com.kcl.api.Error parse_errs = 3;</code>
+       * <code>repeated .com.kcl.api.Error parse_errors = 3;</code>
        */
-      public java.util.List<com.kcl.api.Spec.Error> getParseErrsList() {
-        if (parseErrsBuilder_ == null) {
-          return java.util.Collections.unmodifiableList(parseErrs_);
+      public java.util.List<com.kcl.api.Spec.Error> getParseErrorsList() {
+        if (parseErrorsBuilder_ == null) {
+          return java.util.Collections.unmodifiableList(parseErrors_);
         } else {
-          return parseErrsBuilder_.getMessageList();
+          return parseErrorsBuilder_.getMessageList();
         }
       }
       /**
-       * <code>repeated .com.kcl.api.Error parse_errs = 3;</code>
+       * <code>repeated .com.kcl.api.Error parse_errors = 3;</code>
        */
-      public int getParseErrsCount() {
-        if (parseErrsBuilder_ == null) {
-          return parseErrs_.size();
+      public int getParseErrorsCount() {
+        if (parseErrorsBuilder_ == null) {
+          return parseErrors_.size();
         } else {
-          return parseErrsBuilder_.getCount();
+          return parseErrorsBuilder_.getCount();
         }
       }
       /**
-       * <code>repeated .com.kcl.api.Error parse_errs = 3;</code>
+       * <code>repeated .com.kcl.api.Error parse_errors = 3;</code>
        */
-      public com.kcl.api.Spec.Error getParseErrs(int index) {
-        if (parseErrsBuilder_ == null) {
-          return parseErrs_.get(index);
+      public com.kcl.api.Spec.Error getParseErrors(int index) {
+        if (parseErrorsBuilder_ == null) {
+          return parseErrors_.get(index);
         } else {
-          return parseErrsBuilder_.getMessage(index);
+          return parseErrorsBuilder_.getMessage(index);
         }
       }
       /**
-       * <code>repeated .com.kcl.api.Error parse_errs = 3;</code>
+       * <code>repeated .com.kcl.api.Error parse_errors = 3;</code>
        */
-      public Builder setParseErrs(
+      public Builder setParseErrors(
           int index, com.kcl.api.Spec.Error value) {
-        if (parseErrsBuilder_ == null) {
+        if (parseErrorsBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
           }
-          ensureParseErrsIsMutable();
-          parseErrs_.set(index, value);
+          ensureParseErrorsIsMutable();
+          parseErrors_.set(index, value);
           onChanged();
         } else {
-          parseErrsBuilder_.setMessage(index, value);
+          parseErrorsBuilder_.setMessage(index, value);
         }
         return this;
       }
       /**
-       * <code>repeated .com.kcl.api.Error parse_errs = 3;</code>
+       * <code>repeated .com.kcl.api.Error parse_errors = 3;</code>
        */
-      public Builder setParseErrs(
+      public Builder setParseErrors(
           int index, com.kcl.api.Spec.Error.Builder builderForValue) {
-        if (parseErrsBuilder_ == null) {
-          ensureParseErrsIsMutable();
-          parseErrs_.set(index, builderForValue.build());
+        if (parseErrorsBuilder_ == null) {
+          ensureParseErrorsIsMutable();
+          parseErrors_.set(index, builderForValue.build());
           onChanged();
         } else {
-          parseErrsBuilder_.setMessage(index, builderForValue.build());
+          parseErrorsBuilder_.setMessage(index, builderForValue.build());
         }
         return this;
       }
       /**
-       * <code>repeated .com.kcl.api.Error parse_errs = 3;</code>
+       * <code>repeated .com.kcl.api.Error parse_errors = 3;</code>
        */
-      public Builder addParseErrs(com.kcl.api.Spec.Error value) {
-        if (parseErrsBuilder_ == null) {
+      public Builder addParseErrors(com.kcl.api.Spec.Error value) {
+        if (parseErrorsBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
           }
-          ensureParseErrsIsMutable();
-          parseErrs_.add(value);
+          ensureParseErrorsIsMutable();
+          parseErrors_.add(value);
           onChanged();
         } else {
-          parseErrsBuilder_.addMessage(value);
+          parseErrorsBuilder_.addMessage(value);
         }
         return this;
       }
       /**
-       * <code>repeated .com.kcl.api.Error parse_errs = 3;</code>
+       * <code>repeated .com.kcl.api.Error parse_errors = 3;</code>
        */
-      public Builder addParseErrs(
+      public Builder addParseErrors(
           int index, com.kcl.api.Spec.Error value) {
-        if (parseErrsBuilder_ == null) {
+        if (parseErrorsBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
           }
-          ensureParseErrsIsMutable();
-          parseErrs_.add(index, value);
+          ensureParseErrorsIsMutable();
+          parseErrors_.add(index, value);
           onChanged();
         } else {
-          parseErrsBuilder_.addMessage(index, value);
+          parseErrorsBuilder_.addMessage(index, value);
         }
         return this;
       }
       /**
-       * <code>repeated .com.kcl.api.Error parse_errs = 3;</code>
+       * <code>repeated .com.kcl.api.Error parse_errors = 3;</code>
        */
-      public Builder addParseErrs(
+      public Builder addParseErrors(
           com.kcl.api.Spec.Error.Builder builderForValue) {
-        if (parseErrsBuilder_ == null) {
-          ensureParseErrsIsMutable();
-          parseErrs_.add(builderForValue.build());
+        if (parseErrorsBuilder_ == null) {
+          ensureParseErrorsIsMutable();
+          parseErrors_.add(builderForValue.build());
           onChanged();
         } else {
-          parseErrsBuilder_.addMessage(builderForValue.build());
+          parseErrorsBuilder_.addMessage(builderForValue.build());
         }
         return this;
       }
       /**
-       * <code>repeated .com.kcl.api.Error parse_errs = 3;</code>
+       * <code>repeated .com.kcl.api.Error parse_errors = 3;</code>
        */
-      public Builder addParseErrs(
+      public Builder addParseErrors(
           int index, com.kcl.api.Spec.Error.Builder builderForValue) {
-        if (parseErrsBuilder_ == null) {
-          ensureParseErrsIsMutable();
-          parseErrs_.add(index, builderForValue.build());
+        if (parseErrorsBuilder_ == null) {
+          ensureParseErrorsIsMutable();
+          parseErrors_.add(index, builderForValue.build());
           onChanged();
         } else {
-          parseErrsBuilder_.addMessage(index, builderForValue.build());
+          parseErrorsBuilder_.addMessage(index, builderForValue.build());
         }
         return this;
       }
       /**
-       * <code>repeated .com.kcl.api.Error parse_errs = 3;</code>
+       * <code>repeated .com.kcl.api.Error parse_errors = 3;</code>
        */
-      public Builder addAllParseErrs(
+      public Builder addAllParseErrors(
           java.lang.Iterable<? extends com.kcl.api.Spec.Error> values) {
-        if (parseErrsBuilder_ == null) {
-          ensureParseErrsIsMutable();
+        if (parseErrorsBuilder_ == null) {
+          ensureParseErrorsIsMutable();
           com.google.protobuf.AbstractMessageLite.Builder.addAll(
-              values, parseErrs_);
+              values, parseErrors_);
           onChanged();
         } else {
-          parseErrsBuilder_.addAllMessages(values);
+          parseErrorsBuilder_.addAllMessages(values);
         }
         return this;
       }
       /**
-       * <code>repeated .com.kcl.api.Error parse_errs = 3;</code>
+       * <code>repeated .com.kcl.api.Error parse_errors = 3;</code>
        */
-      public Builder clearParseErrs() {
-        if (parseErrsBuilder_ == null) {
-          parseErrs_ = java.util.Collections.emptyList();
+      public Builder clearParseErrors() {
+        if (parseErrorsBuilder_ == null) {
+          parseErrors_ = java.util.Collections.emptyList();
           bitField0_ = (bitField0_ & ~0x00000004);
           onChanged();
         } else {
-          parseErrsBuilder_.clear();
+          parseErrorsBuilder_.clear();
         }
         return this;
       }
       /**
-       * <code>repeated .com.kcl.api.Error parse_errs = 3;</code>
+       * <code>repeated .com.kcl.api.Error parse_errors = 3;</code>
        */
-      public Builder removeParseErrs(int index) {
-        if (parseErrsBuilder_ == null) {
-          ensureParseErrsIsMutable();
-          parseErrs_.remove(index);
+      public Builder removeParseErrors(int index) {
+        if (parseErrorsBuilder_ == null) {
+          ensureParseErrorsIsMutable();
+          parseErrors_.remove(index);
           onChanged();
         } else {
-          parseErrsBuilder_.remove(index);
+          parseErrorsBuilder_.remove(index);
         }
         return this;
       }
       /**
-       * <code>repeated .com.kcl.api.Error parse_errs = 3;</code>
+       * <code>repeated .com.kcl.api.Error parse_errors = 3;</code>
        */
-      public com.kcl.api.Spec.Error.Builder getParseErrsBuilder(
+      public com.kcl.api.Spec.Error.Builder getParseErrorsBuilder(
           int index) {
-        return getParseErrsFieldBuilder().getBuilder(index);
+        return getParseErrorsFieldBuilder().getBuilder(index);
       }
       /**
-       * <code>repeated .com.kcl.api.Error parse_errs = 3;</code>
+       * <code>repeated .com.kcl.api.Error parse_errors = 3;</code>
        */
-      public com.kcl.api.Spec.ErrorOrBuilder getParseErrsOrBuilder(
+      public com.kcl.api.Spec.ErrorOrBuilder getParseErrorsOrBuilder(
           int index) {
-        if (parseErrsBuilder_ == null) {
-          return parseErrs_.get(index);  } else {
-          return parseErrsBuilder_.getMessageOrBuilder(index);
+        if (parseErrorsBuilder_ == null) {
+          return parseErrors_.get(index);  } else {
+          return parseErrorsBuilder_.getMessageOrBuilder(index);
         }
       }
       /**
-       * <code>repeated .com.kcl.api.Error parse_errs = 3;</code>
+       * <code>repeated .com.kcl.api.Error parse_errors = 3;</code>
        */
       public java.util.List<? extends com.kcl.api.Spec.ErrorOrBuilder> 
-           getParseErrsOrBuilderList() {
-        if (parseErrsBuilder_ != null) {
-          return parseErrsBuilder_.getMessageOrBuilderList();
+           getParseErrorsOrBuilderList() {
+        if (parseErrorsBuilder_ != null) {
+          return parseErrorsBuilder_.getMessageOrBuilderList();
         } else {
-          return java.util.Collections.unmodifiableList(parseErrs_);
+          return java.util.Collections.unmodifiableList(parseErrors_);
         }
       }
       /**
-       * <code>repeated .com.kcl.api.Error parse_errs = 3;</code>
+       * <code>repeated .com.kcl.api.Error parse_errors = 3;</code>
        */
-      public com.kcl.api.Spec.Error.Builder addParseErrsBuilder() {
-        return getParseErrsFieldBuilder().addBuilder(
+      public com.kcl.api.Spec.Error.Builder addParseErrorsBuilder() {
+        return getParseErrorsFieldBuilder().addBuilder(
             com.kcl.api.Spec.Error.getDefaultInstance());
       }
       /**
-       * <code>repeated .com.kcl.api.Error parse_errs = 3;</code>
+       * <code>repeated .com.kcl.api.Error parse_errors = 3;</code>
        */
-      public com.kcl.api.Spec.Error.Builder addParseErrsBuilder(
+      public com.kcl.api.Spec.Error.Builder addParseErrorsBuilder(
           int index) {
-        return getParseErrsFieldBuilder().addBuilder(
+        return getParseErrorsFieldBuilder().addBuilder(
             index, com.kcl.api.Spec.Error.getDefaultInstance());
       }
       /**
-       * <code>repeated .com.kcl.api.Error parse_errs = 3;</code>
+       * <code>repeated .com.kcl.api.Error parse_errors = 3;</code>
        */
       public java.util.List<com.kcl.api.Spec.Error.Builder> 
-           getParseErrsBuilderList() {
-        return getParseErrsFieldBuilder().getBuilderList();
+           getParseErrorsBuilderList() {
+        return getParseErrorsFieldBuilder().getBuilderList();
       }
       private com.google.protobuf.RepeatedFieldBuilderV3<
           com.kcl.api.Spec.Error, com.kcl.api.Spec.Error.Builder, com.kcl.api.Spec.ErrorOrBuilder> 
-          getParseErrsFieldBuilder() {
-        if (parseErrsBuilder_ == null) {
-          parseErrsBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
+          getParseErrorsFieldBuilder() {
+        if (parseErrorsBuilder_ == null) {
+          parseErrorsBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
               com.kcl.api.Spec.Error, com.kcl.api.Spec.Error.Builder, com.kcl.api.Spec.ErrorOrBuilder>(
-                  parseErrs_,
+                  parseErrors_,
                   ((bitField0_ & 0x00000004) != 0),
                   getParentForChildren(),
                   isClean());
-          parseErrs_ = null;
+          parseErrors_ = null;
         }
-        return parseErrsBuilder_;
+        return parseErrorsBuilder_;
       }
       @java.lang.Override
       public final Builder setUnknownFields(
@@ -65374,139 +65374,139 @@ java.lang.String defaultValue) {
       "le_Args\022\014\n\004file\030\001 \001(\t\022\r\n\005specs\030\002 \003(\t\022\024\n\014" +
       "import_paths\030\003 \003(\t\"%\n\023OverrideFile_Resul" +
       "t\022\016\n\006result\030\001 \001(\010\"1\n\022ListVariables_Args\022" +
-      "\014\n\004file\030\001 \001(\t\022\r\n\005specs\030\002 \003(\t\"\347\001\n\024ListVar" +
+      "\014\n\004file\030\001 \001(\t\022\r\n\005specs\030\002 \003(\t\"\351\001\n\024ListVar" +
       "iables_Result\022C\n\tvariables\030\001 \003(\01320.com.k" +
       "cl.api.ListVariables_Result.VariablesEnt" +
-      "ry\022\031\n\021unsupported_codes\030\002 \003(\t\022&\n\nparse_e" +
-      "rrs\030\003 \003(\0132\022.com.kcl.api.Error\032G\n\016Variabl" +
-      "esEntry\022\013\n\003key\030\001 \001(\t\022$\n\005value\030\002 \001(\0132\025.co" +
-      "m.kcl.api.Variable:\0028\001\"<\n\010Variable\022\r\n\005va" +
-      "lue\030\001 \001(\t\022\021\n\ttype_name\030\002 \001(\t\022\016\n\006op_sym\030\003" +
-      " \001(\t\"_\n\026GetFullSchemaType_Args\0220\n\texec_a" +
-      "rgs\030\001 \001(\0132\035.com.kcl.api.ExecProgram_Args" +
-      "\022\023\n\013schema_name\030\002 \001(\t\"E\n\022GetSchemaType_A" +
-      "rgs\022\014\n\004file\030\001 \001(\t\022\014\n\004code\030\002 \001(\t\022\023\n\013schem" +
-      "a_name\030\003 \001(\t\"F\n\024GetSchemaType_Result\022.\n\020" +
-      "schema_type_list\030\001 \003(\0132\024.com.kcl.api.Kcl" +
-      "Type\"L\n\031GetSchemaTypeMapping_Args\022\014\n\004fil" +
-      "e\030\001 \001(\t\022\014\n\004code\030\002 \001(\t\022\023\n\013schema_name\030\003 \001" +
-      "(\t\"\313\001\n\033GetSchemaTypeMapping_Result\022\\\n\023sc" +
-      "hema_type_mapping\030\001 \003(\0132?.com.kcl.api.Ge" +
-      "tSchemaTypeMapping_Result.SchemaTypeMapp" +
-      "ingEntry\032N\n\026SchemaTypeMappingEntry\022\013\n\003ke" +
-      "y\030\001 \001(\t\022#\n\005value\030\002 \001(\0132\024.com.kcl.api.Kcl" +
-      "Type:\0028\001\"\207\001\n\021ValidateCode_Args\022\020\n\010datafi" +
-      "le\030\001 \001(\t\022\014\n\004data\030\002 \001(\t\022\014\n\004file\030\003 \001(\t\022\014\n\004" +
-      "code\030\004 \001(\t\022\016\n\006schema\030\005 \001(\t\022\026\n\016attribute_" +
-      "name\030\006 \001(\t\022\016\n\006format\030\007 \001(\t\";\n\023ValidateCo" +
-      "de_Result\022\017\n\007success\030\001 \001(\010\022\023\n\013err_messag" +
-      "e\030\002 \001(\t\":\n\010Position\022\014\n\004line\030\001 \001(\003\022\016\n\006col" +
-      "umn\030\002 \001(\003\022\020\n\010filename\030\003 \001(\t\"i\n\021ListDepFi" +
-      "les_Args\022\020\n\010work_dir\030\001 \001(\t\022\024\n\014use_abs_pa" +
-      "th\030\002 \001(\010\022\023\n\013include_all\030\003 \001(\010\022\027\n\017use_fas" +
-      "t_parser\030\004 \001(\010\"F\n\023ListDepFiles_Result\022\017\n" +
-      "\007pkgroot\030\001 \001(\t\022\017\n\007pkgpath\030\002 \001(\t\022\r\n\005files" +
-      "\030\003 \003(\t\"9\n\026LoadSettingsFiles_Args\022\020\n\010work" +
-      "_dir\030\001 \001(\t\022\r\n\005files\030\002 \003(\t\"{\n\030LoadSetting" +
-      "sFiles_Result\022/\n\017kcl_cli_configs\030\001 \001(\0132\026" +
-      ".com.kcl.api.CliConfig\022.\n\013kcl_options\030\002 " +
-      "\003(\0132\031.com.kcl.api.KeyValuePair\"\203\002\n\tCliCo" +
-      "nfig\022\r\n\005files\030\001 \003(\t\022\016\n\006output\030\002 \001(\t\022\021\n\to" +
-      "verrides\030\003 \003(\t\022\025\n\rpath_selector\030\004 \003(\t\022\032\n" +
-      "\022strict_range_check\030\005 \001(\010\022\024\n\014disable_non" +
-      "e\030\006 \001(\010\022\017\n\007verbose\030\007 \001(\003\022\r\n\005debug\030\010 \001(\010\022" +
-      "\021\n\tsort_keys\030\t \001(\010\022\023\n\013show_hidden\030\n \001(\010\022" +
-      " \n\030include_schema_type_path\030\013 \001(\010\022\021\n\tfas" +
-      "t_eval\030\014 \001(\010\"*\n\014KeyValuePair\022\013\n\003key\030\001 \001(" +
-      "\t\022\r\n\005value\030\002 \001(\t\"^\n\013Rename_Args\022\024\n\014packa" +
-      "ge_root\030\001 \001(\t\022\023\n\013symbol_path\030\002 \001(\t\022\022\n\nfi" +
-      "le_paths\030\003 \003(\t\022\020\n\010new_name\030\004 \001(\t\"&\n\rRena" +
-      "me_Result\022\025\n\rchanged_files\030\001 \003(\t\"\307\001\n\017Ren" +
-      "ameCode_Args\022\024\n\014package_root\030\001 \001(\t\022\023\n\013sy" +
-      "mbol_path\030\002 \001(\t\022C\n\014source_codes\030\003 \003(\0132-." +
-      "com.kcl.api.RenameCode_Args.SourceCodesE" +
-      "ntry\022\020\n\010new_name\030\004 \001(\t\0322\n\020SourceCodesEnt" +
-      "ry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\"\221\001\n\021R" +
-      "enameCode_Result\022G\n\rchanged_codes\030\001 \003(\0132" +
-      "0.com.kcl.api.RenameCode_Result.ChangedC" +
-      "odesEntry\0323\n\021ChangedCodesEntry\022\013\n\003key\030\001 " +
-      "\001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\"v\n\tTest_Args\0220\n\te" +
-      "xec_args\030\001 \001(\0132\035.com.kcl.api.ExecProgram" +
-      "_Args\022\020\n\010pkg_list\030\002 \003(\t\022\022\n\nrun_regexp\030\003 " +
-      "\001(\t\022\021\n\tfail_fast\030\004 \001(\010\"6\n\013Test_Result\022\'\n" +
-      "\004info\030\002 \003(\0132\031.com.kcl.api.TestCaseInfo\"R" +
-      "\n\014TestCaseInfo\022\014\n\004name\030\001 \001(\t\022\r\n\005error\030\002 " +
-      "\001(\t\022\020\n\010duration\030\003 \001(\004\022\023\n\013log_message\030\004 \001" +
-      "(\t\"\363\004\n\007KclType\022\014\n\004type\030\001 \001(\t\022)\n\013union_ty" +
-      "pes\030\002 \003(\0132\024.com.kcl.api.KclType\022\017\n\007defau" +
-      "lt\030\003 \001(\t\022\023\n\013schema_name\030\004 \001(\t\022\022\n\nschema_" +
-      "doc\030\005 \001(\t\0228\n\nproperties\030\006 \003(\0132$.com.kcl." +
-      "api.KclType.PropertiesEntry\022\020\n\010required\030" +
-      "\007 \003(\t\022!\n\003key\030\010 \001(\0132\024.com.kcl.api.KclType" +
-      "\022\"\n\004item\030\t \001(\0132\024.com.kcl.api.KclType\022\014\n\004" +
-      "line\030\n \001(\005\022*\n\ndecorators\030\013 \003(\0132\026.com.kcl" +
-      ".api.Decorator\022\020\n\010filename\030\014 \001(\t\022\020\n\010pkg_" +
-      "path\030\r \001(\t\022\023\n\013description\030\016 \001(\t\0224\n\010examp" +
-      "les\030\017 \003(\0132\".com.kcl.api.KclType.Examples" +
-      "Entry\022)\n\013base_schema\030\020 \001(\0132\024.com.kcl.api" +
-      ".KclType\032G\n\017PropertiesEntry\022\013\n\003key\030\001 \001(\t" +
-      "\022#\n\005value\030\002 \001(\0132\024.com.kcl.api.KclType:\0028" +
-      "\001\032E\n\rExamplesEntry\022\013\n\003key\030\001 \001(\t\022#\n\005value" +
-      "\030\002 \001(\0132\024.com.kcl.api.Example:\0028\001\"\225\001\n\tDec" +
-      "orator\022\014\n\004name\030\001 \001(\t\022\021\n\targuments\030\002 \003(\t\022" +
-      "6\n\010keywords\030\003 \003(\0132$.com.kcl.api.Decorato" +
-      "r.KeywordsEntry\032/\n\rKeywordsEntry\022\013\n\003key\030" +
-      "\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\">\n\007Example\022\017\n\007s" +
-      "ummary\030\001 \001(\t\022\023\n\013description\030\002 \001(\t\022\r\n\005val" +
-      "ue\030\003 \001(\t2\226\001\n\016BuiltinService\0228\n\004Ping\022\026.co" +
-      "m.kcl.api.Ping_Args\032\030.com.kcl.api.Ping_R" +
-      "esult\022J\n\nListMethod\022\034.com.kcl.api.ListMe" +
-      "thod_Args\032\036.com.kcl.api.ListMethod_Resul" +
-      "t2\340\r\n\014KclvmService\0228\n\004Ping\022\026.com.kcl.api" +
-      ".Ping_Args\032\030.com.kcl.api.Ping_Result\022M\n\013" +
-      "ExecProgram\022\035.com.kcl.api.ExecProgram_Ar" +
-      "gs\032\037.com.kcl.api.ExecProgram_Result\022P\n\014B" +
-      "uildProgram\022\036.com.kcl.api.BuildProgram_A" +
-      "rgs\032 .com.kcl.api.BuildProgram_Result\022O\n" +
-      "\014ExecArtifact\022\036.com.kcl.api.ExecArtifact" +
-      "_Args\032\037.com.kcl.api.ExecProgram_Result\022G" +
-      "\n\tParseFile\022\033.com.kcl.api.ParseFile_Args" +
-      "\032\035.com.kcl.api.ParseFile_Result\022P\n\014Parse" +
-      "Program\022\036.com.kcl.api.ParseProgram_Args\032" +
-      " .com.kcl.api.ParseProgram_Result\022M\n\013Loa" +
-      "dPackage\022\035.com.kcl.api.LoadPackage_Args\032" +
-      "\037.com.kcl.api.LoadPackage_Result\022N\n\013List" +
-      "Options\022\036.com.kcl.api.ParseProgram_Args\032" +
-      "\037.com.kcl.api.ListOptions_Result\022S\n\rList" +
-      "Variables\022\037.com.kcl.api.ListVariables_Ar" +
-      "gs\032!.com.kcl.api.ListVariables_Result\022J\n" +
-      "\nFormatCode\022\034.com.kcl.api.FormatCode_Arg" +
-      "s\032\036.com.kcl.api.FormatCode_Result\022J\n\nFor" +
-      "matPath\022\034.com.kcl.api.FormatPath_Args\032\036." +
-      "com.kcl.api.FormatPath_Result\022D\n\010LintPat" +
-      "h\022\032.com.kcl.api.LintPath_Args\032\034.com.kcl." +
-      "api.LintPath_Result\022P\n\014OverrideFile\022\036.co" +
-      "m.kcl.api.OverrideFile_Args\032 .com.kcl.ap" +
-      "i.OverrideFile_Result\022S\n\rGetSchemaType\022\037" +
-      ".com.kcl.api.GetSchemaType_Args\032!.com.kc" +
-      "l.api.GetSchemaType_Result\022[\n\021GetFullSch" +
-      "emaType\022#.com.kcl.api.GetFullSchemaType_" +
-      "Args\032!.com.kcl.api.GetSchemaType_Result\022" +
-      "h\n\024GetSchemaTypeMapping\022&.com.kcl.api.Ge" +
-      "tSchemaTypeMapping_Args\032(.com.kcl.api.Ge" +
-      "tSchemaTypeMapping_Result\022P\n\014ValidateCod" +
-      "e\022\036.com.kcl.api.ValidateCode_Args\032 .com." +
-      "kcl.api.ValidateCode_Result\022P\n\014ListDepFi" +
-      "les\022\036.com.kcl.api.ListDepFiles_Args\032 .co" +
-      "m.kcl.api.ListDepFiles_Result\022_\n\021LoadSet" +
-      "tingsFiles\022#.com.kcl.api.LoadSettingsFil" +
-      "es_Args\032%.com.kcl.api.LoadSettingsFiles_" +
-      "Result\022>\n\006Rename\022\030.com.kcl.api.Rename_Ar" +
-      "gs\032\032.com.kcl.api.Rename_Result\022J\n\nRename" +
-      "Code\022\034.com.kcl.api.RenameCode_Args\032\036.com" +
-      ".kcl.api.RenameCode_Result\0228\n\004Test\022\026.com" +
-      ".kcl.api.Test_Args\032\030.com.kcl.api.Test_Re" +
-      "sultb\006proto3"
+      "ry\022\031\n\021unsupported_codes\030\002 \003(\t\022(\n\014parse_e" +
+      "rrors\030\003 \003(\0132\022.com.kcl.api.Error\032G\n\016Varia" +
+      "blesEntry\022\013\n\003key\030\001 \001(\t\022$\n\005value\030\002 \001(\0132\025." +
+      "com.kcl.api.Variable:\0028\001\"<\n\010Variable\022\r\n\005" +
+      "value\030\001 \001(\t\022\021\n\ttype_name\030\002 \001(\t\022\016\n\006op_sym" +
+      "\030\003 \001(\t\"_\n\026GetFullSchemaType_Args\0220\n\texec" +
+      "_args\030\001 \001(\0132\035.com.kcl.api.ExecProgram_Ar" +
+      "gs\022\023\n\013schema_name\030\002 \001(\t\"E\n\022GetSchemaType" +
+      "_Args\022\014\n\004file\030\001 \001(\t\022\014\n\004code\030\002 \001(\t\022\023\n\013sch" +
+      "ema_name\030\003 \001(\t\"F\n\024GetSchemaType_Result\022." +
+      "\n\020schema_type_list\030\001 \003(\0132\024.com.kcl.api.K" +
+      "clType\"L\n\031GetSchemaTypeMapping_Args\022\014\n\004f" +
+      "ile\030\001 \001(\t\022\014\n\004code\030\002 \001(\t\022\023\n\013schema_name\030\003" +
+      " \001(\t\"\313\001\n\033GetSchemaTypeMapping_Result\022\\\n\023" +
+      "schema_type_mapping\030\001 \003(\0132?.com.kcl.api." +
+      "GetSchemaTypeMapping_Result.SchemaTypeMa" +
+      "ppingEntry\032N\n\026SchemaTypeMappingEntry\022\013\n\003" +
+      "key\030\001 \001(\t\022#\n\005value\030\002 \001(\0132\024.com.kcl.api.K" +
+      "clType:\0028\001\"\207\001\n\021ValidateCode_Args\022\020\n\010data" +
+      "file\030\001 \001(\t\022\014\n\004data\030\002 \001(\t\022\014\n\004file\030\003 \001(\t\022\014" +
+      "\n\004code\030\004 \001(\t\022\016\n\006schema\030\005 \001(\t\022\026\n\016attribut" +
+      "e_name\030\006 \001(\t\022\016\n\006format\030\007 \001(\t\";\n\023Validate" +
+      "Code_Result\022\017\n\007success\030\001 \001(\010\022\023\n\013err_mess" +
+      "age\030\002 \001(\t\":\n\010Position\022\014\n\004line\030\001 \001(\003\022\016\n\006c" +
+      "olumn\030\002 \001(\003\022\020\n\010filename\030\003 \001(\t\"i\n\021ListDep" +
+      "Files_Args\022\020\n\010work_dir\030\001 \001(\t\022\024\n\014use_abs_" +
+      "path\030\002 \001(\010\022\023\n\013include_all\030\003 \001(\010\022\027\n\017use_f" +
+      "ast_parser\030\004 \001(\010\"F\n\023ListDepFiles_Result\022" +
+      "\017\n\007pkgroot\030\001 \001(\t\022\017\n\007pkgpath\030\002 \001(\t\022\r\n\005fil" +
+      "es\030\003 \003(\t\"9\n\026LoadSettingsFiles_Args\022\020\n\010wo" +
+      "rk_dir\030\001 \001(\t\022\r\n\005files\030\002 \003(\t\"{\n\030LoadSetti" +
+      "ngsFiles_Result\022/\n\017kcl_cli_configs\030\001 \001(\013" +
+      "2\026.com.kcl.api.CliConfig\022.\n\013kcl_options\030" +
+      "\002 \003(\0132\031.com.kcl.api.KeyValuePair\"\203\002\n\tCli" +
+      "Config\022\r\n\005files\030\001 \003(\t\022\016\n\006output\030\002 \001(\t\022\021\n" +
+      "\toverrides\030\003 \003(\t\022\025\n\rpath_selector\030\004 \003(\t\022" +
+      "\032\n\022strict_range_check\030\005 \001(\010\022\024\n\014disable_n" +
+      "one\030\006 \001(\010\022\017\n\007verbose\030\007 \001(\003\022\r\n\005debug\030\010 \001(" +
+      "\010\022\021\n\tsort_keys\030\t \001(\010\022\023\n\013show_hidden\030\n \001(" +
+      "\010\022 \n\030include_schema_type_path\030\013 \001(\010\022\021\n\tf" +
+      "ast_eval\030\014 \001(\010\"*\n\014KeyValuePair\022\013\n\003key\030\001 " +
+      "\001(\t\022\r\n\005value\030\002 \001(\t\"^\n\013Rename_Args\022\024\n\014pac" +
+      "kage_root\030\001 \001(\t\022\023\n\013symbol_path\030\002 \001(\t\022\022\n\n" +
+      "file_paths\030\003 \003(\t\022\020\n\010new_name\030\004 \001(\t\"&\n\rRe" +
+      "name_Result\022\025\n\rchanged_files\030\001 \003(\t\"\307\001\n\017R" +
+      "enameCode_Args\022\024\n\014package_root\030\001 \001(\t\022\023\n\013" +
+      "symbol_path\030\002 \001(\t\022C\n\014source_codes\030\003 \003(\0132" +
+      "-.com.kcl.api.RenameCode_Args.SourceCode" +
+      "sEntry\022\020\n\010new_name\030\004 \001(\t\0322\n\020SourceCodesE" +
+      "ntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\"\221\001\n" +
+      "\021RenameCode_Result\022G\n\rchanged_codes\030\001 \003(" +
+      "\01320.com.kcl.api.RenameCode_Result.Change" +
+      "dCodesEntry\0323\n\021ChangedCodesEntry\022\013\n\003key\030" +
+      "\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\"v\n\tTest_Args\0220\n" +
+      "\texec_args\030\001 \001(\0132\035.com.kcl.api.ExecProgr" +
+      "am_Args\022\020\n\010pkg_list\030\002 \003(\t\022\022\n\nrun_regexp\030" +
+      "\003 \001(\t\022\021\n\tfail_fast\030\004 \001(\010\"6\n\013Test_Result\022" +
+      "\'\n\004info\030\002 \003(\0132\031.com.kcl.api.TestCaseInfo" +
+      "\"R\n\014TestCaseInfo\022\014\n\004name\030\001 \001(\t\022\r\n\005error\030" +
+      "\002 \001(\t\022\020\n\010duration\030\003 \001(\004\022\023\n\013log_message\030\004" +
+      " \001(\t\"\363\004\n\007KclType\022\014\n\004type\030\001 \001(\t\022)\n\013union_" +
+      "types\030\002 \003(\0132\024.com.kcl.api.KclType\022\017\n\007def" +
+      "ault\030\003 \001(\t\022\023\n\013schema_name\030\004 \001(\t\022\022\n\nschem" +
+      "a_doc\030\005 \001(\t\0228\n\nproperties\030\006 \003(\0132$.com.kc" +
+      "l.api.KclType.PropertiesEntry\022\020\n\010require" +
+      "d\030\007 \003(\t\022!\n\003key\030\010 \001(\0132\024.com.kcl.api.KclTy" +
+      "pe\022\"\n\004item\030\t \001(\0132\024.com.kcl.api.KclType\022\014" +
+      "\n\004line\030\n \001(\005\022*\n\ndecorators\030\013 \003(\0132\026.com.k" +
+      "cl.api.Decorator\022\020\n\010filename\030\014 \001(\t\022\020\n\010pk" +
+      "g_path\030\r \001(\t\022\023\n\013description\030\016 \001(\t\0224\n\010exa" +
+      "mples\030\017 \003(\0132\".com.kcl.api.KclType.Exampl" +
+      "esEntry\022)\n\013base_schema\030\020 \001(\0132\024.com.kcl.a" +
+      "pi.KclType\032G\n\017PropertiesEntry\022\013\n\003key\030\001 \001" +
+      "(\t\022#\n\005value\030\002 \001(\0132\024.com.kcl.api.KclType:" +
+      "\0028\001\032E\n\rExamplesEntry\022\013\n\003key\030\001 \001(\t\022#\n\005val" +
+      "ue\030\002 \001(\0132\024.com.kcl.api.Example:\0028\001\"\225\001\n\tD" +
+      "ecorator\022\014\n\004name\030\001 \001(\t\022\021\n\targuments\030\002 \003(" +
+      "\t\0226\n\010keywords\030\003 \003(\0132$.com.kcl.api.Decora" +
+      "tor.KeywordsEntry\032/\n\rKeywordsEntry\022\013\n\003ke" +
+      "y\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\">\n\007Example\022\017\n" +
+      "\007summary\030\001 \001(\t\022\023\n\013description\030\002 \001(\t\022\r\n\005v" +
+      "alue\030\003 \001(\t2\226\001\n\016BuiltinService\0228\n\004Ping\022\026." +
+      "com.kcl.api.Ping_Args\032\030.com.kcl.api.Ping" +
+      "_Result\022J\n\nListMethod\022\034.com.kcl.api.List" +
+      "Method_Args\032\036.com.kcl.api.ListMethod_Res" +
+      "ult2\340\r\n\014KclvmService\0228\n\004Ping\022\026.com.kcl.a" +
+      "pi.Ping_Args\032\030.com.kcl.api.Ping_Result\022M" +
+      "\n\013ExecProgram\022\035.com.kcl.api.ExecProgram_" +
+      "Args\032\037.com.kcl.api.ExecProgram_Result\022P\n" +
+      "\014BuildProgram\022\036.com.kcl.api.BuildProgram" +
+      "_Args\032 .com.kcl.api.BuildProgram_Result\022" +
+      "O\n\014ExecArtifact\022\036.com.kcl.api.ExecArtifa" +
+      "ct_Args\032\037.com.kcl.api.ExecProgram_Result" +
+      "\022G\n\tParseFile\022\033.com.kcl.api.ParseFile_Ar" +
+      "gs\032\035.com.kcl.api.ParseFile_Result\022P\n\014Par" +
+      "seProgram\022\036.com.kcl.api.ParseProgram_Arg" +
+      "s\032 .com.kcl.api.ParseProgram_Result\022M\n\013L" +
+      "oadPackage\022\035.com.kcl.api.LoadPackage_Arg" +
+      "s\032\037.com.kcl.api.LoadPackage_Result\022N\n\013Li" +
+      "stOptions\022\036.com.kcl.api.ParseProgram_Arg" +
+      "s\032\037.com.kcl.api.ListOptions_Result\022S\n\rLi" +
+      "stVariables\022\037.com.kcl.api.ListVariables_" +
+      "Args\032!.com.kcl.api.ListVariables_Result\022" +
+      "J\n\nFormatCode\022\034.com.kcl.api.FormatCode_A" +
+      "rgs\032\036.com.kcl.api.FormatCode_Result\022J\n\nF" +
+      "ormatPath\022\034.com.kcl.api.FormatPath_Args\032" +
+      "\036.com.kcl.api.FormatPath_Result\022D\n\010LintP" +
+      "ath\022\032.com.kcl.api.LintPath_Args\032\034.com.kc" +
+      "l.api.LintPath_Result\022P\n\014OverrideFile\022\036." +
+      "com.kcl.api.OverrideFile_Args\032 .com.kcl." +
+      "api.OverrideFile_Result\022S\n\rGetSchemaType" +
+      "\022\037.com.kcl.api.GetSchemaType_Args\032!.com." +
+      "kcl.api.GetSchemaType_Result\022[\n\021GetFullS" +
+      "chemaType\022#.com.kcl.api.GetFullSchemaTyp" +
+      "e_Args\032!.com.kcl.api.GetSchemaType_Resul" +
+      "t\022h\n\024GetSchemaTypeMapping\022&.com.kcl.api." +
+      "GetSchemaTypeMapping_Args\032(.com.kcl.api." +
+      "GetSchemaTypeMapping_Result\022P\n\014ValidateC" +
+      "ode\022\036.com.kcl.api.ValidateCode_Args\032 .co" +
+      "m.kcl.api.ValidateCode_Result\022P\n\014ListDep" +
+      "Files\022\036.com.kcl.api.ListDepFiles_Args\032 ." +
+      "com.kcl.api.ListDepFiles_Result\022_\n\021LoadS" +
+      "ettingsFiles\022#.com.kcl.api.LoadSettingsF" +
+      "iles_Args\032%.com.kcl.api.LoadSettingsFile" +
+      "s_Result\022>\n\006Rename\022\030.com.kcl.api.Rename_" +
+      "Args\032\032.com.kcl.api.Rename_Result\022J\n\nRena" +
+      "meCode\022\034.com.kcl.api.RenameCode_Args\032\036.c" +
+      "om.kcl.api.RenameCode_Result\0228\n\004Test\022\026.c" +
+      "om.kcl.api.Test_Args\032\030.com.kcl.api.Test_" +
+      "Resultb\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -65775,7 +65775,7 @@ java.lang.String defaultValue) {
     internal_static_com_kcl_api_ListVariables_Result_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_kcl_api_ListVariables_Result_descriptor,
-        new java.lang.String[] { "Variables", "UnsupportedCodes", "ParseErrs", });
+        new java.lang.String[] { "Variables", "UnsupportedCodes", "ParseErrors", });
     internal_static_com_kcl_api_ListVariables_Result_VariablesEntry_descriptor =
       internal_static_com_kcl_api_ListVariables_Result_descriptor.getNestedTypes().get(0);
     internal_static_com_kcl_api_ListVariables_Result_VariablesEntry_fieldAccessorTable = new

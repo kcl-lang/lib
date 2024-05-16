@@ -8,6 +8,7 @@ install:
 
 fmt:
 	pnpm format
+	cargo fmt
 
 test:
 	pnpm test
