@@ -1,4 +1,5 @@
 import kcl_lib.api as api
+
 TEST_FILE = "./tests/test_data/schema.k"
 
 
@@ -17,7 +18,9 @@ def test_load_package_api():
     import kcl_lib.api as api
 
     # Call the `exec_program` method with appropriate arguments
-    args = api.LoadPackage_Args(parse_args=api.ParseProgram_Args(paths=[TEST_FILE]), resolve_ast=True)
+    args = api.LoadPackage_Args(
+        parse_args=api.ParseProgram_Args(paths=[TEST_FILE]), resolve_ast=True
+    )
     # Usage
     api = api.API()
     result = api.load_package(args)

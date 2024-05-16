@@ -36,21 +36,32 @@ use anyhow::Result;
 
 pub type API = KclvmServiceImpl;
 
+/// Call KCL API with the API name and argument protobuf bytes.
+#[inline]
 pub fn call<'a>(name: &'a [u8], args: &'a [u8]) -> Result<Vec<u8>> {
+    call_with_plugin_agent(name, args, 0)
+}
+
+/// Call KCL API with the API name, argument protobuf bytes and the plugin agent pointer address.
+pub fn call_with_plugin_agent<'a>(
+    name: &'a [u8],
+    args: &'a [u8],
+    plugin_agent: u64,
+) -> Result<Vec<u8>> {
     let mut result_len: usize = 0;
     let result_ptr = {
         let args = CString::new(args)?;
         let call = CString::new(name)?;
-        let serv = kclvm_service_new(0);
+        let serv = kclvm_service_new(plugin_agent);
         kclvm_service_call_with_length(serv, call.as_ptr(), args.as_ptr(), &mut result_len)
     };
-    let result = unsafe { 
+    let result = unsafe {
         let mut dest_data: Vec<u8> = Vec::with_capacity(result_len);
         let dest_ptr: *mut u8 = dest_data.as_mut_ptr();
         std::ptr::copy_nonoverlapping(result_ptr as *const u8, dest_ptr, result_len);
         dest_data.set_len(result_len);
         dest_data
-    }; 
+    };
 
     Ok(result)
 }
