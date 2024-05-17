@@ -115,6 +115,7 @@ impl OverrideFileArgs {
     }
 }
 
+#[napi]
 pub fn override_file(args: &OverrideFileArgs) -> Result<OverrideFileResult> {
     let api = kcl_lang::API::default();
     api.override_file(&args.0)

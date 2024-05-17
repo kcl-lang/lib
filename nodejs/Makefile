@@ -2,6 +2,7 @@ default: build
 
 build:
 	pnpm build
+	make fmt
 
 install:
 	pnpm install

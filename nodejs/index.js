@@ -284,7 +284,16 @@ if (!nativeBinding) {
   throw new Error(`Failed to load native binding`)
 }
 
-const { LoadPackageArgs, loadPackage, ExecProgramArgs, execProgram, ListVariablesArgs, listVariables } = nativeBinding
+const {
+  LoadPackageArgs,
+  loadPackage,
+  ExecProgramArgs,
+  execProgram,
+  ListVariablesArgs,
+  listVariables,
+  OverrideFileArgs,
+  overrideFile,
+} = nativeBinding
 
 module.exports.LoadPackageArgs = LoadPackageArgs
 module.exports.loadPackage = loadPackage
@@ -292,3 +301,5 @@ module.exports.ExecProgramArgs = ExecProgramArgs
 module.exports.execProgram = execProgram
 module.exports.ListVariablesArgs = ListVariablesArgs
 module.exports.listVariables = listVariables
+module.exports.OverrideFileArgs = OverrideFileArgs
+module.exports.overrideFile = overrideFile
