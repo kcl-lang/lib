@@ -45,21 +45,21 @@ public class ListVariablesTest {
 
     @Test
     public void testListVariablesWithInvalidKcl() throws Exception {
-          // API instance
-    API api = new API();
+        // API instance
+        API api = new API();
 
-    String filePath = Paths.get("./src/test_data/list_variables/invalid.k").toAbsolutePath().toString();
+        String filePath = Paths.get("./src/test_data/list_variables/invalid.k").toAbsolutePath().toString();
 
-    ListVariables_Result result = api.listVariables(ListVariables_Args.newBuilder()
-            .setFile(filePath).addSpecs("a").build());
+        ListVariables_Result result = api
+                .listVariables(ListVariables_Args.newBuilder().setFile(filePath).addSpecs("a").build());
 
-    Assert.assertEquals(result.getParseErrsCount(), 1);
-    Assert.assertEquals(result.getParseErrs(0).getLevel(), "error");
-    Assert.assertEquals(result.getParseErrs(0).getCode(), "Error(InvalidSyntax)");
-    Assert.assertTrue(result.getParseErrs(0).getMessages(0).getPos().getFilename()
-            .contains(Paths.get("src/test_data/list_variables/invalid.k").getFileName().toString()));
-    Assert.assertEquals(result.getParseErrs(0).getMessages(0).getPos().getLine(), 1);
-    Assert.assertEquals(result.getParseErrs(0).getMessages(0).getPos().getColumn(), 3);
-    Assert.assertEquals(result.getParseErrs(0).getMessages(0).getMsg(), "unexpected token ':'");
+        Assert.assertEquals(result.getParseErrorsCount(), 1);
+        Assert.assertEquals(result.getParseErrors(0).getLevel(), "error");
+        Assert.assertEquals(result.getParseErrors(0).getCode(), "Error(InvalidSyntax)");
+        Assert.assertTrue(result.getParseErrors(0).getMessages(0).getPos().getFilename()
+                .contains(Paths.get("src/test_data/list_variables/invalid.k").getFileName().toString()));
+        Assert.assertEquals(result.getParseErrors(0).getMessages(0).getPos().getLine(), 1);
+        Assert.assertEquals(result.getParseErrors(0).getMessages(0).getPos().getColumn(), 3);
+        Assert.assertEquals(result.getParseErrors(0).getMessages(0).getMsg(), "unexpected token ':'");
     }
 }

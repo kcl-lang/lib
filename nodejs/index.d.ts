@@ -155,17 +155,13 @@ export interface LintPathArgs {
 export interface LintPathResult {
   results: Array<string>
 }
-export interface OverrideFileArgs {
-  file: string
-  specs: Array<string>
-  importPaths: Array<string>
-}
 export interface OverrideFileResult {
   result: boolean
 }
 export interface ListVariablesResult {
   variables: Record<string, Variable>
   unsupportedCodes: Array<string>
+  parseErrors: Array<Error>
 }
 export interface Variable {
   value: string
@@ -315,21 +311,9 @@ export interface Example {
   value: string
 }
 export function loadPackage(args: LoadPackageArgs): LoadPackageResult
-export interface ExecProgramResult {
-  jsonResult: string
-  yamlResult: string
-  logMessage: string
-  errMessage: string
-}
 export function execProgram(args: ExecProgramArgs): ExecProgramResult
-export interface ListVariablesResult {
-  variables: Record<string, Variable>
-  unsupportedCodes: Array<string>
-}
-export interface Variable {
-  value: string
-}
 export function listVariables(args: ListVariablesArgs): ListVariablesResult
+export function overrideFile(args: OverrideFileArgs): OverrideFileResult
 export class LoadPackageArgs {
   constructor(
     paths: Array<string>,
@@ -344,4 +328,7 @@ export class ExecProgramArgs {
 }
 export class ListVariablesArgs {
   constructor(file: string, specs: Array<string>)
+}
+export class OverrideFileArgs {
+  constructor(file: string, specs: Array<string>, importPaths: Array<string>)
 }
