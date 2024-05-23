@@ -62,4 +62,23 @@ public class ListVariablesTest {
         Assert.assertEquals(result.getParseErrors(0).getMessages(0).getPos().getColumn(), 3);
         Assert.assertEquals(result.getParseErrors(0).getMessages(0).getMsg(), "unexpected token ':'");
     }
+
+    @Test
+    public void testListVariablesWithList() throws Exception {
+        // API instance
+        API api = new API();
+
+        String filePath = Paths.get("./src/test_data/list_variables/list.k").toAbsolutePath().toString();
+
+        ListVariables_Result result = api
+                .listVariables(ListVariables_Args.newBuilder().setFile(filePath).addSpecs("list0").build());
+        Assert.assertEquals(result.getVariablesCount(), 1);
+        Assert.assertEquals(result.getVariablesMap().get("list0").getValue(), "[1, 2, 3]");
+        Assert.assertEquals(result.getVariablesMap().get("list0").getTypeName(), "");
+        Assert.assertEquals(result.getVariablesMap().get("list0").getOpSym(), "=");
+        Assert.assertEquals(result.getVariablesMap().get("list0").getListItemsCount(), 3);
+        Assert.assertEquals(result.getVariablesMap().get("list0").getListItems(0).getValue(), "1");
+        Assert.assertEquals(result.getVariablesMap().get("list0").getListItems(1).getValue(), "2");
+        Assert.assertEquals(result.getVariablesMap().get("list0").getListItems(2).getValue(), "3");
+    }
 }
