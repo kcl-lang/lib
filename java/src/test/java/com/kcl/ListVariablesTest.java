@@ -53,14 +53,14 @@ public class ListVariablesTest {
         ListVariables_Result result = api
                 .listVariables(ListVariables_Args.newBuilder().setFile(filePath).addSpecs("a").build());
 
-        Assert.assertEquals(result.getParseErrorsCount(), 1);
+        Assert.assertEquals(result.getParseErrorsCount(), 2);
         Assert.assertEquals(result.getParseErrors(0).getLevel(), "error");
         Assert.assertEquals(result.getParseErrors(0).getCode(), "Error(InvalidSyntax)");
         Assert.assertTrue(result.getParseErrors(0).getMessages(0).getPos().getFilename()
                 .contains(Paths.get("src/test_data/list_variables/invalid.k").getFileName().toString()));
         Assert.assertEquals(result.getParseErrors(0).getMessages(0).getPos().getLine(), 1);
-        Assert.assertEquals(result.getParseErrors(0).getMessages(0).getPos().getColumn(), 3);
-        Assert.assertEquals(result.getParseErrors(0).getMessages(0).getMsg(), "unexpected token ':'");
+        Assert.assertEquals(result.getParseErrors(0).getMessages(0).getPos().getColumn(), 8);
+        Assert.assertEquals(result.getParseErrors(0).getMessages(0).getMsg(), "expected one of [\"=\"] got eof");
     }
 
     @Test
