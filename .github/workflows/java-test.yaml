@@ -165,7 +165,7 @@ jobs:
         if: "startsWith(github.ref, 'refs/tags/')"
         working-directory: java
         run: |
-          JAR_FILE=$(find ./release -name "*.jar")
+          JAR_FILE=$(find ./release -name "*.jar" ! -name "*sources.jar")
           echo "Deploying $JAR_FILE"
           mvn deploy:deploy-file \
             -Dfile=$JAR_FILE \
