@@ -210,8 +210,8 @@ public class API implements Service {
     }
 
     @Override
-    public GetSchemaType_Result getFullSchemaType(GetFullSchemaType_Args args) throws Exception {
-        return GetSchemaType_Result.parseFrom(call("KclvmService.GetSchemaType", args.toByteArray()));
+    public GetSchemaTypeMapping_Result getSchemaTypeMapping(GetSchemaTypeMapping_Args args) throws Exception {
+        return GetSchemaTypeMapping_Result.parseFrom(call("KclvmService.GetSchemaTypeMapping", args.toByteArray()));
     }
 
     @Override
@@ -252,6 +252,11 @@ public class API implements Service {
     @Override
     public Test_Result test(Test_Args args) throws Exception {
         return Test_Result.parseFrom(call("KclvmService.Test", args.toByteArray()));
+    }
+
+    @Override
+    public UpdateDependencies_Result updateDependencies(UpdateDependencies_Args args) throws Exception {
+        return UpdateDependencies_Result.parseFrom(call("KclvmService.UpdateDependencies", args.toByteArray()));
     }
 
     private byte[] call(String name, byte[] args) throws Exception {

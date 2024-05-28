@@ -13,7 +13,7 @@ use napi::bindgen_prelude::*;
 */
 
 #[napi]
-pub struct LoadPackageArgs(kcl_lang::LoadPackageArgs);
+pub struct LoadPackageArgs(kclvm_api::LoadPackageArgs);
 
 #[napi]
 impl LoadPackageArgs {
@@ -25,8 +25,8 @@ impl LoadPackageArgs {
         load_builtin: Option<bool>,
         with_ast_index: Option<bool>,
     ) -> Result<Self> {
-        Ok(Self(kcl_lang::LoadPackageArgs {
-            parse_args: Some(kcl_lang::ParseProgramArgs {
+        Ok(Self(kclvm_api::LoadPackageArgs {
+            parse_args: Some(kclvm_api::ParseProgramArgs {
                 paths,
                 sources,
                 ..Default::default()
@@ -40,7 +40,7 @@ impl LoadPackageArgs {
 
 #[napi]
 pub fn load_package(args: &LoadPackageArgs) -> Result<LoadPackageResult> {
-    let api = kcl_lang::API::default();
+    let api = kclvm_api::API::default();
     api.load_package(&args.0)
         .map_err(|e| napi::bindgen_prelude::Error::from_reason(e.to_string()))
         .map(|r| LoadPackageResult::new(r))
@@ -51,13 +51,13 @@ pub fn load_package(args: &LoadPackageArgs) -> Result<LoadPackageResult> {
 */
 
 #[napi]
-pub struct ExecProgramArgs(kcl_lang::ExecProgramArgs);
+pub struct ExecProgramArgs(kclvm_api::ExecProgramArgs);
 
 #[napi]
 impl ExecProgramArgs {
     #[napi(constructor)]
     pub fn new(paths: Vec<String>, work_dir: Option<String>) -> Result<Self> {
-        Ok(Self(kcl_lang::ExecProgramArgs {
+        Ok(Self(kclvm_api::ExecProgramArgs {
             k_filename_list: paths,
             work_dir: work_dir.unwrap_or_default(),
             ..Default::default()
@@ -67,7 +67,7 @@ impl ExecProgramArgs {
 
 #[napi]
 pub fn exec_program(args: &ExecProgramArgs) -> Result<ExecProgramResult> {
-    let api = kcl_lang::API::default();
+    let api = kclvm_api::API::default();
     api.exec_program(&args.0)
         .map_err(|e| napi::bindgen_prelude::Error::from_reason(e.to_string()))
         .map(|r| ExecProgramResult::new(r))
@@ -78,19 +78,19 @@ pub fn exec_program(args: &ExecProgramArgs) -> Result<ExecProgramResult> {
 */
 
 #[napi]
-pub struct ListVariablesArgs(kcl_lang::ListVariablesArgs);
+pub struct ListVariablesArgs(kclvm_api::ListVariablesArgs);
 
 #[napi]
 impl ListVariablesArgs {
     #[napi(constructor)]
     pub fn new(file: String, specs: Vec<String>) -> Result<Self> {
-        Ok(Self(kcl_lang::ListVariablesArgs { file, specs }))
+        Ok(Self(kclvm_api::ListVariablesArgs { file, specs }))
     }
 }
 
 #[napi]
 pub fn list_variables(args: &ListVariablesArgs) -> Result<ListVariablesResult> {
-    let api = kcl_lang::API::default();
+    let api = kclvm_api::API::default();
     api.list_variables(&args.0)
         .map_err(|e| napi::bindgen_prelude::Error::from_reason(e.to_string()))
         .map(|r| ListVariablesResult::new(r))
@@ -101,13 +101,13 @@ pub fn list_variables(args: &ListVariablesArgs) -> Result<ListVariablesResult> {
 */
 
 #[napi]
-pub struct OverrideFileArgs(kcl_lang::OverrideFileArgs);
+pub struct OverrideFileArgs(kclvm_api::OverrideFileArgs);
 
 #[napi]
 impl OverrideFileArgs {
     #[napi(constructor)]
     pub fn new(file: String, specs: Vec<String>, import_paths: Vec<String>) -> Result<Self> {
-        Ok(Self(kcl_lang::OverrideFileArgs {
+        Ok(Self(kclvm_api::OverrideFileArgs {
             file,
             specs,
             import_paths,
@@ -117,8 +117,34 @@ impl OverrideFileArgs {
 
 #[napi]
 pub fn override_file(args: &OverrideFileArgs) -> Result<OverrideFileResult> {
-    let api = kcl_lang::API::default();
+    let api = kclvm_api::API::default();
     api.override_file(&args.0)
         .map_err(|e| napi::bindgen_prelude::Error::from_reason(e.to_string()))
         .map(|r| OverrideFileResult::new(r))
+}
+
+/*
+* UpdateDependencies API
+*/
+
+#[napi]
+pub struct UpdateDependenciesArgs(kclvm_api::UpdateDependenciesArgs);
+
+#[napi]
+impl UpdateDependenciesArgs {
+    #[napi(constructor)]
+    pub fn new(manifest_path: String, vendor: bool) -> Result<Self> {
+        Ok(Self(kclvm_api::UpdateDependenciesArgs {
+            manifest_path,
+            vendor,
+        }))
+    }
+}
+
+#[napi]
+pub fn update_dependencies(args: &UpdateDependenciesArgs) -> Result<UpdateDependenciesResult> {
+    let api = kclvm_api::API::default();
+    api.update_dependencies(&args.0)
+        .map_err(|e| napi::bindgen_prelude::Error::from_reason(e.to_string()))
+        .map(|r| UpdateDependenciesResult::new(r))
 }

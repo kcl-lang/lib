@@ -2,24 +2,16 @@ use napi::bindgen_prelude::*;
 use std::collections::HashMap;
 
 #[napi(object)]
-pub struct CmdExternalPkgSpec {
+pub struct ExternalPkg {
     pub pkg_name: String,
     pub pkg_path: String,
 }
 
 /// kcl main.k -D name=value
 #[napi(object)]
-pub struct CmdArgSpec {
+pub struct Argument {
     pub name: String,
     pub value: String,
-}
-
-#[napi(object)]
-pub struct CmdOverrideSpec {
-    pub pkgpath: String,
-    pub field_path: String,
-    pub field_value: String,
-    pub action: String,
 }
 
 #[napi(object)]
@@ -58,7 +50,7 @@ pub struct ListMethodResult {
 pub struct ParseFileArgs {
     pub path: String,
     pub source: String,
-    pub external_pkgs: Vec<CmdExternalPkgSpec>,
+    pub external_pkgs: Vec<ExternalPkg>,
 }
 
 #[napi(object)]
@@ -76,7 +68,7 @@ pub struct ParseProgramArgs {
     pub paths: Vec<String>,
     pub sources: Vec<String>,
     /// External packages path
-    pub external_pkgs: Vec<CmdExternalPkgSpec>,
+    pub external_pkgs: Vec<ExternalPkg>,
 }
 
 #[napi(object)]
@@ -90,7 +82,7 @@ pub struct ParseProgramResult {
 }
 
 impl crate::spec::Error {
-    pub fn new(e: &kcl_lang::Error) -> Self {
+    pub fn new(e: &kclvm_api::Error) -> Self {
         Self {
             level: e.level.clone(),
             code: e.code.clone(),
@@ -111,7 +103,7 @@ impl crate::spec::Error {
 }
 
 impl ScopeIndex {
-    pub fn new(v: &kcl_lang::ScopeIndex) -> Self {
+    pub fn new(v: &kclvm_api::ScopeIndex) -> Self {
         ScopeIndex {
             i: v.i as u32,
             g: v.g as u32,
@@ -121,7 +113,7 @@ impl ScopeIndex {
 }
 
 impl SymbolIndex {
-    pub fn new(v: &kcl_lang::SymbolIndex) -> Self {
+    pub fn new(v: &kclvm_api::SymbolIndex) -> Self {
         SymbolIndex {
             i: v.i as u32,
             g: v.g as u32,
@@ -131,7 +123,7 @@ impl SymbolIndex {
 }
 
 impl crate::spec::Symbol {
-    pub fn new(v: &kcl_lang::Symbol) -> Self {
+    pub fn new(v: &kclvm_api::Symbol) -> Self {
         crate::spec::Symbol {
             ty: v.ty.as_ref().map(|ty| ty.r#type.clone()),
             name: v.name.clone(),
@@ -144,7 +136,7 @@ impl crate::spec::Symbol {
 }
 
 impl LoadPackageResult {
-    pub fn new(r: kcl_lang::LoadPackageResult) -> Self {
+    pub fn new(r: kclvm_api::LoadPackageResult) -> Self {
         Self {
             program: r.program,
             paths: r.paths,
@@ -280,7 +272,7 @@ pub struct ExecProgramResult {
 }
 
 impl ExecProgramResult {
-    pub fn new(r: kcl_lang::ExecProgramResult) -> Self {
+    pub fn new(r: kclvm_api::ExecProgramResult) -> Self {
         Self {
             json_result: r.json_result,
             yaml_result: r.yaml_result,
@@ -340,7 +332,7 @@ pub struct OverrideFileResult {
 }
 
 impl OverrideFileResult {
-    pub fn new(r: kcl_lang::OverrideFileResult) -> Self {
+    pub fn new(r: kclvm_api::OverrideFileResult) -> Self {
         Self { result: r.result }
     }
 }
@@ -358,7 +350,7 @@ pub struct Variable {
 }
 
 impl ListVariablesResult {
-    pub fn new(r: kcl_lang::ListVariablesResult) -> Self {
+    pub fn new(r: kclvm_api::ListVariablesResult) -> Self {
         Self {
             variables: r
                 .variables
@@ -385,13 +377,6 @@ impl ListVariablesResult {
 #[napi(object)]
 pub struct GetSchemaTypeResult {
     pub schema_type_list: Vec<KclType>,
-}
-
-#[napi(object)]
-pub struct GetSchemaTypeMappingArgs {
-    pub file: String,
-    pub code: String,
-    pub schema_name: String,
 }
 
 #[napi(object)]
@@ -566,4 +551,24 @@ pub struct Example {
     pub summary: String,
     pub description: String,
     pub value: String,
+}
+
+#[napi(object)]
+pub struct UpdateDependenciesResult {
+    pub external_pkgs: Vec<ExternalPkg>,
+}
+
+impl UpdateDependenciesResult {
+    pub fn new(r: kclvm_api::UpdateDependenciesResult) -> Self {
+        Self {
+            external_pkgs: r
+                .external_pkgs
+                .iter()
+                .map(|p| ExternalPkg {
+                    pkg_name: p.pkg_name.clone(),
+                    pkg_path: p.pkg_path.clone(),
+                })
+                .collect(),
+        }
+    }
 }
