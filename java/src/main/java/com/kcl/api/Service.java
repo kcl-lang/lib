@@ -25,7 +25,7 @@ public interface Service {
     ListVariables_Result listVariables(ListVariables_Args args) throws Exception;
 
     // Service for getting the full schema type list
-    GetSchemaType_Result getFullSchemaType(GetFullSchemaType_Args args) throws Exception;
+    GetSchemaTypeMapping_Result getSchemaTypeMapping(GetSchemaTypeMapping_Args args) throws Exception;
 
     // Service for formatting a code source
     FormatCode_Result formatCode(FormatCode_Args args) throws Exception;
@@ -50,4 +50,7 @@ public interface Service {
 
     // Service for the testing tool
     Test_Result test(Test_Args args) throws Exception;
+
+    // Service for the dependency updating
+    UpdateDependencies_Result updateDependencies(UpdateDependencies_Args args) throws Exception;
 }

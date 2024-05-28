@@ -1,6 +1,5 @@
 extern crate anyhow;
 extern crate jni;
-extern crate kcl_lang;
 extern crate kclvm_api;
 extern crate kclvm_parser;
 extern crate kclvm_sema;
@@ -12,7 +11,7 @@ use anyhow::Result;
 use jni::objects::{JByteArray, JClass, JObject};
 use jni::sys::jbyteArray;
 use jni::JNIEnv;
-use kcl_lang::call;
+use kclvm_api::call;
 use kclvm_api::gpyrpc::LoadPackageArgs;
 use kclvm_api::service::KclvmServiceImpl;
 use kclvm_parser::KCLModuleCache;

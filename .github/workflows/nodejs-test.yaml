@@ -46,11 +46,8 @@ jobs:
           cache: pnpm
           cache-dependency-path: "nodejs/pnpm-lock.yaml"
 
-      - name: Corepack
-        run: corepack enable
-
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: pnpm install --no-save --frozen-lockfile
 
       - name: Check format
         run: pnpm exec prettier --check .
@@ -113,10 +110,8 @@ jobs:
           node-version: '18'
           cache: pnpm
           cache-dependency-path: "nodejs/pnpm-lock.yaml"
-      - name: Corepack
-        run: corepack enable
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: pnpm install --no-save --frozen-lockfile
       - name: Build
         shell: bash
         working-directory: .
@@ -156,10 +151,8 @@ jobs:
           node-version: '18'
           cache: pnpm
           cache-dependency-path: "nodejs/pnpm-lock.yaml"
-      - name: Corepack
-        run: corepack enable
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: pnpm install --no-save --frozen-lockfile
       - name: Build
         shell: bash
         run: ${{ matrix.settings.build }}
@@ -208,10 +201,8 @@ jobs:
           node-version: '18'
           cache: pnpm
           cache-dependency-path: "nodejs/pnpm-lock.yaml"
-      - name: Corepack
-        run: corepack enable
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: pnpm install --no-save --frozen-lockfile
       - name: Build
         run: ${{ matrix.settings.build }}
         shell: bash
@@ -243,10 +234,9 @@ jobs:
           node-version: "18"
           cache: pnpm
           cache-dependency-path: "nodejs/pnpm-lock.yaml"
-      - name: Corepack
-        run: corepack enable
+
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: pnpm install --no-save --frozen-lockfile
 
       - name: Download all artifacts
         uses: actions/download-artifact@v3

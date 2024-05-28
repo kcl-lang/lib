@@ -293,6 +293,8 @@ const {
   listVariables,
   OverrideFileArgs,
   overrideFile,
+  UpdateDependenciesArgs,
+  updateDependencies,
 } = nativeBinding
 
 module.exports.LoadPackageArgs = LoadPackageArgs
@@ -303,3 +305,5 @@ module.exports.ListVariablesArgs = ListVariablesArgs
 module.exports.listVariables = listVariables
 module.exports.OverrideFileArgs = OverrideFileArgs
 module.exports.overrideFile = overrideFile
+module.exports.UpdateDependenciesArgs = UpdateDependenciesArgs
+module.exports.updateDependencies = updateDependencies

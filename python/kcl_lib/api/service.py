@@ -64,11 +64,11 @@ class API:
     def override_file(self, args: OverrideFile_Args) -> OverrideFile_Result:
         return self.call("KclvmService.OverrideFile", args)
 
-    def get_full_schema_type(
+    def get_schema_type_mapping(
         self,
-        args: GetFullSchemaType_Args,
-    ) -> GetSchemaType_Result:
-        return self.call("KclvmService.GetFullSchemaType", args)
+        args: GetSchemaTypeMapping_Args,
+    ) -> GetSchemaTypeMapping_Result:
+        return self.call("KclvmService.GetSchemaTypeMapping", args)
 
     def validate_code(self, args: ValidateCode_Args) -> ValidateCode_Result:
         return self.call("KclvmService.ValidateCode", args)
@@ -88,15 +88,18 @@ class API:
     def test(self, args: Test_Args) -> Test_Result:
         return self.call("KclvmService.Test", args)
 
+    def test(self, args: UpdateDependencies_Args) -> UpdateDependencies_Result:
+        return self.call("KclvmService.UpdateDependencies", args)
+
     # Helper method to perform the call
     def call(self, name: str, args):
         # Serialize arguments using pickle or json
         args_serialized = args.SerializeToString()
 
         # Call the service function and get the result
-        result = kcl_lib.call_with_plugin_agent(
+        result = bytes(kcl_lib.call_with_plugin_agent(
             name.encode("utf-8"), args_serialized, self.plugin_agent
-        )
+        ))
         if result.startswith(b"ERROR"):
             raise Exception(str(result))
         msg = self.create_method_resp_message(name)
@@ -130,10 +133,8 @@ class API:
             return LintPath_Args()
         if method in ["OverrideFile", "KclvmService.OverrideFile"]:
             return OverrideFile_Args()
-        if method in ["GetSchemaType", "KclvmService.GetSchemaType"]:
-            return GetSchemaType_Args()
-        if method in ["GetFullSchemaType", "KclvmService.GetFullSchemaType"]:
-            return GetFullSchemaType_Args()
+        if method in ["GetSchemaTypeMapping", "KclvmService.GetSchemaTypeMapping"]:
+            return GetSchemaTypeMapping_Args()
         if method in ["ValidateCode", "KclvmService.ValidateCode"]:
             return ValidateCode_Args()
         if method in ["ListDepFiles", "KclvmService.ListDepFiles"]:
@@ -146,6 +147,8 @@ class API:
             return RenameCode_Args()
         if method in ["Test", "KclvmService.Test"]:
             return Test_Args()
+        if method in ["UpdateDependencies", "KclvmService.UpdateDependencies"]:
+            return UpdateDependencies_Args()
         raise Exception(f"unknown method: {method}")
 
     def create_method_resp_message(self, method: str) -> _message.Message:
@@ -175,10 +178,8 @@ class API:
             return LintPath_Result()
         if method in ["OverrideFile", "KclvmService.OverrideFile"]:
             return OverrideFile_Result()
-        if method in ["GetSchemaType", "KclvmService.GetSchemaType"]:
-            return GetSchemaType_Result()
-        if method in ["GetFullSchemaType", "KclvmService.GetFullSchemaType"]:
-            return GetSchemaType_Result()
+        if method in ["GetSchemaTypeMapping", "KclvmService.GetSchemaTypeMapping"]:
+            return GetSchemaTypeMapping_Result()
         if method in ["ValidateCode", "KclvmService.ValidateCode"]:
             return ValidateCode_Result()
         if method in ["ListDepFiles", "KclvmService.ListDepFiles"]:
@@ -191,4 +192,6 @@ class API:
             return RenameCode_Result()
         if method in ["Test", "KclvmService.Test"]:
             return Test_Result()
+        if method in ["UpdateDependencies", "KclvmService.UpdateDependencies"]:
+            return UpdateDependencies_Result()
         raise Exception(f"unknown method: {method}")
