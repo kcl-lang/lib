@@ -1,0 +1,35 @@
+{
+  "name": "@kcl-lang/wasm-lib",
+  "version": "0.9.0-beta.2",
+  "description": "KCL WASM module",
+  "files": [
+    "kcl.wasm",
+    "dist/"
+  ],
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kcl-lang/lib.git"
+  },
+  "scripts": {
+    "compile": "tsc",
+    "format": "prettier --write ."
+  },
+  "license": "Apache-2.0",
+  "dependencies": {
+    "wasi-js": "^1.7.3"
+  },
+  "bundledDependencies": [
+    "wasi-js"
+  ],
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "prettier": "^2.8.4",
+    "typescript": "^5.3.3",
+    "wasi-js": "^1.7.3"
+  },
+  "bundleDependencies": [
+    "wasi-js"
+  ]
+}
