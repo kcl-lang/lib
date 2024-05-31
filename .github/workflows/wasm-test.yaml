@@ -1,0 +1,55 @@
+name: wasm-test
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - '*'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "wasm/**"
+  workflow_dispatch:
+
+jobs:
+  test-and-release:
+    name: Test and Release
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+
+    # Notes: this defaults only apply on run tasks.
+    defaults:
+      run:
+        working-directory: "wasm"
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Node.js 20.x
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20.x
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build
+        run: npm run compile
+
+      - name: Publish Dry Run
+        if: "startsWith(github.ref, 'refs/tags/') && contains(github.ref, '-')"
+        # Since this command will not exit with non-zero code when file missing,
+        # we need to check the output manually.
+        run: |
+          npm publish --access public --provenance --dry-run
+
+      - name: Publish
+        if: "startsWith(github.ref, 'refs/tags/')"
+        run: |
+          echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> ~/.npmrc
+          npm publish --access public --provenance
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
