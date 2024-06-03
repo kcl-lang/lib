@@ -1,14 +1,12 @@
 # KCL WASM Library for Node.js and Browser
 
-## Installation
+## Quick Start
+
+### Node.js
 
 ```shell
 npm install @kcl-lang/wasm-lib
 ```
-
-## Quick Start
-
-### Node.js
 
 ```typescript
 import { load, invokeKCLRun } from '@kcl-lang/wasm-lib'
@@ -31,7 +29,26 @@ main()
 
 ### Rust
 
-See [here](./examples/rust/src/main.rs)
+```shell
+cargo add kcl-wasm-lib --git https://github.com/kcl-lang/lib
+cargo add anyhow
+```
+
+```rust
+use anyhow::Result;
+use kcl_wasm_lib::{KCLModule, RunOptions};
+
+fn main() -> Result<()> {
+    let opts = RunOptions {
+        filename: "test.k".to_string(),
+        source: "a = 1".to_string(),
+    };
+    let mut module = KCLModule::from_path("path/to/kcl.wasm")?;
+    let result = module.run(&opts)?;
+    println!("{}", result);
+    Ok(())
+}
+```
 
 ## Developing
 
