@@ -8,6 +8,8 @@ npm install @kcl-lang/wasm-lib
 
 ## Quick Start
 
+### Node.js
+
 ```typescript
 import { load, invokeKCLRun } from '@kcl-lang/wasm-lib'
 
@@ -26,6 +28,10 @@ p = Person {name = "Alice"}`,
 
 main()
 ```
+
+### Rust
+
+See [here](./examples/rust/src/main.rs)
 
 ## Developing
 
