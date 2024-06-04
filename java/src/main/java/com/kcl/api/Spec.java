@@ -36138,18 +36138,38 @@ public final class Spec {
             com.google.protobuf.MessageOrBuilder {
 
         /**
-         * <code>string file = 1;</code>
+         * <code>repeated string files = 1;</code>
          * 
-         * @return The file.
+         * @return A list containing the files.
          */
-        java.lang.String getFile();
+        java.util.List<java.lang.String> getFilesList();
 
         /**
-         * <code>string file = 1;</code>
+         * <code>repeated string files = 1;</code>
          * 
-         * @return The bytes for file.
+         * @return The count of files.
          */
-        com.google.protobuf.ByteString getFileBytes();
+        int getFilesCount();
+
+        /**
+         * <code>repeated string files = 1;</code>
+         * 
+         * @param index
+         *            The index of the element to return.
+         * 
+         * @return The files at the given index.
+         */
+        java.lang.String getFiles(int index);
+
+        /**
+         * <code>repeated string files = 1;</code>
+         * 
+         * @param index
+         *            The index of the value to return.
+         * 
+         * @return The bytes of the files at the given index.
+         */
+        com.google.protobuf.ByteString getFilesBytes(int index);
 
         /**
          * <code>repeated string specs = 2;</code>
@@ -36200,7 +36220,7 @@ public final class Spec {
         }
 
         private ListVariables_Args() {
-            file_ = "";
+            files_ = com.google.protobuf.LazyStringArrayList.emptyList();
             specs_ = com.google.protobuf.LazyStringArrayList.emptyList();
         }
 
@@ -36221,43 +36241,50 @@ public final class Spec {
                             com.kcl.api.Spec.ListVariables_Args.Builder.class);
         }
 
-        public static final int FILE_FIELD_NUMBER = 1;
+        public static final int FILES_FIELD_NUMBER = 1;
         @SuppressWarnings("serial")
-        private volatile java.lang.Object file_ = "";
+        private com.google.protobuf.LazyStringArrayList files_ = com.google.protobuf.LazyStringArrayList.emptyList();
 
         /**
-         * <code>string file = 1;</code>
+         * <code>repeated string files = 1;</code>
          * 
-         * @return The file.
+         * @return A list containing the files.
          */
-        @java.lang.Override
-        public java.lang.String getFile() {
-            java.lang.Object ref = file_;
-            if (ref instanceof java.lang.String) {
-                return (java.lang.String) ref;
-            } else {
-                com.google.protobuf.ByteString bs = (com.google.protobuf.ByteString) ref;
-                java.lang.String s = bs.toStringUtf8();
-                file_ = s;
-                return s;
-            }
+        public com.google.protobuf.ProtocolStringList getFilesList() {
+            return files_;
         }
 
         /**
-         * <code>string file = 1;</code>
+         * <code>repeated string files = 1;</code>
          * 
-         * @return The bytes for file.
+         * @return The count of files.
          */
-        @java.lang.Override
-        public com.google.protobuf.ByteString getFileBytes() {
-            java.lang.Object ref = file_;
-            if (ref instanceof java.lang.String) {
-                com.google.protobuf.ByteString b = com.google.protobuf.ByteString.copyFromUtf8((java.lang.String) ref);
-                file_ = b;
-                return b;
-            } else {
-                return (com.google.protobuf.ByteString) ref;
-            }
+        public int getFilesCount() {
+            return files_.size();
+        }
+
+        /**
+         * <code>repeated string files = 1;</code>
+         * 
+         * @param index
+         *            The index of the element to return.
+         * 
+         * @return The files at the given index.
+         */
+        public java.lang.String getFiles(int index) {
+            return files_.get(index);
+        }
+
+        /**
+         * <code>repeated string files = 1;</code>
+         * 
+         * @param index
+         *            The index of the value to return.
+         * 
+         * @return The bytes of the files at the given index.
+         */
+        public com.google.protobuf.ByteString getFilesBytes(int index) {
+            return files_.getByteString(index);
         }
 
         public static final int SPECS_FIELD_NUMBER = 2;
@@ -36322,8 +36349,8 @@ public final class Spec {
 
         @java.lang.Override
         public void writeTo(com.google.protobuf.CodedOutputStream output) throws java.io.IOException {
-            if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(file_)) {
-                com.google.protobuf.GeneratedMessageV3.writeString(output, 1, file_);
+            for (int i = 0; i < files_.size(); i++) {
+                com.google.protobuf.GeneratedMessageV3.writeString(output, 1, files_.getRaw(i));
             }
             for (int i = 0; i < specs_.size(); i++) {
                 com.google.protobuf.GeneratedMessageV3.writeString(output, 2, specs_.getRaw(i));
@@ -36338,8 +36365,13 @@ public final class Spec {
                 return size;
 
             size = 0;
-            if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(file_)) {
-                size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, file_);
+            {
+                int dataSize = 0;
+                for (int i = 0; i < files_.size(); i++) {
+                    dataSize += computeStringSizeNoTag(files_.getRaw(i));
+                }
+                size += dataSize;
+                size += 1 * getFilesList().size();
             }
             {
                 int dataSize = 0;
@@ -36364,7 +36396,7 @@ public final class Spec {
             }
             com.kcl.api.Spec.ListVariables_Args other = (com.kcl.api.Spec.ListVariables_Args) obj;
 
-            if (!getFile().equals(other.getFile()))
+            if (!getFilesList().equals(other.getFilesList()))
                 return false;
             if (!getSpecsList().equals(other.getSpecsList()))
                 return false;
@@ -36380,8 +36412,10 @@ public final class Spec {
             }
             int hash = 41;
             hash = (19 * hash) + getDescriptor().hashCode();
-            hash = (37 * hash) + FILE_FIELD_NUMBER;
-            hash = (53 * hash) + getFile().hashCode();
+            if (getFilesCount() > 0) {
+                hash = (37 * hash) + FILES_FIELD_NUMBER;
+                hash = (53 * hash) + getFilesList().hashCode();
+            }
             if (getSpecsCount() > 0) {
                 hash = (37 * hash) + SPECS_FIELD_NUMBER;
                 hash = (53 * hash) + getSpecsList().hashCode();
@@ -36510,7 +36544,7 @@ public final class Spec {
             public Builder clear() {
                 super.clear();
                 bitField0_ = 0;
-                file_ = "";
+                files_ = com.google.protobuf.LazyStringArrayList.emptyList();
                 specs_ = com.google.protobuf.LazyStringArrayList.emptyList();
                 return this;
             }
@@ -36547,7 +36581,8 @@ public final class Spec {
             private void buildPartial0(com.kcl.api.Spec.ListVariables_Args result) {
                 int from_bitField0_ = bitField0_;
                 if (((from_bitField0_ & 0x00000001) != 0)) {
-                    result.file_ = file_;
+                    files_.makeImmutable();
+                    result.files_ = files_;
                 }
                 if (((from_bitField0_ & 0x00000002) != 0)) {
                     specs_.makeImmutable();
@@ -36600,9 +36635,14 @@ public final class Spec {
             public Builder mergeFrom(com.kcl.api.Spec.ListVariables_Args other) {
                 if (other == com.kcl.api.Spec.ListVariables_Args.getDefaultInstance())
                     return this;
-                if (!other.getFile().isEmpty()) {
-                    file_ = other.file_;
-                    bitField0_ |= 0x00000001;
+                if (!other.files_.isEmpty()) {
+                    if (files_.isEmpty()) {
+                        files_ = other.files_;
+                        bitField0_ |= 0x00000001;
+                    } else {
+                        ensureFilesIsMutable();
+                        files_.addAll(other.files_);
+                    }
                     onChanged();
                 }
                 if (!other.specs_.isEmpty()) {
@@ -36640,8 +36680,9 @@ public final class Spec {
                             done = true;
                             break;
                         case 10: {
-                            file_ = input.readStringRequireUtf8();
-                            bitField0_ |= 0x00000001;
+                            java.lang.String s = input.readStringRequireUtf8();
+                            ensureFilesIsMutable();
+                            files_.add(s);
                             break;
                         } // case 10
                         case 18: {
@@ -36668,86 +36709,143 @@ public final class Spec {
 
             private int bitField0_;
 
-            private java.lang.Object file_ = "";
+            private com.google.protobuf.LazyStringArrayList files_ = com.google.protobuf.LazyStringArrayList
+                    .emptyList();
 
-            /**
-             * <code>string file = 1;</code>
-             * 
-             * @return The file.
-             */
-            public java.lang.String getFile() {
-                java.lang.Object ref = file_;
-                if (!(ref instanceof java.lang.String)) {
-                    com.google.protobuf.ByteString bs = (com.google.protobuf.ByteString) ref;
-                    java.lang.String s = bs.toStringUtf8();
-                    file_ = s;
-                    return s;
-                } else {
-                    return (java.lang.String) ref;
+            private void ensureFilesIsMutable() {
+                if (!files_.isModifiable()) {
+                    files_ = new com.google.protobuf.LazyStringArrayList(files_);
                 }
+                bitField0_ |= 0x00000001;
             }
 
             /**
-             * <code>string file = 1;</code>
+             * <code>repeated string files = 1;</code>
              * 
-             * @return The bytes for file.
+             * @return A list containing the files.
              */
-            public com.google.protobuf.ByteString getFileBytes() {
-                java.lang.Object ref = file_;
-                if (ref instanceof String) {
-                    com.google.protobuf.ByteString b = com.google.protobuf.ByteString
-                            .copyFromUtf8((java.lang.String) ref);
-                    file_ = b;
-                    return b;
-                } else {
-                    return (com.google.protobuf.ByteString) ref;
-                }
+            public com.google.protobuf.ProtocolStringList getFilesList() {
+                files_.makeImmutable();
+                return files_;
             }
 
             /**
-             * <code>string file = 1;</code>
+             * <code>repeated string files = 1;</code>
              * 
+             * @return The count of files.
+             */
+            public int getFilesCount() {
+                return files_.size();
+            }
+
+            /**
+             * <code>repeated string files = 1;</code>
+             * 
+             * @param index
+             *            The index of the element to return.
+             * 
+             * @return The files at the given index.
+             */
+            public java.lang.String getFiles(int index) {
+                return files_.get(index);
+            }
+
+            /**
+             * <code>repeated string files = 1;</code>
+             * 
+             * @param index
+             *            The index of the value to return.
+             * 
+             * @return The bytes of the files at the given index.
+             */
+            public com.google.protobuf.ByteString getFilesBytes(int index) {
+                return files_.getByteString(index);
+            }
+
+            /**
+             * <code>repeated string files = 1;</code>
+             * 
+             * @param index
+             *            The index to set the value at.
              * @param value
-             *            The file to set.
+             *            The files to set.
              * 
              * @return This builder for chaining.
              */
-            public Builder setFile(java.lang.String value) {
+            public Builder setFiles(int index, java.lang.String value) {
                 if (value == null) {
                     throw new NullPointerException();
                 }
-                file_ = value;
+                ensureFilesIsMutable();
+                files_.set(index, value);
                 bitField0_ |= 0x00000001;
                 onChanged();
                 return this;
             }
 
             /**
-             * <code>string file = 1;</code>
+             * <code>repeated string files = 1;</code>
+             * 
+             * @param value
+             *            The files to add.
              * 
              * @return This builder for chaining.
              */
-            public Builder clearFile() {
-                file_ = getDefaultInstance().getFile();
-                bitField0_ = (bitField0_ & ~0x00000001);
+            public Builder addFiles(java.lang.String value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                ensureFilesIsMutable();
+                files_.add(value);
+                bitField0_ |= 0x00000001;
                 onChanged();
                 return this;
             }
 
             /**
-             * <code>string file = 1;</code>
+             * <code>repeated string files = 1;</code>
              * 
-             * @param value
-             *            The bytes for file to set.
+             * @param values
+             *            The files to add.
              * 
              * @return This builder for chaining.
              */
-            public Builder setFileBytes(com.google.protobuf.ByteString value) {
+            public Builder addAllFiles(java.lang.Iterable<java.lang.String> values) {
+                ensureFilesIsMutable();
+                com.google.protobuf.AbstractMessageLite.Builder.addAll(values, files_);
+                bitField0_ |= 0x00000001;
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>repeated string files = 1;</code>
+             * 
+             * @return This builder for chaining.
+             */
+            public Builder clearFiles() {
+                files_ = com.google.protobuf.LazyStringArrayList.emptyList();
+                bitField0_ = (bitField0_ & ~0x00000001);
+                ;
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <code>repeated string files = 1;</code>
+             * 
+             * @param value
+             *            The bytes of the files to add.
+             * 
+             * @return This builder for chaining.
+             */
+            public Builder addFilesBytes(com.google.protobuf.ByteString value) {
                 if (value == null) {
                     throw new NullPointerException();
                 }
                 checkByteStringIsUtf8(value);
-                file_ = value;
+                ensureFilesIsMutable();
+                files_.add(value);
                 bitField0_ |= 0x00000001;
                 onChanged();
                 return this;
@@ -67295,134 +67393,134 @@ public final class Spec {
                 + "ideFile_Args\022\014\n\004file\030\001 \001(\t\022\r\n\005specs\030\002 \003("
                 + "\t\022\024\n\014import_paths\030\003 \003(\t\"O\n\023OverrideFile_"
                 + "Result\022\016\n\006result\030\001 \001(\010\022(\n\014parse_errors\030\002"
-                + " \003(\0132\022.com.kcl.api.Error\"1\n\022ListVariable"
-                + "s_Args\022\014\n\004file\030\001 \001(\t\022\r\n\005specs\030\002 \003(\t\"\351\001\n\024"
-                + "ListVariables_Result\022C\n\tvariables\030\001 \003(\0132"
-                + "0.com.kcl.api.ListVariables_Result.Varia"
-                + "blesEntry\022\031\n\021unsupported_codes\030\002 \003(\t\022(\n\014"
-                + "parse_errors\030\003 \003(\0132\022.com.kcl.api.Error\032G"
-                + "\n\016VariablesEntry\022\013\n\003key\030\001 \001(\t\022$\n\005value\030\002"
-                + " \001(\0132\025.com.kcl.api.Variable:\0028\001\"\224\001\n\010Vari"
-                + "able\022\r\n\005value\030\001 \001(\t\022\021\n\ttype_name\030\002 \001(\t\022\016"
-                + "\n\006op_sym\030\003 \001(\t\022)\n\nlist_items\030\004 \003(\0132\025.com"
-                + ".kcl.api.Variable\022+\n\014dict_entries\030\005 \003(\0132"
-                + "\025.com.kcl.api.MapEntry\"=\n\010MapEntry\022\013\n\003ke"
-                + "y\030\001 \001(\t\022$\n\005value\030\002 \001(\0132\025.com.kcl.api.Var"
-                + "iable\"b\n\031GetSchemaTypeMapping_Args\0220\n\tex"
-                + "ec_args\030\001 \001(\0132\035.com.kcl.api.ExecProgram_"
-                + "Args\022\023\n\013schema_name\030\002 \001(\t\"\313\001\n\033GetSchemaT"
-                + "ypeMapping_Result\022\\\n\023schema_type_mapping"
-                + "\030\001 \003(\0132?.com.kcl.api.GetSchemaTypeMappin"
-                + "g_Result.SchemaTypeMappingEntry\032N\n\026Schem"
-                + "aTypeMappingEntry\022\013\n\003key\030\001 \001(\t\022#\n\005value\030"
-                + "\002 \001(\0132\024.com.kcl.api.KclType:\0028\001\"\207\001\n\021Vali"
-                + "dateCode_Args\022\020\n\010datafile\030\001 \001(\t\022\014\n\004data\030"
-                + "\002 \001(\t\022\014\n\004file\030\003 \001(\t\022\014\n\004code\030\004 \001(\t\022\016\n\006sch"
-                + "ema\030\005 \001(\t\022\026\n\016attribute_name\030\006 \001(\t\022\016\n\006for"
-                + "mat\030\007 \001(\t\";\n\023ValidateCode_Result\022\017\n\007succ"
-                + "ess\030\001 \001(\010\022\023\n\013err_message\030\002 \001(\t\":\n\010Positi"
-                + "on\022\014\n\004line\030\001 \001(\003\022\016\n\006column\030\002 \001(\003\022\020\n\010file"
-                + "name\030\003 \001(\t\"i\n\021ListDepFiles_Args\022\020\n\010work_"
-                + "dir\030\001 \001(\t\022\024\n\014use_abs_path\030\002 \001(\010\022\023\n\013inclu"
-                + "de_all\030\003 \001(\010\022\027\n\017use_fast_parser\030\004 \001(\010\"F\n"
-                + "\023ListDepFiles_Result\022\017\n\007pkgroot\030\001 \001(\t\022\017\n"
-                + "\007pkgpath\030\002 \001(\t\022\r\n\005files\030\003 \003(\t\"9\n\026LoadSet"
-                + "tingsFiles_Args\022\020\n\010work_dir\030\001 \001(\t\022\r\n\005fil"
-                + "es\030\002 \003(\t\"{\n\030LoadSettingsFiles_Result\022/\n\017"
-                + "kcl_cli_configs\030\001 \001(\0132\026.com.kcl.api.CliC"
-                + "onfig\022.\n\013kcl_options\030\002 \003(\0132\031.com.kcl.api"
-                + ".KeyValuePair\"\203\002\n\tCliConfig\022\r\n\005files\030\001 \003"
-                + "(\t\022\016\n\006output\030\002 \001(\t\022\021\n\toverrides\030\003 \003(\t\022\025\n"
-                + "\rpath_selector\030\004 \003(\t\022\032\n\022strict_range_che"
-                + "ck\030\005 \001(\010\022\024\n\014disable_none\030\006 \001(\010\022\017\n\007verbos"
-                + "e\030\007 \001(\003\022\r\n\005debug\030\010 \001(\010\022\021\n\tsort_keys\030\t \001("
-                + "\010\022\023\n\013show_hidden\030\n \001(\010\022 \n\030include_schema"
-                + "_type_path\030\013 \001(\010\022\021\n\tfast_eval\030\014 \001(\010\"*\n\014K"
-                + "eyValuePair\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t\""
-                + "^\n\013Rename_Args\022\024\n\014package_root\030\001 \001(\t\022\023\n\013"
-                + "symbol_path\030\002 \001(\t\022\022\n\nfile_paths\030\003 \003(\t\022\020\n"
-                + "\010new_name\030\004 \001(\t\"&\n\rRename_Result\022\025\n\rchan"
-                + "ged_files\030\001 \003(\t\"\307\001\n\017RenameCode_Args\022\024\n\014p"
-                + "ackage_root\030\001 \001(\t\022\023\n\013symbol_path\030\002 \001(\t\022C"
-                + "\n\014source_codes\030\003 \003(\0132-.com.kcl.api.Renam"
-                + "eCode_Args.SourceCodesEntry\022\020\n\010new_name\030"
-                + "\004 \001(\t\0322\n\020SourceCodesEntry\022\013\n\003key\030\001 \001(\t\022\r"
-                + "\n\005value\030\002 \001(\t:\0028\001\"\221\001\n\021RenameCode_Result\022"
-                + "G\n\rchanged_codes\030\001 \003(\01320.com.kcl.api.Ren"
-                + "ameCode_Result.ChangedCodesEntry\0323\n\021Chan"
-                + "gedCodesEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001("
-                + "\t:\0028\001\"v\n\tTest_Args\0220\n\texec_args\030\001 \001(\0132\035."
-                + "com.kcl.api.ExecProgram_Args\022\020\n\010pkg_list"
-                + "\030\002 \003(\t\022\022\n\nrun_regexp\030\003 \001(\t\022\021\n\tfail_fast\030"
-                + "\004 \001(\010\"6\n\013Test_Result\022\'\n\004info\030\002 \003(\0132\031.com"
-                + ".kcl.api.TestCaseInfo\"R\n\014TestCaseInfo\022\014\n"
-                + "\004name\030\001 \001(\t\022\r\n\005error\030\002 \001(\t\022\020\n\010duration\030\003"
-                + " \001(\004\022\023\n\013log_message\030\004 \001(\t\"@\n\027UpdateDepen"
-                + "dencies_Args\022\025\n\rmanifest_path\030\001 \001(\t\022\016\n\006v"
-                + "endor\030\002 \001(\010\"L\n\031UpdateDependencies_Result"
-                + "\022/\n\rexternal_pkgs\030\003 \003(\0132\030.com.kcl.api.Ex"
-                + "ternalPkg\"\363\004\n\007KclType\022\014\n\004type\030\001 \001(\t\022)\n\013u"
-                + "nion_types\030\002 \003(\0132\024.com.kcl.api.KclType\022\017"
-                + "\n\007default\030\003 \001(\t\022\023\n\013schema_name\030\004 \001(\t\022\022\n\n"
-                + "schema_doc\030\005 \001(\t\0228\n\nproperties\030\006 \003(\0132$.c"
-                + "om.kcl.api.KclType.PropertiesEntry\022\020\n\010re"
-                + "quired\030\007 \003(\t\022!\n\003key\030\010 \001(\0132\024.com.kcl.api."
-                + "KclType\022\"\n\004item\030\t \001(\0132\024.com.kcl.api.KclT"
-                + "ype\022\014\n\004line\030\n \001(\005\022*\n\ndecorators\030\013 \003(\0132\026."
-                + "com.kcl.api.Decorator\022\020\n\010filename\030\014 \001(\t\022"
-                + "\020\n\010pkg_path\030\r \001(\t\022\023\n\013description\030\016 \001(\t\0224"
-                + "\n\010examples\030\017 \003(\0132\".com.kcl.api.KclType.E"
-                + "xamplesEntry\022)\n\013base_schema\030\020 \001(\0132\024.com."
-                + "kcl.api.KclType\032G\n\017PropertiesEntry\022\013\n\003ke"
-                + "y\030\001 \001(\t\022#\n\005value\030\002 \001(\0132\024.com.kcl.api.Kcl"
-                + "Type:\0028\001\032E\n\rExamplesEntry\022\013\n\003key\030\001 \001(\t\022#"
-                + "\n\005value\030\002 \001(\0132\024.com.kcl.api.Example:\0028\001\""
-                + "\225\001\n\tDecorator\022\014\n\004name\030\001 \001(\t\022\021\n\targuments"
-                + "\030\002 \003(\t\0226\n\010keywords\030\003 \003(\0132$.com.kcl.api.D"
-                + "ecorator.KeywordsEntry\032/\n\rKeywordsEntry\022"
-                + "\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\">\n\007Examp"
-                + "le\022\017\n\007summary\030\001 \001(\t\022\023\n\013description\030\002 \001(\t"
-                + "\022\r\n\005value\030\003 \001(\t2\226\001\n\016BuiltinService\0228\n\004Pi"
-                + "ng\022\026.com.kcl.api.Ping_Args\032\030.com.kcl.api"
-                + ".Ping_Result\022J\n\nListMethod\022\034.com.kcl.api"
-                + ".ListMethod_Args\032\036.com.kcl.api.ListMetho"
-                + "d_Result2\222\r\n\014KclvmService\0228\n\004Ping\022\026.com."
-                + "kcl.api.Ping_Args\032\030.com.kcl.api.Ping_Res"
-                + "ult\022M\n\013ExecProgram\022\035.com.kcl.api.ExecPro"
-                + "gram_Args\032\037.com.kcl.api.ExecProgram_Resu"
-                + "lt\022P\n\014BuildProgram\022\036.com.kcl.api.BuildPr"
-                + "ogram_Args\032 .com.kcl.api.BuildProgram_Re"
-                + "sult\022O\n\014ExecArtifact\022\036.com.kcl.api.ExecA"
-                + "rtifact_Args\032\037.com.kcl.api.ExecProgram_R"
-                + "esult\022G\n\tParseFile\022\033.com.kcl.api.ParseFi"
-                + "le_Args\032\035.com.kcl.api.ParseFile_Result\022P"
-                + "\n\014ParseProgram\022\036.com.kcl.api.ParseProgra" + "m_Args\032 .com.kcl.api.ParseProgram_Result"
-                + "\022M\n\013LoadPackage\022\035.com.kcl.api.LoadPackag"
-                + "e_Args\032\037.com.kcl.api.LoadPackage_Result\022"
-                + "N\n\013ListOptions\022\036.com.kcl.api.ParseProgra"
-                + "m_Args\032\037.com.kcl.api.ListOptions_Result\022"
-                + "S\n\rListVariables\022\037.com.kcl.api.ListVaria" + "bles_Args\032!.com.kcl.api.ListVariables_Re"
-                + "sult\022J\n\nFormatCode\022\034.com.kcl.api.FormatC"
-                + "ode_Args\032\036.com.kcl.api.FormatCode_Result"
-                + "\022J\n\nFormatPath\022\034.com.kcl.api.FormatPath_"
-                + "Args\032\036.com.kcl.api.FormatPath_Result\022D\n\010"
-                + "LintPath\022\032.com.kcl.api.LintPath_Args\032\034.c"
-                + "om.kcl.api.LintPath_Result\022P\n\014OverrideFi"
-                + "le\022\036.com.kcl.api.OverrideFile_Args\032 .com"
-                + ".kcl.api.OverrideFile_Result\022h\n\024GetSchem" + "aTypeMapping\022&.com.kcl.api.GetSchemaType"
-                + "Mapping_Args\032(.com.kcl.api.GetSchemaType"
-                + "Mapping_Result\022P\n\014ValidateCode\022\036.com.kcl"
-                + ".api.ValidateCode_Args\032 .com.kcl.api.Val"
-                + "idateCode_Result\022P\n\014ListDepFiles\022\036.com.k"
-                + "cl.api.ListDepFiles_Args\032 .com.kcl.api.L" + "istDepFiles_Result\022_\n\021LoadSettingsFiles\022"
-                + "#.com.kcl.api.LoadSettingsFiles_Args\032%.c" + "om.kcl.api.LoadSettingsFiles_Result\022>\n\006R"
-                + "ename\022\030.com.kcl.api.Rename_Args\032\032.com.kc"
-                + "l.api.Rename_Result\022J\n\nRenameCode\022\034.com."
-                + "kcl.api.RenameCode_Args\032\036.com.kcl.api.Re"
-                + "nameCode_Result\0228\n\004Test\022\026.com.kcl.api.Te"
-                + "st_Args\032\030.com.kcl.api.Test_Result\022b\n\022Upd"
-                + "ateDependencies\022$.com.kcl.api.UpdateDepe" + "ndencies_Args\032&.com.kcl.api.UpdateDepend"
-                + "encies_Resultb\006proto3" };
+                + " \003(\0132\022.com.kcl.api.Error\"2\n\022ListVariable"
+                + "s_Args\022\r\n\005files\030\001 \003(\t\022\r\n\005specs\030\002 \003(\t\"\351\001\n"
+                + "\024ListVariables_Result\022C\n\tvariables\030\001 \003(\013"
+                + "20.com.kcl.api.ListVariables_Result.Vari"
+                + "ablesEntry\022\031\n\021unsupported_codes\030\002 \003(\t\022(\n"
+                + "\014parse_errors\030\003 \003(\0132\022.com.kcl.api.Error\032"
+                + "G\n\016VariablesEntry\022\013\n\003key\030\001 \001(\t\022$\n\005value\030"
+                + "\002 \001(\0132\025.com.kcl.api.Variable:\0028\001\"\224\001\n\010Var"
+                + "iable\022\r\n\005value\030\001 \001(\t\022\021\n\ttype_name\030\002 \001(\t\022"
+                + "\016\n\006op_sym\030\003 \001(\t\022)\n\nlist_items\030\004 \003(\0132\025.co"
+                + "m.kcl.api.Variable\022+\n\014dict_entries\030\005 \003(\013"
+                + "2\025.com.kcl.api.MapEntry\"=\n\010MapEntry\022\013\n\003k"
+                + "ey\030\001 \001(\t\022$\n\005value\030\002 \001(\0132\025.com.kcl.api.Va"
+                + "riable\"b\n\031GetSchemaTypeMapping_Args\0220\n\te"
+                + "xec_args\030\001 \001(\0132\035.com.kcl.api.ExecProgram"
+                + "_Args\022\023\n\013schema_name\030\002 \001(\t\"\313\001\n\033GetSchema"
+                + "TypeMapping_Result\022\\\n\023schema_type_mappin"
+                + "g\030\001 \003(\0132?.com.kcl.api.GetSchemaTypeMappi"
+                + "ng_Result.SchemaTypeMappingEntry\032N\n\026Sche"
+                + "maTypeMappingEntry\022\013\n\003key\030\001 \001(\t\022#\n\005value"
+                + "\030\002 \001(\0132\024.com.kcl.api.KclType:\0028\001\"\207\001\n\021Val"
+                + "idateCode_Args\022\020\n\010datafile\030\001 \001(\t\022\014\n\004data"
+                + "\030\002 \001(\t\022\014\n\004file\030\003 \001(\t\022\014\n\004code\030\004 \001(\t\022\016\n\006sc"
+                + "hema\030\005 \001(\t\022\026\n\016attribute_name\030\006 \001(\t\022\016\n\006fo"
+                + "rmat\030\007 \001(\t\";\n\023ValidateCode_Result\022\017\n\007suc"
+                + "cess\030\001 \001(\010\022\023\n\013err_message\030\002 \001(\t\":\n\010Posit"
+                + "ion\022\014\n\004line\030\001 \001(\003\022\016\n\006column\030\002 \001(\003\022\020\n\010fil"
+                + "ename\030\003 \001(\t\"i\n\021ListDepFiles_Args\022\020\n\010work"
+                + "_dir\030\001 \001(\t\022\024\n\014use_abs_path\030\002 \001(\010\022\023\n\013incl"
+                + "ude_all\030\003 \001(\010\022\027\n\017use_fast_parser\030\004 \001(\010\"F"
+                + "\n\023ListDepFiles_Result\022\017\n\007pkgroot\030\001 \001(\t\022\017"
+                + "\n\007pkgpath\030\002 \001(\t\022\r\n\005files\030\003 \003(\t\"9\n\026LoadSe"
+                + "ttingsFiles_Args\022\020\n\010work_dir\030\001 \001(\t\022\r\n\005fi"
+                + "les\030\002 \003(\t\"{\n\030LoadSettingsFiles_Result\022/\n"
+                + "\017kcl_cli_configs\030\001 \001(\0132\026.com.kcl.api.Cli"
+                + "Config\022.\n\013kcl_options\030\002 \003(\0132\031.com.kcl.ap"
+                + "i.KeyValuePair\"\203\002\n\tCliConfig\022\r\n\005files\030\001 "
+                + "\003(\t\022\016\n\006output\030\002 \001(\t\022\021\n\toverrides\030\003 \003(\t\022\025"
+                + "\n\rpath_selector\030\004 \003(\t\022\032\n\022strict_range_ch"
+                + "eck\030\005 \001(\010\022\024\n\014disable_none\030\006 \001(\010\022\017\n\007verbo"
+                + "se\030\007 \001(\003\022\r\n\005debug\030\010 \001(\010\022\021\n\tsort_keys\030\t \001"
+                + "(\010\022\023\n\013show_hidden\030\n \001(\010\022 \n\030include_schem"
+                + "a_type_path\030\013 \001(\010\022\021\n\tfast_eval\030\014 \001(\010\"*\n\014"
+                + "KeyValuePair\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t"
+                + "\"^\n\013Rename_Args\022\024\n\014package_root\030\001 \001(\t\022\023\n"
+                + "\013symbol_path\030\002 \001(\t\022\022\n\nfile_paths\030\003 \003(\t\022\020"
+                + "\n\010new_name\030\004 \001(\t\"&\n\rRename_Result\022\025\n\rcha"
+                + "nged_files\030\001 \003(\t\"\307\001\n\017RenameCode_Args\022\024\n\014"
+                + "package_root\030\001 \001(\t\022\023\n\013symbol_path\030\002 \001(\t\022"
+                + "C\n\014source_codes\030\003 \003(\0132-.com.kcl.api.Rena"
+                + "meCode_Args.SourceCodesEntry\022\020\n\010new_name"
+                + "\030\004 \001(\t\0322\n\020SourceCodesEntry\022\013\n\003key\030\001 \001(\t\022"
+                + "\r\n\005value\030\002 \001(\t:\0028\001\"\221\001\n\021RenameCode_Result"
+                + "\022G\n\rchanged_codes\030\001 \003(\01320.com.kcl.api.Re"
+                + "nameCode_Result.ChangedCodesEntry\0323\n\021Cha"
+                + "ngedCodesEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001"
+                + "(\t:\0028\001\"v\n\tTest_Args\0220\n\texec_args\030\001 \001(\0132\035"
+                + ".com.kcl.api.ExecProgram_Args\022\020\n\010pkg_lis"
+                + "t\030\002 \003(\t\022\022\n\nrun_regexp\030\003 \001(\t\022\021\n\tfail_fast"
+                + "\030\004 \001(\010\"6\n\013Test_Result\022\'\n\004info\030\002 \003(\0132\031.co"
+                + "m.kcl.api.TestCaseInfo\"R\n\014TestCaseInfo\022\014"
+                + "\n\004name\030\001 \001(\t\022\r\n\005error\030\002 \001(\t\022\020\n\010duration\030"
+                + "\003 \001(\004\022\023\n\013log_message\030\004 \001(\t\"@\n\027UpdateDepe"
+                + "ndencies_Args\022\025\n\rmanifest_path\030\001 \001(\t\022\016\n\006"
+                + "vendor\030\002 \001(\010\"L\n\031UpdateDependencies_Resul"
+                + "t\022/\n\rexternal_pkgs\030\003 \003(\0132\030.com.kcl.api.E"
+                + "xternalPkg\"\363\004\n\007KclType\022\014\n\004type\030\001 \001(\t\022)\n\013"
+                + "union_types\030\002 \003(\0132\024.com.kcl.api.KclType\022"
+                + "\017\n\007default\030\003 \001(\t\022\023\n\013schema_name\030\004 \001(\t\022\022\n"
+                + "\nschema_doc\030\005 \001(\t\0228\n\nproperties\030\006 \003(\0132$."
+                + "com.kcl.api.KclType.PropertiesEntry\022\020\n\010r"
+                + "equired\030\007 \003(\t\022!\n\003key\030\010 \001(\0132\024.com.kcl.api"
+                + ".KclType\022\"\n\004item\030\t \001(\0132\024.com.kcl.api.Kcl"
+                + "Type\022\014\n\004line\030\n \001(\005\022*\n\ndecorators\030\013 \003(\0132\026"
+                + ".com.kcl.api.Decorator\022\020\n\010filename\030\014 \001(\t"
+                + "\022\020\n\010pkg_path\030\r \001(\t\022\023\n\013description\030\016 \001(\t\022"
+                + "4\n\010examples\030\017 \003(\0132\".com.kcl.api.KclType."
+                + "ExamplesEntry\022)\n\013base_schema\030\020 \001(\0132\024.com"
+                + ".kcl.api.KclType\032G\n\017PropertiesEntry\022\013\n\003k"
+                + "ey\030\001 \001(\t\022#\n\005value\030\002 \001(\0132\024.com.kcl.api.Kc"
+                + "lType:\0028\001\032E\n\rExamplesEntry\022\013\n\003key\030\001 \001(\t\022"
+                + "#\n\005value\030\002 \001(\0132\024.com.kcl.api.Example:\0028\001"
+                + "\"\225\001\n\tDecorator\022\014\n\004name\030\001 \001(\t\022\021\n\targument"
+                + "s\030\002 \003(\t\0226\n\010keywords\030\003 \003(\0132$.com.kcl.api."
+                + "Decorator.KeywordsEntry\032/\n\rKeywordsEntry"
+                + "\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\">\n\007Exam"
+                + "ple\022\017\n\007summary\030\001 \001(\t\022\023\n\013description\030\002 \001("
+                + "\t\022\r\n\005value\030\003 \001(\t2\226\001\n\016BuiltinService\0228\n\004P"
+                + "ing\022\026.com.kcl.api.Ping_Args\032\030.com.kcl.ap"
+                + "i.Ping_Result\022J\n\nListMethod\022\034.com.kcl.ap"
+                + "i.ListMethod_Args\032\036.com.kcl.api.ListMeth"
+                + "od_Result2\222\r\n\014KclvmService\0228\n\004Ping\022\026.com"
+                + ".kcl.api.Ping_Args\032\030.com.kcl.api.Ping_Re"
+                + "sult\022M\n\013ExecProgram\022\035.com.kcl.api.ExecPr"
+                + "ogram_Args\032\037.com.kcl.api.ExecProgram_Res"
+                + "ult\022P\n\014BuildProgram\022\036.com.kcl.api.BuildP"
+                + "rogram_Args\032 .com.kcl.api.BuildProgram_R"
+                + "esult\022O\n\014ExecArtifact\022\036.com.kcl.api.Exec"
+                + "Artifact_Args\032\037.com.kcl.api.ExecProgram_"
+                + "Result\022G\n\tParseFile\022\033.com.kcl.api.ParseF"
+                + "ile_Args\032\035.com.kcl.api.ParseFile_Result\022"
+                + "P\n\014ParseProgram\022\036.com.kcl.api.ParseProgr" + "am_Args\032 .com.kcl.api.ParseProgram_Resul"
+                + "t\022M\n\013LoadPackage\022\035.com.kcl.api.LoadPacka"
+                + "ge_Args\032\037.com.kcl.api.LoadPackage_Result"
+                + "\022N\n\013ListOptions\022\036.com.kcl.api.ParseProgr"
+                + "am_Args\032\037.com.kcl.api.ListOptions_Result"
+                + "\022S\n\rListVariables\022\037.com.kcl.api.ListVari" + "ables_Args\032!.com.kcl.api.ListVariables_R"
+                + "esult\022J\n\nFormatCode\022\034.com.kcl.api.Format"
+                + "Code_Args\032\036.com.kcl.api.FormatCode_Resul"
+                + "t\022J\n\nFormatPath\022\034.com.kcl.api.FormatPath"
+                + "_Args\032\036.com.kcl.api.FormatPath_Result\022D\n"
+                + "\010LintPath\022\032.com.kcl.api.LintPath_Args\032\034."
+                + "com.kcl.api.LintPath_Result\022P\n\014OverrideF"
+                + "ile\022\036.com.kcl.api.OverrideFile_Args\032 .co"
+                + "m.kcl.api.OverrideFile_Result\022h\n\024GetSche" + "maTypeMapping\022&.com.kcl.api.GetSchemaTyp"
+                + "eMapping_Args\032(.com.kcl.api.GetSchemaTyp"
+                + "eMapping_Result\022P\n\014ValidateCode\022\036.com.kc"
+                + "l.api.ValidateCode_Args\032 .com.kcl.api.Va"
+                + "lidateCode_Result\022P\n\014ListDepFiles\022\036.com."
+                + "kcl.api.ListDepFiles_Args\032 .com.kcl.api." + "ListDepFiles_Result\022_\n\021LoadSettingsFiles"
+                + "\022#.com.kcl.api.LoadSettingsFiles_Args\032%." + "com.kcl.api.LoadSettingsFiles_Result\022>\n\006"
+                + "Rename\022\030.com.kcl.api.Rename_Args\032\032.com.k"
+                + "cl.api.Rename_Result\022J\n\nRenameCode\022\034.com"
+                + ".kcl.api.RenameCode_Args\032\036.com.kcl.api.R"
+                + "enameCode_Result\0228\n\004Test\022\026.com.kcl.api.T"
+                + "est_Args\032\030.com.kcl.api.Test_Result\022b\n\022Up"
+                + "dateDependencies\022$.com.kcl.api.UpdateDep" + "endencies_Args\032&.com.kcl.api.UpdateDepen"
+                + "dencies_Resultb\006proto3" };
         descriptor = com.google.protobuf.Descriptors.FileDescriptor.internalBuildGeneratedFileFrom(descriptorData,
                 new com.google.protobuf.Descriptors.FileDescriptor[] {});
         internal_static_com_kcl_api_ExternalPkg_descriptor = getDescriptor().getMessageTypes().get(0);
@@ -67581,7 +67679,8 @@ public final class Spec {
                 new java.lang.String[] { "Result", "ParseErrors", });
         internal_static_com_kcl_api_ListVariables_Args_descriptor = getDescriptor().getMessageTypes().get(35);
         internal_static_com_kcl_api_ListVariables_Args_fieldAccessorTable = new com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-                internal_static_com_kcl_api_ListVariables_Args_descriptor, new java.lang.String[] { "File", "Specs", });
+                internal_static_com_kcl_api_ListVariables_Args_descriptor,
+                new java.lang.String[] { "Files", "Specs", });
         internal_static_com_kcl_api_ListVariables_Result_descriptor = getDescriptor().getMessageTypes().get(36);
         internal_static_com_kcl_api_ListVariables_Result_fieldAccessorTable = new com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
                 internal_static_com_kcl_api_ListVariables_Result_descriptor,
