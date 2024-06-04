@@ -33,7 +33,7 @@ public class ListVariablesTest {
             String expectedName = testCase[2];
             String expectOpSym = testCase[3];
             ListVariables_Result result = api.listVariables(ListVariables_Args.newBuilder()
-                    .setFile("./src/test_data/list_variables/main.k").addSpecs(spec).build());
+                    .addFiles("./src/test_data/list_variables/main.k").addSpecs(spec).build());
 
             Assert.assertEquals(result.getVariablesCount(), 1);
             System.out.println("spec is " + spec);
@@ -51,7 +51,7 @@ public class ListVariablesTest {
         String filePath = Paths.get("./src/test_data/list_variables/invalid.k").toAbsolutePath().toString();
 
         ListVariables_Result result = api
-                .listVariables(ListVariables_Args.newBuilder().setFile(filePath).addSpecs("a").build());
+                .listVariables(ListVariables_Args.newBuilder().addFiles(filePath).addSpecs("a").build());
 
         Assert.assertEquals(result.getParseErrorsCount(), 2);
         Assert.assertEquals(result.getParseErrors(0).getLevel(), "error");
@@ -71,7 +71,7 @@ public class ListVariablesTest {
         String filePath = Paths.get("./src/test_data/list_variables/list.k").toAbsolutePath().toString();
 
         ListVariables_Result result = api
-                .listVariables(ListVariables_Args.newBuilder().setFile(filePath).addSpecs("list0").build());
+                .listVariables(ListVariables_Args.newBuilder().addFiles(filePath).addSpecs("list0").build());
         Assert.assertEquals(result.getVariablesCount(), 1);
         Assert.assertEquals(result.getVariablesMap().get("list0").getValue(), "[1, 2, 3]");
         Assert.assertEquals(result.getVariablesMap().get("list0").getTypeName(), "");
@@ -80,5 +80,20 @@ public class ListVariablesTest {
         Assert.assertEquals(result.getVariablesMap().get("list0").getListItems(0).getValue(), "1");
         Assert.assertEquals(result.getVariablesMap().get("list0").getListItems(1).getValue(), "2");
         Assert.assertEquals(result.getVariablesMap().get("list0").getListItems(2).getValue(), "3");
+    }
+
+    @Test
+    public void testListMergedVariables() throws Exception {
+        // API instance
+        API api = new API();
+
+        String mainFilePath = Paths.get("./src/test_data/list_merged_variables/main.k").toAbsolutePath().toString();
+        String baseFilePath = Paths.get("./src/test_data/list_merged_variables/base.k").toAbsolutePath().toString();
+
+        ListVariables_Result result = api.listVariables(ListVariables_Args.newBuilder().addFiles(baseFilePath)
+                .addFiles(mainFilePath).addSpecs("tests.aType").build());
+
+        Assert.assertEquals(result.getVariablesCount(), 1);
+        Assert.assertEquals(result.getVariablesMap().get("tests.aType").getValue(), "\"Internet\"");
     }
 }
