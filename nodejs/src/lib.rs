@@ -83,8 +83,8 @@ pub struct ListVariablesArgs(kclvm_api::ListVariablesArgs);
 #[napi]
 impl ListVariablesArgs {
     #[napi(constructor)]
-    pub fn new(file: String, specs: Vec<String>) -> Result<Self> {
-        Ok(Self(kclvm_api::ListVariablesArgs { file, specs }))
+    pub fn new(files: Vec<String>, specs: Vec<String>) -> Result<Self> {
+        Ok(Self(kclvm_api::ListVariablesArgs { files, specs }))
     }
 }
 
