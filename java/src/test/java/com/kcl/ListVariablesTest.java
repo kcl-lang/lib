@@ -88,7 +88,6 @@ public class ListVariablesTest {
         // API instance
         API api = new API();
 
-        // Test data setup
         String[][] testData = {
                 { "./src/test_data/list_merged_variables/merge_0/main.k",
                         "./src/test_data/list_merged_variables/merge_0/base.k", "tests.aType", "\"Internet\"" },
