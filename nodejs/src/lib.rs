@@ -83,8 +83,18 @@ pub struct ListVariablesArgs(kclvm_api::ListVariablesArgs);
 #[napi]
 impl ListVariablesArgs {
     #[napi(constructor)]
-    pub fn new(files: Vec<String>, specs: Vec<String>) -> Result<Self> {
-        Ok(Self(kclvm_api::ListVariablesArgs { files, specs }))
+    pub fn new(
+        files: Vec<String>,
+        specs: Vec<String>,
+        opts: Option<ListVariablesOptions>,
+    ) -> Result<Self> {
+        Ok(Self(kclvm_api::ListVariablesArgs {
+            files,
+            specs,
+            options: opts.map(|o| kclvm_api::ListVariablesOptions {
+                merge_program: o.merge_program,
+            }),
+        }))
     }
 }
 

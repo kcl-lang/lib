@@ -338,15 +338,46 @@ impl OverrideFileResult {
 }
 
 #[napi(object)]
+pub struct ListVariablesOptions {
+    pub merge_program: bool,
+}
+
+#[napi(object)]
 pub struct ListVariablesResult {
-    pub variables: HashMap<String, Variable>,
+    pub variables: HashMap<String, Vec<Variable>>,
     pub unsupported_codes: Vec<String>,
     pub parse_errors: Vec<Error>,
 }
 
 #[napi(object)]
+#[derive(Default, Debug)]
 pub struct Variable {
     pub value: String,
+    pub type_name: String,
+    pub op_sym: String,
+    pub list_items: Vec<Variable>,
+    pub dict_entires: HashMap<String, Variable>,
+}
+
+impl Variable {
+    pub fn new(v: &kclvm_api::Variable) -> Self {
+        Self {
+            value: v.value.to_string(),
+            type_name: v.type_name.to_string(),
+            op_sym: v.op_sym.to_string(),
+            list_items: v.list_items.iter().map(|v| Variable::new(v)).collect(),
+            dict_entires: v
+                .dict_entries
+                .iter()
+                .map(|e| {
+                    (
+                        e.key.to_string(),
+                        Variable::new(&e.value.clone().unwrap_or_default()),
+                    )
+                })
+                .collect(),
+        }
+    }
 }
 
 impl ListVariablesResult {
@@ -358,9 +389,7 @@ impl ListVariablesResult {
                 .map(|(k, v)| {
                     (
                         k.to_string(),
-                        Variable {
-                            value: v.value.to_string(),
-                        },
+                        v.variables.iter().map(|v| Variable::new(v)).collect(),
                     )
                 })
                 .collect(),

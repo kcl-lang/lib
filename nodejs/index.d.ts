@@ -152,13 +152,20 @@ export interface LintPathResult {
 export interface OverrideFileResult {
   result: boolean
 }
+export interface ListVariablesOptions {
+  mergeProgram: boolean
+}
 export interface ListVariablesResult {
-  variables: Record<string, Variable>
+  variables: Record<string, Array<Variable>>
   unsupportedCodes: Array<string>
   parseErrors: Array<Error>
 }
 export interface Variable {
   value: string
+  typeName: string
+  opSym: string
+  listItems: Array<Variable>
+  dictEntires: Record<string, Variable>
 }
 export interface GetSchemaTypeResult {
   schemaTypeList: Array<KclType>
@@ -320,7 +327,7 @@ export class ExecProgramArgs {
   constructor(paths: Array<string>, workDir?: string | undefined | null)
 }
 export class ListVariablesArgs {
-  constructor(file: string, specs: Array<string>)
+  constructor(files: Array<string>, specs: Array<string>, opts?: ListVariablesOptions | undefined | null)
 }
 export class OverrideFileArgs {
   constructor(file: string, specs: Array<string>, importPaths: Array<string>)
