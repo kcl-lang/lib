@@ -6,6 +6,8 @@ syntax = "proto3";
 
 package com.kcl.api;
 
+option go_package = ".;lib";
+
 // kcl main.k -E pkg_name=pkg_path
 message ExternalPkg {
 	string pkg_name = 1;
