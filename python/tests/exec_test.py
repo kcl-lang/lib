@@ -31,8 +31,20 @@ def test_list_variable_api():
     import kcl_lib.api as api
 
     # Call the `exec_program` method with appropriate arguments
-    args = api.ListVariables_Args(file=TEST_FILE)
+    args = api.ListVariables_Args(files=[TEST_FILE])
     # Usage
     api = api.API()
     result = api.list_variables(args)
-    assert result.variables["app"].value == "AppConfig {replicas: 2}"
+    assert result.variables["app"].variables[0].value == "AppConfig {replicas: 2}"
+
+
+def test_get_schema_type_api():
+    import kcl_lib.api as api
+
+    exec_args = api.ExecProgram_Args(k_filename_list=[TEST_FILE])
+    # Call the `exec_program` method with appropriate arguments
+    args = api.GetSchemaTypeMapping_Args(exec_args=exec_args)
+    # Usage
+    api = api.API()
+    result = api.get_schema_type_mapping(args)
+    assert result.schema_type_mapping["app"].properties["replicas"].type == "int"
