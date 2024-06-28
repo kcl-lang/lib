@@ -97,9 +97,11 @@ class API:
         args_serialized = args.SerializeToString()
 
         # Call the service function and get the result
-        result = bytes(kcl_lib.call_with_plugin_agent(
-            name.encode("utf-8"), args_serialized, self.plugin_agent
-        ))
+        result = bytes(
+            kcl_lib.call_with_plugin_agent(
+                name.encode("utf-8"), args_serialized, self.plugin_agent
+            )
+        )
         if result.startswith(b"ERROR"):
             raise Exception(str(result))
         msg = self.create_method_resp_message(name)
