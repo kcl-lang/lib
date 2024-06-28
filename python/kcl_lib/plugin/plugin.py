@@ -21,7 +21,7 @@ class PluginContext:
         try:
             return self._call_py_method_unsafe(name, args_json, kwargs_json)
         except Exception as e:
-            return json.dumps({"__kcl_PanicInfo__": True, "message": f"{e}"})
+            return json.dumps({"__kcl_PanicInfo__": f"{e}"})
 
     def _call_py_method_unsafe(
         self, name: str, args_json: str, kwargs_json: str
