@@ -4,10 +4,13 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UncheckedIOException;
+import java.util.Map;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 
 import com.kcl.api.Spec.*;
+import com.kcl.plugin.MethodFunction;
+import com.kcl.plugin.PluginContext;
 
 public class API implements Service {
     static String LIB_NAME = "kcl_lib_jni";
@@ -30,7 +33,7 @@ public class API implements Service {
             System.loadLibrary(LIB_NAME);
             return;
         } catch (UnsatisfiedLinkError ignore) {
-            // ignore - try to find native libraries from classpath
+            // ignore - try to find native libraries from class path
         }
         doLoadBundledLibrary();
     }
@@ -59,7 +62,21 @@ public class API implements Service {
 
     private native byte[] loadPackageWithCache(byte[] args);
 
+    private native void registerPluginContext(PluginContext ctx);
+
+    private static PluginContext pluginContext = new PluginContext();
+    private static byte[] buffer = new byte[1024];
+
+    public static void registerPlugin(String name, Map<String, MethodFunction> methodMap) {
+        pluginContext.registerPlugin(name, methodMap);
+    }
+
+    private String callMethod(String method, String argsJson, String kwArgsJson) {
+        return pluginContext.callMethod(method, argsJson, kwArgsJson);
+    }
+
     public API() {
+        registerPluginContext(pluginContext);
     }
 
     /**
