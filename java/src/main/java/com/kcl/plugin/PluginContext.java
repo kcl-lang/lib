@@ -17,8 +17,9 @@ public class PluginContext {
         try {
             return callJavaMethodUnsafe(name, argsJson, kwArgsJson);
         } catch (Exception e) {
-            Map<String, String> panicInfo = new HashMap<>();
-            panicInfo.put("__kcl_PanicInfo__", e.getMessage());
+            Map<String, Object> panicInfo = new HashMap<>();
+            panicInfo.put("__kcl_PanicInfo__", true);
+            panicInfo.put("message", e.getMessage());
             return convertToJson(panicInfo);
         }
     }
