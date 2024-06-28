@@ -4,7 +4,7 @@ import com.kcl.api.API;
 import com.kcl.api.Spec.ExecProgram_Args;
 import com.kcl.api.Spec.ExecProgram_Result;
 
-import java.util.Map;
+import java.util.Collections;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -13,7 +13,7 @@ public class PluginTest {
     @Test
     public void testExecProgramWithPlugin() throws Exception {
         // API instance
-        API.registerPlugin("my_plugin", Map.of("add", (args, kwArgs) -> {
+        API.registerPlugin("my_plugin", Collections.singletonMap("add", (args, kwArgs) -> {
             return (int) args[0] + (int) args[1];
         }));
         API api = new API();
