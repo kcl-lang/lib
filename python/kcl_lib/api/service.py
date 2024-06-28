@@ -1,4 +1,5 @@
 import kcl_lib
+import kcl_lib.plugin as plugin
 from .spec_pb2 import *
 from google.protobuf import message as _message
 
@@ -19,7 +20,7 @@ class API:
     ```
     """
 
-    def __init__(self, plugin_agent: int = 0):
+    def __init__(self, plugin_agent: int = plugin.plugin_agent_addr):
         self.plugin_agent = plugin_agent
 
     def ping(self, args: Ping_Args) -> Ping_Result:
