@@ -7,10 +7,10 @@ fmt:
 	mvn formatter:format
 
 pkg:
-	mvn clean package
+	mvn clean package -Dcargo-build.profile=release
 
 deploy:
-	mvn clean deploy
+	mvn clean deploy -Dcargo-build.profile=release
 
 test:
-	mvn clean test
+	mvn clean test -Dcargo-build.profile=release
