@@ -57,7 +57,7 @@ jobs:
         toolchain: 1.77
         override: true
         components: clippy, rustfmt
-    - name: Clear package cache
+    - name: Build KCL Library
       run: cargo build --release
     - name: Clear package cache
       run: dotnet clean KclLib.sln && dotnet nuget locals all --clear
