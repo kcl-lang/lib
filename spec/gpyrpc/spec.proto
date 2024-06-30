@@ -6,6 +6,7 @@ syntax = "proto3";
 
 package com.kcl.api;
 
+option csharp_namespace = "KclLib.API";
 option go_package = ".;lib";
 
 // kcl main.k -E pkg_name=pkg_path

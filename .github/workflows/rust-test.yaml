@@ -8,6 +8,11 @@ on:
     tags:
       - '*'
   pull_request:
+    branches:
+      - main
+    paths:
+      - "Cargo.toml"
+      - "src/**"
   workflow_dispatch:
 
 permissions:

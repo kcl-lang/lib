@@ -1,0 +1,78 @@
+name: dotnet-test
+
+on:
+  push:
+    branches:
+      - main
+      - master
+    tags:
+      - '*'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "dotnet/**"
+  workflow_dispatch:
+
+jobs:
+  build-and-test:
+    name: Test .NET Library of KCL
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        working-directory: "dotnet"
+    env:
+      DevBuild: 'false'
+    strategy:
+      fail-fast: false
+      matrix:
+        build: [linux-debug, linux-release, macos-debug, macos-release, windows-debug, windows-release]
+        include:
+          - build: linux-debug
+            os: ubuntu-latest
+            config: debug
+          - build: linux-release
+            os: ubuntu-latest
+            config: release
+          - build: macos-debug
+            os: macos-latest
+            config: debug
+          - build: macos-release
+            os: macos-latest
+            config: release
+          - build: windows-debug
+            os: windows-2019
+            config: debug
+          - build: windows-release
+            os: windows-2019
+            config: release
+    steps:
+    - uses: actions/checkout@v4
+    - uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '8.0.x'
+    - name: Install Rust
+      uses: actions-rs/toolchain@v1
+      with:
+        toolchain: 1.77
+        override: true
+        components: clippy, rustfmt
+    - name: Build KCL Library
+      run: cargo build --release
+    - name: Clear package cache
+      run: dotnet clean KclLib.sln && dotnet nuget locals all --clear
+    - name: Enable development builds for the main branch
+      if: github.ref == 'refs/heads/main' || github.base_ref == 'main'
+      shell: bash
+      run: |
+        echo "DevBuild=true" >> $GITHUB_ENV
+    - name: Restore packages
+      run: dotnet restore KclLib.sln
+    - name: Build
+      run: dotnet build KclLib.sln -c ${{ matrix.config }} --no-restore
+    - name: Test
+      run: dotnet test KclLib.sln -c ${{ matrix.config }}
+    - name: Create package
+      run: |
+        cd KclLib
+        dotnet pack -c ${{ matrix.config }} /p:Packing=true

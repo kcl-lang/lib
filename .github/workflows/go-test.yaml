@@ -8,6 +8,13 @@ on:
     tags:
       - '*'
   pull_request:
+    branches:
+      - main
+    paths:
+      - "lib/**"
+      - "*.go"
+      - "go.mod"
+      - "go.sum"
   workflow_dispatch:
 
 permissions:
