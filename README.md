@@ -122,7 +122,7 @@ public class KclLibAPITest
         var execArgs = new ExecProgram_Args();
         execArgs.KFilenameList.Add("path/to/kcl.k");
         var result = new API().ExecProgram(execArgs);
-        Consolo.WriteLine(result.YamlResult);
+        Console.WriteLine(result.YamlResult);
     }
 }
 ```
