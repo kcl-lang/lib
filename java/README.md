@@ -6,7 +6,7 @@ Refer to [this](https://docs.github.com/en/packages/working-with-a-github-packag
 
 ### Maven
 
-In your project's pom.xml, configure our repository as follows:
+In your project's `pom.xml`, configure our repository as follows:
 
 ```xml
 <repositories>
@@ -73,4 +73,3 @@ make test
 ```shell
 make fmt
 ```
-

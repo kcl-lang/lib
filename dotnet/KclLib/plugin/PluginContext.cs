@@ -21,14 +21,14 @@ public class PluginContext
 
     public string CallMethod(string name, string argsJson, string kwArgsJson)
     {
-        return CallJavaMethod(name, argsJson, kwArgsJson);
+        return CallCSharpMethod(name, argsJson, kwArgsJson);
     }
 
-    private string CallJavaMethod(string name, string argsJson, string kwArgsJson)
+    private string CallCSharpMethod(string name, string argsJson, string kwArgsJson)
     {
         try
         {
-            return CallJavaMethodUnsafe(name, argsJson, kwArgsJson);
+            return CallCSharpMethodUnsafe(name, argsJson, kwArgsJson);
         }
         catch (Exception e)
         {
@@ -40,7 +40,7 @@ public class PluginContext
         }
     }
 
-    private string CallJavaMethodUnsafe(string name, string argsJson, string kwArgsJson)
+    private string CallCSharpMethodUnsafe(string name, string argsJson, string kwArgsJson)
     {
         int dotIdx = name.LastIndexOf(".");
         if (dotIdx < 0)
