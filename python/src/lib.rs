@@ -7,7 +7,8 @@ fn call<'a>(name: &'a [u8], args: &'a [u8]) -> PyResult<Vec<u8>> {
     kclvm_api::call(name, args).map_err(|e| PyErr::new::<PyException, _>(e.to_string()))
 }
 
-/// Call KCL API with the API name and argument protobuf bytes.
+/// Call KCL API with the API name and plugin agent address and
+/// argument protobuf bytes.
 #[pyfunction]
 fn call_with_plugin_agent<'a>(
     name: &'a [u8],

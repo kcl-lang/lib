@@ -12,6 +12,6 @@
     "dist/"
   ],
   "dependencies": {
-    "@kcl-lang/wasm-lib": "0.9.0-rc.2"
+    "@kcl-lang/wasm-lib": "0.9.0"
   }
 }
