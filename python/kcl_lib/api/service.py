@@ -104,7 +104,7 @@ class API:
             )
         )
         if result.startswith(b"ERROR"):
-            raise Exception(str(result))
+            raise Exception(result.decode(encoding="uft-8"))
         msg = self.create_method_resp_message(name)
         msg.ParseFromString(result)
         return msg
