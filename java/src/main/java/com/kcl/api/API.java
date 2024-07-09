@@ -14,6 +14,7 @@ import com.kcl.plugin.PluginContext;
 
 public class API implements Service {
     static String LIB_NAME = "kcl_lib_jni";
+    static String ERROR_PREFIX = "ERROR:";
     static {
         loadLibrary();
     }
@@ -278,16 +279,16 @@ public class API implements Service {
 
     private byte[] call(String name, byte[] args) throws Exception {
         byte[] result = callNative(name.getBytes(), args);
-        if (result != null && startsWith(result, "ERROR")) {
-            throw new java.lang.Error(result.toString());
+        if (result != null && startsWith(result, ERROR_PREFIX)) {
+            throw new java.lang.Error(result.toString().substring(ERROR_PREFIX.length()).trim());
         }
         return result;
     }
 
     private byte[] callLoadPackageWithCache(byte[] args) throws Exception {
         byte[] result = loadPackageWithCache(args);
-        if (result != null && startsWith(result, "ERROR")) {
-            throw new java.lang.Error(result.toString());
+        if (result != null && startsWith(result, ERROR_PREFIX)) {
+            throw new java.lang.Error(result.toString().substring(ERROR_PREFIX.length()).trim());
         }
         return result;
     }

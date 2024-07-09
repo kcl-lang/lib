@@ -14,6 +14,20 @@ def test_exec_api():
     assert result.yaml_result == "app:\n  replicas: 2"
 
 
+def test_exec_api_failed():
+    import kcl_lib.api as api
+
+    try:
+        # Call the `exec_program` method with appropriate arguments
+        args = api.ExecProgram_Args(k_filename_list=["file_not_found"])
+        # Usage
+        api = api.API()
+        result = api.exec_program(args)
+        assert False
+    except Exception as err:
+        assert "Cannot find the kcl file" in str(err)
+
+
 def test_load_package_api():
     import kcl_lib.api as api
 

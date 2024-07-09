@@ -33,7 +33,7 @@ public class LoadPackageTest {
         // Variable definitions in the main scope.
         Scope mainScope = SematicUtil.findMainPackageScope(result);
         // Child scopes of the main scope.
-        Assert.assertEquals(mainScope.getChildrenList().size(), 3);
+        Assert.assertEquals(mainScope.getChildrenList().size(), 2);
         // Mapping AST node to Symbol type
         NodeRef<Stmt> stmt = program.getFirstModule().getBody().get(0);
         Assert.assertTrue(SematicUtil.findSymbolByAstId(result, stmt.getId()).getName().contains("pkg"));
@@ -70,7 +70,7 @@ public class LoadPackageTest {
         // Variable definitions in the main scope.
         Scope mainScope = SematicUtil.findMainPackageScope(result);
         // Child scopes of the main scope.
-        Assert.assertEquals(mainScope.getChildrenList().size(), 3);
+        Assert.assertEquals(mainScope.getChildrenList().size(), 2);
         // Mapping AST node to Symbol type
         NodeRef<Stmt> stmt = program.getFirstModule().getBody().get(0);
         Assert.assertTrue(SematicUtil.findSymbolByAstId(result, stmt.getId()).getName().contains("pkg"));

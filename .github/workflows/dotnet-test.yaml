@@ -16,47 +16,71 @@ on:
 
 jobs:
   build-and-test:
-    name: Test .NET Library of KCL
-    runs-on: ${{ matrix.os }}
+    name: "Test .NET Library of KCL on ${{ matrix.os }}  for the classifier ${{ matrix.classifier }}"
     defaults:
       run:
         working-directory: "dotnet"
     strategy:
       fail-fast: false
       matrix:
-        build: [linux-debug, linux-release, macos-debug, macos-release, windows-debug, windows-release]
         include:
-          - build: linux-debug
-            os: ubuntu-latest
-            config: debug
-          - build: linux-release
+          - build: linux-x64-release
             os: ubuntu-latest
             config: release
-          - build: macos-debug
-            os: macos-latest
-            config: debug
-          - build: macos-release
+            classifier: linux-x64
+            target: x86_64-unknown-linux-gnu
+            dotnet-version: '8.0.x'
+            lib-name: libkcl_lib_dotnet.so
+          - build: linux-arm64-release
+            os: ubuntu-latest
+            config: release
+            classifier: linux-arm64
+            target: aarch64-unknown-linux-gnu
+            dotnet-version: '8.0.x'
+            lib-name: libkcl_lib_dotnet.so
+          - build: macos-x64-release
             os: macos-latest
             config: release
-          - build: windows-debug
-            os: windows-2019
-            config: debug
+            classifier: osx-x64
+            target: x86_64-apple-darwin
+            dotnet-version: '8.0.x'
+            lib-name: libkcl_lib_dotnet.dylib
+          - build: macos-arm64-release
+            os: macos-latest
+            config: release
+            classifier: osx-arm64
+            target: aarch64-apple-darwin
+            dotnet-version: '8.0.x'
+            lib-name: libkcl_lib_dotnet.dylib
           - build: windows-release
-            os: windows-2019
+            os: windows-latest
             config: release
+            classifier: win-x64
+            target: x86_64-pc-windows-msvc
+            dotnet-version: '8.0.x'
+            lib-name: kcl_lib_dotnet.dll
+    runs-on: ${{ matrix.os }}
     steps:
     - uses: actions/checkout@v4
     - uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: '8.0.x'
+        dotnet-version: ${{ matrix.dotnet-version }}
     - name: Install Rust
       uses: actions-rs/toolchain@v1
       with:
         toolchain: 1.77
         override: true
         components: clippy, rustfmt
+    - name: Setup linux-aarch_64 rust target
+      if: "contains(matrix.classifier, 'linux-arm64')"
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y gcc-aarch64-linux-gnu g++-aarch64-linux-gnu
+        # Setup for cargo
+        echo "CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER=aarch64-linux-gnu-gcc" >> $GITHUB_ENV
     - name: Build KCL Library
-      run: cargo build --release
+      run: |
+        cargo build --release
     - name: Clear package cache
       run: dotnet clean KclLib.sln && dotnet nuget locals all --clear
     - name: Restore packages
@@ -68,4 +92,87 @@ jobs:
     - name: Create package
       run: |
         cd KclLib
-        dotnet pack -c ${{ matrix.config }} /p:Packing=true
+        dotnet pack -c ${{ matrix.config }}
+
+    - name: Build Native Release Library
+      run: |
+        rustup target add ${{ matrix.target }}
+        cargo build --release --target ${{ matrix.target }}
+
+    - name: 'Upload artifact'
+      uses: actions/upload-artifact@v4
+      with:
+        name: kcl-lib-${{ matrix.classifier }}
+        if-no-files-found: error
+        path: ${{ github.workspace }}/dotnet/target/${{ matrix.target }}/release/${{ matrix.lib-name }}
+
+  deploy:
+    name: Deploy KCL .NET Library to Nuget
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      packages: write
+    needs: [ build-and-test ]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+      - name: Install Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: 1.77
+          override: true
+          components: clippy, rustfmt
+
+      - name: Download windows x86_64 lib
+        uses: actions/download-artifact@v4
+        with:
+          name: kcl-lib-win-x64
+          path: dotnet/KclLib/runtimes/win-x64/native
+
+      - name: Download linux aarch_64 lib
+        uses: actions/download-artifact@v4
+        with:
+          name: kcl-lib-linux-arm64
+          path: dotnet/KclLib/runtimes/linux-arm64/native
+  
+      - name: Download linux x86_64 lib
+        uses: actions/download-artifact@v4
+        with:
+          name: kcl-lib-linux-x64
+          path: dotnet/KclLib/runtimes/linux-x64/native
+
+      - name: Download darwin x86_64 lib
+        uses: actions/download-artifact@v4
+        with:
+          name: kcl-lib-osx-x64
+          path: dotnet/KclLib/runtimes/osx-x64/native
+  
+      - name: Download darwin aarch_64 lib
+        uses: actions/download-artifact@v4
+        with:
+          name: kcl-lib-osx-arm64
+          path: dotnet/KclLib/runtimes/osx-arm64/native
+
+      - name: Create package
+        run: |
+          cd dotnet/KclLib
+          tree runtimes
+          dotnet build
+          dotnet pack
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: KCL .NET Nuget Package
+          path: |
+            dotnet/KclLib/bin/Release/*.nupkg
+            dotnet/KclLib/bin/Release/*.snupkg
+
+      - name: Release to Nuget
+        if: "startsWith(github.ref, 'refs/tags/')"
+        run: |
+          cd dotnet/KclLib/bin/Release
+          dotnet nuget push KclLib.0.9.1.nupkg -k ${{ secrets.NUGET_API_KEY }} -s https://api.nuget.org/v3/index.json

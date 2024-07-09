@@ -2,6 +2,25 @@
 
 This library is currently under development. Please check back later.
 
+## Quick Start
+
+```shell
+dotnet add package KclLib
+```
+
+Write the code
+
+```cs
+using KclLib.API;
+
+var api = new API();
+var execArgs = new ExecProgram_Args();
+var path = Path.Combine("test_data", "schema.k");
+execArgs.KFilenameList.Add(path);
+var result = api.ExecProgram(execArgs);
+Console.WriteLine(result.YamlResult);
+```
+
 ## Developing and Testing
 
 - Install `cargo`

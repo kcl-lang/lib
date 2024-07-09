@@ -70,7 +70,7 @@ jobs:
           sudo apt-get install -y gcc-aarch64-linux-gnu g++-aarch64-linux-gnu
           # Setup for cargo
           echo "CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER=aarch64-linux-gnu-gcc" >> $GITHUB_ENV
-      
+
       - name: 'Test'
         shell: bash
         working-directory: java
@@ -87,12 +87,12 @@ jobs:
           name: kcl-lib-${{ matrix.classifier }}
           path: |
             java/target/classes/native
-          
+
   build-centos7:
     runs-on: ubuntu-latest
     container:
       image: "kcllang/kcl-java-builder-centos7:0.1.0"
-      
+
     permissions:
       contents: read
       packages: write
@@ -130,7 +130,7 @@ jobs:
       - name: Package Java artifact
         working-directory: java
         run: |
-          rustup default stable && mvn package -DskipTests=true
+          rustup default stable && mvn package -DskipTests=true -Dcargo-build.profile=release
 
       - name: Upload artifact
         uses: actions/upload-artifact@v3
