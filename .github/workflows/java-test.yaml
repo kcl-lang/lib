@@ -92,7 +92,7 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: "kcllang/kcl-java-builder-centos7:0.1.0"
-      
+
     permissions:
       contents: read
       packages: write

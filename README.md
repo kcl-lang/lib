@@ -108,23 +108,21 @@ public class ExecProgramTest {
 
 ### .NET
 
-This library is currently under development [here](https://github.com/kcl-lang/lib/tree/main/dotnet)
+```shell
+dotnet add package KclLib
+```
 
-```csharp
-namespace KclLib.Tests;
+Write the code
 
+```cs
 using KclLib.API;
 
-public class KclLibAPITest
-{
-    public static void Main()
-    {
-        var execArgs = new ExecProgram_Args();
-        execArgs.KFilenameList.Add("path/to/kcl.k");
-        var result = new API().ExecProgram(execArgs);
-        Console.WriteLine(result.YamlResult);
-    }
-}
+var api = new API();
+var execArgs = new ExecProgram_Args();
+var path = Path.Combine("test_data", "schema.k");
+execArgs.KFilenameList.Add(path);
+var result = api.ExecProgram(execArgs);
+Console.WriteLine(result.YamlResult);
 ```
 
 ### Python
