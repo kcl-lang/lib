@@ -32,7 +32,6 @@ public class APITest
         }
         catch (Exception ex)
         {
-            Assert.AreEqual(true, ex.Message.Contains("ERROR"));
             Assert.AreEqual(true, ex.Message.Contains("Cannot find the kcl file"));
         }
     }

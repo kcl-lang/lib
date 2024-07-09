@@ -103,8 +103,8 @@ class API:
                 name.encode("utf-8"), args_serialized, self.plugin_agent
             )
         )
-        if result.startswith(b"ERROR"):
-            raise Exception(result.decode(encoding="uft-8"))
+        if result.startswith(b"ERROR:"):
+            raise Exception(result.decode(encoding="utf-8").removeprefix("ERROR:"))
         msg = self.create_method_resp_message(name)
         msg.ParseFromString(result)
         return msg

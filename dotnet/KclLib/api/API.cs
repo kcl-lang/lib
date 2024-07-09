@@ -10,6 +10,7 @@ using KclLib.Plugin;
 public class API : IService
 {
     private const string LIB_NAME = "kcl_lib_dotnet";
+    private const string ERROR_PREFIX = "ERROR:";
 
     // Native methods declarations
     [DllImport(LIB_NAME, CallingConvention = CallingConvention.Cdecl)]
@@ -109,10 +110,11 @@ public class API : IService
         var result = new byte[resultLength];
         Marshal.Copy(resultBuf, result, 0, resultLength);
         Marshal.FreeHGlobal(resultBuf);
-        if (result == null || !result.AsSpan().StartsWith(System.Text.Encoding.UTF8.GetBytes("ERROR")))
+        var resultString = System.Text.Encoding.UTF8.GetString(result);
+        if (result == null || !resultString.StartsWith(ERROR_PREFIX))
         {
             return result;
         }
-        throw new Exception(System.Text.Encoding.UTF8.GetString(result));
+        throw new Exception(resultString.Substring(ERROR_PREFIX.Length));
     }
 }
