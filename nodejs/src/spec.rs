@@ -601,3 +601,22 @@ impl UpdateDependenciesResult {
         }
     }
 }
+
+#[napi(object)]
+pub struct GetVersionResult {
+    pub version: String,
+    pub checksum: String,
+    pub git_sha: String,
+    pub version_info: String,
+}
+
+impl GetVersionResult {
+    pub fn new(r: kclvm_api::GetVersionResult) -> Self {
+        Self {
+            version: r.version.clone(),
+            checksum: r.checksum.clone(),
+            git_sha: r.git_sha.clone(),
+            version_info: r.version_info.clone(),
+        }
+    }
+}

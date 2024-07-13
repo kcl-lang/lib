@@ -309,11 +309,18 @@ export interface Example {
 export interface UpdateDependenciesResult {
   externalPkgs: Array<ExternalPkg>
 }
+export interface GetVersionResult {
+  version: string
+  checksum: string
+  gitSha: string
+  versionInfo: string
+}
 export function loadPackage(args: LoadPackageArgs): LoadPackageResult
 export function execProgram(args: ExecProgramArgs): ExecProgramResult
 export function listVariables(args: ListVariablesArgs): ListVariablesResult
 export function overrideFile(args: OverrideFileArgs): OverrideFileResult
 export function updateDependencies(args: UpdateDependenciesArgs): UpdateDependenciesResult
+export function getVersion(): GetVersionResult
 export class LoadPackageArgs {
   constructor(
     paths: Array<string>,
