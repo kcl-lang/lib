@@ -158,3 +158,15 @@ pub fn update_dependencies(args: &UpdateDependenciesArgs) -> Result<UpdateDepend
         .map_err(|e| napi::bindgen_prelude::Error::from_reason(e.to_string()))
         .map(|r| UpdateDependenciesResult::new(r))
 }
+
+/*
+* GetVersion API
+*/
+
+#[napi]
+pub fn get_version() -> Result<GetVersionResult> {
+    let api = kclvm_api::API::default();
+    api.get_version(&kclvm_api::GetVersionArgs {})
+        .map_err(|e| napi::bindgen_prelude::Error::from_reason(e.to_string()))
+        .map(|r| GetVersionResult::new(r))
+}

@@ -112,89 +112,91 @@ class API:
     def create_method_req_message(self, method: str) -> _message.Message:
         if method in ["Ping", "KclvmService.Ping"]:
             return Ping_Args()
-        if method in ["ExecProgram", "KclvmService.ExecProgram"]:
+        elif method in ["ExecProgram", "KclvmService.ExecProgram"]:
             return ExecProgram_Args()
-        if method in ["BuildProgram", "KclvmService.BuildProgram"]:
+        elif method in ["BuildProgram", "KclvmService.BuildProgram"]:
             return BuildProgram_Args()
-        if method in ["ExecArtifact", "KclvmService.ExecArtifact"]:
+        elif method in ["ExecArtifact", "KclvmService.ExecArtifact"]:
             return ExecArtifact_Args()
-        if method in ["ParseFile", "KclvmService.ParseFile"]:
+        elif method in ["ParseFile", "KclvmService.ParseFile"]:
             return ParseFile_Args()
-        if method in ["ParseProgram", "KclvmService.ParseProgram"]:
+        elif method in ["ParseProgram", "KclvmService.ParseProgram"]:
             return ParseProgram_Args()
-        if method in ["LoadPackage", "KclvmService.LoadPackage"]:
+        elif method in ["LoadPackage", "KclvmService.LoadPackage"]:
             return LoadPackage_Args()
-        if method in ["ListOptions", "KclvmService.ListOptions"]:
+        elif method in ["ListOptions", "KclvmService.ListOptions"]:
             return ParseProgram_Args()
-        if method in ["ListVariables", "KclvmService.ListVariables"]:
+        elif method in ["ListVariables", "KclvmService.ListVariables"]:
             return ListVariables_Args()
-        if method in ["FormatCode", "KclvmService.FormatCode"]:
+        elif method in ["FormatCode", "KclvmService.FormatCode"]:
             return FormatCode_Args()
-        if method in ["FormatPath", "KclvmService.FormatPath"]:
+        elif method in ["FormatPath", "KclvmService.FormatPath"]:
             return FormatPath_Args()
-        if method in ["LintPath", "KclvmService.LintPath"]:
+        elif method in ["LintPath", "KclvmService.LintPath"]:
             return LintPath_Args()
-        if method in ["OverrideFile", "KclvmService.OverrideFile"]:
+        elif method in ["OverrideFile", "KclvmService.OverrideFile"]:
             return OverrideFile_Args()
-        if method in ["GetSchemaTypeMapping", "KclvmService.GetSchemaTypeMapping"]:
+        elif method in ["GetSchemaTypeMapping", "KclvmService.GetSchemaTypeMapping"]:
             return GetSchemaTypeMapping_Args()
-        if method in ["ValidateCode", "KclvmService.ValidateCode"]:
+        elif method in ["ValidateCode", "KclvmService.ValidateCode"]:
             return ValidateCode_Args()
-        if method in ["ListDepFiles", "KclvmService.ListDepFiles"]:
+        elif method in ["ListDepFiles", "KclvmService.ListDepFiles"]:
             return ListDepFiles_Args()
-        if method in ["LoadSettingsFiles", "KclvmService.LoadSettingsFiles"]:
+        elif method in ["LoadSettingsFiles", "KclvmService.LoadSettingsFiles"]:
             return LoadSettingsFiles_Args()
-        if method in ["Rename", "KclvmService.Rename"]:
+        elif method in ["Rename", "KclvmService.Rename"]:
             return Rename_Args()
-        if method in ["RenameCode", "KclvmService.RenameCode"]:
+        elif method in ["RenameCode", "KclvmService.RenameCode"]:
             return RenameCode_Args()
-        if method in ["Test", "KclvmService.Test"]:
+        elif method in ["Test", "KclvmService.Test"]:
             return Test_Args()
-        if method in ["UpdateDependencies", "KclvmService.UpdateDependencies"]:
+        elif method in ["UpdateDependencies", "KclvmService.UpdateDependencies"]:
             return UpdateDependencies_Args()
+        elif method in ["GetVersion", "KclvmService.GetVersion"]:
+            return GetVersion_Args()
         raise Exception(f"unknown method: {method}")
 
     def create_method_resp_message(self, method: str) -> _message.Message:
         if method in ["Ping", "KclvmService.Ping"]:
             return Ping_Result()
-        if method in ["ExecProgram", "KclvmService.ExecProgram"]:
+        elif method in ["ExecProgram", "KclvmService.ExecProgram"]:
             return ExecProgram_Result()
-        if method in ["BuildProgram", "KclvmService.BuildProgram"]:
+        elif method in ["BuildProgram", "KclvmService.BuildProgram"]:
             return BuildProgram_Result()
-        if method in ["ExecArtifact", "KclvmService.ExecArtifact"]:
+        elif method in ["ExecArtifact", "KclvmService.ExecArtifact"]:
             return ExecProgram_Result()
-        if method in ["ParseFile", "KclvmService.ParseFile"]:
+        elif method in ["ParseFile", "KclvmService.ParseFile"]:
             return ParseFile_Result()
-        if method in ["ParseProgram", "KclvmService.ParseProgram"]:
+        elif method in ["ParseProgram", "KclvmService.ParseProgram"]:
             return ParseProgram_Result()
-        if method in ["LoadPackage", "KclvmService.LoadPackage"]:
+        elif method in ["LoadPackage", "KclvmService.LoadPackage"]:
             return LoadPackage_Result()
-        if method in ["ListOptions", "KclvmService.ListOptions"]:
+        elif method in ["ListOptions", "KclvmService.ListOptions"]:
             return ListOptions_Result()
-        if method in ["ListVariables", "KclvmService.ListVariables"]:
+        elif method in ["ListVariables", "KclvmService.ListVariables"]:
             return ListVariables_Result()
-        if method in ["FormatCode", "KclvmService.FormatCode"]:
+        elif method in ["FormatCode", "KclvmService.FormatCode"]:
             return FormatCode_Result()
-        if method in ["FormatPath", "KclvmService.FormatPath"]:
+        elif method in ["FormatPath", "KclvmService.FormatPath"]:
             return FormatPath_Result()
-        if method in ["LintPath", "KclvmService.LintPath"]:
+        elif method in ["LintPath", "KclvmService.LintPath"]:
             return LintPath_Result()
-        if method in ["OverrideFile", "KclvmService.OverrideFile"]:
+        elif method in ["OverrideFile", "KclvmService.OverrideFile"]:
             return OverrideFile_Result()
-        if method in ["GetSchemaTypeMapping", "KclvmService.GetSchemaTypeMapping"]:
+        elif method in ["GetSchemaTypeMapping", "KclvmService.GetSchemaTypeMapping"]:
             return GetSchemaTypeMapping_Result()
-        if method in ["ValidateCode", "KclvmService.ValidateCode"]:
+        elif method in ["ValidateCode", "KclvmService.ValidateCode"]:
             return ValidateCode_Result()
-        if method in ["ListDepFiles", "KclvmService.ListDepFiles"]:
+        elif method in ["ListDepFiles", "KclvmService.ListDepFiles"]:
             return ListDepFiles_Result()
-        if method in ["LoadSettingsFiles", "KclvmService.LoadSettingsFiles"]:
+        elif method in ["LoadSettingsFiles", "KclvmService.LoadSettingsFiles"]:
             return LoadSettingsFiles_Result()
-        if method in ["Rename", "KclvmService.Rename"]:
+        elif method in ["Rename", "KclvmService.Rename"]:
             return Rename_Result()
-        if method in ["RenameCode", "KclvmService.RenameCode"]:
+        elif method in ["RenameCode", "KclvmService.RenameCode"]:
             return RenameCode_Result()
-        if method in ["Test", "KclvmService.Test"]:
+        elif method in ["Test", "KclvmService.Test"]:
             return Test_Result()
-        if method in ["UpdateDependencies", "KclvmService.UpdateDependencies"]:
+        elif method in ["UpdateDependencies", "KclvmService.UpdateDependencies"]:
             return UpdateDependencies_Result()
         raise Exception(f"unknown method: {method}")

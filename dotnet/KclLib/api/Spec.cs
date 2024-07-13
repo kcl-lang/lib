@@ -31,206 +31,210 @@ namespace KclLib.API {
             "a2NsLmFwaS5NZXNzYWdlIjoKB01lc3NhZ2USCwoDbXNnGAEgASgJEiIKA3Bv",
             "cxgCIAEoCzIVLmNvbS5rY2wuYXBpLlBvc2l0aW9uIhoKCVBpbmdfQXJncxIN",
             "CgV2YWx1ZRgBIAEoCSIcCgtQaW5nX1Jlc3VsdBINCgV2YWx1ZRgBIAEoCSIR",
-            "Cg9MaXN0TWV0aG9kX0FyZ3MiLQoRTGlzdE1ldGhvZF9SZXN1bHQSGAoQbWV0",
-            "aG9kX25hbWVfbGlzdBgBIAMoCSJfCg5QYXJzZUZpbGVfQXJncxIMCgRwYXRo",
-            "GAEgASgJEg4KBnNvdXJjZRgCIAEoCRIvCg1leHRlcm5hbF9wa2dzGAMgAygL",
-            "MhguY29tLmtjbC5hcGkuRXh0ZXJuYWxQa2ciVgoQUGFyc2VGaWxlX1Jlc3Vs",
-            "dBIQCghhc3RfanNvbhgBIAEoCRIMCgRkZXBzGAIgAygJEiIKBmVycm9ycxgD",
-            "IAMoCzISLmNvbS5rY2wuYXBpLkVycm9yImQKEVBhcnNlUHJvZ3JhbV9Bcmdz",
-            "Eg0KBXBhdGhzGAEgAygJEg8KB3NvdXJjZXMYAiADKAkSLwoNZXh0ZXJuYWxf",
-            "cGtncxgDIAMoCzIYLmNvbS5rY2wuYXBpLkV4dGVybmFsUGtnIloKE1BhcnNl",
-            "UHJvZ3JhbV9SZXN1bHQSEAoIYXN0X2pzb24YASABKAkSDQoFcGF0aHMYAiAD",
-            "KAkSIgoGZXJyb3JzGAMgAygLMhIuY29tLmtjbC5hcGkuRXJyb3IiiQEKEExv",
-            "YWRQYWNrYWdlX0FyZ3MSMgoKcGFyc2VfYXJncxgBIAEoCzIeLmNvbS5rY2wu",
-            "YXBpLlBhcnNlUHJvZ3JhbV9BcmdzEhMKC3Jlc29sdmVfYXN0GAIgASgIEhQK",
-            "DGxvYWRfYnVpbHRpbhgDIAEoCBIWCg53aXRoX2FzdF9pbmRleBgEIAEoCCL3",
-            "BwoSTG9hZFBhY2thZ2VfUmVzdWx0Eg8KB3Byb2dyYW0YASABKAkSDQoFcGF0",
-            "aHMYAiADKAkSKAoMcGFyc2VfZXJyb3JzGAMgAygLMhIuY29tLmtjbC5hcGku",
-            "RXJyb3ISJwoLdHlwZV9lcnJvcnMYBCADKAsyEi5jb20ua2NsLmFwaS5FcnJv",
-            "chI7CgZzY29wZXMYBSADKAsyKy5jb20ua2NsLmFwaS5Mb2FkUGFja2FnZV9S",
-            "ZXN1bHQuU2NvcGVzRW50cnkSPQoHc3ltYm9scxgGIAMoCzIsLmNvbS5rY2wu",
-            "YXBpLkxvYWRQYWNrYWdlX1Jlc3VsdC5TeW1ib2xzRW50cnkSSwoPbm9kZV9z",
-            "eW1ib2xfbWFwGAcgAygLMjIuY29tLmtjbC5hcGkuTG9hZFBhY2thZ2VfUmVz",
-            "dWx0Lk5vZGVTeW1ib2xNYXBFbnRyeRJLCg9zeW1ib2xfbm9kZV9tYXAYCCAD",
-            "KAsyMi5jb20ua2NsLmFwaS5Mb2FkUGFja2FnZV9SZXN1bHQuU3ltYm9sTm9k",
-            "ZU1hcEVudHJ5ElwKGGZ1bGx5X3F1YWxpZmllZF9uYW1lX21hcBgJIAMoCzI6",
-            "LmNvbS5rY2wuYXBpLkxvYWRQYWNrYWdlX1Jlc3VsdC5GdWxseVF1YWxpZmll",
-            "ZE5hbWVNYXBFbnRyeRJHCg1wa2dfc2NvcGVfbWFwGAogAygLMjAuY29tLmtj",
-            "bC5hcGkuTG9hZFBhY2thZ2VfUmVzdWx0LlBrZ1Njb3BlTWFwRW50cnkaQQoL",
-            "U2NvcGVzRW50cnkSCwoDa2V5GAEgASgJEiEKBXZhbHVlGAIgASgLMhIuY29t",
-            "LmtjbC5hcGkuU2NvcGU6AjgBGkMKDFN5bWJvbHNFbnRyeRILCgNrZXkYASAB",
-            "KAkSIgoFdmFsdWUYAiABKAsyEy5jb20ua2NsLmFwaS5TeW1ib2w6AjgBGk4K",
-            "Ek5vZGVTeW1ib2xNYXBFbnRyeRILCgNrZXkYASABKAkSJwoFdmFsdWUYAiAB",
-            "KAsyGC5jb20ua2NsLmFwaS5TeW1ib2xJbmRleDoCOAEaNAoSU3ltYm9sTm9k",
-            "ZU1hcEVudHJ5EgsKA2tleRgBIAEoCRINCgV2YWx1ZRgCIAEoCToCOAEaVgoa",
-            "RnVsbHlRdWFsaWZpZWROYW1lTWFwRW50cnkSCwoDa2V5GAEgASgJEicKBXZh",
-            "bHVlGAIgASgLMhguY29tLmtjbC5hcGkuU3ltYm9sSW5kZXg6AjgBGksKEFBr",
-            "Z1Njb3BlTWFwRW50cnkSCwoDa2V5GAEgASgJEiYKBXZhbHVlGAIgASgLMhcu",
-            "Y29tLmtjbC5hcGkuU2NvcGVJbmRleDoCOAEiPgoSTGlzdE9wdGlvbnNfUmVz",
-            "dWx0EigKB29wdGlvbnMYAiADKAsyFy5jb20ua2NsLmFwaS5PcHRpb25IZWxw",
-            "Il8KCk9wdGlvbkhlbHASDAoEbmFtZRgBIAEoCRIMCgR0eXBlGAIgASgJEhAK",
-            "CHJlcXVpcmVkGAMgASgIEhUKDWRlZmF1bHRfdmFsdWUYBCABKAkSDAoEaGVs",
-            "cBgFIAEoCSLEAQoGU3ltYm9sEiAKAnR5GAEgASgLMhQuY29tLmtjbC5hcGku",
-            "S2NsVHlwZRIMCgRuYW1lGAIgASgJEicKBW93bmVyGAMgASgLMhguY29tLmtj",
-            "bC5hcGkuU3ltYm9sSW5kZXgSJQoDZGVmGAQgASgLMhguY29tLmtjbC5hcGku",
-            "U3ltYm9sSW5kZXgSJwoFYXR0cnMYBSADKAsyGC5jb20ua2NsLmFwaS5TeW1i",
-            "b2xJbmRleBIRCglpc19nbG9iYWwYBiABKAgiugEKBVNjb3BlEgwKBGtpbmQY",
-            "ASABKAkSJwoGcGFyZW50GAIgASgLMhcuY29tLmtjbC5hcGkuU2NvcGVJbmRl",
-            "eBInCgVvd25lchgDIAEoCzIYLmNvbS5rY2wuYXBpLlN5bWJvbEluZGV4EikK",
-            "CGNoaWxkcmVuGAQgAygLMhcuY29tLmtjbC5hcGkuU2NvcGVJbmRleBImCgRk",
-            "ZWZzGAUgAygLMhguY29tLmtjbC5hcGkuU3ltYm9sSW5kZXgiMQoLU3ltYm9s",
-            "SW5kZXgSCQoBaRgBIAEoBBIJCgFnGAIgASgEEgwKBGtpbmQYAyABKAkiMAoK",
-            "U2NvcGVJbmRleBIJCgFpGAEgASgEEgkKAWcYAiABKAQSDAoEa2luZBgDIAEo",
-            "CSLQAwoQRXhlY1Byb2dyYW1fQXJncxIQCgh3b3JrX2RpchgBIAEoCRIXCg9r",
-            "X2ZpbGVuYW1lX2xpc3QYAiADKAkSEwoLa19jb2RlX2xpc3QYAyADKAkSIwoE",
-            "YXJncxgEIAMoCzIVLmNvbS5rY2wuYXBpLkFyZ3VtZW50EhEKCW92ZXJyaWRl",
-            "cxgFIAMoCRIbChNkaXNhYmxlX3lhbWxfcmVzdWx0GAYgASgIEhoKEnByaW50",
-            "X292ZXJyaWRlX2FzdBgHIAEoCBIaChJzdHJpY3RfcmFuZ2VfY2hlY2sYCCAB",
-            "KAgSFAoMZGlzYWJsZV9ub25lGAkgASgIEg8KB3ZlcmJvc2UYCiABKAUSDQoF",
-            "ZGVidWcYCyABKAUSEQoJc29ydF9rZXlzGAwgASgIEi8KDWV4dGVybmFsX3Br",
-            "Z3MYDSADKAsyGC5jb20ua2NsLmFwaS5FeHRlcm5hbFBrZxIgChhpbmNsdWRl",
-            "X3NjaGVtYV90eXBlX3BhdGgYDiABKAgSFAoMY29tcGlsZV9vbmx5GA8gASgI",
-            "EhMKC3Nob3dfaGlkZGVuGBAgASgIEhUKDXBhdGhfc2VsZWN0b3IYESADKAkS",
-            "EQoJZmFzdF9ldmFsGBIgASgIImgKEkV4ZWNQcm9ncmFtX1Jlc3VsdBITCgtq",
-            "c29uX3Jlc3VsdBgBIAEoCRITCgt5YW1sX3Jlc3VsdBgCIAEoCRITCgtsb2df",
-            "bWVzc2FnZRgDIAEoCRITCgtlcnJfbWVzc2FnZRgEIAEoCSJVChFCdWlsZFBy",
-            "b2dyYW1fQXJncxIwCglleGVjX2FyZ3MYASABKAsyHS5jb20ua2NsLmFwaS5F",
-            "eGVjUHJvZ3JhbV9BcmdzEg4KBm91dHB1dBgCIAEoCSIjChNCdWlsZFByb2dy",
-            "YW1fUmVzdWx0EgwKBHBhdGgYASABKAkiUwoRRXhlY0FydGlmYWN0X0FyZ3MS",
-            "DAoEcGF0aBgBIAEoCRIwCglleGVjX2FyZ3MYAiABKAsyHS5jb20ua2NsLmFw",
-            "aS5FeGVjUHJvZ3JhbV9BcmdzIicKEFJlc2V0UGx1Z2luX0FyZ3MSEwoLcGx1",
-            "Z2luX3Jvb3QYASABKAkiFAoSUmVzZXRQbHVnaW5fUmVzdWx0IiEKD0Zvcm1h",
-            "dENvZGVfQXJncxIOCgZzb3VyY2UYASABKAkiJgoRRm9ybWF0Q29kZV9SZXN1",
-            "bHQSEQoJZm9ybWF0dGVkGAEgASgMIh8KD0Zvcm1hdFBhdGhfQXJncxIMCgRw",
-            "YXRoGAEgASgJIioKEUZvcm1hdFBhdGhfUmVzdWx0EhUKDWNoYW5nZWRfcGF0",
-            "aHMYASADKAkiHgoNTGludFBhdGhfQXJncxINCgVwYXRocxgBIAMoCSIiCg9M",
-            "aW50UGF0aF9SZXN1bHQSDwoHcmVzdWx0cxgBIAMoCSJGChFPdmVycmlkZUZp",
-            "bGVfQXJncxIMCgRmaWxlGAEgASgJEg0KBXNwZWNzGAIgAygJEhQKDGltcG9y",
-            "dF9wYXRocxgDIAMoCSJPChNPdmVycmlkZUZpbGVfUmVzdWx0Eg4KBnJlc3Vs",
-            "dBgBIAEoCBIoCgxwYXJzZV9lcnJvcnMYAiADKAsyEi5jb20ua2NsLmFwaS5F",
-            "cnJvciIuChVMaXN0VmFyaWFibGVzX09wdGlvbnMSFQoNbWVyZ2VfcHJvZ3Jh",
-            "bRgBIAEoCCI4CgxWYXJpYWJsZUxpc3QSKAoJdmFyaWFibGVzGAEgAygLMhUu",
-            "Y29tLmtjbC5hcGkuVmFyaWFibGUiZwoSTGlzdFZhcmlhYmxlc19BcmdzEg0K",
-            "BWZpbGVzGAEgAygJEg0KBXNwZWNzGAIgAygJEjMKB29wdGlvbnMYAyABKAsy",
-            "Ii5jb20ua2NsLmFwaS5MaXN0VmFyaWFibGVzX09wdGlvbnMi7QEKFExpc3RW",
-            "YXJpYWJsZXNfUmVzdWx0EkMKCXZhcmlhYmxlcxgBIAMoCzIwLmNvbS5rY2wu",
-            "YXBpLkxpc3RWYXJpYWJsZXNfUmVzdWx0LlZhcmlhYmxlc0VudHJ5EhkKEXVu",
-            "c3VwcG9ydGVkX2NvZGVzGAIgAygJEigKDHBhcnNlX2Vycm9ycxgDIAMoCzIS",
-            "LmNvbS5rY2wuYXBpLkVycm9yGksKDlZhcmlhYmxlc0VudHJ5EgsKA2tleRgB",
-            "IAEoCRIoCgV2YWx1ZRgCIAEoCzIZLmNvbS5rY2wuYXBpLlZhcmlhYmxlTGlz",
-            "dDoCOAEilAEKCFZhcmlhYmxlEg0KBXZhbHVlGAEgASgJEhEKCXR5cGVfbmFt",
-            "ZRgCIAEoCRIOCgZvcF9zeW0YAyABKAkSKQoKbGlzdF9pdGVtcxgEIAMoCzIV",
-            "LmNvbS5rY2wuYXBpLlZhcmlhYmxlEisKDGRpY3RfZW50cmllcxgFIAMoCzIV",
-            "LmNvbS5rY2wuYXBpLk1hcEVudHJ5Ij0KCE1hcEVudHJ5EgsKA2tleRgBIAEo",
-            "CRIkCgV2YWx1ZRgCIAEoCzIVLmNvbS5rY2wuYXBpLlZhcmlhYmxlImIKGUdl",
-            "dFNjaGVtYVR5cGVNYXBwaW5nX0FyZ3MSMAoJZXhlY19hcmdzGAEgASgLMh0u",
-            "Y29tLmtjbC5hcGkuRXhlY1Byb2dyYW1fQXJncxITCgtzY2hlbWFfbmFtZRgC",
-            "IAEoCSLLAQobR2V0U2NoZW1hVHlwZU1hcHBpbmdfUmVzdWx0ElwKE3NjaGVt",
-            "YV90eXBlX21hcHBpbmcYASADKAsyPy5jb20ua2NsLmFwaS5HZXRTY2hlbWFU",
-            "eXBlTWFwcGluZ19SZXN1bHQuU2NoZW1hVHlwZU1hcHBpbmdFbnRyeRpOChZT",
-            "Y2hlbWFUeXBlTWFwcGluZ0VudHJ5EgsKA2tleRgBIAEoCRIjCgV2YWx1ZRgC",
-            "IAEoCzIULmNvbS5rY2wuYXBpLktjbFR5cGU6AjgBIocBChFWYWxpZGF0ZUNv",
-            "ZGVfQXJncxIQCghkYXRhZmlsZRgBIAEoCRIMCgRkYXRhGAIgASgJEgwKBGZp",
-            "bGUYAyABKAkSDAoEY29kZRgEIAEoCRIOCgZzY2hlbWEYBSABKAkSFgoOYXR0",
-            "cmlidXRlX25hbWUYBiABKAkSDgoGZm9ybWF0GAcgASgJIjsKE1ZhbGlkYXRl",
-            "Q29kZV9SZXN1bHQSDwoHc3VjY2VzcxgBIAEoCBITCgtlcnJfbWVzc2FnZRgC",
-            "IAEoCSI6CghQb3NpdGlvbhIMCgRsaW5lGAEgASgDEg4KBmNvbHVtbhgCIAEo",
-            "AxIQCghmaWxlbmFtZRgDIAEoCSJpChFMaXN0RGVwRmlsZXNfQXJncxIQCgh3",
-            "b3JrX2RpchgBIAEoCRIUCgx1c2VfYWJzX3BhdGgYAiABKAgSEwoLaW5jbHVk",
-            "ZV9hbGwYAyABKAgSFwoPdXNlX2Zhc3RfcGFyc2VyGAQgASgIIkYKE0xpc3RE",
-            "ZXBGaWxlc19SZXN1bHQSDwoHcGtncm9vdBgBIAEoCRIPCgdwa2dwYXRoGAIg",
-            "ASgJEg0KBWZpbGVzGAMgAygJIjkKFkxvYWRTZXR0aW5nc0ZpbGVzX0FyZ3MS",
-            "EAoId29ya19kaXIYASABKAkSDQoFZmlsZXMYAiADKAkiewoYTG9hZFNldHRp",
-            "bmdzRmlsZXNfUmVzdWx0Ei8KD2tjbF9jbGlfY29uZmlncxgBIAEoCzIWLmNv",
-            "bS5rY2wuYXBpLkNsaUNvbmZpZxIuCgtrY2xfb3B0aW9ucxgCIAMoCzIZLmNv",
-            "bS5rY2wuYXBpLktleVZhbHVlUGFpciKDAgoJQ2xpQ29uZmlnEg0KBWZpbGVz",
-            "GAEgAygJEg4KBm91dHB1dBgCIAEoCRIRCglvdmVycmlkZXMYAyADKAkSFQoN",
-            "cGF0aF9zZWxlY3RvchgEIAMoCRIaChJzdHJpY3RfcmFuZ2VfY2hlY2sYBSAB",
-            "KAgSFAoMZGlzYWJsZV9ub25lGAYgASgIEg8KB3ZlcmJvc2UYByABKAMSDQoF",
-            "ZGVidWcYCCABKAgSEQoJc29ydF9rZXlzGAkgASgIEhMKC3Nob3dfaGlkZGVu",
-            "GAogASgIEiAKGGluY2x1ZGVfc2NoZW1hX3R5cGVfcGF0aBgLIAEoCBIRCglm",
-            "YXN0X2V2YWwYDCABKAgiKgoMS2V5VmFsdWVQYWlyEgsKA2tleRgBIAEoCRIN",
-            "CgV2YWx1ZRgCIAEoCSJeCgtSZW5hbWVfQXJncxIUCgxwYWNrYWdlX3Jvb3QY",
-            "ASABKAkSEwoLc3ltYm9sX3BhdGgYAiABKAkSEgoKZmlsZV9wYXRocxgDIAMo",
-            "CRIQCghuZXdfbmFtZRgEIAEoCSImCg1SZW5hbWVfUmVzdWx0EhUKDWNoYW5n",
-            "ZWRfZmlsZXMYASADKAkixwEKD1JlbmFtZUNvZGVfQXJncxIUCgxwYWNrYWdl",
-            "X3Jvb3QYASABKAkSEwoLc3ltYm9sX3BhdGgYAiABKAkSQwoMc291cmNlX2Nv",
-            "ZGVzGAMgAygLMi0uY29tLmtjbC5hcGkuUmVuYW1lQ29kZV9BcmdzLlNvdXJj",
-            "ZUNvZGVzRW50cnkSEAoIbmV3X25hbWUYBCABKAkaMgoQU291cmNlQ29kZXNF",
-            "bnRyeRILCgNrZXkYASABKAkSDQoFdmFsdWUYAiABKAk6AjgBIpEBChFSZW5h",
-            "bWVDb2RlX1Jlc3VsdBJHCg1jaGFuZ2VkX2NvZGVzGAEgAygLMjAuY29tLmtj",
-            "bC5hcGkuUmVuYW1lQ29kZV9SZXN1bHQuQ2hhbmdlZENvZGVzRW50cnkaMwoR",
-            "Q2hhbmdlZENvZGVzRW50cnkSCwoDa2V5GAEgASgJEg0KBXZhbHVlGAIgASgJ",
-            "OgI4ASJ2CglUZXN0X0FyZ3MSMAoJZXhlY19hcmdzGAEgASgLMh0uY29tLmtj",
-            "bC5hcGkuRXhlY1Byb2dyYW1fQXJncxIQCghwa2dfbGlzdBgCIAMoCRISCgpy",
-            "dW5fcmVnZXhwGAMgASgJEhEKCWZhaWxfZmFzdBgEIAEoCCI2CgtUZXN0X1Jl",
-            "c3VsdBInCgRpbmZvGAIgAygLMhkuY29tLmtjbC5hcGkuVGVzdENhc2VJbmZv",
-            "IlIKDFRlc3RDYXNlSW5mbxIMCgRuYW1lGAEgASgJEg0KBWVycm9yGAIgASgJ",
-            "EhAKCGR1cmF0aW9uGAMgASgEEhMKC2xvZ19tZXNzYWdlGAQgASgJIkAKF1Vw",
-            "ZGF0ZURlcGVuZGVuY2llc19BcmdzEhUKDW1hbmlmZXN0X3BhdGgYASABKAkS",
-            "DgoGdmVuZG9yGAIgASgIIkwKGVVwZGF0ZURlcGVuZGVuY2llc19SZXN1bHQS",
-            "LwoNZXh0ZXJuYWxfcGtncxgDIAMoCzIYLmNvbS5rY2wuYXBpLkV4dGVybmFs",
-            "UGtnIvMECgdLY2xUeXBlEgwKBHR5cGUYASABKAkSKQoLdW5pb25fdHlwZXMY",
-            "AiADKAsyFC5jb20ua2NsLmFwaS5LY2xUeXBlEg8KB2RlZmF1bHQYAyABKAkS",
-            "EwoLc2NoZW1hX25hbWUYBCABKAkSEgoKc2NoZW1hX2RvYxgFIAEoCRI4Cgpw",
-            "cm9wZXJ0aWVzGAYgAygLMiQuY29tLmtjbC5hcGkuS2NsVHlwZS5Qcm9wZXJ0",
-            "aWVzRW50cnkSEAoIcmVxdWlyZWQYByADKAkSIQoDa2V5GAggASgLMhQuY29t",
-            "LmtjbC5hcGkuS2NsVHlwZRIiCgRpdGVtGAkgASgLMhQuY29tLmtjbC5hcGku",
-            "S2NsVHlwZRIMCgRsaW5lGAogASgFEioKCmRlY29yYXRvcnMYCyADKAsyFi5j",
-            "b20ua2NsLmFwaS5EZWNvcmF0b3ISEAoIZmlsZW5hbWUYDCABKAkSEAoIcGtn",
-            "X3BhdGgYDSABKAkSEwoLZGVzY3JpcHRpb24YDiABKAkSNAoIZXhhbXBsZXMY",
-            "DyADKAsyIi5jb20ua2NsLmFwaS5LY2xUeXBlLkV4YW1wbGVzRW50cnkSKQoL",
-            "YmFzZV9zY2hlbWEYECABKAsyFC5jb20ua2NsLmFwaS5LY2xUeXBlGkcKD1By",
-            "b3BlcnRpZXNFbnRyeRILCgNrZXkYASABKAkSIwoFdmFsdWUYAiABKAsyFC5j",
-            "b20ua2NsLmFwaS5LY2xUeXBlOgI4ARpFCg1FeGFtcGxlc0VudHJ5EgsKA2tl",
-            "eRgBIAEoCRIjCgV2YWx1ZRgCIAEoCzIULmNvbS5rY2wuYXBpLkV4YW1wbGU6",
-            "AjgBIpUBCglEZWNvcmF0b3ISDAoEbmFtZRgBIAEoCRIRCglhcmd1bWVudHMY",
-            "AiADKAkSNgoIa2V5d29yZHMYAyADKAsyJC5jb20ua2NsLmFwaS5EZWNvcmF0",
-            "b3IuS2V5d29yZHNFbnRyeRovCg1LZXl3b3Jkc0VudHJ5EgsKA2tleRgBIAEo",
-            "CRINCgV2YWx1ZRgCIAEoCToCOAEiPgoHRXhhbXBsZRIPCgdzdW1tYXJ5GAEg",
-            "ASgJEhMKC2Rlc2NyaXB0aW9uGAIgASgJEg0KBXZhbHVlGAMgASgJMpYBCg5C",
-            "dWlsdGluU2VydmljZRI4CgRQaW5nEhYuY29tLmtjbC5hcGkuUGluZ19Bcmdz",
-            "GhguY29tLmtjbC5hcGkuUGluZ19SZXN1bHQSSgoKTGlzdE1ldGhvZBIcLmNv",
-            "bS5rY2wuYXBpLkxpc3RNZXRob2RfQXJncxoeLmNvbS5rY2wuYXBpLkxpc3RN",
-            "ZXRob2RfUmVzdWx0MpINCgxLY2x2bVNlcnZpY2USOAoEUGluZxIWLmNvbS5r",
-            "Y2wuYXBpLlBpbmdfQXJncxoYLmNvbS5rY2wuYXBpLlBpbmdfUmVzdWx0Ek0K",
-            "C0V4ZWNQcm9ncmFtEh0uY29tLmtjbC5hcGkuRXhlY1Byb2dyYW1fQXJncxof",
-            "LmNvbS5rY2wuYXBpLkV4ZWNQcm9ncmFtX1Jlc3VsdBJQCgxCdWlsZFByb2dy",
-            "YW0SHi5jb20ua2NsLmFwaS5CdWlsZFByb2dyYW1fQXJncxogLmNvbS5rY2wu",
-            "YXBpLkJ1aWxkUHJvZ3JhbV9SZXN1bHQSTwoMRXhlY0FydGlmYWN0Eh4uY29t",
-            "LmtjbC5hcGkuRXhlY0FydGlmYWN0X0FyZ3MaHy5jb20ua2NsLmFwaS5FeGVj",
-            "UHJvZ3JhbV9SZXN1bHQSRwoJUGFyc2VGaWxlEhsuY29tLmtjbC5hcGkuUGFy",
-            "c2VGaWxlX0FyZ3MaHS5jb20ua2NsLmFwaS5QYXJzZUZpbGVfUmVzdWx0ElAK",
-            "DFBhcnNlUHJvZ3JhbRIeLmNvbS5rY2wuYXBpLlBhcnNlUHJvZ3JhbV9Bcmdz",
-            "GiAuY29tLmtjbC5hcGkuUGFyc2VQcm9ncmFtX1Jlc3VsdBJNCgtMb2FkUGFj",
-            "a2FnZRIdLmNvbS5rY2wuYXBpLkxvYWRQYWNrYWdlX0FyZ3MaHy5jb20ua2Ns",
-            "LmFwaS5Mb2FkUGFja2FnZV9SZXN1bHQSTgoLTGlzdE9wdGlvbnMSHi5jb20u",
-            "a2NsLmFwaS5QYXJzZVByb2dyYW1fQXJncxofLmNvbS5rY2wuYXBpLkxpc3RP",
-            "cHRpb25zX1Jlc3VsdBJTCg1MaXN0VmFyaWFibGVzEh8uY29tLmtjbC5hcGku",
-            "TGlzdFZhcmlhYmxlc19BcmdzGiEuY29tLmtjbC5hcGkuTGlzdFZhcmlhYmxl",
-            "c19SZXN1bHQSSgoKRm9ybWF0Q29kZRIcLmNvbS5rY2wuYXBpLkZvcm1hdENv",
-            "ZGVfQXJncxoeLmNvbS5rY2wuYXBpLkZvcm1hdENvZGVfUmVzdWx0EkoKCkZv",
-            "cm1hdFBhdGgSHC5jb20ua2NsLmFwaS5Gb3JtYXRQYXRoX0FyZ3MaHi5jb20u",
-            "a2NsLmFwaS5Gb3JtYXRQYXRoX1Jlc3VsdBJECghMaW50UGF0aBIaLmNvbS5r",
-            "Y2wuYXBpLkxpbnRQYXRoX0FyZ3MaHC5jb20ua2NsLmFwaS5MaW50UGF0aF9S",
-            "ZXN1bHQSUAoMT3ZlcnJpZGVGaWxlEh4uY29tLmtjbC5hcGkuT3ZlcnJpZGVG",
-            "aWxlX0FyZ3MaIC5jb20ua2NsLmFwaS5PdmVycmlkZUZpbGVfUmVzdWx0EmgK",
-            "FEdldFNjaGVtYVR5cGVNYXBwaW5nEiYuY29tLmtjbC5hcGkuR2V0U2NoZW1h",
-            "VHlwZU1hcHBpbmdfQXJncxooLmNvbS5rY2wuYXBpLkdldFNjaGVtYVR5cGVN",
-            "YXBwaW5nX1Jlc3VsdBJQCgxWYWxpZGF0ZUNvZGUSHi5jb20ua2NsLmFwaS5W",
-            "YWxpZGF0ZUNvZGVfQXJncxogLmNvbS5rY2wuYXBpLlZhbGlkYXRlQ29kZV9S",
-            "ZXN1bHQSUAoMTGlzdERlcEZpbGVzEh4uY29tLmtjbC5hcGkuTGlzdERlcEZp",
-            "bGVzX0FyZ3MaIC5jb20ua2NsLmFwaS5MaXN0RGVwRmlsZXNfUmVzdWx0El8K",
-            "EUxvYWRTZXR0aW5nc0ZpbGVzEiMuY29tLmtjbC5hcGkuTG9hZFNldHRpbmdz",
-            "RmlsZXNfQXJncxolLmNvbS5rY2wuYXBpLkxvYWRTZXR0aW5nc0ZpbGVzX1Jl",
-            "c3VsdBI+CgZSZW5hbWUSGC5jb20ua2NsLmFwaS5SZW5hbWVfQXJncxoaLmNv",
-            "bS5rY2wuYXBpLlJlbmFtZV9SZXN1bHQSSgoKUmVuYW1lQ29kZRIcLmNvbS5r",
-            "Y2wuYXBpLlJlbmFtZUNvZGVfQXJncxoeLmNvbS5rY2wuYXBpLlJlbmFtZUNv",
-            "ZGVfUmVzdWx0EjgKBFRlc3QSFi5jb20ua2NsLmFwaS5UZXN0X0FyZ3MaGC5j",
-            "b20ua2NsLmFwaS5UZXN0X1Jlc3VsdBJiChJVcGRhdGVEZXBlbmRlbmNpZXMS",
-            "JC5jb20ua2NsLmFwaS5VcGRhdGVEZXBlbmRlbmNpZXNfQXJncxomLmNvbS5r",
-            "Y2wuYXBpLlVwZGF0ZURlcGVuZGVuY2llc19SZXN1bHRCFFoFLjtsaWKqAgpL",
-            "Y2xMaWIuQVBJYgZwcm90bzM="));
+            "Cg9HZXRWZXJzaW9uX0FyZ3MiXQoRR2V0VmVyc2lvbl9SZXN1bHQSDwoHdmVy",
+            "c2lvbhgBIAEoCRIQCghjaGVja3N1bRgCIAEoCRIPCgdnaXRfc2hhGAMgASgJ",
+            "EhQKDHZlcnNpb25faW5mbxgEIAEoCSIRCg9MaXN0TWV0aG9kX0FyZ3MiLQoR",
+            "TGlzdE1ldGhvZF9SZXN1bHQSGAoQbWV0aG9kX25hbWVfbGlzdBgBIAMoCSJf",
+            "Cg5QYXJzZUZpbGVfQXJncxIMCgRwYXRoGAEgASgJEg4KBnNvdXJjZRgCIAEo",
+            "CRIvCg1leHRlcm5hbF9wa2dzGAMgAygLMhguY29tLmtjbC5hcGkuRXh0ZXJu",
+            "YWxQa2ciVgoQUGFyc2VGaWxlX1Jlc3VsdBIQCghhc3RfanNvbhgBIAEoCRIM",
+            "CgRkZXBzGAIgAygJEiIKBmVycm9ycxgDIAMoCzISLmNvbS5rY2wuYXBpLkVy",
+            "cm9yImQKEVBhcnNlUHJvZ3JhbV9BcmdzEg0KBXBhdGhzGAEgAygJEg8KB3Nv",
+            "dXJjZXMYAiADKAkSLwoNZXh0ZXJuYWxfcGtncxgDIAMoCzIYLmNvbS5rY2wu",
+            "YXBpLkV4dGVybmFsUGtnIloKE1BhcnNlUHJvZ3JhbV9SZXN1bHQSEAoIYXN0",
+            "X2pzb24YASABKAkSDQoFcGF0aHMYAiADKAkSIgoGZXJyb3JzGAMgAygLMhIu",
+            "Y29tLmtjbC5hcGkuRXJyb3IiiQEKEExvYWRQYWNrYWdlX0FyZ3MSMgoKcGFy",
+            "c2VfYXJncxgBIAEoCzIeLmNvbS5rY2wuYXBpLlBhcnNlUHJvZ3JhbV9Bcmdz",
+            "EhMKC3Jlc29sdmVfYXN0GAIgASgIEhQKDGxvYWRfYnVpbHRpbhgDIAEoCBIW",
+            "Cg53aXRoX2FzdF9pbmRleBgEIAEoCCL3BwoSTG9hZFBhY2thZ2VfUmVzdWx0",
+            "Eg8KB3Byb2dyYW0YASABKAkSDQoFcGF0aHMYAiADKAkSKAoMcGFyc2VfZXJy",
+            "b3JzGAMgAygLMhIuY29tLmtjbC5hcGkuRXJyb3ISJwoLdHlwZV9lcnJvcnMY",
+            "BCADKAsyEi5jb20ua2NsLmFwaS5FcnJvchI7CgZzY29wZXMYBSADKAsyKy5j",
+            "b20ua2NsLmFwaS5Mb2FkUGFja2FnZV9SZXN1bHQuU2NvcGVzRW50cnkSPQoH",
+            "c3ltYm9scxgGIAMoCzIsLmNvbS5rY2wuYXBpLkxvYWRQYWNrYWdlX1Jlc3Vs",
+            "dC5TeW1ib2xzRW50cnkSSwoPbm9kZV9zeW1ib2xfbWFwGAcgAygLMjIuY29t",
+            "LmtjbC5hcGkuTG9hZFBhY2thZ2VfUmVzdWx0Lk5vZGVTeW1ib2xNYXBFbnRy",
+            "eRJLCg9zeW1ib2xfbm9kZV9tYXAYCCADKAsyMi5jb20ua2NsLmFwaS5Mb2Fk",
+            "UGFja2FnZV9SZXN1bHQuU3ltYm9sTm9kZU1hcEVudHJ5ElwKGGZ1bGx5X3F1",
+            "YWxpZmllZF9uYW1lX21hcBgJIAMoCzI6LmNvbS5rY2wuYXBpLkxvYWRQYWNr",
+            "YWdlX1Jlc3VsdC5GdWxseVF1YWxpZmllZE5hbWVNYXBFbnRyeRJHCg1wa2df",
+            "c2NvcGVfbWFwGAogAygLMjAuY29tLmtjbC5hcGkuTG9hZFBhY2thZ2VfUmVz",
+            "dWx0LlBrZ1Njb3BlTWFwRW50cnkaQQoLU2NvcGVzRW50cnkSCwoDa2V5GAEg",
+            "ASgJEiEKBXZhbHVlGAIgASgLMhIuY29tLmtjbC5hcGkuU2NvcGU6AjgBGkMK",
+            "DFN5bWJvbHNFbnRyeRILCgNrZXkYASABKAkSIgoFdmFsdWUYAiABKAsyEy5j",
+            "b20ua2NsLmFwaS5TeW1ib2w6AjgBGk4KEk5vZGVTeW1ib2xNYXBFbnRyeRIL",
+            "CgNrZXkYASABKAkSJwoFdmFsdWUYAiABKAsyGC5jb20ua2NsLmFwaS5TeW1i",
+            "b2xJbmRleDoCOAEaNAoSU3ltYm9sTm9kZU1hcEVudHJ5EgsKA2tleRgBIAEo",
+            "CRINCgV2YWx1ZRgCIAEoCToCOAEaVgoaRnVsbHlRdWFsaWZpZWROYW1lTWFw",
+            "RW50cnkSCwoDa2V5GAEgASgJEicKBXZhbHVlGAIgASgLMhguY29tLmtjbC5h",
+            "cGkuU3ltYm9sSW5kZXg6AjgBGksKEFBrZ1Njb3BlTWFwRW50cnkSCwoDa2V5",
+            "GAEgASgJEiYKBXZhbHVlGAIgASgLMhcuY29tLmtjbC5hcGkuU2NvcGVJbmRl",
+            "eDoCOAEiPgoSTGlzdE9wdGlvbnNfUmVzdWx0EigKB29wdGlvbnMYAiADKAsy",
+            "Fy5jb20ua2NsLmFwaS5PcHRpb25IZWxwIl8KCk9wdGlvbkhlbHASDAoEbmFt",
+            "ZRgBIAEoCRIMCgR0eXBlGAIgASgJEhAKCHJlcXVpcmVkGAMgASgIEhUKDWRl",
+            "ZmF1bHRfdmFsdWUYBCABKAkSDAoEaGVscBgFIAEoCSLEAQoGU3ltYm9sEiAK",
+            "AnR5GAEgASgLMhQuY29tLmtjbC5hcGkuS2NsVHlwZRIMCgRuYW1lGAIgASgJ",
+            "EicKBW93bmVyGAMgASgLMhguY29tLmtjbC5hcGkuU3ltYm9sSW5kZXgSJQoD",
+            "ZGVmGAQgASgLMhguY29tLmtjbC5hcGkuU3ltYm9sSW5kZXgSJwoFYXR0cnMY",
+            "BSADKAsyGC5jb20ua2NsLmFwaS5TeW1ib2xJbmRleBIRCglpc19nbG9iYWwY",
+            "BiABKAgiugEKBVNjb3BlEgwKBGtpbmQYASABKAkSJwoGcGFyZW50GAIgASgL",
+            "MhcuY29tLmtjbC5hcGkuU2NvcGVJbmRleBInCgVvd25lchgDIAEoCzIYLmNv",
+            "bS5rY2wuYXBpLlN5bWJvbEluZGV4EikKCGNoaWxkcmVuGAQgAygLMhcuY29t",
+            "LmtjbC5hcGkuU2NvcGVJbmRleBImCgRkZWZzGAUgAygLMhguY29tLmtjbC5h",
+            "cGkuU3ltYm9sSW5kZXgiMQoLU3ltYm9sSW5kZXgSCQoBaRgBIAEoBBIJCgFn",
+            "GAIgASgEEgwKBGtpbmQYAyABKAkiMAoKU2NvcGVJbmRleBIJCgFpGAEgASgE",
+            "EgkKAWcYAiABKAQSDAoEa2luZBgDIAEoCSLQAwoQRXhlY1Byb2dyYW1fQXJn",
+            "cxIQCgh3b3JrX2RpchgBIAEoCRIXCg9rX2ZpbGVuYW1lX2xpc3QYAiADKAkS",
+            "EwoLa19jb2RlX2xpc3QYAyADKAkSIwoEYXJncxgEIAMoCzIVLmNvbS5rY2wu",
+            "YXBpLkFyZ3VtZW50EhEKCW92ZXJyaWRlcxgFIAMoCRIbChNkaXNhYmxlX3lh",
+            "bWxfcmVzdWx0GAYgASgIEhoKEnByaW50X292ZXJyaWRlX2FzdBgHIAEoCBIa",
+            "ChJzdHJpY3RfcmFuZ2VfY2hlY2sYCCABKAgSFAoMZGlzYWJsZV9ub25lGAkg",
+            "ASgIEg8KB3ZlcmJvc2UYCiABKAUSDQoFZGVidWcYCyABKAUSEQoJc29ydF9r",
+            "ZXlzGAwgASgIEi8KDWV4dGVybmFsX3BrZ3MYDSADKAsyGC5jb20ua2NsLmFw",
+            "aS5FeHRlcm5hbFBrZxIgChhpbmNsdWRlX3NjaGVtYV90eXBlX3BhdGgYDiAB",
+            "KAgSFAoMY29tcGlsZV9vbmx5GA8gASgIEhMKC3Nob3dfaGlkZGVuGBAgASgI",
+            "EhUKDXBhdGhfc2VsZWN0b3IYESADKAkSEQoJZmFzdF9ldmFsGBIgASgIImgK",
+            "EkV4ZWNQcm9ncmFtX1Jlc3VsdBITCgtqc29uX3Jlc3VsdBgBIAEoCRITCgt5",
+            "YW1sX3Jlc3VsdBgCIAEoCRITCgtsb2dfbWVzc2FnZRgDIAEoCRITCgtlcnJf",
+            "bWVzc2FnZRgEIAEoCSJVChFCdWlsZFByb2dyYW1fQXJncxIwCglleGVjX2Fy",
+            "Z3MYASABKAsyHS5jb20ua2NsLmFwaS5FeGVjUHJvZ3JhbV9BcmdzEg4KBm91",
+            "dHB1dBgCIAEoCSIjChNCdWlsZFByb2dyYW1fUmVzdWx0EgwKBHBhdGgYASAB",
+            "KAkiUwoRRXhlY0FydGlmYWN0X0FyZ3MSDAoEcGF0aBgBIAEoCRIwCglleGVj",
+            "X2FyZ3MYAiABKAsyHS5jb20ua2NsLmFwaS5FeGVjUHJvZ3JhbV9BcmdzIicK",
+            "EFJlc2V0UGx1Z2luX0FyZ3MSEwoLcGx1Z2luX3Jvb3QYASABKAkiFAoSUmVz",
+            "ZXRQbHVnaW5fUmVzdWx0IiEKD0Zvcm1hdENvZGVfQXJncxIOCgZzb3VyY2UY",
+            "ASABKAkiJgoRRm9ybWF0Q29kZV9SZXN1bHQSEQoJZm9ybWF0dGVkGAEgASgM",
+            "Ih8KD0Zvcm1hdFBhdGhfQXJncxIMCgRwYXRoGAEgASgJIioKEUZvcm1hdFBh",
+            "dGhfUmVzdWx0EhUKDWNoYW5nZWRfcGF0aHMYASADKAkiHgoNTGludFBhdGhf",
+            "QXJncxINCgVwYXRocxgBIAMoCSIiCg9MaW50UGF0aF9SZXN1bHQSDwoHcmVz",
+            "dWx0cxgBIAMoCSJGChFPdmVycmlkZUZpbGVfQXJncxIMCgRmaWxlGAEgASgJ",
+            "Eg0KBXNwZWNzGAIgAygJEhQKDGltcG9ydF9wYXRocxgDIAMoCSJPChNPdmVy",
+            "cmlkZUZpbGVfUmVzdWx0Eg4KBnJlc3VsdBgBIAEoCBIoCgxwYXJzZV9lcnJv",
+            "cnMYAiADKAsyEi5jb20ua2NsLmFwaS5FcnJvciIuChVMaXN0VmFyaWFibGVz",
+            "X09wdGlvbnMSFQoNbWVyZ2VfcHJvZ3JhbRgBIAEoCCI4CgxWYXJpYWJsZUxp",
+            "c3QSKAoJdmFyaWFibGVzGAEgAygLMhUuY29tLmtjbC5hcGkuVmFyaWFibGUi",
+            "ZwoSTGlzdFZhcmlhYmxlc19BcmdzEg0KBWZpbGVzGAEgAygJEg0KBXNwZWNz",
+            "GAIgAygJEjMKB29wdGlvbnMYAyABKAsyIi5jb20ua2NsLmFwaS5MaXN0VmFy",
+            "aWFibGVzX09wdGlvbnMi7QEKFExpc3RWYXJpYWJsZXNfUmVzdWx0EkMKCXZh",
+            "cmlhYmxlcxgBIAMoCzIwLmNvbS5rY2wuYXBpLkxpc3RWYXJpYWJsZXNfUmVz",
+            "dWx0LlZhcmlhYmxlc0VudHJ5EhkKEXVuc3VwcG9ydGVkX2NvZGVzGAIgAygJ",
+            "EigKDHBhcnNlX2Vycm9ycxgDIAMoCzISLmNvbS5rY2wuYXBpLkVycm9yGksK",
+            "DlZhcmlhYmxlc0VudHJ5EgsKA2tleRgBIAEoCRIoCgV2YWx1ZRgCIAEoCzIZ",
+            "LmNvbS5rY2wuYXBpLlZhcmlhYmxlTGlzdDoCOAEilAEKCFZhcmlhYmxlEg0K",
+            "BXZhbHVlGAEgASgJEhEKCXR5cGVfbmFtZRgCIAEoCRIOCgZvcF9zeW0YAyAB",
+            "KAkSKQoKbGlzdF9pdGVtcxgEIAMoCzIVLmNvbS5rY2wuYXBpLlZhcmlhYmxl",
+            "EisKDGRpY3RfZW50cmllcxgFIAMoCzIVLmNvbS5rY2wuYXBpLk1hcEVudHJ5",
+            "Ij0KCE1hcEVudHJ5EgsKA2tleRgBIAEoCRIkCgV2YWx1ZRgCIAEoCzIVLmNv",
+            "bS5rY2wuYXBpLlZhcmlhYmxlImIKGUdldFNjaGVtYVR5cGVNYXBwaW5nX0Fy",
+            "Z3MSMAoJZXhlY19hcmdzGAEgASgLMh0uY29tLmtjbC5hcGkuRXhlY1Byb2dy",
+            "YW1fQXJncxITCgtzY2hlbWFfbmFtZRgCIAEoCSLLAQobR2V0U2NoZW1hVHlw",
+            "ZU1hcHBpbmdfUmVzdWx0ElwKE3NjaGVtYV90eXBlX21hcHBpbmcYASADKAsy",
+            "Py5jb20ua2NsLmFwaS5HZXRTY2hlbWFUeXBlTWFwcGluZ19SZXN1bHQuU2No",
+            "ZW1hVHlwZU1hcHBpbmdFbnRyeRpOChZTY2hlbWFUeXBlTWFwcGluZ0VudHJ5",
+            "EgsKA2tleRgBIAEoCRIjCgV2YWx1ZRgCIAEoCzIULmNvbS5rY2wuYXBpLktj",
+            "bFR5cGU6AjgBIocBChFWYWxpZGF0ZUNvZGVfQXJncxIQCghkYXRhZmlsZRgB",
+            "IAEoCRIMCgRkYXRhGAIgASgJEgwKBGZpbGUYAyABKAkSDAoEY29kZRgEIAEo",
+            "CRIOCgZzY2hlbWEYBSABKAkSFgoOYXR0cmlidXRlX25hbWUYBiABKAkSDgoG",
+            "Zm9ybWF0GAcgASgJIjsKE1ZhbGlkYXRlQ29kZV9SZXN1bHQSDwoHc3VjY2Vz",
+            "cxgBIAEoCBITCgtlcnJfbWVzc2FnZRgCIAEoCSI6CghQb3NpdGlvbhIMCgRs",
+            "aW5lGAEgASgDEg4KBmNvbHVtbhgCIAEoAxIQCghmaWxlbmFtZRgDIAEoCSJp",
+            "ChFMaXN0RGVwRmlsZXNfQXJncxIQCgh3b3JrX2RpchgBIAEoCRIUCgx1c2Vf",
+            "YWJzX3BhdGgYAiABKAgSEwoLaW5jbHVkZV9hbGwYAyABKAgSFwoPdXNlX2Zh",
+            "c3RfcGFyc2VyGAQgASgIIkYKE0xpc3REZXBGaWxlc19SZXN1bHQSDwoHcGtn",
+            "cm9vdBgBIAEoCRIPCgdwa2dwYXRoGAIgASgJEg0KBWZpbGVzGAMgAygJIjkK",
+            "FkxvYWRTZXR0aW5nc0ZpbGVzX0FyZ3MSEAoId29ya19kaXIYASABKAkSDQoF",
+            "ZmlsZXMYAiADKAkiewoYTG9hZFNldHRpbmdzRmlsZXNfUmVzdWx0Ei8KD2tj",
+            "bF9jbGlfY29uZmlncxgBIAEoCzIWLmNvbS5rY2wuYXBpLkNsaUNvbmZpZxIu",
+            "CgtrY2xfb3B0aW9ucxgCIAMoCzIZLmNvbS5rY2wuYXBpLktleVZhbHVlUGFp",
+            "ciKDAgoJQ2xpQ29uZmlnEg0KBWZpbGVzGAEgAygJEg4KBm91dHB1dBgCIAEo",
+            "CRIRCglvdmVycmlkZXMYAyADKAkSFQoNcGF0aF9zZWxlY3RvchgEIAMoCRIa",
+            "ChJzdHJpY3RfcmFuZ2VfY2hlY2sYBSABKAgSFAoMZGlzYWJsZV9ub25lGAYg",
+            "ASgIEg8KB3ZlcmJvc2UYByABKAMSDQoFZGVidWcYCCABKAgSEQoJc29ydF9r",
+            "ZXlzGAkgASgIEhMKC3Nob3dfaGlkZGVuGAogASgIEiAKGGluY2x1ZGVfc2No",
+            "ZW1hX3R5cGVfcGF0aBgLIAEoCBIRCglmYXN0X2V2YWwYDCABKAgiKgoMS2V5",
+            "VmFsdWVQYWlyEgsKA2tleRgBIAEoCRINCgV2YWx1ZRgCIAEoCSJeCgtSZW5h",
+            "bWVfQXJncxIUCgxwYWNrYWdlX3Jvb3QYASABKAkSEwoLc3ltYm9sX3BhdGgY",
+            "AiABKAkSEgoKZmlsZV9wYXRocxgDIAMoCRIQCghuZXdfbmFtZRgEIAEoCSIm",
+            "Cg1SZW5hbWVfUmVzdWx0EhUKDWNoYW5nZWRfZmlsZXMYASADKAkixwEKD1Jl",
+            "bmFtZUNvZGVfQXJncxIUCgxwYWNrYWdlX3Jvb3QYASABKAkSEwoLc3ltYm9s",
+            "X3BhdGgYAiABKAkSQwoMc291cmNlX2NvZGVzGAMgAygLMi0uY29tLmtjbC5h",
+            "cGkuUmVuYW1lQ29kZV9BcmdzLlNvdXJjZUNvZGVzRW50cnkSEAoIbmV3X25h",
+            "bWUYBCABKAkaMgoQU291cmNlQ29kZXNFbnRyeRILCgNrZXkYASABKAkSDQoF",
+            "dmFsdWUYAiABKAk6AjgBIpEBChFSZW5hbWVDb2RlX1Jlc3VsdBJHCg1jaGFu",
+            "Z2VkX2NvZGVzGAEgAygLMjAuY29tLmtjbC5hcGkuUmVuYW1lQ29kZV9SZXN1",
+            "bHQuQ2hhbmdlZENvZGVzRW50cnkaMwoRQ2hhbmdlZENvZGVzRW50cnkSCwoD",
+            "a2V5GAEgASgJEg0KBXZhbHVlGAIgASgJOgI4ASJ2CglUZXN0X0FyZ3MSMAoJ",
+            "ZXhlY19hcmdzGAEgASgLMh0uY29tLmtjbC5hcGkuRXhlY1Byb2dyYW1fQXJn",
+            "cxIQCghwa2dfbGlzdBgCIAMoCRISCgpydW5fcmVnZXhwGAMgASgJEhEKCWZh",
+            "aWxfZmFzdBgEIAEoCCI2CgtUZXN0X1Jlc3VsdBInCgRpbmZvGAIgAygLMhku",
+            "Y29tLmtjbC5hcGkuVGVzdENhc2VJbmZvIlIKDFRlc3RDYXNlSW5mbxIMCgRu",
+            "YW1lGAEgASgJEg0KBWVycm9yGAIgASgJEhAKCGR1cmF0aW9uGAMgASgEEhMK",
+            "C2xvZ19tZXNzYWdlGAQgASgJIkAKF1VwZGF0ZURlcGVuZGVuY2llc19Bcmdz",
+            "EhUKDW1hbmlmZXN0X3BhdGgYASABKAkSDgoGdmVuZG9yGAIgASgIIkwKGVVw",
+            "ZGF0ZURlcGVuZGVuY2llc19SZXN1bHQSLwoNZXh0ZXJuYWxfcGtncxgDIAMo",
+            "CzIYLmNvbS5rY2wuYXBpLkV4dGVybmFsUGtnIvMECgdLY2xUeXBlEgwKBHR5",
+            "cGUYASABKAkSKQoLdW5pb25fdHlwZXMYAiADKAsyFC5jb20ua2NsLmFwaS5L",
+            "Y2xUeXBlEg8KB2RlZmF1bHQYAyABKAkSEwoLc2NoZW1hX25hbWUYBCABKAkS",
+            "EgoKc2NoZW1hX2RvYxgFIAEoCRI4Cgpwcm9wZXJ0aWVzGAYgAygLMiQuY29t",
+            "LmtjbC5hcGkuS2NsVHlwZS5Qcm9wZXJ0aWVzRW50cnkSEAoIcmVxdWlyZWQY",
+            "ByADKAkSIQoDa2V5GAggASgLMhQuY29tLmtjbC5hcGkuS2NsVHlwZRIiCgRp",
+            "dGVtGAkgASgLMhQuY29tLmtjbC5hcGkuS2NsVHlwZRIMCgRsaW5lGAogASgF",
+            "EioKCmRlY29yYXRvcnMYCyADKAsyFi5jb20ua2NsLmFwaS5EZWNvcmF0b3IS",
+            "EAoIZmlsZW5hbWUYDCABKAkSEAoIcGtnX3BhdGgYDSABKAkSEwoLZGVzY3Jp",
+            "cHRpb24YDiABKAkSNAoIZXhhbXBsZXMYDyADKAsyIi5jb20ua2NsLmFwaS5L",
+            "Y2xUeXBlLkV4YW1wbGVzRW50cnkSKQoLYmFzZV9zY2hlbWEYECABKAsyFC5j",
+            "b20ua2NsLmFwaS5LY2xUeXBlGkcKD1Byb3BlcnRpZXNFbnRyeRILCgNrZXkY",
+            "ASABKAkSIwoFdmFsdWUYAiABKAsyFC5jb20ua2NsLmFwaS5LY2xUeXBlOgI4",
+            "ARpFCg1FeGFtcGxlc0VudHJ5EgsKA2tleRgBIAEoCRIjCgV2YWx1ZRgCIAEo",
+            "CzIULmNvbS5rY2wuYXBpLkV4YW1wbGU6AjgBIpUBCglEZWNvcmF0b3ISDAoE",
+            "bmFtZRgBIAEoCRIRCglhcmd1bWVudHMYAiADKAkSNgoIa2V5d29yZHMYAyAD",
+            "KAsyJC5jb20ua2NsLmFwaS5EZWNvcmF0b3IuS2V5d29yZHNFbnRyeRovCg1L",
+            "ZXl3b3Jkc0VudHJ5EgsKA2tleRgBIAEoCRINCgV2YWx1ZRgCIAEoCToCOAEi",
+            "PgoHRXhhbXBsZRIPCgdzdW1tYXJ5GAEgASgJEhMKC2Rlc2NyaXB0aW9uGAIg",
+            "ASgJEg0KBXZhbHVlGAMgASgJMpYBCg5CdWlsdGluU2VydmljZRI4CgRQaW5n",
+            "EhYuY29tLmtjbC5hcGkuUGluZ19BcmdzGhguY29tLmtjbC5hcGkuUGluZ19S",
+            "ZXN1bHQSSgoKTGlzdE1ldGhvZBIcLmNvbS5rY2wuYXBpLkxpc3RNZXRob2Rf",
+            "QXJncxoeLmNvbS5rY2wuYXBpLkxpc3RNZXRob2RfUmVzdWx0Mt4NCgxLY2x2",
+            "bVNlcnZpY2USOAoEUGluZxIWLmNvbS5rY2wuYXBpLlBpbmdfQXJncxoYLmNv",
+            "bS5rY2wuYXBpLlBpbmdfUmVzdWx0EkoKCkdldFZlcnNpb24SHC5jb20ua2Ns",
+            "LmFwaS5HZXRWZXJzaW9uX0FyZ3MaHi5jb20ua2NsLmFwaS5HZXRWZXJzaW9u",
+            "X1Jlc3VsdBJQCgxQYXJzZVByb2dyYW0SHi5jb20ua2NsLmFwaS5QYXJzZVBy",
+            "b2dyYW1fQXJncxogLmNvbS5rY2wuYXBpLlBhcnNlUHJvZ3JhbV9SZXN1bHQS",
+            "RwoJUGFyc2VGaWxlEhsuY29tLmtjbC5hcGkuUGFyc2VGaWxlX0FyZ3MaHS5j",
+            "b20ua2NsLmFwaS5QYXJzZUZpbGVfUmVzdWx0Ek0KC0xvYWRQYWNrYWdlEh0u",
+            "Y29tLmtjbC5hcGkuTG9hZFBhY2thZ2VfQXJncxofLmNvbS5rY2wuYXBpLkxv",
+            "YWRQYWNrYWdlX1Jlc3VsdBJOCgtMaXN0T3B0aW9ucxIeLmNvbS5rY2wuYXBp",
+            "LlBhcnNlUHJvZ3JhbV9BcmdzGh8uY29tLmtjbC5hcGkuTGlzdE9wdGlvbnNf",
+            "UmVzdWx0ElMKDUxpc3RWYXJpYWJsZXMSHy5jb20ua2NsLmFwaS5MaXN0VmFy",
+            "aWFibGVzX0FyZ3MaIS5jb20ua2NsLmFwaS5MaXN0VmFyaWFibGVzX1Jlc3Vs",
+            "dBJNCgtFeGVjUHJvZ3JhbRIdLmNvbS5rY2wuYXBpLkV4ZWNQcm9ncmFtX0Fy",
+            "Z3MaHy5jb20ua2NsLmFwaS5FeGVjUHJvZ3JhbV9SZXN1bHQSUAoMQnVpbGRQ",
+            "cm9ncmFtEh4uY29tLmtjbC5hcGkuQnVpbGRQcm9ncmFtX0FyZ3MaIC5jb20u",
+            "a2NsLmFwaS5CdWlsZFByb2dyYW1fUmVzdWx0Ek8KDEV4ZWNBcnRpZmFjdBIe",
+            "LmNvbS5rY2wuYXBpLkV4ZWNBcnRpZmFjdF9BcmdzGh8uY29tLmtjbC5hcGku",
+            "RXhlY1Byb2dyYW1fUmVzdWx0ElAKDE92ZXJyaWRlRmlsZRIeLmNvbS5rY2wu",
+            "YXBpLk92ZXJyaWRlRmlsZV9BcmdzGiAuY29tLmtjbC5hcGkuT3ZlcnJpZGVG",
+            "aWxlX1Jlc3VsdBJoChRHZXRTY2hlbWFUeXBlTWFwcGluZxImLmNvbS5rY2wu",
+            "YXBpLkdldFNjaGVtYVR5cGVNYXBwaW5nX0FyZ3MaKC5jb20ua2NsLmFwaS5H",
+            "ZXRTY2hlbWFUeXBlTWFwcGluZ19SZXN1bHQSSgoKRm9ybWF0Q29kZRIcLmNv",
+            "bS5rY2wuYXBpLkZvcm1hdENvZGVfQXJncxoeLmNvbS5rY2wuYXBpLkZvcm1h",
+            "dENvZGVfUmVzdWx0EkoKCkZvcm1hdFBhdGgSHC5jb20ua2NsLmFwaS5Gb3Jt",
+            "YXRQYXRoX0FyZ3MaHi5jb20ua2NsLmFwaS5Gb3JtYXRQYXRoX1Jlc3VsdBJE",
+            "CghMaW50UGF0aBIaLmNvbS5rY2wuYXBpLkxpbnRQYXRoX0FyZ3MaHC5jb20u",
+            "a2NsLmFwaS5MaW50UGF0aF9SZXN1bHQSUAoMVmFsaWRhdGVDb2RlEh4uY29t",
+            "LmtjbC5hcGkuVmFsaWRhdGVDb2RlX0FyZ3MaIC5jb20ua2NsLmFwaS5WYWxp",
+            "ZGF0ZUNvZGVfUmVzdWx0ElAKDExpc3REZXBGaWxlcxIeLmNvbS5rY2wuYXBp",
+            "Lkxpc3REZXBGaWxlc19BcmdzGiAuY29tLmtjbC5hcGkuTGlzdERlcEZpbGVz",
+            "X1Jlc3VsdBJfChFMb2FkU2V0dGluZ3NGaWxlcxIjLmNvbS5rY2wuYXBpLkxv",
+            "YWRTZXR0aW5nc0ZpbGVzX0FyZ3MaJS5jb20ua2NsLmFwaS5Mb2FkU2V0dGlu",
+            "Z3NGaWxlc19SZXN1bHQSPgoGUmVuYW1lEhguY29tLmtjbC5hcGkuUmVuYW1l",
+            "X0FyZ3MaGi5jb20ua2NsLmFwaS5SZW5hbWVfUmVzdWx0EkoKClJlbmFtZUNv",
+            "ZGUSHC5jb20ua2NsLmFwaS5SZW5hbWVDb2RlX0FyZ3MaHi5jb20ua2NsLmFw",
+            "aS5SZW5hbWVDb2RlX1Jlc3VsdBI4CgRUZXN0EhYuY29tLmtjbC5hcGkuVGVz",
+            "dF9BcmdzGhguY29tLmtjbC5hcGkuVGVzdF9SZXN1bHQSYgoSVXBkYXRlRGVw",
+            "ZW5kZW5jaWVzEiQuY29tLmtjbC5hcGkuVXBkYXRlRGVwZW5kZW5jaWVzX0Fy",
+            "Z3MaJi5jb20ua2NsLmFwaS5VcGRhdGVEZXBlbmRlbmNpZXNfUmVzdWx0QhRa",
+            "BS47bGliqgIKS2NsTGliLkFQSWIGcHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
@@ -240,6 +244,8 @@ namespace KclLib.API {
             new pbr::GeneratedClrTypeInfo(typeof(global::KclLib.API.Message), global::KclLib.API.Message.Parser, new[]{ "Msg", "Pos" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::KclLib.API.Ping_Args), global::KclLib.API.Ping_Args.Parser, new[]{ "Value" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::KclLib.API.Ping_Result), global::KclLib.API.Ping_Result.Parser, new[]{ "Value" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::KclLib.API.GetVersion_Args), global::KclLib.API.GetVersion_Args.Parser, null, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::KclLib.API.GetVersion_Result), global::KclLib.API.GetVersion_Result.Parser, new[]{ "Version", "Checksum", "GitSha", "VersionInfo" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::KclLib.API.ListMethod_Args), global::KclLib.API.ListMethod_Args.Parser, null, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::KclLib.API.ListMethod_Result), global::KclLib.API.ListMethod_Result.Parser, new[]{ "MethodNameList" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::KclLib.API.ParseFile_Args), global::KclLib.API.ParseFile_Args.Parser, new[]{ "Path", "Source", "ExternalPkgs" }, null, null, null, null),
@@ -305,6 +311,7 @@ namespace KclLib.API {
   }
   #region Messages
   /// <summary>
+  /// Message representing an external package for KCL.
   /// kcl main.k -E pkg_name=pkg_path
   /// </summary>
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
@@ -356,6 +363,9 @@ namespace KclLib.API {
     /// <summary>Field number for the "pkg_name" field.</summary>
     public const int PkgNameFieldNumber = 1;
     private string pkgName_ = "";
+    /// <summary>
+    /// Name of the package.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public string PkgName {
@@ -368,6 +378,9 @@ namespace KclLib.API {
     /// <summary>Field number for the "pkg_path" field.</summary>
     public const int PkgPathFieldNumber = 2;
     private string pkgPath_ = "";
+    /// <summary>
+    /// Path of the package.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public string PkgPath {
@@ -543,6 +556,7 @@ namespace KclLib.API {
   }
 
   /// <summary>
+  /// Message representing a key-value argument for KCL.
   /// kcl main.k -D name=value
   /// </summary>
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
@@ -594,6 +608,9 @@ namespace KclLib.API {
     /// <summary>Field number for the "name" field.</summary>
     public const int NameFieldNumber = 1;
     private string name_ = "";
+    /// <summary>
+    /// Name of the argument.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public string Name {
@@ -606,6 +623,9 @@ namespace KclLib.API {
     /// <summary>Field number for the "value" field.</summary>
     public const int ValueFieldNumber = 2;
     private string value_ = "";
+    /// <summary>
+    /// Value of the argument.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public string Value {
@@ -780,6 +800,9 @@ namespace KclLib.API {
 
   }
 
+  /// <summary>
+  /// Message representing an error.
+  /// </summary>
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class Error : pb::IMessage<Error>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
@@ -830,6 +853,9 @@ namespace KclLib.API {
     /// <summary>Field number for the "level" field.</summary>
     public const int LevelFieldNumber = 1;
     private string level_ = "";
+    /// <summary>
+    /// Level of the error (e.g., "Error", "Warning").
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public string Level {
@@ -842,6 +868,9 @@ namespace KclLib.API {
     /// <summary>Field number for the "code" field.</summary>
     public const int CodeFieldNumber = 2;
     private string code_ = "";
+    /// <summary>
+    /// Error code. (e.g., "E1001")
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public string Code {
@@ -856,6 +885,9 @@ namespace KclLib.API {
     private static readonly pb::FieldCodec<global::KclLib.API.Message> _repeated_messages_codec
         = pb::FieldCodec.ForMessage(26, global::KclLib.API.Message.Parser);
     private readonly pbc::RepeatedField<global::KclLib.API.Message> messages_ = new pbc::RepeatedField<global::KclLib.API.Message>();
+    /// <summary>
+    /// List of error messages.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public pbc::RepeatedField<global::KclLib.API.Message> Messages {
@@ -1041,6 +1073,9 @@ namespace KclLib.API {
 
   }
 
+  /// <summary>
+  /// Message representing a detailed error message with a position.
+  /// </summary>
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class Message : pb::IMessage<Message>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
@@ -1090,6 +1125,9 @@ namespace KclLib.API {
     /// <summary>Field number for the "msg" field.</summary>
     public const int MsgFieldNumber = 1;
     private string msg_ = "";
+    /// <summary>
+    /// The error message text.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public string Msg {
@@ -1102,6 +1140,9 @@ namespace KclLib.API {
     /// <summary>Field number for the "pos" field.</summary>
     public const int PosFieldNumber = 2;
     private global::KclLib.API.Position pos_;
+    /// <summary>
+    /// The position in the source code where the error occurred.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public global::KclLib.API.Position Pos {
@@ -1285,6 +1326,9 @@ namespace KclLib.API {
 
   }
 
+  /// <summary>
+  /// Message for ping request arguments.
+  /// </summary>
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class Ping_Args : pb::IMessage<Ping_Args>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
@@ -1333,6 +1377,9 @@ namespace KclLib.API {
     /// <summary>Field number for the "value" field.</summary>
     public const int ValueFieldNumber = 1;
     private string value_ = "";
+    /// <summary>
+    /// Value to be sent in the ping request.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public string Value {
@@ -1483,6 +1530,9 @@ namespace KclLib.API {
 
   }
 
+  /// <summary>
+  /// Message for ping response.
+  /// </summary>
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class Ping_Result : pb::IMessage<Ping_Result>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
@@ -1531,6 +1581,9 @@ namespace KclLib.API {
     /// <summary>Field number for the "value" field.</summary>
     public const int ValueFieldNumber = 1;
     private string value_ = "";
+    /// <summary>
+    /// Value received in the ping response.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public string Value {
@@ -1682,7 +1735,495 @@ namespace KclLib.API {
   }
 
   /// <summary>
-  /// empty
+  /// Message for version request arguments. Empty message.
+  /// </summary>
+  [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
+  public sealed partial class GetVersion_Args : pb::IMessage<GetVersion_Args>
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      , pb::IBufferMessage
+  #endif
+  {
+    private static readonly pb::MessageParser<GetVersion_Args> _parser = new pb::MessageParser<GetVersion_Args>(() => new GetVersion_Args());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public static pb::MessageParser<GetVersion_Args> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[6]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public GetVersion_Args() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public GetVersion_Args(GetVersion_Args other) : this() {
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public GetVersion_Args Clone() {
+      return new GetVersion_Args(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override bool Equals(object other) {
+      return Equals(other as GetVersion_Args);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool Equals(GetVersion_Args other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void WriteTo(pb::CodedOutputStream output) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      output.WriteRawMessage(this);
+    #else
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(ref output);
+      }
+    }
+    #endif
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public int CalculateSize() {
+      int size = 0;
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void MergeFrom(GetVersion_Args other) {
+      if (other == null) {
+        return;
+      }
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void MergeFrom(pb::CodedInputStream input) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      input.ReadRawMessage(this);
+    #else
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+        }
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
+            break;
+        }
+      }
+    }
+    #endif
+
+  }
+
+  /// <summary>
+  /// Message for version response.
+  /// </summary>
+  [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
+  public sealed partial class GetVersion_Result : pb::IMessage<GetVersion_Result>
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      , pb::IBufferMessage
+  #endif
+  {
+    private static readonly pb::MessageParser<GetVersion_Result> _parser = new pb::MessageParser<GetVersion_Result>(() => new GetVersion_Result());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public static pb::MessageParser<GetVersion_Result> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[7]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public GetVersion_Result() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public GetVersion_Result(GetVersion_Result other) : this() {
+      version_ = other.version_;
+      checksum_ = other.checksum_;
+      gitSha_ = other.gitSha_;
+      versionInfo_ = other.versionInfo_;
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public GetVersion_Result Clone() {
+      return new GetVersion_Result(this);
+    }
+
+    /// <summary>Field number for the "version" field.</summary>
+    public const int VersionFieldNumber = 1;
+    private string version_ = "";
+    /// <summary>
+    /// KCL version.
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string Version {
+      get { return version_; }
+      set {
+        version_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "checksum" field.</summary>
+    public const int ChecksumFieldNumber = 2;
+    private string checksum_ = "";
+    /// <summary>
+    /// Checksum of the KCL version.
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string Checksum {
+      get { return checksum_; }
+      set {
+        checksum_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "git_sha" field.</summary>
+    public const int GitShaFieldNumber = 3;
+    private string gitSha_ = "";
+    /// <summary>
+    /// Git Git SHA of the KCL code repo.
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string GitSha {
+      get { return gitSha_; }
+      set {
+        gitSha_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "version_info" field.</summary>
+    public const int VersionInfoFieldNumber = 4;
+    private string versionInfo_ = "";
+    /// <summary>
+    /// Detailed version information as a string.
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string VersionInfo {
+      get { return versionInfo_; }
+      set {
+        versionInfo_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override bool Equals(object other) {
+      return Equals(other as GetVersion_Result);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool Equals(GetVersion_Result other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (Version != other.Version) return false;
+      if (Checksum != other.Checksum) return false;
+      if (GitSha != other.GitSha) return false;
+      if (VersionInfo != other.VersionInfo) return false;
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (Version.Length != 0) hash ^= Version.GetHashCode();
+      if (Checksum.Length != 0) hash ^= Checksum.GetHashCode();
+      if (GitSha.Length != 0) hash ^= GitSha.GetHashCode();
+      if (VersionInfo.Length != 0) hash ^= VersionInfo.GetHashCode();
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void WriteTo(pb::CodedOutputStream output) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      output.WriteRawMessage(this);
+    #else
+      if (Version.Length != 0) {
+        output.WriteRawTag(10);
+        output.WriteString(Version);
+      }
+      if (Checksum.Length != 0) {
+        output.WriteRawTag(18);
+        output.WriteString(Checksum);
+      }
+      if (GitSha.Length != 0) {
+        output.WriteRawTag(26);
+        output.WriteString(GitSha);
+      }
+      if (VersionInfo.Length != 0) {
+        output.WriteRawTag(34);
+        output.WriteString(VersionInfo);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+      if (Version.Length != 0) {
+        output.WriteRawTag(10);
+        output.WriteString(Version);
+      }
+      if (Checksum.Length != 0) {
+        output.WriteRawTag(18);
+        output.WriteString(Checksum);
+      }
+      if (GitSha.Length != 0) {
+        output.WriteRawTag(26);
+        output.WriteString(GitSha);
+      }
+      if (VersionInfo.Length != 0) {
+        output.WriteRawTag(34);
+        output.WriteString(VersionInfo);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(ref output);
+      }
+    }
+    #endif
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public int CalculateSize() {
+      int size = 0;
+      if (Version.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(Version);
+      }
+      if (Checksum.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(Checksum);
+      }
+      if (GitSha.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(GitSha);
+      }
+      if (VersionInfo.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(VersionInfo);
+      }
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void MergeFrom(GetVersion_Result other) {
+      if (other == null) {
+        return;
+      }
+      if (other.Version.Length != 0) {
+        Version = other.Version;
+      }
+      if (other.Checksum.Length != 0) {
+        Checksum = other.Checksum;
+      }
+      if (other.GitSha.Length != 0) {
+        GitSha = other.GitSha;
+      }
+      if (other.VersionInfo.Length != 0) {
+        VersionInfo = other.VersionInfo;
+      }
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void MergeFrom(pb::CodedInputStream input) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      input.ReadRawMessage(this);
+    #else
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+          case 10: {
+            Version = input.ReadString();
+            break;
+          }
+          case 18: {
+            Checksum = input.ReadString();
+            break;
+          }
+          case 26: {
+            GitSha = input.ReadString();
+            break;
+          }
+          case 34: {
+            VersionInfo = input.ReadString();
+            break;
+          }
+        }
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
+            break;
+          case 10: {
+            Version = input.ReadString();
+            break;
+          }
+          case 18: {
+            Checksum = input.ReadString();
+            break;
+          }
+          case 26: {
+            GitSha = input.ReadString();
+            break;
+          }
+          case 34: {
+            VersionInfo = input.ReadString();
+            break;
+          }
+        }
+      }
+    }
+    #endif
+
+  }
+
+  /// <summary>
+  /// Message for list method request arguments. Empty message.
   /// </summary>
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class ListMethod_Args : pb::IMessage<ListMethod_Args>
@@ -1699,7 +2240,7 @@ namespace KclLib.API {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[6]; }
+      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[8]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1845,6 +2386,9 @@ namespace KclLib.API {
 
   }
 
+  /// <summary>
+  /// Message for list method response.
+  /// </summary>
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class ListMethod_Result : pb::IMessage<ListMethod_Result>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
@@ -1860,7 +2404,7 @@ namespace KclLib.API {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[7]; }
+      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[9]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1895,6 +2439,9 @@ namespace KclLib.API {
     private static readonly pb::FieldCodec<string> _repeated_methodNameList_codec
         = pb::FieldCodec.ForString(10);
     private readonly pbc::RepeatedField<string> methodNameList_ = new pbc::RepeatedField<string>();
+    /// <summary>
+    /// List of available method names.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public pbc::RepeatedField<string> MethodNameList {
@@ -2032,6 +2579,9 @@ namespace KclLib.API {
 
   }
 
+  /// <summary>
+  /// Message for parse file request arguments.
+  /// </summary>
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class ParseFile_Args : pb::IMessage<ParseFile_Args>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
@@ -2047,7 +2597,7 @@ namespace KclLib.API {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[8]; }
+      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[10]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -2082,6 +2632,9 @@ namespace KclLib.API {
     /// <summary>Field number for the "path" field.</summary>
     public const int PathFieldNumber = 1;
     private string path_ = "";
+    /// <summary>
+    /// Path of the file to be parsed.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public string Path {
@@ -2094,6 +2647,9 @@ namespace KclLib.API {
     /// <summary>Field number for the "source" field.</summary>
     public const int SourceFieldNumber = 2;
     private string source_ = "";
+    /// <summary>
+    /// Source code to be parsed.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public string Source {
@@ -2109,7 +2665,7 @@ namespace KclLib.API {
         = pb::FieldCodec.ForMessage(26, global::KclLib.API.ExternalPkg.Parser);
     private readonly pbc::RepeatedField<global::KclLib.API.ExternalPkg> externalPkgs_ = new pbc::RepeatedField<global::KclLib.API.ExternalPkg>();
     /// <summary>
-    /// External packages path
+    /// External packages path.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -2296,6 +2852,9 @@ namespace KclLib.API {
 
   }
 
+  /// <summary>
+  /// Message for parse file response.
+  /// </summary>
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class ParseFile_Result : pb::IMessage<ParseFile_Result>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
@@ -2311,7 +2870,7 @@ namespace KclLib.API {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[9]; }
+      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[11]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -2347,7 +2906,7 @@ namespace KclLib.API {
     public const int AstJsonFieldNumber = 1;
     private string astJson_ = "";
     /// <summary>
-    /// JSON string value
+    /// Abstract Syntax Tree (AST) in JSON format.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -2364,7 +2923,7 @@ namespace KclLib.API {
         = pb::FieldCodec.ForString(18);
     private readonly pbc::RepeatedField<string> deps_ = new pbc::RepeatedField<string>();
     /// <summary>
-    /// file dependency paths
+    /// File dependency paths.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -2378,7 +2937,7 @@ namespace KclLib.API {
         = pb::FieldCodec.ForMessage(26, global::KclLib.API.Error.Parser);
     private readonly pbc::RepeatedField<global::KclLib.API.Error> errors_ = new pbc::RepeatedField<global::KclLib.API.Error>();
     /// <summary>
-    /// Parse errors
+    /// List of parse errors.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -2555,6 +3114,9 @@ namespace KclLib.API {
 
   }
 
+  /// <summary>
+  /// Message for parse program request arguments.
+  /// </summary>
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class ParseProgram_Args : pb::IMessage<ParseProgram_Args>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
@@ -2570,7 +3132,7 @@ namespace KclLib.API {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[10]; }
+      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[12]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -2607,6 +3169,9 @@ namespace KclLib.API {
     private static readonly pb::FieldCodec<string> _repeated_paths_codec
         = pb::FieldCodec.ForString(10);
     private readonly pbc::RepeatedField<string> paths_ = new pbc::RepeatedField<string>();
+    /// <summary>
+    /// Paths of the program files to be parsed.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public pbc::RepeatedField<string> Paths {
@@ -2618,6 +3183,9 @@ namespace KclLib.API {
     private static readonly pb::FieldCodec<string> _repeated_sources_codec
         = pb::FieldCodec.ForString(18);
     private readonly pbc::RepeatedField<string> sources_ = new pbc::RepeatedField<string>();
+    /// <summary>
+    /// Source codes to be parsed.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public pbc::RepeatedField<string> Sources {
@@ -2630,7 +3198,7 @@ namespace KclLib.API {
         = pb::FieldCodec.ForMessage(26, global::KclLib.API.ExternalPkg.Parser);
     private readonly pbc::RepeatedField<global::KclLib.API.ExternalPkg> externalPkgs_ = new pbc::RepeatedField<global::KclLib.API.ExternalPkg>();
     /// <summary>
-    /// External packages path
+    /// External packages path.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -2797,6 +3365,9 @@ namespace KclLib.API {
 
   }
 
+  /// <summary>
+  /// Message for parse program response.
+  /// </summary>
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class ParseProgram_Result : pb::IMessage<ParseProgram_Result>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
@@ -2812,7 +3383,7 @@ namespace KclLib.API {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[11]; }
+      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[13]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -2848,7 +3419,7 @@ namespace KclLib.API {
     public const int AstJsonFieldNumber = 1;
     private string astJson_ = "";
     /// <summary>
-    /// JSON string value
+    /// Abstract Syntax Tree (AST) in JSON format.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -2865,7 +3436,7 @@ namespace KclLib.API {
         = pb::FieldCodec.ForString(18);
     private readonly pbc::RepeatedField<string> paths_ = new pbc::RepeatedField<string>();
     /// <summary>
-    /// Returns the files in the order they should be compiled
+    /// Returns the files in the order they should be compiled.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -2879,7 +3450,7 @@ namespace KclLib.API {
         = pb::FieldCodec.ForMessage(26, global::KclLib.API.Error.Parser);
     private readonly pbc::RepeatedField<global::KclLib.API.Error> errors_ = new pbc::RepeatedField<global::KclLib.API.Error>();
     /// <summary>
-    /// Parse errors
+    /// List of parse errors.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -3056,6 +3627,9 @@ namespace KclLib.API {
 
   }
 
+  /// <summary>
+  /// Message for load package request arguments.
+  /// </summary>
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class LoadPackage_Args : pb::IMessage<LoadPackage_Args>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
@@ -3071,7 +3645,7 @@ namespace KclLib.API {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[12]; }
+      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[14]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -3107,6 +3681,9 @@ namespace KclLib.API {
     /// <summary>Field number for the "parse_args" field.</summary>
     public const int ParseArgsFieldNumber = 1;
     private global::KclLib.API.ParseProgram_Args parseArgs_;
+    /// <summary>
+    /// Arguments for parsing the program.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public global::KclLib.API.ParseProgram_Args ParseArgs {
@@ -3119,6 +3696,9 @@ namespace KclLib.API {
     /// <summary>Field number for the "resolve_ast" field.</summary>
     public const int ResolveAstFieldNumber = 2;
     private bool resolveAst_;
+    /// <summary>
+    /// Flag indicating whether to resolve AST.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public bool ResolveAst {
@@ -3131,6 +3711,9 @@ namespace KclLib.API {
     /// <summary>Field number for the "load_builtin" field.</summary>
     public const int LoadBuiltinFieldNumber = 3;
     private bool loadBuiltin_;
+    /// <summary>
+    /// Flag indicating whether to load built-in modules.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public bool LoadBuiltin {
@@ -3143,6 +3726,9 @@ namespace KclLib.API {
     /// <summary>Field number for the "with_ast_index" field.</summary>
     public const int WithAstIndexFieldNumber = 4;
     private bool withAstIndex_;
+    /// <summary>
+    /// Flag indicating whether to include AST index.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public bool WithAstIndex {
@@ -3374,6 +3960,9 @@ namespace KclLib.API {
 
   }
 
+  /// <summary>
+  /// Message for load package response.
+  /// </summary>
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class LoadPackage_Result : pb::IMessage<LoadPackage_Result>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
@@ -3389,7 +3978,7 @@ namespace KclLib.API {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[13]; }
+      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[15]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -3432,7 +4021,7 @@ namespace KclLib.API {
     public const int ProgramFieldNumber = 1;
     private string program_ = "";
     /// <summary>
-    /// JSON string value
+    /// Program Abstract Syntax Tree (AST) in JSON format.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -3449,7 +4038,7 @@ namespace KclLib.API {
         = pb::FieldCodec.ForString(18);
     private readonly pbc::RepeatedField<string> paths_ = new pbc::RepeatedField<string>();
     /// <summary>
-    /// Returns the files in the order they should be compiled
+    /// Returns the files in the order they should be compiled.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -3463,7 +4052,7 @@ namespace KclLib.API {
         = pb::FieldCodec.ForMessage(26, global::KclLib.API.Error.Parser);
     private readonly pbc::RepeatedField<global::KclLib.API.Error> parseErrors_ = new pbc::RepeatedField<global::KclLib.API.Error>();
     /// <summary>
-    /// Parse errors
+    /// List of parse errors.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -3477,7 +4066,7 @@ namespace KclLib.API {
         = pb::FieldCodec.ForMessage(34, global::KclLib.API.Error.Parser);
     private readonly pbc::RepeatedField<global::KclLib.API.Error> typeErrors_ = new pbc::RepeatedField<global::KclLib.API.Error>();
     /// <summary>
-    /// Type errors
+    /// List of type errors.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -3491,7 +4080,7 @@ namespace KclLib.API {
         = new pbc::MapField<string, global::KclLib.API.Scope>.Codec(pb::FieldCodec.ForString(10, ""), pb::FieldCodec.ForMessage(18, global::KclLib.API.Scope.Parser), 42);
     private readonly pbc::MapField<string, global::KclLib.API.Scope> scopes_ = new pbc::MapField<string, global::KclLib.API.Scope>();
     /// <summary>
-    /// Map key is the ScopeIndex json string.
+    /// Map of scopes with scope index as key.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -3505,7 +4094,7 @@ namespace KclLib.API {
         = new pbc::MapField<string, global::KclLib.API.Symbol>.Codec(pb::FieldCodec.ForString(10, ""), pb::FieldCodec.ForMessage(18, global::KclLib.API.Symbol.Parser), 50);
     private readonly pbc::MapField<string, global::KclLib.API.Symbol> symbols_ = new pbc::MapField<string, global::KclLib.API.Symbol>();
     /// <summary>
-    /// Map key is the SymbolIndex json string.
+    /// Map of symbols with symbol index as key.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -3519,7 +4108,7 @@ namespace KclLib.API {
         = new pbc::MapField<string, global::KclLib.API.SymbolIndex>.Codec(pb::FieldCodec.ForString(10, ""), pb::FieldCodec.ForMessage(18, global::KclLib.API.SymbolIndex.Parser), 58);
     private readonly pbc::MapField<string, global::KclLib.API.SymbolIndex> nodeSymbolMap_ = new pbc::MapField<string, global::KclLib.API.SymbolIndex>();
     /// <summary>
-    /// Map key is the AST index UUID string.
+    /// Map of node-symbol associations with AST index UUID as key.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -3533,7 +4122,7 @@ namespace KclLib.API {
         = new pbc::MapField<string, string>.Codec(pb::FieldCodec.ForString(10, ""), pb::FieldCodec.ForString(18, ""), 66);
     private readonly pbc::MapField<string, string> symbolNodeMap_ = new pbc::MapField<string, string>();
     /// <summary>
-    /// Map key is the SymbolIndex json string.
+    /// Map of symbol-node associations with symbol index as key.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -3547,7 +4136,7 @@ namespace KclLib.API {
         = new pbc::MapField<string, global::KclLib.API.SymbolIndex>.Codec(pb::FieldCodec.ForString(10, ""), pb::FieldCodec.ForMessage(18, global::KclLib.API.SymbolIndex.Parser), 74);
     private readonly pbc::MapField<string, global::KclLib.API.SymbolIndex> fullyQualifiedNameMap_ = new pbc::MapField<string, global::KclLib.API.SymbolIndex>();
     /// <summary>
-    /// Map key is the fully_qualified_name e.g. `pkg.Name`
+    /// Map of fully qualified names with symbol index as key.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -3561,7 +4150,7 @@ namespace KclLib.API {
         = new pbc::MapField<string, global::KclLib.API.ScopeIndex>.Codec(pb::FieldCodec.ForString(10, ""), pb::FieldCodec.ForMessage(18, global::KclLib.API.ScopeIndex.Parser), 82);
     private readonly pbc::MapField<string, global::KclLib.API.ScopeIndex> pkgScopeMap_ = new pbc::MapField<string, global::KclLib.API.ScopeIndex>();
     /// <summary>
-    /// Map key is the package path.
+    /// Map of package scope with package path as key.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -3836,6 +4425,9 @@ namespace KclLib.API {
 
   }
 
+  /// <summary>
+  /// Message for list options response.
+  /// </summary>
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class ListOptions_Result : pb::IMessage<ListOptions_Result>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
@@ -3851,7 +4443,7 @@ namespace KclLib.API {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[14]; }
+      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[16]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -3887,7 +4479,7 @@ namespace KclLib.API {
         = pb::FieldCodec.ForMessage(18, global::KclLib.API.OptionHelp.Parser);
     private readonly pbc::RepeatedField<global::KclLib.API.OptionHelp> options_ = new pbc::RepeatedField<global::KclLib.API.OptionHelp>();
     /// <summary>
-    /// Returns the files in the order they should be compiled
+    /// List of available options.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -4026,6 +4618,9 @@ namespace KclLib.API {
 
   }
 
+  /// <summary>
+  /// Message representing a help option.
+  /// </summary>
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class OptionHelp : pb::IMessage<OptionHelp>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
@@ -4041,7 +4636,7 @@ namespace KclLib.API {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[15]; }
+      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[17]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -4078,6 +4673,9 @@ namespace KclLib.API {
     /// <summary>Field number for the "name" field.</summary>
     public const int NameFieldNumber = 1;
     private string name_ = "";
+    /// <summary>
+    /// Name of the option.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public string Name {
@@ -4090,6 +4688,9 @@ namespace KclLib.API {
     /// <summary>Field number for the "type" field.</summary>
     public const int TypeFieldNumber = 2;
     private string type_ = "";
+    /// <summary>
+    /// Type of the option.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public string Type {
@@ -4102,6 +4703,9 @@ namespace KclLib.API {
     /// <summary>Field number for the "required" field.</summary>
     public const int RequiredFieldNumber = 3;
     private bool required_;
+    /// <summary>
+    /// Flag indicating if the option is required.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public bool Required {
@@ -4114,6 +4718,9 @@ namespace KclLib.API {
     /// <summary>Field number for the "default_value" field.</summary>
     public const int DefaultValueFieldNumber = 4;
     private string defaultValue_ = "";
+    /// <summary>
+    /// Default value of the option.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public string DefaultValue {
@@ -4126,6 +4733,9 @@ namespace KclLib.API {
     /// <summary>Field number for the "help" field.</summary>
     public const int HelpFieldNumber = 5;
     private string help_ = "";
+    /// <summary>
+    /// Help text for the option.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public string Help {
@@ -4372,6 +4982,9 @@ namespace KclLib.API {
 
   }
 
+  /// <summary>
+  /// Message representing a symbol in KCL.
+  /// </summary>
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class Symbol : pb::IMessage<Symbol>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
@@ -4387,7 +5000,7 @@ namespace KclLib.API {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[16]; }
+      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[18]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -4425,6 +5038,9 @@ namespace KclLib.API {
     /// <summary>Field number for the "ty" field.</summary>
     public const int TyFieldNumber = 1;
     private global::KclLib.API.KclType ty_;
+    /// <summary>
+    /// Type of the symbol.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public global::KclLib.API.KclType Ty {
@@ -4437,6 +5053,9 @@ namespace KclLib.API {
     /// <summary>Field number for the "name" field.</summary>
     public const int NameFieldNumber = 2;
     private string name_ = "";
+    /// <summary>
+    /// Name of the symbol.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public string Name {
@@ -4449,6 +5068,9 @@ namespace KclLib.API {
     /// <summary>Field number for the "owner" field.</summary>
     public const int OwnerFieldNumber = 3;
     private global::KclLib.API.SymbolIndex owner_;
+    /// <summary>
+    /// Owner of the symbol.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public global::KclLib.API.SymbolIndex Owner {
@@ -4461,6 +5083,9 @@ namespace KclLib.API {
     /// <summary>Field number for the "def" field.</summary>
     public const int DefFieldNumber = 4;
     private global::KclLib.API.SymbolIndex def_;
+    /// <summary>
+    /// Definition of the symbol.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public global::KclLib.API.SymbolIndex Def {
@@ -4475,6 +5100,9 @@ namespace KclLib.API {
     private static readonly pb::FieldCodec<global::KclLib.API.SymbolIndex> _repeated_attrs_codec
         = pb::FieldCodec.ForMessage(42, global::KclLib.API.SymbolIndex.Parser);
     private readonly pbc::RepeatedField<global::KclLib.API.SymbolIndex> attrs_ = new pbc::RepeatedField<global::KclLib.API.SymbolIndex>();
+    /// <summary>
+    /// Attributes of the symbol.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public pbc::RepeatedField<global::KclLib.API.SymbolIndex> Attrs {
@@ -4484,6 +5112,9 @@ namespace KclLib.API {
     /// <summary>Field number for the "is_global" field.</summary>
     public const int IsGlobalFieldNumber = 6;
     private bool isGlobal_;
+    /// <summary>
+    /// Flag indicating if the symbol is global.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public bool IsGlobal {
@@ -4771,6 +5402,9 @@ namespace KclLib.API {
 
   }
 
+  /// <summary>
+  /// Message representing a scope in KCL.
+  /// </summary>
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class Scope : pb::IMessage<Scope>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
@@ -4786,7 +5420,7 @@ namespace KclLib.API {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[17]; }
+      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[19]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -4823,6 +5457,9 @@ namespace KclLib.API {
     /// <summary>Field number for the "kind" field.</summary>
     public const int KindFieldNumber = 1;
     private string kind_ = "";
+    /// <summary>
+    /// Type of the scope.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public string Kind {
@@ -4835,6 +5472,9 @@ namespace KclLib.API {
     /// <summary>Field number for the "parent" field.</summary>
     public const int ParentFieldNumber = 2;
     private global::KclLib.API.ScopeIndex parent_;
+    /// <summary>
+    /// Parent scope.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public global::KclLib.API.ScopeIndex Parent {
@@ -4847,6 +5487,9 @@ namespace KclLib.API {
     /// <summary>Field number for the "owner" field.</summary>
     public const int OwnerFieldNumber = 3;
     private global::KclLib.API.SymbolIndex owner_;
+    /// <summary>
+    /// Owner of the scope.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public global::KclLib.API.SymbolIndex Owner {
@@ -4861,6 +5504,9 @@ namespace KclLib.API {
     private static readonly pb::FieldCodec<global::KclLib.API.ScopeIndex> _repeated_children_codec
         = pb::FieldCodec.ForMessage(34, global::KclLib.API.ScopeIndex.Parser);
     private readonly pbc::RepeatedField<global::KclLib.API.ScopeIndex> children_ = new pbc::RepeatedField<global::KclLib.API.ScopeIndex>();
+    /// <summary>
+    /// Children of the scope.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public pbc::RepeatedField<global::KclLib.API.ScopeIndex> Children {
@@ -4872,6 +5518,9 @@ namespace KclLib.API {
     private static readonly pb::FieldCodec<global::KclLib.API.SymbolIndex> _repeated_defs_codec
         = pb::FieldCodec.ForMessage(42, global::KclLib.API.SymbolIndex.Parser);
     private readonly pbc::RepeatedField<global::KclLib.API.SymbolIndex> defs_ = new pbc::RepeatedField<global::KclLib.API.SymbolIndex>();
+    /// <summary>
+    /// Definitions in the scope.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public pbc::RepeatedField<global::KclLib.API.SymbolIndex> Defs {
@@ -5113,6 +5762,9 @@ namespace KclLib.API {
 
   }
 
+  /// <summary>
+  /// Message representing a symbol index.
+  /// </summary>
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class SymbolIndex : pb::IMessage<SymbolIndex>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
@@ -5128,7 +5780,7 @@ namespace KclLib.API {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[18]; }
+      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[20]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -5163,6 +5815,9 @@ namespace KclLib.API {
     /// <summary>Field number for the "i" field.</summary>
     public const int IFieldNumber = 1;
     private ulong i_;
+    /// <summary>
+    /// Index identifier.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public ulong I {
@@ -5175,6 +5830,9 @@ namespace KclLib.API {
     /// <summary>Field number for the "g" field.</summary>
     public const int GFieldNumber = 2;
     private ulong g_;
+    /// <summary>
+    /// Global identifier.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public ulong G {
@@ -5187,6 +5845,9 @@ namespace KclLib.API {
     /// <summary>Field number for the "kind" field.</summary>
     public const int KindFieldNumber = 3;
     private string kind_ = "";
+    /// <summary>
+    /// Type of the symbol or scope.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public string Kind {
@@ -5385,6 +6046,9 @@ namespace KclLib.API {
 
   }
 
+  /// <summary>
+  /// Message representing a scope index.
+  /// </summary>
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class ScopeIndex : pb::IMessage<ScopeIndex>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
@@ -5400,7 +6064,7 @@ namespace KclLib.API {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[19]; }
+      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[21]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -5435,6 +6099,9 @@ namespace KclLib.API {
     /// <summary>Field number for the "i" field.</summary>
     public const int IFieldNumber = 1;
     private ulong i_;
+    /// <summary>
+    /// Index identifier.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public ulong I {
@@ -5447,6 +6114,9 @@ namespace KclLib.API {
     /// <summary>Field number for the "g" field.</summary>
     public const int GFieldNumber = 2;
     private ulong g_;
+    /// <summary>
+    /// Global identifier.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public ulong G {
@@ -5459,6 +6129,9 @@ namespace KclLib.API {
     /// <summary>Field number for the "kind" field.</summary>
     public const int KindFieldNumber = 3;
     private string kind_ = "";
+    /// <summary>
+    /// Type of the scope.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public string Kind {
@@ -5657,6 +6330,9 @@ namespace KclLib.API {
 
   }
 
+  /// <summary>
+  /// Message for execute program request arguments.
+  /// </summary>
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class ExecProgram_Args : pb::IMessage<ExecProgram_Args>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
@@ -5672,7 +6348,7 @@ namespace KclLib.API {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[20]; }
+      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[22]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -5722,6 +6398,9 @@ namespace KclLib.API {
     /// <summary>Field number for the "work_dir" field.</summary>
     public const int WorkDirFieldNumber = 1;
     private string workDir_ = "";
+    /// <summary>
+    /// Working directory.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public string WorkDir {
@@ -5736,6 +6415,9 @@ namespace KclLib.API {
     private static readonly pb::FieldCodec<string> _repeated_kFilenameList_codec
         = pb::FieldCodec.ForString(18);
     private readonly pbc::RepeatedField<string> kFilenameList_ = new pbc::RepeatedField<string>();
+    /// <summary>
+    /// List of KCL filenames.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public pbc::RepeatedField<string> KFilenameList {
@@ -5747,6 +6429,9 @@ namespace KclLib.API {
     private static readonly pb::FieldCodec<string> _repeated_kCodeList_codec
         = pb::FieldCodec.ForString(26);
     private readonly pbc::RepeatedField<string> kCodeList_ = new pbc::RepeatedField<string>();
+    /// <summary>
+    /// List of KCL codes.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public pbc::RepeatedField<string> KCodeList {
@@ -5758,6 +6443,9 @@ namespace KclLib.API {
     private static readonly pb::FieldCodec<global::KclLib.API.Argument> _repeated_args_codec
         = pb::FieldCodec.ForMessage(34, global::KclLib.API.Argument.Parser);
     private readonly pbc::RepeatedField<global::KclLib.API.Argument> args_ = new pbc::RepeatedField<global::KclLib.API.Argument>();
+    /// <summary>
+    /// Arguments for the program.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public pbc::RepeatedField<global::KclLib.API.Argument> Args {
@@ -5769,6 +6457,9 @@ namespace KclLib.API {
     private static readonly pb::FieldCodec<string> _repeated_overrides_codec
         = pb::FieldCodec.ForString(42);
     private readonly pbc::RepeatedField<string> overrides_ = new pbc::RepeatedField<string>();
+    /// <summary>
+    /// Override configurations.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public pbc::RepeatedField<string> Overrides {
@@ -5778,6 +6469,9 @@ namespace KclLib.API {
     /// <summary>Field number for the "disable_yaml_result" field.</summary>
     public const int DisableYamlResultFieldNumber = 6;
     private bool disableYamlResult_;
+    /// <summary>
+    /// Flag to disable YAML result.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public bool DisableYamlResult {
@@ -5790,6 +6484,9 @@ namespace KclLib.API {
     /// <summary>Field number for the "print_override_ast" field.</summary>
     public const int PrintOverrideAstFieldNumber = 7;
     private bool printOverrideAst_;
+    /// <summary>
+    /// Flag to print override AST.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public bool PrintOverrideAst {
@@ -5803,7 +6500,7 @@ namespace KclLib.API {
     public const int StrictRangeCheckFieldNumber = 8;
     private bool strictRangeCheck_;
     /// <summary>
-    /// -r --strict-range-check
+    /// Flag for strict range check.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -5818,7 +6515,7 @@ namespace KclLib.API {
     public const int DisableNoneFieldNumber = 9;
     private bool disableNone_;
     /// <summary>
-    /// -n --disable-none
+    /// Flag to disable none values.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -5833,7 +6530,7 @@ namespace KclLib.API {
     public const int VerboseFieldNumber = 10;
     private int verbose_;
     /// <summary>
-    /// -v --verbose
+    /// Verbose level.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -5848,7 +6545,7 @@ namespace KclLib.API {
     public const int DebugFieldNumber = 11;
     private int debug_;
     /// <summary>
-    /// -d --debug
+    /// Debug level.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -5863,7 +6560,7 @@ namespace KclLib.API {
     public const int SortKeysFieldNumber = 12;
     private bool sortKeys_;
     /// <summary>
-    /// yaml/json: sort keys
+    /// Flag to sort keys in YAML/JSON results.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -5880,7 +6577,7 @@ namespace KclLib.API {
         = pb::FieldCodec.ForMessage(106, global::KclLib.API.ExternalPkg.Parser);
     private readonly pbc::RepeatedField<global::KclLib.API.ExternalPkg> externalPkgs_ = new pbc::RepeatedField<global::KclLib.API.ExternalPkg>();
     /// <summary>
-    /// -E --external : external packages path
+    /// External packages path.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -5892,7 +6589,7 @@ namespace KclLib.API {
     public const int IncludeSchemaTypePathFieldNumber = 14;
     private bool includeSchemaTypePath_;
     /// <summary>
-    /// Whether including schema type in JSON/YAML result
+    /// Flag to include schema type path in results.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -5907,7 +6604,7 @@ namespace KclLib.API {
     public const int CompileOnlyFieldNumber = 15;
     private bool compileOnly_;
     /// <summary>
-    /// Whether only compiling the program
+    /// Flag to compile only without execution.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -5922,7 +6619,7 @@ namespace KclLib.API {
     public const int ShowHiddenFieldNumber = 16;
     private bool showHidden_;
     /// <summary>
-    /// Show hidden attributes
+    /// Flag to show hidden attributes.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -5939,7 +6636,7 @@ namespace KclLib.API {
         = pb::FieldCodec.ForString(138);
     private readonly pbc::RepeatedField<string> pathSelector_ = new pbc::RepeatedField<string>();
     /// <summary>
-    /// -S --path_selector
+    /// Path selectors for results.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -5951,7 +6648,7 @@ namespace KclLib.API {
     public const int FastEvalFieldNumber = 18;
     private bool fastEval_;
     /// <summary>
-    /// -K --fast_eval
+    /// Flag for fast evaluation.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -6451,6 +7148,9 @@ namespace KclLib.API {
 
   }
 
+  /// <summary>
+  /// Message for execute program response.
+  /// </summary>
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class ExecProgram_Result : pb::IMessage<ExecProgram_Result>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
@@ -6466,7 +7166,7 @@ namespace KclLib.API {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[21]; }
+      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[23]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -6502,6 +7202,9 @@ namespace KclLib.API {
     /// <summary>Field number for the "json_result" field.</summary>
     public const int JsonResultFieldNumber = 1;
     private string jsonResult_ = "";
+    /// <summary>
+    /// Result in JSON format.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public string JsonResult {
@@ -6514,6 +7217,9 @@ namespace KclLib.API {
     /// <summary>Field number for the "yaml_result" field.</summary>
     public const int YamlResultFieldNumber = 2;
     private string yamlResult_ = "";
+    /// <summary>
+    /// Result in YAML format.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public string YamlResult {
@@ -6526,6 +7232,9 @@ namespace KclLib.API {
     /// <summary>Field number for the "log_message" field.</summary>
     public const int LogMessageFieldNumber = 3;
     private string logMessage_ = "";
+    /// <summary>
+    /// Log message from execution.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public string LogMessage {
@@ -6538,6 +7247,9 @@ namespace KclLib.API {
     /// <summary>Field number for the "err_message" field.</summary>
     public const int ErrMessageFieldNumber = 4;
     private string errMessage_ = "";
+    /// <summary>
+    /// Error message from execution.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public string ErrMessage {
@@ -6760,6 +7472,9 @@ namespace KclLib.API {
 
   }
 
+  /// <summary>
+  /// Message for build program request arguments.
+  /// </summary>
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class BuildProgram_Args : pb::IMessage<BuildProgram_Args>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
@@ -6775,7 +7490,7 @@ namespace KclLib.API {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[22]; }
+      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[24]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -6809,6 +7524,9 @@ namespace KclLib.API {
     /// <summary>Field number for the "exec_args" field.</summary>
     public const int ExecArgsFieldNumber = 1;
     private global::KclLib.API.ExecProgram_Args execArgs_;
+    /// <summary>
+    /// Arguments for executing the program.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public global::KclLib.API.ExecProgram_Args ExecArgs {
@@ -6821,6 +7539,9 @@ namespace KclLib.API {
     /// <summary>Field number for the "output" field.</summary>
     public const int OutputFieldNumber = 2;
     private string output_ = "";
+    /// <summary>
+    /// Output path.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public string Output {
@@ -7004,6 +7725,9 @@ namespace KclLib.API {
 
   }
 
+  /// <summary>
+  /// Message for build program response.
+  /// </summary>
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class BuildProgram_Result : pb::IMessage<BuildProgram_Result>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
@@ -7019,7 +7743,7 @@ namespace KclLib.API {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[23]; }
+      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[25]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -7052,6 +7776,9 @@ namespace KclLib.API {
     /// <summary>Field number for the "path" field.</summary>
     public const int PathFieldNumber = 1;
     private string path_ = "";
+    /// <summary>
+    /// Path of the built program.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public string Path {
@@ -7202,6 +7929,9 @@ namespace KclLib.API {
 
   }
 
+  /// <summary>
+  /// Message for execute artifact request arguments.
+  /// </summary>
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class ExecArtifact_Args : pb::IMessage<ExecArtifact_Args>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
@@ -7217,7 +7947,7 @@ namespace KclLib.API {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[24]; }
+      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[26]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -7251,6 +7981,9 @@ namespace KclLib.API {
     /// <summary>Field number for the "path" field.</summary>
     public const int PathFieldNumber = 1;
     private string path_ = "";
+    /// <summary>
+    /// Path of the artifact.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public string Path {
@@ -7263,6 +7996,9 @@ namespace KclLib.API {
     /// <summary>Field number for the "exec_args" field.</summary>
     public const int ExecArgsFieldNumber = 2;
     private global::KclLib.API.ExecProgram_Args execArgs_;
+    /// <summary>
+    /// Arguments for executing the program.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public global::KclLib.API.ExecProgram_Args ExecArgs {
@@ -7446,6 +8182,9 @@ namespace KclLib.API {
 
   }
 
+  /// <summary>
+  /// Message for reset plugin request arguments.
+  /// </summary>
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class ResetPlugin_Args : pb::IMessage<ResetPlugin_Args>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
@@ -7461,7 +8200,7 @@ namespace KclLib.API {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[25]; }
+      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[27]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -7494,6 +8233,9 @@ namespace KclLib.API {
     /// <summary>Field number for the "plugin_root" field.</summary>
     public const int PluginRootFieldNumber = 1;
     private string pluginRoot_ = "";
+    /// <summary>
+    /// Root path for the plugin.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public string PluginRoot {
@@ -7645,7 +8387,7 @@ namespace KclLib.API {
   }
 
   /// <summary>
-  /// empty
+  /// Message for reset plugin response. Empty message.
   /// </summary>
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class ResetPlugin_Result : pb::IMessage<ResetPlugin_Result>
@@ -7662,7 +8404,7 @@ namespace KclLib.API {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[26]; }
+      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[28]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -7808,6 +8550,9 @@ namespace KclLib.API {
 
   }
 
+  /// <summary>
+  /// Message for format code request arguments.
+  /// </summary>
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class FormatCode_Args : pb::IMessage<FormatCode_Args>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
@@ -7823,7 +8568,7 @@ namespace KclLib.API {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[27]; }
+      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[29]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -7856,6 +8601,9 @@ namespace KclLib.API {
     /// <summary>Field number for the "source" field.</summary>
     public const int SourceFieldNumber = 1;
     private string source_ = "";
+    /// <summary>
+    /// Source code to be formatted.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public string Source {
@@ -8006,6 +8754,9 @@ namespace KclLib.API {
 
   }
 
+  /// <summary>
+  /// Message for format code response.
+  /// </summary>
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class FormatCode_Result : pb::IMessage<FormatCode_Result>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
@@ -8021,7 +8772,7 @@ namespace KclLib.API {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[28]; }
+      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[30]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -8054,6 +8805,9 @@ namespace KclLib.API {
     /// <summary>Field number for the "formatted" field.</summary>
     public const int FormattedFieldNumber = 1;
     private pb::ByteString formatted_ = pb::ByteString.Empty;
+    /// <summary>
+    /// Formatted code as bytes.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public pb::ByteString Formatted {
@@ -8204,6 +8958,9 @@ namespace KclLib.API {
 
   }
 
+  /// <summary>
+  /// Message for format file path request arguments.
+  /// </summary>
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class FormatPath_Args : pb::IMessage<FormatPath_Args>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
@@ -8219,7 +8976,7 @@ namespace KclLib.API {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[29]; }
+      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[31]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -8252,6 +9009,9 @@ namespace KclLib.API {
     /// <summary>Field number for the "path" field.</summary>
     public const int PathFieldNumber = 1;
     private string path_ = "";
+    /// <summary>
+    /// Path of the file to format.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public string Path {
@@ -8402,6 +9162,9 @@ namespace KclLib.API {
 
   }
 
+  /// <summary>
+  /// Message for format file path response.
+  /// </summary>
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class FormatPath_Result : pb::IMessage<FormatPath_Result>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
@@ -8417,7 +9180,7 @@ namespace KclLib.API {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[30]; }
+      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[32]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -8452,6 +9215,9 @@ namespace KclLib.API {
     private static readonly pb::FieldCodec<string> _repeated_changedPaths_codec
         = pb::FieldCodec.ForString(10);
     private readonly pbc::RepeatedField<string> changedPaths_ = new pbc::RepeatedField<string>();
+    /// <summary>
+    /// List of changed file paths.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public pbc::RepeatedField<string> ChangedPaths {
@@ -8589,6 +9355,9 @@ namespace KclLib.API {
 
   }
 
+  /// <summary>
+  /// Message for lint file path request arguments.
+  /// </summary>
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class LintPath_Args : pb::IMessage<LintPath_Args>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
@@ -8604,7 +9373,7 @@ namespace KclLib.API {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[31]; }
+      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[33]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -8639,6 +9408,9 @@ namespace KclLib.API {
     private static readonly pb::FieldCodec<string> _repeated_paths_codec
         = pb::FieldCodec.ForString(10);
     private readonly pbc::RepeatedField<string> paths_ = new pbc::RepeatedField<string>();
+    /// <summary>
+    /// Paths of the files to lint.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public pbc::RepeatedField<string> Paths {
@@ -8776,6 +9548,9 @@ namespace KclLib.API {
 
   }
 
+  /// <summary>
+  /// Message for lint file path response.
+  /// </summary>
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class LintPath_Result : pb::IMessage<LintPath_Result>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
@@ -8791,7 +9566,7 @@ namespace KclLib.API {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[32]; }
+      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[34]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -8826,6 +9601,9 @@ namespace KclLib.API {
     private static readonly pb::FieldCodec<string> _repeated_results_codec
         = pb::FieldCodec.ForString(10);
     private readonly pbc::RepeatedField<string> results_ = new pbc::RepeatedField<string>();
+    /// <summary>
+    /// List of lint results.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public pbc::RepeatedField<string> Results {
@@ -8963,6 +9741,9 @@ namespace KclLib.API {
 
   }
 
+  /// <summary>
+  /// Message for override file request arguments.
+  /// </summary>
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class OverrideFile_Args : pb::IMessage<OverrideFile_Args>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
@@ -8978,7 +9759,7 @@ namespace KclLib.API {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[33]; }
+      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[35]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -9013,6 +9794,9 @@ namespace KclLib.API {
     /// <summary>Field number for the "file" field.</summary>
     public const int FileFieldNumber = 1;
     private string file_ = "";
+    /// <summary>
+    /// Path of the file to override.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public string File {
@@ -9027,6 +9811,9 @@ namespace KclLib.API {
     private static readonly pb::FieldCodec<string> _repeated_specs_codec
         = pb::FieldCodec.ForString(18);
     private readonly pbc::RepeatedField<string> specs_ = new pbc::RepeatedField<string>();
+    /// <summary>
+    /// List of override specifications.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public pbc::RepeatedField<string> Specs {
@@ -9038,6 +9825,9 @@ namespace KclLib.API {
     private static readonly pb::FieldCodec<string> _repeated_importPaths_codec
         = pb::FieldCodec.ForString(26);
     private readonly pbc::RepeatedField<string> importPaths_ = new pbc::RepeatedField<string>();
+    /// <summary>
+    /// List of import paths.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public pbc::RepeatedField<string> ImportPaths {
@@ -9213,6 +10003,9 @@ namespace KclLib.API {
 
   }
 
+  /// <summary>
+  /// Message for override file response.
+  /// </summary>
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class OverrideFile_Result : pb::IMessage<OverrideFile_Result>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
@@ -9228,7 +10021,7 @@ namespace KclLib.API {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[34]; }
+      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[36]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -9262,6 +10055,9 @@ namespace KclLib.API {
     /// <summary>Field number for the "result" field.</summary>
     public const int ResultFieldNumber = 1;
     private bool result_;
+    /// <summary>
+    /// Result of the override operation.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public bool Result {
@@ -9276,6 +10072,9 @@ namespace KclLib.API {
     private static readonly pb::FieldCodec<global::KclLib.API.Error> _repeated_parseErrors_codec
         = pb::FieldCodec.ForMessage(18, global::KclLib.API.Error.Parser);
     private readonly pbc::RepeatedField<global::KclLib.API.Error> parseErrors_ = new pbc::RepeatedField<global::KclLib.API.Error>();
+    /// <summary>
+    /// List of parse errors encountered.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public pbc::RepeatedField<global::KclLib.API.Error> ParseErrors {
@@ -9437,6 +10236,9 @@ namespace KclLib.API {
 
   }
 
+  /// <summary>
+  /// Message for list variables options.
+  /// </summary>
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class ListVariables_Options : pb::IMessage<ListVariables_Options>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
@@ -9452,7 +10254,7 @@ namespace KclLib.API {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[35]; }
+      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[37]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -9485,6 +10287,9 @@ namespace KclLib.API {
     /// <summary>Field number for the "merge_program" field.</summary>
     public const int MergeProgramFieldNumber = 1;
     private bool mergeProgram_;
+    /// <summary>
+    /// Flag to merge program configuration.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public bool MergeProgram {
@@ -9635,6 +10440,9 @@ namespace KclLib.API {
 
   }
 
+  /// <summary>
+  /// Message representing a list of variables.
+  /// </summary>
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class VariableList : pb::IMessage<VariableList>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
@@ -9650,7 +10458,7 @@ namespace KclLib.API {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[36]; }
+      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[38]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -9685,6 +10493,9 @@ namespace KclLib.API {
     private static readonly pb::FieldCodec<global::KclLib.API.Variable> _repeated_variables_codec
         = pb::FieldCodec.ForMessage(10, global::KclLib.API.Variable.Parser);
     private readonly pbc::RepeatedField<global::KclLib.API.Variable> variables_ = new pbc::RepeatedField<global::KclLib.API.Variable>();
+    /// <summary>
+    /// List of variables.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public pbc::RepeatedField<global::KclLib.API.Variable> Variables {
@@ -9822,6 +10633,9 @@ namespace KclLib.API {
 
   }
 
+  /// <summary>
+  /// Message for list variables request arguments.
+  /// </summary>
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class ListVariables_Args : pb::IMessage<ListVariables_Args>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
@@ -9837,7 +10651,7 @@ namespace KclLib.API {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[37]; }
+      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[39]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -9874,6 +10688,9 @@ namespace KclLib.API {
     private static readonly pb::FieldCodec<string> _repeated_files_codec
         = pb::FieldCodec.ForString(10);
     private readonly pbc::RepeatedField<string> files_ = new pbc::RepeatedField<string>();
+    /// <summary>
+    /// Files to be processed.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public pbc::RepeatedField<string> Files {
@@ -9885,6 +10702,9 @@ namespace KclLib.API {
     private static readonly pb::FieldCodec<string> _repeated_specs_codec
         = pb::FieldCodec.ForString(18);
     private readonly pbc::RepeatedField<string> specs_ = new pbc::RepeatedField<string>();
+    /// <summary>
+    /// Specifications for variables.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public pbc::RepeatedField<string> Specs {
@@ -9894,6 +10714,9 @@ namespace KclLib.API {
     /// <summary>Field number for the "options" field.</summary>
     public const int OptionsFieldNumber = 3;
     private global::KclLib.API.ListVariables_Options options_;
+    /// <summary>
+    /// Options for listing variables.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public global::KclLib.API.ListVariables_Options Options {
@@ -10081,6 +10904,9 @@ namespace KclLib.API {
 
   }
 
+  /// <summary>
+  /// Message for list variables response.
+  /// </summary>
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class ListVariables_Result : pb::IMessage<ListVariables_Result>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
@@ -10096,7 +10922,7 @@ namespace KclLib.API {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[38]; }
+      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[40]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -10133,6 +10959,9 @@ namespace KclLib.API {
     private static readonly pbc::MapField<string, global::KclLib.API.VariableList>.Codec _map_variables_codec
         = new pbc::MapField<string, global::KclLib.API.VariableList>.Codec(pb::FieldCodec.ForString(10, ""), pb::FieldCodec.ForMessage(18, global::KclLib.API.VariableList.Parser), 10);
     private readonly pbc::MapField<string, global::KclLib.API.VariableList> variables_ = new pbc::MapField<string, global::KclLib.API.VariableList>();
+    /// <summary>
+    /// Map of variable lists by file.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public pbc::MapField<string, global::KclLib.API.VariableList> Variables {
@@ -10144,6 +10973,9 @@ namespace KclLib.API {
     private static readonly pb::FieldCodec<string> _repeated_unsupportedCodes_codec
         = pb::FieldCodec.ForString(18);
     private readonly pbc::RepeatedField<string> unsupportedCodes_ = new pbc::RepeatedField<string>();
+    /// <summary>
+    /// List of unsupported codes.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public pbc::RepeatedField<string> UnsupportedCodes {
@@ -10155,6 +10987,9 @@ namespace KclLib.API {
     private static readonly pb::FieldCodec<global::KclLib.API.Error> _repeated_parseErrors_codec
         = pb::FieldCodec.ForMessage(26, global::KclLib.API.Error.Parser);
     private readonly pbc::RepeatedField<global::KclLib.API.Error> parseErrors_ = new pbc::RepeatedField<global::KclLib.API.Error>();
+    /// <summary>
+    /// List of parse errors encountered.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public pbc::RepeatedField<global::KclLib.API.Error> ParseErrors {
@@ -10320,6 +11155,9 @@ namespace KclLib.API {
 
   }
 
+  /// <summary>
+  /// Message representing a variable.
+  /// </summary>
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class Variable : pb::IMessage<Variable>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
@@ -10335,7 +11173,7 @@ namespace KclLib.API {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[39]; }
+      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[41]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -10372,6 +11210,9 @@ namespace KclLib.API {
     /// <summary>Field number for the "value" field.</summary>
     public const int ValueFieldNumber = 1;
     private string value_ = "";
+    /// <summary>
+    /// Value of the variable.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public string Value {
@@ -10384,6 +11225,9 @@ namespace KclLib.API {
     /// <summary>Field number for the "type_name" field.</summary>
     public const int TypeNameFieldNumber = 2;
     private string typeName_ = "";
+    /// <summary>
+    /// Type name of the variable.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public string TypeName {
@@ -10396,6 +11240,9 @@ namespace KclLib.API {
     /// <summary>Field number for the "op_sym" field.</summary>
     public const int OpSymFieldNumber = 3;
     private string opSym_ = "";
+    /// <summary>
+    /// Operation symbol associated with the variable.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public string OpSym {
@@ -10410,6 +11257,9 @@ namespace KclLib.API {
     private static readonly pb::FieldCodec<global::KclLib.API.Variable> _repeated_listItems_codec
         = pb::FieldCodec.ForMessage(34, global::KclLib.API.Variable.Parser);
     private readonly pbc::RepeatedField<global::KclLib.API.Variable> listItems_ = new pbc::RepeatedField<global::KclLib.API.Variable>();
+    /// <summary>
+    /// List items if the variable is a list.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public pbc::RepeatedField<global::KclLib.API.Variable> ListItems {
@@ -10421,6 +11271,9 @@ namespace KclLib.API {
     private static readonly pb::FieldCodec<global::KclLib.API.MapEntry> _repeated_dictEntries_codec
         = pb::FieldCodec.ForMessage(42, global::KclLib.API.MapEntry.Parser);
     private readonly pbc::RepeatedField<global::KclLib.API.MapEntry> dictEntries_ = new pbc::RepeatedField<global::KclLib.API.MapEntry>();
+    /// <summary>
+    /// Dictionary entries if the variable is a dictionary.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public pbc::RepeatedField<global::KclLib.API.MapEntry> DictEntries {
@@ -10644,6 +11497,9 @@ namespace KclLib.API {
 
   }
 
+  /// <summary>
+  /// Message representing a map entry.
+  /// </summary>
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class MapEntry : pb::IMessage<MapEntry>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
@@ -10659,7 +11515,7 @@ namespace KclLib.API {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[40]; }
+      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[42]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -10693,6 +11549,9 @@ namespace KclLib.API {
     /// <summary>Field number for the "key" field.</summary>
     public const int KeyFieldNumber = 1;
     private string key_ = "";
+    /// <summary>
+    /// Key of the map entry.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public string Key {
@@ -10705,6 +11564,9 @@ namespace KclLib.API {
     /// <summary>Field number for the "value" field.</summary>
     public const int ValueFieldNumber = 2;
     private global::KclLib.API.Variable value_;
+    /// <summary>
+    /// Value of the map entry.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public global::KclLib.API.Variable Value {
@@ -10888,6 +11750,9 @@ namespace KclLib.API {
 
   }
 
+  /// <summary>
+  /// Message for get schema type mapping request arguments.
+  /// </summary>
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class GetSchemaTypeMapping_Args : pb::IMessage<GetSchemaTypeMapping_Args>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
@@ -10903,7 +11768,7 @@ namespace KclLib.API {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[41]; }
+      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[43]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -10937,6 +11802,9 @@ namespace KclLib.API {
     /// <summary>Field number for the "exec_args" field.</summary>
     public const int ExecArgsFieldNumber = 1;
     private global::KclLib.API.ExecProgram_Args execArgs_;
+    /// <summary>
+    /// Arguments for executing the program.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public global::KclLib.API.ExecProgram_Args ExecArgs {
@@ -10949,6 +11817,9 @@ namespace KclLib.API {
     /// <summary>Field number for the "schema_name" field.</summary>
     public const int SchemaNameFieldNumber = 2;
     private string schemaName_ = "";
+    /// <summary>
+    /// Name of the schema.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public string SchemaName {
@@ -11132,6 +12003,9 @@ namespace KclLib.API {
 
   }
 
+  /// <summary>
+  /// Message for get schema type mapping response.
+  /// </summary>
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class GetSchemaTypeMapping_Result : pb::IMessage<GetSchemaTypeMapping_Result>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
@@ -11147,7 +12021,7 @@ namespace KclLib.API {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[42]; }
+      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[44]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -11182,6 +12056,9 @@ namespace KclLib.API {
     private static readonly pbc::MapField<string, global::KclLib.API.KclType>.Codec _map_schemaTypeMapping_codec
         = new pbc::MapField<string, global::KclLib.API.KclType>.Codec(pb::FieldCodec.ForString(10, ""), pb::FieldCodec.ForMessage(18, global::KclLib.API.KclType.Parser), 10);
     private readonly pbc::MapField<string, global::KclLib.API.KclType> schemaTypeMapping_ = new pbc::MapField<string, global::KclLib.API.KclType>();
+    /// <summary>
+    /// Map of schema type mappings.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public pbc::MapField<string, global::KclLib.API.KclType> SchemaTypeMapping {
@@ -11319,6 +12196,9 @@ namespace KclLib.API {
 
   }
 
+  /// <summary>
+  /// Message for validate code request arguments.
+  /// </summary>
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class ValidateCode_Args : pb::IMessage<ValidateCode_Args>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
@@ -11334,7 +12214,7 @@ namespace KclLib.API {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[43]; }
+      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[45]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -11373,6 +12253,9 @@ namespace KclLib.API {
     /// <summary>Field number for the "datafile" field.</summary>
     public const int DatafileFieldNumber = 1;
     private string datafile_ = "";
+    /// <summary>
+    /// Path to the data file.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public string Datafile {
@@ -11385,6 +12268,9 @@ namespace KclLib.API {
     /// <summary>Field number for the "data" field.</summary>
     public const int DataFieldNumber = 2;
     private string data_ = "";
+    /// <summary>
+    /// Data content.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public string Data {
@@ -11397,6 +12283,9 @@ namespace KclLib.API {
     /// <summary>Field number for the "file" field.</summary>
     public const int FileFieldNumber = 3;
     private string file_ = "";
+    /// <summary>
+    /// Path to the code file.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public string File {
@@ -11409,6 +12298,9 @@ namespace KclLib.API {
     /// <summary>Field number for the "code" field.</summary>
     public const int CodeFieldNumber = 4;
     private string code_ = "";
+    /// <summary>
+    /// Source code content.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public string Code {
@@ -11421,6 +12313,9 @@ namespace KclLib.API {
     /// <summary>Field number for the "schema" field.</summary>
     public const int SchemaFieldNumber = 5;
     private string schema_ = "";
+    /// <summary>
+    /// Name of the schema.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public string Schema {
@@ -11433,6 +12328,9 @@ namespace KclLib.API {
     /// <summary>Field number for the "attribute_name" field.</summary>
     public const int AttributeNameFieldNumber = 6;
     private string attributeName_ = "";
+    /// <summary>
+    /// Name of the attribute.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public string AttributeName {
@@ -11445,6 +12343,9 @@ namespace KclLib.API {
     /// <summary>Field number for the "format" field.</summary>
     public const int FormatFieldNumber = 7;
     private string format_ = "";
+    /// <summary>
+    /// Format of the validation (e.g., "json", "yaml").
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public string Format {
@@ -11739,6 +12640,9 @@ namespace KclLib.API {
 
   }
 
+  /// <summary>
+  /// Message for validate code response.
+  /// </summary>
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class ValidateCode_Result : pb::IMessage<ValidateCode_Result>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
@@ -11754,7 +12658,7 @@ namespace KclLib.API {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[44]; }
+      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[46]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -11788,6 +12692,9 @@ namespace KclLib.API {
     /// <summary>Field number for the "success" field.</summary>
     public const int SuccessFieldNumber = 1;
     private bool success_;
+    /// <summary>
+    /// Flag indicating if validation was successful.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public bool Success {
@@ -11800,6 +12707,9 @@ namespace KclLib.API {
     /// <summary>Field number for the "err_message" field.</summary>
     public const int ErrMessageFieldNumber = 2;
     private string errMessage_ = "";
+    /// <summary>
+    /// Error message from validation.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public string ErrMessage {
@@ -11974,6 +12884,9 @@ namespace KclLib.API {
 
   }
 
+  /// <summary>
+  /// Message representing a position in the source code.
+  /// </summary>
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class Position : pb::IMessage<Position>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
@@ -11989,7 +12902,7 @@ namespace KclLib.API {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[45]; }
+      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[47]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -12024,6 +12937,9 @@ namespace KclLib.API {
     /// <summary>Field number for the "line" field.</summary>
     public const int LineFieldNumber = 1;
     private long line_;
+    /// <summary>
+    /// Line number.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public long Line {
@@ -12036,6 +12952,9 @@ namespace KclLib.API {
     /// <summary>Field number for the "column" field.</summary>
     public const int ColumnFieldNumber = 2;
     private long column_;
+    /// <summary>
+    /// Column number.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public long Column {
@@ -12048,6 +12967,9 @@ namespace KclLib.API {
     /// <summary>Field number for the "filename" field.</summary>
     public const int FilenameFieldNumber = 3;
     private string filename_ = "";
+    /// <summary>
+    /// Filename the position refers to.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public string Filename {
@@ -12246,6 +13168,9 @@ namespace KclLib.API {
 
   }
 
+  /// <summary>
+  /// Message for list dependency files request arguments.
+  /// </summary>
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class ListDepFiles_Args : pb::IMessage<ListDepFiles_Args>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
@@ -12261,7 +13186,7 @@ namespace KclLib.API {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[46]; }
+      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[48]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -12297,6 +13222,9 @@ namespace KclLib.API {
     /// <summary>Field number for the "work_dir" field.</summary>
     public const int WorkDirFieldNumber = 1;
     private string workDir_ = "";
+    /// <summary>
+    /// Working directory.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public string WorkDir {
@@ -12309,6 +13237,9 @@ namespace KclLib.API {
     /// <summary>Field number for the "use_abs_path" field.</summary>
     public const int UseAbsPathFieldNumber = 2;
     private bool useAbsPath_;
+    /// <summary>
+    /// Flag to use absolute paths.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public bool UseAbsPath {
@@ -12321,6 +13252,9 @@ namespace KclLib.API {
     /// <summary>Field number for the "include_all" field.</summary>
     public const int IncludeAllFieldNumber = 3;
     private bool includeAll_;
+    /// <summary>
+    /// Flag to include all files.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public bool IncludeAll {
@@ -12333,6 +13267,9 @@ namespace KclLib.API {
     /// <summary>Field number for the "use_fast_parser" field.</summary>
     public const int UseFastParserFieldNumber = 4;
     private bool useFastParser_;
+    /// <summary>
+    /// Flag to use fast parser.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public bool UseFastParser {
@@ -12555,6 +13492,9 @@ namespace KclLib.API {
 
   }
 
+  /// <summary>
+  /// Message for list dependency files response.
+  /// </summary>
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class ListDepFiles_Result : pb::IMessage<ListDepFiles_Result>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
@@ -12570,7 +13510,7 @@ namespace KclLib.API {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[47]; }
+      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[49]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -12605,6 +13545,9 @@ namespace KclLib.API {
     /// <summary>Field number for the "pkgroot" field.</summary>
     public const int PkgrootFieldNumber = 1;
     private string pkgroot_ = "";
+    /// <summary>
+    /// Root package path.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public string Pkgroot {
@@ -12617,6 +13560,9 @@ namespace KclLib.API {
     /// <summary>Field number for the "pkgpath" field.</summary>
     public const int PkgpathFieldNumber = 2;
     private string pkgpath_ = "";
+    /// <summary>
+    /// Package path.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public string Pkgpath {
@@ -12631,6 +13577,9 @@ namespace KclLib.API {
     private static readonly pb::FieldCodec<string> _repeated_files_codec
         = pb::FieldCodec.ForString(26);
     private readonly pbc::RepeatedField<string> files_ = new pbc::RepeatedField<string>();
+    /// <summary>
+    /// List of file paths in the package.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public pbc::RepeatedField<string> Files {
@@ -12816,6 +13765,9 @@ namespace KclLib.API {
 
   }
 
+  /// <summary>
+  /// Message for load settings files request arguments.
+  /// </summary>
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class LoadSettingsFiles_Args : pb::IMessage<LoadSettingsFiles_Args>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
@@ -12831,7 +13783,7 @@ namespace KclLib.API {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[48]; }
+      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[50]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -12865,6 +13817,9 @@ namespace KclLib.API {
     /// <summary>Field number for the "work_dir" field.</summary>
     public const int WorkDirFieldNumber = 1;
     private string workDir_ = "";
+    /// <summary>
+    /// Working directory.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public string WorkDir {
@@ -12879,6 +13834,9 @@ namespace KclLib.API {
     private static readonly pb::FieldCodec<string> _repeated_files_codec
         = pb::FieldCodec.ForString(18);
     private readonly pbc::RepeatedField<string> files_ = new pbc::RepeatedField<string>();
+    /// <summary>
+    /// Setting files to load.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public pbc::RepeatedField<string> Files {
@@ -13040,6 +13998,9 @@ namespace KclLib.API {
 
   }
 
+  /// <summary>
+  /// Message for load settings files response.
+  /// </summary>
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class LoadSettingsFiles_Result : pb::IMessage<LoadSettingsFiles_Result>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
@@ -13055,7 +14016,7 @@ namespace KclLib.API {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[49]; }
+      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[51]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -13089,6 +14050,9 @@ namespace KclLib.API {
     /// <summary>Field number for the "kcl_cli_configs" field.</summary>
     public const int KclCliConfigsFieldNumber = 1;
     private global::KclLib.API.CliConfig kclCliConfigs_;
+    /// <summary>
+    /// KCL CLI configuration.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public global::KclLib.API.CliConfig KclCliConfigs {
@@ -13103,6 +14067,9 @@ namespace KclLib.API {
     private static readonly pb::FieldCodec<global::KclLib.API.KeyValuePair> _repeated_kclOptions_codec
         = pb::FieldCodec.ForMessage(18, global::KclLib.API.KeyValuePair.Parser);
     private readonly pbc::RepeatedField<global::KclLib.API.KeyValuePair> kclOptions_ = new pbc::RepeatedField<global::KclLib.API.KeyValuePair>();
+    /// <summary>
+    /// List of KCL options as key-value pairs.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public pbc::RepeatedField<global::KclLib.API.KeyValuePair> KclOptions {
@@ -13273,6 +14240,9 @@ namespace KclLib.API {
 
   }
 
+  /// <summary>
+  /// Message representing KCL CLI configuration.
+  /// </summary>
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class CliConfig : pb::IMessage<CliConfig>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
@@ -13288,7 +14258,7 @@ namespace KclLib.API {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[50]; }
+      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[52]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -13334,6 +14304,9 @@ namespace KclLib.API {
     private static readonly pb::FieldCodec<string> _repeated_files_codec
         = pb::FieldCodec.ForString(10);
     private readonly pbc::RepeatedField<string> files_ = new pbc::RepeatedField<string>();
+    /// <summary>
+    /// List of files.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public pbc::RepeatedField<string> Files {
@@ -13343,6 +14316,9 @@ namespace KclLib.API {
     /// <summary>Field number for the "output" field.</summary>
     public const int OutputFieldNumber = 2;
     private string output_ = "";
+    /// <summary>
+    /// Output path.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public string Output {
@@ -13357,6 +14333,9 @@ namespace KclLib.API {
     private static readonly pb::FieldCodec<string> _repeated_overrides_codec
         = pb::FieldCodec.ForString(26);
     private readonly pbc::RepeatedField<string> overrides_ = new pbc::RepeatedField<string>();
+    /// <summary>
+    /// List of overrides.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public pbc::RepeatedField<string> Overrides {
@@ -13368,6 +14347,9 @@ namespace KclLib.API {
     private static readonly pb::FieldCodec<string> _repeated_pathSelector_codec
         = pb::FieldCodec.ForString(34);
     private readonly pbc::RepeatedField<string> pathSelector_ = new pbc::RepeatedField<string>();
+    /// <summary>
+    /// Path selectors.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public pbc::RepeatedField<string> PathSelector {
@@ -13377,6 +14359,9 @@ namespace KclLib.API {
     /// <summary>Field number for the "strict_range_check" field.</summary>
     public const int StrictRangeCheckFieldNumber = 5;
     private bool strictRangeCheck_;
+    /// <summary>
+    /// Flag for strict range check.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public bool StrictRangeCheck {
@@ -13389,6 +14374,9 @@ namespace KclLib.API {
     /// <summary>Field number for the "disable_none" field.</summary>
     public const int DisableNoneFieldNumber = 6;
     private bool disableNone_;
+    /// <summary>
+    /// Flag to disable none values.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public bool DisableNone {
@@ -13401,6 +14389,9 @@ namespace KclLib.API {
     /// <summary>Field number for the "verbose" field.</summary>
     public const int VerboseFieldNumber = 7;
     private long verbose_;
+    /// <summary>
+    /// Verbose level.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public long Verbose {
@@ -13413,6 +14404,9 @@ namespace KclLib.API {
     /// <summary>Field number for the "debug" field.</summary>
     public const int DebugFieldNumber = 8;
     private bool debug_;
+    /// <summary>
+    /// Debug flag.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public bool Debug {
@@ -13425,6 +14419,9 @@ namespace KclLib.API {
     /// <summary>Field number for the "sort_keys" field.</summary>
     public const int SortKeysFieldNumber = 9;
     private bool sortKeys_;
+    /// <summary>
+    /// Flag to sort keys in YAML/JSON results.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public bool SortKeys {
@@ -13437,6 +14434,9 @@ namespace KclLib.API {
     /// <summary>Field number for the "show_hidden" field.</summary>
     public const int ShowHiddenFieldNumber = 10;
     private bool showHidden_;
+    /// <summary>
+    /// Flag to show hidden attributes.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public bool ShowHidden {
@@ -13449,6 +14449,9 @@ namespace KclLib.API {
     /// <summary>Field number for the "include_schema_type_path" field.</summary>
     public const int IncludeSchemaTypePathFieldNumber = 11;
     private bool includeSchemaTypePath_;
+    /// <summary>
+    /// Flag to include schema type path in results.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public bool IncludeSchemaTypePath {
@@ -13461,6 +14464,9 @@ namespace KclLib.API {
     /// <summary>Field number for the "fast_eval" field.</summary>
     public const int FastEvalFieldNumber = 12;
     private bool fastEval_;
+    /// <summary>
+    /// Flag for fast evaluation.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public bool FastEval {
@@ -13845,6 +14851,9 @@ namespace KclLib.API {
 
   }
 
+  /// <summary>
+  /// Message representing a key-value pair.
+  /// </summary>
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class KeyValuePair : pb::IMessage<KeyValuePair>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
@@ -13860,7 +14869,7 @@ namespace KclLib.API {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[51]; }
+      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[53]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -13894,6 +14903,9 @@ namespace KclLib.API {
     /// <summary>Field number for the "key" field.</summary>
     public const int KeyFieldNumber = 1;
     private string key_ = "";
+    /// <summary>
+    /// Key of the pair.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public string Key {
@@ -13906,6 +14918,9 @@ namespace KclLib.API {
     /// <summary>Field number for the "value" field.</summary>
     public const int ValueFieldNumber = 2;
     private string value_ = "";
+    /// <summary>
+    /// Value of the pair.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public string Value {
@@ -14080,6 +15095,9 @@ namespace KclLib.API {
 
   }
 
+  /// <summary>
+  /// Message for rename request arguments.
+  /// </summary>
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class Rename_Args : pb::IMessage<Rename_Args>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
@@ -14095,7 +15113,7 @@ namespace KclLib.API {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[52]; }
+      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[54]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -14132,7 +15150,7 @@ namespace KclLib.API {
     public const int PackageRootFieldNumber = 1;
     private string packageRoot_ = "";
     /// <summary>
-    /// the file path to the package root
+    /// File path to the package root.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -14147,7 +15165,7 @@ namespace KclLib.API {
     public const int SymbolPathFieldNumber = 2;
     private string symbolPath_ = "";
     /// <summary>
-    /// the path to the target symbol to be renamed. The symbol path should conform to format: `&lt;pkgpath>:&lt;field_path>` When the pkgpath is '__main__', `&lt;pkgpath>:` can be omitted.
+    /// Path to the target symbol to be renamed.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -14164,7 +15182,7 @@ namespace KclLib.API {
         = pb::FieldCodec.ForString(26);
     private readonly pbc::RepeatedField<string> filePaths_ = new pbc::RepeatedField<string>();
     /// <summary>
-    /// the paths to the source code files
+    /// Paths to the source code files.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -14176,7 +15194,7 @@ namespace KclLib.API {
     public const int NewNameFieldNumber = 4;
     private string newName_ = "";
     /// <summary>
-    /// the new name of the symbol
+    /// New name of the symbol.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -14390,6 +15408,9 @@ namespace KclLib.API {
 
   }
 
+  /// <summary>
+  /// Message for rename response.
+  /// </summary>
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class Rename_Result : pb::IMessage<Rename_Result>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
@@ -14405,7 +15426,7 @@ namespace KclLib.API {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[53]; }
+      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[55]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -14441,7 +15462,7 @@ namespace KclLib.API {
         = pb::FieldCodec.ForString(10);
     private readonly pbc::RepeatedField<string> changedFiles_ = new pbc::RepeatedField<string>();
     /// <summary>
-    /// the file paths got changed
+    /// List of file paths that got changed.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -14580,6 +15601,9 @@ namespace KclLib.API {
 
   }
 
+  /// <summary>
+  /// Message for rename code request arguments.
+  /// </summary>
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class RenameCode_Args : pb::IMessage<RenameCode_Args>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
@@ -14595,7 +15619,7 @@ namespace KclLib.API {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[54]; }
+      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[56]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -14632,7 +15656,7 @@ namespace KclLib.API {
     public const int PackageRootFieldNumber = 1;
     private string packageRoot_ = "";
     /// <summary>
-    /// the file path to the package root
+    /// File path to the package root.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -14647,7 +15671,7 @@ namespace KclLib.API {
     public const int SymbolPathFieldNumber = 2;
     private string symbolPath_ = "";
     /// <summary>
-    /// the path to the target symbol to be renamed. The symbol path should conform to format: `&lt;pkgpath>:&lt;field_path>` When the pkgpath is '__main__', `&lt;pkgpath>:` can be omitted.
+    /// Path to the target symbol to be renamed.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -14664,7 +15688,7 @@ namespace KclLib.API {
         = new pbc::MapField<string, string>.Codec(pb::FieldCodec.ForString(10, ""), pb::FieldCodec.ForString(18, ""), 26);
     private readonly pbc::MapField<string, string> sourceCodes_ = new pbc::MapField<string, string>();
     /// <summary>
-    /// the source code. a &lt;filename>:&lt;code> map
+    /// Map of source code with filename as key and code as value.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -14676,7 +15700,7 @@ namespace KclLib.API {
     public const int NewNameFieldNumber = 4;
     private string newName_ = "";
     /// <summary>
-    /// the new name of the symbol
+    /// New name of the symbol.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -14890,6 +15914,9 @@ namespace KclLib.API {
 
   }
 
+  /// <summary>
+  /// Message for rename code response.
+  /// </summary>
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class RenameCode_Result : pb::IMessage<RenameCode_Result>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
@@ -14905,7 +15932,7 @@ namespace KclLib.API {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[55]; }
+      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[57]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -14941,7 +15968,7 @@ namespace KclLib.API {
         = new pbc::MapField<string, string>.Codec(pb::FieldCodec.ForString(10, ""), pb::FieldCodec.ForString(18, ""), 10);
     private readonly pbc::MapField<string, string> changedCodes_ = new pbc::MapField<string, string>();
     /// <summary>
-    /// the changed code. a &lt;filename>:&lt;code> map
+    /// Map of changed code with filename as key and modified code as value.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -15080,6 +16107,9 @@ namespace KclLib.API {
 
   }
 
+  /// <summary>
+  /// Message for test request arguments.
+  /// </summary>
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class Test_Args : pb::IMessage<Test_Args>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
@@ -15095,7 +16125,7 @@ namespace KclLib.API {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[56]; }
+      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[58]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -15132,7 +16162,7 @@ namespace KclLib.API {
     public const int ExecArgsFieldNumber = 1;
     private global::KclLib.API.ExecProgram_Args execArgs_;
     /// <summary>
-    /// This field stores the execution program arguments.
+    /// Execution program arguments.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -15149,7 +16179,7 @@ namespace KclLib.API {
         = pb::FieldCodec.ForString(18);
     private readonly pbc::RepeatedField<string> pkgList_ = new pbc::RepeatedField<string>();
     /// <summary>
-    /// The package path list to be tested e.g., "./...", "/path/to/package/", "/path/to/package/..."
+    /// List of KCL package paths to be tested.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -15161,7 +16191,7 @@ namespace KclLib.API {
     public const int RunRegexpFieldNumber = 3;
     private string runRegexp_ = "";
     /// <summary>
-    /// This field stores a regular expression for filtering tests to run.
+    /// Regular expression for filtering tests to run.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -15176,7 +16206,7 @@ namespace KclLib.API {
     public const int FailFastFieldNumber = 4;
     private bool failFast_;
     /// <summary>
-    /// This field determines whether the test run should stop on the first failure.
+    /// Flag to stop the test run on the first failure.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -15399,6 +16429,9 @@ namespace KclLib.API {
 
   }
 
+  /// <summary>
+  /// Message for test response.
+  /// </summary>
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class Test_Result : pb::IMessage<Test_Result>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
@@ -15414,7 +16447,7 @@ namespace KclLib.API {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[57]; }
+      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[59]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -15449,6 +16482,9 @@ namespace KclLib.API {
     private static readonly pb::FieldCodec<global::KclLib.API.TestCaseInfo> _repeated_info_codec
         = pb::FieldCodec.ForMessage(18, global::KclLib.API.TestCaseInfo.Parser);
     private readonly pbc::RepeatedField<global::KclLib.API.TestCaseInfo> info_ = new pbc::RepeatedField<global::KclLib.API.TestCaseInfo>();
+    /// <summary>
+    /// List of test case information.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public pbc::RepeatedField<global::KclLib.API.TestCaseInfo> Info {
@@ -15586,6 +16622,9 @@ namespace KclLib.API {
 
   }
 
+  /// <summary>
+  /// Message representing information about a single test case.
+  /// </summary>
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class TestCaseInfo : pb::IMessage<TestCaseInfo>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
@@ -15601,7 +16640,7 @@ namespace KclLib.API {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[58]; }
+      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[60]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -15638,7 +16677,7 @@ namespace KclLib.API {
     public const int NameFieldNumber = 1;
     private string name_ = "";
     /// <summary>
-    /// Test case name
+    /// Name of the test case.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -15652,6 +16691,9 @@ namespace KclLib.API {
     /// <summary>Field number for the "error" field.</summary>
     public const int ErrorFieldNumber = 2;
     private string error_ = "";
+    /// <summary>
+    /// Error message if any.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public string Error {
@@ -15665,7 +16707,7 @@ namespace KclLib.API {
     public const int DurationFieldNumber = 3;
     private ulong duration_;
     /// <summary>
-    /// Number of whole microseconds in the duration.
+    /// Duration of the test case in microseconds.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -15679,6 +16721,9 @@ namespace KclLib.API {
     /// <summary>Field number for the "log_message" field.</summary>
     public const int LogMessageFieldNumber = 4;
     private string logMessage_ = "";
+    /// <summary>
+    /// Log message from the test case.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public string LogMessage {
@@ -15901,6 +16946,9 @@ namespace KclLib.API {
 
   }
 
+  /// <summary>
+  /// Message for update dependencies request arguments.
+  /// </summary>
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class UpdateDependencies_Args : pb::IMessage<UpdateDependencies_Args>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
@@ -15916,7 +16964,7 @@ namespace KclLib.API {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[59]; }
+      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[61]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -15950,6 +16998,9 @@ namespace KclLib.API {
     /// <summary>Field number for the "manifest_path" field.</summary>
     public const int ManifestPathFieldNumber = 1;
     private string manifestPath_ = "";
+    /// <summary>
+    /// Path to the manifest file.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public string ManifestPath {
@@ -15962,6 +17013,9 @@ namespace KclLib.API {
     /// <summary>Field number for the "vendor" field.</summary>
     public const int VendorFieldNumber = 2;
     private bool vendor_;
+    /// <summary>
+    /// Flag to vendor dependencies locally.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public bool Vendor {
@@ -16136,6 +17190,9 @@ namespace KclLib.API {
 
   }
 
+  /// <summary>
+  /// Message for update dependencies response.
+  /// </summary>
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class UpdateDependencies_Result : pb::IMessage<UpdateDependencies_Result>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
@@ -16151,7 +17208,7 @@ namespace KclLib.API {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[60]; }
+      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[62]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -16186,6 +17243,9 @@ namespace KclLib.API {
     private static readonly pb::FieldCodec<global::KclLib.API.ExternalPkg> _repeated_externalPkgs_codec
         = pb::FieldCodec.ForMessage(26, global::KclLib.API.ExternalPkg.Parser);
     private readonly pbc::RepeatedField<global::KclLib.API.ExternalPkg> externalPkgs_ = new pbc::RepeatedField<global::KclLib.API.ExternalPkg>();
+    /// <summary>
+    /// List of external packages updated.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public pbc::RepeatedField<global::KclLib.API.ExternalPkg> ExternalPkgs {
@@ -16323,6 +17383,9 @@ namespace KclLib.API {
 
   }
 
+  /// <summary>
+  /// Message representing a KCL type.
+  /// </summary>
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class KclType : pb::IMessage<KclType>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
@@ -16338,7 +17401,7 @@ namespace KclLib.API {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[61]; }
+      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[63]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -16387,7 +17450,7 @@ namespace KclLib.API {
     public const int TypeFieldNumber = 1;
     private string type_ = "";
     /// <summary>
-    /// schema, dict, list, str, int, float, bool, any, union, number_multiplier
+    /// Type name (e.g., schema, dict, list, str, int, float, bool, any, union, number_multiplier).
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -16404,7 +17467,7 @@ namespace KclLib.API {
         = pb::FieldCodec.ForMessage(18, global::KclLib.API.KclType.Parser);
     private readonly pbc::RepeatedField<global::KclLib.API.KclType> unionTypes_ = new pbc::RepeatedField<global::KclLib.API.KclType>();
     /// <summary>
-    /// union types
+    /// Union types if applicable.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -16416,7 +17479,7 @@ namespace KclLib.API {
     public const int DefaultFieldNumber = 3;
     private string default_ = "";
     /// <summary>
-    /// default value
+    /// Default value of the type.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -16431,7 +17494,7 @@ namespace KclLib.API {
     public const int SchemaNameFieldNumber = 4;
     private string schemaName_ = "";
     /// <summary>
-    /// schema name
+    /// Name of the schema if applicable.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -16446,7 +17509,7 @@ namespace KclLib.API {
     public const int SchemaDocFieldNumber = 5;
     private string schemaDoc_ = "";
     /// <summary>
-    /// schema doc
+    /// Documentation for the schema.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -16463,7 +17526,7 @@ namespace KclLib.API {
         = new pbc::MapField<string, global::KclLib.API.KclType>.Codec(pb::FieldCodec.ForString(10, ""), pb::FieldCodec.ForMessage(18, global::KclLib.API.KclType.Parser), 50);
     private readonly pbc::MapField<string, global::KclLib.API.KclType> properties_ = new pbc::MapField<string, global::KclLib.API.KclType>();
     /// <summary>
-    /// schema properties
+    /// Properties of the schema as a map with property name as key.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -16477,7 +17540,7 @@ namespace KclLib.API {
         = pb::FieldCodec.ForString(58);
     private readonly pbc::RepeatedField<string> required_ = new pbc::RepeatedField<string>();
     /// <summary>
-    /// required schema properties, [property_name1, property_name2]
+    /// List of required schema properties.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -16489,7 +17552,7 @@ namespace KclLib.API {
     public const int KeyFieldNumber = 8;
     private global::KclLib.API.KclType key_;
     /// <summary>
-    /// dict key type
+    /// Key type if the KclType is a dictionary.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -16504,7 +17567,7 @@ namespace KclLib.API {
     public const int ItemFieldNumber = 9;
     private global::KclLib.API.KclType item_;
     /// <summary>
-    /// dict/list item type
+    /// Item type if the KclType is a list or dictionary.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -16518,6 +17581,9 @@ namespace KclLib.API {
     /// <summary>Field number for the "line" field.</summary>
     public const int LineFieldNumber = 10;
     private int line_;
+    /// <summary>
+    /// Line number where the type is defined.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public int Line {
@@ -16533,7 +17599,7 @@ namespace KclLib.API {
         = pb::FieldCodec.ForMessage(90, global::KclLib.API.Decorator.Parser);
     private readonly pbc::RepeatedField<global::KclLib.API.Decorator> decorators_ = new pbc::RepeatedField<global::KclLib.API.Decorator>();
     /// <summary>
-    /// schema decorators
+    /// List of decorators for the schema.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -16545,7 +17611,7 @@ namespace KclLib.API {
     public const int FilenameFieldNumber = 12;
     private string filename_ = "";
     /// <summary>
-    /// `filename` represents the absolute path of the file name where the attribute is located.
+    /// Absolute path of the file where the attribute is located.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -16560,7 +17626,7 @@ namespace KclLib.API {
     public const int PkgPathFieldNumber = 13;
     private string pkgPath_ = "";
     /// <summary>
-    /// `pkg_path` represents the path name of the package where the attribute is located.
+    /// Path of the package where the attribute is located.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -16575,7 +17641,7 @@ namespace KclLib.API {
     public const int DescriptionFieldNumber = 14;
     private string description_ = "";
     /// <summary>
-    /// `description` represents the document of the attribute.
+    /// Documentation for the attribute.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -16592,7 +17658,7 @@ namespace KclLib.API {
         = new pbc::MapField<string, global::KclLib.API.Example>.Codec(pb::FieldCodec.ForString(10, ""), pb::FieldCodec.ForMessage(18, global::KclLib.API.Example.Parser), 122);
     private readonly pbc::MapField<string, global::KclLib.API.Example> examples_ = new pbc::MapField<string, global::KclLib.API.Example>();
     /// <summary>
-    /// A map object to hold examples, the key is the example name.
+    /// Map of examples with example name as key.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -16603,6 +17669,9 @@ namespace KclLib.API {
     /// <summary>Field number for the "base_schema" field.</summary>
     public const int BaseSchemaFieldNumber = 16;
     private global::KclLib.API.KclType baseSchema_;
+    /// <summary>
+    /// Base schema if applicable.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public global::KclLib.API.KclType BaseSchema {
@@ -17090,6 +18159,9 @@ namespace KclLib.API {
 
   }
 
+  /// <summary>
+  /// Message representing a decorator in KCL.
+  /// </summary>
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class Decorator : pb::IMessage<Decorator>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
@@ -17105,7 +18177,7 @@ namespace KclLib.API {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[62]; }
+      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[64]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -17140,6 +18212,9 @@ namespace KclLib.API {
     /// <summary>Field number for the "name" field.</summary>
     public const int NameFieldNumber = 1;
     private string name_ = "";
+    /// <summary>
+    /// Name of the decorator.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public string Name {
@@ -17154,6 +18229,9 @@ namespace KclLib.API {
     private static readonly pb::FieldCodec<string> _repeated_arguments_codec
         = pb::FieldCodec.ForString(18);
     private readonly pbc::RepeatedField<string> arguments_ = new pbc::RepeatedField<string>();
+    /// <summary>
+    /// Arguments for the decorator.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public pbc::RepeatedField<string> Arguments {
@@ -17165,6 +18243,9 @@ namespace KclLib.API {
     private static readonly pbc::MapField<string, string>.Codec _map_keywords_codec
         = new pbc::MapField<string, string>.Codec(pb::FieldCodec.ForString(10, ""), pb::FieldCodec.ForString(18, ""), 26);
     private readonly pbc::MapField<string, string> keywords_ = new pbc::MapField<string, string>();
+    /// <summary>
+    /// Keyword arguments for the decorator as a map with keyword name as key.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public pbc::MapField<string, string> Keywords {
@@ -17340,6 +18421,9 @@ namespace KclLib.API {
 
   }
 
+  /// <summary>
+  /// Message representing an example in KCL.
+  /// </summary>
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class Example : pb::IMessage<Example>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
@@ -17355,7 +18439,7 @@ namespace KclLib.API {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[63]; }
+      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[65]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
