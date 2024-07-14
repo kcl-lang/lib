@@ -183,39 +183,6 @@ struct ScopeIndexDefaultTypeInternal {
 
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
     PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 ScopeIndexDefaultTypeInternal _ScopeIndex_default_instance_;
-      template <typename>
-PROTOBUF_CONSTEXPR ResetPlugin_Result::ResetPlugin_Result(::_pbi::ConstantInitialized) {}
-struct ResetPlugin_ResultDefaultTypeInternal {
-  PROTOBUF_CONSTEXPR ResetPlugin_ResultDefaultTypeInternal() : _instance(::_pbi::ConstantInitialized{}) {}
-  ~ResetPlugin_ResultDefaultTypeInternal() {}
-  union {
-    ResetPlugin_Result _instance;
-  };
-};
-
-PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
-    PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 ResetPlugin_ResultDefaultTypeInternal _ResetPlugin_Result_default_instance_;
-
-inline constexpr ResetPlugin_Args::Impl_::Impl_(
-    ::_pbi::ConstantInitialized) noexcept
-      : plugin_root_(
-            &::google::protobuf::internal::fixed_address_empty_string,
-            ::_pbi::ConstantInitialized()),
-        _cached_size_{0} {}
-
-template <typename>
-PROTOBUF_CONSTEXPR ResetPlugin_Args::ResetPlugin_Args(::_pbi::ConstantInitialized)
-    : _impl_(::_pbi::ConstantInitialized()) {}
-struct ResetPlugin_ArgsDefaultTypeInternal {
-  PROTOBUF_CONSTEXPR ResetPlugin_ArgsDefaultTypeInternal() : _instance(::_pbi::ConstantInitialized{}) {}
-  ~ResetPlugin_ArgsDefaultTypeInternal() {}
-  union {
-    ResetPlugin_Args _instance;
-  };
-};
-
-PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
-    PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 ResetPlugin_ArgsDefaultTypeInternal _ResetPlugin_Args_default_instance_;
 
 inline constexpr Rename_Result::Impl_::Impl_(
     ::_pbi::ConstantInitialized) noexcept
@@ -2131,23 +2098,6 @@ const ::uint32_t
         ~0u,
         0,
         ~0u,  // no _has_bits_
-        PROTOBUF_FIELD_OFFSET(::com::kcl::api::ResetPlugin_Args, _internal_metadata_),
-        ~0u,  // no _extensions_
-        ~0u,  // no _oneof_case_
-        ~0u,  // no _weak_field_map_
-        ~0u,  // no _inlined_string_donated_
-        ~0u,  // no _split_
-        ~0u,  // no sizeof(Split)
-        PROTOBUF_FIELD_OFFSET(::com::kcl::api::ResetPlugin_Args, _impl_.plugin_root_),
-        ~0u,  // no _has_bits_
-        PROTOBUF_FIELD_OFFSET(::com::kcl::api::ResetPlugin_Result, _internal_metadata_),
-        ~0u,  // no _extensions_
-        ~0u,  // no _oneof_case_
-        ~0u,  // no _weak_field_map_
-        ~0u,  // no _inlined_string_donated_
-        ~0u,  // no _split_
-        ~0u,  // no sizeof(Split)
-        ~0u,  // no _has_bits_
         PROTOBUF_FIELD_OFFSET(::com::kcl::api::FormatCode_Args, _internal_metadata_),
         ~0u,  // no _extensions_
         ~0u,  // no _oneof_case_
@@ -2703,52 +2653,50 @@ static const ::_pbi::MigrationSchema
         {368, 378, -1, sizeof(::com::kcl::api::BuildProgram_Args)},
         {380, -1, -1, sizeof(::com::kcl::api::BuildProgram_Result)},
         {389, 399, -1, sizeof(::com::kcl::api::ExecArtifact_Args)},
-        {401, -1, -1, sizeof(::com::kcl::api::ResetPlugin_Args)},
-        {410, -1, -1, sizeof(::com::kcl::api::ResetPlugin_Result)},
-        {418, -1, -1, sizeof(::com::kcl::api::FormatCode_Args)},
-        {427, -1, -1, sizeof(::com::kcl::api::FormatCode_Result)},
-        {436, -1, -1, sizeof(::com::kcl::api::FormatPath_Args)},
-        {445, -1, -1, sizeof(::com::kcl::api::FormatPath_Result)},
-        {454, -1, -1, sizeof(::com::kcl::api::LintPath_Args)},
-        {463, -1, -1, sizeof(::com::kcl::api::LintPath_Result)},
-        {472, -1, -1, sizeof(::com::kcl::api::OverrideFile_Args)},
-        {483, -1, -1, sizeof(::com::kcl::api::OverrideFile_Result)},
-        {493, -1, -1, sizeof(::com::kcl::api::ListVariables_Options)},
-        {502, -1, -1, sizeof(::com::kcl::api::VariableList)},
-        {511, 522, -1, sizeof(::com::kcl::api::ListVariables_Args)},
-        {525, 535, -1, sizeof(::com::kcl::api::ListVariables_Result_VariablesEntry_DoNotUse)},
-        {537, -1, -1, sizeof(::com::kcl::api::ListVariables_Result)},
-        {548, -1, -1, sizeof(::com::kcl::api::Variable)},
-        {561, 571, -1, sizeof(::com::kcl::api::MapEntry)},
-        {573, 583, -1, sizeof(::com::kcl::api::GetSchemaTypeMapping_Args)},
-        {585, 595, -1, sizeof(::com::kcl::api::GetSchemaTypeMapping_Result_SchemaTypeMappingEntry_DoNotUse)},
-        {597, -1, -1, sizeof(::com::kcl::api::GetSchemaTypeMapping_Result)},
-        {606, -1, -1, sizeof(::com::kcl::api::ValidateCode_Args)},
-        {621, -1, -1, sizeof(::com::kcl::api::ValidateCode_Result)},
-        {631, -1, -1, sizeof(::com::kcl::api::Position)},
-        {642, -1, -1, sizeof(::com::kcl::api::ListDepFiles_Args)},
-        {654, -1, -1, sizeof(::com::kcl::api::ListDepFiles_Result)},
-        {665, -1, -1, sizeof(::com::kcl::api::LoadSettingsFiles_Args)},
-        {675, 685, -1, sizeof(::com::kcl::api::LoadSettingsFiles_Result)},
-        {687, -1, -1, sizeof(::com::kcl::api::CliConfig)},
-        {707, -1, -1, sizeof(::com::kcl::api::KeyValuePair)},
-        {717, -1, -1, sizeof(::com::kcl::api::Rename_Args)},
-        {729, -1, -1, sizeof(::com::kcl::api::Rename_Result)},
-        {738, 748, -1, sizeof(::com::kcl::api::RenameCode_Args_SourceCodesEntry_DoNotUse)},
-        {750, -1, -1, sizeof(::com::kcl::api::RenameCode_Args)},
-        {762, 772, -1, sizeof(::com::kcl::api::RenameCode_Result_ChangedCodesEntry_DoNotUse)},
-        {774, -1, -1, sizeof(::com::kcl::api::RenameCode_Result)},
-        {783, 795, -1, sizeof(::com::kcl::api::Test_Args)},
-        {799, -1, -1, sizeof(::com::kcl::api::Test_Result)},
-        {808, -1, -1, sizeof(::com::kcl::api::TestCaseInfo)},
-        {820, -1, -1, sizeof(::com::kcl::api::UpdateDependencies_Args)},
-        {830, -1, -1, sizeof(::com::kcl::api::UpdateDependencies_Result)},
-        {839, 849, -1, sizeof(::com::kcl::api::KclType_PropertiesEntry_DoNotUse)},
-        {851, 861, -1, sizeof(::com::kcl::api::KclType_ExamplesEntry_DoNotUse)},
-        {863, 887, -1, sizeof(::com::kcl::api::KclType)},
-        {903, 913, -1, sizeof(::com::kcl::api::Decorator_KeywordsEntry_DoNotUse)},
-        {915, -1, -1, sizeof(::com::kcl::api::Decorator)},
-        {926, -1, -1, sizeof(::com::kcl::api::Example)},
+        {401, -1, -1, sizeof(::com::kcl::api::FormatCode_Args)},
+        {410, -1, -1, sizeof(::com::kcl::api::FormatCode_Result)},
+        {419, -1, -1, sizeof(::com::kcl::api::FormatPath_Args)},
+        {428, -1, -1, sizeof(::com::kcl::api::FormatPath_Result)},
+        {437, -1, -1, sizeof(::com::kcl::api::LintPath_Args)},
+        {446, -1, -1, sizeof(::com::kcl::api::LintPath_Result)},
+        {455, -1, -1, sizeof(::com::kcl::api::OverrideFile_Args)},
+        {466, -1, -1, sizeof(::com::kcl::api::OverrideFile_Result)},
+        {476, -1, -1, sizeof(::com::kcl::api::ListVariables_Options)},
+        {485, -1, -1, sizeof(::com::kcl::api::VariableList)},
+        {494, 505, -1, sizeof(::com::kcl::api::ListVariables_Args)},
+        {508, 518, -1, sizeof(::com::kcl::api::ListVariables_Result_VariablesEntry_DoNotUse)},
+        {520, -1, -1, sizeof(::com::kcl::api::ListVariables_Result)},
+        {531, -1, -1, sizeof(::com::kcl::api::Variable)},
+        {544, 554, -1, sizeof(::com::kcl::api::MapEntry)},
+        {556, 566, -1, sizeof(::com::kcl::api::GetSchemaTypeMapping_Args)},
+        {568, 578, -1, sizeof(::com::kcl::api::GetSchemaTypeMapping_Result_SchemaTypeMappingEntry_DoNotUse)},
+        {580, -1, -1, sizeof(::com::kcl::api::GetSchemaTypeMapping_Result)},
+        {589, -1, -1, sizeof(::com::kcl::api::ValidateCode_Args)},
+        {604, -1, -1, sizeof(::com::kcl::api::ValidateCode_Result)},
+        {614, -1, -1, sizeof(::com::kcl::api::Position)},
+        {625, -1, -1, sizeof(::com::kcl::api::ListDepFiles_Args)},
+        {637, -1, -1, sizeof(::com::kcl::api::ListDepFiles_Result)},
+        {648, -1, -1, sizeof(::com::kcl::api::LoadSettingsFiles_Args)},
+        {658, 668, -1, sizeof(::com::kcl::api::LoadSettingsFiles_Result)},
+        {670, -1, -1, sizeof(::com::kcl::api::CliConfig)},
+        {690, -1, -1, sizeof(::com::kcl::api::KeyValuePair)},
+        {700, -1, -1, sizeof(::com::kcl::api::Rename_Args)},
+        {712, -1, -1, sizeof(::com::kcl::api::Rename_Result)},
+        {721, 731, -1, sizeof(::com::kcl::api::RenameCode_Args_SourceCodesEntry_DoNotUse)},
+        {733, -1, -1, sizeof(::com::kcl::api::RenameCode_Args)},
+        {745, 755, -1, sizeof(::com::kcl::api::RenameCode_Result_ChangedCodesEntry_DoNotUse)},
+        {757, -1, -1, sizeof(::com::kcl::api::RenameCode_Result)},
+        {766, 778, -1, sizeof(::com::kcl::api::Test_Args)},
+        {782, -1, -1, sizeof(::com::kcl::api::Test_Result)},
+        {791, -1, -1, sizeof(::com::kcl::api::TestCaseInfo)},
+        {803, -1, -1, sizeof(::com::kcl::api::UpdateDependencies_Args)},
+        {813, -1, -1, sizeof(::com::kcl::api::UpdateDependencies_Result)},
+        {822, 832, -1, sizeof(::com::kcl::api::KclType_PropertiesEntry_DoNotUse)},
+        {834, 844, -1, sizeof(::com::kcl::api::KclType_ExamplesEntry_DoNotUse)},
+        {846, 870, -1, sizeof(::com::kcl::api::KclType)},
+        {886, 896, -1, sizeof(::com::kcl::api::Decorator_KeywordsEntry_DoNotUse)},
+        {898, -1, -1, sizeof(::com::kcl::api::Decorator)},
+        {909, -1, -1, sizeof(::com::kcl::api::Example)},
 };
 static const ::_pb::Message* const file_default_instances[] = {
     &::com::kcl::api::_ExternalPkg_default_instance_._instance,
@@ -2784,8 +2732,6 @@ static const ::_pb::Message* const file_default_instances[] = {
     &::com::kcl::api::_BuildProgram_Args_default_instance_._instance,
     &::com::kcl::api::_BuildProgram_Result_default_instance_._instance,
     &::com::kcl::api::_ExecArtifact_Args_default_instance_._instance,
-    &::com::kcl::api::_ResetPlugin_Args_default_instance_._instance,
-    &::com::kcl::api::_ResetPlugin_Result_default_instance_._instance,
     &::com::kcl::api::_FormatCode_Args_default_instance_._instance,
     &::com::kcl::api::_FormatCode_Result_default_instance_._instance,
     &::com::kcl::api::_FormatPath_Args_default_instance_._instance,
@@ -2919,169 +2865,168 @@ const char descriptor_table_protodef_spec_2eproto[] ABSL_ATTRIBUTE_SECTION_VARIA
     "Args\022\016\n\006output\030\002 \001(\t\"#\n\023BuildProgram_Res"
     "ult\022\014\n\004path\030\001 \001(\t\"S\n\021ExecArtifact_Args\022\014"
     "\n\004path\030\001 \001(\t\0220\n\texec_args\030\002 \001(\0132\035.com.kc"
-    "l.api.ExecProgram_Args\"\'\n\020ResetPlugin_Ar"
-    "gs\022\023\n\013plugin_root\030\001 \001(\t\"\024\n\022ResetPlugin_R"
-    "esult\"!\n\017FormatCode_Args\022\016\n\006source\030\001 \001(\t"
-    "\"&\n\021FormatCode_Result\022\021\n\tformatted\030\001 \001(\014"
-    "\"\037\n\017FormatPath_Args\022\014\n\004path\030\001 \001(\t\"*\n\021For"
-    "matPath_Result\022\025\n\rchanged_paths\030\001 \003(\t\"\036\n"
-    "\rLintPath_Args\022\r\n\005paths\030\001 \003(\t\"\"\n\017LintPat"
-    "h_Result\022\017\n\007results\030\001 \003(\t\"F\n\021OverrideFil"
-    "e_Args\022\014\n\004file\030\001 \001(\t\022\r\n\005specs\030\002 \003(\t\022\024\n\014i"
-    "mport_paths\030\003 \003(\t\"O\n\023OverrideFile_Result"
-    "\022\016\n\006result\030\001 \001(\010\022(\n\014parse_errors\030\002 \003(\0132\022"
-    ".com.kcl.api.Error\".\n\025ListVariables_Opti"
-    "ons\022\025\n\rmerge_program\030\001 \001(\010\"8\n\014VariableLi"
-    "st\022(\n\tvariables\030\001 \003(\0132\025.com.kcl.api.Vari"
-    "able\"g\n\022ListVariables_Args\022\r\n\005files\030\001 \003("
-    "\t\022\r\n\005specs\030\002 \003(\t\0223\n\007options\030\003 \001(\0132\".com."
-    "kcl.api.ListVariables_Options\"\355\001\n\024ListVa"
-    "riables_Result\022C\n\tvariables\030\001 \003(\01320.com."
-    "kcl.api.ListVariables_Result.VariablesEn"
-    "try\022\031\n\021unsupported_codes\030\002 \003(\t\022(\n\014parse_"
-    "errors\030\003 \003(\0132\022.com.kcl.api.Error\032K\n\016Vari"
-    "ablesEntry\022\013\n\003key\030\001 \001(\t\022(\n\005value\030\002 \001(\0132\031"
-    ".com.kcl.api.VariableList:\0028\001\"\224\001\n\010Variab"
-    "le\022\r\n\005value\030\001 \001(\t\022\021\n\ttype_name\030\002 \001(\t\022\016\n\006"
-    "op_sym\030\003 \001(\t\022)\n\nlist_items\030\004 \003(\0132\025.com.k"
-    "cl.api.Variable\022+\n\014dict_entries\030\005 \003(\0132\025."
-    "com.kcl.api.MapEntry\"=\n\010MapEntry\022\013\n\003key\030"
-    "\001 \001(\t\022$\n\005value\030\002 \001(\0132\025.com.kcl.api.Varia"
-    "ble\"b\n\031GetSchemaTypeMapping_Args\0220\n\texec"
-    "_args\030\001 \001(\0132\035.com.kcl.api.ExecProgram_Ar"
-    "gs\022\023\n\013schema_name\030\002 \001(\t\"\313\001\n\033GetSchemaTyp"
-    "eMapping_Result\022\\\n\023schema_type_mapping\030\001"
-    " \003(\0132\?.com.kcl.api.GetSchemaTypeMapping_"
-    "Result.SchemaTypeMappingEntry\032N\n\026SchemaT"
-    "ypeMappingEntry\022\013\n\003key\030\001 \001(\t\022#\n\005value\030\002 "
-    "\001(\0132\024.com.kcl.api.KclType:\0028\001\"\207\001\n\021Valida"
-    "teCode_Args\022\020\n\010datafile\030\001 \001(\t\022\014\n\004data\030\002 "
-    "\001(\t\022\014\n\004file\030\003 \001(\t\022\014\n\004code\030\004 \001(\t\022\016\n\006schem"
-    "a\030\005 \001(\t\022\026\n\016attribute_name\030\006 \001(\t\022\016\n\006forma"
-    "t\030\007 \001(\t\";\n\023ValidateCode_Result\022\017\n\007succes"
-    "s\030\001 \001(\010\022\023\n\013err_message\030\002 \001(\t\":\n\010Position"
-    "\022\014\n\004line\030\001 \001(\003\022\016\n\006column\030\002 \001(\003\022\020\n\010filena"
-    "me\030\003 \001(\t\"i\n\021ListDepFiles_Args\022\020\n\010work_di"
-    "r\030\001 \001(\t\022\024\n\014use_abs_path\030\002 \001(\010\022\023\n\013include"
-    "_all\030\003 \001(\010\022\027\n\017use_fast_parser\030\004 \001(\010\"F\n\023L"
-    "istDepFiles_Result\022\017\n\007pkgroot\030\001 \001(\t\022\017\n\007p"
-    "kgpath\030\002 \001(\t\022\r\n\005files\030\003 \003(\t\"9\n\026LoadSetti"
-    "ngsFiles_Args\022\020\n\010work_dir\030\001 \001(\t\022\r\n\005files"
-    "\030\002 \003(\t\"{\n\030LoadSettingsFiles_Result\022/\n\017kc"
-    "l_cli_configs\030\001 \001(\0132\026.com.kcl.api.CliCon"
-    "fig\022.\n\013kcl_options\030\002 \003(\0132\031.com.kcl.api.K"
-    "eyValuePair\"\203\002\n\tCliConfig\022\r\n\005files\030\001 \003(\t"
-    "\022\016\n\006output\030\002 \001(\t\022\021\n\toverrides\030\003 \003(\t\022\025\n\rp"
-    "ath_selector\030\004 \003(\t\022\032\n\022strict_range_check"
-    "\030\005 \001(\010\022\024\n\014disable_none\030\006 \001(\010\022\017\n\007verbose\030"
-    "\007 \001(\003\022\r\n\005debug\030\010 \001(\010\022\021\n\tsort_keys\030\t \001(\010\022"
-    "\023\n\013show_hidden\030\n \001(\010\022 \n\030include_schema_t"
-    "ype_path\030\013 \001(\010\022\021\n\tfast_eval\030\014 \001(\010\"*\n\014Key"
-    "ValuePair\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t\"^\n"
-    "\013Rename_Args\022\024\n\014package_root\030\001 \001(\t\022\023\n\013sy"
-    "mbol_path\030\002 \001(\t\022\022\n\nfile_paths\030\003 \003(\t\022\020\n\010n"
-    "ew_name\030\004 \001(\t\"&\n\rRename_Result\022\025\n\rchange"
-    "d_files\030\001 \003(\t\"\307\001\n\017RenameCode_Args\022\024\n\014pac"
-    "kage_root\030\001 \001(\t\022\023\n\013symbol_path\030\002 \001(\t\022C\n\014"
-    "source_codes\030\003 \003(\0132-.com.kcl.api.RenameC"
-    "ode_Args.SourceCodesEntry\022\020\n\010new_name\030\004 "
-    "\001(\t\0322\n\020SourceCodesEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005"
-    "value\030\002 \001(\t:\0028\001\"\221\001\n\021RenameCode_Result\022G\n"
-    "\rchanged_codes\030\001 \003(\01320.com.kcl.api.Renam"
-    "eCode_Result.ChangedCodesEntry\0323\n\021Change"
-    "dCodesEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:"
-    "\0028\001\"v\n\tTest_Args\0220\n\texec_args\030\001 \001(\0132\035.co"
-    "m.kcl.api.ExecProgram_Args\022\020\n\010pkg_list\030\002"
-    " \003(\t\022\022\n\nrun_regexp\030\003 \001(\t\022\021\n\tfail_fast\030\004 "
-    "\001(\010\"6\n\013Test_Result\022\'\n\004info\030\002 \003(\0132\031.com.k"
-    "cl.api.TestCaseInfo\"R\n\014TestCaseInfo\022\014\n\004n"
-    "ame\030\001 \001(\t\022\r\n\005error\030\002 \001(\t\022\020\n\010duration\030\003 \001"
-    "(\004\022\023\n\013log_message\030\004 \001(\t\"@\n\027UpdateDepende"
-    "ncies_Args\022\025\n\rmanifest_path\030\001 \001(\t\022\016\n\006ven"
-    "dor\030\002 \001(\010\"L\n\031UpdateDependencies_Result\022/"
-    "\n\rexternal_pkgs\030\003 \003(\0132\030.com.kcl.api.Exte"
-    "rnalPkg\"\363\004\n\007KclType\022\014\n\004type\030\001 \001(\t\022)\n\013uni"
-    "on_types\030\002 \003(\0132\024.com.kcl.api.KclType\022\017\n\007"
-    "default\030\003 \001(\t\022\023\n\013schema_name\030\004 \001(\t\022\022\n\nsc"
-    "hema_doc\030\005 \001(\t\0228\n\nproperties\030\006 \003(\0132$.com"
-    ".kcl.api.KclType.PropertiesEntry\022\020\n\010requ"
-    "ired\030\007 \003(\t\022!\n\003key\030\010 \001(\0132\024.com.kcl.api.Kc"
-    "lType\022\"\n\004item\030\t \001(\0132\024.com.kcl.api.KclTyp"
-    "e\022\014\n\004line\030\n \001(\005\022*\n\ndecorators\030\013 \003(\0132\026.co"
-    "m.kcl.api.Decorator\022\020\n\010filename\030\014 \001(\t\022\020\n"
-    "\010pkg_path\030\r \001(\t\022\023\n\013description\030\016 \001(\t\0224\n\010"
-    "examples\030\017 \003(\0132\".com.kcl.api.KclType.Exa"
-    "mplesEntry\022)\n\013base_schema\030\020 \001(\0132\024.com.kc"
-    "l.api.KclType\032G\n\017PropertiesEntry\022\013\n\003key\030"
+    "l.api.ExecProgram_Args\"!\n\017FormatCode_Arg"
+    "s\022\016\n\006source\030\001 \001(\t\"&\n\021FormatCode_Result\022\021"
+    "\n\tformatted\030\001 \001(\014\"\037\n\017FormatPath_Args\022\014\n\004"
+    "path\030\001 \001(\t\"*\n\021FormatPath_Result\022\025\n\rchang"
+    "ed_paths\030\001 \003(\t\"\036\n\rLintPath_Args\022\r\n\005paths"
+    "\030\001 \003(\t\"\"\n\017LintPath_Result\022\017\n\007results\030\001 \003"
+    "(\t\"F\n\021OverrideFile_Args\022\014\n\004file\030\001 \001(\t\022\r\n"
+    "\005specs\030\002 \003(\t\022\024\n\014import_paths\030\003 \003(\t\"O\n\023Ov"
+    "errideFile_Result\022\016\n\006result\030\001 \001(\010\022(\n\014par"
+    "se_errors\030\002 \003(\0132\022.com.kcl.api.Error\".\n\025L"
+    "istVariables_Options\022\025\n\rmerge_program\030\001 "
+    "\001(\010\"8\n\014VariableList\022(\n\tvariables\030\001 \003(\0132\025"
+    ".com.kcl.api.Variable\"g\n\022ListVariables_A"
+    "rgs\022\r\n\005files\030\001 \003(\t\022\r\n\005specs\030\002 \003(\t\0223\n\007opt"
+    "ions\030\003 \001(\0132\".com.kcl.api.ListVariables_O"
+    "ptions\"\355\001\n\024ListVariables_Result\022C\n\tvaria"
+    "bles\030\001 \003(\01320.com.kcl.api.ListVariables_R"
+    "esult.VariablesEntry\022\031\n\021unsupported_code"
+    "s\030\002 \003(\t\022(\n\014parse_errors\030\003 \003(\0132\022.com.kcl."
+    "api.Error\032K\n\016VariablesEntry\022\013\n\003key\030\001 \001(\t"
+    "\022(\n\005value\030\002 \001(\0132\031.com.kcl.api.VariableLi"
+    "st:\0028\001\"\224\001\n\010Variable\022\r\n\005value\030\001 \001(\t\022\021\n\tty"
+    "pe_name\030\002 \001(\t\022\016\n\006op_sym\030\003 \001(\t\022)\n\nlist_it"
+    "ems\030\004 \003(\0132\025.com.kcl.api.Variable\022+\n\014dict"
+    "_entries\030\005 \003(\0132\025.com.kcl.api.MapEntry\"=\n"
+    "\010MapEntry\022\013\n\003key\030\001 \001(\t\022$\n\005value\030\002 \001(\0132\025."
+    "com.kcl.api.Variable\"b\n\031GetSchemaTypeMap"
+    "ping_Args\0220\n\texec_args\030\001 \001(\0132\035.com.kcl.a"
+    "pi.ExecProgram_Args\022\023\n\013schema_name\030\002 \001(\t"
+    "\"\313\001\n\033GetSchemaTypeMapping_Result\022\\\n\023sche"
+    "ma_type_mapping\030\001 \003(\0132\?.com.kcl.api.GetS"
+    "chemaTypeMapping_Result.SchemaTypeMappin"
+    "gEntry\032N\n\026SchemaTypeMappingEntry\022\013\n\003key\030"
     "\001 \001(\t\022#\n\005value\030\002 \001(\0132\024.com.kcl.api.KclTy"
-    "pe:\0028\001\032E\n\rExamplesEntry\022\013\n\003key\030\001 \001(\t\022#\n\005"
-    "value\030\002 \001(\0132\024.com.kcl.api.Example:\0028\001\"\225\001"
-    "\n\tDecorator\022\014\n\004name\030\001 \001(\t\022\021\n\targuments\030\002"
-    " \003(\t\0226\n\010keywords\030\003 \003(\0132$.com.kcl.api.Dec"
-    "orator.KeywordsEntry\032/\n\rKeywordsEntry\022\013\n"
-    "\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\">\n\007Example"
-    "\022\017\n\007summary\030\001 \001(\t\022\023\n\013description\030\002 \001(\t\022\r"
-    "\n\005value\030\003 \001(\t2\226\001\n\016BuiltinService\0228\n\004Ping"
-    "\022\026.com.kcl.api.Ping_Args\032\030.com.kcl.api.P"
-    "ing_Result\022J\n\nListMethod\022\034.com.kcl.api.L"
-    "istMethod_Args\032\036.com.kcl.api.ListMethod_"
-    "Result2\336\r\n\014KclvmService\0228\n\004Ping\022\026.com.kc"
-    "l.api.Ping_Args\032\030.com.kcl.api.Ping_Resul"
-    "t\022J\n\nGetVersion\022\034.com.kcl.api.GetVersion"
-    "_Args\032\036.com.kcl.api.GetVersion_Result\022P\n"
-    "\014ParseProgram\022\036.com.kcl.api.ParseProgram"
-    "_Args\032 .com.kcl.api.ParseProgram_Result\022"
-    "G\n\tParseFile\022\033.com.kcl.api.ParseFile_Arg"
-    "s\032\035.com.kcl.api.ParseFile_Result\022M\n\013Load"
-    "Package\022\035.com.kcl.api.LoadPackage_Args\032\037"
-    ".com.kcl.api.LoadPackage_Result\022N\n\013ListO"
-    "ptions\022\036.com.kcl.api.ParseProgram_Args\032\037"
-    ".com.kcl.api.ListOptions_Result\022S\n\rListV"
-    "ariables\022\037.com.kcl.api.ListVariables_Arg"
-    "s\032!.com.kcl.api.ListVariables_Result\022M\n\013"
-    "ExecProgram\022\035.com.kcl.api.ExecProgram_Ar"
-    "gs\032\037.com.kcl.api.ExecProgram_Result\022P\n\014B"
-    "uildProgram\022\036.com.kcl.api.BuildProgram_A"
-    "rgs\032 .com.kcl.api.BuildProgram_Result\022O\n"
-    "\014ExecArtifact\022\036.com.kcl.api.ExecArtifact"
-    "_Args\032\037.com.kcl.api.ExecProgram_Result\022P"
-    "\n\014OverrideFile\022\036.com.kcl.api.OverrideFil"
-    "e_Args\032 .com.kcl.api.OverrideFile_Result"
-    "\022h\n\024GetSchemaTypeMapping\022&.com.kcl.api.G"
-    "etSchemaTypeMapping_Args\032(.com.kcl.api.G"
-    "etSchemaTypeMapping_Result\022J\n\nFormatCode"
-    "\022\034.com.kcl.api.FormatCode_Args\032\036.com.kcl"
-    ".api.FormatCode_Result\022J\n\nFormatPath\022\034.c"
-    "om.kcl.api.FormatPath_Args\032\036.com.kcl.api"
-    ".FormatPath_Result\022D\n\010LintPath\022\032.com.kcl"
-    ".api.LintPath_Args\032\034.com.kcl.api.LintPat"
-    "h_Result\022P\n\014ValidateCode\022\036.com.kcl.api.V"
-    "alidateCode_Args\032 .com.kcl.api.ValidateC"
-    "ode_Result\022P\n\014ListDepFiles\022\036.com.kcl.api"
-    ".ListDepFiles_Args\032 .com.kcl.api.ListDep"
-    "Files_Result\022_\n\021LoadSettingsFiles\022#.com."
-    "kcl.api.LoadSettingsFiles_Args\032%.com.kcl"
-    ".api.LoadSettingsFiles_Result\022>\n\006Rename\022"
-    "\030.com.kcl.api.Rename_Args\032\032.com.kcl.api."
-    "Rename_Result\022J\n\nRenameCode\022\034.com.kcl.ap"
-    "i.RenameCode_Args\032\036.com.kcl.api.RenameCo"
-    "de_Result\0228\n\004Test\022\026.com.kcl.api.Test_Arg"
-    "s\032\030.com.kcl.api.Test_Result\022b\n\022UpdateDep"
-    "endencies\022$.com.kcl.api.UpdateDependenci"
-    "es_Args\032&.com.kcl.api.UpdateDependencies"
-    "_ResultB\024Z\005.;lib\252\002\nKclLib.APIb\006proto3"
+    "pe:\0028\001\"\207\001\n\021ValidateCode_Args\022\020\n\010datafile"
+    "\030\001 \001(\t\022\014\n\004data\030\002 \001(\t\022\014\n\004file\030\003 \001(\t\022\014\n\004co"
+    "de\030\004 \001(\t\022\016\n\006schema\030\005 \001(\t\022\026\n\016attribute_na"
+    "me\030\006 \001(\t\022\016\n\006format\030\007 \001(\t\";\n\023ValidateCode"
+    "_Result\022\017\n\007success\030\001 \001(\010\022\023\n\013err_message\030"
+    "\002 \001(\t\":\n\010Position\022\014\n\004line\030\001 \001(\003\022\016\n\006colum"
+    "n\030\002 \001(\003\022\020\n\010filename\030\003 \001(\t\"i\n\021ListDepFile"
+    "s_Args\022\020\n\010work_dir\030\001 \001(\t\022\024\n\014use_abs_path"
+    "\030\002 \001(\010\022\023\n\013include_all\030\003 \001(\010\022\027\n\017use_fast_"
+    "parser\030\004 \001(\010\"F\n\023ListDepFiles_Result\022\017\n\007p"
+    "kgroot\030\001 \001(\t\022\017\n\007pkgpath\030\002 \001(\t\022\r\n\005files\030\003"
+    " \003(\t\"9\n\026LoadSettingsFiles_Args\022\020\n\010work_d"
+    "ir\030\001 \001(\t\022\r\n\005files\030\002 \003(\t\"{\n\030LoadSettingsF"
+    "iles_Result\022/\n\017kcl_cli_configs\030\001 \001(\0132\026.c"
+    "om.kcl.api.CliConfig\022.\n\013kcl_options\030\002 \003("
+    "\0132\031.com.kcl.api.KeyValuePair\"\203\002\n\tCliConf"
+    "ig\022\r\n\005files\030\001 \003(\t\022\016\n\006output\030\002 \001(\t\022\021\n\tove"
+    "rrides\030\003 \003(\t\022\025\n\rpath_selector\030\004 \003(\t\022\032\n\022s"
+    "trict_range_check\030\005 \001(\010\022\024\n\014disable_none\030"
+    "\006 \001(\010\022\017\n\007verbose\030\007 \001(\003\022\r\n\005debug\030\010 \001(\010\022\021\n"
+    "\tsort_keys\030\t \001(\010\022\023\n\013show_hidden\030\n \001(\010\022 \n"
+    "\030include_schema_type_path\030\013 \001(\010\022\021\n\tfast_"
+    "eval\030\014 \001(\010\"*\n\014KeyValuePair\022\013\n\003key\030\001 \001(\t\022"
+    "\r\n\005value\030\002 \001(\t\"^\n\013Rename_Args\022\024\n\014package"
+    "_root\030\001 \001(\t\022\023\n\013symbol_path\030\002 \001(\t\022\022\n\nfile"
+    "_paths\030\003 \003(\t\022\020\n\010new_name\030\004 \001(\t\"&\n\rRename"
+    "_Result\022\025\n\rchanged_files\030\001 \003(\t\"\307\001\n\017Renam"
+    "eCode_Args\022\024\n\014package_root\030\001 \001(\t\022\023\n\013symb"
+    "ol_path\030\002 \001(\t\022C\n\014source_codes\030\003 \003(\0132-.co"
+    "m.kcl.api.RenameCode_Args.SourceCodesEnt"
+    "ry\022\020\n\010new_name\030\004 \001(\t\0322\n\020SourceCodesEntry"
+    "\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\"\221\001\n\021Ren"
+    "ameCode_Result\022G\n\rchanged_codes\030\001 \003(\01320."
+    "com.kcl.api.RenameCode_Result.ChangedCod"
+    "esEntry\0323\n\021ChangedCodesEntry\022\013\n\003key\030\001 \001("
+    "\t\022\r\n\005value\030\002 \001(\t:\0028\001\"v\n\tTest_Args\0220\n\texe"
+    "c_args\030\001 \001(\0132\035.com.kcl.api.ExecProgram_A"
+    "rgs\022\020\n\010pkg_list\030\002 \003(\t\022\022\n\nrun_regexp\030\003 \001("
+    "\t\022\021\n\tfail_fast\030\004 \001(\010\"6\n\013Test_Result\022\'\n\004i"
+    "nfo\030\002 \003(\0132\031.com.kcl.api.TestCaseInfo\"R\n\014"
+    "TestCaseInfo\022\014\n\004name\030\001 \001(\t\022\r\n\005error\030\002 \001("
+    "\t\022\020\n\010duration\030\003 \001(\004\022\023\n\013log_message\030\004 \001(\t"
+    "\"@\n\027UpdateDependencies_Args\022\025\n\rmanifest_"
+    "path\030\001 \001(\t\022\016\n\006vendor\030\002 \001(\010\"L\n\031UpdateDepe"
+    "ndencies_Result\022/\n\rexternal_pkgs\030\003 \003(\0132\030"
+    ".com.kcl.api.ExternalPkg\"\363\004\n\007KclType\022\014\n\004"
+    "type\030\001 \001(\t\022)\n\013union_types\030\002 \003(\0132\024.com.kc"
+    "l.api.KclType\022\017\n\007default\030\003 \001(\t\022\023\n\013schema"
+    "_name\030\004 \001(\t\022\022\n\nschema_doc\030\005 \001(\t\0228\n\nprope"
+    "rties\030\006 \003(\0132$.com.kcl.api.KclType.Proper"
+    "tiesEntry\022\020\n\010required\030\007 \003(\t\022!\n\003key\030\010 \001(\013"
+    "2\024.com.kcl.api.KclType\022\"\n\004item\030\t \001(\0132\024.c"
+    "om.kcl.api.KclType\022\014\n\004line\030\n \001(\005\022*\n\ndeco"
+    "rators\030\013 \003(\0132\026.com.kcl.api.Decorator\022\020\n\010"
+    "filename\030\014 \001(\t\022\020\n\010pkg_path\030\r \001(\t\022\023\n\013desc"
+    "ription\030\016 \001(\t\0224\n\010examples\030\017 \003(\0132\".com.kc"
+    "l.api.KclType.ExamplesEntry\022)\n\013base_sche"
+    "ma\030\020 \001(\0132\024.com.kcl.api.KclType\032G\n\017Proper"
+    "tiesEntry\022\013\n\003key\030\001 \001(\t\022#\n\005value\030\002 \001(\0132\024."
+    "com.kcl.api.KclType:\0028\001\032E\n\rExamplesEntry"
+    "\022\013\n\003key\030\001 \001(\t\022#\n\005value\030\002 \001(\0132\024.com.kcl.a"
+    "pi.Example:\0028\001\"\225\001\n\tDecorator\022\014\n\004name\030\001 \001"
+    "(\t\022\021\n\targuments\030\002 \003(\t\0226\n\010keywords\030\003 \003(\0132"
+    "$.com.kcl.api.Decorator.KeywordsEntry\032/\n"
+    "\rKeywordsEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001"
+    "(\t:\0028\001\">\n\007Example\022\017\n\007summary\030\001 \001(\t\022\023\n\013de"
+    "scription\030\002 \001(\t\022\r\n\005value\030\003 \001(\t2\226\001\n\016Built"
+    "inService\0228\n\004Ping\022\026.com.kcl.api.Ping_Arg"
+    "s\032\030.com.kcl.api.Ping_Result\022J\n\nListMetho"
+    "d\022\034.com.kcl.api.ListMethod_Args\032\036.com.kc"
+    "l.api.ListMethod_Result2\336\r\n\014KclvmService"
+    "\0228\n\004Ping\022\026.com.kcl.api.Ping_Args\032\030.com.k"
+    "cl.api.Ping_Result\022J\n\nGetVersion\022\034.com.k"
+    "cl.api.GetVersion_Args\032\036.com.kcl.api.Get"
+    "Version_Result\022P\n\014ParseProgram\022\036.com.kcl"
+    ".api.ParseProgram_Args\032 .com.kcl.api.Par"
+    "seProgram_Result\022G\n\tParseFile\022\033.com.kcl."
+    "api.ParseFile_Args\032\035.com.kcl.api.ParseFi"
+    "le_Result\022M\n\013LoadPackage\022\035.com.kcl.api.L"
+    "oadPackage_Args\032\037.com.kcl.api.LoadPackag"
+    "e_Result\022N\n\013ListOptions\022\036.com.kcl.api.Pa"
+    "rseProgram_Args\032\037.com.kcl.api.ListOption"
+    "s_Result\022S\n\rListVariables\022\037.com.kcl.api."
+    "ListVariables_Args\032!.com.kcl.api.ListVar"
+    "iables_Result\022M\n\013ExecProgram\022\035.com.kcl.a"
+    "pi.ExecProgram_Args\032\037.com.kcl.api.ExecPr"
+    "ogram_Result\022P\n\014BuildProgram\022\036.com.kcl.a"
+    "pi.BuildProgram_Args\032 .com.kcl.api.Build"
+    "Program_Result\022O\n\014ExecArtifact\022\036.com.kcl"
+    ".api.ExecArtifact_Args\032\037.com.kcl.api.Exe"
+    "cProgram_Result\022P\n\014OverrideFile\022\036.com.kc"
+    "l.api.OverrideFile_Args\032 .com.kcl.api.Ov"
+    "errideFile_Result\022h\n\024GetSchemaTypeMappin"
+    "g\022&.com.kcl.api.GetSchemaTypeMapping_Arg"
+    "s\032(.com.kcl.api.GetSchemaTypeMapping_Res"
+    "ult\022J\n\nFormatCode\022\034.com.kcl.api.FormatCo"
+    "de_Args\032\036.com.kcl.api.FormatCode_Result\022"
+    "J\n\nFormatPath\022\034.com.kcl.api.FormatPath_A"
+    "rgs\032\036.com.kcl.api.FormatPath_Result\022D\n\010L"
+    "intPath\022\032.com.kcl.api.LintPath_Args\032\034.co"
+    "m.kcl.api.LintPath_Result\022P\n\014ValidateCod"
+    "e\022\036.com.kcl.api.ValidateCode_Args\032 .com."
+    "kcl.api.ValidateCode_Result\022P\n\014ListDepFi"
+    "les\022\036.com.kcl.api.ListDepFiles_Args\032 .co"
+    "m.kcl.api.ListDepFiles_Result\022_\n\021LoadSet"
+    "tingsFiles\022#.com.kcl.api.LoadSettingsFil"
+    "es_Args\032%.com.kcl.api.LoadSettingsFiles_"
+    "Result\022>\n\006Rename\022\030.com.kcl.api.Rename_Ar"
+    "gs\032\032.com.kcl.api.Rename_Result\022J\n\nRename"
+    "Code\022\034.com.kcl.api.RenameCode_Args\032\036.com"
+    ".kcl.api.RenameCode_Result\0228\n\004Test\022\026.com"
+    ".kcl.api.Test_Args\032\030.com.kcl.api.Test_Re"
+    "sult\022b\n\022UpdateDependencies\022$.com.kcl.api"
+    ".UpdateDependencies_Args\032&.com.kcl.api.U"
+    "pdateDependencies_ResultB\024Z\005.;lib\252\002\nKclL"
+    "ib.APIb\006proto3"
 };
 static ::absl::once_flag descriptor_table_spec_2eproto_once;
 PROTOBUF_CONSTINIT const ::_pbi::DescriptorTable descriptor_table_spec_2eproto = {
     false,
     false,
-    9477,
+    9414,
     descriptor_table_protodef_spec_2eproto,
     "spec.proto",
     &descriptor_table_spec_2eproto_once,
     nullptr,
     0,
-    79,
+    77,
     schemas,
     file_default_instances,
     TableStruct_spec_2eproto::offsets,
@@ -10382,279 +10327,6 @@ void ExecArtifact_Args::InternalSwap(ExecArtifact_Args* PROTOBUF_RESTRICT other)
 
 ::google::protobuf::Metadata ExecArtifact_Args::GetMetadata() const {
   return ::google::protobuf::Message::GetMetadataImpl(GetClassData()->full());
-}
-// ===================================================================
-
-class ResetPlugin_Args::_Internal {
- public:
-};
-
-ResetPlugin_Args::ResetPlugin_Args(::google::protobuf::Arena* arena)
-    : ::google::protobuf::Message(arena) {
-  SharedCtor(arena);
-  // @@protoc_insertion_point(arena_constructor:com.kcl.api.ResetPlugin_Args)
-}
-inline PROTOBUF_NDEBUG_INLINE ResetPlugin_Args::Impl_::Impl_(
-    ::google::protobuf::internal::InternalVisibility visibility, ::google::protobuf::Arena* arena,
-    const Impl_& from, const ::com::kcl::api::ResetPlugin_Args& from_msg)
-      : plugin_root_(arena, from.plugin_root_),
-        _cached_size_{0} {}
-
-ResetPlugin_Args::ResetPlugin_Args(
-    ::google::protobuf::Arena* arena,
-    const ResetPlugin_Args& from)
-    : ::google::protobuf::Message(arena) {
-  ResetPlugin_Args* const _this = this;
-  (void)_this;
-  _internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
-      from._internal_metadata_);
-  new (&_impl_) Impl_(internal_visibility(), arena, from._impl_, from);
-
-  // @@protoc_insertion_point(copy_constructor:com.kcl.api.ResetPlugin_Args)
-}
-inline PROTOBUF_NDEBUG_INLINE ResetPlugin_Args::Impl_::Impl_(
-    ::google::protobuf::internal::InternalVisibility visibility,
-    ::google::protobuf::Arena* arena)
-      : plugin_root_(arena),
-        _cached_size_{0} {}
-
-inline void ResetPlugin_Args::SharedCtor(::_pb::Arena* arena) {
-  new (&_impl_) Impl_(internal_visibility(), arena);
-}
-ResetPlugin_Args::~ResetPlugin_Args() {
-  // @@protoc_insertion_point(destructor:com.kcl.api.ResetPlugin_Args)
-  _internal_metadata_.Delete<::google::protobuf::UnknownFieldSet>();
-  SharedDtor();
-}
-inline void ResetPlugin_Args::SharedDtor() {
-  ABSL_DCHECK(GetArena() == nullptr);
-  _impl_.plugin_root_.Destroy();
-  _impl_.~Impl_();
-}
-
-const ::google::protobuf::MessageLite::ClassData*
-ResetPlugin_Args::GetClassData() const {
-  PROTOBUF_CONSTINIT static const ::google::protobuf::MessageLite::
-      ClassDataFull _data_ = {
-          {
-              &_table_.header,
-              nullptr,  // OnDemandRegisterArenaDtor
-              nullptr,  // IsInitialized
-              PROTOBUF_FIELD_OFFSET(ResetPlugin_Args, _impl_._cached_size_),
-              false,
-          },
-          &ResetPlugin_Args::MergeImpl,
-          &ResetPlugin_Args::kDescriptorMethods,
-          &descriptor_table_spec_2eproto,
-          nullptr,  // tracker
-      };
-  ::google::protobuf::internal::PrefetchToLocalCache(&_data_);
-  ::google::protobuf::internal::PrefetchToLocalCache(_data_.tc_table);
-  return _data_.base();
-}
-PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
-const ::_pbi::TcParseTable<0, 1, 0, 48, 2> ResetPlugin_Args::_table_ = {
-  {
-    0,  // no _has_bits_
-    0, // no _extensions_
-    1, 0,  // max_field_number, fast_idx_mask
-    offsetof(decltype(_table_), field_lookup_table),
-    4294967294,  // skipmap
-    offsetof(decltype(_table_), field_entries),
-    1,  // num_field_entries
-    0,  // num_aux_entries
-    offsetof(decltype(_table_), field_names),  // no aux_entries
-    &_ResetPlugin_Args_default_instance_._instance,
-    nullptr,  // post_loop_handler
-    ::_pbi::TcParser::GenericFallback,  // fallback
-    #ifdef PROTOBUF_PREFETCH_PARSE_TABLE
-    ::_pbi::TcParser::GetTable<::com::kcl::api::ResetPlugin_Args>(),  // to_prefetch
-    #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
-  }, {{
-    // string plugin_root = 1;
-    {::_pbi::TcParser::FastUS1,
-     {10, 63, 0, PROTOBUF_FIELD_OFFSET(ResetPlugin_Args, _impl_.plugin_root_)}},
-  }}, {{
-    65535, 65535
-  }}, {{
-    // string plugin_root = 1;
-    {PROTOBUF_FIELD_OFFSET(ResetPlugin_Args, _impl_.plugin_root_), 0, 0,
-    (0 | ::_fl::kFcSingular | ::_fl::kUtf8String | ::_fl::kRepAString)},
-  }},
-  // no aux_entries
-  {{
-    "\34\13\0\0\0\0\0\0"
-    "com.kcl.api.ResetPlugin_Args"
-    "plugin_root"
-  }},
-};
-
-PROTOBUF_NOINLINE void ResetPlugin_Args::Clear() {
-// @@protoc_insertion_point(message_clear_start:com.kcl.api.ResetPlugin_Args)
-  ::google::protobuf::internal::TSanWrite(&_impl_);
-  ::uint32_t cached_has_bits = 0;
-  // Prevent compiler warnings about cached_has_bits being unused
-  (void) cached_has_bits;
-
-  _impl_.plugin_root_.ClearToEmpty();
-  _internal_metadata_.Clear<::google::protobuf::UnknownFieldSet>();
-}
-
-::uint8_t* ResetPlugin_Args::_InternalSerialize(
-    ::uint8_t* target,
-    ::google::protobuf::io::EpsCopyOutputStream* stream) const {
-  // @@protoc_insertion_point(serialize_to_array_start:com.kcl.api.ResetPlugin_Args)
-  ::uint32_t cached_has_bits = 0;
-  (void)cached_has_bits;
-
-  // string plugin_root = 1;
-  if (!this->_internal_plugin_root().empty()) {
-    const std::string& _s = this->_internal_plugin_root();
-    ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
-        _s.data(), static_cast<int>(_s.length()), ::google::protobuf::internal::WireFormatLite::SERIALIZE, "com.kcl.api.ResetPlugin_Args.plugin_root");
-    target = stream->WriteStringMaybeAliased(1, _s, target);
-  }
-
-  if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
-    target =
-        ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
-            _internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance), target, stream);
-  }
-  // @@protoc_insertion_point(serialize_to_array_end:com.kcl.api.ResetPlugin_Args)
-  return target;
-}
-
-::size_t ResetPlugin_Args::ByteSizeLong() const {
-// @@protoc_insertion_point(message_byte_size_start:com.kcl.api.ResetPlugin_Args)
-  ::size_t total_size = 0;
-
-  ::uint32_t cached_has_bits = 0;
-  // Prevent compiler warnings about cached_has_bits being unused
-  (void) cached_has_bits;
-
-  // string plugin_root = 1;
-  if (!this->_internal_plugin_root().empty()) {
-    total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
-                                    this->_internal_plugin_root());
-  }
-
-  return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
-}
-
-
-void ResetPlugin_Args::MergeImpl(::google::protobuf::MessageLite& to_msg, const ::google::protobuf::MessageLite& from_msg) {
-  auto* const _this = static_cast<ResetPlugin_Args*>(&to_msg);
-  auto& from = static_cast<const ResetPlugin_Args&>(from_msg);
-  // @@protoc_insertion_point(class_specific_merge_from_start:com.kcl.api.ResetPlugin_Args)
-  ABSL_DCHECK_NE(&from, _this);
-  ::uint32_t cached_has_bits = 0;
-  (void) cached_has_bits;
-
-  if (!from._internal_plugin_root().empty()) {
-    _this->_internal_set_plugin_root(from._internal_plugin_root());
-  }
-  _this->_internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(from._internal_metadata_);
-}
-
-void ResetPlugin_Args::CopyFrom(const ResetPlugin_Args& from) {
-// @@protoc_insertion_point(class_specific_copy_from_start:com.kcl.api.ResetPlugin_Args)
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-
-void ResetPlugin_Args::InternalSwap(ResetPlugin_Args* PROTOBUF_RESTRICT other) {
-  using std::swap;
-  auto* arena = GetArena();
-  ABSL_DCHECK_EQ(arena, other->GetArena());
-  _internal_metadata_.InternalSwap(&other->_internal_metadata_);
-  ::_pbi::ArenaStringPtr::InternalSwap(&_impl_.plugin_root_, &other->_impl_.plugin_root_, arena);
-}
-
-::google::protobuf::Metadata ResetPlugin_Args::GetMetadata() const {
-  return ::google::protobuf::Message::GetMetadataImpl(GetClassData()->full());
-}
-// ===================================================================
-
-class ResetPlugin_Result::_Internal {
- public:
-};
-
-ResetPlugin_Result::ResetPlugin_Result(::google::protobuf::Arena* arena)
-    : ::google::protobuf::internal::ZeroFieldsBase(arena) {
-  // @@protoc_insertion_point(arena_constructor:com.kcl.api.ResetPlugin_Result)
-}
-ResetPlugin_Result::ResetPlugin_Result(
-    ::google::protobuf::Arena* arena,
-    const ResetPlugin_Result& from)
-    : ::google::protobuf::internal::ZeroFieldsBase(arena) {
-  ResetPlugin_Result* const _this = this;
-  (void)_this;
-  _internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
-      from._internal_metadata_);
-
-  // @@protoc_insertion_point(copy_constructor:com.kcl.api.ResetPlugin_Result)
-}
-
-const ::google::protobuf::MessageLite::ClassData*
-ResetPlugin_Result::GetClassData() const {
-  PROTOBUF_CONSTINIT static const ::google::protobuf::MessageLite::
-      ClassDataFull _data_ = {
-          {
-              &_table_.header,
-              nullptr,  // OnDemandRegisterArenaDtor
-              nullptr,  // IsInitialized
-              PROTOBUF_FIELD_OFFSET(ResetPlugin_Result, _impl_._cached_size_),
-              false,
-          },
-          &ResetPlugin_Result::MergeImpl,
-          &ResetPlugin_Result::kDescriptorMethods,
-          &descriptor_table_spec_2eproto,
-          nullptr,  // tracker
-      };
-  ::google::protobuf::internal::PrefetchToLocalCache(&_data_);
-  ::google::protobuf::internal::PrefetchToLocalCache(_data_.tc_table);
-  return _data_.base();
-}
-PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
-const ::_pbi::TcParseTable<0, 0, 0, 0, 2> ResetPlugin_Result::_table_ = {
-  {
-    0,  // no _has_bits_
-    0, // no _extensions_
-    0, 0,  // max_field_number, fast_idx_mask
-    offsetof(decltype(_table_), field_lookup_table),
-    4294967295,  // skipmap
-    offsetof(decltype(_table_), field_names),  // no field_entries
-    0,  // num_field_entries
-    0,  // num_aux_entries
-    offsetof(decltype(_table_), field_names),  // no aux_entries
-    &_ResetPlugin_Result_default_instance_._instance,
-    nullptr,  // post_loop_handler
-    ::_pbi::TcParser::GenericFallback,  // fallback
-    #ifdef PROTOBUF_PREFETCH_PARSE_TABLE
-    ::_pbi::TcParser::GetTable<::com::kcl::api::ResetPlugin_Result>(),  // to_prefetch
-    #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
-  }, {{
-    {::_pbi::TcParser::MiniParse, {}},
-  }}, {{
-    65535, 65535
-  }},
-  // no field_entries, or aux_entries
-  {{
-  }},
-};
-
-
-
-
-
-
-
-
-
-::google::protobuf::Metadata ResetPlugin_Result::GetMetadata() const {
-  return ::google::protobuf::internal::ZeroFieldsBase::GetMetadataImpl(GetClassData()->full());
 }
 // ===================================================================
 

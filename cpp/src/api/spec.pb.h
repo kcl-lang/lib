@@ -248,12 +248,6 @@ extern Rename_ArgsDefaultTypeInternal _Rename_Args_default_instance_;
 class Rename_Result;
 struct Rename_ResultDefaultTypeInternal;
 extern Rename_ResultDefaultTypeInternal _Rename_Result_default_instance_;
-class ResetPlugin_Args;
-struct ResetPlugin_ArgsDefaultTypeInternal;
-extern ResetPlugin_ArgsDefaultTypeInternal _ResetPlugin_Args_default_instance_;
-class ResetPlugin_Result;
-struct ResetPlugin_ResultDefaultTypeInternal;
-extern ResetPlugin_ResultDefaultTypeInternal _ResetPlugin_Result_default_instance_;
 class Scope;
 struct ScopeDefaultTypeInternal;
 extern ScopeDefaultTypeInternal _Scope_default_instance_;
@@ -365,7 +359,7 @@ class ValidateCode_Result final : public ::google::protobuf::Message
     return reinterpret_cast<const ValidateCode_Result*>(
         &_ValidateCode_Result_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 54;
+  static constexpr int kIndexInFileMessages = 52;
   friend void swap(ValidateCode_Result& a, ValidateCode_Result& b) { a.Swap(&b); }
   inline void Swap(ValidateCode_Result* other) {
     if (other == this) return;
@@ -554,7 +548,7 @@ class ValidateCode_Args final : public ::google::protobuf::Message
     return reinterpret_cast<const ValidateCode_Args*>(
         &_ValidateCode_Args_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 53;
+  static constexpr int kIndexInFileMessages = 51;
   friend void swap(ValidateCode_Args& a, ValidateCode_Args& b) { a.Swap(&b); }
   inline void Swap(ValidateCode_Args* other) {
     if (other == this) return;
@@ -839,7 +833,7 @@ class UpdateDependencies_Args final : public ::google::protobuf::Message
     return reinterpret_cast<const UpdateDependencies_Args*>(
         &_UpdateDependencies_Args_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 71;
+  static constexpr int kIndexInFileMessages = 69;
   friend void swap(UpdateDependencies_Args& a, UpdateDependencies_Args& b) { a.Swap(&b); }
   inline void Swap(UpdateDependencies_Args* other) {
     if (other == this) return;
@@ -1028,7 +1022,7 @@ class TestCaseInfo final : public ::google::protobuf::Message
     return reinterpret_cast<const TestCaseInfo*>(
         &_TestCaseInfo_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 70;
+  static constexpr int kIndexInFileMessages = 68;
   friend void swap(TestCaseInfo& a, TestCaseInfo& b) { a.Swap(&b); }
   inline void Swap(TestCaseInfo* other) {
     if (other == this) return;
@@ -1600,325 +1594,6 @@ class ScopeIndex final : public ::google::protobuf::Message
 };
 // -------------------------------------------------------------------
 
-class ResetPlugin_Result final : public ::google::protobuf::internal::ZeroFieldsBase
-/* @@protoc_insertion_point(class_definition:com.kcl.api.ResetPlugin_Result) */ {
- public:
-  inline ResetPlugin_Result() : ResetPlugin_Result(nullptr) {}
-  template <typename = void>
-  explicit PROTOBUF_CONSTEXPR ResetPlugin_Result(
-      ::google::protobuf::internal::ConstantInitialized);
-
-  inline ResetPlugin_Result(const ResetPlugin_Result& from) : ResetPlugin_Result(nullptr, from) {}
-  inline ResetPlugin_Result(ResetPlugin_Result&& from) noexcept
-      : ResetPlugin_Result(nullptr, std::move(from)) {}
-  inline ResetPlugin_Result& operator=(const ResetPlugin_Result& from) {
-    CopyFrom(from);
-    return *this;
-  }
-  inline ResetPlugin_Result& operator=(ResetPlugin_Result&& from) noexcept {
-    if (this == &from) return *this;
-    if (GetArena() == from.GetArena()
-#ifdef PROTOBUF_FORCE_COPY_IN_MOVE
-        && GetArena() != nullptr
-#endif  // !PROTOBUF_FORCE_COPY_IN_MOVE
-    ) {
-      InternalSwap(&from);
-    } else {
-      CopyFrom(from);
-    }
-    return *this;
-  }
-
-  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const
-      ABSL_ATTRIBUTE_LIFETIME_BOUND {
-    return _internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance);
-  }
-  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields()
-      ABSL_ATTRIBUTE_LIFETIME_BOUND {
-    return _internal_metadata_.mutable_unknown_fields<::google::protobuf::UnknownFieldSet>();
-  }
-
-  static const ::google::protobuf::Descriptor* descriptor() {
-    return GetDescriptor();
-  }
-  static const ::google::protobuf::Descriptor* GetDescriptor() {
-    return default_instance().GetMetadata().descriptor;
-  }
-  static const ::google::protobuf::Reflection* GetReflection() {
-    return default_instance().GetMetadata().reflection;
-  }
-  static const ResetPlugin_Result& default_instance() {
-    return *internal_default_instance();
-  }
-  static inline const ResetPlugin_Result* internal_default_instance() {
-    return reinterpret_cast<const ResetPlugin_Result*>(
-        &_ResetPlugin_Result_default_instance_);
-  }
-  static constexpr int kIndexInFileMessages = 34;
-  friend void swap(ResetPlugin_Result& a, ResetPlugin_Result& b) { a.Swap(&b); }
-  inline void Swap(ResetPlugin_Result* other) {
-    if (other == this) return;
-#ifdef PROTOBUF_FORCE_COPY_IN_SWAP
-    if (GetArena() != nullptr && GetArena() == other->GetArena()) {
-#else   // PROTOBUF_FORCE_COPY_IN_SWAP
-    if (GetArena() == other->GetArena()) {
-#endif  // !PROTOBUF_FORCE_COPY_IN_SWAP
-      InternalSwap(other);
-    } else {
-      ::google::protobuf::internal::GenericSwap(this, other);
-    }
-  }
-  void UnsafeArenaSwap(ResetPlugin_Result* other) {
-    if (other == this) return;
-    ABSL_DCHECK(GetArena() == other->GetArena());
-    InternalSwap(other);
-  }
-
-  // implements Message ----------------------------------------------
-
-  ResetPlugin_Result* New(::google::protobuf::Arena* arena = nullptr) const final {
-    return ::google::protobuf::internal::ZeroFieldsBase::DefaultConstruct<ResetPlugin_Result>(arena);
-  }
-  using ::google::protobuf::internal::ZeroFieldsBase::CopyFrom;
-  inline void CopyFrom(const ResetPlugin_Result& from) {
-    ::google::protobuf::internal::ZeroFieldsBase::CopyImpl(*this, from);
-  }
-  using ::google::protobuf::internal::ZeroFieldsBase::MergeFrom;
-  void MergeFrom(const ResetPlugin_Result& from) {
-    ::google::protobuf::internal::ZeroFieldsBase::MergeImpl(*this, from);
-  }
-
-  public:
-  bool IsInitialized() const {
-    return true;
-  }
- private:
-  friend class ::google::protobuf::internal::AnyMetadata;
-  static ::absl::string_view FullMessageName() { return "com.kcl.api.ResetPlugin_Result"; }
-
- protected:
-  explicit ResetPlugin_Result(::google::protobuf::Arena* arena);
-  ResetPlugin_Result(::google::protobuf::Arena* arena, const ResetPlugin_Result& from);
-  ResetPlugin_Result(::google::protobuf::Arena* arena, ResetPlugin_Result&& from) noexcept
-      : ResetPlugin_Result(arena) {
-    *this = ::std::move(from);
-  }
-  const ::google::protobuf::internal::ZeroFieldsBase::ClassData* GetClassData() const final;
-
- public:
-  ::google::protobuf::Metadata GetMetadata() const;
-  // nested types ----------------------------------------------------
-
-  // accessors -------------------------------------------------------
-  // @@protoc_insertion_point(class_scope:com.kcl.api.ResetPlugin_Result)
- private:
-  class _Internal;
-  friend class ::google::protobuf::internal::TcParser;
-  static const ::google::protobuf::internal::TcParseTable<
-      0, 0, 0,
-      0, 2>
-      _table_;
-
-  static constexpr const void* _raw_default_instance_ =
-      &_ResetPlugin_Result_default_instance_;
-
-  friend class ::google::protobuf::MessageLite;
-  friend class ::google::protobuf::Arena;
-  template <typename T>
-  friend class ::google::protobuf::Arena::InternalHelper;
-  using InternalArenaConstructable_ = void;
-  using DestructorSkippable_ = void;
-  struct Impl_ {
-    inline explicit constexpr Impl_(
-        ::google::protobuf::internal::ConstantInitialized) noexcept;
-    inline explicit Impl_(::google::protobuf::internal::InternalVisibility visibility,
-                          ::google::protobuf::Arena* arena);
-    inline explicit Impl_(::google::protobuf::internal::InternalVisibility visibility,
-                          ::google::protobuf::Arena* arena, const Impl_& from,
-                          const ResetPlugin_Result& from_msg);
-    PROTOBUF_TSAN_DECLARE_MEMBER
-  };
-  friend struct ::TableStruct_spec_2eproto;
-};
-// -------------------------------------------------------------------
-
-class ResetPlugin_Args final : public ::google::protobuf::Message
-/* @@protoc_insertion_point(class_definition:com.kcl.api.ResetPlugin_Args) */ {
- public:
-  inline ResetPlugin_Args() : ResetPlugin_Args(nullptr) {}
-  ~ResetPlugin_Args() override;
-  template <typename = void>
-  explicit PROTOBUF_CONSTEXPR ResetPlugin_Args(
-      ::google::protobuf::internal::ConstantInitialized);
-
-  inline ResetPlugin_Args(const ResetPlugin_Args& from) : ResetPlugin_Args(nullptr, from) {}
-  inline ResetPlugin_Args(ResetPlugin_Args&& from) noexcept
-      : ResetPlugin_Args(nullptr, std::move(from)) {}
-  inline ResetPlugin_Args& operator=(const ResetPlugin_Args& from) {
-    CopyFrom(from);
-    return *this;
-  }
-  inline ResetPlugin_Args& operator=(ResetPlugin_Args&& from) noexcept {
-    if (this == &from) return *this;
-    if (GetArena() == from.GetArena()
-#ifdef PROTOBUF_FORCE_COPY_IN_MOVE
-        && GetArena() != nullptr
-#endif  // !PROTOBUF_FORCE_COPY_IN_MOVE
-    ) {
-      InternalSwap(&from);
-    } else {
-      CopyFrom(from);
-    }
-    return *this;
-  }
-
-  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const
-      ABSL_ATTRIBUTE_LIFETIME_BOUND {
-    return _internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance);
-  }
-  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields()
-      ABSL_ATTRIBUTE_LIFETIME_BOUND {
-    return _internal_metadata_.mutable_unknown_fields<::google::protobuf::UnknownFieldSet>();
-  }
-
-  static const ::google::protobuf::Descriptor* descriptor() {
-    return GetDescriptor();
-  }
-  static const ::google::protobuf::Descriptor* GetDescriptor() {
-    return default_instance().GetMetadata().descriptor;
-  }
-  static const ::google::protobuf::Reflection* GetReflection() {
-    return default_instance().GetMetadata().reflection;
-  }
-  static const ResetPlugin_Args& default_instance() {
-    return *internal_default_instance();
-  }
-  static inline const ResetPlugin_Args* internal_default_instance() {
-    return reinterpret_cast<const ResetPlugin_Args*>(
-        &_ResetPlugin_Args_default_instance_);
-  }
-  static constexpr int kIndexInFileMessages = 33;
-  friend void swap(ResetPlugin_Args& a, ResetPlugin_Args& b) { a.Swap(&b); }
-  inline void Swap(ResetPlugin_Args* other) {
-    if (other == this) return;
-#ifdef PROTOBUF_FORCE_COPY_IN_SWAP
-    if (GetArena() != nullptr && GetArena() == other->GetArena()) {
-#else   // PROTOBUF_FORCE_COPY_IN_SWAP
-    if (GetArena() == other->GetArena()) {
-#endif  // !PROTOBUF_FORCE_COPY_IN_SWAP
-      InternalSwap(other);
-    } else {
-      ::google::protobuf::internal::GenericSwap(this, other);
-    }
-  }
-  void UnsafeArenaSwap(ResetPlugin_Args* other) {
-    if (other == this) return;
-    ABSL_DCHECK(GetArena() == other->GetArena());
-    InternalSwap(other);
-  }
-
-  // implements Message ----------------------------------------------
-
-  ResetPlugin_Args* New(::google::protobuf::Arena* arena = nullptr) const final {
-    return ::google::protobuf::Message::DefaultConstruct<ResetPlugin_Args>(arena);
-  }
-  using ::google::protobuf::Message::CopyFrom;
-  void CopyFrom(const ResetPlugin_Args& from);
-  using ::google::protobuf::Message::MergeFrom;
-  void MergeFrom(const ResetPlugin_Args& from) { ResetPlugin_Args::MergeImpl(*this, from); }
-
-  private:
-  static void MergeImpl(
-      ::google::protobuf::MessageLite& to_msg,
-      const ::google::protobuf::MessageLite& from_msg);
-
-  public:
-  bool IsInitialized() const {
-    return true;
-  }
-  ABSL_ATTRIBUTE_REINITIALIZES void Clear() final;
-  ::size_t ByteSizeLong() const final;
-  ::uint8_t* _InternalSerialize(
-      ::uint8_t* target,
-      ::google::protobuf::io::EpsCopyOutputStream* stream) const final;
-  int GetCachedSize() const { return _impl_._cached_size_.Get(); }
-
-  private:
-  void SharedCtor(::google::protobuf::Arena* arena);
-  void SharedDtor();
-  void InternalSwap(ResetPlugin_Args* other);
- private:
-  friend class ::google::protobuf::internal::AnyMetadata;
-  static ::absl::string_view FullMessageName() { return "com.kcl.api.ResetPlugin_Args"; }
-
- protected:
-  explicit ResetPlugin_Args(::google::protobuf::Arena* arena);
-  ResetPlugin_Args(::google::protobuf::Arena* arena, const ResetPlugin_Args& from);
-  ResetPlugin_Args(::google::protobuf::Arena* arena, ResetPlugin_Args&& from) noexcept
-      : ResetPlugin_Args(arena) {
-    *this = ::std::move(from);
-  }
-  const ::google::protobuf::Message::ClassData* GetClassData() const final;
-
- public:
-  ::google::protobuf::Metadata GetMetadata() const;
-  // nested types ----------------------------------------------------
-
-  // accessors -------------------------------------------------------
-  enum : int {
-    kPluginRootFieldNumber = 1,
-  };
-  // string plugin_root = 1;
-  void clear_plugin_root() ;
-  const std::string& plugin_root() const;
-  template <typename Arg_ = const std::string&, typename... Args_>
-  void set_plugin_root(Arg_&& arg, Args_... args);
-  std::string* mutable_plugin_root();
-  PROTOBUF_NODISCARD std::string* release_plugin_root();
-  void set_allocated_plugin_root(std::string* value);
-
-  private:
-  const std::string& _internal_plugin_root() const;
-  inline PROTOBUF_ALWAYS_INLINE void _internal_set_plugin_root(
-      const std::string& value);
-  std::string* _internal_mutable_plugin_root();
-
-  public:
-  // @@protoc_insertion_point(class_scope:com.kcl.api.ResetPlugin_Args)
- private:
-  class _Internal;
-  friend class ::google::protobuf::internal::TcParser;
-  static const ::google::protobuf::internal::TcParseTable<
-      0, 1, 0,
-      48, 2>
-      _table_;
-
-  static constexpr const void* _raw_default_instance_ =
-      &_ResetPlugin_Args_default_instance_;
-
-  friend class ::google::protobuf::MessageLite;
-  friend class ::google::protobuf::Arena;
-  template <typename T>
-  friend class ::google::protobuf::Arena::InternalHelper;
-  using InternalArenaConstructable_ = void;
-  using DestructorSkippable_ = void;
-  struct Impl_ {
-    inline explicit constexpr Impl_(
-        ::google::protobuf::internal::ConstantInitialized) noexcept;
-    inline explicit Impl_(::google::protobuf::internal::InternalVisibility visibility,
-                          ::google::protobuf::Arena* arena);
-    inline explicit Impl_(::google::protobuf::internal::InternalVisibility visibility,
-                          ::google::protobuf::Arena* arena, const Impl_& from,
-                          const ResetPlugin_Args& from_msg);
-    ::google::protobuf::internal::ArenaStringPtr plugin_root_;
-    mutable ::google::protobuf::internal::CachedSize _cached_size_;
-    PROTOBUF_TSAN_DECLARE_MEMBER
-  };
-  union { Impl_ _impl_; };
-  friend struct ::TableStruct_spec_2eproto;
-};
-// -------------------------------------------------------------------
-
 class Rename_Result final : public ::google::protobuf::Message
 /* @@protoc_insertion_point(class_definition:com.kcl.api.Rename_Result) */ {
  public:
@@ -1974,7 +1649,7 @@ class Rename_Result final : public ::google::protobuf::Message
     return reinterpret_cast<const Rename_Result*>(
         &_Rename_Result_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 63;
+  static constexpr int kIndexInFileMessages = 61;
   friend void swap(Rename_Result& a, Rename_Result& b) { a.Swap(&b); }
   inline void Swap(Rename_Result* other) {
     if (other == this) return;
@@ -2163,7 +1838,7 @@ class Rename_Args final : public ::google::protobuf::Message
     return reinterpret_cast<const Rename_Args*>(
         &_Rename_Args_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 62;
+  static constexpr int kIndexInFileMessages = 60;
   friend void swap(Rename_Args& a, Rename_Args& b) { a.Swap(&b); }
   inline void Swap(Rename_Args* other) {
     if (other == this) return;
@@ -2454,7 +2129,7 @@ class Position final : public ::google::protobuf::Message
     return reinterpret_cast<const Position*>(
         &_Position_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 55;
+  static constexpr int kIndexInFileMessages = 53;
   friend void swap(Position& a, Position& b) { a.Swap(&b); }
   inline void Swap(Position* other) {
     if (other == this) return;
@@ -3009,7 +2684,7 @@ class OverrideFile_Args final : public ::google::protobuf::Message
     return reinterpret_cast<const OverrideFile_Args*>(
         &_OverrideFile_Args_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 41;
+  static constexpr int kIndexInFileMessages = 39;
   friend void swap(OverrideFile_Args& a, OverrideFile_Args& b) { a.Swap(&b); }
   inline void Swap(OverrideFile_Args* other) {
     if (other == this) return;
@@ -3489,7 +3164,7 @@ class MapEntry final : public ::google::protobuf::Message
     return reinterpret_cast<const MapEntry*>(
         &_MapEntry_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 49;
+  static constexpr int kIndexInFileMessages = 47;
   friend void swap(MapEntry& a, MapEntry& b) { a.Swap(&b); }
   inline void Swap(MapEntry* other) {
     if (other == this) return;
@@ -3684,7 +3359,7 @@ class Variable final : public ::google::protobuf::Message
     return reinterpret_cast<const Variable*>(
         &_Variable_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 48;
+  static constexpr int kIndexInFileMessages = 46;
   friend void swap(Variable& a, Variable& b) { a.Swap(&b); }
   inline void Swap(Variable* other) {
     if (other == this) return;
@@ -3935,7 +3610,7 @@ class LoadSettingsFiles_Args final : public ::google::protobuf::Message
     return reinterpret_cast<const LoadSettingsFiles_Args*>(
         &_LoadSettingsFiles_Args_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 58;
+  static constexpr int kIndexInFileMessages = 56;
   friend void swap(LoadSettingsFiles_Args& a, LoadSettingsFiles_Args& b) { a.Swap(&b); }
   inline void Swap(LoadSettingsFiles_Args* other) {
     if (other == this) return;
@@ -4166,7 +3841,7 @@ class ListVariables_Options final : public ::google::protobuf::Message
     return reinterpret_cast<const ListVariables_Options*>(
         &_ListVariables_Options_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 43;
+  static constexpr int kIndexInFileMessages = 41;
   friend void swap(ListVariables_Options& a, ListVariables_Options& b) { a.Swap(&b); }
   inline void Swap(ListVariables_Options* other) {
     if (other == this) return;
@@ -4668,7 +4343,7 @@ class ListDepFiles_Result final : public ::google::protobuf::Message
     return reinterpret_cast<const ListDepFiles_Result*>(
         &_ListDepFiles_Result_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 57;
+  static constexpr int kIndexInFileMessages = 55;
   friend void swap(ListDepFiles_Result& a, ListDepFiles_Result& b) { a.Swap(&b); }
   inline void Swap(ListDepFiles_Result* other) {
     if (other == this) return;
@@ -4893,7 +4568,7 @@ class ListDepFiles_Args final : public ::google::protobuf::Message
     return reinterpret_cast<const ListDepFiles_Args*>(
         &_ListDepFiles_Args_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 56;
+  static constexpr int kIndexInFileMessages = 54;
   friend void swap(ListDepFiles_Args& a, ListDepFiles_Args& b) { a.Swap(&b); }
   inline void Swap(ListDepFiles_Args* other) {
     if (other == this) return;
@@ -5106,7 +4781,7 @@ class LintPath_Result final : public ::google::protobuf::Message
     return reinterpret_cast<const LintPath_Result*>(
         &_LintPath_Result_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 40;
+  static constexpr int kIndexInFileMessages = 38;
   friend void swap(LintPath_Result& a, LintPath_Result& b) { a.Swap(&b); }
   inline void Swap(LintPath_Result* other) {
     if (other == this) return;
@@ -5295,7 +4970,7 @@ class LintPath_Args final : public ::google::protobuf::Message
     return reinterpret_cast<const LintPath_Args*>(
         &_LintPath_Args_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 39;
+  static constexpr int kIndexInFileMessages = 37;
   friend void swap(LintPath_Args& a, LintPath_Args& b) { a.Swap(&b); }
   inline void Swap(LintPath_Args* other) {
     if (other == this) return;
@@ -5484,7 +5159,7 @@ class KeyValuePair final : public ::google::protobuf::Message
     return reinterpret_cast<const KeyValuePair*>(
         &_KeyValuePair_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 61;
+  static constexpr int kIndexInFileMessages = 59;
   friend void swap(KeyValuePair& a, KeyValuePair& b) { a.Swap(&b); }
   inline void Swap(KeyValuePair* other) {
     if (other == this) return;
@@ -6052,7 +5727,7 @@ class FormatPath_Result final : public ::google::protobuf::Message
     return reinterpret_cast<const FormatPath_Result*>(
         &_FormatPath_Result_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 38;
+  static constexpr int kIndexInFileMessages = 36;
   friend void swap(FormatPath_Result& a, FormatPath_Result& b) { a.Swap(&b); }
   inline void Swap(FormatPath_Result* other) {
     if (other == this) return;
@@ -6241,7 +5916,7 @@ class FormatPath_Args final : public ::google::protobuf::Message
     return reinterpret_cast<const FormatPath_Args*>(
         &_FormatPath_Args_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 37;
+  static constexpr int kIndexInFileMessages = 35;
   friend void swap(FormatPath_Args& a, FormatPath_Args& b) { a.Swap(&b); }
   inline void Swap(FormatPath_Args* other) {
     if (other == this) return;
@@ -6418,7 +6093,7 @@ class FormatCode_Result final : public ::google::protobuf::Message
     return reinterpret_cast<const FormatCode_Result*>(
         &_FormatCode_Result_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 36;
+  static constexpr int kIndexInFileMessages = 34;
   friend void swap(FormatCode_Result& a, FormatCode_Result& b) { a.Swap(&b); }
   inline void Swap(FormatCode_Result* other) {
     if (other == this) return;
@@ -6595,7 +6270,7 @@ class FormatCode_Args final : public ::google::protobuf::Message
     return reinterpret_cast<const FormatCode_Args*>(
         &_FormatCode_Args_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 35;
+  static constexpr int kIndexInFileMessages = 33;
   friend void swap(FormatCode_Args& a, FormatCode_Args& b) { a.Swap(&b); }
   inline void Swap(FormatCode_Args* other) {
     if (other == this) return;
@@ -7198,7 +6873,7 @@ class Example final : public ::google::protobuf::Message
     return reinterpret_cast<const Example*>(
         &_Example_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 78;
+  static constexpr int kIndexInFileMessages = 76;
   friend void swap(Example& a, Example& b) { a.Swap(&b); }
   inline void Swap(Example* other) {
     if (other == this) return;
@@ -7435,7 +7110,7 @@ class CliConfig final : public ::google::protobuf::Message
     return reinterpret_cast<const CliConfig*>(
         &_CliConfig_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 60;
+  static constexpr int kIndexInFileMessages = 58;
   friend void swap(CliConfig& a, CliConfig& b) { a.Swap(&b); }
   inline void Swap(CliConfig* other) {
     if (other == this) return;
@@ -8170,7 +7845,7 @@ class VariableList final : public ::google::protobuf::Message
     return reinterpret_cast<const VariableList*>(
         &_VariableList_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 44;
+  static constexpr int kIndexInFileMessages = 42;
   friend void swap(VariableList& a, VariableList& b) { a.Swap(&b); }
   inline void Swap(VariableList* other) {
     if (other == this) return;
@@ -8348,7 +8023,7 @@ class UpdateDependencies_Result final : public ::google::protobuf::Message
     return reinterpret_cast<const UpdateDependencies_Result*>(
         &_UpdateDependencies_Result_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 72;
+  static constexpr int kIndexInFileMessages = 70;
   friend void swap(UpdateDependencies_Result& a, UpdateDependencies_Result& b) { a.Swap(&b); }
   inline void Swap(UpdateDependencies_Result* other) {
     if (other == this) return;
@@ -8526,7 +8201,7 @@ class Test_Result final : public ::google::protobuf::Message
     return reinterpret_cast<const Test_Result*>(
         &_Test_Result_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 69;
+  static constexpr int kIndexInFileMessages = 67;
   friend void swap(Test_Result& a, Test_Result& b) { a.Swap(&b); }
   inline void Swap(Test_Result* other) {
     if (other == this) return;
@@ -8954,7 +8629,7 @@ class RenameCode_Result final : public ::google::protobuf::Message
     return reinterpret_cast<const RenameCode_Result*>(
         &_RenameCode_Result_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 67;
+  static constexpr int kIndexInFileMessages = 65;
   friend void swap(RenameCode_Result& a, RenameCode_Result& b) { a.Swap(&b); }
   inline void Swap(RenameCode_Result* other) {
     if (other == this) return;
@@ -9133,7 +8808,7 @@ class RenameCode_Args final : public ::google::protobuf::Message
     return reinterpret_cast<const RenameCode_Args*>(
         &_RenameCode_Args_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 65;
+  static constexpr int kIndexInFileMessages = 63;
   friend void swap(RenameCode_Args& a, RenameCode_Args& b) { a.Swap(&b); }
   inline void Swap(RenameCode_Args* other) {
     if (other == this) return;
@@ -10013,7 +9688,7 @@ class LoadSettingsFiles_Result final : public ::google::protobuf::Message
     return reinterpret_cast<const LoadSettingsFiles_Result*>(
         &_LoadSettingsFiles_Result_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 59;
+  static constexpr int kIndexInFileMessages = 57;
   friend void swap(LoadSettingsFiles_Result& a, LoadSettingsFiles_Result& b) { a.Swap(&b); }
   inline void Swap(LoadSettingsFiles_Result* other) {
     if (other == this) return;
@@ -10281,7 +9956,7 @@ class ListVariables_Args final : public ::google::protobuf::Message
     return reinterpret_cast<const ListVariables_Args*>(
         &_ListVariables_Args_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 45;
+  static constexpr int kIndexInFileMessages = 43;
   friend void swap(ListVariables_Args& a, ListVariables_Args& b) { a.Swap(&b); }
   inline void Swap(ListVariables_Args* other) {
     if (other == this) return;
@@ -11187,7 +10862,7 @@ class Decorator final : public ::google::protobuf::Message
     return reinterpret_cast<const Decorator*>(
         &_Decorator_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 77;
+  static constexpr int kIndexInFileMessages = 75;
   friend void swap(Decorator& a, Decorator& b) { a.Swap(&b); }
   inline void Swap(Decorator* other) {
     if (other == this) return;
@@ -11414,7 +11089,7 @@ class Test_Args final : public ::google::protobuf::Message
     return reinterpret_cast<const Test_Args*>(
         &_Test_Args_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 68;
+  static constexpr int kIndexInFileMessages = 66;
   friend void swap(Test_Args& a, Test_Args& b) { a.Swap(&b); }
   inline void Swap(Test_Args* other) {
     if (other == this) return;
@@ -11912,7 +11587,7 @@ class KclType final : public ::google::protobuf::Message
     return reinterpret_cast<const KclType*>(
         &_KclType_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 75;
+  static constexpr int kIndexInFileMessages = 73;
   friend void swap(KclType& a, KclType& b) { a.Swap(&b); }
   inline void Swap(KclType* other) {
     if (other == this) return;
@@ -12393,7 +12068,7 @@ class GetSchemaTypeMapping_Args final : public ::google::protobuf::Message
     return reinterpret_cast<const GetSchemaTypeMapping_Args*>(
         &_GetSchemaTypeMapping_Args_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 50;
+  static constexpr int kIndexInFileMessages = 48;
   friend void swap(GetSchemaTypeMapping_Args& a, GetSchemaTypeMapping_Args& b) { a.Swap(&b); }
   inline void Swap(GetSchemaTypeMapping_Args* other) {
     if (other == this) return;
@@ -13904,7 +13579,7 @@ class OverrideFile_Result final : public ::google::protobuf::Message
     return reinterpret_cast<const OverrideFile_Result*>(
         &_OverrideFile_Result_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 42;
+  static constexpr int kIndexInFileMessages = 40;
   friend void swap(OverrideFile_Result& a, OverrideFile_Result& b) { a.Swap(&b); }
   inline void Swap(OverrideFile_Result* other) {
     if (other == this) return;
@@ -14094,7 +13769,7 @@ class ListVariables_Result final : public ::google::protobuf::Message
     return reinterpret_cast<const ListVariables_Result*>(
         &_ListVariables_Result_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 47;
+  static constexpr int kIndexInFileMessages = 45;
   friend void swap(ListVariables_Result& a, ListVariables_Result& b) { a.Swap(&b); }
   inline void Swap(ListVariables_Result* other) {
     if (other == this) return;
@@ -14370,7 +14045,7 @@ class GetSchemaTypeMapping_Result final : public ::google::protobuf::Message
     return reinterpret_cast<const GetSchemaTypeMapping_Result*>(
         &_GetSchemaTypeMapping_Result_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 52;
+  static constexpr int kIndexInFileMessages = 50;
   friend void swap(GetSchemaTypeMapping_Result& a, GetSchemaTypeMapping_Result& b) { a.Swap(&b); }
   inline void Swap(GetSchemaTypeMapping_Result* other) {
     if (other == this) return;
@@ -19818,64 +19493,6 @@ inline void ExecArtifact_Args::set_allocated_exec_args(::com::kcl::api::ExecProg
   _impl_.exec_args_ = reinterpret_cast<::com::kcl::api::ExecProgram_Args*>(value);
   // @@protoc_insertion_point(field_set_allocated:com.kcl.api.ExecArtifact_Args.exec_args)
 }
-
-// -------------------------------------------------------------------
-
-// ResetPlugin_Args
-
-// string plugin_root = 1;
-inline void ResetPlugin_Args::clear_plugin_root() {
-  ::google::protobuf::internal::TSanWrite(&_impl_);
-  _impl_.plugin_root_.ClearToEmpty();
-}
-inline const std::string& ResetPlugin_Args::plugin_root() const
-    ABSL_ATTRIBUTE_LIFETIME_BOUND {
-  // @@protoc_insertion_point(field_get:com.kcl.api.ResetPlugin_Args.plugin_root)
-  return _internal_plugin_root();
-}
-template <typename Arg_, typename... Args_>
-inline PROTOBUF_ALWAYS_INLINE void ResetPlugin_Args::set_plugin_root(Arg_&& arg,
-                                                     Args_... args) {
-  ::google::protobuf::internal::TSanWrite(&_impl_);
-  _impl_.plugin_root_.Set(static_cast<Arg_&&>(arg), args..., GetArena());
-  // @@protoc_insertion_point(field_set:com.kcl.api.ResetPlugin_Args.plugin_root)
-}
-inline std::string* ResetPlugin_Args::mutable_plugin_root() ABSL_ATTRIBUTE_LIFETIME_BOUND {
-  std::string* _s = _internal_mutable_plugin_root();
-  // @@protoc_insertion_point(field_mutable:com.kcl.api.ResetPlugin_Args.plugin_root)
-  return _s;
-}
-inline const std::string& ResetPlugin_Args::_internal_plugin_root() const {
-  ::google::protobuf::internal::TSanRead(&_impl_);
-  return _impl_.plugin_root_.Get();
-}
-inline void ResetPlugin_Args::_internal_set_plugin_root(const std::string& value) {
-  ::google::protobuf::internal::TSanWrite(&_impl_);
-  _impl_.plugin_root_.Set(value, GetArena());
-}
-inline std::string* ResetPlugin_Args::_internal_mutable_plugin_root() {
-  ::google::protobuf::internal::TSanWrite(&_impl_);
-  return _impl_.plugin_root_.Mutable( GetArena());
-}
-inline std::string* ResetPlugin_Args::release_plugin_root() {
-  ::google::protobuf::internal::TSanWrite(&_impl_);
-  // @@protoc_insertion_point(field_release:com.kcl.api.ResetPlugin_Args.plugin_root)
-  return _impl_.plugin_root_.Release();
-}
-inline void ResetPlugin_Args::set_allocated_plugin_root(std::string* value) {
-  ::google::protobuf::internal::TSanWrite(&_impl_);
-  _impl_.plugin_root_.SetAllocated(value, GetArena());
-  #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
-        if (_impl_.plugin_root_.IsDefault()) {
-          _impl_.plugin_root_.Set("", GetArena());
-        }
-  #endif  // PROTOBUF_FORCE_COPY_DEFAULT_STRING
-  // @@protoc_insertion_point(field_set_allocated:com.kcl.api.ResetPlugin_Args.plugin_root)
-}
-
-// -------------------------------------------------------------------
-
-// ResetPlugin_Result
 
 // -------------------------------------------------------------------
 

@@ -528,16 +528,6 @@ class ExecArtifact_Args(_message.Message):
         exec_args: _Optional[_Union[ExecProgram_Args, _Mapping]] = ...,
     ) -> None: ...
 
-class ResetPlugin_Args(_message.Message):
-    __slots__ = ("plugin_root",)
-    PLUGIN_ROOT_FIELD_NUMBER: _ClassVar[int]
-    plugin_root: str
-    def __init__(self, plugin_root: _Optional[str] = ...) -> None: ...
-
-class ResetPlugin_Result(_message.Message):
-    __slots__ = ()
-    def __init__(self) -> None: ...
-
 class FormatCode_Args(_message.Message):
     __slots__ = ("source",)
     SOURCE_FIELD_NUMBER: _ClassVar[int]

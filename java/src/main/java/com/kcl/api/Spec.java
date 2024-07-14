@@ -32961,917 +32961,6 @@ public final class Spec {
 
     }
 
-    public interface ResetPlugin_ArgsOrBuilder extends
-            // @@protoc_insertion_point(interface_extends:com.kcl.api.ResetPlugin_Args)
-            com.google.protobuf.MessageOrBuilder {
-
-        /**
-         * <pre>
-         * Root path for the plugin.
-         * </pre>
-         *
-         * <code>string plugin_root = 1;</code>
-         * 
-         * @return The pluginRoot.
-         */
-        java.lang.String getPluginRoot();
-
-        /**
-         * <pre>
-         * Root path for the plugin.
-         * </pre>
-         *
-         * <code>string plugin_root = 1;</code>
-         * 
-         * @return The bytes for pluginRoot.
-         */
-        com.google.protobuf.ByteString getPluginRootBytes();
-    }
-
-    /**
-     * <pre>
-     * Message for reset plugin request arguments.
-     * </pre>
-     *
-     * Protobuf type {@code com.kcl.api.ResetPlugin_Args}
-     */
-    public static final class ResetPlugin_Args extends com.google.protobuf.GeneratedMessage implements
-            // @@protoc_insertion_point(message_implements:com.kcl.api.ResetPlugin_Args)
-            ResetPlugin_ArgsOrBuilder {
-        private static final long serialVersionUID = 0L;
-        static {
-            com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
-                    com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC, /* major= */ 4, /* minor= */ 27,
-                    /* patch= */ 0, /* suffix= */ "", ResetPlugin_Args.class.getName());
-        }
-
-        // Use ResetPlugin_Args.newBuilder() to construct.
-        private ResetPlugin_Args(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
-            super(builder);
-        }
-
-        private ResetPlugin_Args() {
-            pluginRoot_ = "";
-        }
-
-        public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
-            return com.kcl.api.Spec.internal_static_com_kcl_api_ResetPlugin_Args_descriptor;
-        }
-
-        @java.lang.Override
-        protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable() {
-            return com.kcl.api.Spec.internal_static_com_kcl_api_ResetPlugin_Args_fieldAccessorTable
-                    .ensureFieldAccessorsInitialized(com.kcl.api.Spec.ResetPlugin_Args.class,
-                            com.kcl.api.Spec.ResetPlugin_Args.Builder.class);
-        }
-
-        public static final int PLUGIN_ROOT_FIELD_NUMBER = 1;
-        @SuppressWarnings("serial")
-        private volatile java.lang.Object pluginRoot_ = "";
-
-        /**
-         * <pre>
-         * Root path for the plugin.
-         * </pre>
-         *
-         * <code>string plugin_root = 1;</code>
-         * 
-         * @return The pluginRoot.
-         */
-        @java.lang.Override
-        public java.lang.String getPluginRoot() {
-            java.lang.Object ref = pluginRoot_;
-            if (ref instanceof java.lang.String) {
-                return (java.lang.String) ref;
-            } else {
-                com.google.protobuf.ByteString bs = (com.google.protobuf.ByteString) ref;
-                java.lang.String s = bs.toStringUtf8();
-                pluginRoot_ = s;
-                return s;
-            }
-        }
-
-        /**
-         * <pre>
-         * Root path for the plugin.
-         * </pre>
-         *
-         * <code>string plugin_root = 1;</code>
-         * 
-         * @return The bytes for pluginRoot.
-         */
-        @java.lang.Override
-        public com.google.protobuf.ByteString getPluginRootBytes() {
-            java.lang.Object ref = pluginRoot_;
-            if (ref instanceof java.lang.String) {
-                com.google.protobuf.ByteString b = com.google.protobuf.ByteString.copyFromUtf8((java.lang.String) ref);
-                pluginRoot_ = b;
-                return b;
-            } else {
-                return (com.google.protobuf.ByteString) ref;
-            }
-        }
-
-        private byte memoizedIsInitialized = -1;
-
-        @java.lang.Override
-        public final boolean isInitialized() {
-            byte isInitialized = memoizedIsInitialized;
-            if (isInitialized == 1)
-                return true;
-            if (isInitialized == 0)
-                return false;
-
-            memoizedIsInitialized = 1;
-            return true;
-        }
-
-        @java.lang.Override
-        public void writeTo(com.google.protobuf.CodedOutputStream output) throws java.io.IOException {
-            if (!com.google.protobuf.GeneratedMessage.isStringEmpty(pluginRoot_)) {
-                com.google.protobuf.GeneratedMessage.writeString(output, 1, pluginRoot_);
-            }
-            getUnknownFields().writeTo(output);
-        }
-
-        @java.lang.Override
-        public int getSerializedSize() {
-            int size = memoizedSize;
-            if (size != -1)
-                return size;
-
-            size = 0;
-            if (!com.google.protobuf.GeneratedMessage.isStringEmpty(pluginRoot_)) {
-                size += com.google.protobuf.GeneratedMessage.computeStringSize(1, pluginRoot_);
-            }
-            size += getUnknownFields().getSerializedSize();
-            memoizedSize = size;
-            return size;
-        }
-
-        @java.lang.Override
-        public boolean equals(final java.lang.Object obj) {
-            if (obj == this) {
-                return true;
-            }
-            if (!(obj instanceof com.kcl.api.Spec.ResetPlugin_Args)) {
-                return super.equals(obj);
-            }
-            com.kcl.api.Spec.ResetPlugin_Args other = (com.kcl.api.Spec.ResetPlugin_Args) obj;
-
-            if (!getPluginRoot().equals(other.getPluginRoot()))
-                return false;
-            if (!getUnknownFields().equals(other.getUnknownFields()))
-                return false;
-            return true;
-        }
-
-        @java.lang.Override
-        public int hashCode() {
-            if (memoizedHashCode != 0) {
-                return memoizedHashCode;
-            }
-            int hash = 41;
-            hash = (19 * hash) + getDescriptor().hashCode();
-            hash = (37 * hash) + PLUGIN_ROOT_FIELD_NUMBER;
-            hash = (53 * hash) + getPluginRoot().hashCode();
-            hash = (29 * hash) + getUnknownFields().hashCode();
-            memoizedHashCode = hash;
-            return hash;
-        }
-
-        public static com.kcl.api.Spec.ResetPlugin_Args parseFrom(java.nio.ByteBuffer data)
-                throws com.google.protobuf.InvalidProtocolBufferException {
-            return PARSER.parseFrom(data);
-        }
-
-        public static com.kcl.api.Spec.ResetPlugin_Args parseFrom(java.nio.ByteBuffer data,
-                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-                throws com.google.protobuf.InvalidProtocolBufferException {
-            return PARSER.parseFrom(data, extensionRegistry);
-        }
-
-        public static com.kcl.api.Spec.ResetPlugin_Args parseFrom(com.google.protobuf.ByteString data)
-                throws com.google.protobuf.InvalidProtocolBufferException {
-            return PARSER.parseFrom(data);
-        }
-
-        public static com.kcl.api.Spec.ResetPlugin_Args parseFrom(com.google.protobuf.ByteString data,
-                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-                throws com.google.protobuf.InvalidProtocolBufferException {
-            return PARSER.parseFrom(data, extensionRegistry);
-        }
-
-        public static com.kcl.api.Spec.ResetPlugin_Args parseFrom(byte[] data)
-                throws com.google.protobuf.InvalidProtocolBufferException {
-            return PARSER.parseFrom(data);
-        }
-
-        public static com.kcl.api.Spec.ResetPlugin_Args parseFrom(byte[] data,
-                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-                throws com.google.protobuf.InvalidProtocolBufferException {
-            return PARSER.parseFrom(data, extensionRegistry);
-        }
-
-        public static com.kcl.api.Spec.ResetPlugin_Args parseFrom(java.io.InputStream input)
-                throws java.io.IOException {
-            return com.google.protobuf.GeneratedMessage.parseWithIOException(PARSER, input);
-        }
-
-        public static com.kcl.api.Spec.ResetPlugin_Args parseFrom(java.io.InputStream input,
-                com.google.protobuf.ExtensionRegistryLite extensionRegistry) throws java.io.IOException {
-            return com.google.protobuf.GeneratedMessage.parseWithIOException(PARSER, input, extensionRegistry);
-        }
-
-        public static com.kcl.api.Spec.ResetPlugin_Args parseDelimitedFrom(java.io.InputStream input)
-                throws java.io.IOException {
-            return com.google.protobuf.GeneratedMessage.parseDelimitedWithIOException(PARSER, input);
-        }
-
-        public static com.kcl.api.Spec.ResetPlugin_Args parseDelimitedFrom(java.io.InputStream input,
-                com.google.protobuf.ExtensionRegistryLite extensionRegistry) throws java.io.IOException {
-            return com.google.protobuf.GeneratedMessage.parseDelimitedWithIOException(PARSER, input, extensionRegistry);
-        }
-
-        public static com.kcl.api.Spec.ResetPlugin_Args parseFrom(com.google.protobuf.CodedInputStream input)
-                throws java.io.IOException {
-            return com.google.protobuf.GeneratedMessage.parseWithIOException(PARSER, input);
-        }
-
-        public static com.kcl.api.Spec.ResetPlugin_Args parseFrom(com.google.protobuf.CodedInputStream input,
-                com.google.protobuf.ExtensionRegistryLite extensionRegistry) throws java.io.IOException {
-            return com.google.protobuf.GeneratedMessage.parseWithIOException(PARSER, input, extensionRegistry);
-        }
-
-        @java.lang.Override
-        public Builder newBuilderForType() {
-            return newBuilder();
-        }
-
-        public static Builder newBuilder() {
-            return DEFAULT_INSTANCE.toBuilder();
-        }
-
-        public static Builder newBuilder(com.kcl.api.Spec.ResetPlugin_Args prototype) {
-            return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
-        }
-
-        @java.lang.Override
-        public Builder toBuilder() {
-            return this == DEFAULT_INSTANCE ? new Builder() : new Builder().mergeFrom(this);
-        }
-
-        @java.lang.Override
-        protected Builder newBuilderForType(com.google.protobuf.GeneratedMessage.BuilderParent parent) {
-            Builder builder = new Builder(parent);
-            return builder;
-        }
-
-        /**
-         * <pre>
-         * Message for reset plugin request arguments.
-         * </pre>
-         *
-         * Protobuf type {@code com.kcl.api.ResetPlugin_Args}
-         */
-        public static final class Builder extends com.google.protobuf.GeneratedMessage.Builder<Builder> implements
-                // @@protoc_insertion_point(builder_implements:com.kcl.api.ResetPlugin_Args)
-                com.kcl.api.Spec.ResetPlugin_ArgsOrBuilder {
-            public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
-                return com.kcl.api.Spec.internal_static_com_kcl_api_ResetPlugin_Args_descriptor;
-            }
-
-            @java.lang.Override
-            protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable() {
-                return com.kcl.api.Spec.internal_static_com_kcl_api_ResetPlugin_Args_fieldAccessorTable
-                        .ensureFieldAccessorsInitialized(com.kcl.api.Spec.ResetPlugin_Args.class,
-                                com.kcl.api.Spec.ResetPlugin_Args.Builder.class);
-            }
-
-            // Construct using com.kcl.api.Spec.ResetPlugin_Args.newBuilder()
-            private Builder() {
-
-            }
-
-            private Builder(com.google.protobuf.GeneratedMessage.BuilderParent parent) {
-                super(parent);
-
-            }
-
-            @java.lang.Override
-            public Builder clear() {
-                super.clear();
-                bitField0_ = 0;
-                pluginRoot_ = "";
-                return this;
-            }
-
-            @java.lang.Override
-            public com.google.protobuf.Descriptors.Descriptor getDescriptorForType() {
-                return com.kcl.api.Spec.internal_static_com_kcl_api_ResetPlugin_Args_descriptor;
-            }
-
-            @java.lang.Override
-            public com.kcl.api.Spec.ResetPlugin_Args getDefaultInstanceForType() {
-                return com.kcl.api.Spec.ResetPlugin_Args.getDefaultInstance();
-            }
-
-            @java.lang.Override
-            public com.kcl.api.Spec.ResetPlugin_Args build() {
-                com.kcl.api.Spec.ResetPlugin_Args result = buildPartial();
-                if (!result.isInitialized()) {
-                    throw newUninitializedMessageException(result);
-                }
-                return result;
-            }
-
-            @java.lang.Override
-            public com.kcl.api.Spec.ResetPlugin_Args buildPartial() {
-                com.kcl.api.Spec.ResetPlugin_Args result = new com.kcl.api.Spec.ResetPlugin_Args(this);
-                if (bitField0_ != 0) {
-                    buildPartial0(result);
-                }
-                onBuilt();
-                return result;
-            }
-
-            private void buildPartial0(com.kcl.api.Spec.ResetPlugin_Args result) {
-                int from_bitField0_ = bitField0_;
-                if (((from_bitField0_ & 0x00000001) != 0)) {
-                    result.pluginRoot_ = pluginRoot_;
-                }
-            }
-
-            @java.lang.Override
-            public Builder mergeFrom(com.google.protobuf.Message other) {
-                if (other instanceof com.kcl.api.Spec.ResetPlugin_Args) {
-                    return mergeFrom((com.kcl.api.Spec.ResetPlugin_Args) other);
-                } else {
-                    super.mergeFrom(other);
-                    return this;
-                }
-            }
-
-            public Builder mergeFrom(com.kcl.api.Spec.ResetPlugin_Args other) {
-                if (other == com.kcl.api.Spec.ResetPlugin_Args.getDefaultInstance())
-                    return this;
-                if (!other.getPluginRoot().isEmpty()) {
-                    pluginRoot_ = other.pluginRoot_;
-                    bitField0_ |= 0x00000001;
-                    onChanged();
-                }
-                this.mergeUnknownFields(other.getUnknownFields());
-                onChanged();
-                return this;
-            }
-
-            @java.lang.Override
-            public final boolean isInitialized() {
-                return true;
-            }
-
-            @java.lang.Override
-            public Builder mergeFrom(com.google.protobuf.CodedInputStream input,
-                    com.google.protobuf.ExtensionRegistryLite extensionRegistry) throws java.io.IOException {
-                if (extensionRegistry == null) {
-                    throw new java.lang.NullPointerException();
-                }
-                try {
-                    boolean done = false;
-                    while (!done) {
-                        int tag = input.readTag();
-                        switch (tag) {
-                        case 0:
-                            done = true;
-                            break;
-                        case 10: {
-                            pluginRoot_ = input.readStringRequireUtf8();
-                            bitField0_ |= 0x00000001;
-                            break;
-                        } // case 10
-                        default: {
-                            if (!super.parseUnknownField(input, extensionRegistry, tag)) {
-                                done = true; // was an endgroup tag
-                            }
-                            break;
-                        } // default:
-                        } // switch (tag)
-                    } // while (!done)
-                } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-                    throw e.unwrapIOException();
-                } finally {
-                    onChanged();
-                } // finally
-                return this;
-            }
-
-            private int bitField0_;
-
-            private java.lang.Object pluginRoot_ = "";
-
-            /**
-             * <pre>
-             * Root path for the plugin.
-             * </pre>
-             *
-             * <code>string plugin_root = 1;</code>
-             * 
-             * @return The pluginRoot.
-             */
-            public java.lang.String getPluginRoot() {
-                java.lang.Object ref = pluginRoot_;
-                if (!(ref instanceof java.lang.String)) {
-                    com.google.protobuf.ByteString bs = (com.google.protobuf.ByteString) ref;
-                    java.lang.String s = bs.toStringUtf8();
-                    pluginRoot_ = s;
-                    return s;
-                } else {
-                    return (java.lang.String) ref;
-                }
-            }
-
-            /**
-             * <pre>
-             * Root path for the plugin.
-             * </pre>
-             *
-             * <code>string plugin_root = 1;</code>
-             * 
-             * @return The bytes for pluginRoot.
-             */
-            public com.google.protobuf.ByteString getPluginRootBytes() {
-                java.lang.Object ref = pluginRoot_;
-                if (ref instanceof String) {
-                    com.google.protobuf.ByteString b = com.google.protobuf.ByteString
-                            .copyFromUtf8((java.lang.String) ref);
-                    pluginRoot_ = b;
-                    return b;
-                } else {
-                    return (com.google.protobuf.ByteString) ref;
-                }
-            }
-
-            /**
-             * <pre>
-             * Root path for the plugin.
-             * </pre>
-             *
-             * <code>string plugin_root = 1;</code>
-             * 
-             * @param value
-             *            The pluginRoot to set.
-             * 
-             * @return This builder for chaining.
-             */
-            public Builder setPluginRoot(java.lang.String value) {
-                if (value == null) {
-                    throw new NullPointerException();
-                }
-                pluginRoot_ = value;
-                bitField0_ |= 0x00000001;
-                onChanged();
-                return this;
-            }
-
-            /**
-             * <pre>
-             * Root path for the plugin.
-             * </pre>
-             *
-             * <code>string plugin_root = 1;</code>
-             * 
-             * @return This builder for chaining.
-             */
-            public Builder clearPluginRoot() {
-                pluginRoot_ = getDefaultInstance().getPluginRoot();
-                bitField0_ = (bitField0_ & ~0x00000001);
-                onChanged();
-                return this;
-            }
-
-            /**
-             * <pre>
-             * Root path for the plugin.
-             * </pre>
-             *
-             * <code>string plugin_root = 1;</code>
-             * 
-             * @param value
-             *            The bytes for pluginRoot to set.
-             * 
-             * @return This builder for chaining.
-             */
-            public Builder setPluginRootBytes(com.google.protobuf.ByteString value) {
-                if (value == null) {
-                    throw new NullPointerException();
-                }
-                checkByteStringIsUtf8(value);
-                pluginRoot_ = value;
-                bitField0_ |= 0x00000001;
-                onChanged();
-                return this;
-            }
-
-            // @@protoc_insertion_point(builder_scope:com.kcl.api.ResetPlugin_Args)
-        }
-
-        // @@protoc_insertion_point(class_scope:com.kcl.api.ResetPlugin_Args)
-        private static final com.kcl.api.Spec.ResetPlugin_Args DEFAULT_INSTANCE;
-        static {
-            DEFAULT_INSTANCE = new com.kcl.api.Spec.ResetPlugin_Args();
-        }
-
-        public static com.kcl.api.Spec.ResetPlugin_Args getDefaultInstance() {
-            return DEFAULT_INSTANCE;
-        }
-
-        private static final com.google.protobuf.Parser<ResetPlugin_Args> PARSER = new com.google.protobuf.AbstractParser<ResetPlugin_Args>() {
-            @java.lang.Override
-            public ResetPlugin_Args parsePartialFrom(com.google.protobuf.CodedInputStream input,
-                    com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-                    throws com.google.protobuf.InvalidProtocolBufferException {
-                Builder builder = newBuilder();
-                try {
-                    builder.mergeFrom(input, extensionRegistry);
-                } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-                    throw e.setUnfinishedMessage(builder.buildPartial());
-                } catch (com.google.protobuf.UninitializedMessageException e) {
-                    throw e.asInvalidProtocolBufferException().setUnfinishedMessage(builder.buildPartial());
-                } catch (java.io.IOException e) {
-                    throw new com.google.protobuf.InvalidProtocolBufferException(e)
-                            .setUnfinishedMessage(builder.buildPartial());
-                }
-                return builder.buildPartial();
-            }
-        };
-
-        public static com.google.protobuf.Parser<ResetPlugin_Args> parser() {
-            return PARSER;
-        }
-
-        @java.lang.Override
-        public com.google.protobuf.Parser<ResetPlugin_Args> getParserForType() {
-            return PARSER;
-        }
-
-        @java.lang.Override
-        public com.kcl.api.Spec.ResetPlugin_Args getDefaultInstanceForType() {
-            return DEFAULT_INSTANCE;
-        }
-
-    }
-
-    public interface ResetPlugin_ResultOrBuilder extends
-            // @@protoc_insertion_point(interface_extends:com.kcl.api.ResetPlugin_Result)
-            com.google.protobuf.MessageOrBuilder {
-    }
-
-    /**
-     * <pre>
-     * Message for reset plugin response. Empty message.
-     * </pre>
-     *
-     * Protobuf type {@code com.kcl.api.ResetPlugin_Result}
-     */
-    public static final class ResetPlugin_Result extends com.google.protobuf.GeneratedMessage implements
-            // @@protoc_insertion_point(message_implements:com.kcl.api.ResetPlugin_Result)
-            ResetPlugin_ResultOrBuilder {
-        private static final long serialVersionUID = 0L;
-        static {
-            com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
-                    com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC, /* major= */ 4, /* minor= */ 27,
-                    /* patch= */ 0, /* suffix= */ "", ResetPlugin_Result.class.getName());
-        }
-
-        // Use ResetPlugin_Result.newBuilder() to construct.
-        private ResetPlugin_Result(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
-            super(builder);
-        }
-
-        private ResetPlugin_Result() {
-        }
-
-        public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
-            return com.kcl.api.Spec.internal_static_com_kcl_api_ResetPlugin_Result_descriptor;
-        }
-
-        @java.lang.Override
-        protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable() {
-            return com.kcl.api.Spec.internal_static_com_kcl_api_ResetPlugin_Result_fieldAccessorTable
-                    .ensureFieldAccessorsInitialized(com.kcl.api.Spec.ResetPlugin_Result.class,
-                            com.kcl.api.Spec.ResetPlugin_Result.Builder.class);
-        }
-
-        private byte memoizedIsInitialized = -1;
-
-        @java.lang.Override
-        public final boolean isInitialized() {
-            byte isInitialized = memoizedIsInitialized;
-            if (isInitialized == 1)
-                return true;
-            if (isInitialized == 0)
-                return false;
-
-            memoizedIsInitialized = 1;
-            return true;
-        }
-
-        @java.lang.Override
-        public void writeTo(com.google.protobuf.CodedOutputStream output) throws java.io.IOException {
-            getUnknownFields().writeTo(output);
-        }
-
-        @java.lang.Override
-        public int getSerializedSize() {
-            int size = memoizedSize;
-            if (size != -1)
-                return size;
-
-            size = 0;
-            size += getUnknownFields().getSerializedSize();
-            memoizedSize = size;
-            return size;
-        }
-
-        @java.lang.Override
-        public boolean equals(final java.lang.Object obj) {
-            if (obj == this) {
-                return true;
-            }
-            if (!(obj instanceof com.kcl.api.Spec.ResetPlugin_Result)) {
-                return super.equals(obj);
-            }
-            com.kcl.api.Spec.ResetPlugin_Result other = (com.kcl.api.Spec.ResetPlugin_Result) obj;
-
-            if (!getUnknownFields().equals(other.getUnknownFields()))
-                return false;
-            return true;
-        }
-
-        @java.lang.Override
-        public int hashCode() {
-            if (memoizedHashCode != 0) {
-                return memoizedHashCode;
-            }
-            int hash = 41;
-            hash = (19 * hash) + getDescriptor().hashCode();
-            hash = (29 * hash) + getUnknownFields().hashCode();
-            memoizedHashCode = hash;
-            return hash;
-        }
-
-        public static com.kcl.api.Spec.ResetPlugin_Result parseFrom(java.nio.ByteBuffer data)
-                throws com.google.protobuf.InvalidProtocolBufferException {
-            return PARSER.parseFrom(data);
-        }
-
-        public static com.kcl.api.Spec.ResetPlugin_Result parseFrom(java.nio.ByteBuffer data,
-                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-                throws com.google.protobuf.InvalidProtocolBufferException {
-            return PARSER.parseFrom(data, extensionRegistry);
-        }
-
-        public static com.kcl.api.Spec.ResetPlugin_Result parseFrom(com.google.protobuf.ByteString data)
-                throws com.google.protobuf.InvalidProtocolBufferException {
-            return PARSER.parseFrom(data);
-        }
-
-        public static com.kcl.api.Spec.ResetPlugin_Result parseFrom(com.google.protobuf.ByteString data,
-                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-                throws com.google.protobuf.InvalidProtocolBufferException {
-            return PARSER.parseFrom(data, extensionRegistry);
-        }
-
-        public static com.kcl.api.Spec.ResetPlugin_Result parseFrom(byte[] data)
-                throws com.google.protobuf.InvalidProtocolBufferException {
-            return PARSER.parseFrom(data);
-        }
-
-        public static com.kcl.api.Spec.ResetPlugin_Result parseFrom(byte[] data,
-                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-                throws com.google.protobuf.InvalidProtocolBufferException {
-            return PARSER.parseFrom(data, extensionRegistry);
-        }
-
-        public static com.kcl.api.Spec.ResetPlugin_Result parseFrom(java.io.InputStream input)
-                throws java.io.IOException {
-            return com.google.protobuf.GeneratedMessage.parseWithIOException(PARSER, input);
-        }
-
-        public static com.kcl.api.Spec.ResetPlugin_Result parseFrom(java.io.InputStream input,
-                com.google.protobuf.ExtensionRegistryLite extensionRegistry) throws java.io.IOException {
-            return com.google.protobuf.GeneratedMessage.parseWithIOException(PARSER, input, extensionRegistry);
-        }
-
-        public static com.kcl.api.Spec.ResetPlugin_Result parseDelimitedFrom(java.io.InputStream input)
-                throws java.io.IOException {
-            return com.google.protobuf.GeneratedMessage.parseDelimitedWithIOException(PARSER, input);
-        }
-
-        public static com.kcl.api.Spec.ResetPlugin_Result parseDelimitedFrom(java.io.InputStream input,
-                com.google.protobuf.ExtensionRegistryLite extensionRegistry) throws java.io.IOException {
-            return com.google.protobuf.GeneratedMessage.parseDelimitedWithIOException(PARSER, input, extensionRegistry);
-        }
-
-        public static com.kcl.api.Spec.ResetPlugin_Result parseFrom(com.google.protobuf.CodedInputStream input)
-                throws java.io.IOException {
-            return com.google.protobuf.GeneratedMessage.parseWithIOException(PARSER, input);
-        }
-
-        public static com.kcl.api.Spec.ResetPlugin_Result parseFrom(com.google.protobuf.CodedInputStream input,
-                com.google.protobuf.ExtensionRegistryLite extensionRegistry) throws java.io.IOException {
-            return com.google.protobuf.GeneratedMessage.parseWithIOException(PARSER, input, extensionRegistry);
-        }
-
-        @java.lang.Override
-        public Builder newBuilderForType() {
-            return newBuilder();
-        }
-
-        public static Builder newBuilder() {
-            return DEFAULT_INSTANCE.toBuilder();
-        }
-
-        public static Builder newBuilder(com.kcl.api.Spec.ResetPlugin_Result prototype) {
-            return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
-        }
-
-        @java.lang.Override
-        public Builder toBuilder() {
-            return this == DEFAULT_INSTANCE ? new Builder() : new Builder().mergeFrom(this);
-        }
-
-        @java.lang.Override
-        protected Builder newBuilderForType(com.google.protobuf.GeneratedMessage.BuilderParent parent) {
-            Builder builder = new Builder(parent);
-            return builder;
-        }
-
-        /**
-         * <pre>
-         * Message for reset plugin response. Empty message.
-         * </pre>
-         *
-         * Protobuf type {@code com.kcl.api.ResetPlugin_Result}
-         */
-        public static final class Builder extends com.google.protobuf.GeneratedMessage.Builder<Builder> implements
-                // @@protoc_insertion_point(builder_implements:com.kcl.api.ResetPlugin_Result)
-                com.kcl.api.Spec.ResetPlugin_ResultOrBuilder {
-            public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
-                return com.kcl.api.Spec.internal_static_com_kcl_api_ResetPlugin_Result_descriptor;
-            }
-
-            @java.lang.Override
-            protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable() {
-                return com.kcl.api.Spec.internal_static_com_kcl_api_ResetPlugin_Result_fieldAccessorTable
-                        .ensureFieldAccessorsInitialized(com.kcl.api.Spec.ResetPlugin_Result.class,
-                                com.kcl.api.Spec.ResetPlugin_Result.Builder.class);
-            }
-
-            // Construct using com.kcl.api.Spec.ResetPlugin_Result.newBuilder()
-            private Builder() {
-
-            }
-
-            private Builder(com.google.protobuf.GeneratedMessage.BuilderParent parent) {
-                super(parent);
-
-            }
-
-            @java.lang.Override
-            public Builder clear() {
-                super.clear();
-                return this;
-            }
-
-            @java.lang.Override
-            public com.google.protobuf.Descriptors.Descriptor getDescriptorForType() {
-                return com.kcl.api.Spec.internal_static_com_kcl_api_ResetPlugin_Result_descriptor;
-            }
-
-            @java.lang.Override
-            public com.kcl.api.Spec.ResetPlugin_Result getDefaultInstanceForType() {
-                return com.kcl.api.Spec.ResetPlugin_Result.getDefaultInstance();
-            }
-
-            @java.lang.Override
-            public com.kcl.api.Spec.ResetPlugin_Result build() {
-                com.kcl.api.Spec.ResetPlugin_Result result = buildPartial();
-                if (!result.isInitialized()) {
-                    throw newUninitializedMessageException(result);
-                }
-                return result;
-            }
-
-            @java.lang.Override
-            public com.kcl.api.Spec.ResetPlugin_Result buildPartial() {
-                com.kcl.api.Spec.ResetPlugin_Result result = new com.kcl.api.Spec.ResetPlugin_Result(this);
-                onBuilt();
-                return result;
-            }
-
-            @java.lang.Override
-            public Builder mergeFrom(com.google.protobuf.Message other) {
-                if (other instanceof com.kcl.api.Spec.ResetPlugin_Result) {
-                    return mergeFrom((com.kcl.api.Spec.ResetPlugin_Result) other);
-                } else {
-                    super.mergeFrom(other);
-                    return this;
-                }
-            }
-
-            public Builder mergeFrom(com.kcl.api.Spec.ResetPlugin_Result other) {
-                if (other == com.kcl.api.Spec.ResetPlugin_Result.getDefaultInstance())
-                    return this;
-                this.mergeUnknownFields(other.getUnknownFields());
-                onChanged();
-                return this;
-            }
-
-            @java.lang.Override
-            public final boolean isInitialized() {
-                return true;
-            }
-
-            @java.lang.Override
-            public Builder mergeFrom(com.google.protobuf.CodedInputStream input,
-                    com.google.protobuf.ExtensionRegistryLite extensionRegistry) throws java.io.IOException {
-                if (extensionRegistry == null) {
-                    throw new java.lang.NullPointerException();
-                }
-                try {
-                    boolean done = false;
-                    while (!done) {
-                        int tag = input.readTag();
-                        switch (tag) {
-                        case 0:
-                            done = true;
-                            break;
-                        default: {
-                            if (!super.parseUnknownField(input, extensionRegistry, tag)) {
-                                done = true; // was an endgroup tag
-                            }
-                            break;
-                        } // default:
-                        } // switch (tag)
-                    } // while (!done)
-                } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-                    throw e.unwrapIOException();
-                } finally {
-                    onChanged();
-                } // finally
-                return this;
-            }
-
-            // @@protoc_insertion_point(builder_scope:com.kcl.api.ResetPlugin_Result)
-        }
-
-        // @@protoc_insertion_point(class_scope:com.kcl.api.ResetPlugin_Result)
-        private static final com.kcl.api.Spec.ResetPlugin_Result DEFAULT_INSTANCE;
-        static {
-            DEFAULT_INSTANCE = new com.kcl.api.Spec.ResetPlugin_Result();
-        }
-
-        public static com.kcl.api.Spec.ResetPlugin_Result getDefaultInstance() {
-            return DEFAULT_INSTANCE;
-        }
-
-        private static final com.google.protobuf.Parser<ResetPlugin_Result> PARSER = new com.google.protobuf.AbstractParser<ResetPlugin_Result>() {
-            @java.lang.Override
-            public ResetPlugin_Result parsePartialFrom(com.google.protobuf.CodedInputStream input,
-                    com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-                    throws com.google.protobuf.InvalidProtocolBufferException {
-                Builder builder = newBuilder();
-                try {
-                    builder.mergeFrom(input, extensionRegistry);
-                } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-                    throw e.setUnfinishedMessage(builder.buildPartial());
-                } catch (com.google.protobuf.UninitializedMessageException e) {
-                    throw e.asInvalidProtocolBufferException().setUnfinishedMessage(builder.buildPartial());
-                } catch (java.io.IOException e) {
-                    throw new com.google.protobuf.InvalidProtocolBufferException(e)
-                            .setUnfinishedMessage(builder.buildPartial());
-                }
-                return builder.buildPartial();
-            }
-        };
-
-        public static com.google.protobuf.Parser<ResetPlugin_Result> parser() {
-            return PARSER;
-        }
-
-        @java.lang.Override
-        public com.google.protobuf.Parser<ResetPlugin_Result> getParserForType() {
-            return PARSER;
-        }
-
-        @java.lang.Override
-        public com.kcl.api.Spec.ResetPlugin_Result getDefaultInstanceForType() {
-            return DEFAULT_INSTANCE;
-        }
-
-    }
-
     public interface FormatCode_ArgsOrBuilder extends
             // @@protoc_insertion_point(interface_extends:com.kcl.api.FormatCode_Args)
             com.google.protobuf.MessageOrBuilder {
@@ -74331,10 +73420,6 @@ public final class Spec {
     private static final com.google.protobuf.GeneratedMessage.FieldAccessorTable internal_static_com_kcl_api_BuildProgram_Result_fieldAccessorTable;
     private static final com.google.protobuf.Descriptors.Descriptor internal_static_com_kcl_api_ExecArtifact_Args_descriptor;
     private static final com.google.protobuf.GeneratedMessage.FieldAccessorTable internal_static_com_kcl_api_ExecArtifact_Args_fieldAccessorTable;
-    private static final com.google.protobuf.Descriptors.Descriptor internal_static_com_kcl_api_ResetPlugin_Args_descriptor;
-    private static final com.google.protobuf.GeneratedMessage.FieldAccessorTable internal_static_com_kcl_api_ResetPlugin_Args_fieldAccessorTable;
-    private static final com.google.protobuf.Descriptors.Descriptor internal_static_com_kcl_api_ResetPlugin_Result_descriptor;
-    private static final com.google.protobuf.GeneratedMessage.FieldAccessorTable internal_static_com_kcl_api_ResetPlugin_Result_fieldAccessorTable;
     private static final com.google.protobuf.Descriptors.Descriptor internal_static_com_kcl_api_FormatCode_Args_descriptor;
     private static final com.google.protobuf.GeneratedMessage.FieldAccessorTable internal_static_com_kcl_api_FormatCode_Args_fieldAccessorTable;
     private static final com.google.protobuf.Descriptors.Descriptor internal_static_com_kcl_api_FormatCode_Result_descriptor;
@@ -74515,148 +73600,148 @@ public final class Spec {
                 + "Args\022\016\n\006output\030\002 \001(\t\"#\n\023BuildProgram_Res"
                 + "ult\022\014\n\004path\030\001 \001(\t\"S\n\021ExecArtifact_Args\022\014"
                 + "\n\004path\030\001 \001(\t\0220\n\texec_args\030\002 \001(\0132\035.com.kc"
-                + "l.api.ExecProgram_Args\"\'\n\020ResetPlugin_Ar"
-                + "gs\022\023\n\013plugin_root\030\001 \001(\t\"\024\n\022ResetPlugin_R"
-                + "esult\"!\n\017FormatCode_Args\022\016\n\006source\030\001 \001(\t"
-                + "\"&\n\021FormatCode_Result\022\021\n\tformatted\030\001 \001(\014"
-                + "\"\037\n\017FormatPath_Args\022\014\n\004path\030\001 \001(\t\"*\n\021For"
-                + "matPath_Result\022\025\n\rchanged_paths\030\001 \003(\t\"\036\n"
-                + "\rLintPath_Args\022\r\n\005paths\030\001 \003(\t\"\"\n\017LintPat"
-                + "h_Result\022\017\n\007results\030\001 \003(\t\"F\n\021OverrideFil"
-                + "e_Args\022\014\n\004file\030\001 \001(\t\022\r\n\005specs\030\002 \003(\t\022\024\n\014i"
-                + "mport_paths\030\003 \003(\t\"O\n\023OverrideFile_Result"
-                + "\022\016\n\006result\030\001 \001(\010\022(\n\014parse_errors\030\002 \003(\0132\022"
-                + ".com.kcl.api.Error\".\n\025ListVariables_Opti"
-                + "ons\022\025\n\rmerge_program\030\001 \001(\010\"8\n\014VariableLi"
-                + "st\022(\n\tvariables\030\001 \003(\0132\025.com.kcl.api.Vari"
-                + "able\"g\n\022ListVariables_Args\022\r\n\005files\030\001 \003("
-                + "\t\022\r\n\005specs\030\002 \003(\t\0223\n\007options\030\003 \001(\0132\".com."
-                + "kcl.api.ListVariables_Options\"\355\001\n\024ListVa"
-                + "riables_Result\022C\n\tvariables\030\001 \003(\01320.com."
-                + "kcl.api.ListVariables_Result.VariablesEn"
-                + "try\022\031\n\021unsupported_codes\030\002 \003(\t\022(\n\014parse_"
-                + "errors\030\003 \003(\0132\022.com.kcl.api.Error\032K\n\016Vari"
-                + "ablesEntry\022\013\n\003key\030\001 \001(\t\022(\n\005value\030\002 \001(\0132\031"
-                + ".com.kcl.api.VariableList:\0028\001\"\224\001\n\010Variab"
-                + "le\022\r\n\005value\030\001 \001(\t\022\021\n\ttype_name\030\002 \001(\t\022\016\n\006"
-                + "op_sym\030\003 \001(\t\022)\n\nlist_items\030\004 \003(\0132\025.com.k"
-                + "cl.api.Variable\022+\n\014dict_entries\030\005 \003(\0132\025."
-                + "com.kcl.api.MapEntry\"=\n\010MapEntry\022\013\n\003key\030"
-                + "\001 \001(\t\022$\n\005value\030\002 \001(\0132\025.com.kcl.api.Varia"
-                + "ble\"b\n\031GetSchemaTypeMapping_Args\0220\n\texec"
-                + "_args\030\001 \001(\0132\035.com.kcl.api.ExecProgram_Ar"
-                + "gs\022\023\n\013schema_name\030\002 \001(\t\"\313\001\n\033GetSchemaTyp"
-                + "eMapping_Result\022\\\n\023schema_type_mapping\030\001"
-                + " \003(\0132?.com.kcl.api.GetSchemaTypeMapping_" + "Result.SchemaTypeMappingEntry\032N\n\026SchemaT"
-                + "ypeMappingEntry\022\013\n\003key\030\001 \001(\t\022#\n\005value\030\002 "
-                + "\001(\0132\024.com.kcl.api.KclType:\0028\001\"\207\001\n\021Valida"
-                + "teCode_Args\022\020\n\010datafile\030\001 \001(\t\022\014\n\004data\030\002 "
-                + "\001(\t\022\014\n\004file\030\003 \001(\t\022\014\n\004code\030\004 \001(\t\022\016\n\006schem"
-                + "a\030\005 \001(\t\022\026\n\016attribute_name\030\006 \001(\t\022\016\n\006forma"
-                + "t\030\007 \001(\t\";\n\023ValidateCode_Result\022\017\n\007succes"
-                + "s\030\001 \001(\010\022\023\n\013err_message\030\002 \001(\t\":\n\010Position"
-                + "\022\014\n\004line\030\001 \001(\003\022\016\n\006column\030\002 \001(\003\022\020\n\010filena"
-                + "me\030\003 \001(\t\"i\n\021ListDepFiles_Args\022\020\n\010work_di"
-                + "r\030\001 \001(\t\022\024\n\014use_abs_path\030\002 \001(\010\022\023\n\013include"
-                + "_all\030\003 \001(\010\022\027\n\017use_fast_parser\030\004 \001(\010\"F\n\023L"
-                + "istDepFiles_Result\022\017\n\007pkgroot\030\001 \001(\t\022\017\n\007p"
-                + "kgpath\030\002 \001(\t\022\r\n\005files\030\003 \003(\t\"9\n\026LoadSetti"
-                + "ngsFiles_Args\022\020\n\010work_dir\030\001 \001(\t\022\r\n\005files"
-                + "\030\002 \003(\t\"{\n\030LoadSettingsFiles_Result\022/\n\017kc"
-                + "l_cli_configs\030\001 \001(\0132\026.com.kcl.api.CliCon"
-                + "fig\022.\n\013kcl_options\030\002 \003(\0132\031.com.kcl.api.K"
-                + "eyValuePair\"\203\002\n\tCliConfig\022\r\n\005files\030\001 \003(\t"
-                + "\022\016\n\006output\030\002 \001(\t\022\021\n\toverrides\030\003 \003(\t\022\025\n\rp"
-                + "ath_selector\030\004 \003(\t\022\032\n\022strict_range_check"
-                + "\030\005 \001(\010\022\024\n\014disable_none\030\006 \001(\010\022\017\n\007verbose\030"
-                + "\007 \001(\003\022\r\n\005debug\030\010 \001(\010\022\021\n\tsort_keys\030\t \001(\010\022"
-                + "\023\n\013show_hidden\030\n \001(\010\022 \n\030include_schema_t"
-                + "ype_path\030\013 \001(\010\022\021\n\tfast_eval\030\014 \001(\010\"*\n\014Key"
-                + "ValuePair\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t\"^\n"
-                + "\013Rename_Args\022\024\n\014package_root\030\001 \001(\t\022\023\n\013sy"
-                + "mbol_path\030\002 \001(\t\022\022\n\nfile_paths\030\003 \003(\t\022\020\n\010n"
-                + "ew_name\030\004 \001(\t\"&\n\rRename_Result\022\025\n\rchange"
-                + "d_files\030\001 \003(\t\"\307\001\n\017RenameCode_Args\022\024\n\014pac"
-                + "kage_root\030\001 \001(\t\022\023\n\013symbol_path\030\002 \001(\t\022C\n\014"
-                + "source_codes\030\003 \003(\0132-.com.kcl.api.RenameC"
-                + "ode_Args.SourceCodesEntry\022\020\n\010new_name\030\004 "
-                + "\001(\t\0322\n\020SourceCodesEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005"
-                + "value\030\002 \001(\t:\0028\001\"\221\001\n\021RenameCode_Result\022G\n"
-                + "\rchanged_codes\030\001 \003(\01320.com.kcl.api.Renam"
-                + "eCode_Result.ChangedCodesEntry\0323\n\021Change"
-                + "dCodesEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:"
-                + "\0028\001\"v\n\tTest_Args\0220\n\texec_args\030\001 \001(\0132\035.co"
-                + "m.kcl.api.ExecProgram_Args\022\020\n\010pkg_list\030\002"
-                + " \003(\t\022\022\n\nrun_regexp\030\003 \001(\t\022\021\n\tfail_fast\030\004 "
-                + "\001(\010\"6\n\013Test_Result\022\'\n\004info\030\002 \003(\0132\031.com.k"
-                + "cl.api.TestCaseInfo\"R\n\014TestCaseInfo\022\014\n\004n"
-                + "ame\030\001 \001(\t\022\r\n\005error\030\002 \001(\t\022\020\n\010duration\030\003 \001"
-                + "(\004\022\023\n\013log_message\030\004 \001(\t\"@\n\027UpdateDepende"
-                + "ncies_Args\022\025\n\rmanifest_path\030\001 \001(\t\022\016\n\006ven"
-                + "dor\030\002 \001(\010\"L\n\031UpdateDependencies_Result\022/"
-                + "\n\rexternal_pkgs\030\003 \003(\0132\030.com.kcl.api.Exte"
-                + "rnalPkg\"\363\004\n\007KclType\022\014\n\004type\030\001 \001(\t\022)\n\013uni"
-                + "on_types\030\002 \003(\0132\024.com.kcl.api.KclType\022\017\n\007"
-                + "default\030\003 \001(\t\022\023\n\013schema_name\030\004 \001(\t\022\022\n\nsc"
-                + "hema_doc\030\005 \001(\t\0228\n\nproperties\030\006 \003(\0132$.com"
-                + ".kcl.api.KclType.PropertiesEntry\022\020\n\010requ"
-                + "ired\030\007 \003(\t\022!\n\003key\030\010 \001(\0132\024.com.kcl.api.Kc"
-                + "lType\022\"\n\004item\030\t \001(\0132\024.com.kcl.api.KclTyp"
-                + "e\022\014\n\004line\030\n \001(\005\022*\n\ndecorators\030\013 \003(\0132\026.co"
-                + "m.kcl.api.Decorator\022\020\n\010filename\030\014 \001(\t\022\020\n"
-                + "\010pkg_path\030\r \001(\t\022\023\n\013description\030\016 \001(\t\0224\n\010"
-                + "examples\030\017 \003(\0132\".com.kcl.api.KclType.Exa"
-                + "mplesEntry\022)\n\013base_schema\030\020 \001(\0132\024.com.kc"
-                + "l.api.KclType\032G\n\017PropertiesEntry\022\013\n\003key\030"
+                + "l.api.ExecProgram_Args\"!\n\017FormatCode_Arg"
+                + "s\022\016\n\006source\030\001 \001(\t\"&\n\021FormatCode_Result\022\021"
+                + "\n\tformatted\030\001 \001(\014\"\037\n\017FormatPath_Args\022\014\n\004"
+                + "path\030\001 \001(\t\"*\n\021FormatPath_Result\022\025\n\rchang"
+                + "ed_paths\030\001 \003(\t\"\036\n\rLintPath_Args\022\r\n\005paths"
+                + "\030\001 \003(\t\"\"\n\017LintPath_Result\022\017\n\007results\030\001 \003"
+                + "(\t\"F\n\021OverrideFile_Args\022\014\n\004file\030\001 \001(\t\022\r\n"
+                + "\005specs\030\002 \003(\t\022\024\n\014import_paths\030\003 \003(\t\"O\n\023Ov"
+                + "errideFile_Result\022\016\n\006result\030\001 \001(\010\022(\n\014par"
+                + "se_errors\030\002 \003(\0132\022.com.kcl.api.Error\".\n\025L"
+                + "istVariables_Options\022\025\n\rmerge_program\030\001 "
+                + "\001(\010\"8\n\014VariableList\022(\n\tvariables\030\001 \003(\0132\025"
+                + ".com.kcl.api.Variable\"g\n\022ListVariables_A"
+                + "rgs\022\r\n\005files\030\001 \003(\t\022\r\n\005specs\030\002 \003(\t\0223\n\007opt"
+                + "ions\030\003 \001(\0132\".com.kcl.api.ListVariables_O"
+                + "ptions\"\355\001\n\024ListVariables_Result\022C\n\tvaria"
+                + "bles\030\001 \003(\01320.com.kcl.api.ListVariables_R"
+                + "esult.VariablesEntry\022\031\n\021unsupported_code"
+                + "s\030\002 \003(\t\022(\n\014parse_errors\030\003 \003(\0132\022.com.kcl."
+                + "api.Error\032K\n\016VariablesEntry\022\013\n\003key\030\001 \001(\t"
+                + "\022(\n\005value\030\002 \001(\0132\031.com.kcl.api.VariableLi"
+                + "st:\0028\001\"\224\001\n\010Variable\022\r\n\005value\030\001 \001(\t\022\021\n\tty"
+                + "pe_name\030\002 \001(\t\022\016\n\006op_sym\030\003 \001(\t\022)\n\nlist_it"
+                + "ems\030\004 \003(\0132\025.com.kcl.api.Variable\022+\n\014dict"
+                + "_entries\030\005 \003(\0132\025.com.kcl.api.MapEntry\"=\n"
+                + "\010MapEntry\022\013\n\003key\030\001 \001(\t\022$\n\005value\030\002 \001(\0132\025."
+                + "com.kcl.api.Variable\"b\n\031GetSchemaTypeMap"
+                + "ping_Args\0220\n\texec_args\030\001 \001(\0132\035.com.kcl.a"
+                + "pi.ExecProgram_Args\022\023\n\013schema_name\030\002 \001(\t"
+                + "\"\313\001\n\033GetSchemaTypeMapping_Result\022\\\n\023sche"
+                + "ma_type_mapping\030\001 \003(\0132?.com.kcl.api.GetS" + "chemaTypeMapping_Result.SchemaTypeMappin"
+                + "gEntry\032N\n\026SchemaTypeMappingEntry\022\013\n\003key\030"
                 + "\001 \001(\t\022#\n\005value\030\002 \001(\0132\024.com.kcl.api.KclTy"
-                + "pe:\0028\001\032E\n\rExamplesEntry\022\013\n\003key\030\001 \001(\t\022#\n\005"
-                + "value\030\002 \001(\0132\024.com.kcl.api.Example:\0028\001\"\225\001"
-                + "\n\tDecorator\022\014\n\004name\030\001 \001(\t\022\021\n\targuments\030\002"
-                + " \003(\t\0226\n\010keywords\030\003 \003(\0132$.com.kcl.api.Dec"
-                + "orator.KeywordsEntry\032/\n\rKeywordsEntry\022\013\n"
-                + "\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\">\n\007Example"
-                + "\022\017\n\007summary\030\001 \001(\t\022\023\n\013description\030\002 \001(\t\022\r"
-                + "\n\005value\030\003 \001(\t2\226\001\n\016BuiltinService\0228\n\004Ping"
-                + "\022\026.com.kcl.api.Ping_Args\032\030.com.kcl.api.P"
-                + "ing_Result\022J\n\nListMethod\022\034.com.kcl.api.L"
-                + "istMethod_Args\032\036.com.kcl.api.ListMethod_"
-                + "Result2\336\r\n\014KclvmService\0228\n\004Ping\022\026.com.kc"
-                + "l.api.Ping_Args\032\030.com.kcl.api.Ping_Resul"
-                + "t\022J\n\nGetVersion\022\034.com.kcl.api.GetVersion"
-                + "_Args\032\036.com.kcl.api.GetVersion_Result\022P\n"
-                + "\014ParseProgram\022\036.com.kcl.api.ParseProgram" + "_Args\032 .com.kcl.api.ParseProgram_Result\022"
-                + "G\n\tParseFile\022\033.com.kcl.api.ParseFile_Arg"
-                + "s\032\035.com.kcl.api.ParseFile_Result\022M\n\013Load"
-                + "Package\022\035.com.kcl.api.LoadPackage_Args\032\037"
-                + ".com.kcl.api.LoadPackage_Result\022N\n\013ListO"
-                + "ptions\022\036.com.kcl.api.ParseProgram_Args\032\037"
-                + ".com.kcl.api.ListOptions_Result\022S\n\rListV" + "ariables\022\037.com.kcl.api.ListVariables_Arg"
-                + "s\032!.com.kcl.api.ListVariables_Result\022M\n\013"
-                + "ExecProgram\022\035.com.kcl.api.ExecProgram_Ar"
-                + "gs\032\037.com.kcl.api.ExecProgram_Result\022P\n\014B"
-                + "uildProgram\022\036.com.kcl.api.BuildProgram_A" + "rgs\032 .com.kcl.api.BuildProgram_Result\022O\n"
-                + "\014ExecArtifact\022\036.com.kcl.api.ExecArtifact"
-                + "_Args\032\037.com.kcl.api.ExecProgram_Result\022P"
-                + "\n\014OverrideFile\022\036.com.kcl.api.OverrideFil" + "e_Args\032 .com.kcl.api.OverrideFile_Result"
-                + "\022h\n\024GetSchemaTypeMapping\022&.com.kcl.api.G" + "etSchemaTypeMapping_Args\032(.com.kcl.api.G"
-                + "etSchemaTypeMapping_Result\022J\n\nFormatCode"
-                + "\022\034.com.kcl.api.FormatCode_Args\032\036.com.kcl"
-                + ".api.FormatCode_Result\022J\n\nFormatPath\022\034.c"
-                + "om.kcl.api.FormatPath_Args\032\036.com.kcl.api"
-                + ".FormatPath_Result\022D\n\010LintPath\022\032.com.kcl"
-                + ".api.LintPath_Args\032\034.com.kcl.api.LintPat"
-                + "h_Result\022P\n\014ValidateCode\022\036.com.kcl.api.V"
-                + "alidateCode_Args\032 .com.kcl.api.ValidateC"
-                + "ode_Result\022P\n\014ListDepFiles\022\036.com.kcl.api"
-                + ".ListDepFiles_Args\032 .com.kcl.api.ListDep" + "Files_Result\022_\n\021LoadSettingsFiles\022#.com."
-                + "kcl.api.LoadSettingsFiles_Args\032%.com.kcl" + ".api.LoadSettingsFiles_Result\022>\n\006Rename\022"
-                + "\030.com.kcl.api.Rename_Args\032\032.com.kcl.api."
-                + "Rename_Result\022J\n\nRenameCode\022\034.com.kcl.ap"
-                + "i.RenameCode_Args\032\036.com.kcl.api.RenameCo"
-                + "de_Result\0228\n\004Test\022\026.com.kcl.api.Test_Arg"
-                + "s\032\030.com.kcl.api.Test_Result\022b\n\022UpdateDep"
-                + "endencies\022$.com.kcl.api.UpdateDependenci" + "es_Args\032&.com.kcl.api.UpdateDependencies"
-                + "_ResultB\024Z\005.;lib\252\002\nKclLib.APIb\006proto3" };
+                + "pe:\0028\001\"\207\001\n\021ValidateCode_Args\022\020\n\010datafile"
+                + "\030\001 \001(\t\022\014\n\004data\030\002 \001(\t\022\014\n\004file\030\003 \001(\t\022\014\n\004co"
+                + "de\030\004 \001(\t\022\016\n\006schema\030\005 \001(\t\022\026\n\016attribute_na"
+                + "me\030\006 \001(\t\022\016\n\006format\030\007 \001(\t\";\n\023ValidateCode"
+                + "_Result\022\017\n\007success\030\001 \001(\010\022\023\n\013err_message\030"
+                + "\002 \001(\t\":\n\010Position\022\014\n\004line\030\001 \001(\003\022\016\n\006colum"
+                + "n\030\002 \001(\003\022\020\n\010filename\030\003 \001(\t\"i\n\021ListDepFile"
+                + "s_Args\022\020\n\010work_dir\030\001 \001(\t\022\024\n\014use_abs_path"
+                + "\030\002 \001(\010\022\023\n\013include_all\030\003 \001(\010\022\027\n\017use_fast_"
+                + "parser\030\004 \001(\010\"F\n\023ListDepFiles_Result\022\017\n\007p"
+                + "kgroot\030\001 \001(\t\022\017\n\007pkgpath\030\002 \001(\t\022\r\n\005files\030\003"
+                + " \003(\t\"9\n\026LoadSettingsFiles_Args\022\020\n\010work_d"
+                + "ir\030\001 \001(\t\022\r\n\005files\030\002 \003(\t\"{\n\030LoadSettingsF"
+                + "iles_Result\022/\n\017kcl_cli_configs\030\001 \001(\0132\026.c"
+                + "om.kcl.api.CliConfig\022.\n\013kcl_options\030\002 \003("
+                + "\0132\031.com.kcl.api.KeyValuePair\"\203\002\n\tCliConf"
+                + "ig\022\r\n\005files\030\001 \003(\t\022\016\n\006output\030\002 \001(\t\022\021\n\tove"
+                + "rrides\030\003 \003(\t\022\025\n\rpath_selector\030\004 \003(\t\022\032\n\022s"
+                + "trict_range_check\030\005 \001(\010\022\024\n\014disable_none\030"
+                + "\006 \001(\010\022\017\n\007verbose\030\007 \001(\003\022\r\n\005debug\030\010 \001(\010\022\021\n"
+                + "\tsort_keys\030\t \001(\010\022\023\n\013show_hidden\030\n \001(\010\022 \n"
+                + "\030include_schema_type_path\030\013 \001(\010\022\021\n\tfast_"
+                + "eval\030\014 \001(\010\"*\n\014KeyValuePair\022\013\n\003key\030\001 \001(\t\022"
+                + "\r\n\005value\030\002 \001(\t\"^\n\013Rename_Args\022\024\n\014package"
+                + "_root\030\001 \001(\t\022\023\n\013symbol_path\030\002 \001(\t\022\022\n\nfile"
+                + "_paths\030\003 \003(\t\022\020\n\010new_name\030\004 \001(\t\"&\n\rRename"
+                + "_Result\022\025\n\rchanged_files\030\001 \003(\t\"\307\001\n\017Renam"
+                + "eCode_Args\022\024\n\014package_root\030\001 \001(\t\022\023\n\013symb"
+                + "ol_path\030\002 \001(\t\022C\n\014source_codes\030\003 \003(\0132-.co"
+                + "m.kcl.api.RenameCode_Args.SourceCodesEnt"
+                + "ry\022\020\n\010new_name\030\004 \001(\t\0322\n\020SourceCodesEntry"
+                + "\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\"\221\001\n\021Ren"
+                + "ameCode_Result\022G\n\rchanged_codes\030\001 \003(\01320."
+                + "com.kcl.api.RenameCode_Result.ChangedCod"
+                + "esEntry\0323\n\021ChangedCodesEntry\022\013\n\003key\030\001 \001("
+                + "\t\022\r\n\005value\030\002 \001(\t:\0028\001\"v\n\tTest_Args\0220\n\texe"
+                + "c_args\030\001 \001(\0132\035.com.kcl.api.ExecProgram_A"
+                + "rgs\022\020\n\010pkg_list\030\002 \003(\t\022\022\n\nrun_regexp\030\003 \001("
+                + "\t\022\021\n\tfail_fast\030\004 \001(\010\"6\n\013Test_Result\022\'\n\004i"
+                + "nfo\030\002 \003(\0132\031.com.kcl.api.TestCaseInfo\"R\n\014"
+                + "TestCaseInfo\022\014\n\004name\030\001 \001(\t\022\r\n\005error\030\002 \001("
+                + "\t\022\020\n\010duration\030\003 \001(\004\022\023\n\013log_message\030\004 \001(\t"
+                + "\"@\n\027UpdateDependencies_Args\022\025\n\rmanifest_"
+                + "path\030\001 \001(\t\022\016\n\006vendor\030\002 \001(\010\"L\n\031UpdateDepe"
+                + "ndencies_Result\022/\n\rexternal_pkgs\030\003 \003(\0132\030"
+                + ".com.kcl.api.ExternalPkg\"\363\004\n\007KclType\022\014\n\004"
+                + "type\030\001 \001(\t\022)\n\013union_types\030\002 \003(\0132\024.com.kc"
+                + "l.api.KclType\022\017\n\007default\030\003 \001(\t\022\023\n\013schema"
+                + "_name\030\004 \001(\t\022\022\n\nschema_doc\030\005 \001(\t\0228\n\nprope"
+                + "rties\030\006 \003(\0132$.com.kcl.api.KclType.Proper"
+                + "tiesEntry\022\020\n\010required\030\007 \003(\t\022!\n\003key\030\010 \001(\013"
+                + "2\024.com.kcl.api.KclType\022\"\n\004item\030\t \001(\0132\024.c"
+                + "om.kcl.api.KclType\022\014\n\004line\030\n \001(\005\022*\n\ndeco"
+                + "rators\030\013 \003(\0132\026.com.kcl.api.Decorator\022\020\n\010"
+                + "filename\030\014 \001(\t\022\020\n\010pkg_path\030\r \001(\t\022\023\n\013desc"
+                + "ription\030\016 \001(\t\0224\n\010examples\030\017 \003(\0132\".com.kc"
+                + "l.api.KclType.ExamplesEntry\022)\n\013base_sche"
+                + "ma\030\020 \001(\0132\024.com.kcl.api.KclType\032G\n\017Proper"
+                + "tiesEntry\022\013\n\003key\030\001 \001(\t\022#\n\005value\030\002 \001(\0132\024."
+                + "com.kcl.api.KclType:\0028\001\032E\n\rExamplesEntry"
+                + "\022\013\n\003key\030\001 \001(\t\022#\n\005value\030\002 \001(\0132\024.com.kcl.a"
+                + "pi.Example:\0028\001\"\225\001\n\tDecorator\022\014\n\004name\030\001 \001"
+                + "(\t\022\021\n\targuments\030\002 \003(\t\0226\n\010keywords\030\003 \003(\0132"
+                + "$.com.kcl.api.Decorator.KeywordsEntry\032/\n"
+                + "\rKeywordsEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001"
+                + "(\t:\0028\001\">\n\007Example\022\017\n\007summary\030\001 \001(\t\022\023\n\013de"
+                + "scription\030\002 \001(\t\022\r\n\005value\030\003 \001(\t2\226\001\n\016Built"
+                + "inService\0228\n\004Ping\022\026.com.kcl.api.Ping_Arg"
+                + "s\032\030.com.kcl.api.Ping_Result\022J\n\nListMetho"
+                + "d\022\034.com.kcl.api.ListMethod_Args\032\036.com.kc"
+                + "l.api.ListMethod_Result2\336\r\n\014KclvmService"
+                + "\0228\n\004Ping\022\026.com.kcl.api.Ping_Args\032\030.com.k"
+                + "cl.api.Ping_Result\022J\n\nGetVersion\022\034.com.k"
+                + "cl.api.GetVersion_Args\032\036.com.kcl.api.Get"
+                + "Version_Result\022P\n\014ParseProgram\022\036.com.kcl"
+                + ".api.ParseProgram_Args\032 .com.kcl.api.Par" + "seProgram_Result\022G\n\tParseFile\022\033.com.kcl."
+                + "api.ParseFile_Args\032\035.com.kcl.api.ParseFi"
+                + "le_Result\022M\n\013LoadPackage\022\035.com.kcl.api.L"
+                + "oadPackage_Args\032\037.com.kcl.api.LoadPackag"
+                + "e_Result\022N\n\013ListOptions\022\036.com.kcl.api.Pa"
+                + "rseProgram_Args\032\037.com.kcl.api.ListOption"
+                + "s_Result\022S\n\rListVariables\022\037.com.kcl.api." + "ListVariables_Args\032!.com.kcl.api.ListVar"
+                + "iables_Result\022M\n\013ExecProgram\022\035.com.kcl.a"
+                + "pi.ExecProgram_Args\032\037.com.kcl.api.ExecPr"
+                + "ogram_Result\022P\n\014BuildProgram\022\036.com.kcl.a"
+                + "pi.BuildProgram_Args\032 .com.kcl.api.Build"
+                + "Program_Result\022O\n\014ExecArtifact\022\036.com.kcl"
+                + ".api.ExecArtifact_Args\032\037.com.kcl.api.Exe"
+                + "cProgram_Result\022P\n\014OverrideFile\022\036.com.kc"
+                + "l.api.OverrideFile_Args\032 .com.kcl.api.Ov" + "errideFile_Result\022h\n\024GetSchemaTypeMappin"
+                + "g\022&.com.kcl.api.GetSchemaTypeMapping_Arg" + "s\032(.com.kcl.api.GetSchemaTypeMapping_Res"
+                + "ult\022J\n\nFormatCode\022\034.com.kcl.api.FormatCo"
+                + "de_Args\032\036.com.kcl.api.FormatCode_Result\022"
+                + "J\n\nFormatPath\022\034.com.kcl.api.FormatPath_A"
+                + "rgs\032\036.com.kcl.api.FormatPath_Result\022D\n\010L"
+                + "intPath\022\032.com.kcl.api.LintPath_Args\032\034.co"
+                + "m.kcl.api.LintPath_Result\022P\n\014ValidateCod"
+                + "e\022\036.com.kcl.api.ValidateCode_Args\032 .com."
+                + "kcl.api.ValidateCode_Result\022P\n\014ListDepFi"
+                + "les\022\036.com.kcl.api.ListDepFiles_Args\032 .co"
+                + "m.kcl.api.ListDepFiles_Result\022_\n\021LoadSet" + "tingsFiles\022#.com.kcl.api.LoadSettingsFil"
+                + "es_Args\032%.com.kcl.api.LoadSettingsFiles_"
+                + "Result\022>\n\006Rename\022\030.com.kcl.api.Rename_Ar"
+                + "gs\032\032.com.kcl.api.Rename_Result\022J\n\nRename"
+                + "Code\022\034.com.kcl.api.RenameCode_Args\032\036.com"
+                + ".kcl.api.RenameCode_Result\0228\n\004Test\022\026.com"
+                + ".kcl.api.Test_Args\032\030.com.kcl.api.Test_Re"
+                + "sult\022b\n\022UpdateDependencies\022$.com.kcl.api" + ".UpdateDependencies_Args\032&.com.kcl.api.U"
+                + "pdateDependencies_ResultB\024Z\005.;lib\252\002\nKclL" + "ib.APIb\006proto3" };
         descriptor = com.google.protobuf.Descriptors.FileDescriptor.internalBuildGeneratedFileFrom(descriptorData,
                 new com.google.protobuf.Descriptors.FileDescriptor[] {});
         internal_static_com_kcl_api_ExternalPkg_descriptor = getDescriptor().getMessageTypes().get(0);
@@ -74788,50 +73873,44 @@ public final class Spec {
         internal_static_com_kcl_api_ExecArtifact_Args_fieldAccessorTable = new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                 internal_static_com_kcl_api_ExecArtifact_Args_descriptor,
                 new java.lang.String[] { "Path", "ExecArgs", });
-        internal_static_com_kcl_api_ResetPlugin_Args_descriptor = getDescriptor().getMessageTypes().get(27);
-        internal_static_com_kcl_api_ResetPlugin_Args_fieldAccessorTable = new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
-                internal_static_com_kcl_api_ResetPlugin_Args_descriptor, new java.lang.String[] { "PluginRoot", });
-        internal_static_com_kcl_api_ResetPlugin_Result_descriptor = getDescriptor().getMessageTypes().get(28);
-        internal_static_com_kcl_api_ResetPlugin_Result_fieldAccessorTable = new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
-                internal_static_com_kcl_api_ResetPlugin_Result_descriptor, new java.lang.String[] {});
-        internal_static_com_kcl_api_FormatCode_Args_descriptor = getDescriptor().getMessageTypes().get(29);
+        internal_static_com_kcl_api_FormatCode_Args_descriptor = getDescriptor().getMessageTypes().get(27);
         internal_static_com_kcl_api_FormatCode_Args_fieldAccessorTable = new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                 internal_static_com_kcl_api_FormatCode_Args_descriptor, new java.lang.String[] { "Source", });
-        internal_static_com_kcl_api_FormatCode_Result_descriptor = getDescriptor().getMessageTypes().get(30);
+        internal_static_com_kcl_api_FormatCode_Result_descriptor = getDescriptor().getMessageTypes().get(28);
         internal_static_com_kcl_api_FormatCode_Result_fieldAccessorTable = new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                 internal_static_com_kcl_api_FormatCode_Result_descriptor, new java.lang.String[] { "Formatted", });
-        internal_static_com_kcl_api_FormatPath_Args_descriptor = getDescriptor().getMessageTypes().get(31);
+        internal_static_com_kcl_api_FormatPath_Args_descriptor = getDescriptor().getMessageTypes().get(29);
         internal_static_com_kcl_api_FormatPath_Args_fieldAccessorTable = new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                 internal_static_com_kcl_api_FormatPath_Args_descriptor, new java.lang.String[] { "Path", });
-        internal_static_com_kcl_api_FormatPath_Result_descriptor = getDescriptor().getMessageTypes().get(32);
+        internal_static_com_kcl_api_FormatPath_Result_descriptor = getDescriptor().getMessageTypes().get(30);
         internal_static_com_kcl_api_FormatPath_Result_fieldAccessorTable = new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                 internal_static_com_kcl_api_FormatPath_Result_descriptor, new java.lang.String[] { "ChangedPaths", });
-        internal_static_com_kcl_api_LintPath_Args_descriptor = getDescriptor().getMessageTypes().get(33);
+        internal_static_com_kcl_api_LintPath_Args_descriptor = getDescriptor().getMessageTypes().get(31);
         internal_static_com_kcl_api_LintPath_Args_fieldAccessorTable = new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                 internal_static_com_kcl_api_LintPath_Args_descriptor, new java.lang.String[] { "Paths", });
-        internal_static_com_kcl_api_LintPath_Result_descriptor = getDescriptor().getMessageTypes().get(34);
+        internal_static_com_kcl_api_LintPath_Result_descriptor = getDescriptor().getMessageTypes().get(32);
         internal_static_com_kcl_api_LintPath_Result_fieldAccessorTable = new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                 internal_static_com_kcl_api_LintPath_Result_descriptor, new java.lang.String[] { "Results", });
-        internal_static_com_kcl_api_OverrideFile_Args_descriptor = getDescriptor().getMessageTypes().get(35);
+        internal_static_com_kcl_api_OverrideFile_Args_descriptor = getDescriptor().getMessageTypes().get(33);
         internal_static_com_kcl_api_OverrideFile_Args_fieldAccessorTable = new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                 internal_static_com_kcl_api_OverrideFile_Args_descriptor,
                 new java.lang.String[] { "File", "Specs", "ImportPaths", });
-        internal_static_com_kcl_api_OverrideFile_Result_descriptor = getDescriptor().getMessageTypes().get(36);
+        internal_static_com_kcl_api_OverrideFile_Result_descriptor = getDescriptor().getMessageTypes().get(34);
         internal_static_com_kcl_api_OverrideFile_Result_fieldAccessorTable = new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                 internal_static_com_kcl_api_OverrideFile_Result_descriptor,
                 new java.lang.String[] { "Result", "ParseErrors", });
-        internal_static_com_kcl_api_ListVariables_Options_descriptor = getDescriptor().getMessageTypes().get(37);
+        internal_static_com_kcl_api_ListVariables_Options_descriptor = getDescriptor().getMessageTypes().get(35);
         internal_static_com_kcl_api_ListVariables_Options_fieldAccessorTable = new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                 internal_static_com_kcl_api_ListVariables_Options_descriptor,
                 new java.lang.String[] { "MergeProgram", });
-        internal_static_com_kcl_api_VariableList_descriptor = getDescriptor().getMessageTypes().get(38);
+        internal_static_com_kcl_api_VariableList_descriptor = getDescriptor().getMessageTypes().get(36);
         internal_static_com_kcl_api_VariableList_fieldAccessorTable = new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                 internal_static_com_kcl_api_VariableList_descriptor, new java.lang.String[] { "Variables", });
-        internal_static_com_kcl_api_ListVariables_Args_descriptor = getDescriptor().getMessageTypes().get(39);
+        internal_static_com_kcl_api_ListVariables_Args_descriptor = getDescriptor().getMessageTypes().get(37);
         internal_static_com_kcl_api_ListVariables_Args_fieldAccessorTable = new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                 internal_static_com_kcl_api_ListVariables_Args_descriptor,
                 new java.lang.String[] { "Files", "Specs", "Options", });
-        internal_static_com_kcl_api_ListVariables_Result_descriptor = getDescriptor().getMessageTypes().get(40);
+        internal_static_com_kcl_api_ListVariables_Result_descriptor = getDescriptor().getMessageTypes().get(38);
         internal_static_com_kcl_api_ListVariables_Result_fieldAccessorTable = new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                 internal_static_com_kcl_api_ListVariables_Result_descriptor,
                 new java.lang.String[] { "Variables", "UnsupportedCodes", "ParseErrors", });
@@ -74840,18 +73919,18 @@ public final class Spec {
         internal_static_com_kcl_api_ListVariables_Result_VariablesEntry_fieldAccessorTable = new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                 internal_static_com_kcl_api_ListVariables_Result_VariablesEntry_descriptor,
                 new java.lang.String[] { "Key", "Value", });
-        internal_static_com_kcl_api_Variable_descriptor = getDescriptor().getMessageTypes().get(41);
+        internal_static_com_kcl_api_Variable_descriptor = getDescriptor().getMessageTypes().get(39);
         internal_static_com_kcl_api_Variable_fieldAccessorTable = new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                 internal_static_com_kcl_api_Variable_descriptor,
                 new java.lang.String[] { "Value", "TypeName", "OpSym", "ListItems", "DictEntries", });
-        internal_static_com_kcl_api_MapEntry_descriptor = getDescriptor().getMessageTypes().get(42);
+        internal_static_com_kcl_api_MapEntry_descriptor = getDescriptor().getMessageTypes().get(40);
         internal_static_com_kcl_api_MapEntry_fieldAccessorTable = new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                 internal_static_com_kcl_api_MapEntry_descriptor, new java.lang.String[] { "Key", "Value", });
-        internal_static_com_kcl_api_GetSchemaTypeMapping_Args_descriptor = getDescriptor().getMessageTypes().get(43);
+        internal_static_com_kcl_api_GetSchemaTypeMapping_Args_descriptor = getDescriptor().getMessageTypes().get(41);
         internal_static_com_kcl_api_GetSchemaTypeMapping_Args_fieldAccessorTable = new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                 internal_static_com_kcl_api_GetSchemaTypeMapping_Args_descriptor,
                 new java.lang.String[] { "ExecArgs", "SchemaName", });
-        internal_static_com_kcl_api_GetSchemaTypeMapping_Result_descriptor = getDescriptor().getMessageTypes().get(44);
+        internal_static_com_kcl_api_GetSchemaTypeMapping_Result_descriptor = getDescriptor().getMessageTypes().get(42);
         internal_static_com_kcl_api_GetSchemaTypeMapping_Result_fieldAccessorTable = new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                 internal_static_com_kcl_api_GetSchemaTypeMapping_Result_descriptor,
                 new java.lang.String[] { "SchemaTypeMapping", });
@@ -74860,51 +73939,51 @@ public final class Spec {
         internal_static_com_kcl_api_GetSchemaTypeMapping_Result_SchemaTypeMappingEntry_fieldAccessorTable = new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                 internal_static_com_kcl_api_GetSchemaTypeMapping_Result_SchemaTypeMappingEntry_descriptor,
                 new java.lang.String[] { "Key", "Value", });
-        internal_static_com_kcl_api_ValidateCode_Args_descriptor = getDescriptor().getMessageTypes().get(45);
+        internal_static_com_kcl_api_ValidateCode_Args_descriptor = getDescriptor().getMessageTypes().get(43);
         internal_static_com_kcl_api_ValidateCode_Args_fieldAccessorTable = new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                 internal_static_com_kcl_api_ValidateCode_Args_descriptor,
                 new java.lang.String[] { "Datafile", "Data", "File", "Code", "Schema", "AttributeName", "Format", });
-        internal_static_com_kcl_api_ValidateCode_Result_descriptor = getDescriptor().getMessageTypes().get(46);
+        internal_static_com_kcl_api_ValidateCode_Result_descriptor = getDescriptor().getMessageTypes().get(44);
         internal_static_com_kcl_api_ValidateCode_Result_fieldAccessorTable = new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                 internal_static_com_kcl_api_ValidateCode_Result_descriptor,
                 new java.lang.String[] { "Success", "ErrMessage", });
-        internal_static_com_kcl_api_Position_descriptor = getDescriptor().getMessageTypes().get(47);
+        internal_static_com_kcl_api_Position_descriptor = getDescriptor().getMessageTypes().get(45);
         internal_static_com_kcl_api_Position_fieldAccessorTable = new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                 internal_static_com_kcl_api_Position_descriptor,
                 new java.lang.String[] { "Line", "Column", "Filename", });
-        internal_static_com_kcl_api_ListDepFiles_Args_descriptor = getDescriptor().getMessageTypes().get(48);
+        internal_static_com_kcl_api_ListDepFiles_Args_descriptor = getDescriptor().getMessageTypes().get(46);
         internal_static_com_kcl_api_ListDepFiles_Args_fieldAccessorTable = new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                 internal_static_com_kcl_api_ListDepFiles_Args_descriptor,
                 new java.lang.String[] { "WorkDir", "UseAbsPath", "IncludeAll", "UseFastParser", });
-        internal_static_com_kcl_api_ListDepFiles_Result_descriptor = getDescriptor().getMessageTypes().get(49);
+        internal_static_com_kcl_api_ListDepFiles_Result_descriptor = getDescriptor().getMessageTypes().get(47);
         internal_static_com_kcl_api_ListDepFiles_Result_fieldAccessorTable = new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                 internal_static_com_kcl_api_ListDepFiles_Result_descriptor,
                 new java.lang.String[] { "Pkgroot", "Pkgpath", "Files", });
-        internal_static_com_kcl_api_LoadSettingsFiles_Args_descriptor = getDescriptor().getMessageTypes().get(50);
+        internal_static_com_kcl_api_LoadSettingsFiles_Args_descriptor = getDescriptor().getMessageTypes().get(48);
         internal_static_com_kcl_api_LoadSettingsFiles_Args_fieldAccessorTable = new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                 internal_static_com_kcl_api_LoadSettingsFiles_Args_descriptor,
                 new java.lang.String[] { "WorkDir", "Files", });
-        internal_static_com_kcl_api_LoadSettingsFiles_Result_descriptor = getDescriptor().getMessageTypes().get(51);
+        internal_static_com_kcl_api_LoadSettingsFiles_Result_descriptor = getDescriptor().getMessageTypes().get(49);
         internal_static_com_kcl_api_LoadSettingsFiles_Result_fieldAccessorTable = new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                 internal_static_com_kcl_api_LoadSettingsFiles_Result_descriptor,
                 new java.lang.String[] { "KclCliConfigs", "KclOptions", });
-        internal_static_com_kcl_api_CliConfig_descriptor = getDescriptor().getMessageTypes().get(52);
+        internal_static_com_kcl_api_CliConfig_descriptor = getDescriptor().getMessageTypes().get(50);
         internal_static_com_kcl_api_CliConfig_fieldAccessorTable = new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                 internal_static_com_kcl_api_CliConfig_descriptor,
                 new java.lang.String[] { "Files", "Output", "Overrides", "PathSelector", "StrictRangeCheck",
                         "DisableNone", "Verbose", "Debug", "SortKeys", "ShowHidden", "IncludeSchemaTypePath",
                         "FastEval", });
-        internal_static_com_kcl_api_KeyValuePair_descriptor = getDescriptor().getMessageTypes().get(53);
+        internal_static_com_kcl_api_KeyValuePair_descriptor = getDescriptor().getMessageTypes().get(51);
         internal_static_com_kcl_api_KeyValuePair_fieldAccessorTable = new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                 internal_static_com_kcl_api_KeyValuePair_descriptor, new java.lang.String[] { "Key", "Value", });
-        internal_static_com_kcl_api_Rename_Args_descriptor = getDescriptor().getMessageTypes().get(54);
+        internal_static_com_kcl_api_Rename_Args_descriptor = getDescriptor().getMessageTypes().get(52);
         internal_static_com_kcl_api_Rename_Args_fieldAccessorTable = new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                 internal_static_com_kcl_api_Rename_Args_descriptor,
                 new java.lang.String[] { "PackageRoot", "SymbolPath", "FilePaths", "NewName", });
-        internal_static_com_kcl_api_Rename_Result_descriptor = getDescriptor().getMessageTypes().get(55);
+        internal_static_com_kcl_api_Rename_Result_descriptor = getDescriptor().getMessageTypes().get(53);
         internal_static_com_kcl_api_Rename_Result_fieldAccessorTable = new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                 internal_static_com_kcl_api_Rename_Result_descriptor, new java.lang.String[] { "ChangedFiles", });
-        internal_static_com_kcl_api_RenameCode_Args_descriptor = getDescriptor().getMessageTypes().get(56);
+        internal_static_com_kcl_api_RenameCode_Args_descriptor = getDescriptor().getMessageTypes().get(54);
         internal_static_com_kcl_api_RenameCode_Args_fieldAccessorTable = new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                 internal_static_com_kcl_api_RenameCode_Args_descriptor,
                 new java.lang.String[] { "PackageRoot", "SymbolPath", "SourceCodes", "NewName", });
@@ -74913,7 +73992,7 @@ public final class Spec {
         internal_static_com_kcl_api_RenameCode_Args_SourceCodesEntry_fieldAccessorTable = new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                 internal_static_com_kcl_api_RenameCode_Args_SourceCodesEntry_descriptor,
                 new java.lang.String[] { "Key", "Value", });
-        internal_static_com_kcl_api_RenameCode_Result_descriptor = getDescriptor().getMessageTypes().get(57);
+        internal_static_com_kcl_api_RenameCode_Result_descriptor = getDescriptor().getMessageTypes().get(55);
         internal_static_com_kcl_api_RenameCode_Result_fieldAccessorTable = new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                 internal_static_com_kcl_api_RenameCode_Result_descriptor, new java.lang.String[] { "ChangedCodes", });
         internal_static_com_kcl_api_RenameCode_Result_ChangedCodesEntry_descriptor = internal_static_com_kcl_api_RenameCode_Result_descriptor
@@ -74921,26 +74000,26 @@ public final class Spec {
         internal_static_com_kcl_api_RenameCode_Result_ChangedCodesEntry_fieldAccessorTable = new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                 internal_static_com_kcl_api_RenameCode_Result_ChangedCodesEntry_descriptor,
                 new java.lang.String[] { "Key", "Value", });
-        internal_static_com_kcl_api_Test_Args_descriptor = getDescriptor().getMessageTypes().get(58);
+        internal_static_com_kcl_api_Test_Args_descriptor = getDescriptor().getMessageTypes().get(56);
         internal_static_com_kcl_api_Test_Args_fieldAccessorTable = new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                 internal_static_com_kcl_api_Test_Args_descriptor,
                 new java.lang.String[] { "ExecArgs", "PkgList", "RunRegexp", "FailFast", });
-        internal_static_com_kcl_api_Test_Result_descriptor = getDescriptor().getMessageTypes().get(59);
+        internal_static_com_kcl_api_Test_Result_descriptor = getDescriptor().getMessageTypes().get(57);
         internal_static_com_kcl_api_Test_Result_fieldAccessorTable = new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                 internal_static_com_kcl_api_Test_Result_descriptor, new java.lang.String[] { "Info", });
-        internal_static_com_kcl_api_TestCaseInfo_descriptor = getDescriptor().getMessageTypes().get(60);
+        internal_static_com_kcl_api_TestCaseInfo_descriptor = getDescriptor().getMessageTypes().get(58);
         internal_static_com_kcl_api_TestCaseInfo_fieldAccessorTable = new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                 internal_static_com_kcl_api_TestCaseInfo_descriptor,
                 new java.lang.String[] { "Name", "Error", "Duration", "LogMessage", });
-        internal_static_com_kcl_api_UpdateDependencies_Args_descriptor = getDescriptor().getMessageTypes().get(61);
+        internal_static_com_kcl_api_UpdateDependencies_Args_descriptor = getDescriptor().getMessageTypes().get(59);
         internal_static_com_kcl_api_UpdateDependencies_Args_fieldAccessorTable = new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                 internal_static_com_kcl_api_UpdateDependencies_Args_descriptor,
                 new java.lang.String[] { "ManifestPath", "Vendor", });
-        internal_static_com_kcl_api_UpdateDependencies_Result_descriptor = getDescriptor().getMessageTypes().get(62);
+        internal_static_com_kcl_api_UpdateDependencies_Result_descriptor = getDescriptor().getMessageTypes().get(60);
         internal_static_com_kcl_api_UpdateDependencies_Result_fieldAccessorTable = new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                 internal_static_com_kcl_api_UpdateDependencies_Result_descriptor,
                 new java.lang.String[] { "ExternalPkgs", });
-        internal_static_com_kcl_api_KclType_descriptor = getDescriptor().getMessageTypes().get(63);
+        internal_static_com_kcl_api_KclType_descriptor = getDescriptor().getMessageTypes().get(61);
         internal_static_com_kcl_api_KclType_fieldAccessorTable = new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                 internal_static_com_kcl_api_KclType_descriptor,
                 new java.lang.String[] { "Type", "UnionTypes", "Default", "SchemaName", "SchemaDoc", "Properties",
@@ -74956,7 +74035,7 @@ public final class Spec {
         internal_static_com_kcl_api_KclType_ExamplesEntry_fieldAccessorTable = new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                 internal_static_com_kcl_api_KclType_ExamplesEntry_descriptor,
                 new java.lang.String[] { "Key", "Value", });
-        internal_static_com_kcl_api_Decorator_descriptor = getDescriptor().getMessageTypes().get(64);
+        internal_static_com_kcl_api_Decorator_descriptor = getDescriptor().getMessageTypes().get(62);
         internal_static_com_kcl_api_Decorator_fieldAccessorTable = new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                 internal_static_com_kcl_api_Decorator_descriptor,
                 new java.lang.String[] { "Name", "Arguments", "Keywords", });
@@ -74965,7 +74044,7 @@ public final class Spec {
         internal_static_com_kcl_api_Decorator_KeywordsEntry_fieldAccessorTable = new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                 internal_static_com_kcl_api_Decorator_KeywordsEntry_descriptor,
                 new java.lang.String[] { "Key", "Value", });
-        internal_static_com_kcl_api_Example_descriptor = getDescriptor().getMessageTypes().get(65);
+        internal_static_com_kcl_api_Example_descriptor = getDescriptor().getMessageTypes().get(63);
         internal_static_com_kcl_api_Example_fieldAccessorTable = new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                 internal_static_com_kcl_api_Example_descriptor,
                 new java.lang.String[] { "Summary", "Description", "Value", });
