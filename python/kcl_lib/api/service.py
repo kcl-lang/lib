@@ -1,6 +1,49 @@
 import kcl_lib
 import kcl_lib.plugin as plugin
-from .spec_pb2 import *
+from .spec_pb2 import (
+    Ping_Args,
+    Ping_Result,
+    GetVersion_Args,
+    GetVersion_Result,
+    ParseFile_Args,
+    ParseFile_Result,
+    ParseProgram_Args,
+    ParseProgram_Result,
+    LoadPackage_Args,
+    LoadPackage_Result,
+    ListOptions_Result,
+    ExecProgram_Args,
+    ExecProgram_Result,
+    BuildProgram_Args,
+    BuildProgram_Result,
+    ExecArtifact_Args,
+    FormatCode_Args,
+    FormatCode_Result,
+    FormatPath_Args,
+    FormatPath_Result,
+    LintPath_Args,
+    LintPath_Result,
+    OverrideFile_Args,
+    OverrideFile_Result,
+    ListVariables_Args,
+    ListVariables_Result,
+    GetSchemaTypeMapping_Args,
+    GetSchemaTypeMapping_Result,
+    ValidateCode_Args,
+    ValidateCode_Result,
+    ListDepFiles_Args,
+    ListDepFiles_Result,
+    LoadSettingsFiles_Args,
+    LoadSettingsFiles_Result,
+    Rename_Args,
+    Rename_Result,
+    RenameCode_Args,
+    RenameCode_Result,
+    Test_Args,
+    Test_Result,
+    UpdateDependencies_Args,
+    UpdateDependencies_Result,
+)
 from google.protobuf import message as _message
 
 
@@ -89,7 +132,9 @@ class API:
     def test(self, args: Test_Args) -> Test_Result:
         return self.call("KclvmService.Test", args)
 
-    def test(self, args: UpdateDependencies_Args) -> UpdateDependencies_Result:
+    def update_dependencies(
+        self, args: UpdateDependencies_Args
+    ) -> UpdateDependencies_Result:
         return self.call("KclvmService.UpdateDependencies", args)
 
     # Helper method to perform the call
@@ -199,4 +244,6 @@ class API:
             return Test_Result()
         elif method in ["UpdateDependencies", "KclvmService.UpdateDependencies"]:
             return UpdateDependencies_Result()
+        elif method in ["GetVersion", "KclvmService.GetVersion"]:
+            return GetVersion_Result()
         raise Exception(f"unknown method: {method}")
