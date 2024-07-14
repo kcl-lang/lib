@@ -1,0 +1,10 @@
+*.swp
+*.*~
+.DS_Store
+
+.vs/
+.vscode
+
+build/
+examples/ping_api
+examples/exec_api
