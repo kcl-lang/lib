@@ -4,7 +4,6 @@ import com.kcl.api.API;
 import com.kcl.api.Spec.FormatCode_Args;
 import com.kcl.api.Spec.FormatCode_Result;
 import com.kcl.api.Spec.FormatPath_Args;
-import com.kcl.api.Spec.FormatPath_Result;
 import org.junit.Assert;
 import org.junit.Test;
 

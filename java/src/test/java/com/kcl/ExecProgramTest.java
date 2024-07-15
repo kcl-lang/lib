@@ -12,7 +12,7 @@ public class ExecProgramTest {
     private static final String TEST_FILE = "./src/test_data/schema.k";
 
     @Test
-    public void testGetSchemaTypeApi() throws Exception {
+    public void testExecProgramApi() throws Exception {
         ExecProgram_Args args = ExecProgram_Args.newBuilder().addKFilenameList(TEST_FILE).build();
 
         API apiInstance = new API();

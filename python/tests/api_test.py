@@ -66,7 +66,7 @@ def test_load_package_api():
     assert list(result.symbols.values())[0].ty.schema_name == "AppConfig"
 
 
-def test_list_variable_api():
+def test_list_variables_api():
     """list_variables provides users with the ability to parse KCL program and get all variables by specs."""
     import kcl_lib.api as api
 
