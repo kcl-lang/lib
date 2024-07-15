@@ -42,6 +42,11 @@ public class API : IService
         return ListVariables_Result.Parser.ParseFrom(Call("KclvmService.ListVariables", args.ToByteArray()));
     }
 
+    public ListOptions_Result ListOptions(ParseProgram_Args args)
+    {
+        return ListOptions_Result.Parser.ParseFrom(Call("KclvmService.ListOptions", args.ToByteArray()));
+    }
+
     public ExecProgram_Result ExecProgram(ExecProgram_Args args)
     {
         return ExecProgram_Result.Parser.ParseFrom(Call("KclvmService.ExecProgram", args.ToByteArray()));
@@ -100,6 +105,11 @@ public class API : IService
     public UpdateDependencies_Result UpdateDependencies(UpdateDependencies_Args args)
     {
         return UpdateDependencies_Result.Parser.ParseFrom(Call("KclvmService.UpdateDependencies", args.ToByteArray()));
+    }
+
+    public GetVersion_Result GetVersion(GetVersion_Args args)
+    {
+        return GetVersion_Result.Parser.ParseFrom(Call("KclvmService.GetVersion", args.ToByteArray()));
     }
 
     private byte[] Call(string name, byte[] args)

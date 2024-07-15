@@ -4,7 +4,7 @@ build:
 	cargo build -r
 
 fmt:
-	dotnet fmt
+	dotnet format
 
 pkg:
 	cd KclLib && dotnet pack
