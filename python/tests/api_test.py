@@ -2,6 +2,7 @@ TEST_FILE = "./tests/test_data/schema.k"
 
 
 def test_exec_api():
+    """Execute KCL file with arguments and return the JSON/YAML result."""
     import kcl_lib.api as api
 
     # Call the `exec_program` method with appropriate arguments
@@ -13,6 +14,7 @@ def test_exec_api():
 
 
 def test_exec_api_failed():
+    """Execute KCL file with arguments and return the JSON/YAML result."""
     import kcl_lib.api as api
 
     try:
@@ -26,10 +28,35 @@ def test_exec_api_failed():
         assert "Cannot find the kcl file" in str(err)
 
 
-def test_load_package_api():
+def test_parse_program_api():
+    """Parse KCL program with entry files and return the AST JSON string."""
     import kcl_lib.api as api
 
-    # Call the `exec_program` method with appropriate arguments
+    args = api.ParseProgram_Args(paths=[TEST_FILE])
+    api = api.API()
+    result = api.parse_program(args)
+    assert len(result.paths) == 1
+    assert len(result.errors) == 0
+
+
+def test_parse_file_api():
+    """Parse KCL single file to Module AST JSON string with import dependencies and parse errors."""
+    import kcl_lib.api as api
+
+    args = api.ParseFile_Args(path=TEST_FILE)
+    api = api.API()
+    result = api.parse_file(args)
+    assert len(result.deps) == 0
+    assert len(result.errors) == 0
+
+
+def test_load_package_api():
+    """load_package provides users with the ability to parse KCL program and semantic model
+    information including symbols, types, definitions, etc.
+    """
+    import kcl_lib.api as api
+
+    # Call the `load_package` method with appropriate arguments
     args = api.LoadPackage_Args(
         parse_args=api.ParseProgram_Args(paths=[TEST_FILE]), resolve_ast=True
     )
@@ -40,9 +67,10 @@ def test_load_package_api():
 
 
 def test_list_variable_api():
+    """list_variables provides users with the ability to parse KCL program and get all variables by specs."""
     import kcl_lib.api as api
 
-    # Call the `exec_program` method with appropriate arguments
+    # Call the `list_variable` method with appropriate arguments
     args = api.ListVariables_Args(files=[TEST_FILE])
     # Usage
     api = api.API()
@@ -50,11 +78,25 @@ def test_list_variable_api():
     assert result.variables["app"].variables[0].value == "AppConfig {replicas: 2}"
 
 
+def test_list_options_api():
+    """list_options provides users with the ability to parse KCL program and get all option information."""
+    import kcl_lib.api as api
+
+    args = api.ParseProgram_Args(paths=["./tests/test_data/option/main.k"])
+    api = api.API()
+    result = api.list_options(args)
+    assert len(result.options) == 3
+    assert result.options[0].name == "key1"
+    assert result.options[1].name == "key2"
+    assert result.options[2].name == "metadata-key"
+
+
 def test_get_schema_type_api():
+    """Get schema type mapping defined in the program."""
     import kcl_lib.api as api
 
     exec_args = api.ExecProgram_Args(k_filename_list=[TEST_FILE])
-    # Call the `exec_program` method with appropriate arguments
+    # Call the `get_schema_type_mapping` method with appropriate arguments
     args = api.GetSchemaTypeMapping_Args(exec_args=exec_args)
     # Usage
     api = api.API()
@@ -62,7 +104,40 @@ def test_get_schema_type_api():
     assert result.schema_type_mapping["app"].properties["replicas"].type == "int"
 
 
+def test_override_file_api():
+    """Override KCL file with arguments. See https://www.kcl-lang.io/docs/user_docs/guides/automation
+    for more override spec guide.
+    """
+    import kcl_lib.api as api
+    import pathlib
+
+    bak_file = "./tests/test_data/override_file/main.bak"
+    test_file = "./tests/test_data/override_file/main.k"
+
+    pathlib.Path(test_file).write_text(pathlib.Path(bak_file).read_text())
+
+    args = api.OverrideFile_Args(
+        file=test_file,
+        specs=["b.a=2"],
+    )
+    api = api.API()
+    result = api.override_file(args)
+    assert len(result.parse_errors) == 0
+    assert result.result == True
+    assert (
+        pathlib.Path(test_file).read_text()
+        == """\
+a = 1
+b = {
+    "a": 2
+    "b": 2
+}
+"""
+    )
+
+
 def test_format_code_api():
+    """Format the code source."""
     import kcl_lib.api as api
 
     source_code = """\
@@ -94,6 +169,7 @@ schema Person:
 
 
 def test_format_path_api():
+    """Format KCL file or directory path contains KCL files and returns the changed file paths."""
     import kcl_lib.api as api
 
     TEST_PATH = "./tests/test_data/format_path/test.k"
@@ -107,6 +183,7 @@ def test_format_path_api():
 
 
 def test_lint_path_api():
+    """Lint files and return error messages including errors and warnings."""
     import kcl_lib.api as api
 
     TEST_PATH = "./tests/test_data/lint_path/test-lint.k"
@@ -120,6 +197,7 @@ def test_lint_path_api():
 
 
 def test_validate_code_api():
+    """Validate code using schema and JSON/YAML data strings."""
     import kcl_lib.api as api
 
     code = """\
@@ -142,6 +220,9 @@ schema Person:
 
 
 def test_rename_api():
+    """Rename all the occurrences of the target symbol in the files. This API will rewrite files if they contain symbols to be renamed.
+    Return the file paths that got changed.
+    """
     import kcl_lib.api as api
     import pathlib
 
@@ -163,6 +244,9 @@ def test_rename_api():
 
 
 def test_rename_code_api():
+    """Rename all the occurrences of the target symbol and return the modified code if any code has been changed.
+    This API won't rewrite files but return the changed code.
+    """
     import kcl_lib.api as api
 
     args = api.RenameCode_Args(
@@ -178,7 +262,22 @@ def test_rename_code_api():
     assert result.changed_codes["/mock/path/main.k"] == "a2 = 1\nb = a2"
 
 
+def test_testing_api():
+    """Test KCL packages with test arguments."""
+    import kcl_lib.api as api
+
+    args = api.Test_Args(
+        pkg_list=["./tests/test_data/testing/..."],
+    )
+
+    api_instance = api.API()
+    result = api_instance.test(args)
+
+    assert len(result.info) == 2
+
+
 def test_load_settings_files_api():
+    """Load the setting file config defined in `kcl.yaml`"""
     import kcl_lib.api as api
 
     args = api.LoadSettingsFiles_Args(
@@ -196,6 +295,9 @@ def test_load_settings_files_api():
 
 
 def test_update_dependencies_api():
+    """Download and update dependencies defined in the `kcl.mod` file and return the
+    external package name and location list.
+    """
     import kcl_lib.api as api
 
     args = api.UpdateDependencies_Args(
@@ -226,3 +328,12 @@ def test_exec_api_with_external_dependencies():
     )
     result = api_instance.exec_program(exec_args)
     assert result.yaml_result == "a: Hello World!"
+
+
+def test_get_version_api():
+    """Return the KCL service version information."""
+    import kcl_lib.api as api
+
+    api_instance = api.API()
+    result = api_instance.get_version()
+    assert "Version" in str(result) and "GitCommit" in str(result)
