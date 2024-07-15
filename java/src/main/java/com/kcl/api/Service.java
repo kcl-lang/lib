@@ -24,6 +24,9 @@ public interface Service {
     // List all the variables in the KCL file
     ListVariables_Result listVariables(ListVariables_Args args) throws Exception;
 
+    // List all the option functions in the KCL file
+    ListOptions_Result listOptions(ParseProgram_Args args) throws Exception;
+
     // Service for getting the full schema type list
     GetSchemaTypeMapping_Result getSchemaTypeMapping(GetSchemaTypeMapping_Args args) throws Exception;
 
@@ -53,4 +56,7 @@ public interface Service {
 
     // Service for the dependency updating
     UpdateDependencies_Result updateDependencies(UpdateDependencies_Args args) throws Exception;
+
+    // Service for the KCL service version information.
+    GetVersion_Result getVersion(GetVersion_Args args) throws Exception;
 }
