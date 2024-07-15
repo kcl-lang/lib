@@ -289,10 +289,34 @@ const {
   loadPackage,
   ExecProgramArgs,
   execProgram,
+  ParseProgramArgs,
+  parseProgram,
+  ParseFileArgs,
+  parseFile,
+  ListOptionsArgs,
+  listOptions,
   ListVariablesArgs,
   listVariables,
   OverrideFileArgs,
   overrideFile,
+  GetSchemaTypeMappingArgs,
+  getSchemaTypeMapping,
+  FormatCodeArgs,
+  formatCode,
+  FormatPathArgs,
+  formatPath,
+  LintPathArgs,
+  lintPath,
+  ValidateCodeArgs,
+  validateCode,
+  LoadSettingsFilesArgs,
+  loadSettingsFiles,
+  RenameArgs,
+  rename,
+  RenameCodeArgs,
+  renameCode,
+  TestArgs,
+  test,
   UpdateDependenciesArgs,
   updateDependencies,
   getVersion,
@@ -302,10 +326,34 @@ module.exports.LoadPackageArgs = LoadPackageArgs
 module.exports.loadPackage = loadPackage
 module.exports.ExecProgramArgs = ExecProgramArgs
 module.exports.execProgram = execProgram
+module.exports.ParseProgramArgs = ParseProgramArgs
+module.exports.parseProgram = parseProgram
+module.exports.ParseFileArgs = ParseFileArgs
+module.exports.parseFile = parseFile
+module.exports.ListOptionsArgs = ListOptionsArgs
+module.exports.listOptions = listOptions
 module.exports.ListVariablesArgs = ListVariablesArgs
 module.exports.listVariables = listVariables
 module.exports.OverrideFileArgs = OverrideFileArgs
 module.exports.overrideFile = overrideFile
+module.exports.GetSchemaTypeMappingArgs = GetSchemaTypeMappingArgs
+module.exports.getSchemaTypeMapping = getSchemaTypeMapping
+module.exports.FormatCodeArgs = FormatCodeArgs
+module.exports.formatCode = formatCode
+module.exports.FormatPathArgs = FormatPathArgs
+module.exports.formatPath = formatPath
+module.exports.LintPathArgs = LintPathArgs
+module.exports.lintPath = lintPath
+module.exports.ValidateCodeArgs = ValidateCodeArgs
+module.exports.validateCode = validateCode
+module.exports.LoadSettingsFilesArgs = LoadSettingsFilesArgs
+module.exports.loadSettingsFiles = loadSettingsFiles
+module.exports.RenameArgs = RenameArgs
+module.exports.rename = rename
+module.exports.RenameCodeArgs = RenameCodeArgs
+module.exports.renameCode = renameCode
+module.exports.TestArgs = TestArgs
+module.exports.test = test
 module.exports.UpdateDependenciesArgs = UpdateDependenciesArgs
 module.exports.updateDependencies = updateDependencies
 module.exports.getVersion = getVersion
