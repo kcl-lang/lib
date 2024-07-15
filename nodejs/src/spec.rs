@@ -1,84 +1,100 @@
 use napi::bindgen_prelude::*;
 use std::collections::HashMap;
 
+/// Message representing an external package for KCL.
+/// kcl main.k -E pkg_name=pkg_path
 #[napi(object)]
 pub struct ExternalPkg {
+    /// Name of the package.
     pub pkg_name: String,
+    /// Path of the package.
     pub pkg_path: String,
 }
 
+/// Message representing a key-value argument for KCL.
 /// kcl main.k -D name=value
 #[napi(object)]
 pub struct Argument {
+    /// Name of the argument.
     pub name: String,
+    /// Value of the argument.
     pub value: String,
 }
 
+/// Message representing an error.
 #[napi(object)]
 pub struct Error {
+    /// Level of the error (e.g., "Error", "Warning").
     pub level: String,
+    /// Error code. (e.g., "E1001")
     pub code: String,
+    /// List of error messages.
     pub messages: Vec<Message>,
 }
 
+/// Message representing a detailed error message with a position.
 #[napi(object)]
 pub struct Message {
+    /// The error message text.
     pub msg: String,
+    /// The position in the source code where the error occurred.
     pub pos: Option<Position>,
 }
 
-#[napi(object)]
-pub struct PingArgs {
-    pub value: String,
-}
-
+/// Message for ping response.
 #[napi(object)]
 pub struct PingResult {
+    /// Value received in the ping response.
     pub value: String,
 }
 
-/// empty
-#[napi(object)]
-pub struct ListMethodArgs {}
-
+/// Message for list method response.
 #[napi(object)]
 pub struct ListMethodResult {
+    /// List of available method names.
     pub method_name_list: Vec<String>,
 }
 
-#[napi(object)]
-pub struct ParseFileArgs {
-    pub path: String,
-    pub source: String,
-    pub external_pkgs: Vec<ExternalPkg>,
-}
-
+/// Message for parse file response.
 #[napi(object)]
 pub struct ParseFileResult {
-    /// JSON string value
+    /// Abstract Syntax Tree (AST) in JSON format.
     pub ast_json: String,
-    /// file dependency paths
+    /// File dependency paths.
     pub deps: Vec<String>,
-    /// Parse errors
+    /// List of parse errors.
     pub errors: Vec<Error>,
 }
 
-#[napi(object)]
-pub struct ParseProgramArgs {
-    pub paths: Vec<String>,
-    pub sources: Vec<String>,
-    /// External packages path
-    pub external_pkgs: Vec<ExternalPkg>,
+impl ParseFileResult {
+    pub fn new(r: kclvm_api::ParseFileResult) -> Self {
+        Self {
+            ast_json: r.ast_json,
+            deps: r.deps,
+            errors: r.errors.iter().map(crate::spec::Error::new).collect(),
+        }
+    }
 }
 
+/// Message for parse program response.
 #[napi(object)]
 pub struct ParseProgramResult {
-    /// JSON string value
+    /// Abstract Syntax Tree (AST) in JSON format.
     pub ast_json: String,
-    /// Returns the files in the order they should be compiled
+    /// Returns the files in the order they should be compiled.
     pub paths: Vec<String>,
-    /// Parse errors
+    /// List of parse errors.
     pub errors: Vec<Error>,
+}
+
+impl ParseProgramResult {
+    pub fn new(r: kclvm_api::ParseProgramResult) -> Self {
+        Self {
+            ast_json: r.ast_json,
+            paths: r.paths,
+            errors: r.errors.iter().map(crate::spec::Error::new).collect(),
+        }
+    }
 }
 
 impl crate::spec::Error {
@@ -127,9 +143,9 @@ impl crate::spec::Symbol {
         crate::spec::Symbol {
             ty: v.ty.as_ref().map(|ty| ty.r#type.clone()),
             name: v.name.clone(),
-            owner: v.owner.as_ref().map(|v| SymbolIndex::new(v)),
-            def: v.def.as_ref().map(|v| SymbolIndex::new(v)),
-            attrs: v.attrs.iter().map(|v| SymbolIndex::new(v)).collect(),
+            owner: v.owner.as_ref().map(SymbolIndex::new),
+            def: v.def.as_ref().map(SymbolIndex::new),
+            attrs: v.attrs.iter().map(SymbolIndex::new).collect(),
             is_global: v.is_global,
         }
     }
@@ -140,16 +156,8 @@ impl LoadPackageResult {
         Self {
             program: r.program,
             paths: r.paths,
-            parse_errors: r
-                .parse_errors
-                .iter()
-                .map(|e| crate::spec::Error::new(e))
-                .collect(),
-            type_errors: r
-                .type_errors
-                .iter()
-                .map(|e| crate::spec::Error::new(e))
-                .collect(),
+            parse_errors: r.parse_errors.iter().map(crate::spec::Error::new).collect(),
+            type_errors: r.type_errors.iter().map(crate::spec::Error::new).collect(),
             scopes: r
                 .scopes
                 .iter()
@@ -158,10 +166,10 @@ impl LoadPackageResult {
                         k.to_string(),
                         Scope {
                             kind: v.kind.clone(),
-                            parent: v.parent.as_ref().map(|v| ScopeIndex::new(&v)),
-                            owner: v.owner.as_ref().map(|v| SymbolIndex::new(&v)),
-                            children: v.children.iter().map(|v| ScopeIndex::new(v)).collect(),
-                            defs: v.defs.iter().map(|v| SymbolIndex::new(v)).collect(),
+                            parent: v.parent.as_ref().map(ScopeIndex::new),
+                            owner: v.owner.as_ref().map(SymbolIndex::new),
+                            children: v.children.iter().map(ScopeIndex::new).collect(),
+                            defs: v.defs.iter().map(SymbolIndex::new).collect(),
                         },
                     )
                 })
@@ -191,6 +199,7 @@ impl LoadPackageResult {
     }
 }
 
+/// Message for load package response.
 #[napi(object)]
 pub struct LoadPackageResult {
     /// JSON string value
@@ -215,40 +224,79 @@ pub struct LoadPackageResult {
     pub pkg_scope_map: HashMap<String, ScopeIndex>,
 }
 
+/// Message for list options response.
 #[napi(object)]
 pub struct ListOptionsResult {
     /// Returns the files in the order they should be compiled
     pub options: Vec<OptionHelp>,
 }
 
+impl ListOptionsResult {
+    pub fn new(r: kclvm_api::ListOptionsResult) -> Self {
+        Self {
+            options: r
+                .options
+                .iter()
+                .map(|r| OptionHelp {
+                    name: r.name.clone(),
+                    r#type: r.r#type.clone(),
+                    required: r.required,
+                    default_value: r.default_value.clone(),
+                    help: r.help.clone(),
+                })
+                .collect(),
+        }
+    }
+}
+
+/// Message representing a help option.
 #[napi(object)]
 pub struct OptionHelp {
+    /// Name of the option.
     pub name: String,
+    /// Type of the option.
     pub r#type: String,
+    /// Flag indicating if the option is required.
     pub required: bool,
+    /// Default value of the option.
     pub default_value: String,
+    /// Help text for the option.
     pub help: String,
 }
 
+/// Message representing a symbol in KCL.
 #[napi(object)]
 pub struct Symbol {
+    /// Type of the symbol.
     pub ty: Option<String>,
+    /// Name of the symbol.
     pub name: String,
+    /// Owner of the symbol.
     pub owner: Option<SymbolIndex>,
+    /// Definition of the symbol.
     pub def: Option<SymbolIndex>,
+    /// Attributes of the symbol.
     pub attrs: Vec<SymbolIndex>,
+    /// Flag indicating if the symbol is global.
     pub is_global: bool,
 }
 
+/// Message representing a scope in KCL.
 #[napi(object)]
 pub struct Scope {
+    /// Type of the scope.
     pub kind: String,
+    /// Parent scope.
     pub parent: Option<ScopeIndex>,
+    /// Owner of the scope.
     pub owner: Option<SymbolIndex>,
+    /// Children of the scope.
     pub children: Vec<ScopeIndex>,
+    /// Definitions in the scope.
     pub defs: Vec<SymbolIndex>,
 }
 
+/// Message representing a symbol index.
 #[napi(object)]
 pub struct SymbolIndex {
     pub i: u32,
@@ -256,6 +304,7 @@ pub struct SymbolIndex {
     pub kind: String,
 }
 
+/// Message representing a scope index.
 #[napi(object)]
 pub struct ScopeIndex {
     pub i: u32,
@@ -263,11 +312,16 @@ pub struct ScopeIndex {
     pub kind: String,
 }
 
+/// Message for execute program response.
 #[napi(object)]
 pub struct ExecProgramResult {
+    /// Result in JSON format.
     pub json_result: String,
+    /// Result in YAML format.
     pub yaml_result: String,
+    /// Log message from execution.
     pub log_message: String,
+    /// Error message from execution.
     pub err_message: String,
 }
 
@@ -282,80 +336,105 @@ impl ExecProgramResult {
     }
 }
 
+/// Message for build program response.
 #[napi(object)]
 pub struct BuildProgramResult {
+    /// Path of the built program.
     pub path: String,
 }
 
-#[napi(object)]
-pub struct ResetPluginArgs {
-    pub plugin_root: String,
-}
-
-/// empty
-#[napi(object)]
-pub struct ResetPluginResult {}
-
-#[napi(object)]
-pub struct FormatCodeArgs {
-    pub source: String,
-}
-
+/// Message for format code response.
 #[napi(object)]
 pub struct FormatCodeResult {
-    pub formatted: Vec<u8>,
+    /// Formatted code as bytes.
+    pub formatted: String,
 }
 
-#[napi(object)]
-pub struct FormatPathArgs {
-    pub path: String,
+impl FormatCodeResult {
+    pub fn new(r: kclvm_api::FormatCodeResult) -> Self {
+        Self {
+            formatted: String::from_utf8(r.formatted).unwrap(),
+        }
+    }
 }
 
+/// Message for format file path response.
 #[napi(object)]
 pub struct FormatPathResult {
+    /// List of changed file paths.
     pub changed_paths: Vec<String>,
 }
 
-#[napi(object)]
-pub struct LintPathArgs {
-    pub paths: Vec<String>,
+impl FormatPathResult {
+    pub fn new(r: kclvm_api::FormatPathResult) -> Self {
+        Self {
+            changed_paths: r.changed_paths,
+        }
+    }
 }
 
+/// Message for lint file path response.
 #[napi(object)]
 pub struct LintPathResult {
+    /// List of lint results.
     pub results: Vec<String>,
 }
 
+impl LintPathResult {
+    pub fn new(r: kclvm_api::LintPathResult) -> Self {
+        Self { results: r.results }
+    }
+}
+
+/// Message for override file response.
 #[napi(object)]
 pub struct OverrideFileResult {
+    /// Result of the override operation.
     pub result: bool,
+    // List of parse errors encountered.
+    pub parse_errors: Vec<Error>,
 }
 
 impl OverrideFileResult {
     pub fn new(r: kclvm_api::OverrideFileResult) -> Self {
-        Self { result: r.result }
+        Self {
+            result: r.result,
+            parse_errors: r.parse_errors.iter().map(crate::spec::Error::new).collect(),
+        }
     }
 }
 
+/// Message for list variables options.
 #[napi(object)]
 pub struct ListVariablesOptions {
+    /// Flag to merge program configuration.
     pub merge_program: bool,
 }
 
+/// Message for list variables response.
 #[napi(object)]
 pub struct ListVariablesResult {
+    /// Map of variable lists by file.
     pub variables: HashMap<String, Vec<Variable>>,
+    /// List of unsupported codes.
     pub unsupported_codes: Vec<String>,
+    /// List of parse errors encountered.
     pub parse_errors: Vec<Error>,
 }
 
+/// Message representing a variable.
 #[napi(object)]
 #[derive(Default, Debug)]
 pub struct Variable {
+    /// Value of the variable.
     pub value: String,
+    /// Type name of the variable.
     pub type_name: String,
+    /// Operation symbol associated with the variable.
     pub op_sym: String,
+    /// List items if the variable is a list.
     pub list_items: Vec<Variable>,
+    /// Dictionary entries if the variable is a dictionary.
     pub dict_entires: HashMap<String, Variable>,
 }
 
@@ -365,7 +444,7 @@ impl Variable {
             value: v.value.to_string(),
             type_name: v.type_name.to_string(),
             op_sym: v.op_sym.to_string(),
-            list_items: v.list_items.iter().map(|v| Variable::new(v)).collect(),
+            list_items: v.list_items.iter().map(Variable::new).collect(),
             dict_entires: v
                 .dict_entries
                 .iter()
@@ -389,113 +468,138 @@ impl ListVariablesResult {
                 .map(|(k, v)| {
                     (
                         k.to_string(),
-                        v.variables.iter().map(|v| Variable::new(v)).collect(),
+                        v.variables.iter().map(Variable::new).collect(),
                     )
                 })
                 .collect(),
             unsupported_codes: r.unsupported_codes,
-            parse_errors: r
-                .parse_errors
+            parse_errors: r.parse_errors.iter().map(crate::spec::Error::new).collect(),
+        }
+    }
+}
+
+// Message for get schema type mapping response.
+#[napi(object)]
+pub struct GetSchemaTypeMappingResult {
+    /// Map of schema type mappings.
+    pub schema_type_mapping: HashMap<String, String>,
+}
+
+impl GetSchemaTypeMappingResult {
+    pub fn new(r: kclvm_api::GetSchemaTypeMappingResult) -> Self {
+        Self {
+            schema_type_mapping: r
+                .schema_type_mapping
                 .iter()
-                .map(|e| crate::spec::Error::new(e))
+                .map(|(k, v)| (k.to_string(), v.r#type.clone()))
                 .collect(),
         }
     }
 }
 
-#[napi(object)]
-pub struct GetSchemaTypeResult {
-    pub schema_type_list: Vec<KclType>,
-}
-
-#[napi(object)]
-pub struct GetSchemaTypeMappingResult {
-    pub schema_type_mapping: HashMap<String, KclType>,
-}
-
-#[napi(object)]
-pub struct ValidateCodeArgs {
-    pub datafile: String,
-    pub data: String,
-    pub file: String,
-    pub code: String,
-    pub schema: String,
-    pub attribute_name: String,
-    pub format: String,
-}
-
+/// Message for validate code response.
 #[napi(object)]
 pub struct ValidateCodeResult {
+    /// Flag indicating if validation was successful.
     pub success: bool,
+    /// Error message from validation.
     pub err_message: String,
 }
 
+impl ValidateCodeResult {
+    pub fn new(r: kclvm_api::ValidateCodeResult) -> Self {
+        Self {
+            success: r.success,
+            err_message: r.err_message,
+        }
+    }
+}
+
+/// Message representing a position in the source code.
 #[napi(object)]
 pub struct Position {
+    /// Line number.
     pub line: i64,
+    /// Column number.
     pub column: i64,
+    /// Filename the position refers to.
     pub filename: String,
 }
 
-#[napi(object)]
-pub struct ListDepFilesArgs {
-    pub work_dir: String,
-    pub use_abs_path: bool,
-    pub include_all: bool,
-    pub use_fast_parser: bool,
-}
-
-#[napi(object)]
-pub struct ListDepFilesResult {
-    pub pkgroot: String,
-    pub pkgpath: String,
-    pub files: Vec<String>,
-}
-
-#[napi(object)]
-pub struct LoadSettingsFilesArgs {
-    pub work_dir: String,
-    pub files: Vec<String>,
-}
-
+/// Message for load settings files response.
 #[napi(object)]
 pub struct LoadSettingsFilesResult {
+    /// KCL CLI configuration.
     pub kcl_cli_configs: Option<CliConfig>,
+    /// List of KCL options as key-value pairs.
     pub kcl_options: Vec<KeyValuePair>,
 }
 
+impl LoadSettingsFilesResult {
+    pub fn new(r: kclvm_api::LoadSettingsFilesResult) -> Self {
+        Self {
+            kcl_cli_configs: r.kcl_cli_configs.map(|r| CliConfig {
+                files: r.files.clone(),
+                output: r.output.clone(),
+                overrides: r.overrides.clone(),
+                path_selector: r.path_selector.clone(),
+                strict_range_check: r.strict_range_check,
+                disable_none: r.disable_none,
+                verbose: r.verbose,
+                debug: r.debug,
+                sort_keys: r.sort_keys,
+                show_hidden: r.show_hidden,
+                include_schema_type_path: r.include_schema_type_path,
+                fast_eval: r.fast_eval,
+            }),
+            kcl_options: r
+                .kcl_options
+                .iter()
+                .map(|r| KeyValuePair {
+                    key: r.key.clone(),
+                    value: r.value.clone(),
+                })
+                .collect(),
+        }
+    }
+}
+
+/// Message representing KCL CLI configuration.
 #[napi(object)]
 pub struct CliConfig {
+    /// List of files.
     pub files: Vec<String>,
+    /// Output path.
     pub output: String,
+    /// List of overrides.
     pub overrides: Vec<String>,
+    /// Path selectors.
     pub path_selector: Vec<String>,
+    /// Flag for strict range check.
     pub strict_range_check: bool,
+    /// Flag to disable none values.
     pub disable_none: bool,
+    /// Verbose level.
     pub verbose: i64,
+    /// Debug flag.
     pub debug: bool,
+    /// Flag to sort keys in YAML/JSON results.
     pub sort_keys: bool,
+    /// Flag to show hidden attributes.
     pub show_hidden: bool,
+    /// Flag to include schema type path in results.
     pub include_schema_type_path: bool,
+    /// Flag for fast evaluation.
     pub fast_eval: bool,
 }
 
+/// Message representing a key-value pair.
 #[napi(object)]
 pub struct KeyValuePair {
+    /// Key of the pair.
     pub key: String,
+    /// Value of the pair.
     pub value: String,
-}
-
-#[napi(object)]
-pub struct RenameArgs {
-    /// the file path to the package root
-    pub package_root: String,
-    /// the path to the target symbol to be renamed. The symbol path should conform to format: `<pkgpath>:<field_path>` When the pkgpath is '__main__', `<pkgpath>:` can be omitted.
-    pub symbol_path: String,
-    /// the paths to the source code files
-    pub file_paths: Vec<String>,
-    /// the new name of the symbol
-    pub new_name: String,
 }
 
 #[napi(object)]
@@ -504,37 +608,67 @@ pub struct RenameResult {
     pub changed_files: Vec<String>,
 }
 
-#[napi(object)]
-pub struct RenameCodeArgs {
-    /// the file path to the package root
-    pub package_root: String,
-    /// the path to the target symbol to be renamed. The symbol path should conform to format: `<pkgpath>:<field_path>` When the pkgpath is '__main__', `<pkgpath>:` can be omitted.
-    pub symbol_path: String,
-    /// the source code. a <filename>:<code> map
-    pub source_codes: HashMap<String, String>,
-    /// the new name of the symbol
-    pub new_name: String,
+impl RenameResult {
+    pub fn new(r: kclvm_api::RenameResult) -> Self {
+        Self {
+            changed_files: r.changed_files,
+        }
+    }
 }
 
+// Message for rename response.
 #[napi(object)]
 pub struct RenameCodeResult {
     /// the changed code. a <filename>:<code> map
     pub changed_codes: HashMap<String, String>,
 }
 
+impl RenameCodeResult {
+    pub fn new(r: kclvm_api::RenameCodeResult) -> Self {
+        Self {
+            changed_codes: r.changed_codes,
+        }
+    }
+}
+
+/// Message for test response.
 #[napi(object)]
 pub struct TestResult {
+    /// List of test case information.
     pub info: Vec<TestCaseInfo>,
 }
 
+impl TestResult {
+    pub fn new(r: kclvm_api::TestResult) -> Self {
+        Self {
+            info: r
+                .info
+                .iter()
+                .map(|r| TestCaseInfo {
+                    name: r.name.clone(),
+                    error: r.error.clone(),
+                    duration: r.duration as i64,
+                    log_message: r.log_message.clone(),
+                })
+                .collect(),
+        }
+    }
+}
+
+/// Message representing information about a single test case.
 #[napi(object)]
 pub struct TestCaseInfo {
-    /// Test case name
+    /// Name of the test case.
     pub name: String,
+    /// Error message if any.
     pub error: String,
+    /// Duration of the test case in microseconds.
+    pub duration: i64,
+    /// Log message from the test case.
     pub log_message: String,
 }
 
+/// Message representing a KCL type.
 #[napi(object)]
 pub struct KclType {
     /// schema, dict, list, str, int, float, bool, any, union, number_multiplier
@@ -568,22 +702,32 @@ pub struct KclType {
     pub examples: HashMap<String, Example>,
 }
 
+/// Message representing a decorator in KCL.
 #[napi(object)]
 pub struct Decorator {
+    /// Name of the decorator.
     pub name: String,
+    /// Arguments for the decorator.
     pub arguments: Vec<String>,
+    /// Keyword arguments for the decorator as a map with keyword name as key.
     pub keywords: HashMap<String, String>,
 }
 
+/// Message representing an example in KCL.
 #[napi(object)]
 pub struct Example {
+    /// Short description for the example.
     pub summary: String,
+    /// Long description for the example.
     pub description: String,
+    /// Embedded literal example.
     pub value: String,
 }
 
+/// Message for update dependencies response.
 #[napi(object)]
 pub struct UpdateDependenciesResult {
+    /// List of external packages updated.
     pub external_pkgs: Vec<ExternalPkg>,
 }
 
