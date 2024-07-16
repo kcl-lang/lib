@@ -1,6 +1,8 @@
 git clone https://github.com/nanopb/nanopb.git
 cd nanopb
 grep -v '^package' ../../../spec/gpyrpc/spec.proto > "spec.proto"
+sed -i '' -e 's|string default |string default_ |g' spec.proto
+
 python3 generator/nanopb_generator.py spec.proto
 
 # Copy headers

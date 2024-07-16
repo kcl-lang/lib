@@ -1,5 +1,5 @@
-#ifndef _API_H
-#define _API_H
+#ifndef _KCL_LIB_H
+#define _KCL_LIB_H
 
 #ifdef __cplusplus
 extern "C" {

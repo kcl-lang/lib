@@ -8,3 +8,4 @@
 build/
 examples/ping_api
 examples/exec_api
+examples/validate_api

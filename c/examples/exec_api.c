@@ -1,12 +1,10 @@
 #include <kcl_lib.h>
 
-int main()
-{
+int exec_file(const char* file_str) {
     uint8_t buffer[BUFFER_SIZE];
     uint8_t result_buffer[BUFFER_SIZE];
     size_t message_length;
     bool status;
-    const char* file_str = "./test_data/schema.k";
     struct Buffer file = {
         .buffer = file_str,
         .len = strlen(file_str),
@@ -35,22 +33,22 @@ int main()
     pb_istream_t istream = pb_istream_from_buffer(result_buffer, result_length);
 
     ExecProgram_Result result = ExecProgram_Result_init_default;
-    result.yaml_result.funcs.decode = decode_string;
-    result.json_result.funcs.decode = decode_string;
-    result.err_message.funcs.decode = decode_string;
-    result.log_message.funcs.decode = decode_string;
 
     uint8_t yaml_value_buffer[BUFFER_SIZE] = { 0 };
     result.yaml_result.arg = yaml_value_buffer;
+    result.yaml_result.funcs.decode = decode_string;
 
     uint8_t json_value_buffer[BUFFER_SIZE] = { 0 };
     result.json_result.arg = json_value_buffer;
+    result.json_result.funcs.decode = decode_string;
 
     uint8_t err_value_buffer[BUFFER_SIZE] = { 0 };
     result.err_message.arg = err_value_buffer;
+    result.err_message.funcs.decode = decode_string;
 
     uint8_t log_value_buffer[BUFFER_SIZE] = { 0 };
     result.log_message.arg = log_value_buffer;
+    result.log_message.funcs.decode = decode_string;
 
     status = pb_decode(&istream, ExecProgram_Result_fields, &result);
 
@@ -63,5 +61,11 @@ int main()
         printf("%s\n", (char*)result.yaml_result.arg);
     }
 
+    return 0;
+}
+
+int main()
+{
+    exec_file("./test_data/schema.k");
     return 0;
 }
