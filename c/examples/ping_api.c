@@ -1,7 +1,6 @@
 #include <kcl_lib.h>
 
-int main()
-{
+int ping(const char* msg) {
     uint8_t buffer[BUFFER_SIZE];
     uint8_t result_buffer[BUFFER_SIZE];
     size_t message_length;
@@ -10,8 +9,7 @@ int main()
     Ping_Args ping_args = Ping_Args_init_zero;
     pb_ostream_t stream = pb_ostream_from_buffer(buffer, sizeof(buffer));
     ping_args.value.funcs.encode = encode_string;
-    const char* hello_str = "hello";
-    ping_args.value.arg = (void*)hello_str;
+    ping_args.value.arg = (void*)msg;
 
     status = pb_encode(&stream, Ping_Args_fields, &ping_args);
     message_length = stream.bytes_written;
@@ -25,12 +23,12 @@ int main()
     size_t result_length = call_native((const uint8_t*)api_str, strlen(api_str), buffer, message_length, result_buffer);
 
     pb_istream_t istream = pb_istream_from_buffer(result_buffer, result_length);
-    Ping_Args decoded_ping_args = Ping_Args_init_default;
+    Ping_Result decoded_ping_args = Ping_Result_init_default;
     decoded_ping_args.value.funcs.decode = decode_string;
     uint8_t value_buffer[BUFFER_SIZE] = { 0 };
     decoded_ping_args.value.arg = value_buffer;
 
-    status = pb_decode(&istream, Ping_Args_fields, &decoded_ping_args);
+    status = pb_decode(&istream, Ping_Result_fields, &decoded_ping_args);
 
     if (!status) {
         printf("Decoding failed: %s\n", PB_GET_ERROR(&istream));
@@ -43,5 +41,12 @@ int main()
         printf("No decoded message\n");
     }
 
+    return 0;
+}
+
+int main()
+{
+    ping("hello");
+    ping("world");
     return 0;
 }

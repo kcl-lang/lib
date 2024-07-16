@@ -33,8 +33,8 @@ fmt:
 	find . -name '*.cpp' -exec clang-format -i --style=WebKit --verbose {} \;
 	find . -name '*.c' -exec clang-format -i --style=WebKit --verbose {} \;
 
-.PHONY: cargo-build
-cargo-cargo:
+.PHONY: cargo
+cargo:
 	cargo build -r
 
 $(BUILD_DIR):
