@@ -1,6 +1,7 @@
 #include <kcl_lib.h>
 
-int exec_file(const char* file_str) {
+int exec_file(const char* file_str)
+{
     uint8_t buffer[BUFFER_SIZE];
     uint8_t result_buffer[BUFFER_SIZE];
     size_t message_length;

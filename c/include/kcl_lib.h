@@ -14,6 +14,8 @@ extern "C" {
 #include <stddef.h>
 #include <stdbool.h>
 
+#include "kcl_ffi.h"
+
 #define BUFFER_SIZE 1024
 
 struct Buffer {
@@ -76,12 +78,6 @@ bool check_error_prefix(uint8_t result_buffer[])
     }
     return false;
 }
-
-uintptr_t call_native(const uint8_t *name_ptr,
-                      uintptr_t name_len,
-                      const uint8_t *args_ptr,
-                      uintptr_t args_len,
-                      uint8_t *result_ptr);
 
 #ifdef __cplusplus
 } /* extern "C" */
