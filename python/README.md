@@ -103,39 +103,6 @@ except Exception as err:
 </p>
 </details>
 
-### parse_program
-
-Parse KCL program with entry files and return the AST JSON string.
-
-<details><summary>Example</summary>
-<p>
-
-The content of `schema.k` is
-
-```python
-schema AppConfig:
-    replicas: int
-
-app: AppConfig {
-    replicas: 2
-}
-```
-
-Python Code
-
-```python
-import kcl_lib.api as api
-
-args = api.ParseProgram_Args(paths=["schema.k"])
-api = api.API()
-result = api.parse_program(args)
-assert len(result.paths) == 1
-assert len(result.errors) == 0
-```
-
-</p>
-</details>
-
 ### parse_file
 
 Parse KCL single file to Module AST JSON string with import dependencies and parse errors.
@@ -159,11 +126,9 @@ Python Code
 ```python
 import kcl_lib.api as api
 
-args = api.ParseProgram_Args(paths=[TEST_FILE])
+args = api.ParseParseFile_Args(path=TEST_FILE)
 api = api.API()
-result = api.parse_program(args)
-assert len(result.paths) == 1
-assert len(result.errors) == 0
+result = api.parse_file(args)
 ```
 
 </p>

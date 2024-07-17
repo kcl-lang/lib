@@ -26,7 +26,7 @@ This way you'll be able to import the above dependency to use the SDK.
 <dependency>
     <groupId>com.kcl</groupId>
     <artifactId>kcl-lib</artifactId>
-    <version>0.9.1-SNAPSHOT</version>
+    <version>0.9.2-SNAPSHOT</version>
 </dependency>
 ```
 
@@ -107,42 +107,6 @@ ExecProgram_Result result = apiInstance.execProgram(args);
 </p>
 </details>
 
-### parseProgram
-
-Parse KCL program with entry files and return the AST JSON string.
-
-<details><summary>Example</summary>
-<p>
-
-The content of `schema.k` is
-
-```python
-schema AppConfig:
-    replicas: int
-
-app: AppConfig {
-    replicas: 2
-}
-```
-
-Java Code
-
-```java
-import com.kcl.api.*;
-import com.kcl.ast.*;
-import com.kcl.util.JsonUtil;
-
-API api = new API();
-ParseProgram_Result result = api.parseProgram(
-   ParseProgram_Args.newBuilder().addPaths("schema.k").build()
-);
-System.out.println(result.getAstJson());
-Program program = JsonUtil.deserializeProgram(result.getAstJson());
-```
-
-</p>
-</details>
-
 ### parseFile
 
 Parse KCL single file to Module AST JSON string with import dependencies and parse errors.
@@ -169,42 +133,6 @@ import com.kcl.api.*;
 ParseFile_Args args = ParseFile_Args.newBuilder().setPath("schema.k").build();
 API apiInstance = new API();
 ParseFile_Result result = apiInstance.parseFile(args);
-```
-
-</p>
-</details>
-
-### parseProgram
-
-Parse KCL program with entry files and return the AST JSON string.
-
-<details><summary>Example</summary>
-<p>
-
-The content of `schema.k` is
-
-```python
-schema AppConfig:
-    replicas: int
-
-app: AppConfig {
-    replicas: 2
-}
-```
-
-Java Code
-
-```java
-import com.kcl.api.*;
-import com.kcl.ast.*;
-import com.kcl.util.JsonUtil;
-
-API api = new API();
-ParseProgram_Result result = api.parseProgram(
-   ParseProgram_Args.newBuilder().addPaths("path/to/kcl.k").build()
-);
-System.out.println(result.getAstJson());
-Program program = JsonUtil.deserializeProgram(result.getAstJson());
 ```
 
 </p>
