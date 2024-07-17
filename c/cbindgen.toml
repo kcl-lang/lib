@@ -1,0 +1,9 @@
+cpp_compat = true
+include_guard = "_KCL_FFI_H"
+language = "C"
+no_includes = true
+sys_includes = ["stdint.h", "stddef.h", "stdbool.h"]
+
+[parse]
+include = ["kcl_ffi"]
+parse_deps = true

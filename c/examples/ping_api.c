@@ -1,6 +1,7 @@
 #include <kcl_lib.h>
 
-int ping(const char* msg) {
+int ping(const char* msg)
+{
     uint8_t buffer[BUFFER_SIZE];
     uint8_t result_buffer[BUFFER_SIZE];
     size_t message_length;
