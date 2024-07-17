@@ -25,9 +25,6 @@ public class ConfigEntry {
     @JsonProperty("operation")
     private ConfigEntryOperation operation;
 
-    @JsonProperty("insert_index")
-    private int insertIndex;
-
     public NodeRef<Expr> getKey() {
         return key;
     }
@@ -50,13 +47,5 @@ public class ConfigEntry {
 
     public void setOperation(ConfigEntryOperation operation) {
         this.operation = operation;
-    }
-
-    public int getInsertIndex() {
-        return insertIndex;
-    }
-
-    public void setInsertIndex(int insertIndex) {
-        this.insertIndex = insertIndex;
     }
 }
