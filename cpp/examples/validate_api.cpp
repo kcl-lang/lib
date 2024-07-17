@@ -1,7 +1,8 @@
 #include "kcl_lib.hpp"
 #include <iostream>
 
-int validate(const char* code_str, const char* data_str) {
+int validate(const char* code_str, const char* data_str)
+{
     auto args = kcl_lib::ValidateCodeArgs();
     args.code = rust::String(code_str);
     args.data = rust::String(data_str);

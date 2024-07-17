@@ -40,27 +40,18 @@ set_target_properties(kcl-lib-cpp
         PROPERTIES ADDITIONAL_CLEAN_FILES ${CARGO_TARGET_DIR}
 )
 
-add_executable(exec_api examples/exec_api.cpp)
-target_include_directories(exec_api PUBLIC ${CPP_INCLUDE_DIR})
-target_link_libraries(exec_api PUBLIC kcl-lib-cpp)
-# Platform-specific test configuration
-if(WIN32)
-    target_link_libraries(exec_api PRIVATE userenv ws2_32 bcrypt)
-endif()
-if(APPLE)
-    target_link_libraries(exec_api PRIVATE "-framework CoreFoundation -framework Security")
-endif()
-
-add_executable(validate_api examples/validate_api.cpp)
-target_include_directories(validate_api PUBLIC ${CPP_INCLUDE_DIR})
-target_link_libraries(validate_api PUBLIC kcl-lib-cpp)
-# Platform-specific test configuration
-if(WIN32)
-    target_link_libraries(validate_api PRIVATE userenv ws2_32 bcrypt)
-endif()
-if(APPLE)
-    target_link_libraries(validate_api PRIVATE "-framework CoreFoundation -framework Security")
-endif()
+set(EXECUTABLES exec_api exec_with_deps_api override_api update_deps_api validate_api)
+foreach(EXE IN LISTS EXECUTABLES)
+    add_executable(${EXE} examples/${EXE}.cpp)
+    target_include_directories(${EXE} PUBLIC ${CPP_INCLUDE_DIR})
+    target_link_libraries(${EXE} PUBLIC kcl-lib-cpp)
+    if(WIN32)
+        target_link_libraries(${EXE} PRIVATE userenv ws2_32 bcrypt)
+    endif()
+    if(APPLE)
+        target_link_libraries(${EXE} PRIVATE "-framework CoreFoundation -framework Security")
+    endif()
+endforeach()
 
 # Platform-specific test configuration
 if(WIN32)
