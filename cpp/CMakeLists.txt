@@ -40,7 +40,7 @@ set_target_properties(kcl-lib-cpp
         PROPERTIES ADDITIONAL_CLEAN_FILES ${CARGO_TARGET_DIR}
 )
 
-set(EXECUTABLES exec_api exec_with_deps_api override_api update_deps_api validate_api)
+set(EXECUTABLES exec_api exec_with_deps_api override_api update_deps_api validate_api list_options_api get_version_api load_settings_files_api testing_api rename_code_api rename_api lint_path_api format_path_api format_code_api get_schema_type_api list_variables_api load_package_api parse_file_api parse_program_api)
 foreach(EXE IN LISTS EXECUTABLES)
     add_executable(${EXE} examples/${EXE}.cpp)
     target_include_directories(${EXE} PUBLIC ${CPP_INCLUDE_DIR})
