@@ -1,7 +1,7 @@
 //go:build linux || darwin
 // +build linux darwin
 
-package lib
+package install
 
 import (
 	"fmt"

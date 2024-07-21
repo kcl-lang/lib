@@ -1,4 +1,4 @@
-package lib
+package install
 
 import (
 	"fmt"
@@ -6,6 +6,8 @@ import (
 	"os/exec"
 	"path/filepath"
 	"runtime"
+
+	lib "kcl-lang.io/lib/go/lib"
 )
 
 const KCLVM_VERSION = "v0.9.3"
@@ -60,7 +62,7 @@ func InstallKclvm(installRoot string) error {
 	}
 
 	// Install kclvm binary.
-	err = installBin(binPath, "kclvm_cli", kclvmCliBin, versionMatched)
+	err = installBin(binPath, "kclvm_cli", lib.CliBin, versionMatched)
 	if err != nil {
 		return err
 	}
@@ -80,33 +82,5 @@ func InstallKclvm(installRoot string) error {
 
 	os.Setenv("PATH", os.Getenv("PATH")+string(os.PathListSeparator)+binPath)
 
-	return nil
-}
-
-func installBin(binDir, binName string, content []byte, versionMatched bool) error {
-	binPath := findPath(binName)
-	if binPath == "" || !versionMatched {
-		if runtime.GOOS == "windows" {
-			binName += ".exe"
-		}
-		binPath = filepath.Join(binDir, binName)
-		err := os.MkdirAll(binDir, 0777)
-		if err != nil {
-			return err
-		}
-		binFile, err := os.Create(binPath)
-		defer func() {
-			binFile.Close()
-		}()
-		if err != nil {
-			return err
-		}
-		_, err = binFile.Write(content)
-		if err != nil {
-			return err
-		}
-		fileMode := os.FileMode(0777)
-		os.Chmod(binPath, fileMode)
-	}
 	return nil
 }

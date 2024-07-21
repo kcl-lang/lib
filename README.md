@@ -48,12 +48,12 @@ Write the Code
 package main
 
 import (
-	"kcl-lang.io/lib"
+	"kcl-lang.io/lib/go/install"
 )
 
 func main() {
     path = "path/to/install/lib"
-    _ := lib.InstallKclvm(path)
+    _ := install.InstallKclvm(path)
 }
 ```
 

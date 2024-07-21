@@ -1,0 +1,6 @@
+
+!lib/**/*.dylib
+!lib/**/*.dll
+!lib/**/*.lib
+!lib/**/*.so
+!lib/**/*.exe
