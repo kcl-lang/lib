@@ -435,7 +435,7 @@ pub struct Variable {
     /// List items if the variable is a list.
     pub list_items: Vec<Variable>,
     /// Dictionary entries if the variable is a dictionary.
-    pub dict_entires: HashMap<String, Variable>,
+    pub dict_entries: HashMap<String, Variable>,
 }
 
 impl Variable {
@@ -445,7 +445,7 @@ impl Variable {
             type_name: v.type_name.to_string(),
             op_sym: v.op_sym.to_string(),
             list_items: v.list_items.iter().map(Variable::new).collect(),
-            dict_entires: v
+            dict_entries: v
                 .dict_entries
                 .iter()
                 .map(|e| {
