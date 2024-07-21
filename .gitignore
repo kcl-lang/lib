@@ -31,10 +31,3 @@ _a.out_*.*
 **/.DS_Store
 **/.vscode
 __pycache__
-
-!lib/**/*.dylib
-!lib/**/*.dll
-!lib/**/*.lib
-!lib/**/*.so
-!lib/**/*.exe
-!scripts/*.exe

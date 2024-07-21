@@ -1,10 +1,12 @@
 //go:build linux || darwin
 // +build linux darwin
 
-package lib
+package install
 
 import (
 	"runtime"
+
+	lib "kcl-lang.io/lib/go/lib"
 )
 
 func installLib(libDir, libName string, versionMatched bool) error {
@@ -15,5 +17,5 @@ func installLib(libDir, libName string, versionMatched bool) error {
 	case "linux":
 		libFullName = libFullName + ".so"
 	}
-	return writeLib(libDir, libFullName, kclvmCliLib, versionMatched)
+	return writeLib(libDir, libFullName, lib.CliLib, versionMatched)
 }
