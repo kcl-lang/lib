@@ -14,6 +14,7 @@ on:
       - "go/**"
       - "go.mod"
       - "go.sum"
+      - ".github/workflows/go-test.yaml"
   workflow_dispatch:
 
 permissions:

@@ -17,6 +17,7 @@ on:
       - main
     paths:
       - "python/**"
+      - ".github/workflows/python-test.yaml"
   workflow_dispatch:
 
 permissions:

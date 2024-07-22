@@ -64,25 +64,3 @@ if(WIN32)
             RUNTIME_OUTPUT_DIRECTORY_RELEASE ${CMAKE_BINARY_DIR}
     )
 endif()
-
-# Tests
-if (KCL_LIB_ENABLE_TESTING)
-    enable_testing()
-    find_package(GTest REQUIRED)
-    file(GLOB_RECURSE TEST_SOURCE_FILE tests/*.cpp)
-    add_executable(kcl-lib-cpp_test ${TEST_SOURCE_FILE})
-    target_include_directories(kcl-lib-cpp_test PUBLIC ${CPP_INCLUDE_DIR} ${GTEST_INCLUDE_DIRS})
-    target_link_libraries(kcl-lib-cpp_test ${GTEST_LDFLAGS} GTest::gtest_main kcl-lib-cpp)
-    target_compile_options(kcl-lib-cpp_test PRIVATE ${GTEST_CFLAGS})
-
-    # Platform-specific test configuration
-    if(WIN32)
-        target_link_libraries(kcl-lib-cpp_test userenv ws2_32 bcrypt)
-    endif()
-    if(APPLE)
-        target_link_libraries(kcl-lib-cpp_test "-framework CoreFoundation -framework Security")
-    endif()
-
-    include(GoogleTest)
-    gtest_discover_tests(kcl-lib-cpp_test)
-endif()

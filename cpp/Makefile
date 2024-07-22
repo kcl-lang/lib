@@ -7,3 +7,7 @@ fmt:
 .PHONY: cargo
 cargo:
 	cargo build -r
+
+.PHONY: cpp
+cpp:
+	cmake --build build --parallel

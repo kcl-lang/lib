@@ -22,7 +22,7 @@ STATIC_LIB = $(LIB_DIR)/libkcl_lib_c.a
 CCFLAGS=-I./include
 CXXFLAGS=-I./include -std=c++14
 
-all: cargo-build $(STATIC_LIB)
+all: cargo $(STATIC_LIB)
 
 debug: CFLAGS += -g
 debug: all
