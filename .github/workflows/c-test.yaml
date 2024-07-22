@@ -1,0 +1,56 @@
+name: c-test
+
+on:
+  push:
+    branches:
+      - main
+      - master
+    tags:
+      - '*'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "c/**"
+      - ".github/workflows/c-test.yaml"
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}-${{ github.event_name }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  build-and-test:
+    defaults:
+      run:
+        working-directory: "c"
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Install Rust
+      uses: actions-rs/toolchain@v1
+      with:
+        toolchain: 1.79
+        override: true
+        components: clippy, rustfmt
+    - name: Build
+      run: |
+        make
+        make examples
+    - name: Run Examples
+      shell: bash
+      run: |
+        cd examples
+        for file in ./*
+        do
+          if [[ -f "$file" && -x "$file" ]]; then
+            echo "Executing: $file"
+            if ! "$file"; then
+              echo "Error occurred while executing $file. Exiting script."
+              exit 1
+            fi
+          fi
+        done

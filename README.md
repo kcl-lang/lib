@@ -161,6 +161,61 @@ function main() {
 main();
 ```
 
+### C++
+
+For CMake, you can use FetchContent to add KCL C++ Lib to your project.
+
+```shell
+FetchContent_Declare(
+  kcl-lib
+  GIT_REPOSITORY https://github.com/kcl-lang/lib.git
+  GIT_TAG        v0.9.3
+  SOURCE_SUBDIR  cpp
+)
+FetchContent_MakeAvailable(kcl-lib)
+```
+
+Or you can download the source code and add it to your project.
+
+```shell
+mkdir third_party
+cd third_party
+git clone https://github.com/kcl-lang/lib.git
+```
+
+```shell
+add_subdirectory(third_party/lib/cpp)
+```
+
+```shell
+target_link_libraries(your_target kcl-lib-cpp)
+```
+
+Write the code
+
+```cpp
+#include "kcl_lib.hpp"
+#include <iostream>
+
+int main()
+{
+    auto args = kcl_lib::ExecProgramArgs();
+    auto files = rust::Vec<rust::String>();
+    files.push_back(rust::String("../test_data/schema.k"));
+    args.k_filename_list = files;
+    auto result = kcl_lib::exec_program(args);
+    std::cout << result.yaml_result.c_str() << std::endl;
+}
+```
+
+### C
+
+See [here](./c/)
+
+### WASM
+
+See [here](./wasm/)
+
 ## Documents
 
 See [here](https://www.kcl-lang.io/docs/reference/xlang-api/overview)

@@ -15,6 +15,7 @@ on:
       - main
     paths:
       - "nodejs/**"
+      - ".github/workflows/nodejs-test.yaml"
   workflow_dispatch:
 
 jobs:

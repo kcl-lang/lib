@@ -13,6 +13,7 @@ on:
     paths:
       - "Cargo.toml"
       - "src/**"
+      - ".github/workflows/rust-test.yaml"
   workflow_dispatch:
 
 permissions:
@@ -30,7 +31,7 @@ jobs:
       - name: Install rust nightly toolchain
         uses: actions-rs/toolchain@v1
         with:
-          toolchain: 1.77
+          toolchain: 1.79
           override: true
           components: clippy, rustfmt
       - name: Rust code test

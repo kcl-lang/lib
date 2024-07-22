@@ -11,6 +11,7 @@ on:
       - main
     paths:
       - "wasm/**"
+      - ".github/workflows/wasm-test.yaml"
   workflow_dispatch:
 
 jobs:
