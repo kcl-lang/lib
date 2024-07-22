@@ -42,7 +42,7 @@ target_link_libraries(your_target kcl-lib-cpp)
 + C++ Compiler with C++17 Support
 + Cargo
 
-If you build in macos, you set the environment.
+If you build on macos, you can set the environment to prevent link errors.
 
 ```shell
 # Set cargo build target on macos
