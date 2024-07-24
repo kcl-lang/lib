@@ -10,7 +10,7 @@ import (
 	lib "kcl-lang.io/lib/go/lib"
 )
 
-const KCLVM_VERSION = "v0.9.3"
+const KCLVM_VERSION = "v0.10.0-alpha.1"
 
 func findPath(name string) string {
 	if path, err := exec.LookPath(name); err == nil {

@@ -210,7 +210,7 @@ export interface Variable {
   /** List items if the variable is a list. */
   listItems: Array<Variable>
   /** Dictionary entries if the variable is a dictionary. */
-  dictEntires: Record<string, Variable>
+  dictEntries: Record<string, Variable>
 }
 export interface GetSchemaTypeMappingResult {
   /** Map of schema type mappings. */
@@ -362,60 +362,60 @@ export interface GetVersionResult {
  * Provides users with the ability to parse KCL program and semantic
  * model information including symbols, types, definitions, etc.
  */
-export function loadPackage(args: LoadPackageArgs): LoadPackageResult
+export declare function loadPackage(args: LoadPackageArgs): LoadPackageResult
 /** Execute KCL file with arguments and return the JSON/YAML result. */
-export function execProgram(args: ExecProgramArgs): ExecProgramResult
+export declare function execProgram(args: ExecProgramArgs): ExecProgramResult
 /** Parse KCL program with entry files. */
-export function parseProgram(args: ParseProgramArgs): ParseProgramResult
+export declare function parseProgram(args: ParseProgramArgs): ParseProgramResult
 /**
  * Parse KCL single file to Module AST JSON string with import dependencies
  * and parse errors.
  */
-export function parseFile(args: ParseFileArgs): ParseFileResult
+export declare function parseFile(args: ParseFileArgs): ParseFileResult
 /** Provides users with the ability to parse kcl program and get all option information. */
-export function listOptions(args: ListOptionsArgs): ListOptionsResult
+export declare function listOptions(args: ListOptionsArgs): ListOptionsResult
 /**
  * Provides users with the ability to parse KCL program and get
  * all variables by specs.
  */
-export function listVariables(args: ListVariablesArgs): ListVariablesResult
+export declare function listVariables(args: ListVariablesArgs): ListVariablesResult
 /**
  * Override KCL file with arguments.
  * See [https://www.kcl-lang.io/docs/user_docs/guides/automation](https://www.kcl-lang.io/docs/user_docs/guides/automation)
  * for more override spec guide.
  */
-export function overrideFile(args: OverrideFileArgs): OverrideFileResult
+export declare function overrideFile(args: OverrideFileArgs): OverrideFileResult
 /** Get schema type mapping. */
-export function getSchemaTypeMapping(args: GetSchemaTypeMappingArgs): GetSchemaTypeMappingResult
+export declare function getSchemaTypeMapping(args: GetSchemaTypeMappingArgs): GetSchemaTypeMappingResult
 /** Format KCL file or directory path contains KCL files and returns the changed file paths. */
-export function formatCode(args: FormatCodeArgs): FormatCodeResult
+export declare function formatCode(args: FormatCodeArgs): FormatCodeResult
 /** Format KCL file or directory path contains KCL files and returns the changed file paths. */
-export function formatPath(args: FormatPathArgs): FormatPathResult
+export declare function formatPath(args: FormatPathArgs): FormatPathResult
 /** Lint files and return error messages including errors and warnings. */
-export function lintPath(args: LintPathArgs): LintPathResult
+export declare function lintPath(args: LintPathArgs): LintPathResult
 /** Validate code using schema and data strings. */
-export function validateCode(args: ValidateCodeArgs): ValidateCodeResult
+export declare function validateCode(args: ValidateCodeArgs): ValidateCodeResult
 /** Load the setting file config defined in `kcl.yaml` */
-export function loadSettingsFiles(args: LoadSettingsFilesArgs): LoadSettingsFilesResult
+export declare function loadSettingsFiles(args: LoadSettingsFilesArgs): LoadSettingsFilesResult
 /**
  * Rename all the occurrences of the target symbol in the files. This API will rewrite files if they contain symbols to be renamed.
  * Return the file paths that got changed.
  */
-export function rename(args: RenameArgs): RenameResult
+export declare function rename(args: RenameArgs): RenameResult
 /**
  * Rename all the occurrences of the target symbol and return the modified code if any code has been changed. This API won't
  * rewrite files but return the changed code.
  */
-export function renameCode(args: RenameCodeArgs): RenameCodeResult
+export declare function renameCode(args: RenameCodeArgs): RenameCodeResult
 /** Test KCL packages with test arguments. */
-export function test(args: TestArgs): TestResult
+export declare function test(args: TestArgs): TestResult
 /**
  * Download and update dependencies defined in the `kcl.mod` file and return the
  * external package name and location list.
  */
-export function updateDependencies(args: UpdateDependenciesArgs): UpdateDependenciesResult
+export declare function updateDependencies(args: UpdateDependenciesArgs): UpdateDependenciesResult
 /** Return the KCL service version information. */
-export function getVersion(): GetVersionResult
+export declare function getVersion(): GetVersionResult
 /**
  * Message for load package request arguments.
  * - paths: List of KCL files.

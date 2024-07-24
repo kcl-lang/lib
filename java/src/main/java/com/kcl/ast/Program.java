@@ -11,16 +11,6 @@ import java.util.List;
  * `AST` class. The main structure of a KCL program is as follows:
  *
  * <p>
- * ┌─────────────────────────────────────────────────────────────────┐ │ Program │ │ ┌─────────────────┐
- * ┌─────────────────┐ ┌─────────────────┐ │ │ │ Main Package │ │ Package1 │ │ Package2 │ │ │ │ ┌───────────┐ │ │
- * ┌───────────┐ │ │ ┌───────────┐ │ │ │ │ │ Module1 │ │ │ │ Module1 │ │ │ │ Module1 │ │ │ │ │ └───────────┘ │ │
- * └───────────┘ │ │ └───────────┘ │ │ │ │ ┌───────────┐ │ │ ┌───────────┐ │ │ ┌───────────┐ │ │ │ │ │ Module2 │ │ │ │
- * Module2 │ │ │ │ Module2 │ │ │ │ │ └───────────┘ │ │ └───────────┘ │ │ └───────────┘ │ │ │ │ ┌───────────┐ │ │
- * ┌───────────┐ │ │ ┌───────────┐ │ │ │ │ │ ... │ │ │ │ ... │ │ │ │ ... │ │ │ │ │ └───────────┘ │ │ └───────────┘ │ │
- * └───────────┘ │ │ │ └─────────────────┘ └─────────────────┘ └─────────────────┘ │
- * └─────────────────────────────────────────────────────────────────┘
- *
- * <p>
  * A single KCL file represents a module, which records file information, package path information, and module document
  * information, which is mainly composed of all the statements in the KCL file.
  *

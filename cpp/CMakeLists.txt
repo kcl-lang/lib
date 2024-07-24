@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.10)
-project(kcl-lib VERSION 0.9.3 LANGUAGES CXX)
+project(kcl-lib VERSION 0.10.0 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)

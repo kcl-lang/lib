@@ -15,7 +15,7 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 @JsonTypeName("AugAssign")
 public class AugAssignStmt extends Stmt {
     @JsonProperty("target")
-    private NodeRef<Identifier> target;
+    private NodeRef<Target> target;
 
     @JsonProperty("value")
     private NodeRef<Expr> value;
@@ -23,11 +23,11 @@ public class AugAssignStmt extends Stmt {
     @JsonProperty("op")
     private AugOp op;
 
-    public NodeRef<Identifier> getTarget() {
+    public NodeRef<Target> getTarget() {
         return target;
     }
 
-    public void setTarget(NodeRef<Identifier> target) {
+    public void setTarget(NodeRef<Target> target) {
         this.target = target;
     }
 
