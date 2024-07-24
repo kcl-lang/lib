@@ -698,7 +698,7 @@ class API:
         """Call KCL API with the API name and argument protobuf bytes."""
         # Serialize arguments using pickle or json
         args_serialized = args.SerializeToString()
-
+        print("sad:", name, name.encode("utf-8"), args_serialized)
         # Call the service function and get the result
         result = bytes(
             kcl_lib.call_with_plugin_agent(

@@ -43,8 +43,7 @@ jobs:
     - name: Run Examples
       shell: bash
       run: |
-        cd examples
-        for file in ./*
+        for file in ./examples/*
         do
           if [[ -f "$file" && -x "$file" ]]; then
             echo "Executing: $file"

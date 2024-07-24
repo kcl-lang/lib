@@ -17,7 +17,7 @@ import java.util.List;
  */
 public class AssignStmt extends Stmt {
     @JsonProperty("targets")
-    private List<NodeRef<Identifier>> targets;
+    private List<NodeRef<Target>> targets;
 
     @JsonProperty("value")
     private NodeRef<Expr> value;
@@ -25,11 +25,11 @@ public class AssignStmt extends Stmt {
     @JsonProperty("ty")
     private NodeRef<Type> ty;
 
-    public List<NodeRef<Identifier>> getTargets() {
+    public List<NodeRef<Target>> getTargets() {
         return targets;
     }
 
-    public void setTargets(List<NodeRef<Identifier>> targets) {
+    public void setTargets(List<NodeRef<Target>> targets) {
         this.targets = targets;
     }
 

@@ -7,7 +7,7 @@ import com.kcl.api.API;
 import com.kcl.api.Spec.ParseFile_Args;
 import com.kcl.api.Spec.ParseFile_Result;
 
-public class ParseTest {
+public class ParseFileTest {
     @Test
     public void testParseFile() throws Exception {
         ParseFile_Args args = ParseFile_Args.newBuilder().setPath("./src/test_data/parse/main.k").build();
