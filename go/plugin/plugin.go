@@ -1,7 +1,7 @@
-// Copyright The KCL Authors. All rights reserved.
-
 //go:build !windows && cgo
 // +build !windows,cgo
+
+// Copyright The KCL Authors. All rights reserved.
 
 package plugin
 
