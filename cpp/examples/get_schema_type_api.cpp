@@ -4,7 +4,7 @@
 int main()
 {
     auto exec_args = kcl_lib::ExecProgramArgs {
-        .k_filename_list = rust::Vec({ rust::String("../test_data/schema.k") }),
+        .k_filename_list = { "../test_data/schema.k" },
     };
     auto args = kcl_lib::GetSchemaTypeMappingArgs();
     args.exec_args = kcl_lib::OptionalExecProgramArgs {

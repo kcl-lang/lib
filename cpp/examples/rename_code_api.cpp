@@ -6,7 +6,7 @@ int main()
     auto args = kcl_lib::RenameCodeArgs {
         .package_root = "/mock/path",
         .symbol_path = "a",
-        .source_codes = rust::Vec { kcl_lib::HashMapStringValue {
+        .source_codes = { {
             .key = "/mock/path/main.k",
             .value = "a = 1\nb = a\nc = a",
         } },
