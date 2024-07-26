@@ -4,7 +4,7 @@
 int main()
 {
     auto parse_args = kcl_lib::ParseProgramArgs {
-        .paths = rust::Vec({ rust::String("../test_data/schema.k") }),
+        .paths = { "../test_data/schema.k" },
     };
     auto args = kcl_lib::LoadPackageArgs {
         .resolve_ast = true,

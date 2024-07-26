@@ -4,8 +4,8 @@
 int main()
 {
     auto args = kcl_lib::OverrideFileArgs {
-        .file = rust::String("../test_data/override_file/main.k"),
-        .specs = rust::Vec({ rust::String("b.a=2") }),
+        .file = { "../test_data/override_file/main.k" },
+        .specs = { "b.a=2" },
     };
     auto result = kcl_lib::override_file(args);
     std::cout << result.result << std::endl;

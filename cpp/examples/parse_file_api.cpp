@@ -4,7 +4,7 @@
 int main()
 {
     auto args = kcl_lib::ParseFileArgs {
-        .path = rust::String("../test_data/schema.k"),
+        .path = "../test_data/schema.k",
     };
     auto result = kcl_lib::parse_file(args);
     std::cout << result.deps.size() << std::endl;

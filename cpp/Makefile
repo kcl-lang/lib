@@ -11,3 +11,7 @@ cargo:
 .PHONY: cpp
 cpp:
 	cmake --build build --parallel
+
+.PHONY: examples
+examples: cpp
+	./scripts/run_examples.sh

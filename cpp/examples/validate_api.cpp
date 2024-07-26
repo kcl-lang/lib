@@ -3,9 +3,10 @@
 
 int validate(const char* code_str, const char* data_str)
 {
-    auto args = kcl_lib::ValidateCodeArgs();
-    args.code = rust::String(code_str);
-    args.data = rust::String(data_str);
+    auto args = kcl_lib::ValidateCodeArgs {
+        .data = data_str,
+        .code = code_str,
+    };
     auto result = kcl_lib::validate_code(args);
     std::cout << result.success << std::endl;
     std::cout << result.err_message.c_str() << std::endl;

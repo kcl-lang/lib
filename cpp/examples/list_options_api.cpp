@@ -4,7 +4,7 @@
 int main()
 {
     auto args = kcl_lib::ParseProgramArgs {
-        .paths = rust::Vec({ rust::String("../test_data/option/main.k") }),
+        .paths = { "../test_data/option/main.k" },
     };
     auto result = kcl_lib::list_options(args);
     std::cout << result.options[0].name.c_str() << std::endl;
