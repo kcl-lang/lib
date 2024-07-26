@@ -1,3 +1,6 @@
+//go:build windows
+// +build windows
+
 package install
 
 import lib "kcl-lang.io/lib/go/lib"
