@@ -31,3 +31,4 @@ _a.out_*.*
 **/.DS_Store
 **/.vscode
 __pycache__
+build
