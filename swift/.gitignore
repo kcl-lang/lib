@@ -1,0 +1,12 @@
+.DS_Store
+/.build
+/Packages
+/*.xcodeproj
+xcuserdata/
+DerivedData/
+.netrc
+
+/KclLib/.build
+/KclLib/.swiftpm/xcode/package.xcworkspace/contents.xcworkspacedata
+/KclLib/.swiftpm/config/registries.json
+/KclLib/Sources/CKclLib/lib

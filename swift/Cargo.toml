@@ -1,0 +1,15 @@
+[package]
+name = "kcl-lib-c"
+version = "0.10.0-alpha.1"
+edition = "2021"
+publish = false
+
+[lib]
+crate-type = ["cdylib", "staticlib"]
+doc = false
+
+[build-dependencies]
+cbindgen = "0.26.0"
+
+[dependencies]
+kclvm-api = { git = "https://github.com/kcl-lang/kcl", version = "0.10.0-alpha.1" }
