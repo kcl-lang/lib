@@ -161,6 +161,28 @@ function main() {
 main();
 ```
 
+### Kotlin
+
+```kotlin
+import com.kcl.api.API
+import com.kcl.api.execProgramArgs
+
+val args = execProgramArgs { kFilenameList += "schema.k" }
+val api = API()
+val result = api.execProgram(args)
+```
+
+### Swift
+
+```swift
+import KclLib
+
+let api = API()
+var execArgs = ExecProgram_Args()
+execArgs.kFilenameList.append("schema.k")
+let result = try api.execProgram(execArgs)
+```
+
 ### C++
 
 For CMake, you can use FetchContent to add KCL C++ Lib to your project.
@@ -199,12 +221,12 @@ Write the code
 
 int main()
 {
-    auto args = kcl_lib::ExecProgramArgs();
-    auto files = rust::Vec<rust::String>();
-    files.push_back(rust::String("../test_data/schema.k"));
-    args.k_filename_list = files;
+    auto args = kcl_lib::ExecProgramArgs {
+        .k_filename_list = { "../test_data/schema.k" },
+    };
     auto result = kcl_lib::exec_program(args);
     std::cout << result.yaml_result.c_str() << std::endl;
+    return 0;
 }
 ```
 
