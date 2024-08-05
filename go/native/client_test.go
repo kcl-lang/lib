@@ -11,7 +11,6 @@ import (
 	"time"
 
 	"kcl-lang.io/lib/go/api"
-	"kcl-lang.io/lib/go/env"
 	"kcl-lang.io/lib/go/plugin"
 )
 
@@ -23,9 +22,6 @@ sum = hello.add(option("a"), option("b"))
 `
 
 func init() {
-	// Set the lib path
-	// Enable the fast eval mode.
-	env.EnableFastEvalMode()
 	// Add a plugin named hello
 	plugin.RegisterPlugin(plugin.Plugin{
 		Name: "hello",
