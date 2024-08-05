@@ -6,7 +6,11 @@ all: build
 
 .PHONY: build
 build: cargo
-	swift build
+	swift build -c release
+
+.PHONY: fmt
+fmt:
+	swift format
 
 .PHONY: cargo
 cargo:

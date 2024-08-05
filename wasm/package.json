@@ -18,11 +18,9 @@
   },
   "license": "Apache-2.0",
   "dependencies": {
-    "wasi-js": "^1.7.3"
+    "wasi-js": "^1.7.3",
+    "prettier": "^2.8.4"
   },
-  "bundledDependencies": [
-    "wasi-js"
-  ],
   "devDependencies": {
     "@types/node": "^20.11.0",
     "prettier": "^2.8.4",
