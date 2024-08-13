@@ -7,7 +7,7 @@ import com.kcl.api.API;
 import com.kcl.api.Spec.LoadSettingsFiles_Args;
 import com.kcl.api.Spec.LoadSettingsFiles_Result;
 
-public class LoadSettingsFileTest {
+public class LoadSettingsFilesTest {
     @Test
     public void testLoadSettingsFile() throws Exception {
         API api = new API();

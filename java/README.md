@@ -50,11 +50,8 @@ public class ExecProgramTest {
 ## Developing
 
 - Install `Java 8+`
+- Install `Maven`
 - Install `cargo` and `Python` (for Rust code building)
-
-```shell
-pnpm install
-```
 
 ### Building
 
