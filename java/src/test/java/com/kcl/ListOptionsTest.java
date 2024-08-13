@@ -9,7 +9,7 @@ import com.kcl.api.Spec.ListOptions_Result;
 
 public class ListOptionsTest {
     @Test
-    public void testParseProgram() throws Exception {
+    public void testListOptionsApi() throws Exception {
         ParseProgram_Args args = ParseProgram_Args.newBuilder().addPaths("./src/test_data/option/main.k").build();
 
         API apiInstance = new API();

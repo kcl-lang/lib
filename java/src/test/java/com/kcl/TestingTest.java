@@ -9,7 +9,7 @@ import org.junit.Test;
 
 public class TestingTest {
     @Test
-    public void testLintPathApi() throws Exception {
+    public void testTestingApi() throws Exception {
         API apiInstance = new API();
         Test_Args args = Test_Args.newBuilder().addPkgList("./src/test_data/testing/...").build();
         Test_Result result = apiInstance.test(args);
