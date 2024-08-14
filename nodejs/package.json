@@ -1,6 +1,6 @@
 {
   "name": "kcl-lib",
-  "version": "0.10.0-alpha.2",
+  "version": "0.10.0-beta.1",
   "repository": "https://github.com/kcl-lang/lib",
   "license": "Apache-2.0",
   "main": "index.js",
