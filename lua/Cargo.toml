@@ -1,0 +1,19 @@
+[package]
+name = "kcl-lib-lua"
+version = "0.10.0-beta.1"
+edition = "2021"
+publish = false
+
+[features]
+default = ["mlua/lua52"]
+lua52 = ["mlua", "mlua/lua52"]
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+mlua = { version = "0.9", features = [
+  "module",
+  "macros",
+], default-features = false, optional = true }
+kclvm-api = { git = "https://github.com/kcl-lang/kcl", version = "0.10.0-beta.1" }

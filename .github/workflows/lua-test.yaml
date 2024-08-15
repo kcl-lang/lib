@@ -1,0 +1,44 @@
+name: lua-test
+
+on:
+  push:
+    branches:
+      - main
+      - master
+    tags:
+      - '*'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "lua/**"
+      - ".github/workflows/lua-test.yaml"
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}-${{ github.event_name }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  build-and-test:
+    defaults:
+      run:
+        working-directory: "lua"
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Setup lua toolchain
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y lua-busted luarocks liblua5.2-dev
+    - name: Install Rust
+      uses: actions-rs/toolchain@v1
+      with:
+        toolchain: 1.79
+        override: true
+        components: clippy, rustfmt
+    - name: Build
+      run: make

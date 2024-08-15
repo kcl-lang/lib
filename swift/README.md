@@ -4,12 +4,12 @@ This repo is under development, PRs welcome!
 
 ## Developing
 
-If you build on macos, you can set the environment to prevent link errors.
-
 **Prerequisites**
 
 + Swift 5.8+
 + Cargo
+
+If you build on macos, you can set the environment to prevent link errors.
 
 ```shell
 # Set cargo build target on macos
