@@ -63,7 +63,8 @@ def test_load_package_api():
     # Usage
     api = api.API()
     result = api.load_package(args)
-    assert list(result.symbols.values())[0].ty.schema_name == "AppConfig"
+    symbols = list(result.symbols.values())
+    assert len([s for s in symbols if s.ty.schema_name == "AppConfig"]) > 0
 
 
 def test_list_variables_api():
@@ -75,7 +76,9 @@ def test_list_variables_api():
     # Usage
     api = api.API()
     result = api.list_variables(args)
-    assert result.variables["app"].variables[0].value == "AppConfig {replicas: 2}"
+    assert (
+        result.variables["app"].variables[0].value == "AppConfig {\n    replicas: 2\n}"
+    )
 
 
 def test_list_options_api():

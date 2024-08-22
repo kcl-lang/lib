@@ -26,7 +26,7 @@ This way you'll be able to import the above dependency to use the SDK.
 <dependency>
     <groupId>com.kcl</groupId>
     <artifactId>kcl-lib-kotlin</artifactId>
-    <version>0.10.0-beta.1-SNAPSHOT</version>
+    <version>0.10.0-beta.2-SNAPSHOT</version>
 </dependency>
 ```
 
@@ -267,7 +267,6 @@ The content of `main.k` is
 
 ```python
 a = 1
-
 b = {
     "a": 1
     "b": 2
