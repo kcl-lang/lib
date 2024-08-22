@@ -276,7 +276,6 @@ The content of `main.k` is
 
 ```python
 a = 1
-
 b = {
     "a": 1
     "b": 2

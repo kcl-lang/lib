@@ -15,6 +15,6 @@ class ListVariablesTest {
         val args = listVariablesArgs { files += TEST_FILE }
         val api = API()
         val result = api.listVariables(args)
-        assertEquals(result.variablesMap["app"]?.variablesList?.get(0)?.value, "AppConfig {replicas: 2}")
+        assertEquals(result.variablesMap["app"]?.variablesList?.get(0)?.value, "AppConfig {\n    replicas: 2\n}")
     }
 }

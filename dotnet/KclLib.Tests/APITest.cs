@@ -146,7 +146,7 @@ public class APITest
         var path = Path.Combine(parentDirectory, "test_data", "schema.k");
         args.Files.Add(path);
         var result = api.ListVariables(args);
-        Assert.AreEqual("AppConfig {replicas = 2}", result.Variables["app"].Variables[0].Value, result.ToString());
+        Assert.AreEqual("AppConfig {\n    replicas = 2\n}", result.Variables["app"].Variables[0].Value, result.ToString());
     }
 
     [TestMethod]

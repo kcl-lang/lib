@@ -227,7 +227,6 @@ import kcl_lib.api as api
 args = api.ListVariables_Args(files=[TEST_FILE])
 api = api.API()
 result = api.list_variables(args)
-assert result.variables["app"].variables[0].value == "AppConfig {replicas: 2}"
 ```
 
 </p>
@@ -311,7 +310,6 @@ The content of `main.k` is
 
 ```python
 a = 1
-
 b = {
     "a": 1
     "b": 2

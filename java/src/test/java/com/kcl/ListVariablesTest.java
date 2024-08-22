@@ -19,14 +19,15 @@ public class ListVariablesTest {
         // Define the variables to test and their expected results
         String[][] testCases = { { "a", "1", "", "=" }, { "a1", "2", "", "=" }, { "a3", "3m", "", "=" },
                 { "b1", "True", "", "=" }, { "b2", "False", "", "=" }, { "s1", "\"Hello\"", "", "=" },
-                { "array1", "[1, 2, 3]", "", "=" }, { "dict1", "{\"a\": 1, \"b\": 2}", "", "=" },
-                { "dict1.a", "1", "", ":" }, { "dict1.b", "2", "", ":" }, { "dict2.b.c", "2", "", ":" },
-                { "dict2.b.d", "3", "", ":" }, { "sha.name", "\"Hello\"", "", ":" },
-                { "sha.ids", "[1, 2, 3]", "", ":" }, { "sha.data.a.b", "{\"c\": 2}", "", ":" },
-                { "sha.data.a.b.c", "2", "", ":" }, { "shb.a.name", "\"HelloB\"", "", ":" },
-                { "shb.a.ids", "[4, 5, 6]", "", ":" }, { "shb.a.data.d.e", "{\"f\": 3}", "", ":" },
-                { "uconfa.name", "\"b\"", "", "=" }, { "c.a", "{name: \"Hello\"}", "", ":" },
-                { "c1", "C {}", "C", "=" }, { "c2", "a.b.C {}", "a.b.C", "=" } };
+                { "array1", "[\n    1\n    2\n    3\n]", "", "=" },
+                { "dict1", "{\n    \"a\": 1\n    \"b\": 2\n}", "", "=" }, { "dict1.a", "1", "", ":" },
+                { "dict1.b", "2", "", ":" }, { "dict2.b.c", "2", "", ":" }, { "dict2.b.d", "3", "", ":" },
+                { "sha.name", "\"Hello\"", "", ":" }, { "sha.ids", "[\n    1\n    2\n    3\n]", "", ":" },
+                { "sha.data.a.b", "{\n    \"c\": 2\n}", "", ":" }, { "sha.data.a.b.c", "2", "", ":" },
+                { "shb.a.name", "\"HelloB\"", "", ":" }, { "shb.a.ids", "[\n    4\n    5\n    6\n]", "", ":" },
+                { "shb.a.data.d.e", "{\n    \"f\": 3\n}", "", ":" }, { "uconfa.name", "\"b\"", "", "=" },
+                { "c.a", "{\n    name: \"Hello\"\n}", "", ":" }, { "c1", "C {}", "C", "=" },
+                { "c2", "a.b.C {}", "a.b.C", "=" } };
 
         for (String[] testCase : testCases) {
             String spec = testCase[0];

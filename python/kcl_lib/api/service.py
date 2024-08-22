@@ -293,7 +293,6 @@ class API:
         args = api.ListVariables_Args(files=[TEST_FILE])
         api = api.API()
         result = api.list_variables(args)
-        assert result.variables["app"].variables[0].value == "AppConfig {replicas: 2}"
         ```
         """
         return self.call("KclvmService.ListVariables", args)
