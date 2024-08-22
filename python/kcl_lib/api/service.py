@@ -50,14 +50,15 @@ from google.protobuf import message as _message
 class API:
     """KCL APIs
 
-    Examples
-    --------
+    ## Examples
+
+    Python Code
+
     ```python
     import kcl_lib.api as api
-    # Call the `exec_program` method with appropriate arguments
     args = api.ExecProgram_Args(k_filename_list=["a.k"])
-    # Usage
     api = api.API()
+
     result = api.exec_program(args)
     print(result.yaml_result)
     ```
@@ -78,10 +79,9 @@ class API:
 
         ```python
         schema AppConfig:
-            replicas: int
-
+           replicas: int
         app: AppConfig {
-            replicas: 2
+           replicas: 2
         }
         ```
 
@@ -109,7 +109,6 @@ class API:
         ```python
         schema AppConfig:
             replicas: int
-
         app: AppConfig {
             replicas: 2
         }
@@ -129,7 +128,6 @@ class API:
 
         ```python
         import kcl_lib.api as api
-
         try:
             args = api.ExecProgram_Args(k_filename_list=["file_not_found"])
             api = api.API()
@@ -141,12 +139,6 @@ class API:
         """
         return self.call("KclvmService.ExecProgram", args)
 
-    def build_program(self, args: BuildProgram_Args) -> BuildProgram_Result:
-        return self.call("KclvmService.BuildProgram", args)
-
-    def exec_artifact(self, args: ExecArtifact_Args) -> ExecProgram_Result:
-        return self.call("KclvmService.ExecArtifact", args)
-
     def parse_file(self, args: ParseFile_Args) -> ParseFile_Result:
         """Parse KCL single file to Module AST JSON string with import dependencies and parse errors.
 
@@ -157,7 +149,6 @@ class API:
         ```python
         schema AppConfig:
             replicas: int
-
         app: AppConfig {
             replicas: 2
         }
@@ -187,7 +178,6 @@ class API:
         ```python
         schema AppConfig:
             replicas: int
-
         app: AppConfig {
             replicas: 2
         }
@@ -217,7 +207,6 @@ class API:
         ```python
         schema AppConfig:
             replicas: int
-
         app: AppConfig {
             replicas: 2
         }
@@ -227,7 +216,6 @@ class API:
 
         ```python
         import kcl_lib.api as api
-
         args = api.LoadPackage_Args(
             parse_args=api.ParseProgram_Args(paths=["schema.k"]), resolve_ast=True
         )
@@ -279,7 +267,6 @@ class API:
         ```python
         schema AppConfig:
             replicas: int
-
         app: AppConfig {
             replicas: 2
         }
@@ -300,35 +287,18 @@ class API:
     def format_code(self, args: FormatCode_Args) -> FormatCode_Result:
         """Format the code source.
 
-        <details><summary>Example</summary>
-        <p>
+        ## Example
 
         Python Code
 
         ```python
         import kcl_lib.api as api
-
-        source_code = \"\"\"schema Person:
-            name:   str
-            age:    int
-
-            check:
-                0 <   age <   120
-        \"\"\"
+        source_code = "a   =   1"
         args = api.FormatCode_Args(source=source_code)
         api_instance = api.API()
+
         result = api_instance.format_code(args)
-        assert (
-            result.formatted.decode()
-            == \"\"\"schema Person:
-            name: str
-            age: int
-
-            check:
-                0 < age < 120
-
-        \"\"\"
-        )
+        assert result.formatted.decode(), "a = 1"
         ```
         """
         return self.call("KclvmService.FormatCode", args)
@@ -344,7 +314,6 @@ class API:
         schema Person:
             name:   str
             age:    int
-
             check:
                 0 <   age <   120
         ```
@@ -372,7 +341,6 @@ class API:
         ```python
         import math
 
-        a = 1
         ```
 
         Python Code
@@ -396,7 +364,6 @@ class API:
 
         ```python
         a = 1
-
         b = {
             "a": 1
             "b": 2
@@ -441,7 +408,6 @@ class API:
         ```python
         schema AppConfig:
             replicas: int
-
         app: AppConfig {
             replicas: 2
         }
@@ -474,7 +440,6 @@ class API:
         schema Person:
             name: str
             age: int
-
             check:
                 0 < age < 120
         \"\"\"
@@ -510,7 +475,6 @@ class API:
 
         ```python
         import kcl_lib.api as api
-
         args = api.LoadSettingsFiles_Args(
             work_dir=".", files=["kcl.yaml"]
         )
@@ -530,9 +494,10 @@ class API:
 
         ## Example
 
-        The content of `main.k` is
+        The content of main.k is
 
         ```python
+
         a = 1
         b = a
         ```
@@ -541,7 +506,6 @@ class API:
 
         ```python
         import kcl_lib.api as api
-
         args = api.Rename_Args(
             package_root=".",
             symbol_path="a",
@@ -563,7 +527,6 @@ class API:
 
         ```python
         import kcl_lib.api as api
-
         args = api.RenameCode_Args(
             package_root="/mock/path",
             symbol_path="a",
@@ -619,7 +582,6 @@ class API:
 
         ```python
         import kcl_lib.api as api
-
         args = api.UpdateDependencies_Args(
             manifest_path="module"
         )
@@ -651,7 +613,6 @@ class API:
         ```python
         import helloworld
         import flask
-
         a = helloworld.The_first_kcl_program
         ```
 
@@ -659,7 +620,6 @@ class API:
 
         ```python
         import kcl_lib.api as api
-
         args = api.UpdateDependencies_Args(
             manifest_path="module"
         )
