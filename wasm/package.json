@@ -13,19 +13,18 @@
     "url": "git+https://github.com/kcl-lang/lib.git"
   },
   "scripts": {
-    "compile": "tsc",
+    "build": "tsc --build",
     "format": "prettier --write ."
   },
   "license": "Apache-2.0",
   "dependencies": {
-    "wasi-js": "^1.7.3",
+    "@wasmer/wasi": "^1.2.2",
     "prettier": "^2.8.4"
   },
   "devDependencies": {
     "@types/node": "^20.11.0",
     "prettier": "^2.8.4",
-    "typescript": "^5.3.3",
-    "wasi-js": "^1.7.3"
+    "typescript": "^5.3.3"
   },
   "bundleDependencies": [
     "wasi-js"

@@ -1,8 +1,6 @@
-import WASI from "wasi-js";
-import wasiBindings from "wasi-js/dist/bindings/node";
-import { resolve } from "path";
-
+import { init, WASI, MemFS } from "@wasmer/wasi";
 const RUN_FUNCTION_NAME = "kcl_run";
+const FMT_FUNCTION_NAME = "kcl_fmt";
 
 export interface KCLWasmLoadOptions {
   /**
@@ -32,7 +30,8 @@ export interface KCLWasmLoadOptions {
    *
    * @default - The `fs` module from Node.js
    */
-  fs?: typeof import("fs");
+  fs?: MemFS;
+
   /**
    * The bytes of the `kcl.wasm` data loaded into memory.
    *
@@ -54,72 +53,70 @@ export interface RunOptions {
   source: string;
 }
 
+export interface FmtOptions {
+  /**
+   * KCL code source
+   */
+  source: string;
+}
+
 /**
- * load a WASM
+ * load the KCL WASM
  * @param options
  * @returns
  */
 export async function load(opts?: KCLWasmLoadOptions) {
+  await init();
   const options = opts ?? {};
-  const fs: typeof import("fs") = options.fs ?? require("fs");
-
-  let preopens: Record<string, string> = {};
-
   // preopen everything
-  preopens["/"] = "/";
-  preopens["."] = resolve(".");
-
-  // add provided preopens
-  preopens = {
-    ...preopens,
-    ...(options.preopens ?? {}),
+  let preopens: Record<string, string> = {
+    "/": "/",
   };
 
-  // check if running in browser
-  const bindings = {
-    ...wasiBindings,
-    fs,
-  };
-
-  const wasi = new WASI({
-    bindings,
-    env: {
-      ...process.env,
-      ...(options.env ?? {}),
-    },
-    preopens,
+  const w = new WASI({
+    env: options.env ?? {},
+    preopens: preopens,
+    fs: options.fs,
   });
 
-  const env = {
-    kclvm_plugin_invoke_json_wasm: (
-      _method: number,
-      _args: number,
-      _kwargs: number
-    ) => {
-      // TODO
-      return 0;
+  let bytes: BufferSource;
+  if (options.data) {
+    bytes = options.data;
+  } else {
+    if (typeof window !== "undefined") {
+      const response = await fetch("../kcl.wasm");
+      bytes = await response.arrayBuffer();
+    } else if (typeof process !== "undefined") {
+      const fs = require("fs");
+      const path = require("path");
+      const wasmPath = path.resolve(__dirname, "../kcl.wasm");
+      bytes = fs.readFileSync(wasmPath);
+    } else {
+      throw new Error("Unsupported environment");
+    }
+  }
+  const imports = {
+    env: {
+      kclvm_plugin_invoke_json_wasm: (
+        _method: number,
+        _args: number,
+        _kwargs: number
+      ) => {
+        // TODO: KCL WASM plugin impl
+        return 0;
+      },
     },
-  };
-
-  const importObject = {
-    wasi_snapshot_preview1: wasi.wasiImport,
-    env: env,
     ...(options.imports ?? {}),
-  } as any;
+  } as object;
 
-  const binary =
-    options.data ??
-    new Uint8Array(
-      await fs.promises.readFile(resolve(__dirname, "../kcl.wasm"))
-    );
-  const mod = new WebAssembly.Module(binary);
-
-  const instance = new WebAssembly.Instance(mod, importObject);
-  wasi.start(instance);
-
-  return instance;
+  const module = await WebAssembly.compile(bytes);
+  // Instantiate the WASI module
+  return w.instantiate(module, imports);
 }
 
+/**
+ * Exported function to invoke the KCL run operation.
+ */
 export function invokeKCLRun(
   instance: WebAssembly.Instance,
   opts: RunOptions
@@ -139,6 +136,28 @@ export function invokeKCLRun(
     resultPtr
   );
   exports.kcl_free(filenamePtr, filenamePtrLength);
+  exports.kcl_free(sourcePtr, sourcePtrLength);
+  exports.kcl_free(resultPtr, resultPtrLength);
+  return resultStr;
+}
+
+/**
+ * Exported function to invoke the KCL format operation.
+ */
+export function invokeKCLFmt(
+  instance: WebAssembly.Instance,
+  opts: FmtOptions
+): string {
+  const exports = instance.exports as any;
+  const [sourcePtr, sourcePtrLength] = copyStringToWasmMemory(
+    instance,
+    opts.source
+  );
+  const resultPtr = exports[FMT_FUNCTION_NAME](sourcePtr);
+  const [resultStr, resultPtrLength] = copyCStrFromWasmMemory(
+    instance,
+    resultPtr
+  );
   exports.kcl_free(sourcePtr, sourcePtrLength);
   exports.kcl_free(resultPtr, resultPtrLength);
   return resultStr;
