@@ -1,4 +1,4 @@
-import { load, invokeKCLRun } from '@kcl-lang/wasm-lib'
+import { load, invokeKCLRun } from "@kcl-lang/wasm-lib";
 
 async function main() {
   const inst = await load();
@@ -10,7 +10,7 @@ schema Person:
 
 p = Person {name = "Alice"}`,
   });
-  console.log(result)
+  console.log(result);
 }
 
-main()
+main();

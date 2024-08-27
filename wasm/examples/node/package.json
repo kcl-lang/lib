@@ -3,8 +3,9 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "build": "tsc",
-    "dev": "node ./dist/main.js"
+    "build": "tsc --build",
+    "dev": "node ./dist/main.js",
+    "format": "prettier --write ."
   },
   "main": "./dist/main.js",
   "types": "./dist/main.d.ts",
@@ -12,6 +13,10 @@
     "dist/"
   ],
   "dependencies": {
-    "@kcl-lang/wasm-lib": "0.10.0-beta.2"
+    "@kcl-lang/wasm-lib": "file:../.."
+  },
+  "devDependencies": {
+    "prettier": "^2.8.4",
+    "typescript": "^5.3.3"
   }
 }

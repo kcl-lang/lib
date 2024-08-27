@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Button Click</title>
+  </head>
+  <body>
+    <button id="myButton">Click Me</button>
+
+    <script>
+      var button = document.getElementById("myButton");
+      function handleClick() {
+        var script = document.createElement("script");
+        script.src = "dist/main.js";
+      }
+      button.addEventListener("click", handleClick);
+    </script>
+  </body>
+</html>
