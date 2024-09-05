@@ -46,6 +46,8 @@ jobs:
         components: clippy, rustfmt
     - name: Build
       run: |
+        # Set cargo build target on macos
+        export MACOSX_DEPLOYMENT_TARGET=12.0
         mkdir build
         cd build
         cmake ..
