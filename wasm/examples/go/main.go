@@ -19,4 +19,11 @@ func main() {
 		panic(err)
 	}
 	fmt.Println(result)
+	result, err = m.Fmt(&module.FmtOptions{
+		Source: "a = 1",
+	})
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(result)
 }
