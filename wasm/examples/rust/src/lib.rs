@@ -1,6 +1,8 @@
-use std::path::Path;
+#[cfg(test)]
+mod tests;
 
 use anyhow::Result;
+use std::path::Path;
 use wasmtime::*;
 use wasmtime_wasi::{
     preview1::{self, WasiP1Ctx},
@@ -19,8 +21,14 @@ impl State {
     }
 }
 
+#[derive(Debug)]
 pub struct RunOptions {
     pub filename: String,
+    pub source: String,
+}
+
+#[derive(Debug)]
+pub struct FmtOptions {
     pub source: String,
 }
 
@@ -31,6 +39,8 @@ pub struct KCLModule {
     malloc: TypedFunc<i32, i32>,
     free: TypedFunc<(i32, i32), ()>,
     run: TypedFunc<(i32, i32), i32>,
+    fmt: TypedFunc<i32, i32>,
+    runtime_err: TypedFunc<(i32, i32), i32>,
 }
 
 impl KCLModule {
@@ -54,6 +64,8 @@ impl KCLModule {
         let malloc = instance.get_typed_func::<i32, i32>(&mut store, "kcl_malloc")?;
         let free = instance.get_typed_func::<(i32, i32), ()>(&mut store, "kcl_free")?;
         let run = instance.get_typed_func::<(i32, i32), i32>(&mut store, "kcl_run")?;
+        let fmt = instance.get_typed_func::<i32, i32>(&mut store, "kcl_fmt")?;
+        let runtime_err = instance.get_typed_func::<(i32, i32), i32>(&mut store, "kcl_runtime_err")?;
         Ok(KCLModule {
             instance,
             store,
@@ -61,6 +73,8 @@ impl KCLModule {
             malloc,
             free,
             run,
+            fmt,
+            runtime_err,
         })
     }
 
@@ -70,10 +84,39 @@ impl KCLModule {
             copy_string_to_wasm_memory(&mut self.store, &self.malloc, self.memory, &opts.filename)?;
         let (source_ptr, source_len) =
             copy_string_to_wasm_memory(&mut self.store, &self.malloc, self.memory, &opts.source)?;
-        let result_ptr = self.run.call(&mut self.store, (filename_ptr, source_ptr))?;
+        let runtime_err_len = 1024;
+        let (runtime_err_ptr, _) = malloc_bytes_from_wasm_memory(&mut self.store, &self.malloc, runtime_err_len)?;
+        let result_str = match self.run.call(&mut self.store, (filename_ptr, source_ptr)) {
+            Ok(result_ptr) => {
+                let (result_str, result_len) =
+                    copy_cstr_from_wasm_memory(&mut self.store, self.memory, result_ptr as usize)?;
+                free_memory(&mut self.store, &self.free, result_ptr, result_len)?;
+                result_str
+            },
+            Err(err) => {
+                self.runtime_err.call(&mut self.store, (runtime_err_ptr, runtime_err_len))?;
+                let (runtime_err_str, runtime_err_len) =
+                    copy_cstr_from_wasm_memory(&mut self.store, self.memory, runtime_err_ptr as usize)?;
+                free_memory(&mut self.store, &self.free, runtime_err_ptr, runtime_err_len)?;
+                if runtime_err_str.is_empty() {
+                    return Err(err)
+                } else {
+                    runtime_err_str
+                }
+            },
+        };
+        free_memory(&mut self.store, &self.free, filename_ptr, filename_len)?;
+        free_memory(&mut self.store, &self.free, source_ptr, source_len)?;
+        Ok(result_str)
+    }
+
+    /// Run with the wasm module and options.
+    pub fn fmt(&mut self, opts: &FmtOptions) -> Result<String> {
+        let (source_ptr, source_len) =
+            copy_string_to_wasm_memory(&mut self.store, &self.malloc, self.memory, &opts.source)?;
+        let result_ptr = self.fmt.call(&mut self.store, source_ptr)?;
         let (result_str, result_len) =
             copy_cstr_from_wasm_memory(&mut self.store, self.memory, result_ptr as usize)?;
-        free_memory(&mut self.store, &self.free, filename_ptr, filename_len)?;
         free_memory(&mut self.store, &self.free, source_ptr, source_len)?;
         free_memory(&mut self.store, &self.free, result_ptr, result_len)?;
 
@@ -95,6 +138,15 @@ fn copy_string_to_wasm_memory<T>(
     let data = memory.data_mut(&mut *store);
     data[ptr as usize..(ptr as usize + length as usize)].copy_from_slice(bytes);
 
+    Ok((ptr, length as usize))
+}
+
+fn malloc_bytes_from_wasm_memory<T>(
+    store: &mut Store<T>,
+    malloc: &TypedFunc<i32, i32>,
+    length: i32,
+) -> Result<(i32, usize)> {
+    let ptr = malloc.call(&mut *store, length)?;
     Ok((ptr, length as usize))
 }
 

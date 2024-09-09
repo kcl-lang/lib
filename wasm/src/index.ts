@@ -1,6 +1,7 @@
 import { init, WASI, MemFS } from "@wasmer/wasi";
 const RUN_FUNCTION_NAME = "kcl_run";
 const FMT_FUNCTION_NAME = "kcl_fmt";
+const RUNTIME_ERR_FUNCTION_NAME = "kcl_runtime_err";
 
 export interface KCLWasmLoadOptions {
   /**
@@ -68,14 +69,8 @@ export interface FmtOptions {
 export async function load(opts?: KCLWasmLoadOptions) {
   await init();
   const options = opts ?? {};
-  // preopen everything
-  let preopens: Record<string, string> = {
-    "/": "/",
-  };
-
   const w = new WASI({
     env: options.env ?? {},
-    preopens: preopens,
     fs: options.fs,
   });
 
@@ -130,15 +125,27 @@ export function invokeKCLRun(
     instance,
     opts.source
   );
-  const resultPtr = exports[RUN_FUNCTION_NAME](filenamePtr, sourcePtr);
-  const [resultStr, resultPtrLength] = copyCStrFromWasmMemory(
-    instance,
-    resultPtr
-  );
-  exports.kcl_free(filenamePtr, filenamePtrLength);
-  exports.kcl_free(sourcePtr, sourcePtrLength);
-  exports.kcl_free(resultPtr, resultPtrLength);
-  return resultStr;
+  let result;
+  try {
+    const resultPtr = exports[RUN_FUNCTION_NAME](filenamePtr, sourcePtr);
+    const [resultStr, resultPtrLength] = copyCStrFromWasmMemory(
+      instance,
+      resultPtr
+    );
+    exports.kcl_free(resultPtr, resultPtrLength);
+    result = resultStr;
+  } catch (error) {
+    let runtimeErrPtrLength = 1024;
+    let runtimeErrPtr = exports.kcl_malloc(runtimeErrPtrLength);
+    exports[RUNTIME_ERR_FUNCTION_NAME](runtimeErrPtr, runtimeErrPtrLength);
+    const [runtimeErrStr, _] = copyCStrFromWasmMemory(instance, runtimeErrPtr);
+    exports.kcl_free(runtimeErrPtr, runtimeErrPtrLength);
+    result = "ERROR:" + runtimeErrStr;
+  } finally {
+    exports.kcl_free(filenamePtr, filenamePtrLength);
+    exports.kcl_free(sourcePtr, sourcePtrLength);
+  }
+  return result;
 }
 
 /**
