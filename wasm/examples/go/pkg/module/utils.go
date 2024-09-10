@@ -10,13 +10,16 @@ func copyStringToWasmMemory(
 ) (int32, int32, error) {
 	bytes := []byte(str)
 	length := len(bytes)
-	ptr, err := malloc.Call(store, int32(length))
+	// C str '\0'
+	ptr, err := malloc.Call(store, int32(length)+1)
 	if err != nil {
 		return 0, 0, err
 	}
 	data := memory.UnsafeData(store)
 	idx := ptr.(int32)
 	copy(data[idx:(int(idx)+length)], bytes)
+	// C str '\0'
+	data[int(idx)+length] = 0
 	return idx, int32(length), nil
 }
 

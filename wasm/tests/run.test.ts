@@ -271,13 +271,12 @@ nginx = Nginx {
 ];
 
 test("run example tests", async () => {
+  const inst = await load();
   SNIPPETS.forEach((snippet) => {
-    load().then((inst) => {
-      const result = invokeKCLRun(inst, {
-        filename: "test.k",
-        source: snippet.value,
-      });
-      expect(result).not.toContain("ERROR:");
+    const result = invokeKCLRun(inst, {
+      filename: "test.k",
+      source: snippet.value,
     });
+    expect(result).not.toContain("ERROR:");
   });
 });

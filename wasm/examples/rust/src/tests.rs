@@ -2,7 +2,6 @@ use crate::{FmtOptions, KCLModule, RunOptions};
 use anyhow::Result;
 
 const WASM_PATH: &str = "../../kcl.wasm";
-const BENCH_COUNT: usize = 20;
 const SOURCES: &[&str] = &[
     r#"apiVersion = "apps/v1"
 kind = "Deployment"
@@ -205,23 +204,25 @@ fn test_run() -> Result<()> {
         source: "a = 1".to_string(),
     };
     let mut module = KCLModule::from_path(WASM_PATH)?;
-    for _ in 0..BENCH_COUNT {
-        let result = module.run(&opts)?;
-        println!("{}", result);
-    }
+    let result = module.run(&opts)?;
+    println!("{}", result);
     Ok(())
 }
 
 #[test]
 fn test_run_examples() -> Result<()> {
+    // Singleton WASM instance
+    let mut module = KCLModule::from_path(WASM_PATH)?;
     for source in SOURCES {
         let opts = RunOptions {
             filename: "test.k".to_string(),
             source: source.to_string(),
         };
-        let mut module = KCLModule::from_path(WASM_PATH)?;
         let result = module.run(&opts)?;
-        assert!(!result.starts_with("ERROR:"), "source: {source}. result: {result}");
+        assert!(
+            !result.starts_with("ERROR:"),
+            "source: {source}. result: {result}"
+        );
     }
     Ok(())
 }
@@ -268,9 +269,7 @@ fn test_fmt() -> Result<()> {
         source: "a = 1".to_string(),
     };
     let mut module = KCLModule::from_path(WASM_PATH)?;
-    for _ in 0..BENCH_COUNT {
-        let result = module.fmt(&opts)?;
-        println!("{}", result);
-    }
+    let result = module.fmt(&opts)?;
+    println!("{}", result);
     Ok(())
 }
