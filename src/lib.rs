@@ -33,6 +33,9 @@ use anyhow::Result;
 
 pub type API = KclvmServiceImpl;
 
+#[cfg(test)]
+mod tests;
+
 /// Call KCL API with the API name and argument protobuf bytes.
 #[inline]
 pub fn call<'a>(name: &'a [u8], args: &'a [u8]) -> Result<Vec<u8>> {
