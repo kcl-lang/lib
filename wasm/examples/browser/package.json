@@ -15,7 +15,8 @@
   ],
   "dependencies": {
     "@kcl-lang/wasm-lib": "file:../..",
-    "@wasmer/wasi": "^1.2.2"
+    "@wasmer/wasi": "^1.2.2",
+    "buffer": "^6.0.3"
   },
   "devDependencies": {
     "copy-webpack-plugin": "^8.1.1",

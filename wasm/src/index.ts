@@ -180,7 +180,7 @@ function copyStringToWasmMemory(
   const buffer = new Uint8Array(
     exports.memory.buffer,
     pointer,
-    encodedString.length
+    encodedString.length + 1
   );
   buffer.set(encodedString);
   buffer[encodedString.length] = 0; // Null-terminate the string

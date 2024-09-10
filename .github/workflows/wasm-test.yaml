@@ -57,6 +57,12 @@ jobs:
 
       - name: Go example e2e tests
         run: cd examples/go && go mod tidy && go run main.go
+      
+      - name: Node.js example e2e tests
+        run: cd examples/node && npm install && npm run build
+
+      - name: Browser example e2e tests
+        run: cd examples/browser && npm install && npm run build
 
       - name: Publish Dry Run
         if: "startsWith(github.ref, 'refs/tags/') && contains(github.ref, '-')"

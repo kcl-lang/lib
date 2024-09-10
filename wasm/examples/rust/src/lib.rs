@@ -65,7 +65,8 @@ impl KCLModule {
         let free = instance.get_typed_func::<(i32, i32), ()>(&mut store, "kcl_free")?;
         let run = instance.get_typed_func::<(i32, i32), i32>(&mut store, "kcl_run")?;
         let fmt = instance.get_typed_func::<i32, i32>(&mut store, "kcl_fmt")?;
-        let runtime_err = instance.get_typed_func::<(i32, i32), i32>(&mut store, "kcl_runtime_err")?;
+        let runtime_err =
+            instance.get_typed_func::<(i32, i32), i32>(&mut store, "kcl_runtime_err")?;
         Ok(KCLModule {
             instance,
             store,
@@ -85,25 +86,35 @@ impl KCLModule {
         let (source_ptr, source_len) =
             copy_string_to_wasm_memory(&mut self.store, &self.malloc, self.memory, &opts.source)?;
         let runtime_err_len = 1024;
-        let (runtime_err_ptr, _) = malloc_bytes_from_wasm_memory(&mut self.store, &self.malloc, runtime_err_len)?;
+        let (runtime_err_ptr, _) =
+            malloc_bytes_from_wasm_memory(&mut self.store, &self.malloc, runtime_err_len)?;
         let result_str = match self.run.call(&mut self.store, (filename_ptr, source_ptr)) {
             Ok(result_ptr) => {
                 let (result_str, result_len) =
                     copy_cstr_from_wasm_memory(&mut self.store, self.memory, result_ptr as usize)?;
                 free_memory(&mut self.store, &self.free, result_ptr, result_len)?;
                 result_str
-            },
+            }
             Err(err) => {
-                self.runtime_err.call(&mut self.store, (runtime_err_ptr, runtime_err_len))?;
-                let (runtime_err_str, runtime_err_len) =
-                    copy_cstr_from_wasm_memory(&mut self.store, self.memory, runtime_err_ptr as usize)?;
-                free_memory(&mut self.store, &self.free, runtime_err_ptr, runtime_err_len)?;
+                self.runtime_err
+                    .call(&mut self.store, (runtime_err_ptr, runtime_err_len))?;
+                let (runtime_err_str, runtime_err_len) = copy_cstr_from_wasm_memory(
+                    &mut self.store,
+                    self.memory,
+                    runtime_err_ptr as usize,
+                )?;
+                free_memory(
+                    &mut self.store,
+                    &self.free,
+                    runtime_err_ptr,
+                    runtime_err_len,
+                )?;
                 if runtime_err_str.is_empty() {
-                    return Err(err)
+                    return Err(err);
                 } else {
                     runtime_err_str
                 }
-            },
+            }
         };
         free_memory(&mut self.store, &self.free, filename_ptr, filename_len)?;
         free_memory(&mut self.store, &self.free, source_ptr, source_len)?;
@@ -133,12 +144,15 @@ fn copy_string_to_wasm_memory<T>(
     let bytes = string.as_bytes();
     let length = bytes.len();
 
-    let ptr = malloc.call(&mut *store, length as i32)?;
+    // C str '\0'
+    let ptr = malloc.call(&mut *store, length as i32 + 1)?;
 
     let data = memory.data_mut(&mut *store);
     data[ptr as usize..(ptr as usize + length as usize)].copy_from_slice(bytes);
+    // C str '\0'
+    data[ptr as usize + length] = 0;
 
-    Ok((ptr, length as usize))
+    Ok((ptr, length as usize + 1))
 }
 
 fn malloc_bytes_from_wasm_memory<T>(
@@ -146,8 +160,9 @@ fn malloc_bytes_from_wasm_memory<T>(
     malloc: &TypedFunc<i32, i32>,
     length: i32,
 ) -> Result<(i32, usize)> {
-    let ptr = malloc.call(&mut *store, length)?;
-    Ok((ptr, length as usize))
+    // C str '\0'
+    let ptr = malloc.call(&mut *store, length + 1)?;
+    Ok((ptr, length as usize + 1))
 }
 
 fn copy_cstr_from_wasm_memory<T>(
