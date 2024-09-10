@@ -12,3 +12,7 @@ license = "Apache-2.0"
 [dependencies]
 anyhow = "1"
 kclvm-api = { git = "https://github.com/kcl-lang/kcl", version = "0.10.0-rc.1" }
+kclvm-evaluator = { git = "https://github.com/kcl-lang/kcl", version = "0.10.0-rc.1" }
+kclvm-loader = { git = "https://github.com/kcl-lang/kcl", version = "0.10.0-rc.1" }
+kclvm-parser = { git = "https://github.com/kcl-lang/kcl", version = "0.10.0-rc.1" }
+kclvm-runtime = { git = "https://github.com/kcl-lang/kcl", version = "0.10.0-rc.1" }
