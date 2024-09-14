@@ -4,3 +4,4 @@
 !lib/**/*.lib
 !lib/**/*.so
 !lib/**/*.exe
+!lib/**/*.a

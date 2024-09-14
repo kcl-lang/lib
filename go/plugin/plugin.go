@@ -1,5 +1,5 @@
-//go:build !windows && cgo
-// +build !windows,cgo
+//go:build cgo
+// +build cgo
 
 // Copyright The KCL Authors. All rights reserved.
 
@@ -8,13 +8,11 @@ package plugin
 /*
 #include <stdint.h>
 #include <stdlib.h>
-
-extern char* kcl_go_capi_InvokeJsonProxy(
+char* kcl_go_capi_InvokeJsonProxy(
     char* method,
     char* args_json,
     char* kwargs_json
 );
-
 static uint64_t kcl_go_capi_getInvokeJsonProxyPtr() {
 	return (uint64_t)(kcl_go_capi_InvokeJsonProxy);
 }
@@ -84,27 +82,24 @@ func _Invoke(method, args_json, kwargs_json string) (result_json string) {
 		}
 	}()
 
-	// check method
+	// Check method name
 	if method == "" {
 		return JSONError(fmt.Errorf("empty method"))
 	}
 
-	// parse args, kwargs
+	// Parse args, kwargs
 	args, err := ParseMethodArgs(args_json, kwargs_json)
 	if err != nil {
 		return JSONError(err)
 	}
 
-	// todo: check args type
-	// todo: check kwargs type
-
-	// get method
+	// Get plugin method
 	methodSpec, found := GetMethodSpec(method)
 	if !found {
 		return JSONError(fmt.Errorf("invalid method: %s, not found", method))
 	}
 
-	// call plugin method
+	// Call plugin method
 	result, err := methodSpec.Body(args)
 	if err != nil {
 		return JSONError(err)
@@ -113,7 +108,7 @@ func _Invoke(method, args_json, kwargs_json string) (result_json string) {
 		result = new(MethodResult)
 	}
 
-	// encode result
+	// Encode result to JSON
 	data, err := json.Marshal(result.V)
 	if err != nil {
 		return JSONError(err)

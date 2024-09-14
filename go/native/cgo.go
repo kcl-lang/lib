@@ -1,5 +1,5 @@
-//go:build !windows && cgo
-// +build !windows,cgo
+//go:build cgo
+// +build cgo
 
 package native
 
@@ -10,7 +10,7 @@ package native
 // #cgo linux,arm64 LDFLAGS:-L${SRCDIR}/../lib/linux-arm64 -Wl,-rpath,${SRCDIR}/../lib/linux-arm64
 // #cgo darwin,amd64 LDFLAGS:-L${SRCDIR}/../lib/darwin-amd64 -Wl,-rpath,${SRCDIR}/../lib/darwin-amd64
 // #cgo darwin,arm64 LDFLAGS:-L${SRCDIR}/../lib/darwin-arm64 -Wl,-rpath,${SRCDIR}/../lib/darwin-arm64
-// #cgo windows,amd64 LDFLAGS:-L${SRCDIR}/../lib/windows-amd64 -Wl,-rpath,${SRCDIR}/../lib/windows-amd64
+// #cgo windows,amd64 LDFLAGS:-L${SRCDIR}/../lib/windows-amd64/static -Wl,-rpath,${SRCDIR}/../lib/windows-amd64
 // #include <kclvm_cli_cdylib.h>
 import "C"
 

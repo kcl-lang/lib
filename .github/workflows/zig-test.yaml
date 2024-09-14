@@ -1,0 +1,51 @@
+name: zig-test
+
+on:
+  push:
+    branches:
+      - main
+      - master
+    tags:
+      - '*'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "zig/**"
+      - ".github/workflows/zig-test.yaml"
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}-${{ github.event_name }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  build-and-test:
+    defaults:
+      run:
+        working-directory: "zig"
+    strategy:
+      matrix:
+        os: [macos-12, macos-latest, ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+    - uses: actions/checkout@v4
+    - uses: korandoru/setup-zig@v1
+      with:
+        zig-version: master
+    - name: Ready msys2
+      uses: msys2/setup-msys2@v2
+      with:
+        msystem: MINGW64
+        update: true
+        install: git mingw-w64-x86_64-toolchain
+        path-type: inherit
+      if: matrix.os == 'windows-latest'
+    - name: Check
+      run: zig fmt --check .
+      if: matrix.os != 'windows-latest'
+    - name: Build and Test
+      run: zig build test
