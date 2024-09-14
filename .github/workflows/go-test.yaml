@@ -36,9 +36,6 @@ jobs:
         uses: actions/setup-go@v2
         with:
           go-version: 1.22
-      - uses: korandoru/setup-zig@v1
-        with:
-          zig-version: master
       - name: Ready msys2
         uses: msys2/setup-msys2@v2
         with:
@@ -49,3 +46,36 @@ jobs:
         if: matrix.os == 'windows-latest'
       - name: Go code test
         run: go test ./...
+
+  cross-compile-test:
+    runs-on: macos-12
+    defaults:
+      run:
+        working-directory: "go"
+    steps:
+      - name: Git checkout
+        uses: actions/checkout@v2
+      - name: Set up Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.22
+      - uses: korandoru/setup-zig@v1
+        with:
+          zig-version: master
+      - name: Set output
+        id: macos_sdk
+        run: echo "path=$(xcrun --show-sdk-path)" >> $GITHUB_OUTPUT
+      - name: Go cross compile test on Windows
+        run: |
+          CGO_ENABLED=1 GOOS=windows GOARCH=amd64 CC='zig cc -target x86_64-windows-gnu' go build ./...
+      - name: Go cross compile test on Linux
+        run: |
+          CGO_ENABLED=1 GOOS=linux GOARCH=amd64 CC='zig cc -target x86_64-linux-musl' go build ./...
+          CGO_ENABLED=1 GOOS=linux GOARCH=arm64 CC='zig cc -target aarch64-linux-musl' go build ./...
+      - name: Go cross compile test on Macos
+        run: |
+          export SDK_PATH=$(xcrun --show-sdk-path)
+          CGO_ENABLED=1 GOOS=darwin GOARCH=amd64 CC='zig cc -target x86_64-macos-none -F'"${SDK_PATH}"'/System/Library/Frameworks' go build ./...
+          CGO_ENABLED=1 GOOS=darwin GOARCH=arm64 CC='zig cc -target aarch64-macos-none -F'"${SDK_PATH}"'/System/Library/Frameworks' go build ./...
+        env:
+          SDK_PATH: ${{ steps.macos_sdk.outputs.path }}
