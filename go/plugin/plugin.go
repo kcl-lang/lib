@@ -8,14 +8,8 @@ package plugin
 /*
 #include <stdint.h>
 #include <stdlib.h>
-char* kcl_go_capi_InvokeJsonProxy(
-    char* method,
-    char* args_json,
-    char* kwargs_json
-);
-static uint64_t kcl_go_capi_getInvokeJsonProxyPtr() {
-	return (uint64_t)(kcl_go_capi_InvokeJsonProxy);
-}
+
+uint64_t kcl_go_plugin_get_proxy_func_ptr();
 */
 import "C"
 import (
@@ -26,8 +20,8 @@ import (
 
 const CgoEnabled = true
 
-//export kcl_go_capi_InvokeJsonProxy
-func kcl_go_capi_InvokeJsonProxy(_method, _args_json, _kwargs_json *C.char) (result_json *C.char) {
+//export kcl_go_plugin_proxy_func
+func kcl_go_plugin_proxy_func(_method, _args_json, _kwargs_json *C.char) (result_json *C.char) {
 	var method, args_json, kwargs_json string
 
 	if _method != nil {
@@ -45,7 +39,7 @@ func kcl_go_capi_InvokeJsonProxy(_method, _args_json, _kwargs_json *C.char) (res
 }
 
 func GetInvokeJsonProxyPtr() uint64 {
-	ptr := uint64(C.kcl_go_capi_getInvokeJsonProxyPtr())
+	ptr := uint64(C.kcl_go_plugin_get_proxy_func_ptr())
 	return ptr
 }
 
