@@ -61,7 +61,6 @@ pub fn build(b: *std.Build) void {
 }
 
 fn linkWindowsLibraries(lib: *std.Build.Step.Compile) void {
-    lib.linkSystemLibrary("msvcrt");
     lib.linkSystemLibrary("userenv");
     lib.linkSystemLibrary("ole32");
     lib.linkSystemLibrary("ntdll");

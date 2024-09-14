@@ -108,7 +108,7 @@ func _Invoke(method, args_json, kwargs_json string) (result_json string) {
 		result = new(MethodResult)
 	}
 
-	// Encode result to JSO
+	// Encode result to JSON
 	data, err := json.Marshal(result.V)
 	if err != nil {
 		return JSONError(err)
