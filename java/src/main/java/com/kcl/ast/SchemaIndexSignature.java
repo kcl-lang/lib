@@ -14,7 +14,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 public class SchemaIndexSignature {
     @JsonProperty("key_name")
-    private String keyName;
+    private NodeRef<String> keyName;
 
     @JsonProperty("value")
     private NodeRef<Expr> value;
@@ -28,11 +28,11 @@ public class SchemaIndexSignature {
     @JsonProperty("value_ty")
     private NodeRef<Type> valueTy;
 
-    public String getKeyName() {
+    public NodeRef<String> getKeyName() {
         return keyName;
     }
 
-    public void setKeyName(String keyName) {
+    public void setKeyName(NodeRef<String> keyName) {
         this.keyName = keyName;
     }
 
