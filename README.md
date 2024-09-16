@@ -48,12 +48,22 @@ Write the Code
 package main
 
 import (
-	"kcl-lang.io/lib/go/install"
+	"fmt"
+
+	"kcl-lang.io/lib/go/api"
+	"kcl-lang.io/lib/go/native"
 )
 
 func main() {
-    path = "path/to/install/lib"
-    _ := install.InstallKclvm(path)
+	client := native.NewNativeServiceClient()
+	result, err := client.ExecProgram(&api.ExecProgram_Args{
+		KFilenameList: []string{"main.k"},
+		KCodeList:     []string{"a = 1"},
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	fmt.Println(result.YamlResult)
 }
 ```
 
@@ -85,7 +95,7 @@ This way you'll be able to import the above dependency to use the SDK.
 <dependency>
     <groupId>com.kcl</groupId>
     <artifactId>kcl-lib</artifactId>
-    <version>0.10.0-rc.1-SNAPSHOT</version>
+    <version>0.10.0-SNAPSHOT</version>
 </dependency>
 ```
 
@@ -187,7 +197,7 @@ This way you'll be able to import the above dependency to use the SDK.
 <dependency>
     <groupId>com.kcl</groupId>
     <artifactId>kcl-lib</artifactId>
-    <version>0.10.0-rc.1-SNAPSHOT</version>
+    <version>0.10.0-SNAPSHOT</version>
 </dependency>
 ```
 
@@ -221,7 +231,7 @@ For CMake, you can use FetchContent to add KCL C++ Lib to your project.
 FetchContent_Declare(
   kcl-lib
   GIT_REPOSITORY https://github.com/kcl-lang/lib.git
-  GIT_TAG        v0.10.0-rc.1
+  GIT_TAG        v0.10.0
   SOURCE_SUBDIR  cpp
 )
 FetchContent_MakeAvailable(kcl-lib)
