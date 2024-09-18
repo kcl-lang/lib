@@ -53,34 +53,32 @@ func InstallKclvm(installRoot string) error {
 	if err != nil {
 		return err
 	}
-	binPath := filepath.Join(installRoot, "bin")
-
-	versionMatched, err := checkVersion(binPath)
+	versionMatched, err := checkVersion(installRoot)
 
 	if err != nil {
 		return err
 	}
 
 	// Install kclvm binary.
-	err = installBin(binPath, "kclvm_cli", lib.CliBin, versionMatched)
+	err = installBin(installRoot, "kclvm_cli", lib.CliBin, versionMatched)
 	if err != nil {
 		return err
 	}
 	// Install kclvm libs.
-	err = installLib(binPath, "kclvm_cli_cdylib", versionMatched)
+	err = installLib(installRoot, "kclvm_cli_cdylib", versionMatched)
 	if err != nil {
 		return err
 	}
 
 	if !versionMatched {
-		kclvmVersionPath := filepath.Join(binPath, "kclvm.version")
+		kclvmVersionPath := filepath.Join(installRoot, "kclvm.version")
 		err = os.WriteFile(kclvmVersionPath, []byte(getVersion()), os.FileMode(os.O_WRONLY|os.O_TRUNC))
 		if err != nil {
 			return err
 		}
 	}
 
-	os.Setenv("PATH", os.Getenv("PATH")+string(os.PathListSeparator)+binPath)
+	os.Setenv("PATH", os.Getenv("PATH")+string(os.PathListSeparator)+installRoot)
 
 	return nil
 }

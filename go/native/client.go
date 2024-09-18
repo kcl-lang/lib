@@ -1,25 +1,28 @@
-//go:build cgo
-// +build cgo
-
 package native
 
-/*
-#include <stdlib.h>
-#include <stdint.h>
-typedef struct kclvm_service kclvm_service;
-*/
-import "C"
 import (
 	"bytes"
 	"errors"
 	"runtime"
 	"strings"
+	"sync"
 	"unsafe"
 
+	"github.com/ebitengine/purego"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoreflect"
 	"kcl-lang.io/lib/go/api"
 	"kcl-lang.io/lib/go/plugin"
+)
+
+var libInit sync.Once
+
+var (
+	lib           uintptr
+	serviceNew    func(uint64) uintptr
+	serviceDelete func(uintptr)
+	serviceCall   func(uintptr, string, string, uint, *uint) uintptr
+	freeString    func(uintptr)
 )
 
 type validator interface {
@@ -27,7 +30,17 @@ type validator interface {
 }
 
 type NativeServiceClient struct {
-	client *C.kclvm_service
+	svc uintptr
+}
+
+func initLib() {
+	libInit.Do(func() {
+		lib, _ = loadServiceNativeLib()
+		purego.RegisterLibFunc(&serviceNew, lib, "kclvm_service_new")
+		purego.RegisterLibFunc(&serviceDelete, lib, "kclvm_service_delete")
+		purego.RegisterLibFunc(&serviceCall, lib, "kclvm_service_call_with_length")
+		purego.RegisterLibFunc(&freeString, lib, "kclvm_service_free_string")
+	})
 }
 
 func NewNativeServiceClient() api.ServiceClient {
@@ -35,11 +48,12 @@ func NewNativeServiceClient() api.ServiceClient {
 }
 
 func NewNativeServiceClientWithPluginAgent(pluginAgent uint64) *NativeServiceClient {
+	initLib()
 	c := new(NativeServiceClient)
-	c.client = NewKclvmService(C.uint64_t(pluginAgent))
+	c.svc = serviceNew(pluginAgent)
 	runtime.SetFinalizer(c, func(x *NativeServiceClient) {
-		DeleteKclvmService(x.client)
-		x.client = nil
+		serviceDelete(x.svc)
+		closeLibrary(lib)
 	})
 	return c
 }
@@ -68,20 +82,10 @@ func cApiCall[I interface {
 	if err != nil {
 		return nil, err
 	}
+	var cOutSize uint
+	cOut := serviceCall(c.svc, callName, string(inBytes), uint(len(inBytes)), &cOutSize)
 
-	cCallName := C.CString(callName)
-
-	defer C.free(unsafe.Pointer(cCallName))
-
-	cIn := C.CString(string(inBytes))
-
-	defer C.free(unsafe.Pointer(cIn))
-
-	cOut, cOutSize := KclvmServiceCall(c.client, cCallName, cIn, C.size_t(len(inBytes)))
-
-	defer KclvmServiceFreeString(cOut)
-
-	msg := C.GoBytes(unsafe.Pointer(cOut), C.int(cOutSize))
+	msg := GoByte(cOut, cOutSize)
 
 	if bytes.HasPrefix(msg, []byte("ERROR:")) {
 		return nil, errors.New(strings.TrimPrefix(string(msg), "ERROR:"))
@@ -94,6 +98,16 @@ func cApiCall[I interface {
 	}
 
 	return out, nil
+}
+
+// GoByte copies a null-terminated char* to a Go string.
+func GoByte(c uintptr, length uint) []byte {
+	// We take the address and then dereference it to trick go vet from creating a possible misuse of unsafe.Pointer
+	ptr := *(*unsafe.Pointer)(unsafe.Pointer(&c))
+	if ptr == nil {
+		return []byte{}
+	}
+	return unsafe.Slice((*byte)(ptr), length)
 }
 
 func (c *NativeServiceClient) Ping(in *api.Ping_Args) (*api.Ping_Result, error) {
