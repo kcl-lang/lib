@@ -18,11 +18,12 @@ import (
 var libInit sync.Once
 
 var (
+	client        *NativeServiceClient
 	lib           uintptr
 	serviceNew    func(uint64) uintptr
 	serviceDelete func(uintptr)
 	serviceCall   func(uintptr, string, string, uint, *uint) uintptr
-	freeString    func(uintptr)
+	free          func(uintptr, uint)
 )
 
 type validator interface {
@@ -33,13 +34,20 @@ type NativeServiceClient struct {
 	svc uintptr
 }
 
-func initLib() {
+func initClient(pluginAgent uint64) {
 	libInit.Do(func() {
 		lib, _ = loadServiceNativeLib()
 		purego.RegisterLibFunc(&serviceNew, lib, "kclvm_service_new")
 		purego.RegisterLibFunc(&serviceDelete, lib, "kclvm_service_delete")
 		purego.RegisterLibFunc(&serviceCall, lib, "kclvm_service_call_with_length")
-		purego.RegisterLibFunc(&freeString, lib, "kclvm_service_free_string")
+		purego.RegisterLibFunc(&free, lib, "kcl_free")
+		client = new(NativeServiceClient)
+		client.svc = serviceNew(pluginAgent)
+		runtime.SetFinalizer(client, func(x *NativeServiceClient) {
+			if x != nil {
+				x.Close()
+			}
+		})
 	})
 }
 
@@ -48,16 +56,13 @@ func NewNativeServiceClient() api.ServiceClient {
 }
 
 func NewNativeServiceClientWithPluginAgent(pluginAgent uint64) *NativeServiceClient {
-	initLib()
-	c := new(NativeServiceClient)
-	c.svc = serviceNew(pluginAgent)
-	runtime.SetFinalizer(c, func(x *NativeServiceClient) {
-		if x.svc != 0 {
-			serviceDelete(x.svc)
-		}
-		closeLibrary(lib)
-	})
-	return c
+	initClient(pluginAgent)
+	return client
+}
+
+func (x *NativeServiceClient) Close() {
+	serviceDelete(x.svc)
+	closeLibrary(lib)
 }
 
 func cApiCall[I interface {
@@ -87,7 +92,10 @@ func cApiCall[I interface {
 	var cOutSize uint
 	cOut := serviceCall(c.svc, callName, string(inBytes), uint(len(inBytes)), &cOutSize)
 
-	msg := GoByte(cOut, cOutSize)
+	msg := GoBytes(cOut, cOutSize)
+
+	// The bytes is allocated from the C API, thus we free it when copied it to Go bytes.
+	defer free(cOut, cOutSize)
 
 	if bytes.HasPrefix(msg, []byte("ERROR:")) {
 		return nil, errors.New(strings.TrimPrefix(string(msg), "ERROR:"))
@@ -102,8 +110,8 @@ func cApiCall[I interface {
 	return out, nil
 }
 
-// GoByte copies a null-terminated char* to a Go string.
-func GoByte(c uintptr, length uint) []byte {
+// GoBytes copies a uintptr with length to go []byte
+func GoBytes(c uintptr, length uint) []byte {
 	// We take the address and then dereference it to trick go vet from creating a possible misuse of unsafe.Pointer
 	ptr := *(*unsafe.Pointer)(unsafe.Pointer(&c))
 	if ptr == nil {
