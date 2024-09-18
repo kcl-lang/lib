@@ -32,6 +32,8 @@ pub fn build(b: *std.Build) void {
     lib.linkSystemLibrary(kclLibName());
     if (os == .windows) {
         linkWindowsLibraries(lib);
+    } else if (os == .macos) {
+        linkMacOSLibraries(lib);
     }
 
     // This declares intent for the library to be installed into the standard
@@ -53,6 +55,8 @@ pub fn build(b: *std.Build) void {
     lib_unit_tests.linkSystemLibrary(kclLibName());
     if (os == .windows) {
         linkWindowsLibraries(lib_unit_tests);
+    } else if (os == .macos) {
+        linkMacOSLibraries(lib_unit_tests);
     }
 
     const run_lib_unit_tests = b.addRunArtifact(lib_unit_tests);
@@ -69,6 +73,11 @@ fn linkWindowsLibraries(lib: *std.Build.Step.Compile) void {
     lib.linkSystemLibrary("ws2_32");
 }
 
+fn linkMacOSLibraries(lib: *std.Build.Step.Compile) void {
+    lib.linkFramework("CoreFoundation");
+    lib.linkFramework("Security");
+}
+
 fn kclLibName() []const u8 {
     return "kclvm_cli_cdylib";
 }
@@ -80,13 +89,13 @@ fn kclLibPath(b: *std.Build, target: *const std.Build.ResolvedTarget) std.Build.
         .windows => {
             switch (arch) {
                 .x86_64 => {
-                    return b.path("../go/lib/windows-amd64/static");
+                    return b.path("../go/lib/windows-amd64/");
                 },
                 .x86 => {
-                    return b.path("../go/lib/windows-amd64/static");
+                    return b.path("../go/lib/windows-amd64/");
                 },
                 .aarch64 => {
-                    return b.path("../go/lib/windows-arm64/static");
+                    return b.path("../go/lib/windows-arm64/");
                 },
                 else => @panic("Unsupported Windows architecture"),
             }

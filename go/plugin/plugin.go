@@ -18,8 +18,6 @@ import (
 	"fmt"
 )
 
-const CgoEnabled = true
-
 //export kcl_go_plugin_proxy_func
 func kcl_go_plugin_proxy_func(_method, _args_json, _kwargs_json *C.char) (result_json *C.char) {
 	var method, args_json, kwargs_json string

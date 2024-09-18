@@ -4,11 +4,11 @@ This repo is under development, PRs welcome!
 
 ## Developing
 
-## Prerequisites
+### Prerequisites
 
 + Zig 0.13.0+
 
-## Build and Test
+### Build and Test
 
 ```shell
 zig build test
