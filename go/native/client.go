@@ -52,7 +52,9 @@ func NewNativeServiceClientWithPluginAgent(pluginAgent uint64) *NativeServiceCli
 	c := new(NativeServiceClient)
 	c.svc = serviceNew(pluginAgent)
 	runtime.SetFinalizer(c, func(x *NativeServiceClient) {
-		serviceDelete(x.svc)
+		if x.svc != 0 {
+			serviceDelete(x.svc)
+		}
 		closeLibrary(lib)
 	})
 	return c
