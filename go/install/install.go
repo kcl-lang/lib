@@ -7,7 +7,7 @@ import (
 	"path/filepath"
 	"runtime"
 
-	lib "kcl-lang.io/lib/go/lib"
+	"github.com/gofrs/flock"
 )
 
 const KCLVM_VERSION = "v0.10.0"
@@ -54,16 +54,28 @@ func InstallKclvm(installRoot string) error {
 		return err
 	}
 	versionMatched, err := checkVersion(installRoot)
-
 	if err != nil {
 		return err
 	}
 
-	// Install kclvm binary.
-	err = installBin(installRoot, "kclvm_cli", lib.CliBin, versionMatched)
+	err = os.MkdirAll(installRoot, 0777)
 	if err != nil {
 		return err
 	}
+	// Create a lock file for installing.
+	lockFilePath := filepath.Join(installRoot, "install.lock")
+	fileLock := flock.New(lockFilePath)
+
+	// Try to obtain a lock with a timeout.
+	locked, err := fileLock.TryLock()
+	if err != nil {
+		return err
+	}
+	if !locked {
+		return fmt.Errorf("another installation is already in progress")
+	}
+	defer fileLock.Unlock() // Ensure the lock is released when done.
+
 	// Install kclvm libs.
 	err = installLib(installRoot, "kclvm_cli_cdylib", versionMatched)
 	if err != nil {
