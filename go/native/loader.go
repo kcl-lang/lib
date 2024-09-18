@@ -6,6 +6,7 @@ import (
 	"runtime"
 
 	"kcl-lang.io/lib/go/install"
+	lazypath "kcl-lang.io/lib/go/path"
 )
 
 const libName = "kclvm_cli_cdylib"
@@ -13,7 +14,7 @@ const libName = "kclvm_cli_cdylib"
 func libPath() (path string, err error) {
 	libHome := os.Getenv("KCL_LIB_HOME")
 	if libHome == "" {
-		return os.MkdirTemp("", "kcl_lib_home")
+		return lazypath.CacheHome(), nil
 	}
 	return libHome, nil
 }
