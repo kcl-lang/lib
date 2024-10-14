@@ -14,7 +14,7 @@ const libName = "kclvm_cli_cdylib"
 func libPath() (path string, err error) {
 	libHome := os.Getenv("KCL_LIB_HOME")
 	if libHome == "" {
-		return lazypath.CacheHome(), nil
+		return lazypath., nil
 	}
 	return libHome, nil
 }
