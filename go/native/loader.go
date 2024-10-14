@@ -31,6 +31,7 @@ func fullLibName() string {
 
 func loadServiceNativeLib() (uintptr, error) {
 	libPath, err := libPath()
+	libPath = filepath.Join(libPath, "kcl")
 	if err != nil {
 		return 0, err
 	}
