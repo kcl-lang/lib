@@ -53,11 +53,6 @@ func InstallKclvm(installRoot string) error {
 	if err != nil {
 		return err
 	}
-	versionMatched, err := checkVersion(installRoot)
-	if err != nil {
-		return err
-	}
-
 	err = os.MkdirAll(installRoot, 0777)
 	if err != nil {
 		return err
@@ -67,14 +62,18 @@ func InstallKclvm(installRoot string) error {
 	fileLock := flock.New(lockFilePath)
 
 	// Try to obtain a lock with a timeout.
-	locked, err := fileLock.TryLock()
+	err = fileLock.Lock()
 	if err != nil {
 		return err
 	}
-	if !locked {
-		return fmt.Errorf("another installation is already in progress")
+	// Ensure the lock is released when done.
+	defer fileLock.Unlock()
+
+	// Check the lib is installed.
+	versionMatched, err := checkVersion(installRoot)
+	if err != nil {
+		return err
 	}
-	defer fileLock.Unlock() // Ensure the lock is released when done.
 
 	// Install kclvm libs.
 	err = installLib(installRoot, "kclvm_cli_cdylib", versionMatched)
