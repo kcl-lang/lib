@@ -36,7 +36,10 @@ type NativeServiceClient struct {
 
 func initClient(pluginAgent uint64) {
 	libInit.Do(func() {
-		lib, _ = loadServiceNativeLib()
+		lib, err := loadServiceNativeLib()
+		if err != nil {
+			panic(err)
+		}
 		purego.RegisterLibFunc(&serviceNew, lib, "kclvm_service_new")
 		purego.RegisterLibFunc(&serviceDelete, lib, "kclvm_service_delete")
 		purego.RegisterLibFunc(&serviceCall, lib, "kclvm_service_call_with_length")
