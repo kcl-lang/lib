@@ -1,7 +1,7 @@
 {
   "name": "@kcl-lang/lib-darwin-arm64",
   "repository": "https://github.com/kcl-lang/lib",
-  "version": "0.10.3",
+  "version": "0.10.4",
   "os": [
     "darwin"
   ],

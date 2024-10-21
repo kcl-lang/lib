@@ -8,4 +8,4 @@ crate-type = ["cdylib"]
 doc = false
 
 [dependencies]
-kclvm-api = { git = "https://github.com/kcl-lang/kcl", version = "0.10.3" }
+kclvm-api = { git = "https://github.com/kcl-lang/kcl", version = "0.10.4" }
