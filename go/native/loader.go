@@ -12,11 +12,7 @@ import (
 const libName = "kclvm_cli_cdylib"
 
 func libPath() (path string, err error) {
-	libHome := os.Getenv("KCL_LIB_HOME")
-	if libHome == "" {
-		return lazypath.DataHome(), nil
-	}
-	return libHome, nil
+	return lazypath.DataHome(), nil
 }
 
 func fullLibName() string {
@@ -32,6 +28,10 @@ func fullLibName() string {
 func loadServiceNativeLib() (uintptr, error) {
 	libPath, err := libPath()
 	libPath = filepath.Join(libPath, "kcl")
+	envLibHome := os.Getenv("KCL_LIB_HOME")
+	if envLibHome != "" {
+		libPath = envLibHome
+	}
 	if err != nil {
 		return 0, err
 	}
