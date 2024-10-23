@@ -4,10 +4,11 @@ import com.kcl.api.API
 import com.kcl.api.parseProgramArgs
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.assertEquals
+import java.nio.file.Paths
 
 class ParseProgramTest {
     companion object {
-        private const val TEST_FILE = "./src/test_data/parse/main.k"
+        private val TEST_FILE = Paths.get("src", "test_data", "parse", "main.k").toString()
     }
 
     @Test

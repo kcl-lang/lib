@@ -1,6 +1,6 @@
 [package]
 name = "kcl-lib-lua"
-version = "0.10.4"
+version = "0.10.5"
 edition = "2021"
 publish = false
 
@@ -16,4 +16,4 @@ mlua = { version = "0.9", features = [
   "module",
   "macros",
 ], default-features = false, optional = true }
-kclvm-api = { git = "https://github.com/kcl-lang/kcl", version = "0.10.4" }
+kclvm-api = { git = "https://github.com/kcl-lang/kcl", version = "0.10.5" }

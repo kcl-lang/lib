@@ -1,5 +1,8 @@
 package com.kcl;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -12,7 +15,8 @@ import com.kcl.util.JsonUtil;
 public class ParseProgramTest {
     @Test
     public void testParseProgram() throws Exception {
-        ParseProgram_Args args = ParseProgram_Args.newBuilder().addPaths("./src/test_data/parse/main.k").build();
+        Path path = Paths.get("src", "test_data", "parse", "main.k");
+        ParseProgram_Args args = ParseProgram_Args.newBuilder().addPaths(path.toString()).build();
 
         API apiInstance = new API();
         ParseProgram_Result result = apiInstance.parseProgram(args);

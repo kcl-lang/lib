@@ -1,5 +1,5 @@
 package = "kcl_lib"
-version = "0.10.4-1"
+version = "0.10.5-1"
 
 source = {
     url = "git+https://github.com/kcl-lang/kcl",
