@@ -1,6 +1,6 @@
 module kcl-lang.io/lib
 
-go 1.23
+go 1.22
 
 require (
 	github.com/ebitengine/purego v0.7.1
