@@ -15,9 +15,6 @@ public class Module {
     @JsonProperty("doc")
     private NodeRef<String> doc;
 
-    @JsonProperty("name")
-    private String name;
-
     @JsonProperty("body")
     private List<NodeRef<Stmt>> body;
 
@@ -64,14 +61,6 @@ public class Module {
 
     public void setDoc(NodeRef<String> doc) {
         this.doc = doc;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public List<NodeRef<Stmt>> getBody() {
