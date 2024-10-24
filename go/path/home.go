@@ -16,6 +16,7 @@ package path
 
 import (
 	"os"
+	"os/user"
 	"runtime"
 )
 
@@ -71,5 +72,10 @@ func HomeDir() string {
 		// We've got nothing
 		return ""
 	}
-	return os.Getenv("HOME")
+	home := os.Getenv("HOME")
+	if home != "" {
+		return home
+	}
+	usr, _ := user.Current()
+	return usr.HomeDir
 }
