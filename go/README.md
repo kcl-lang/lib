@@ -1,4 +1,4 @@
-# KCL Artifact Library for Go
+# KCL Bindings for Go
 
 ## Developing
 
@@ -11,3 +11,5 @@
 ```shell
 go test ./...
 ```
+
+Note: Full Go SDK can be found [here](https://github.com/kcl-lang/kcl-go), which depends on the kcl-lang/lib Go bindings.
