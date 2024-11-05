@@ -15,7 +15,7 @@ description = "KCL Programming Language Python Lib"
 license = { text = "Apache-2.0" }
 
 dependencies = [
-    "protobuf>=5.27.2"
+    "protobuf>=4.25.3"
 ]
 
 [tool.maturin]
