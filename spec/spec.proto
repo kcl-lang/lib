@@ -106,10 +106,10 @@ service KclvmService {
 	/// {
 	///     "jsonrpc": "2.0",
 	///     "result": {
-	///         "version": "0.10.7",
+	///         "version": "0.10.8",
 	///         "checksum": "c020ab3eb4b9179219d6837a57f5d323",
 	///         "git_sha": "1a9a72942fffc9f62cb8f1ae4e1d5ca32aa1f399",
-	///         "version_info": "Version: 0.10.7-c020ab3eb4b9179219d6837a57f5d323\nPlatform: aarch64-apple-darwin\nGitCommit: 1a9a72942fffc9f62cb8f1ae4e1d5ca32aa1f399"
+	///         "version_info": "Version: 0.10.8-c020ab3eb4b9179219d6837a57f5d323\nPlatform: aarch64-apple-darwin\nGitCommit: 1a9a72942fffc9f62cb8f1ae4e1d5ca32aa1f399"
 	///     },
 	///     "id": 1
 	/// }

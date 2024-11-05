@@ -32,13 +32,13 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 20.x
-      - name: Install rust nightly toolchain
+      - name: Setup Rust
         uses: actions-rs/toolchain@v1
         with:
-          toolchain: 1.79
+          toolchain: 1.81
           override: true
           components: clippy, rustfmt
-      - name: Set up Go
+      - name: Setup Go
         uses: actions/setup-go@v2
         with:
           go-version: 1.22
