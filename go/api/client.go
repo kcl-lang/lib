@@ -30,6 +30,8 @@ type ServiceClient interface {
 	OverrideFile(in *OverrideFile_Args) (out *OverrideFile_Result, err error)
 	// Get schema type mapping defined in the program.
 	GetSchemaTypeMapping(in *GetSchemaTypeMapping_Args) (out *GetSchemaTypeMapping_Result, err error)
+	// Get schema type mapping defined under the path.
+	GetSchemaTypeMappingUnderPath(in *GetSchemaTypeMapping_Args) (out *GetSchemaTypeMappingUnderPath_Result, err error)
 	// Validate code using schema and JSON/YAML data strings.
 	ValidateCode(in *ValidateCode_Args) (out *ValidateCode_Result, err error)
 	// List dependencies files of input paths.

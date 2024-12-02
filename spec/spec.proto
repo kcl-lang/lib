@@ -507,6 +507,8 @@ service KclvmService {
 	/// }
 	/// ```
 	rpc GetSchemaTypeMapping(GetSchemaTypeMapping_Args) returns (GetSchemaTypeMapping_Result);
+	
+	rpc GetSchemaTypeMappingUnderPath(GetSchemaTypeMapping_Args) returns (GetSchemaTypeMappingUnderPath_Result);
 
 	/// Format code source.
 	///
@@ -1185,6 +1187,17 @@ message GetSchemaTypeMapping_Args {
 message GetSchemaTypeMapping_Result {
 	// Map of schema type mappings.
 	map<string, KclType> schema_type_mapping = 1;
+}
+
+// Message for get schema type mapping response.
+message GetSchemaTypeMappingUnderPath_Result {
+	// Map of pkg and schema types mappings.
+	map<string, SchemaTypes> schema_type_mapping = 1;
+}
+
+message SchemaTypes {
+	// List of schema type mappings.
+	repeated KclType schema_type = 1;
 }
 
 // Message for validate code request arguments.

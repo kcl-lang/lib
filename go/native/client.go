@@ -181,6 +181,10 @@ func (c *NativeServiceClient) GetSchemaTypeMapping(in *api.GetSchemaTypeMapping_
 	return cApiCall[*api.GetSchemaTypeMapping_Args, *api.GetSchemaTypeMapping_Result](c, "KclvmService.GetSchemaTypeMapping", in)
 }
 
+func (c *NativeServiceClient) GetSchemaTypeMappingUnderPath(in *api.GetSchemaTypeMapping_Args) (*api.GetSchemaTypeMappingUnderPath_Result, error) {
+	return cApiCall[*api.GetSchemaTypeMapping_Args, *api.GetSchemaTypeMappingUnderPath_Result](c, "KclvmService.GetSchemaTypeMappingUnderPath", in)
+}
+
 func (c *NativeServiceClient) ValidateCode(in *api.ValidateCode_Args) (*api.ValidateCode_Result, error) {
 	return cApiCall[*api.ValidateCode_Args, *api.ValidateCode_Result](c, "KclvmService.ValidateCode", in)
 }
