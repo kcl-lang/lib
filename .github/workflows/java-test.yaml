@@ -90,9 +90,7 @@ jobs:
             java/target/classes/native
 
   build-centos7:
-    runs-on: ubuntu-latest
-    container:
-      image: "kcllang/kcl-java-builder-centos7:0.1.0"
+    runs-on: ubuntu-20.04
 
     permissions:
       contents: read
@@ -100,8 +98,6 @@ jobs:
     needs: [ test-and-build ]
     env:
       ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
-      ACTIONS_RUNNER_FORCED_INTERNAL_NODE_VERSION: node16
-      ACTIONS_RUNNER_FORCE_ACTIONS_NODE_VERSION: node16
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -130,10 +126,12 @@ jobs:
           name: kcl-lib-osx-aarch_64
           path: java/native
 
-      - name: Package Java artifact
-        working-directory: java
+      - name: Run tests and package in CentOS 7 container
         run: |
-          rustup default stable && mvn package -DskipTests=true -Dcargo-build.profile=release
+          docker run --rm -v ${{ github.workspace }}:/work kcllang/kcl-java-builder-centos7:0.1.0 bash -c "
+            rustup default stable &&
+            mvn package -DskipTests=true -Dcargo-build.profile=release
+          "
 
       - name: Upload artifact
         uses: actions/upload-artifact@v3
