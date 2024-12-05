@@ -129,6 +129,7 @@ jobs:
       - name: Run tests and package in CentOS 7 container
         run: |
           docker run --rm -v ${{ github.workspace }}/java:/work kcllang/kcl-java-builder-centos7:0.1.0 bash -c "
+            cd /work &&
             rustup default stable &&
             mvn package -DskipTests=true -Dcargo-build.profile=release
           "
