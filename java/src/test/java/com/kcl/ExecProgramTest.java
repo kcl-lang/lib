@@ -19,4 +19,16 @@ public class ExecProgramTest {
         ExecProgram_Result result = apiInstance.execProgram(args);
         Assert.assertEquals(result.getYamlResult(), "app:\n" + "  replicas: 2");
     }
+
+    @Test
+    public void testExecProgramApiInvalid() {
+        try {
+            ExecProgram_Args args = ExecProgram_Args.newBuilder().build();
+
+            API apiInstance = new API();
+            apiInstance.execProgram(args);
+        } catch (Exception e) {
+            Assert.assertEquals(e.getMessage(), "No input KCL files or paths");
+        }
+    }
 }

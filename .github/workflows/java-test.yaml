@@ -90,9 +90,7 @@ jobs:
             java/target/classes/native
 
   build-centos7:
-    runs-on: ubuntu-latest
-    container:
-      image: "kcllang/kcl-java-builder-centos7:0.1.0"
+    runs-on: ubuntu-20.04
 
     permissions:
       contents: read
@@ -128,10 +126,13 @@ jobs:
           name: kcl-lib-osx-aarch_64
           path: java/native
 
-      - name: Package Java artifact
-        working-directory: java
+      - name: Run tests and package in CentOS 7 container
         run: |
-          rustup default stable && mvn package -DskipTests=true -Dcargo-build.profile=release
+          docker run --rm -v ${{ github.workspace }}/java:/work kcllang/kcl-java-builder-centos7:0.1.0 bash -c "
+            cd /work &&
+            rustup default stable &&
+            mvn package -DskipTests=true -Dcargo-build.profile=release
+          "
 
       - name: Upload artifact
         uses: actions/upload-artifact@v3
