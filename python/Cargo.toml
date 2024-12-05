@@ -9,4 +9,4 @@ crate-type = ["cdylib"]
 
 [dependencies]
 kclvm-api = { git = "https://github.com/kcl-lang/kcl", rev = "2aa8fea", version = "0.10.8" }
-pyo3 = "0.20.1"
+pyo3 = "0.23.3"
