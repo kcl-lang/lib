@@ -23,6 +23,9 @@ on:
 permissions:
   contents: read
 
+env:
+  PYO3_USE_ABI3_FORWARD_COMPATIBILITY: 1
+
 jobs:
   sdist:
     runs-on: ubuntu-latest

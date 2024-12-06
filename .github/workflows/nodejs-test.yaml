@@ -32,7 +32,7 @@ jobs:
       - name: Install rust toolchain
         uses: actions-rs/toolchain@v1
         with:
-          toolchain: 1.74
+          toolchain: 1.75
           override: true
           components: clippy, rustfmt
 
@@ -163,7 +163,7 @@ jobs:
           path: nodejs/*.node
 
   macos:
-    runs-on: macos-12
+    runs-on: macos-13
     strategy:
       matrix:
         settings:
