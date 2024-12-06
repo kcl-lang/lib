@@ -12,6 +12,6 @@
     "dist/"
   ],
   "dependencies": {
-    "kcl-lib": "0.10.8"
+    "kcl-lib": "0.11.0-alpha.1"
   }
 }
