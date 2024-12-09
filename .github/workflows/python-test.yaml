@@ -110,7 +110,7 @@ jobs:
           name: wheels
           path: python/dist
       - name: Publish to PyPI
-        uses: pypa/gh-action-pypi-publish@cbd6d01
+        uses: pypa/gh-action-pypi-publish@cbd6d01d855e02aab0908c7709d5c0ddc88c617a
         with:
           password: ${{ secrets.PYPI_API_TOKEN }}
           skip-existing: true
