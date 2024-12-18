@@ -10,7 +10,7 @@ import (
 	"github.com/gofrs/flock"
 )
 
-const KCLVM_VERSION = "v0.11.0-alpha.1"
+const KCLVM_VERSION = "v0.11.0"
 
 func findPath(name string) string {
 	if path, err := exec.LookPath(name); err == nil {
