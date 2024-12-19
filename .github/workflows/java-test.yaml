@@ -24,7 +24,7 @@ jobs:
     strategy:
       matrix:
         include:
-          - os: ubuntu-22.04
+          - os: ubuntu-latest
             classifier: linux-aarch_64
             java: 8
             root-pom: 'pom.xml'
@@ -141,7 +141,7 @@ jobs:
           path: java/target/*.jar
 
   deploy:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
       
     permissions:
       contents: read
