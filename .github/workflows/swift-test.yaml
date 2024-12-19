@@ -29,12 +29,14 @@ jobs:
         working-directory: "swift"
     strategy:
       matrix:
-        os: [macos-13, macos-latest, ubuntu-latest]
+        # https://github.com/swift-actions/setup-swift/issues/677
+        # ubuntu-latest is not supported
+        os: [macos-13, macos-latest, ubuntu-22.04]
     runs-on: ${{ matrix.os }}
     steps:
     - uses: actions/checkout@v4
     - name: Install dependencies
-      if: "contains(matrix.os, 'ubuntu-latest')"
+      if: "contains(matrix.os, 'ubuntu-22.04')"
       run: |
         sudo apt-get update
         sudo apt-get install libgtest-dev ninja-build

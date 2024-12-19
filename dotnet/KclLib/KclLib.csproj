@@ -11,7 +11,7 @@
   <PropertyGroup>
     <AssemblyName>KclLib</AssemblyName>
     <PackageId>KclLib</PackageId>
-    <Version>0.11.0-alpha.1</Version>
+    <Version>0.11.0</Version>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <RepositoryUrl>https://github.com/kcl-lang</RepositoryUrl>
