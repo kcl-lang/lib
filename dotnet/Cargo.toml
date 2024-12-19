@@ -9,4 +9,3 @@ doc = false
 
 [dependencies]
 kclvm-api = { git = "https://github.com/kcl-lang/kcl", version = "0.11.0" }
-home = "0.5.9"
