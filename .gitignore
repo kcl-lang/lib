@@ -32,3 +32,9 @@ _a.out_*.*
 **/.vscode
 __pycache__
 build
+
+# java
+*.idea
+*.iml
+*.idea/*.xml
+*.class
