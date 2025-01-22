@@ -22,6 +22,7 @@ jobs:
       contents: read  # for actions/checkout to fetch code
     name: "${{ matrix.root-pom }} on JDK ${{ matrix.java }} for the classifier ${{ matrix.classifier }}"
     strategy:
+      fail-fast: false
       matrix:
         include:
           - os: ubuntu-latest
