@@ -12,7 +12,7 @@ import (
 const libName = "kclvm_cli_cdylib"
 
 func libPath() (path string, err error) {
-	return lazypath.CacheHome(), nil
+	return lazypath.CacheHomeWithError()
 }
 
 func fullLibName() string {

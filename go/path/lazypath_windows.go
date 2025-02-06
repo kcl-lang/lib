@@ -21,3 +21,20 @@ func ConfigHome() string {
 func CacheHome() string {
 	return os.Getenv("TEMP")
 }
+
+// DataHomeWithError defines the base directory relative to which user specific data files should be stored.
+func DataHomeWithError() (string, error) {
+	return DataHome(), nil
+}
+
+// ConfigHomeWithError defines the base directory relative to which user specific configuration files should
+// be stored.
+func ConfigHomeWithError() (string, error) {
+	return ConfigHome(), nil
+}
+
+// CacheHomeWithError defines the base directory relative to which user specific non-essential data files
+// should be stored.
+func CacheHomeWithError() (string, error) {
+	return CacheHome(), nil
+}
