@@ -15,16 +15,17 @@
 package path
 
 import (
+	"errors"
 	"os"
 	"os/user"
 	"runtime"
 )
 
-// HomeDir returns the home directory for the current user.
+// HomeDirWithError returns the home directory for the current user along with an error if any.
 // On Windows:
 // 1. if none of those locations are writeable, the first of %HOME%, %USERPROFILE%, %HOMEDRIVE%%HOMEPATH% that exists is returned.
 // 2. if none of those locations exists, the first of %HOME%, %USERPROFILE%, %HOMEDRIVE%%HOMEPATH% that is set is returned.
-func HomeDir() string {
+func HomeDirWithError() (string, error) {
 	if runtime.GOOS == "windows" {
 		home := os.Getenv("HOME")
 		homeDriveHomePath := ""
@@ -55,27 +56,39 @@ func HomeDir() string {
 			}
 			if info.IsDir() && info.Mode().Perm()&(1<<(uint(7))) != 0 {
 				// return first path that is writeable
-				return p
+				return p, nil
 			}
 		}
 
 		// If none are writeable, return first location that exists
 		if len(firstExistingPath) > 0 {
-			return firstExistingPath
+			return firstExistingPath, nil
 		}
 
 		// If none exist, return first location that is set
 		if len(firstSetPath) > 0 {
-			return firstSetPath
+			return firstSetPath, nil
 		}
 
 		// We've got nothing
-		return ""
+		return "", errors.New("no valid home directory found")
 	}
 	home := os.Getenv("HOME")
 	if home != "" {
-		return home
+		return home, nil
 	}
-	usr, _ := user.Current()
-	return usr.HomeDir
+	usr, err := user.Current()
+	if err != nil {
+		return "", err
+	}
+	return usr.HomeDir, nil
+}
+
+// HomeDir returns the home directory for the current user.
+// On Windows:
+// 1. if none of those locations are writeable, the first of %HOME%, %USERPROFILE%, %HOMEDRIVE%%HOMEPATH% that exists is returned.
+// 2. if none of those locations exists, the first of %HOME%, %USERPROFILE%, %HOMEDRIVE%%HOMEPATH% that is set is returned.
+func HomeDir() string {
+	homeDir, _ := HomeDirWithError()
+	return homeDir
 }
