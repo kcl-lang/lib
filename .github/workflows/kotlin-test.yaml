@@ -83,7 +83,7 @@ jobs:
         run: mvn clean package -DskipTests=true -Djni.classifier=${{ matrix.classifier }} -Dcargo-build.profile=release
 
       - name: 'Upload artifact'
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: kcl-lib-${{ matrix.classifier }}
           path: |
@@ -135,7 +135,7 @@ jobs:
           "
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: kcl-lib
           path: kotlin/target/*.jar
