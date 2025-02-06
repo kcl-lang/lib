@@ -15,7 +15,6 @@
 package path
 
 import (
-	"errors"
 	"os"
 	"os/user"
 	"runtime"
@@ -71,7 +70,7 @@ func HomeDirWithError() (string, error) {
 		}
 
 		// We've got nothing
-		return "", errors.New("no valid home directory found")
+		return "", nil
 	}
 	home := os.Getenv("HOME")
 	if home != "" {
