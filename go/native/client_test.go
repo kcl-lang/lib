@@ -3,13 +3,11 @@ package native
 import (
 	"fmt"
 	"io"
-	"os"
 	"strings"
 	"testing"
 	"time"
 
 	"kcl-lang.io/lib/go/api"
-	"kcl-lang.io/lib/go/path"
 )
 
 const code = `
