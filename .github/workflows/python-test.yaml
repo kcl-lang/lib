@@ -107,7 +107,7 @@ jobs:
     steps:
       - uses: actions/download-artifact@v3
         with:
-          name: wheels
+          name: wheels-${{ github.run_id }}
           path: python/dist
       - name: Publish to PyPI
         # The issue https://github.com/pypa/gh-action-pypi-publish/issues/310 has not tagged a release yet
