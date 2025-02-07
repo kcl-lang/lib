@@ -60,7 +60,7 @@ jobs:
       - name: Install rust nightly toolchain
         uses: actions-rs/toolchain@v1
         with:
-          toolchain: 1.79
+          toolchain: 1.83
           override: true
           components: clippy, rustfmt
 
@@ -83,7 +83,7 @@ jobs:
         run: mvn clean package -DskipTests=true -Djni.classifier=${{ matrix.classifier }} -Dcargo-build.profile=release
 
       - name: 'Upload artifact'
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: kcl-lib-${{ matrix.classifier }}
           path: |
@@ -103,39 +103,39 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Download windows x86_64 lib
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: kcl-lib-windows-x86_64
           path: kotlin/native
 
       - name: Download linux aarch_64 lib
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: kcl-lib-linux-aarch_64
           path: kotlin/native
 
       - name: Download darwin x86_64 lib
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: kcl-lib-osx-x86_64
           path: kotlin/native
 
       - name: Download darwin aarch_64 lib
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: kcl-lib-osx-aarch_64
           path: kotlin/native
 
       - name: Run tests and package in CentOS 7 container
         run: |
-          docker run --rm -v ${{ github.workspace }}/kotlin:/work kcllang/kcl-java-builder-centos7:0.1.0 bash -c "
+          docker run --rm -v ${{ github.workspace }}/kotlin:/work kcllang/kcl-java-builder-centos7:latest bash -c "
             cd /work &&
             rustup default stable &&
             mvn package -DskipTests=true -Dcargo-build.profile=release
           "
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: kcl-lib
           path: kotlin/target/*.jar
@@ -160,7 +160,7 @@ jobs:
           settings-path: ${{ github.workspace }} # location for the settings.xml file
 
       - name: Download Jar
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: kcl-lib
           path: kotlin/release

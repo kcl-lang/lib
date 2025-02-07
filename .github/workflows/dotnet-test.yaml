@@ -69,7 +69,7 @@ jobs:
     - name: Install Rust
       uses: actions-rs/toolchain@v1
       with:
-        toolchain: 1.79
+        toolchain: 1.83
         override: true
         components: clippy, rustfmt
     - name: Setup linux-aarch_64 rust target
@@ -124,7 +124,7 @@ jobs:
       - name: Install Rust
         uses: actions-rs/toolchain@v1
         with:
-          toolchain: 1.79
+          toolchain: 1.83
           override: true
           components: clippy, rustfmt
 
@@ -176,4 +176,4 @@ jobs:
         if: "startsWith(github.ref, 'refs/tags/')"
         run: |
           cd dotnet/KclLib/bin/Release
-          dotnet nuget push KclLib.0.11.0.nupkg -k ${{ secrets.NUGET_API_KEY }} -s https://api.nuget.org/v3/index.json
+          dotnet nuget push KclLib.0.11.1.nupkg -k ${{ secrets.NUGET_API_KEY }} -s https://api.nuget.org/v3/index.json
