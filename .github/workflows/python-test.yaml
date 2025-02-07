@@ -59,10 +59,10 @@ jobs:
         env:
           # Workaround ring 0.17 build issue
           CFLAGS_aarch64_unknown_linux_gnu: "-D__ARM_ARCH=8"
-      - name: Upload wheels-${{ matrix.target }}-${{ github.run_id }}
+      - name: Upload wheels-linux-${{ matrix.target }}-${{ github.run_id }}
         uses: actions/upload-artifact@v4
         with:
-          name: wheels-ubuntu-${{ matrix.target }}-${{ github.run_id }}
+          name: wheels-linux-${{ matrix.target }}-${{ github.run_id }}
           path: python/dist
 
   windows:
@@ -107,7 +107,19 @@ jobs:
     steps:
       - uses: actions/download-artifact@v4
         with:
-          name: wheels-${{ github.run_id }}
+          name: wheels-linux-x86_64-${{ github.run_id }}
+          path: python/dist
+      - uses: actions/download-artifact@v4
+        with:
+          name: wheels-linux-aarch64-${{ github.run_id }}
+          path: python/dist
+      - uses: actions/download-artifact@v4
+        with:
+          name: wheels-windows-${{ github.run_id }}
+          path: python/dist
+      - uses: actions/download-artifact@v4
+        with:
+          name: wheels-macos-${{ github.run_id }}
           path: python/dist
       - name: Publish to PyPI
         # The issue https://github.com/pypa/gh-action-pypi-publish/issues/310 has not tagged a release yet
