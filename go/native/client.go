@@ -131,12 +131,12 @@ func (c *NativeServiceClient) ExecProgram(in *api.ExecProgram_Args) (*api.ExecPr
 	return cApiCall[*api.ExecProgram_Args, *api.ExecProgram_Result](c, "KclvmService.ExecProgram", in)
 }
 
-// Depreciated: Please use the env.EnableFastEvalMode() and c.ExecutProgram method and will be removed in v0.11.0.
+// Depreciated: Please use the env.EnableFastEvalMode() and c.ExecutProgram method and will be removed in v0.11.1.
 func (c *NativeServiceClient) BuildProgram(in *api.BuildProgram_Args) (*api.BuildProgram_Result, error) {
 	return cApiCall[*api.BuildProgram_Args, *api.BuildProgram_Result](c, "KclvmService.BuildProgram", in)
 }
 
-// Depreciated: Please use the env.EnableFastEvalMode() and c.ExecutProgram method and will be removed in v0.11.0.
+// Depreciated: Please use the env.EnableFastEvalMode() and c.ExecutProgram method and will be removed in v0.11.1.
 func (c *NativeServiceClient) ExecArtifact(in *api.ExecArtifact_Args) (*api.ExecProgram_Result, error) {
 	return cApiCall[*api.ExecArtifact_Args, *api.ExecProgram_Result](c, "KclvmService.ExecArtifact", in)
 }

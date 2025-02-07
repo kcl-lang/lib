@@ -6,9 +6,9 @@ type ServiceClient interface {
 	Ping(in *Ping_Args) (out *Ping_Result, err error)
 	// Execute KCL file with arguments and return the JSON/YAML result.
 	ExecProgram(in *ExecProgram_Args) (out *ExecProgram_Result, err error)
-	// Depreciated: Please use the env.EnableFastEvalMode() and c.ExecutProgram method and will be removed in v0.11.0.
+	// Depreciated: Please use the env.EnableFastEvalMode() and c.ExecutProgram method and will be removed in v0.11.1.
 	BuildProgram(in *BuildProgram_Args) (out *BuildProgram_Result, err error)
-	// Depreciated: Please use the env.EnableFastEvalMode() and c.ExecutProgram method and will be removed in v0.11.0.
+	// Depreciated: Please use the env.EnableFastEvalMode() and c.ExecutProgram method and will be removed in v0.11.1.
 	ExecArtifact(in *ExecArtifact_Args) (out *ExecProgram_Result, err error)
 	// Parse KCL single file to Module AST JSON string with import dependencies and parse errors.
 	ParseFile(in *ParseFile_Args) (out *ParseFile_Result, err error)
