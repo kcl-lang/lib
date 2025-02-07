@@ -39,7 +39,7 @@ jobs:
       - name: Upload sdist
         uses: actions/upload-artifact@v4
         with:
-          name: wheels
+          name: wheels-${{ github.run_id }}
           path: python/dist
 
   linux:
@@ -59,10 +59,10 @@ jobs:
         env:
           # Workaround ring 0.17 build issue
           CFLAGS_aarch64_unknown_linux_gnu: "-D__ARM_ARCH=8"
-      - name: Upload wheels
+      - name: Upload wheels-${{ github.run_id }}
         uses: actions/upload-artifact@v4
         with:
-          name: wheels
+          name: wheels-${{ github.run_id }}
           path: python/dist
 
   windows:
@@ -74,10 +74,10 @@ jobs:
           working-directory: "python"
           command: build
           args: --release -o dist --find-interpreter
-      - name: Upload wheels
+      - name: Upload wheels-${{ github.run_id }}
         uses: actions/upload-artifact@v4
         with:
-          name: wheels
+          name: wheels-${{ github.run_id }}
           path: python/dist
 
   macos:
@@ -90,10 +90,10 @@ jobs:
           command: build
           target: universal2-apple-darwin
           args: --release -o dist --find-interpreter
-      - name: Upload wheels
+      - name: Upload wheels-${{ github.run_id }}
         uses: actions/upload-artifact@v4
         with:
-          name: wheels
+          name: wheels-${{ github.run_id }}
           path: python/dist
 
   release:
