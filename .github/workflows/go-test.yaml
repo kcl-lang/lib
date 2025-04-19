@@ -24,7 +24,7 @@ jobs:
   test:
     strategy:
       matrix:
-        os: [macos-13, macos-13, macos-13-xlarge, macos-14, macos-latest, ubuntu-20.04, ubuntu-22.04, ubuntu-latest, windows-latest]
+        os: [macos-13, macos-13, macos-13-xlarge, macos-14, macos-latest, ubuntu-22.04, ubuntu-latest, windows-latest]
     runs-on: ${{ matrix.os }}
     defaults:
       run:
