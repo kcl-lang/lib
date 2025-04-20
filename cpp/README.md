@@ -12,7 +12,7 @@ You can use FetchContent to add KCL C++ Lib to your project.
 FetchContent_Declare(
   kcl-lib
   GIT_REPOSITORY https://github.com/kcl-lang/lib.git
-  GIT_TAG        v0.11.1
+  GIT_TAG        v0.11.2
   SOURCE_SUBDIR  cpp
 )
 FetchContent_MakeAvailable(kcl-lib)
@@ -24,7 +24,7 @@ Or you can download the source code and add it to your project.
 mkdir third_party
 cd third_party
 git clone https://github.com/kcl-lang/lib.git
-git checkout v0.11.1
+git checkout v0.11.2
 ```
 
 ```shell

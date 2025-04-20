@@ -46,7 +46,7 @@ mod ffi {
     }
 
     /// kcl main.k -E name=path
-    #[derive(Debug, Default)]
+    #[derive(Debug, Default,Clone)]
     pub struct ExternalPkg {
         pub pkg_name: String,
         pub pkg_path: String,
@@ -374,6 +374,8 @@ mod ffi {
         attribute_name: String,
         /// Format of the validation (e.g., "json", "yaml").
         format: String,
+        /// External packages paths.
+        external_pkgs: Vec<ExternalPkg>,
     }
 
     /// Message for validate code response.
@@ -882,6 +884,14 @@ fn validate_code(args: &ValidateCodeArgs) -> Result<ValidateCodeResult> {
         schema: args.schema.clone(),
         attribute_name: args.attribute_name.clone(),
         format: args.format.clone(),
+        external_pkgs: args
+            .external_pkgs
+            .iter()
+            .map(|e| kclvm_api::ExternalPkg {
+                pkg_name: e.pkg_name.clone(),
+                pkg_path: e.pkg_path.clone(),
+            })
+            .collect::<Vec<kclvm_api::ExternalPkg>>(),
     })?;
     Ok(ValidateCodeResult {
         success: result.success,
