@@ -424,7 +424,7 @@ export declare function getVersion(): GetVersionResult
  * - load_builtin: Flag indicating whether to load built-in modules.
  * - with_ast_index: Flag indicating whether to include AST index.
  */
-export class LoadPackageArgs {
+export declare class LoadPackageArgs {
   constructor(
     paths: Array<string>,
     sources: Array<string>,
@@ -434,7 +434,7 @@ export class LoadPackageArgs {
   )
 }
 /** Message for execute program request arguments. */
-export class ExecProgramArgs {
+export declare class ExecProgramArgs {
   constructor(
     paths: Array<string>,
     sources?: Array<string> | undefined | null,
@@ -452,38 +452,38 @@ export class ExecProgramArgs {
     fastEval?: boolean | undefined | null,
   )
 }
-export class ParseProgramArgs {
+export declare class ParseProgramArgs {
   constructor(
     paths: Array<string>,
     sources?: Array<string> | undefined | null,
     externalPkgs?: Array<ExternalPkg> | undefined | null,
   )
 }
-export class ParseFileArgs {
+export declare class ParseFileArgs {
   constructor(path: string, source?: string | undefined | null, externalPkgs?: Array<ExternalPkg> | undefined | null)
 }
-export class ListOptionsArgs {
+export declare class ListOptionsArgs {
   constructor(paths: Array<string>, sources?: Array<string> | undefined | null)
 }
-export class ListVariablesArgs {
+export declare class ListVariablesArgs {
   constructor(files: Array<string>, specs: Array<string>, opts?: ListVariablesOptions | undefined | null)
 }
-export class OverrideFileArgs {
+export declare class OverrideFileArgs {
   constructor(file: string, specs: Array<string>, importPaths: Array<string>)
 }
-export class GetSchemaTypeMappingArgs {
+export declare class GetSchemaTypeMappingArgs {
   constructor(paths: Array<string>, workDir?: string | undefined | null, schemaName?: string | undefined | null)
 }
-export class FormatCodeArgs {
+export declare class FormatCodeArgs {
   constructor(source: string)
 }
-export class FormatPathArgs {
+export declare class FormatPathArgs {
   constructor(path: string)
 }
-export class LintPathArgs {
+export declare class LintPathArgs {
   constructor(paths: Array<string>)
 }
-export class ValidateCodeArgs {
+export declare class ValidateCodeArgs {
   constructor(
     datafile?: string | undefined | null,
     data?: string | undefined | null,
@@ -492,18 +492,19 @@ export class ValidateCodeArgs {
     schema?: string | undefined | null,
     attributeName?: string | undefined | null,
     format?: string | undefined | null,
+    externalPkgs?: Array<ExternalPkg> | undefined | null,
   )
 }
-export class LoadSettingsFilesArgs {
+export declare class LoadSettingsFilesArgs {
   constructor(workDir: string, files: Array<string>)
 }
-export class RenameArgs {
+export declare class RenameArgs {
   constructor(packageRoot: string, symbolPath: string, filePaths: Array<string>, newName: string)
 }
-export class RenameCodeArgs {
+export declare class RenameCodeArgs {
   constructor(packageRoot: string, symbolPath: string, sourceCodes: Record<string, string>, newName: string)
 }
-export class TestArgs {
+export declare class TestArgs {
   constructor(
     pkgList: Array<string>,
     failFast?: boolean | undefined | null,
@@ -512,6 +513,6 @@ export class TestArgs {
     paths?: Array<string> | undefined | null,
   )
 }
-export class UpdateDependenciesArgs {
+export declare class UpdateDependenciesArgs {
   constructor(manifestPath: string, vendor: boolean)
 }
