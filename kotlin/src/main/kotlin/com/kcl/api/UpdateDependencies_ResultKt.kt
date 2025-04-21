@@ -24,12 +24,12 @@ public object UpdateDependencies_ResultKt {
   ) {
     public companion object {
       @kotlin.jvm.JvmSynthetic
-      @kotlin.PublishedApi
+    @kotlin.PublishedApi
       internal fun _create(builder: com.kcl.api.Spec.UpdateDependencies_Result.Builder): Dsl = Dsl(builder)
     }
 
     @kotlin.jvm.JvmSynthetic
-    @kotlin.PublishedApi
+  @kotlin.PublishedApi
     internal fun _build(): com.kcl.api.Spec.UpdateDependencies_Result = _builder.build()
 
     /**
@@ -48,7 +48,7 @@ public object UpdateDependencies_ResultKt {
      public val externalPkgs: com.google.protobuf.kotlin.DslList<com.kcl.api.Spec.ExternalPkg, ExternalPkgsProxy>
       @kotlin.jvm.JvmSynthetic
       get() = com.google.protobuf.kotlin.DslList(
-        _builder.getExternalPkgsList()
+        _builder.externalPkgsList
       )
     /**
      * ```

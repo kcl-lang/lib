@@ -24,12 +24,12 @@ public object ListVariables_ArgsKt {
   ) {
     public companion object {
       @kotlin.jvm.JvmSynthetic
-      @kotlin.PublishedApi
+    @kotlin.PublishedApi
       internal fun _create(builder: com.kcl.api.Spec.ListVariables_Args.Builder): Dsl = Dsl(builder)
     }
 
     @kotlin.jvm.JvmSynthetic
-    @kotlin.PublishedApi
+  @kotlin.PublishedApi
     internal fun _build(): com.kcl.api.Spec.ListVariables_Args = _builder.build()
 
     /**
@@ -49,7 +49,7 @@ public object ListVariables_ArgsKt {
     public val files: com.google.protobuf.kotlin.DslList<kotlin.String, FilesProxy>
       @kotlin.jvm.JvmSynthetic
       get() = com.google.protobuf.kotlin.DslList(
-        _builder.getFilesList()
+        _builder.filesList
       )
     /**
      * ```
@@ -147,7 +147,7 @@ public object ListVariables_ArgsKt {
     public val specs: com.google.protobuf.kotlin.DslList<kotlin.String, SpecsProxy>
       @kotlin.jvm.JvmSynthetic
       get() = com.google.protobuf.kotlin.DslList(
-        _builder.getSpecsList()
+        _builder.specsList
       )
     /**
      * ```
@@ -237,10 +237,10 @@ public object ListVariables_ArgsKt {
      */
     public var options: com.kcl.api.Spec.ListVariables_Options
       @JvmName("getOptions")
-      get() = _builder.getOptions()
+      get() = _builder.options
       @JvmName("setOptions")
       set(value) {
-        _builder.setOptions(value)
+        _builder.options = value
       }
     /**
      * ```
@@ -263,6 +263,7 @@ public object ListVariables_ArgsKt {
     public fun hasOptions(): kotlin.Boolean {
       return _builder.hasOptions()
     }
+
     public val ListVariables_ArgsKt.Dsl.optionsOrNull: com.kcl.api.Spec.ListVariables_Options?
       get() = _builder.optionsOrNull
   }

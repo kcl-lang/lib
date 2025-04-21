@@ -24,12 +24,12 @@ public object ExecArtifact_ArgsKt {
   ) {
     public companion object {
       @kotlin.jvm.JvmSynthetic
-      @kotlin.PublishedApi
+    @kotlin.PublishedApi
       internal fun _create(builder: com.kcl.api.Spec.ExecArtifact_Args.Builder): Dsl = Dsl(builder)
     }
 
     @kotlin.jvm.JvmSynthetic
-    @kotlin.PublishedApi
+  @kotlin.PublishedApi
     internal fun _build(): com.kcl.api.Spec.ExecArtifact_Args = _builder.build()
 
     /**
@@ -41,10 +41,10 @@ public object ExecArtifact_ArgsKt {
      */
     public var path: kotlin.String
       @JvmName("getPath")
-      get() = _builder.getPath()
+      get() = _builder.path
       @JvmName("setPath")
       set(value) {
-        _builder.setPath(value)
+        _builder.path = value
       }
     /**
      * ```
@@ -66,10 +66,10 @@ public object ExecArtifact_ArgsKt {
      */
     public var execArgs: com.kcl.api.Spec.ExecProgram_Args
       @JvmName("getExecArgs")
-      get() = _builder.getExecArgs()
+      get() = _builder.execArgs
       @JvmName("setExecArgs")
       set(value) {
-        _builder.setExecArgs(value)
+        _builder.execArgs = value
       }
     /**
      * ```
@@ -92,6 +92,7 @@ public object ExecArtifact_ArgsKt {
     public fun hasExecArgs(): kotlin.Boolean {
       return _builder.hasExecArgs()
     }
+
     public val ExecArtifact_ArgsKt.Dsl.execArgsOrNull: com.kcl.api.Spec.ExecProgram_Args?
       get() = _builder.execArgsOrNull
   }

@@ -24,12 +24,12 @@ public object ExecProgram_ResultKt {
   ) {
     public companion object {
       @kotlin.jvm.JvmSynthetic
-      @kotlin.PublishedApi
+    @kotlin.PublishedApi
       internal fun _create(builder: com.kcl.api.Spec.ExecProgram_Result.Builder): Dsl = Dsl(builder)
     }
 
     @kotlin.jvm.JvmSynthetic
-    @kotlin.PublishedApi
+  @kotlin.PublishedApi
     internal fun _build(): com.kcl.api.Spec.ExecProgram_Result = _builder.build()
 
     /**
@@ -41,10 +41,10 @@ public object ExecProgram_ResultKt {
      */
     public var jsonResult: kotlin.String
       @JvmName("getJsonResult")
-      get() = _builder.getJsonResult()
+      get() = _builder.jsonResult
       @JvmName("setJsonResult")
       set(value) {
-        _builder.setJsonResult(value)
+        _builder.jsonResult = value
       }
     /**
      * ```
@@ -66,10 +66,10 @@ public object ExecProgram_ResultKt {
      */
     public var yamlResult: kotlin.String
       @JvmName("getYamlResult")
-      get() = _builder.getYamlResult()
+      get() = _builder.yamlResult
       @JvmName("setYamlResult")
       set(value) {
-        _builder.setYamlResult(value)
+        _builder.yamlResult = value
       }
     /**
      * ```
@@ -91,10 +91,10 @@ public object ExecProgram_ResultKt {
      */
     public var logMessage: kotlin.String
       @JvmName("getLogMessage")
-      get() = _builder.getLogMessage()
+      get() = _builder.logMessage
       @JvmName("setLogMessage")
       set(value) {
-        _builder.setLogMessage(value)
+        _builder.logMessage = value
       }
     /**
      * ```
@@ -116,10 +116,10 @@ public object ExecProgram_ResultKt {
      */
     public var errMessage: kotlin.String
       @JvmName("getErrMessage")
-      get() = _builder.getErrMessage()
+      get() = _builder.errMessage
       @JvmName("setErrMessage")
       set(value) {
-        _builder.setErrMessage(value)
+        _builder.errMessage = value
       }
     /**
      * ```

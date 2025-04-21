@@ -24,12 +24,12 @@ public object BuildProgram_ArgsKt {
   ) {
     public companion object {
       @kotlin.jvm.JvmSynthetic
-      @kotlin.PublishedApi
+    @kotlin.PublishedApi
       internal fun _create(builder: com.kcl.api.Spec.BuildProgram_Args.Builder): Dsl = Dsl(builder)
     }
 
     @kotlin.jvm.JvmSynthetic
-    @kotlin.PublishedApi
+  @kotlin.PublishedApi
     internal fun _build(): com.kcl.api.Spec.BuildProgram_Args = _builder.build()
 
     /**
@@ -41,10 +41,10 @@ public object BuildProgram_ArgsKt {
      */
     public var execArgs: com.kcl.api.Spec.ExecProgram_Args
       @JvmName("getExecArgs")
-      get() = _builder.getExecArgs()
+      get() = _builder.execArgs
       @JvmName("setExecArgs")
       set(value) {
-        _builder.setExecArgs(value)
+        _builder.execArgs = value
       }
     /**
      * ```
@@ -67,6 +67,7 @@ public object BuildProgram_ArgsKt {
     public fun hasExecArgs(): kotlin.Boolean {
       return _builder.hasExecArgs()
     }
+
     public val BuildProgram_ArgsKt.Dsl.execArgsOrNull: com.kcl.api.Spec.ExecProgram_Args?
       get() = _builder.execArgsOrNull
 
@@ -79,10 +80,10 @@ public object BuildProgram_ArgsKt {
      */
     public var output: kotlin.String
       @JvmName("getOutput")
-      get() = _builder.getOutput()
+      get() = _builder.output
       @JvmName("setOutput")
       set(value) {
-        _builder.setOutput(value)
+        _builder.output = value
       }
     /**
      * ```

@@ -24,12 +24,12 @@ public object FormatCode_ArgsKt {
   ) {
     public companion object {
       @kotlin.jvm.JvmSynthetic
-      @kotlin.PublishedApi
+    @kotlin.PublishedApi
       internal fun _create(builder: com.kcl.api.Spec.FormatCode_Args.Builder): Dsl = Dsl(builder)
     }
 
     @kotlin.jvm.JvmSynthetic
-    @kotlin.PublishedApi
+  @kotlin.PublishedApi
     internal fun _build(): com.kcl.api.Spec.FormatCode_Args = _builder.build()
 
     /**
@@ -41,10 +41,10 @@ public object FormatCode_ArgsKt {
      */
     public var source: kotlin.String
       @JvmName("getSource")
-      get() = _builder.getSource()
+      get() = _builder.source
       @JvmName("setSource")
       set(value) {
-        _builder.setSource(value)
+        _builder.source = value
       }
     /**
      * ```

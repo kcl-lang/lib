@@ -24,12 +24,12 @@ public object LintPath_ResultKt {
   ) {
     public companion object {
       @kotlin.jvm.JvmSynthetic
-      @kotlin.PublishedApi
+    @kotlin.PublishedApi
       internal fun _create(builder: com.kcl.api.Spec.LintPath_Result.Builder): Dsl = Dsl(builder)
     }
 
     @kotlin.jvm.JvmSynthetic
-    @kotlin.PublishedApi
+  @kotlin.PublishedApi
     internal fun _build(): com.kcl.api.Spec.LintPath_Result = _builder.build()
 
     /**
@@ -49,7 +49,7 @@ public object LintPath_ResultKt {
     public val results: com.google.protobuf.kotlin.DslList<kotlin.String, ResultsProxy>
       @kotlin.jvm.JvmSynthetic
       get() = com.google.protobuf.kotlin.DslList(
-        _builder.getResultsList()
+        _builder.resultsList
       )
     /**
      * ```

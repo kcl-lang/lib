@@ -24,12 +24,12 @@ public object ListMethod_ResultKt {
   ) {
     public companion object {
       @kotlin.jvm.JvmSynthetic
-      @kotlin.PublishedApi
+    @kotlin.PublishedApi
       internal fun _create(builder: com.kcl.api.Spec.ListMethod_Result.Builder): Dsl = Dsl(builder)
     }
 
     @kotlin.jvm.JvmSynthetic
-    @kotlin.PublishedApi
+  @kotlin.PublishedApi
     internal fun _build(): com.kcl.api.Spec.ListMethod_Result = _builder.build()
 
     /**
@@ -49,7 +49,7 @@ public object ListMethod_ResultKt {
     public val methodNameList: com.google.protobuf.kotlin.DslList<kotlin.String, MethodNameListProxy>
       @kotlin.jvm.JvmSynthetic
       get() = com.google.protobuf.kotlin.DslList(
-        _builder.getMethodNameListList()
+        _builder.methodNameListList
       )
     /**
      * ```

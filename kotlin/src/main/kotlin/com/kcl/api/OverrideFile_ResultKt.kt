@@ -24,12 +24,12 @@ public object OverrideFile_ResultKt {
   ) {
     public companion object {
       @kotlin.jvm.JvmSynthetic
-      @kotlin.PublishedApi
+    @kotlin.PublishedApi
       internal fun _create(builder: com.kcl.api.Spec.OverrideFile_Result.Builder): Dsl = Dsl(builder)
     }
 
     @kotlin.jvm.JvmSynthetic
-    @kotlin.PublishedApi
+  @kotlin.PublishedApi
     internal fun _build(): com.kcl.api.Spec.OverrideFile_Result = _builder.build()
 
     /**
@@ -41,10 +41,10 @@ public object OverrideFile_ResultKt {
      */
     public var result: kotlin.Boolean
       @JvmName("getResult")
-      get() = _builder.getResult()
+      get() = _builder.result
       @JvmName("setResult")
       set(value) {
-        _builder.setResult(value)
+        _builder.result = value
       }
     /**
      * ```
@@ -73,7 +73,7 @@ public object OverrideFile_ResultKt {
      public val parseErrors: com.google.protobuf.kotlin.DslList<com.kcl.api.Spec.Error, ParseErrorsProxy>
       @kotlin.jvm.JvmSynthetic
       get() = com.google.protobuf.kotlin.DslList(
-        _builder.getParseErrorsList()
+        _builder.parseErrorsList
       )
     /**
      * ```

@@ -24,12 +24,12 @@ public object Test_ArgsKt {
   ) {
     public companion object {
       @kotlin.jvm.JvmSynthetic
-      @kotlin.PublishedApi
+    @kotlin.PublishedApi
       internal fun _create(builder: com.kcl.api.Spec.Test_Args.Builder): Dsl = Dsl(builder)
     }
 
     @kotlin.jvm.JvmSynthetic
-    @kotlin.PublishedApi
+  @kotlin.PublishedApi
     internal fun _build(): com.kcl.api.Spec.Test_Args = _builder.build()
 
     /**
@@ -41,10 +41,10 @@ public object Test_ArgsKt {
      */
     public var execArgs: com.kcl.api.Spec.ExecProgram_Args
       @JvmName("getExecArgs")
-      get() = _builder.getExecArgs()
+      get() = _builder.execArgs
       @JvmName("setExecArgs")
       set(value) {
-        _builder.setExecArgs(value)
+        _builder.execArgs = value
       }
     /**
      * ```
@@ -67,6 +67,7 @@ public object Test_ArgsKt {
     public fun hasExecArgs(): kotlin.Boolean {
       return _builder.hasExecArgs()
     }
+
     public val Test_ArgsKt.Dsl.execArgsOrNull: com.kcl.api.Spec.ExecProgram_Args?
       get() = _builder.execArgsOrNull
 
@@ -87,7 +88,7 @@ public object Test_ArgsKt {
     public val pkgList: com.google.protobuf.kotlin.DslList<kotlin.String, PkgListProxy>
       @kotlin.jvm.JvmSynthetic
       get() = com.google.protobuf.kotlin.DslList(
-        _builder.getPkgListList()
+        _builder.pkgListList
       )
     /**
      * ```
@@ -177,10 +178,10 @@ public object Test_ArgsKt {
      */
     public var runRegexp: kotlin.String
       @JvmName("getRunRegexp")
-      get() = _builder.getRunRegexp()
+      get() = _builder.runRegexp
       @JvmName("setRunRegexp")
       set(value) {
-        _builder.setRunRegexp(value)
+        _builder.runRegexp = value
       }
     /**
      * ```
@@ -202,10 +203,10 @@ public object Test_ArgsKt {
      */
     public var failFast: kotlin.Boolean
       @JvmName("getFailFast")
-      get() = _builder.getFailFast()
+      get() = _builder.failFast
       @JvmName("setFailFast")
       set(value) {
-        _builder.setFailFast(value)
+        _builder.failFast = value
       }
     /**
      * ```

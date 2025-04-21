@@ -24,12 +24,12 @@ public object ExampleKt {
   ) {
     public companion object {
       @kotlin.jvm.JvmSynthetic
-      @kotlin.PublishedApi
+    @kotlin.PublishedApi
       internal fun _create(builder: com.kcl.api.Spec.Example.Builder): Dsl = Dsl(builder)
     }
 
     @kotlin.jvm.JvmSynthetic
-    @kotlin.PublishedApi
+  @kotlin.PublishedApi
     internal fun _build(): com.kcl.api.Spec.Example = _builder.build()
 
     /**
@@ -41,10 +41,10 @@ public object ExampleKt {
      */
     public var summary: kotlin.String
       @JvmName("getSummary")
-      get() = _builder.getSummary()
+      get() = _builder.summary
       @JvmName("setSummary")
       set(value) {
-        _builder.setSummary(value)
+        _builder.summary = value
       }
     /**
      * ```
@@ -66,10 +66,10 @@ public object ExampleKt {
      */
     public var description: kotlin.String
       @JvmName("getDescription")
-      get() = _builder.getDescription()
+      get() = _builder.description
       @JvmName("setDescription")
       set(value) {
-        _builder.setDescription(value)
+        _builder.description = value
       }
     /**
      * ```
@@ -91,10 +91,10 @@ public object ExampleKt {
      */
     public var value: kotlin.String
       @JvmName("getValue")
-      get() = _builder.getValue()
+      get() = _builder.value
       @JvmName("setValue")
       set(value) {
-        _builder.setValue(value)
+        _builder.value = value
       }
     /**
      * ```

@@ -24,12 +24,12 @@ public object ErrorKt {
   ) {
     public companion object {
       @kotlin.jvm.JvmSynthetic
-      @kotlin.PublishedApi
+    @kotlin.PublishedApi
       internal fun _create(builder: com.kcl.api.Spec.Error.Builder): Dsl = Dsl(builder)
     }
 
     @kotlin.jvm.JvmSynthetic
-    @kotlin.PublishedApi
+  @kotlin.PublishedApi
     internal fun _build(): com.kcl.api.Spec.Error = _builder.build()
 
     /**
@@ -41,10 +41,10 @@ public object ErrorKt {
      */
     public var level: kotlin.String
       @JvmName("getLevel")
-      get() = _builder.getLevel()
+      get() = _builder.level
       @JvmName("setLevel")
       set(value) {
-        _builder.setLevel(value)
+        _builder.level = value
       }
     /**
      * ```
@@ -66,10 +66,10 @@ public object ErrorKt {
      */
     public var code: kotlin.String
       @JvmName("getCode")
-      get() = _builder.getCode()
+      get() = _builder.code
       @JvmName("setCode")
       set(value) {
-        _builder.setCode(value)
+        _builder.code = value
       }
     /**
      * ```
@@ -98,7 +98,7 @@ public object ErrorKt {
      public val messages: com.google.protobuf.kotlin.DslList<com.kcl.api.Spec.Message, MessagesProxy>
       @kotlin.jvm.JvmSynthetic
       get() = com.google.protobuf.kotlin.DslList(
-        _builder.getMessagesList()
+        _builder.messagesList
       )
     /**
      * ```

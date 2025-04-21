@@ -24,12 +24,12 @@ public object VariableListKt {
   ) {
     public companion object {
       @kotlin.jvm.JvmSynthetic
-      @kotlin.PublishedApi
+    @kotlin.PublishedApi
       internal fun _create(builder: com.kcl.api.Spec.VariableList.Builder): Dsl = Dsl(builder)
     }
 
     @kotlin.jvm.JvmSynthetic
-    @kotlin.PublishedApi
+  @kotlin.PublishedApi
     internal fun _build(): com.kcl.api.Spec.VariableList = _builder.build()
 
     /**
@@ -48,7 +48,7 @@ public object VariableListKt {
      public val variables: com.google.protobuf.kotlin.DslList<com.kcl.api.Spec.Variable, VariablesProxy>
       @kotlin.jvm.JvmSynthetic
       get() = com.google.protobuf.kotlin.DslList(
-        _builder.getVariablesList()
+        _builder.variablesList
       )
     /**
      * ```

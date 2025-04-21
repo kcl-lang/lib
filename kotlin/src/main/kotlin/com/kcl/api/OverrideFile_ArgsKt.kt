@@ -24,12 +24,12 @@ public object OverrideFile_ArgsKt {
   ) {
     public companion object {
       @kotlin.jvm.JvmSynthetic
-      @kotlin.PublishedApi
+    @kotlin.PublishedApi
       internal fun _create(builder: com.kcl.api.Spec.OverrideFile_Args.Builder): Dsl = Dsl(builder)
     }
 
     @kotlin.jvm.JvmSynthetic
-    @kotlin.PublishedApi
+  @kotlin.PublishedApi
     internal fun _build(): com.kcl.api.Spec.OverrideFile_Args = _builder.build()
 
     /**
@@ -41,10 +41,10 @@ public object OverrideFile_ArgsKt {
      */
     public var file: kotlin.String
       @JvmName("getFile")
-      get() = _builder.getFile()
+      get() = _builder.file
       @JvmName("setFile")
       set(value) {
-        _builder.setFile(value)
+        _builder.file = value
       }
     /**
      * ```
@@ -74,7 +74,7 @@ public object OverrideFile_ArgsKt {
     public val specs: com.google.protobuf.kotlin.DslList<kotlin.String, SpecsProxy>
       @kotlin.jvm.JvmSynthetic
       get() = com.google.protobuf.kotlin.DslList(
-        _builder.getSpecsList()
+        _builder.specsList
       )
     /**
      * ```
@@ -172,7 +172,7 @@ public object OverrideFile_ArgsKt {
     public val importPaths: com.google.protobuf.kotlin.DslList<kotlin.String, ImportPathsProxy>
       @kotlin.jvm.JvmSynthetic
       get() = com.google.protobuf.kotlin.DslList(
-        _builder.getImportPathsList()
+        _builder.importPathsList
       )
     /**
      * ```

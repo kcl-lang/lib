@@ -25,12 +25,12 @@ public object ArgumentKt {
   ) {
     public companion object {
       @kotlin.jvm.JvmSynthetic
-      @kotlin.PublishedApi
+    @kotlin.PublishedApi
       internal fun _create(builder: com.kcl.api.Spec.Argument.Builder): Dsl = Dsl(builder)
     }
 
     @kotlin.jvm.JvmSynthetic
-    @kotlin.PublishedApi
+  @kotlin.PublishedApi
     internal fun _build(): com.kcl.api.Spec.Argument = _builder.build()
 
     /**
@@ -42,10 +42,10 @@ public object ArgumentKt {
      */
     public var name: kotlin.String
       @JvmName("getName")
-      get() = _builder.getName()
+      get() = _builder.name
       @JvmName("setName")
       set(value) {
-        _builder.setName(value)
+        _builder.name = value
       }
     /**
      * ```
@@ -67,10 +67,10 @@ public object ArgumentKt {
      */
     public var value: kotlin.String
       @JvmName("getValue")
-      get() = _builder.getValue()
+      get() = _builder.value
       @JvmName("setValue")
       set(value) {
-        _builder.setValue(value)
+        _builder.value = value
       }
     /**
      * ```

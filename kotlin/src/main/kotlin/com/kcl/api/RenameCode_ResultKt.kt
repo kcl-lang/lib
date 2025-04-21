@@ -24,12 +24,12 @@ public object RenameCode_ResultKt {
   ) {
     public companion object {
       @kotlin.jvm.JvmSynthetic
-      @kotlin.PublishedApi
+    @kotlin.PublishedApi
       internal fun _create(builder: com.kcl.api.Spec.RenameCode_Result.Builder): Dsl = Dsl(builder)
     }
 
     @kotlin.jvm.JvmSynthetic
-    @kotlin.PublishedApi
+  @kotlin.PublishedApi
     internal fun _build(): com.kcl.api.Spec.RenameCode_Result = _builder.build()
 
     /**
@@ -49,7 +49,7 @@ public object RenameCode_ResultKt {
       @kotlin.jvm.JvmSynthetic
       @JvmName("getChangedCodesMap")
       get() = com.google.protobuf.kotlin.DslMap(
-        _builder.getChangedCodesMap()
+        _builder.changedCodesMap
       )
     /**
      * ```

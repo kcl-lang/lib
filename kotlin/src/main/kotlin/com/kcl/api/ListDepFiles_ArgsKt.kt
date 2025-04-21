@@ -24,12 +24,12 @@ public object ListDepFiles_ArgsKt {
   ) {
     public companion object {
       @kotlin.jvm.JvmSynthetic
-      @kotlin.PublishedApi
+    @kotlin.PublishedApi
       internal fun _create(builder: com.kcl.api.Spec.ListDepFiles_Args.Builder): Dsl = Dsl(builder)
     }
 
     @kotlin.jvm.JvmSynthetic
-    @kotlin.PublishedApi
+  @kotlin.PublishedApi
     internal fun _build(): com.kcl.api.Spec.ListDepFiles_Args = _builder.build()
 
     /**
@@ -41,10 +41,10 @@ public object ListDepFiles_ArgsKt {
      */
     public var workDir: kotlin.String
       @JvmName("getWorkDir")
-      get() = _builder.getWorkDir()
+      get() = _builder.workDir
       @JvmName("setWorkDir")
       set(value) {
-        _builder.setWorkDir(value)
+        _builder.workDir = value
       }
     /**
      * ```
@@ -66,10 +66,10 @@ public object ListDepFiles_ArgsKt {
      */
     public var useAbsPath: kotlin.Boolean
       @JvmName("getUseAbsPath")
-      get() = _builder.getUseAbsPath()
+      get() = _builder.useAbsPath
       @JvmName("setUseAbsPath")
       set(value) {
-        _builder.setUseAbsPath(value)
+        _builder.useAbsPath = value
       }
     /**
      * ```
@@ -91,10 +91,10 @@ public object ListDepFiles_ArgsKt {
      */
     public var includeAll: kotlin.Boolean
       @JvmName("getIncludeAll")
-      get() = _builder.getIncludeAll()
+      get() = _builder.includeAll
       @JvmName("setIncludeAll")
       set(value) {
-        _builder.setIncludeAll(value)
+        _builder.includeAll = value
       }
     /**
      * ```
@@ -116,10 +116,10 @@ public object ListDepFiles_ArgsKt {
      */
     public var useFastParser: kotlin.Boolean
       @JvmName("getUseFastParser")
-      get() = _builder.getUseFastParser()
+      get() = _builder.useFastParser
       @JvmName("setUseFastParser")
       set(value) {
-        _builder.setUseFastParser(value)
+        _builder.useFastParser = value
       }
     /**
      * ```

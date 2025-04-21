@@ -24,12 +24,12 @@ public object LoadPackage_ArgsKt {
   ) {
     public companion object {
       @kotlin.jvm.JvmSynthetic
-      @kotlin.PublishedApi
+    @kotlin.PublishedApi
       internal fun _create(builder: com.kcl.api.Spec.LoadPackage_Args.Builder): Dsl = Dsl(builder)
     }
 
     @kotlin.jvm.JvmSynthetic
-    @kotlin.PublishedApi
+  @kotlin.PublishedApi
     internal fun _build(): com.kcl.api.Spec.LoadPackage_Args = _builder.build()
 
     /**
@@ -41,10 +41,10 @@ public object LoadPackage_ArgsKt {
      */
     public var parseArgs: com.kcl.api.Spec.ParseProgram_Args
       @JvmName("getParseArgs")
-      get() = _builder.getParseArgs()
+      get() = _builder.parseArgs
       @JvmName("setParseArgs")
       set(value) {
-        _builder.setParseArgs(value)
+        _builder.parseArgs = value
       }
     /**
      * ```
@@ -67,6 +67,7 @@ public object LoadPackage_ArgsKt {
     public fun hasParseArgs(): kotlin.Boolean {
       return _builder.hasParseArgs()
     }
+
     public val LoadPackage_ArgsKt.Dsl.parseArgsOrNull: com.kcl.api.Spec.ParseProgram_Args?
       get() = _builder.parseArgsOrNull
 
@@ -79,10 +80,10 @@ public object LoadPackage_ArgsKt {
      */
     public var resolveAst: kotlin.Boolean
       @JvmName("getResolveAst")
-      get() = _builder.getResolveAst()
+      get() = _builder.resolveAst
       @JvmName("setResolveAst")
       set(value) {
-        _builder.setResolveAst(value)
+        _builder.resolveAst = value
       }
     /**
      * ```
@@ -104,10 +105,10 @@ public object LoadPackage_ArgsKt {
      */
     public var loadBuiltin: kotlin.Boolean
       @JvmName("getLoadBuiltin")
-      get() = _builder.getLoadBuiltin()
+      get() = _builder.loadBuiltin
       @JvmName("setLoadBuiltin")
       set(value) {
-        _builder.setLoadBuiltin(value)
+        _builder.loadBuiltin = value
       }
     /**
      * ```
@@ -129,10 +130,10 @@ public object LoadPackage_ArgsKt {
      */
     public var withAstIndex: kotlin.Boolean
       @JvmName("getWithAstIndex")
-      get() = _builder.getWithAstIndex()
+      get() = _builder.withAstIndex
       @JvmName("setWithAstIndex")
       set(value) {
-        _builder.setWithAstIndex(value)
+        _builder.withAstIndex = value
       }
     /**
      * ```

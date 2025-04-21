@@ -24,12 +24,12 @@ public object KclTypeKt {
   ) {
     public companion object {
       @kotlin.jvm.JvmSynthetic
-      @kotlin.PublishedApi
+    @kotlin.PublishedApi
       internal fun _create(builder: com.kcl.api.Spec.KclType.Builder): Dsl = Dsl(builder)
     }
 
     @kotlin.jvm.JvmSynthetic
-    @kotlin.PublishedApi
+  @kotlin.PublishedApi
     internal fun _build(): com.kcl.api.Spec.KclType = _builder.build()
 
     /**
@@ -41,10 +41,10 @@ public object KclTypeKt {
      */
     public var type: kotlin.String
       @JvmName("getType")
-      get() = _builder.getType()
+      get() = _builder.type
       @JvmName("setType")
       set(value) {
-        _builder.setType(value)
+        _builder.type = value
       }
     /**
      * ```
@@ -73,7 +73,7 @@ public object KclTypeKt {
      public val unionTypes: com.google.protobuf.kotlin.DslList<com.kcl.api.Spec.KclType, UnionTypesProxy>
       @kotlin.jvm.JvmSynthetic
       get() = com.google.protobuf.kotlin.DslList(
-        _builder.getUnionTypesList()
+        _builder.unionTypesList
       )
     /**
      * ```
@@ -166,10 +166,10 @@ public object KclTypeKt {
      */
     public var default: kotlin.String
       @JvmName("getDefault")
-      get() = _builder.getDefault()
+      get() = _builder.default
       @JvmName("setDefault")
       set(value) {
-        _builder.setDefault(value)
+        _builder.default = value
       }
     /**
      * ```
@@ -191,10 +191,10 @@ public object KclTypeKt {
      */
     public var schemaName: kotlin.String
       @JvmName("getSchemaName")
-      get() = _builder.getSchemaName()
+      get() = _builder.schemaName
       @JvmName("setSchemaName")
       set(value) {
-        _builder.setSchemaName(value)
+        _builder.schemaName = value
       }
     /**
      * ```
@@ -216,10 +216,10 @@ public object KclTypeKt {
      */
     public var schemaDoc: kotlin.String
       @JvmName("getSchemaDoc")
-      get() = _builder.getSchemaDoc()
+      get() = _builder.schemaDoc
       @JvmName("setSchemaDoc")
       set(value) {
-        _builder.setSchemaDoc(value)
+        _builder.schemaDoc = value
       }
     /**
      * ```
@@ -249,7 +249,7 @@ public object KclTypeKt {
       @kotlin.jvm.JvmSynthetic
       @JvmName("getPropertiesMap")
       get() = com.google.protobuf.kotlin.DslMap(
-        _builder.getPropertiesMap()
+        _builder.propertiesMap
       )
     /**
      * ```
@@ -334,7 +334,7 @@ public object KclTypeKt {
     public val required: com.google.protobuf.kotlin.DslList<kotlin.String, RequiredProxy>
       @kotlin.jvm.JvmSynthetic
       get() = com.google.protobuf.kotlin.DslList(
-        _builder.getRequiredList()
+        _builder.requiredList
       )
     /**
      * ```
@@ -424,10 +424,10 @@ public object KclTypeKt {
      */
     public var key: com.kcl.api.Spec.KclType
       @JvmName("getKey")
-      get() = _builder.getKey()
+      get() = _builder.key
       @JvmName("setKey")
       set(value) {
-        _builder.setKey(value)
+        _builder.key = value
       }
     /**
      * ```
@@ -450,6 +450,7 @@ public object KclTypeKt {
     public fun hasKey(): kotlin.Boolean {
       return _builder.hasKey()
     }
+
     public val KclTypeKt.Dsl.keyOrNull: com.kcl.api.Spec.KclType?
       get() = _builder.keyOrNull
 
@@ -462,10 +463,10 @@ public object KclTypeKt {
      */
     public var item: com.kcl.api.Spec.KclType
       @JvmName("getItem")
-      get() = _builder.getItem()
+      get() = _builder.item
       @JvmName("setItem")
       set(value) {
-        _builder.setItem(value)
+        _builder.item = value
       }
     /**
      * ```
@@ -488,6 +489,7 @@ public object KclTypeKt {
     public fun hasItem(): kotlin.Boolean {
       return _builder.hasItem()
     }
+
     public val KclTypeKt.Dsl.itemOrNull: com.kcl.api.Spec.KclType?
       get() = _builder.itemOrNull
 
@@ -500,10 +502,10 @@ public object KclTypeKt {
      */
     public var line: kotlin.Int
       @JvmName("getLine")
-      get() = _builder.getLine()
+      get() = _builder.line
       @JvmName("setLine")
       set(value) {
-        _builder.setLine(value)
+        _builder.line = value
       }
     /**
      * ```
@@ -532,7 +534,7 @@ public object KclTypeKt {
      public val decorators: com.google.protobuf.kotlin.DslList<com.kcl.api.Spec.Decorator, DecoratorsProxy>
       @kotlin.jvm.JvmSynthetic
       get() = com.google.protobuf.kotlin.DslList(
-        _builder.getDecoratorsList()
+        _builder.decoratorsList
       )
     /**
      * ```
@@ -625,10 +627,10 @@ public object KclTypeKt {
      */
     public var filename: kotlin.String
       @JvmName("getFilename")
-      get() = _builder.getFilename()
+      get() = _builder.filename
       @JvmName("setFilename")
       set(value) {
-        _builder.setFilename(value)
+        _builder.filename = value
       }
     /**
      * ```
@@ -650,10 +652,10 @@ public object KclTypeKt {
      */
     public var pkgPath: kotlin.String
       @JvmName("getPkgPath")
-      get() = _builder.getPkgPath()
+      get() = _builder.pkgPath
       @JvmName("setPkgPath")
       set(value) {
-        _builder.setPkgPath(value)
+        _builder.pkgPath = value
       }
     /**
      * ```
@@ -675,10 +677,10 @@ public object KclTypeKt {
      */
     public var description: kotlin.String
       @JvmName("getDescription")
-      get() = _builder.getDescription()
+      get() = _builder.description
       @JvmName("setDescription")
       set(value) {
-        _builder.setDescription(value)
+        _builder.description = value
       }
     /**
      * ```
@@ -708,7 +710,7 @@ public object KclTypeKt {
       @kotlin.jvm.JvmSynthetic
       @JvmName("getExamplesMap")
       get() = com.google.protobuf.kotlin.DslMap(
-        _builder.getExamplesMap()
+        _builder.examplesMap
       )
     /**
      * ```
@@ -785,10 +787,10 @@ public object KclTypeKt {
      */
     public var baseSchema: com.kcl.api.Spec.KclType
       @JvmName("getBaseSchema")
-      get() = _builder.getBaseSchema()
+      get() = _builder.baseSchema
       @JvmName("setBaseSchema")
       set(value) {
-        _builder.setBaseSchema(value)
+        _builder.baseSchema = value
       }
     /**
      * ```
@@ -811,6 +813,7 @@ public object KclTypeKt {
     public fun hasBaseSchema(): kotlin.Boolean {
       return _builder.hasBaseSchema()
     }
+
     public val KclTypeKt.Dsl.baseSchemaOrNull: com.kcl.api.Spec.KclType?
       get() = _builder.baseSchemaOrNull
   }

@@ -24,12 +24,12 @@ public object ListVariables_OptionsKt {
   ) {
     public companion object {
       @kotlin.jvm.JvmSynthetic
-      @kotlin.PublishedApi
+    @kotlin.PublishedApi
       internal fun _create(builder: com.kcl.api.Spec.ListVariables_Options.Builder): Dsl = Dsl(builder)
     }
 
     @kotlin.jvm.JvmSynthetic
-    @kotlin.PublishedApi
+  @kotlin.PublishedApi
     internal fun _build(): com.kcl.api.Spec.ListVariables_Options = _builder.build()
 
     /**
@@ -41,10 +41,10 @@ public object ListVariables_OptionsKt {
      */
     public var mergeProgram: kotlin.Boolean
       @JvmName("getMergeProgram")
-      get() = _builder.getMergeProgram()
+      get() = _builder.mergeProgram
       @JvmName("setMergeProgram")
       set(value) {
-        _builder.setMergeProgram(value)
+        _builder.mergeProgram = value
       }
     /**
      * ```

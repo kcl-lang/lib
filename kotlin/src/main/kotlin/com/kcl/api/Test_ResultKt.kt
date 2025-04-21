@@ -24,12 +24,12 @@ public object Test_ResultKt {
   ) {
     public companion object {
       @kotlin.jvm.JvmSynthetic
-      @kotlin.PublishedApi
+    @kotlin.PublishedApi
       internal fun _create(builder: com.kcl.api.Spec.Test_Result.Builder): Dsl = Dsl(builder)
     }
 
     @kotlin.jvm.JvmSynthetic
-    @kotlin.PublishedApi
+  @kotlin.PublishedApi
     internal fun _build(): com.kcl.api.Spec.Test_Result = _builder.build()
 
     /**
@@ -48,7 +48,7 @@ public object Test_ResultKt {
      public val info: com.google.protobuf.kotlin.DslList<com.kcl.api.Spec.TestCaseInfo, InfoProxy>
       @kotlin.jvm.JvmSynthetic
       get() = com.google.protobuf.kotlin.DslList(
-        _builder.getInfoList()
+        _builder.infoList
       )
     /**
      * ```

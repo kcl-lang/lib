@@ -24,12 +24,12 @@ public object MessageKt {
   ) {
     public companion object {
       @kotlin.jvm.JvmSynthetic
-      @kotlin.PublishedApi
+    @kotlin.PublishedApi
       internal fun _create(builder: com.kcl.api.Spec.Message.Builder): Dsl = Dsl(builder)
     }
 
     @kotlin.jvm.JvmSynthetic
-    @kotlin.PublishedApi
+  @kotlin.PublishedApi
     internal fun _build(): com.kcl.api.Spec.Message = _builder.build()
 
     /**
@@ -41,10 +41,10 @@ public object MessageKt {
      */
     public var msg: kotlin.String
       @JvmName("getMsg")
-      get() = _builder.getMsg()
+      get() = _builder.msg
       @JvmName("setMsg")
       set(value) {
-        _builder.setMsg(value)
+        _builder.msg = value
       }
     /**
      * ```
@@ -66,10 +66,10 @@ public object MessageKt {
      */
     public var pos: com.kcl.api.Spec.Position
       @JvmName("getPos")
-      get() = _builder.getPos()
+      get() = _builder.pos
       @JvmName("setPos")
       set(value) {
-        _builder.setPos(value)
+        _builder.pos = value
       }
     /**
      * ```
@@ -92,6 +92,7 @@ public object MessageKt {
     public fun hasPos(): kotlin.Boolean {
       return _builder.hasPos()
     }
+
     public val MessageKt.Dsl.posOrNull: com.kcl.api.Spec.Position?
       get() = _builder.posOrNull
   }

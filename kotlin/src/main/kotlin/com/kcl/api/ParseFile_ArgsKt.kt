@@ -24,12 +24,12 @@ public object ParseFile_ArgsKt {
   ) {
     public companion object {
       @kotlin.jvm.JvmSynthetic
-      @kotlin.PublishedApi
+    @kotlin.PublishedApi
       internal fun _create(builder: com.kcl.api.Spec.ParseFile_Args.Builder): Dsl = Dsl(builder)
     }
 
     @kotlin.jvm.JvmSynthetic
-    @kotlin.PublishedApi
+  @kotlin.PublishedApi
     internal fun _build(): com.kcl.api.Spec.ParseFile_Args = _builder.build()
 
     /**
@@ -41,10 +41,10 @@ public object ParseFile_ArgsKt {
      */
     public var path: kotlin.String
       @JvmName("getPath")
-      get() = _builder.getPath()
+      get() = _builder.path
       @JvmName("setPath")
       set(value) {
-        _builder.setPath(value)
+        _builder.path = value
       }
     /**
      * ```
@@ -66,10 +66,10 @@ public object ParseFile_ArgsKt {
      */
     public var source: kotlin.String
       @JvmName("getSource")
-      get() = _builder.getSource()
+      get() = _builder.source
       @JvmName("setSource")
       set(value) {
-        _builder.setSource(value)
+        _builder.source = value
       }
     /**
      * ```
@@ -98,7 +98,7 @@ public object ParseFile_ArgsKt {
      public val externalPkgs: com.google.protobuf.kotlin.DslList<com.kcl.api.Spec.ExternalPkg, ExternalPkgsProxy>
       @kotlin.jvm.JvmSynthetic
       get() = com.google.protobuf.kotlin.DslList(
-        _builder.getExternalPkgsList()
+        _builder.externalPkgsList
       )
     /**
      * ```

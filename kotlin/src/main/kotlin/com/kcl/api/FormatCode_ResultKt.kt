@@ -24,12 +24,12 @@ public object FormatCode_ResultKt {
   ) {
     public companion object {
       @kotlin.jvm.JvmSynthetic
-      @kotlin.PublishedApi
+    @kotlin.PublishedApi
       internal fun _create(builder: com.kcl.api.Spec.FormatCode_Result.Builder): Dsl = Dsl(builder)
     }
 
     @kotlin.jvm.JvmSynthetic
-    @kotlin.PublishedApi
+  @kotlin.PublishedApi
     internal fun _build(): com.kcl.api.Spec.FormatCode_Result = _builder.build()
 
     /**
@@ -41,10 +41,10 @@ public object FormatCode_ResultKt {
      */
     public var formatted: com.google.protobuf.ByteString
       @JvmName("getFormatted")
-      get() = _builder.getFormatted()
+      get() = _builder.formatted
       @JvmName("setFormatted")
       set(value) {
-        _builder.setFormatted(value)
+        _builder.formatted = value
       }
     /**
      * ```
