@@ -436,6 +436,7 @@ impl ValidateCodeArgs {
         schema: Option<String>,
         attribute_name: Option<String>,
         format: Option<String>,
+        external_pkgs: Option<Vec<ExternalPkg>>,
     ) -> Result<Self> {
         Ok(Self(kclvm_api::ValidateCodeArgs {
             datafile: datafile.unwrap_or_default(),
@@ -445,6 +446,17 @@ impl ValidateCodeArgs {
             schema: schema.unwrap_or_default(),
             attribute_name: attribute_name.unwrap_or_default(),
             format: format.unwrap_or_default(),
+            external_pkgs: external_pkgs
+                .into_iter()
+                .flat_map(|vec| {
+                    vec.into_iter()
+                        .map(|e| kclvm_api::ExternalPkg {
+                            pkg_name: e.pkg_name.clone(),
+                            pkg_path: e.pkg_path.clone(),
+                        })
+                        .collect::<Vec<kclvm_api::ExternalPkg>>()
+                })
+                .collect(),
         }))
     }
 }
