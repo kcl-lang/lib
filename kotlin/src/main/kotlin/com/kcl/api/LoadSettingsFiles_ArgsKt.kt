@@ -24,12 +24,12 @@ public object LoadSettingsFiles_ArgsKt {
   ) {
     public companion object {
       @kotlin.jvm.JvmSynthetic
-      @kotlin.PublishedApi
+    @kotlin.PublishedApi
       internal fun _create(builder: com.kcl.api.Spec.LoadSettingsFiles_Args.Builder): Dsl = Dsl(builder)
     }
 
     @kotlin.jvm.JvmSynthetic
-    @kotlin.PublishedApi
+  @kotlin.PublishedApi
     internal fun _build(): com.kcl.api.Spec.LoadSettingsFiles_Args = _builder.build()
 
     /**
@@ -41,10 +41,10 @@ public object LoadSettingsFiles_ArgsKt {
      */
     public var workDir: kotlin.String
       @JvmName("getWorkDir")
-      get() = _builder.getWorkDir()
+      get() = _builder.workDir
       @JvmName("setWorkDir")
       set(value) {
-        _builder.setWorkDir(value)
+        _builder.workDir = value
       }
     /**
      * ```
@@ -74,7 +74,7 @@ public object LoadSettingsFiles_ArgsKt {
     public val files: com.google.protobuf.kotlin.DslList<kotlin.String, FilesProxy>
       @kotlin.jvm.JvmSynthetic
       get() = com.google.protobuf.kotlin.DslList(
-        _builder.getFilesList()
+        _builder.filesList
       )
     /**
      * ```

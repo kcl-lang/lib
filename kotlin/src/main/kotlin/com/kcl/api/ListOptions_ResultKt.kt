@@ -24,12 +24,12 @@ public object ListOptions_ResultKt {
   ) {
     public companion object {
       @kotlin.jvm.JvmSynthetic
-      @kotlin.PublishedApi
+    @kotlin.PublishedApi
       internal fun _create(builder: com.kcl.api.Spec.ListOptions_Result.Builder): Dsl = Dsl(builder)
     }
 
     @kotlin.jvm.JvmSynthetic
-    @kotlin.PublishedApi
+  @kotlin.PublishedApi
     internal fun _build(): com.kcl.api.Spec.ListOptions_Result = _builder.build()
 
     /**
@@ -48,7 +48,7 @@ public object ListOptions_ResultKt {
      public val options: com.google.protobuf.kotlin.DslList<com.kcl.api.Spec.OptionHelp, OptionsProxy>
       @kotlin.jvm.JvmSynthetic
       get() = com.google.protobuf.kotlin.DslList(
-        _builder.getOptionsList()
+        _builder.optionsList
       )
     /**
      * ```

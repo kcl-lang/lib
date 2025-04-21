@@ -24,12 +24,12 @@ public object ParseProgram_ResultKt {
   ) {
     public companion object {
       @kotlin.jvm.JvmSynthetic
-      @kotlin.PublishedApi
+    @kotlin.PublishedApi
       internal fun _create(builder: com.kcl.api.Spec.ParseProgram_Result.Builder): Dsl = Dsl(builder)
     }
 
     @kotlin.jvm.JvmSynthetic
-    @kotlin.PublishedApi
+  @kotlin.PublishedApi
     internal fun _build(): com.kcl.api.Spec.ParseProgram_Result = _builder.build()
 
     /**
@@ -41,10 +41,10 @@ public object ParseProgram_ResultKt {
      */
     public var astJson: kotlin.String
       @JvmName("getAstJson")
-      get() = _builder.getAstJson()
+      get() = _builder.astJson
       @JvmName("setAstJson")
       set(value) {
-        _builder.setAstJson(value)
+        _builder.astJson = value
       }
     /**
      * ```
@@ -74,7 +74,7 @@ public object ParseProgram_ResultKt {
     public val paths: com.google.protobuf.kotlin.DslList<kotlin.String, PathsProxy>
       @kotlin.jvm.JvmSynthetic
       get() = com.google.protobuf.kotlin.DslList(
-        _builder.getPathsList()
+        _builder.pathsList
       )
     /**
      * ```
@@ -171,7 +171,7 @@ public object ParseProgram_ResultKt {
      public val errors: com.google.protobuf.kotlin.DslList<com.kcl.api.Spec.Error, ErrorsProxy>
       @kotlin.jvm.JvmSynthetic
       get() = com.google.protobuf.kotlin.DslList(
-        _builder.getErrorsList()
+        _builder.errorsList
       )
     /**
      * ```

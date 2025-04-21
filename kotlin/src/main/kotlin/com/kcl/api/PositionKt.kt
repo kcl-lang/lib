@@ -24,12 +24,12 @@ public object PositionKt {
   ) {
     public companion object {
       @kotlin.jvm.JvmSynthetic
-      @kotlin.PublishedApi
+    @kotlin.PublishedApi
       internal fun _create(builder: com.kcl.api.Spec.Position.Builder): Dsl = Dsl(builder)
     }
 
     @kotlin.jvm.JvmSynthetic
-    @kotlin.PublishedApi
+  @kotlin.PublishedApi
     internal fun _build(): com.kcl.api.Spec.Position = _builder.build()
 
     /**
@@ -41,10 +41,10 @@ public object PositionKt {
      */
     public var line: kotlin.Long
       @JvmName("getLine")
-      get() = _builder.getLine()
+      get() = _builder.line
       @JvmName("setLine")
       set(value) {
-        _builder.setLine(value)
+        _builder.line = value
       }
     /**
      * ```
@@ -66,10 +66,10 @@ public object PositionKt {
      */
     public var column: kotlin.Long
       @JvmName("getColumn")
-      get() = _builder.getColumn()
+      get() = _builder.column
       @JvmName("setColumn")
       set(value) {
-        _builder.setColumn(value)
+        _builder.column = value
       }
     /**
      * ```
@@ -91,10 +91,10 @@ public object PositionKt {
      */
     public var filename: kotlin.String
       @JvmName("getFilename")
-      get() = _builder.getFilename()
+      get() = _builder.filename
       @JvmName("setFilename")
       set(value) {
-        _builder.setFilename(value)
+        _builder.filename = value
       }
     /**
      * ```

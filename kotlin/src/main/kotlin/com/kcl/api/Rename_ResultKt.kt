@@ -24,12 +24,12 @@ public object Rename_ResultKt {
   ) {
     public companion object {
       @kotlin.jvm.JvmSynthetic
-      @kotlin.PublishedApi
+    @kotlin.PublishedApi
       internal fun _create(builder: com.kcl.api.Spec.Rename_Result.Builder): Dsl = Dsl(builder)
     }
 
     @kotlin.jvm.JvmSynthetic
-    @kotlin.PublishedApi
+  @kotlin.PublishedApi
     internal fun _build(): com.kcl.api.Spec.Rename_Result = _builder.build()
 
     /**
@@ -49,7 +49,7 @@ public object Rename_ResultKt {
     public val changedFiles: com.google.protobuf.kotlin.DslList<kotlin.String, ChangedFilesProxy>
       @kotlin.jvm.JvmSynthetic
       get() = com.google.protobuf.kotlin.DslList(
-        _builder.getChangedFilesList()
+        _builder.changedFilesList
       )
     /**
      * ```

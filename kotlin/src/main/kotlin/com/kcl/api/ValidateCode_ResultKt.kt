@@ -24,12 +24,12 @@ public object ValidateCode_ResultKt {
   ) {
     public companion object {
       @kotlin.jvm.JvmSynthetic
-      @kotlin.PublishedApi
+    @kotlin.PublishedApi
       internal fun _create(builder: com.kcl.api.Spec.ValidateCode_Result.Builder): Dsl = Dsl(builder)
     }
 
     @kotlin.jvm.JvmSynthetic
-    @kotlin.PublishedApi
+  @kotlin.PublishedApi
     internal fun _build(): com.kcl.api.Spec.ValidateCode_Result = _builder.build()
 
     /**
@@ -41,10 +41,10 @@ public object ValidateCode_ResultKt {
      */
     public var success: kotlin.Boolean
       @JvmName("getSuccess")
-      get() = _builder.getSuccess()
+      get() = _builder.success
       @JvmName("setSuccess")
       set(value) {
-        _builder.setSuccess(value)
+        _builder.success = value
       }
     /**
      * ```
@@ -66,10 +66,10 @@ public object ValidateCode_ResultKt {
      */
     public var errMessage: kotlin.String
       @JvmName("getErrMessage")
-      get() = _builder.getErrMessage()
+      get() = _builder.errMessage
       @JvmName("setErrMessage")
       set(value) {
-        _builder.setErrMessage(value)
+        _builder.errMessage = value
       }
     /**
      * ```

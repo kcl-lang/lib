@@ -24,12 +24,12 @@ public object LoadPackage_ResultKt {
   ) {
     public companion object {
       @kotlin.jvm.JvmSynthetic
-      @kotlin.PublishedApi
+    @kotlin.PublishedApi
       internal fun _create(builder: com.kcl.api.Spec.LoadPackage_Result.Builder): Dsl = Dsl(builder)
     }
 
     @kotlin.jvm.JvmSynthetic
-    @kotlin.PublishedApi
+  @kotlin.PublishedApi
     internal fun _build(): com.kcl.api.Spec.LoadPackage_Result = _builder.build()
 
     /**
@@ -41,10 +41,10 @@ public object LoadPackage_ResultKt {
      */
     public var program: kotlin.String
       @JvmName("getProgram")
-      get() = _builder.getProgram()
+      get() = _builder.program
       @JvmName("setProgram")
       set(value) {
-        _builder.setProgram(value)
+        _builder.program = value
       }
     /**
      * ```
@@ -74,7 +74,7 @@ public object LoadPackage_ResultKt {
     public val paths: com.google.protobuf.kotlin.DslList<kotlin.String, PathsProxy>
       @kotlin.jvm.JvmSynthetic
       get() = com.google.protobuf.kotlin.DslList(
-        _builder.getPathsList()
+        _builder.pathsList
       )
     /**
      * ```
@@ -171,7 +171,7 @@ public object LoadPackage_ResultKt {
      public val parseErrors: com.google.protobuf.kotlin.DslList<com.kcl.api.Spec.Error, ParseErrorsProxy>
       @kotlin.jvm.JvmSynthetic
       get() = com.google.protobuf.kotlin.DslList(
-        _builder.getParseErrorsList()
+        _builder.parseErrorsList
       )
     /**
      * ```
@@ -271,7 +271,7 @@ public object LoadPackage_ResultKt {
      public val typeErrors: com.google.protobuf.kotlin.DslList<com.kcl.api.Spec.Error, TypeErrorsProxy>
       @kotlin.jvm.JvmSynthetic
       get() = com.google.protobuf.kotlin.DslList(
-        _builder.getTypeErrorsList()
+        _builder.typeErrorsList
       )
     /**
      * ```
@@ -372,7 +372,7 @@ public object LoadPackage_ResultKt {
       @kotlin.jvm.JvmSynthetic
       @JvmName("getScopesMap")
       get() = com.google.protobuf.kotlin.DslMap(
-        _builder.getScopesMap()
+        _builder.scopesMap
       )
     /**
      * ```
@@ -457,7 +457,7 @@ public object LoadPackage_ResultKt {
       @kotlin.jvm.JvmSynthetic
       @JvmName("getSymbolsMap")
       get() = com.google.protobuf.kotlin.DslMap(
-        _builder.getSymbolsMap()
+        _builder.symbolsMap
       )
     /**
      * ```
@@ -542,7 +542,7 @@ public object LoadPackage_ResultKt {
       @kotlin.jvm.JvmSynthetic
       @JvmName("getNodeSymbolMapMap")
       get() = com.google.protobuf.kotlin.DslMap(
-        _builder.getNodeSymbolMapMap()
+        _builder.nodeSymbolMapMap
       )
     /**
      * ```
@@ -627,7 +627,7 @@ public object LoadPackage_ResultKt {
       @kotlin.jvm.JvmSynthetic
       @JvmName("getSymbolNodeMapMap")
       get() = com.google.protobuf.kotlin.DslMap(
-        _builder.getSymbolNodeMapMap()
+        _builder.symbolNodeMapMap
       )
     /**
      * ```
@@ -712,7 +712,7 @@ public object LoadPackage_ResultKt {
       @kotlin.jvm.JvmSynthetic
       @JvmName("getFullyQualifiedNameMapMap")
       get() = com.google.protobuf.kotlin.DslMap(
-        _builder.getFullyQualifiedNameMapMap()
+        _builder.fullyQualifiedNameMapMap
       )
     /**
      * ```
@@ -797,7 +797,7 @@ public object LoadPackage_ResultKt {
       @kotlin.jvm.JvmSynthetic
       @JvmName("getPkgScopeMapMap")
       get() = com.google.protobuf.kotlin.DslMap(
-        _builder.getPkgScopeMapMap()
+        _builder.pkgScopeMapMap
       )
     /**
      * ```

@@ -24,12 +24,12 @@ public object ValidateCode_ArgsKt {
   ) {
     public companion object {
       @kotlin.jvm.JvmSynthetic
-      @kotlin.PublishedApi
+    @kotlin.PublishedApi
       internal fun _create(builder: com.kcl.api.Spec.ValidateCode_Args.Builder): Dsl = Dsl(builder)
     }
 
     @kotlin.jvm.JvmSynthetic
-    @kotlin.PublishedApi
+  @kotlin.PublishedApi
     internal fun _build(): com.kcl.api.Spec.ValidateCode_Args = _builder.build()
 
     /**
@@ -41,10 +41,10 @@ public object ValidateCode_ArgsKt {
      */
     public var datafile: kotlin.String
       @JvmName("getDatafile")
-      get() = _builder.getDatafile()
+      get() = _builder.datafile
       @JvmName("setDatafile")
       set(value) {
-        _builder.setDatafile(value)
+        _builder.datafile = value
       }
     /**
      * ```
@@ -66,10 +66,10 @@ public object ValidateCode_ArgsKt {
      */
     public var data: kotlin.String
       @JvmName("getData")
-      get() = _builder.getData()
+      get() = _builder.data
       @JvmName("setData")
       set(value) {
-        _builder.setData(value)
+        _builder.data = value
       }
     /**
      * ```
@@ -91,10 +91,10 @@ public object ValidateCode_ArgsKt {
      */
     public var file: kotlin.String
       @JvmName("getFile")
-      get() = _builder.getFile()
+      get() = _builder.file
       @JvmName("setFile")
       set(value) {
-        _builder.setFile(value)
+        _builder.file = value
       }
     /**
      * ```
@@ -116,10 +116,10 @@ public object ValidateCode_ArgsKt {
      */
     public var code: kotlin.String
       @JvmName("getCode")
-      get() = _builder.getCode()
+      get() = _builder.code
       @JvmName("setCode")
       set(value) {
-        _builder.setCode(value)
+        _builder.code = value
       }
     /**
      * ```
@@ -141,10 +141,10 @@ public object ValidateCode_ArgsKt {
      */
     public var schema: kotlin.String
       @JvmName("getSchema")
-      get() = _builder.getSchema()
+      get() = _builder.schema
       @JvmName("setSchema")
       set(value) {
-        _builder.setSchema(value)
+        _builder.schema = value
       }
     /**
      * ```
@@ -166,10 +166,10 @@ public object ValidateCode_ArgsKt {
      */
     public var attributeName: kotlin.String
       @JvmName("getAttributeName")
-      get() = _builder.getAttributeName()
+      get() = _builder.attributeName
       @JvmName("setAttributeName")
       set(value) {
-        _builder.setAttributeName(value)
+        _builder.attributeName = value
       }
     /**
      * ```
@@ -191,10 +191,10 @@ public object ValidateCode_ArgsKt {
      */
     public var format: kotlin.String
       @JvmName("getFormat")
-      get() = _builder.getFormat()
+      get() = _builder.format
       @JvmName("setFormat")
       set(value) {
-        _builder.setFormat(value)
+        _builder.format = value
       }
     /**
      * ```
@@ -206,6 +206,106 @@ public object ValidateCode_ArgsKt {
     public fun clearFormat() {
       _builder.clearFormat()
     }
+
+    /**
+     * An uninstantiable, behaviorless type to represent the field in
+     * generics.
+     */
+    @kotlin.OptIn(com.google.protobuf.kotlin.OnlyForUseByGeneratedProtoCode::class)
+    public class ExternalPkgsProxy private constructor() : com.google.protobuf.kotlin.DslProxy()
+    /**
+     * ```
+     * List of external packages updated.
+     * ```
+     *
+     * `repeated .com.kcl.api.ExternalPkg external_pkgs = 8;`
+     */
+     public val externalPkgs: com.google.protobuf.kotlin.DslList<com.kcl.api.Spec.ExternalPkg, ExternalPkgsProxy>
+      @kotlin.jvm.JvmSynthetic
+      get() = com.google.protobuf.kotlin.DslList(
+        _builder.externalPkgsList
+      )
+    /**
+     * ```
+     * List of external packages updated.
+     * ```
+     *
+     * `repeated .com.kcl.api.ExternalPkg external_pkgs = 8;`
+     * @param value The externalPkgs to add.
+     */
+    @kotlin.jvm.JvmSynthetic
+    @kotlin.jvm.JvmName("addExternalPkgs")
+    public fun com.google.protobuf.kotlin.DslList<com.kcl.api.Spec.ExternalPkg, ExternalPkgsProxy>.add(value: com.kcl.api.Spec.ExternalPkg) {
+      _builder.addExternalPkgs(value)
+    }
+    /**
+     * ```
+     * List of external packages updated.
+     * ```
+     *
+     * `repeated .com.kcl.api.ExternalPkg external_pkgs = 8;`
+     * @param value The externalPkgs to add.
+     */
+    @kotlin.jvm.JvmSynthetic
+    @kotlin.jvm.JvmName("plusAssignExternalPkgs")
+    @Suppress("NOTHING_TO_INLINE")
+    public inline operator fun com.google.protobuf.kotlin.DslList<com.kcl.api.Spec.ExternalPkg, ExternalPkgsProxy>.plusAssign(value: com.kcl.api.Spec.ExternalPkg) {
+      add(value)
+    }
+    /**
+     * ```
+     * List of external packages updated.
+     * ```
+     *
+     * `repeated .com.kcl.api.ExternalPkg external_pkgs = 8;`
+     * @param values The externalPkgs to add.
+     */
+    @kotlin.jvm.JvmSynthetic
+    @kotlin.jvm.JvmName("addAllExternalPkgs")
+    public fun com.google.protobuf.kotlin.DslList<com.kcl.api.Spec.ExternalPkg, ExternalPkgsProxy>.addAll(values: kotlin.collections.Iterable<com.kcl.api.Spec.ExternalPkg>) {
+      _builder.addAllExternalPkgs(values)
+    }
+    /**
+     * ```
+     * List of external packages updated.
+     * ```
+     *
+     * `repeated .com.kcl.api.ExternalPkg external_pkgs = 8;`
+     * @param values The externalPkgs to add.
+     */
+    @kotlin.jvm.JvmSynthetic
+    @kotlin.jvm.JvmName("plusAssignAllExternalPkgs")
+    @Suppress("NOTHING_TO_INLINE")
+    public inline operator fun com.google.protobuf.kotlin.DslList<com.kcl.api.Spec.ExternalPkg, ExternalPkgsProxy>.plusAssign(values: kotlin.collections.Iterable<com.kcl.api.Spec.ExternalPkg>) {
+      addAll(values)
+    }
+    /**
+     * ```
+     * List of external packages updated.
+     * ```
+     *
+     * `repeated .com.kcl.api.ExternalPkg external_pkgs = 8;`
+     * @param index The index to set the value at.
+     * @param value The externalPkgs to set.
+     */
+    @kotlin.jvm.JvmSynthetic
+    @kotlin.jvm.JvmName("setExternalPkgs")
+    public operator fun com.google.protobuf.kotlin.DslList<com.kcl.api.Spec.ExternalPkg, ExternalPkgsProxy>.set(index: kotlin.Int, value: com.kcl.api.Spec.ExternalPkg) {
+      _builder.setExternalPkgs(index, value)
+    }
+    /**
+     * ```
+     * List of external packages updated.
+     * ```
+     *
+     * `repeated .com.kcl.api.ExternalPkg external_pkgs = 8;`
+     */
+    @kotlin.jvm.JvmSynthetic
+    @kotlin.jvm.JvmName("clearExternalPkgs")
+    public fun com.google.protobuf.kotlin.DslList<com.kcl.api.Spec.ExternalPkg, ExternalPkgsProxy>.clear() {
+      _builder.clearExternalPkgs()
+    }
+
   }
 }
 @kotlin.jvm.JvmSynthetic

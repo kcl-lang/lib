@@ -24,12 +24,12 @@ public object GetVersion_ResultKt {
   ) {
     public companion object {
       @kotlin.jvm.JvmSynthetic
-      @kotlin.PublishedApi
+    @kotlin.PublishedApi
       internal fun _create(builder: com.kcl.api.Spec.GetVersion_Result.Builder): Dsl = Dsl(builder)
     }
 
     @kotlin.jvm.JvmSynthetic
-    @kotlin.PublishedApi
+  @kotlin.PublishedApi
     internal fun _build(): com.kcl.api.Spec.GetVersion_Result = _builder.build()
 
     /**
@@ -41,10 +41,10 @@ public object GetVersion_ResultKt {
      */
     public var version: kotlin.String
       @JvmName("getVersion")
-      get() = _builder.getVersion()
+      get() = _builder.version
       @JvmName("setVersion")
       set(value) {
-        _builder.setVersion(value)
+        _builder.version = value
       }
     /**
      * ```
@@ -66,10 +66,10 @@ public object GetVersion_ResultKt {
      */
     public var checksum: kotlin.String
       @JvmName("getChecksum")
-      get() = _builder.getChecksum()
+      get() = _builder.checksum
       @JvmName("setChecksum")
       set(value) {
-        _builder.setChecksum(value)
+        _builder.checksum = value
       }
     /**
      * ```
@@ -91,10 +91,10 @@ public object GetVersion_ResultKt {
      */
     public var gitSha: kotlin.String
       @JvmName("getGitSha")
-      get() = _builder.getGitSha()
+      get() = _builder.gitSha
       @JvmName("setGitSha")
       set(value) {
-        _builder.setGitSha(value)
+        _builder.gitSha = value
       }
     /**
      * ```
@@ -116,10 +116,10 @@ public object GetVersion_ResultKt {
      */
     public var versionInfo: kotlin.String
       @JvmName("getVersionInfo")
-      get() = _builder.getVersionInfo()
+      get() = _builder.versionInfo
       @JvmName("setVersionInfo")
       set(value) {
-        _builder.setVersionInfo(value)
+        _builder.versionInfo = value
       }
     /**
      * ```

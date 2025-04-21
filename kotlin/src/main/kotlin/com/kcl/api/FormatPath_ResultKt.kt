@@ -24,12 +24,12 @@ public object FormatPath_ResultKt {
   ) {
     public companion object {
       @kotlin.jvm.JvmSynthetic
-      @kotlin.PublishedApi
+    @kotlin.PublishedApi
       internal fun _create(builder: com.kcl.api.Spec.FormatPath_Result.Builder): Dsl = Dsl(builder)
     }
 
     @kotlin.jvm.JvmSynthetic
-    @kotlin.PublishedApi
+  @kotlin.PublishedApi
     internal fun _build(): com.kcl.api.Spec.FormatPath_Result = _builder.build()
 
     /**
@@ -49,7 +49,7 @@ public object FormatPath_ResultKt {
     public val changedPaths: com.google.protobuf.kotlin.DslList<kotlin.String, ChangedPathsProxy>
       @kotlin.jvm.JvmSynthetic
       get() = com.google.protobuf.kotlin.DslList(
-        _builder.getChangedPathsList()
+        _builder.changedPathsList
       )
     /**
      * ```

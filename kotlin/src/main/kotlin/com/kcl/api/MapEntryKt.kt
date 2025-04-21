@@ -24,12 +24,12 @@ public object MapEntryKt {
   ) {
     public companion object {
       @kotlin.jvm.JvmSynthetic
-      @kotlin.PublishedApi
+    @kotlin.PublishedApi
       internal fun _create(builder: com.kcl.api.Spec.MapEntry.Builder): Dsl = Dsl(builder)
     }
 
     @kotlin.jvm.JvmSynthetic
-    @kotlin.PublishedApi
+  @kotlin.PublishedApi
     internal fun _build(): com.kcl.api.Spec.MapEntry = _builder.build()
 
     /**
@@ -41,10 +41,10 @@ public object MapEntryKt {
      */
     public var key: kotlin.String
       @JvmName("getKey")
-      get() = _builder.getKey()
+      get() = _builder.key
       @JvmName("setKey")
       set(value) {
-        _builder.setKey(value)
+        _builder.key = value
       }
     /**
      * ```
@@ -66,10 +66,10 @@ public object MapEntryKt {
      */
     public var value: com.kcl.api.Spec.Variable
       @JvmName("getValue")
-      get() = _builder.getValue()
+      get() = _builder.value
       @JvmName("setValue")
       set(value) {
-        _builder.setValue(value)
+        _builder.value = value
       }
     /**
      * ```
@@ -92,6 +92,7 @@ public object MapEntryKt {
     public fun hasValue(): kotlin.Boolean {
       return _builder.hasValue()
     }
+
     public val MapEntryKt.Dsl.valueOrNull: com.kcl.api.Spec.Variable?
       get() = _builder.valueOrNull
   }

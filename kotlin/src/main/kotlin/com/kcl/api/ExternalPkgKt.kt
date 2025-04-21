@@ -25,12 +25,12 @@ public object ExternalPkgKt {
   ) {
     public companion object {
       @kotlin.jvm.JvmSynthetic
-      @kotlin.PublishedApi
+    @kotlin.PublishedApi
       internal fun _create(builder: com.kcl.api.Spec.ExternalPkg.Builder): Dsl = Dsl(builder)
     }
 
     @kotlin.jvm.JvmSynthetic
-    @kotlin.PublishedApi
+  @kotlin.PublishedApi
     internal fun _build(): com.kcl.api.Spec.ExternalPkg = _builder.build()
 
     /**
@@ -42,10 +42,10 @@ public object ExternalPkgKt {
      */
     public var pkgName: kotlin.String
       @JvmName("getPkgName")
-      get() = _builder.getPkgName()
+      get() = _builder.pkgName
       @JvmName("setPkgName")
       set(value) {
-        _builder.setPkgName(value)
+        _builder.pkgName = value
       }
     /**
      * ```
@@ -67,10 +67,10 @@ public object ExternalPkgKt {
      */
     public var pkgPath: kotlin.String
       @JvmName("getPkgPath")
-      get() = _builder.getPkgPath()
+      get() = _builder.pkgPath
       @JvmName("setPkgPath")
       set(value) {
-        _builder.setPkgPath(value)
+        _builder.pkgPath = value
       }
     /**
      * ```

@@ -24,12 +24,12 @@ public object SymbolKt {
   ) {
     public companion object {
       @kotlin.jvm.JvmSynthetic
-      @kotlin.PublishedApi
+    @kotlin.PublishedApi
       internal fun _create(builder: com.kcl.api.Spec.Symbol.Builder): Dsl = Dsl(builder)
     }
 
     @kotlin.jvm.JvmSynthetic
-    @kotlin.PublishedApi
+  @kotlin.PublishedApi
     internal fun _build(): com.kcl.api.Spec.Symbol = _builder.build()
 
     /**
@@ -41,10 +41,10 @@ public object SymbolKt {
      */
     public var ty: com.kcl.api.Spec.KclType
       @JvmName("getTy")
-      get() = _builder.getTy()
+      get() = _builder.ty
       @JvmName("setTy")
       set(value) {
-        _builder.setTy(value)
+        _builder.ty = value
       }
     /**
      * ```
@@ -67,6 +67,7 @@ public object SymbolKt {
     public fun hasTy(): kotlin.Boolean {
       return _builder.hasTy()
     }
+
     public val SymbolKt.Dsl.tyOrNull: com.kcl.api.Spec.KclType?
       get() = _builder.tyOrNull
 
@@ -79,10 +80,10 @@ public object SymbolKt {
      */
     public var name: kotlin.String
       @JvmName("getName")
-      get() = _builder.getName()
+      get() = _builder.name
       @JvmName("setName")
       set(value) {
-        _builder.setName(value)
+        _builder.name = value
       }
     /**
      * ```
@@ -104,10 +105,10 @@ public object SymbolKt {
      */
     public var owner: com.kcl.api.Spec.SymbolIndex
       @JvmName("getOwner")
-      get() = _builder.getOwner()
+      get() = _builder.owner
       @JvmName("setOwner")
       set(value) {
-        _builder.setOwner(value)
+        _builder.owner = value
       }
     /**
      * ```
@@ -130,6 +131,7 @@ public object SymbolKt {
     public fun hasOwner(): kotlin.Boolean {
       return _builder.hasOwner()
     }
+
     public val SymbolKt.Dsl.ownerOrNull: com.kcl.api.Spec.SymbolIndex?
       get() = _builder.ownerOrNull
 
@@ -142,10 +144,10 @@ public object SymbolKt {
      */
     public var def: com.kcl.api.Spec.SymbolIndex
       @JvmName("getDef")
-      get() = _builder.getDef()
+      get() = _builder.def
       @JvmName("setDef")
       set(value) {
-        _builder.setDef(value)
+        _builder.def = value
       }
     /**
      * ```
@@ -168,6 +170,7 @@ public object SymbolKt {
     public fun hasDef(): kotlin.Boolean {
       return _builder.hasDef()
     }
+
     public val SymbolKt.Dsl.defOrNull: com.kcl.api.Spec.SymbolIndex?
       get() = _builder.defOrNull
 
@@ -187,7 +190,7 @@ public object SymbolKt {
      public val attrs: com.google.protobuf.kotlin.DslList<com.kcl.api.Spec.SymbolIndex, AttrsProxy>
       @kotlin.jvm.JvmSynthetic
       get() = com.google.protobuf.kotlin.DslList(
-        _builder.getAttrsList()
+        _builder.attrsList
       )
     /**
      * ```
@@ -280,10 +283,10 @@ public object SymbolKt {
      */
     public var isGlobal: kotlin.Boolean
       @JvmName("getIsGlobal")
-      get() = _builder.getIsGlobal()
+      get() = _builder.isGlobal
       @JvmName("setIsGlobal")
       set(value) {
-        _builder.setIsGlobal(value)
+        _builder.isGlobal = value
       }
     /**
      * ```

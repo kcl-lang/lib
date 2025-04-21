@@ -24,12 +24,12 @@ public object SymbolIndexKt {
   ) {
     public companion object {
       @kotlin.jvm.JvmSynthetic
-      @kotlin.PublishedApi
+    @kotlin.PublishedApi
       internal fun _create(builder: com.kcl.api.Spec.SymbolIndex.Builder): Dsl = Dsl(builder)
     }
 
     @kotlin.jvm.JvmSynthetic
-    @kotlin.PublishedApi
+  @kotlin.PublishedApi
     internal fun _build(): com.kcl.api.Spec.SymbolIndex = _builder.build()
 
     /**
@@ -41,10 +41,10 @@ public object SymbolIndexKt {
      */
     public var i: kotlin.Long
       @JvmName("getI")
-      get() = _builder.getI()
+      get() = _builder.i
       @JvmName("setI")
       set(value) {
-        _builder.setI(value)
+        _builder.i = value
       }
     /**
      * ```
@@ -66,10 +66,10 @@ public object SymbolIndexKt {
      */
     public var g: kotlin.Long
       @JvmName("getG")
-      get() = _builder.getG()
+      get() = _builder.g
       @JvmName("setG")
       set(value) {
-        _builder.setG(value)
+        _builder.g = value
       }
     /**
      * ```
@@ -91,10 +91,10 @@ public object SymbolIndexKt {
      */
     public var kind: kotlin.String
       @JvmName("getKind")
-      get() = _builder.getKind()
+      get() = _builder.kind
       @JvmName("setKind")
       set(value) {
-        _builder.setKind(value)
+        _builder.kind = value
       }
     /**
      * ```

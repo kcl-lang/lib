@@ -24,12 +24,12 @@ public object ListVariables_ResultKt {
   ) {
     public companion object {
       @kotlin.jvm.JvmSynthetic
-      @kotlin.PublishedApi
+    @kotlin.PublishedApi
       internal fun _create(builder: com.kcl.api.Spec.ListVariables_Result.Builder): Dsl = Dsl(builder)
     }
 
     @kotlin.jvm.JvmSynthetic
-    @kotlin.PublishedApi
+  @kotlin.PublishedApi
     internal fun _build(): com.kcl.api.Spec.ListVariables_Result = _builder.build()
 
     /**
@@ -49,7 +49,7 @@ public object ListVariables_ResultKt {
       @kotlin.jvm.JvmSynthetic
       @JvmName("getVariablesMap")
       get() = com.google.protobuf.kotlin.DslMap(
-        _builder.getVariablesMap()
+        _builder.variablesMap
       )
     /**
      * ```
@@ -134,7 +134,7 @@ public object ListVariables_ResultKt {
     public val unsupportedCodes: com.google.protobuf.kotlin.DslList<kotlin.String, UnsupportedCodesProxy>
       @kotlin.jvm.JvmSynthetic
       get() = com.google.protobuf.kotlin.DslList(
-        _builder.getUnsupportedCodesList()
+        _builder.unsupportedCodesList
       )
     /**
      * ```
@@ -231,7 +231,7 @@ public object ListVariables_ResultKt {
      public val parseErrors: com.google.protobuf.kotlin.DslList<com.kcl.api.Spec.Error, ParseErrorsProxy>
       @kotlin.jvm.JvmSynthetic
       get() = com.google.protobuf.kotlin.DslList(
-        _builder.getParseErrorsList()
+        _builder.parseErrorsList
       )
     /**
      * ```

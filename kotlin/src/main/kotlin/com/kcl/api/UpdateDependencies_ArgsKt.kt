@@ -24,12 +24,12 @@ public object UpdateDependencies_ArgsKt {
   ) {
     public companion object {
       @kotlin.jvm.JvmSynthetic
-      @kotlin.PublishedApi
+    @kotlin.PublishedApi
       internal fun _create(builder: com.kcl.api.Spec.UpdateDependencies_Args.Builder): Dsl = Dsl(builder)
     }
 
     @kotlin.jvm.JvmSynthetic
-    @kotlin.PublishedApi
+  @kotlin.PublishedApi
     internal fun _build(): com.kcl.api.Spec.UpdateDependencies_Args = _builder.build()
 
     /**
@@ -41,10 +41,10 @@ public object UpdateDependencies_ArgsKt {
      */
     public var manifestPath: kotlin.String
       @JvmName("getManifestPath")
-      get() = _builder.getManifestPath()
+      get() = _builder.manifestPath
       @JvmName("setManifestPath")
       set(value) {
-        _builder.setManifestPath(value)
+        _builder.manifestPath = value
       }
     /**
      * ```
@@ -66,10 +66,10 @@ public object UpdateDependencies_ArgsKt {
      */
     public var vendor: kotlin.Boolean
       @JvmName("getVendor")
-      get() = _builder.getVendor()
+      get() = _builder.vendor
       @JvmName("setVendor")
       set(value) {
-        _builder.setVendor(value)
+        _builder.vendor = value
       }
     /**
      * ```

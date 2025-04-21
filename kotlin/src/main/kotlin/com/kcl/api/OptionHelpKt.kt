@@ -24,12 +24,12 @@ public object OptionHelpKt {
   ) {
     public companion object {
       @kotlin.jvm.JvmSynthetic
-      @kotlin.PublishedApi
+    @kotlin.PublishedApi
       internal fun _create(builder: com.kcl.api.Spec.OptionHelp.Builder): Dsl = Dsl(builder)
     }
 
     @kotlin.jvm.JvmSynthetic
-    @kotlin.PublishedApi
+  @kotlin.PublishedApi
     internal fun _build(): com.kcl.api.Spec.OptionHelp = _builder.build()
 
     /**
@@ -41,10 +41,10 @@ public object OptionHelpKt {
      */
     public var name: kotlin.String
       @JvmName("getName")
-      get() = _builder.getName()
+      get() = _builder.name
       @JvmName("setName")
       set(value) {
-        _builder.setName(value)
+        _builder.name = value
       }
     /**
      * ```
@@ -66,10 +66,10 @@ public object OptionHelpKt {
      */
     public var type: kotlin.String
       @JvmName("getType")
-      get() = _builder.getType()
+      get() = _builder.type
       @JvmName("setType")
       set(value) {
-        _builder.setType(value)
+        _builder.type = value
       }
     /**
      * ```
@@ -91,10 +91,10 @@ public object OptionHelpKt {
      */
     public var required: kotlin.Boolean
       @JvmName("getRequired")
-      get() = _builder.getRequired()
+      get() = _builder.required
       @JvmName("setRequired")
       set(value) {
-        _builder.setRequired(value)
+        _builder.required = value
       }
     /**
      * ```
@@ -116,10 +116,10 @@ public object OptionHelpKt {
      */
     public var defaultValue: kotlin.String
       @JvmName("getDefaultValue")
-      get() = _builder.getDefaultValue()
+      get() = _builder.defaultValue
       @JvmName("setDefaultValue")
       set(value) {
-        _builder.setDefaultValue(value)
+        _builder.defaultValue = value
       }
     /**
      * ```
@@ -141,10 +141,10 @@ public object OptionHelpKt {
      */
     public var help: kotlin.String
       @JvmName("getHelp")
-      get() = _builder.getHelp()
+      get() = _builder.help
       @JvmName("setHelp")
       set(value) {
-        _builder.setHelp(value)
+        _builder.help = value
       }
     /**
      * ```

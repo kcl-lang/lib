@@ -24,12 +24,12 @@ public object LoadSettingsFiles_ResultKt {
   ) {
     public companion object {
       @kotlin.jvm.JvmSynthetic
-      @kotlin.PublishedApi
+    @kotlin.PublishedApi
       internal fun _create(builder: com.kcl.api.Spec.LoadSettingsFiles_Result.Builder): Dsl = Dsl(builder)
     }
 
     @kotlin.jvm.JvmSynthetic
-    @kotlin.PublishedApi
+  @kotlin.PublishedApi
     internal fun _build(): com.kcl.api.Spec.LoadSettingsFiles_Result = _builder.build()
 
     /**
@@ -41,10 +41,10 @@ public object LoadSettingsFiles_ResultKt {
      */
     public var kclCliConfigs: com.kcl.api.Spec.CliConfig
       @JvmName("getKclCliConfigs")
-      get() = _builder.getKclCliConfigs()
+      get() = _builder.kclCliConfigs
       @JvmName("setKclCliConfigs")
       set(value) {
-        _builder.setKclCliConfigs(value)
+        _builder.kclCliConfigs = value
       }
     /**
      * ```
@@ -67,6 +67,7 @@ public object LoadSettingsFiles_ResultKt {
     public fun hasKclCliConfigs(): kotlin.Boolean {
       return _builder.hasKclCliConfigs()
     }
+
     public val LoadSettingsFiles_ResultKt.Dsl.kclCliConfigsOrNull: com.kcl.api.Spec.CliConfig?
       get() = _builder.kclCliConfigsOrNull
 
@@ -86,7 +87,7 @@ public object LoadSettingsFiles_ResultKt {
      public val kclOptions: com.google.protobuf.kotlin.DslList<com.kcl.api.Spec.KeyValuePair, KclOptionsProxy>
       @kotlin.jvm.JvmSynthetic
       get() = com.google.protobuf.kotlin.DslList(
-        _builder.getKclOptionsList()
+        _builder.kclOptionsList
       )
     /**
      * ```

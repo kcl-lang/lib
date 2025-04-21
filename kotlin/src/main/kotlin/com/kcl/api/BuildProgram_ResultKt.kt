@@ -24,12 +24,12 @@ public object BuildProgram_ResultKt {
   ) {
     public companion object {
       @kotlin.jvm.JvmSynthetic
-      @kotlin.PublishedApi
+    @kotlin.PublishedApi
       internal fun _create(builder: com.kcl.api.Spec.BuildProgram_Result.Builder): Dsl = Dsl(builder)
     }
 
     @kotlin.jvm.JvmSynthetic
-    @kotlin.PublishedApi
+  @kotlin.PublishedApi
     internal fun _build(): com.kcl.api.Spec.BuildProgram_Result = _builder.build()
 
     /**
@@ -41,10 +41,10 @@ public object BuildProgram_ResultKt {
      */
     public var path: kotlin.String
       @JvmName("getPath")
-      get() = _builder.getPath()
+      get() = _builder.path
       @JvmName("setPath")
       set(value) {
-        _builder.setPath(value)
+        _builder.path = value
       }
     /**
      * ```

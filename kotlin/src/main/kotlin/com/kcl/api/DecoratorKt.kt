@@ -24,12 +24,12 @@ public object DecoratorKt {
   ) {
     public companion object {
       @kotlin.jvm.JvmSynthetic
-      @kotlin.PublishedApi
+    @kotlin.PublishedApi
       internal fun _create(builder: com.kcl.api.Spec.Decorator.Builder): Dsl = Dsl(builder)
     }
 
     @kotlin.jvm.JvmSynthetic
-    @kotlin.PublishedApi
+  @kotlin.PublishedApi
     internal fun _build(): com.kcl.api.Spec.Decorator = _builder.build()
 
     /**
@@ -41,10 +41,10 @@ public object DecoratorKt {
      */
     public var name: kotlin.String
       @JvmName("getName")
-      get() = _builder.getName()
+      get() = _builder.name
       @JvmName("setName")
       set(value) {
-        _builder.setName(value)
+        _builder.name = value
       }
     /**
      * ```
@@ -74,7 +74,7 @@ public object DecoratorKt {
     public val arguments: com.google.protobuf.kotlin.DslList<kotlin.String, ArgumentsProxy>
       @kotlin.jvm.JvmSynthetic
       get() = com.google.protobuf.kotlin.DslList(
-        _builder.getArgumentsList()
+        _builder.argumentsList
       )
     /**
      * ```
@@ -172,7 +172,7 @@ public object DecoratorKt {
       @kotlin.jvm.JvmSynthetic
       @JvmName("getKeywordsMap")
       get() = com.google.protobuf.kotlin.DslMap(
-        _builder.getKeywordsMap()
+        _builder.keywordsMap
       )
     /**
      * ```

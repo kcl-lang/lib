@@ -24,12 +24,12 @@ public object ScopeKt {
   ) {
     public companion object {
       @kotlin.jvm.JvmSynthetic
-      @kotlin.PublishedApi
+    @kotlin.PublishedApi
       internal fun _create(builder: com.kcl.api.Spec.Scope.Builder): Dsl = Dsl(builder)
     }
 
     @kotlin.jvm.JvmSynthetic
-    @kotlin.PublishedApi
+  @kotlin.PublishedApi
     internal fun _build(): com.kcl.api.Spec.Scope = _builder.build()
 
     /**
@@ -41,10 +41,10 @@ public object ScopeKt {
      */
     public var kind: kotlin.String
       @JvmName("getKind")
-      get() = _builder.getKind()
+      get() = _builder.kind
       @JvmName("setKind")
       set(value) {
-        _builder.setKind(value)
+        _builder.kind = value
       }
     /**
      * ```
@@ -66,10 +66,10 @@ public object ScopeKt {
      */
     public var parent: com.kcl.api.Spec.ScopeIndex
       @JvmName("getParent")
-      get() = _builder.getParent()
+      get() = _builder.parent
       @JvmName("setParent")
       set(value) {
-        _builder.setParent(value)
+        _builder.parent = value
       }
     /**
      * ```
@@ -92,6 +92,7 @@ public object ScopeKt {
     public fun hasParent(): kotlin.Boolean {
       return _builder.hasParent()
     }
+
     public val ScopeKt.Dsl.parentOrNull: com.kcl.api.Spec.ScopeIndex?
       get() = _builder.parentOrNull
 
@@ -104,10 +105,10 @@ public object ScopeKt {
      */
     public var owner: com.kcl.api.Spec.SymbolIndex
       @JvmName("getOwner")
-      get() = _builder.getOwner()
+      get() = _builder.owner
       @JvmName("setOwner")
       set(value) {
-        _builder.setOwner(value)
+        _builder.owner = value
       }
     /**
      * ```
@@ -130,6 +131,7 @@ public object ScopeKt {
     public fun hasOwner(): kotlin.Boolean {
       return _builder.hasOwner()
     }
+
     public val ScopeKt.Dsl.ownerOrNull: com.kcl.api.Spec.SymbolIndex?
       get() = _builder.ownerOrNull
 
@@ -149,7 +151,7 @@ public object ScopeKt {
      public val children: com.google.protobuf.kotlin.DslList<com.kcl.api.Spec.ScopeIndex, ChildrenProxy>
       @kotlin.jvm.JvmSynthetic
       get() = com.google.protobuf.kotlin.DslList(
-        _builder.getChildrenList()
+        _builder.childrenList
       )
     /**
      * ```
@@ -249,7 +251,7 @@ public object ScopeKt {
      public val defs: com.google.protobuf.kotlin.DslList<com.kcl.api.Spec.SymbolIndex, DefsProxy>
       @kotlin.jvm.JvmSynthetic
       get() = com.google.protobuf.kotlin.DslList(
-        _builder.getDefsList()
+        _builder.defsList
       )
     /**
      * ```

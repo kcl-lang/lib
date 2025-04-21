@@ -24,12 +24,12 @@ public object VariableKt {
   ) {
     public companion object {
       @kotlin.jvm.JvmSynthetic
-      @kotlin.PublishedApi
+    @kotlin.PublishedApi
       internal fun _create(builder: com.kcl.api.Spec.Variable.Builder): Dsl = Dsl(builder)
     }
 
     @kotlin.jvm.JvmSynthetic
-    @kotlin.PublishedApi
+  @kotlin.PublishedApi
     internal fun _build(): com.kcl.api.Spec.Variable = _builder.build()
 
     /**
@@ -41,10 +41,10 @@ public object VariableKt {
      */
     public var value: kotlin.String
       @JvmName("getValue")
-      get() = _builder.getValue()
+      get() = _builder.value
       @JvmName("setValue")
       set(value) {
-        _builder.setValue(value)
+        _builder.value = value
       }
     /**
      * ```
@@ -66,10 +66,10 @@ public object VariableKt {
      */
     public var typeName: kotlin.String
       @JvmName("getTypeName")
-      get() = _builder.getTypeName()
+      get() = _builder.typeName
       @JvmName("setTypeName")
       set(value) {
-        _builder.setTypeName(value)
+        _builder.typeName = value
       }
     /**
      * ```
@@ -91,10 +91,10 @@ public object VariableKt {
      */
     public var opSym: kotlin.String
       @JvmName("getOpSym")
-      get() = _builder.getOpSym()
+      get() = _builder.opSym
       @JvmName("setOpSym")
       set(value) {
-        _builder.setOpSym(value)
+        _builder.opSym = value
       }
     /**
      * ```
@@ -123,7 +123,7 @@ public object VariableKt {
      public val listItems: com.google.protobuf.kotlin.DslList<com.kcl.api.Spec.Variable, ListItemsProxy>
       @kotlin.jvm.JvmSynthetic
       get() = com.google.protobuf.kotlin.DslList(
-        _builder.getListItemsList()
+        _builder.listItemsList
       )
     /**
      * ```
@@ -223,7 +223,7 @@ public object VariableKt {
      public val dictEntries: com.google.protobuf.kotlin.DslList<com.kcl.api.Spec.MapEntry, DictEntriesProxy>
       @kotlin.jvm.JvmSynthetic
       get() = com.google.protobuf.kotlin.DslList(
-        _builder.getDictEntriesList()
+        _builder.dictEntriesList
       )
     /**
      * ```

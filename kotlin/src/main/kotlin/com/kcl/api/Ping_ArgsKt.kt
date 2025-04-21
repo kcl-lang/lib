@@ -24,12 +24,12 @@ public object Ping_ArgsKt {
   ) {
     public companion object {
       @kotlin.jvm.JvmSynthetic
-      @kotlin.PublishedApi
+    @kotlin.PublishedApi
       internal fun _create(builder: com.kcl.api.Spec.Ping_Args.Builder): Dsl = Dsl(builder)
     }
 
     @kotlin.jvm.JvmSynthetic
-    @kotlin.PublishedApi
+  @kotlin.PublishedApi
     internal fun _build(): com.kcl.api.Spec.Ping_Args = _builder.build()
 
     /**
@@ -41,10 +41,10 @@ public object Ping_ArgsKt {
      */
     public var value: kotlin.String
       @JvmName("getValue")
-      get() = _builder.getValue()
+      get() = _builder.value
       @JvmName("setValue")
       set(value) {
-        _builder.setValue(value)
+        _builder.value = value
       }
     /**
      * ```

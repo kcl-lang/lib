@@ -24,12 +24,12 @@ public object TestCaseInfoKt {
   ) {
     public companion object {
       @kotlin.jvm.JvmSynthetic
-      @kotlin.PublishedApi
+    @kotlin.PublishedApi
       internal fun _create(builder: com.kcl.api.Spec.TestCaseInfo.Builder): Dsl = Dsl(builder)
     }
 
     @kotlin.jvm.JvmSynthetic
-    @kotlin.PublishedApi
+  @kotlin.PublishedApi
     internal fun _build(): com.kcl.api.Spec.TestCaseInfo = _builder.build()
 
     /**
@@ -41,10 +41,10 @@ public object TestCaseInfoKt {
      */
     public var name: kotlin.String
       @JvmName("getName")
-      get() = _builder.getName()
+      get() = _builder.name
       @JvmName("setName")
       set(value) {
-        _builder.setName(value)
+        _builder.name = value
       }
     /**
      * ```
@@ -66,10 +66,10 @@ public object TestCaseInfoKt {
      */
     public var error: kotlin.String
       @JvmName("getError")
-      get() = _builder.getError()
+      get() = _builder.error
       @JvmName("setError")
       set(value) {
-        _builder.setError(value)
+        _builder.error = value
       }
     /**
      * ```
@@ -91,10 +91,10 @@ public object TestCaseInfoKt {
      */
     public var duration: kotlin.Long
       @JvmName("getDuration")
-      get() = _builder.getDuration()
+      get() = _builder.duration
       @JvmName("setDuration")
       set(value) {
-        _builder.setDuration(value)
+        _builder.duration = value
       }
     /**
      * ```
@@ -116,10 +116,10 @@ public object TestCaseInfoKt {
      */
     public var logMessage: kotlin.String
       @JvmName("getLogMessage")
-      get() = _builder.getLogMessage()
+      get() = _builder.logMessage
       @JvmName("setLogMessage")
       set(value) {
-        _builder.setLogMessage(value)
+        _builder.logMessage = value
       }
     /**
      * ```

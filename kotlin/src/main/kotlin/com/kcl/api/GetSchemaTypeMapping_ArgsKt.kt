@@ -24,12 +24,12 @@ public object GetSchemaTypeMapping_ArgsKt {
   ) {
     public companion object {
       @kotlin.jvm.JvmSynthetic
-      @kotlin.PublishedApi
+    @kotlin.PublishedApi
       internal fun _create(builder: com.kcl.api.Spec.GetSchemaTypeMapping_Args.Builder): Dsl = Dsl(builder)
     }
 
     @kotlin.jvm.JvmSynthetic
-    @kotlin.PublishedApi
+  @kotlin.PublishedApi
     internal fun _build(): com.kcl.api.Spec.GetSchemaTypeMapping_Args = _builder.build()
 
     /**
@@ -41,10 +41,10 @@ public object GetSchemaTypeMapping_ArgsKt {
      */
     public var execArgs: com.kcl.api.Spec.ExecProgram_Args
       @JvmName("getExecArgs")
-      get() = _builder.getExecArgs()
+      get() = _builder.execArgs
       @JvmName("setExecArgs")
       set(value) {
-        _builder.setExecArgs(value)
+        _builder.execArgs = value
       }
     /**
      * ```
@@ -67,6 +67,7 @@ public object GetSchemaTypeMapping_ArgsKt {
     public fun hasExecArgs(): kotlin.Boolean {
       return _builder.hasExecArgs()
     }
+
     public val GetSchemaTypeMapping_ArgsKt.Dsl.execArgsOrNull: com.kcl.api.Spec.ExecProgram_Args?
       get() = _builder.execArgsOrNull
 
@@ -79,10 +80,10 @@ public object GetSchemaTypeMapping_ArgsKt {
      */
     public var schemaName: kotlin.String
       @JvmName("getSchemaName")
-      get() = _builder.getSchemaName()
+      get() = _builder.schemaName
       @JvmName("setSchemaName")
       set(value) {
-        _builder.setSchemaName(value)
+        _builder.schemaName = value
       }
     /**
      * ```

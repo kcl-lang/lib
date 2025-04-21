@@ -24,12 +24,12 @@ public object CliConfigKt {
   ) {
     public companion object {
       @kotlin.jvm.JvmSynthetic
-      @kotlin.PublishedApi
+    @kotlin.PublishedApi
       internal fun _create(builder: com.kcl.api.Spec.CliConfig.Builder): Dsl = Dsl(builder)
     }
 
     @kotlin.jvm.JvmSynthetic
-    @kotlin.PublishedApi
+  @kotlin.PublishedApi
     internal fun _build(): com.kcl.api.Spec.CliConfig = _builder.build()
 
     /**
@@ -49,7 +49,7 @@ public object CliConfigKt {
     public val files: com.google.protobuf.kotlin.DslList<kotlin.String, FilesProxy>
       @kotlin.jvm.JvmSynthetic
       get() = com.google.protobuf.kotlin.DslList(
-        _builder.getFilesList()
+        _builder.filesList
       )
     /**
      * ```
@@ -139,10 +139,10 @@ public object CliConfigKt {
      */
     public var output: kotlin.String
       @JvmName("getOutput")
-      get() = _builder.getOutput()
+      get() = _builder.output
       @JvmName("setOutput")
       set(value) {
-        _builder.setOutput(value)
+        _builder.output = value
       }
     /**
      * ```
@@ -172,7 +172,7 @@ public object CliConfigKt {
     public val overrides: com.google.protobuf.kotlin.DslList<kotlin.String, OverridesProxy>
       @kotlin.jvm.JvmSynthetic
       get() = com.google.protobuf.kotlin.DslList(
-        _builder.getOverridesList()
+        _builder.overridesList
       )
     /**
      * ```
@@ -270,7 +270,7 @@ public object CliConfigKt {
     public val pathSelector: com.google.protobuf.kotlin.DslList<kotlin.String, PathSelectorProxy>
       @kotlin.jvm.JvmSynthetic
       get() = com.google.protobuf.kotlin.DslList(
-        _builder.getPathSelectorList()
+        _builder.pathSelectorList
       )
     /**
      * ```
@@ -360,10 +360,10 @@ public object CliConfigKt {
      */
     public var strictRangeCheck: kotlin.Boolean
       @JvmName("getStrictRangeCheck")
-      get() = _builder.getStrictRangeCheck()
+      get() = _builder.strictRangeCheck
       @JvmName("setStrictRangeCheck")
       set(value) {
-        _builder.setStrictRangeCheck(value)
+        _builder.strictRangeCheck = value
       }
     /**
      * ```
@@ -385,10 +385,10 @@ public object CliConfigKt {
      */
     public var disableNone: kotlin.Boolean
       @JvmName("getDisableNone")
-      get() = _builder.getDisableNone()
+      get() = _builder.disableNone
       @JvmName("setDisableNone")
       set(value) {
-        _builder.setDisableNone(value)
+        _builder.disableNone = value
       }
     /**
      * ```
@@ -410,10 +410,10 @@ public object CliConfigKt {
      */
     public var verbose: kotlin.Long
       @JvmName("getVerbose")
-      get() = _builder.getVerbose()
+      get() = _builder.verbose
       @JvmName("setVerbose")
       set(value) {
-        _builder.setVerbose(value)
+        _builder.verbose = value
       }
     /**
      * ```
@@ -435,10 +435,10 @@ public object CliConfigKt {
      */
     public var debug: kotlin.Boolean
       @JvmName("getDebug")
-      get() = _builder.getDebug()
+      get() = _builder.debug
       @JvmName("setDebug")
       set(value) {
-        _builder.setDebug(value)
+        _builder.debug = value
       }
     /**
      * ```
@@ -460,10 +460,10 @@ public object CliConfigKt {
      */
     public var sortKeys: kotlin.Boolean
       @JvmName("getSortKeys")
-      get() = _builder.getSortKeys()
+      get() = _builder.sortKeys
       @JvmName("setSortKeys")
       set(value) {
-        _builder.setSortKeys(value)
+        _builder.sortKeys = value
       }
     /**
      * ```
@@ -485,10 +485,10 @@ public object CliConfigKt {
      */
     public var showHidden: kotlin.Boolean
       @JvmName("getShowHidden")
-      get() = _builder.getShowHidden()
+      get() = _builder.showHidden
       @JvmName("setShowHidden")
       set(value) {
-        _builder.setShowHidden(value)
+        _builder.showHidden = value
       }
     /**
      * ```
@@ -510,10 +510,10 @@ public object CliConfigKt {
      */
     public var includeSchemaTypePath: kotlin.Boolean
       @JvmName("getIncludeSchemaTypePath")
-      get() = _builder.getIncludeSchemaTypePath()
+      get() = _builder.includeSchemaTypePath
       @JvmName("setIncludeSchemaTypePath")
       set(value) {
-        _builder.setIncludeSchemaTypePath(value)
+        _builder.includeSchemaTypePath = value
       }
     /**
      * ```
@@ -535,10 +535,10 @@ public object CliConfigKt {
      */
     public var fastEval: kotlin.Boolean
       @JvmName("getFastEval")
-      get() = _builder.getFastEval()
+      get() = _builder.fastEval
       @JvmName("setFastEval")
       set(value) {
-        _builder.setFastEval(value)
+        _builder.fastEval = value
       }
     /**
      * ```

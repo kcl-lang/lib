@@ -24,12 +24,12 @@ public object ExecProgram_ArgsKt {
   ) {
     public companion object {
       @kotlin.jvm.JvmSynthetic
-      @kotlin.PublishedApi
+    @kotlin.PublishedApi
       internal fun _create(builder: com.kcl.api.Spec.ExecProgram_Args.Builder): Dsl = Dsl(builder)
     }
 
     @kotlin.jvm.JvmSynthetic
-    @kotlin.PublishedApi
+  @kotlin.PublishedApi
     internal fun _build(): com.kcl.api.Spec.ExecProgram_Args = _builder.build()
 
     /**
@@ -41,10 +41,10 @@ public object ExecProgram_ArgsKt {
      */
     public var workDir: kotlin.String
       @JvmName("getWorkDir")
-      get() = _builder.getWorkDir()
+      get() = _builder.workDir
       @JvmName("setWorkDir")
       set(value) {
-        _builder.setWorkDir(value)
+        _builder.workDir = value
       }
     /**
      * ```
@@ -74,7 +74,7 @@ public object ExecProgram_ArgsKt {
     public val kFilenameList: com.google.protobuf.kotlin.DslList<kotlin.String, KFilenameListProxy>
       @kotlin.jvm.JvmSynthetic
       get() = com.google.protobuf.kotlin.DslList(
-        _builder.getKFilenameListList()
+        _builder.kFilenameListList
       )
     /**
      * ```
@@ -172,7 +172,7 @@ public object ExecProgram_ArgsKt {
     public val kCodeList: com.google.protobuf.kotlin.DslList<kotlin.String, KCodeListProxy>
       @kotlin.jvm.JvmSynthetic
       get() = com.google.protobuf.kotlin.DslList(
-        _builder.getKCodeListList()
+        _builder.kCodeListList
       )
     /**
      * ```
@@ -269,7 +269,7 @@ public object ExecProgram_ArgsKt {
      public val args: com.google.protobuf.kotlin.DslList<com.kcl.api.Spec.Argument, ArgsProxy>
       @kotlin.jvm.JvmSynthetic
       get() = com.google.protobuf.kotlin.DslList(
-        _builder.getArgsList()
+        _builder.argsList
       )
     /**
      * ```
@@ -370,7 +370,7 @@ public object ExecProgram_ArgsKt {
     public val overrides: com.google.protobuf.kotlin.DslList<kotlin.String, OverridesProxy>
       @kotlin.jvm.JvmSynthetic
       get() = com.google.protobuf.kotlin.DslList(
-        _builder.getOverridesList()
+        _builder.overridesList
       )
     /**
      * ```
@@ -460,10 +460,10 @@ public object ExecProgram_ArgsKt {
      */
     public var disableYamlResult: kotlin.Boolean
       @JvmName("getDisableYamlResult")
-      get() = _builder.getDisableYamlResult()
+      get() = _builder.disableYamlResult
       @JvmName("setDisableYamlResult")
       set(value) {
-        _builder.setDisableYamlResult(value)
+        _builder.disableYamlResult = value
       }
     /**
      * ```
@@ -485,10 +485,10 @@ public object ExecProgram_ArgsKt {
      */
     public var printOverrideAst: kotlin.Boolean
       @JvmName("getPrintOverrideAst")
-      get() = _builder.getPrintOverrideAst()
+      get() = _builder.printOverrideAst
       @JvmName("setPrintOverrideAst")
       set(value) {
-        _builder.setPrintOverrideAst(value)
+        _builder.printOverrideAst = value
       }
     /**
      * ```
@@ -510,10 +510,10 @@ public object ExecProgram_ArgsKt {
      */
     public var strictRangeCheck: kotlin.Boolean
       @JvmName("getStrictRangeCheck")
-      get() = _builder.getStrictRangeCheck()
+      get() = _builder.strictRangeCheck
       @JvmName("setStrictRangeCheck")
       set(value) {
-        _builder.setStrictRangeCheck(value)
+        _builder.strictRangeCheck = value
       }
     /**
      * ```
@@ -535,10 +535,10 @@ public object ExecProgram_ArgsKt {
      */
     public var disableNone: kotlin.Boolean
       @JvmName("getDisableNone")
-      get() = _builder.getDisableNone()
+      get() = _builder.disableNone
       @JvmName("setDisableNone")
       set(value) {
-        _builder.setDisableNone(value)
+        _builder.disableNone = value
       }
     /**
      * ```
@@ -560,10 +560,10 @@ public object ExecProgram_ArgsKt {
      */
     public var verbose: kotlin.Int
       @JvmName("getVerbose")
-      get() = _builder.getVerbose()
+      get() = _builder.verbose
       @JvmName("setVerbose")
       set(value) {
-        _builder.setVerbose(value)
+        _builder.verbose = value
       }
     /**
      * ```
@@ -585,10 +585,10 @@ public object ExecProgram_ArgsKt {
      */
     public var debug: kotlin.Int
       @JvmName("getDebug")
-      get() = _builder.getDebug()
+      get() = _builder.debug
       @JvmName("setDebug")
       set(value) {
-        _builder.setDebug(value)
+        _builder.debug = value
       }
     /**
      * ```
@@ -610,10 +610,10 @@ public object ExecProgram_ArgsKt {
      */
     public var sortKeys: kotlin.Boolean
       @JvmName("getSortKeys")
-      get() = _builder.getSortKeys()
+      get() = _builder.sortKeys
       @JvmName("setSortKeys")
       set(value) {
-        _builder.setSortKeys(value)
+        _builder.sortKeys = value
       }
     /**
      * ```
@@ -642,7 +642,7 @@ public object ExecProgram_ArgsKt {
      public val externalPkgs: com.google.protobuf.kotlin.DslList<com.kcl.api.Spec.ExternalPkg, ExternalPkgsProxy>
       @kotlin.jvm.JvmSynthetic
       get() = com.google.protobuf.kotlin.DslList(
-        _builder.getExternalPkgsList()
+        _builder.externalPkgsList
       )
     /**
      * ```
@@ -735,10 +735,10 @@ public object ExecProgram_ArgsKt {
      */
     public var includeSchemaTypePath: kotlin.Boolean
       @JvmName("getIncludeSchemaTypePath")
-      get() = _builder.getIncludeSchemaTypePath()
+      get() = _builder.includeSchemaTypePath
       @JvmName("setIncludeSchemaTypePath")
       set(value) {
-        _builder.setIncludeSchemaTypePath(value)
+        _builder.includeSchemaTypePath = value
       }
     /**
      * ```
@@ -760,10 +760,10 @@ public object ExecProgram_ArgsKt {
      */
     public var compileOnly: kotlin.Boolean
       @JvmName("getCompileOnly")
-      get() = _builder.getCompileOnly()
+      get() = _builder.compileOnly
       @JvmName("setCompileOnly")
       set(value) {
-        _builder.setCompileOnly(value)
+        _builder.compileOnly = value
       }
     /**
      * ```
@@ -785,10 +785,10 @@ public object ExecProgram_ArgsKt {
      */
     public var showHidden: kotlin.Boolean
       @JvmName("getShowHidden")
-      get() = _builder.getShowHidden()
+      get() = _builder.showHidden
       @JvmName("setShowHidden")
       set(value) {
-        _builder.setShowHidden(value)
+        _builder.showHidden = value
       }
     /**
      * ```
@@ -818,7 +818,7 @@ public object ExecProgram_ArgsKt {
     public val pathSelector: com.google.protobuf.kotlin.DslList<kotlin.String, PathSelectorProxy>
       @kotlin.jvm.JvmSynthetic
       get() = com.google.protobuf.kotlin.DslList(
-        _builder.getPathSelectorList()
+        _builder.pathSelectorList
       )
     /**
      * ```
@@ -908,10 +908,10 @@ public object ExecProgram_ArgsKt {
      */
     public var fastEval: kotlin.Boolean
       @JvmName("getFastEval")
-      get() = _builder.getFastEval()
+      get() = _builder.fastEval
       @JvmName("setFastEval")
       set(value) {
-        _builder.setFastEval(value)
+        _builder.fastEval = value
       }
     /**
      * ```

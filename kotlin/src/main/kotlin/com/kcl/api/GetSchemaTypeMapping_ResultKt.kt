@@ -24,12 +24,12 @@ public object GetSchemaTypeMapping_ResultKt {
   ) {
     public companion object {
       @kotlin.jvm.JvmSynthetic
-      @kotlin.PublishedApi
+    @kotlin.PublishedApi
       internal fun _create(builder: com.kcl.api.Spec.GetSchemaTypeMapping_Result.Builder): Dsl = Dsl(builder)
     }
 
     @kotlin.jvm.JvmSynthetic
-    @kotlin.PublishedApi
+  @kotlin.PublishedApi
     internal fun _build(): com.kcl.api.Spec.GetSchemaTypeMapping_Result = _builder.build()
 
     /**
@@ -49,7 +49,7 @@ public object GetSchemaTypeMapping_ResultKt {
       @kotlin.jvm.JvmSynthetic
       @JvmName("getSchemaTypeMappingMap")
       get() = com.google.protobuf.kotlin.DslMap(
-        _builder.getSchemaTypeMappingMap()
+        _builder.schemaTypeMappingMap
       )
     /**
      * ```

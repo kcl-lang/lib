@@ -24,12 +24,12 @@ public object RenameCode_ArgsKt {
   ) {
     public companion object {
       @kotlin.jvm.JvmSynthetic
-      @kotlin.PublishedApi
+    @kotlin.PublishedApi
       internal fun _create(builder: com.kcl.api.Spec.RenameCode_Args.Builder): Dsl = Dsl(builder)
     }
 
     @kotlin.jvm.JvmSynthetic
-    @kotlin.PublishedApi
+  @kotlin.PublishedApi
     internal fun _build(): com.kcl.api.Spec.RenameCode_Args = _builder.build()
 
     /**
@@ -41,10 +41,10 @@ public object RenameCode_ArgsKt {
      */
     public var packageRoot: kotlin.String
       @JvmName("getPackageRoot")
-      get() = _builder.getPackageRoot()
+      get() = _builder.packageRoot
       @JvmName("setPackageRoot")
       set(value) {
-        _builder.setPackageRoot(value)
+        _builder.packageRoot = value
       }
     /**
      * ```
@@ -66,10 +66,10 @@ public object RenameCode_ArgsKt {
      */
     public var symbolPath: kotlin.String
       @JvmName("getSymbolPath")
-      get() = _builder.getSymbolPath()
+      get() = _builder.symbolPath
       @JvmName("setSymbolPath")
       set(value) {
-        _builder.setSymbolPath(value)
+        _builder.symbolPath = value
       }
     /**
      * ```
@@ -99,7 +99,7 @@ public object RenameCode_ArgsKt {
       @kotlin.jvm.JvmSynthetic
       @JvmName("getSourceCodesMap")
       get() = com.google.protobuf.kotlin.DslMap(
-        _builder.getSourceCodesMap()
+        _builder.sourceCodesMap
       )
     /**
      * ```
@@ -176,10 +176,10 @@ public object RenameCode_ArgsKt {
      */
     public var newName: kotlin.String
       @JvmName("getNewName")
-      get() = _builder.getNewName()
+      get() = _builder.newName
       @JvmName("setNewName")
       set(value) {
-        _builder.setNewName(value)
+        _builder.newName = value
       }
     /**
      * ```

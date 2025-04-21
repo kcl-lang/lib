@@ -24,12 +24,12 @@ public object ListDepFiles_ResultKt {
   ) {
     public companion object {
       @kotlin.jvm.JvmSynthetic
-      @kotlin.PublishedApi
+    @kotlin.PublishedApi
       internal fun _create(builder: com.kcl.api.Spec.ListDepFiles_Result.Builder): Dsl = Dsl(builder)
     }
 
     @kotlin.jvm.JvmSynthetic
-    @kotlin.PublishedApi
+  @kotlin.PublishedApi
     internal fun _build(): com.kcl.api.Spec.ListDepFiles_Result = _builder.build()
 
     /**
@@ -41,10 +41,10 @@ public object ListDepFiles_ResultKt {
      */
     public var pkgroot: kotlin.String
       @JvmName("getPkgroot")
-      get() = _builder.getPkgroot()
+      get() = _builder.pkgroot
       @JvmName("setPkgroot")
       set(value) {
-        _builder.setPkgroot(value)
+        _builder.pkgroot = value
       }
     /**
      * ```
@@ -66,10 +66,10 @@ public object ListDepFiles_ResultKt {
      */
     public var pkgpath: kotlin.String
       @JvmName("getPkgpath")
-      get() = _builder.getPkgpath()
+      get() = _builder.pkgpath
       @JvmName("setPkgpath")
       set(value) {
-        _builder.setPkgpath(value)
+        _builder.pkgpath = value
       }
     /**
      * ```
@@ -99,7 +99,7 @@ public object ListDepFiles_ResultKt {
     public val files: com.google.protobuf.kotlin.DslList<kotlin.String, FilesProxy>
       @kotlin.jvm.JvmSynthetic
       get() = com.google.protobuf.kotlin.DslList(
-        _builder.getFilesList()
+        _builder.filesList
       )
     /**
      * ```
