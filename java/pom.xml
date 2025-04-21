@@ -58,7 +58,7 @@
         <dependency>
             <groupId>com.google.protobuf</groupId>
             <artifactId>protobuf-java</artifactId>
-            <version>${protobuf-java.version}</version>
+            <version>4.29.3</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
