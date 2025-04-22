@@ -6,6 +6,7 @@
     //
     // It is redundant to include "zig" in this name because it is already
     // within the Zig package namespace.
+    // https://github.com/ziglang/zig/issues/23104
     .name = .kcl_lib_zig,
 
     // This is a [Semantic Version](https://semver.org/).
@@ -24,6 +25,7 @@
     // original project's identity. Thus it is recommended to leave the comment
     // on the following line intact, so that it shows up in code reviews that
     // modify the field.
+    // https://github.com/ziglang/zig/issues/23104
     .fingerprint = 0x390d0670798df8c1, // Changing this has security and trust implications.
 
     // This field is optional.
