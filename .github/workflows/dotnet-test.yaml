@@ -176,4 +176,4 @@ jobs:
         if: "startsWith(github.ref, 'refs/tags/')"
         run: |
           cd dotnet/KclLib/bin/Release
-          dotnet nuget push KclLib.0.11.1.nupkg -k ${{ secrets.NUGET_API_KEY }} -s https://api.nuget.org/v3/index.json
+          dotnet nuget push KclLib.0.11.2.nupkg -k ${{ secrets.NUGET_API_KEY }} -s https://api.nuget.org/v3/index.json
