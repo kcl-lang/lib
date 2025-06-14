@@ -2,7 +2,8 @@ use anyhow::{anyhow, Result};
 use kclvm_evaluator::Evaluator;
 use kclvm_loader::{load_packages, LoadPackageOptions};
 use kclvm_parser::LoadProgramOptions;
-use kclvm_runtime::{Context, IndexMap, PluginFunction, ValueRef};
+use kclvm_primitives::IndexMap;
+use kclvm_runtime::{Context, PluginFunction, ValueRef};
 use std::{cell::RefCell, rc::Rc, sync::Arc};
 
 fn my_plugin_sum(_: &Context, args: &ValueRef, _: &ValueRef) -> Result<ValueRef> {
