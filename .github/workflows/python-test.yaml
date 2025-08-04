@@ -124,7 +124,7 @@ jobs:
       - name: Publish to PyPI
         # The issue https://github.com/pypa/gh-action-pypi-publish/issues/310 has not tagged a release yet
         # Use the commit hash to get the temporary fix
-        uses: pypa/gh-action-pypi-publish@e9ccbe5a211ba3e8363f472cae362b56b104e796
+        uses: pypa/gh-action-pypi-publish@d417ba7e7683fa9104c42abe611c1f2c93c0727d
         with:
           password: ${{ secrets.PYPI_API_TOKEN }}
           skip-existing: true
