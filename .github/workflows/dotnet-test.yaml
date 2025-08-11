@@ -129,31 +129,31 @@ jobs:
           components: clippy, rustfmt
 
       - name: Download windows x86_64 lib
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: kcl-lib-win-x64
           path: dotnet/KclLib/runtimes/win-x64/native
 
       - name: Download linux aarch_64 lib
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: kcl-lib-linux-arm64
           path: dotnet/KclLib/runtimes/linux-arm64/native
   
       - name: Download linux x86_64 lib
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: kcl-lib-linux-x64
           path: dotnet/KclLib/runtimes/linux-x64/native
 
       - name: Download darwin x86_64 lib
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: kcl-lib-osx-x64
           path: dotnet/KclLib/runtimes/osx-x64/native
   
       - name: Download darwin aarch_64 lib
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: kcl-lib-osx-arm64
           path: dotnet/KclLib/runtimes/osx-arm64/native
