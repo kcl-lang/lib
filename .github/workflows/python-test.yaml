@@ -105,19 +105,19 @@ jobs:
       id-token: write
     needs: [ macos, linux, windows ]
     steps:
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v5
         with:
           name: wheels-linux-x86_64-${{ github.run_id }}
           path: python/dist
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v5
         with:
           name: wheels-linux-aarch64-${{ github.run_id }}
           path: python/dist
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v5
         with:
           name: wheels-windows-${{ github.run_id }}
           path: python/dist
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v5
         with:
           name: wheels-macos-${{ github.run_id }}
           path: python/dist
