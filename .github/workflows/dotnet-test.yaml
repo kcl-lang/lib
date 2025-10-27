@@ -101,7 +101,7 @@ jobs:
         cargo build --release --target ${{ matrix.target }}
 
     - name: 'Upload artifact'
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v5
       with:
         name: kcl-lib-${{ matrix.classifier }}
         if-no-files-found: error
@@ -165,7 +165,7 @@ jobs:
           dotnet build
           dotnet pack
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v5
         with:
           name: KCL .NET Nuget Package
           path: |
