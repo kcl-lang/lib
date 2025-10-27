@@ -103,25 +103,25 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Download windows x86_64 lib
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v6
         with:
           name: kcl-lib-windows-x86_64
           path: kotlin/native
 
       - name: Download linux aarch_64 lib
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v6
         with:
           name: kcl-lib-linux-aarch_64
           path: kotlin/native
 
       - name: Download darwin x86_64 lib
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v6
         with:
           name: kcl-lib-osx-x86_64
           path: kotlin/native
 
       - name: Download darwin aarch_64 lib
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v6
         with:
           name: kcl-lib-osx-aarch_64
           path: kotlin/native
@@ -160,7 +160,7 @@ jobs:
           settings-path: ${{ github.workspace }} # location for the settings.xml file
 
       - name: Download Jar
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v6
         with:
           name: kcl-lib
           path: kotlin/release
