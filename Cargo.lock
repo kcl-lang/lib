@@ -714,68 +714,13 @@ dependencies = [
 ]
 
 [[package]]
-name = "encoding"
-version = "0.2.33"
+name = "encoding_rs"
+version = "0.8.35"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6b0d943856b990d12d3b55b359144ff341533e516d94098b1d3fc1ac666d36ec"
+checksum = "75030f3c4f45dafd7586dd6780965a8c7e8e285a5ecb86713e63a79c5b2766f3"
 dependencies = [
- "encoding-index-japanese",
- "encoding-index-korean",
- "encoding-index-simpchinese",
- "encoding-index-singlebyte",
- "encoding-index-tradchinese",
+ "cfg-if 1.0.0",
 ]
-
-[[package]]
-name = "encoding-index-japanese"
-version = "1.20141219.5"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "04e8b2ff42e9a05335dbf8b5c6f7567e5591d0d916ccef4e0b1710d32a0d0c91"
-dependencies = [
- "encoding_index_tests",
-]
-
-[[package]]
-name = "encoding-index-korean"
-version = "1.20141219.5"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "4dc33fb8e6bcba213fe2f14275f0963fd16f0a02c878e3095ecfdf5bee529d81"
-dependencies = [
- "encoding_index_tests",
-]
-
-[[package]]
-name = "encoding-index-simpchinese"
-version = "1.20141219.5"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d87a7194909b9118fc707194baa434a4e3b0fb6a5a757c73c3adb07aa25031f7"
-dependencies = [
- "encoding_index_tests",
-]
-
-[[package]]
-name = "encoding-index-singlebyte"
-version = "1.20141219.5"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "3351d5acffb224af9ca265f435b859c7c01537c0849754d3db3fdf2bfe2ae84a"
-dependencies = [
- "encoding_index_tests",
-]
-
-[[package]]
-name = "encoding-index-tradchinese"
-version = "1.20141219.5"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "fd0e20d5688ce3cab59eb3ef3a2083a5c77bf496cb798dc6fcdb75f323890c18"
-dependencies = [
- "encoding_index_tests",
-]
-
-[[package]]
-name = "encoding_index_tests"
-version = "0.1.4"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a246d82be1c9d791c5dfde9a2bd045fc3cbba3fa2b11ad558f27d01712f00569"
 
 [[package]]
 name = "enquote"
@@ -1687,7 +1632,7 @@ dependencies = [
 [[package]]
 name = "kcl-language-server"
 version = "0.11.2"
-source = "git+https://github.com/kcl-lang/kcl#68b4062e1f6b818b2fc64cfc69ef0a692b35943d"
+source = "git+https://github.com/kcl-lang/kcl#09775b7383dc0b50c7aa201f1c03af88aadd1d3b"
 dependencies = [
  "anyhow",
  "chrono",
@@ -1732,7 +1677,7 @@ dependencies = [
 [[package]]
 name = "kclvm-api"
 version = "0.11.2"
-source = "git+https://github.com/kcl-lang/kcl#68b4062e1f6b818b2fc64cfc69ef0a692b35943d"
+source = "git+https://github.com/kcl-lang/kcl#09775b7383dc0b50c7aa201f1c03af88aadd1d3b"
 dependencies = [
  "anyhow",
  "futures",
@@ -1772,7 +1717,7 @@ dependencies = [
 [[package]]
 name = "kclvm-ast"
 version = "0.11.2"
-source = "git+https://github.com/kcl-lang/kcl#68b4062e1f6b818b2fc64cfc69ef0a692b35943d"
+source = "git+https://github.com/kcl-lang/kcl#09775b7383dc0b50c7aa201f1c03af88aadd1d3b"
 dependencies = [
  "anyhow",
  "compiler_base_span",
@@ -1788,7 +1733,7 @@ dependencies = [
 [[package]]
 name = "kclvm-ast-pretty"
 version = "0.11.2"
-source = "git+https://github.com/kcl-lang/kcl#68b4062e1f6b818b2fc64cfc69ef0a692b35943d"
+source = "git+https://github.com/kcl-lang/kcl#09775b7383dc0b50c7aa201f1c03af88aadd1d3b"
 dependencies = [
  "compiler_base_macros",
  "compiler_base_session",
@@ -1802,7 +1747,7 @@ dependencies = [
 [[package]]
 name = "kclvm-compiler"
 version = "0.11.2"
-source = "git+https://github.com/kcl-lang/kcl#68b4062e1f6b818b2fc64cfc69ef0a692b35943d"
+source = "git+https://github.com/kcl-lang/kcl#09775b7383dc0b50c7aa201f1c03af88aadd1d3b"
 dependencies = [
  "bit-set",
  "bitflags 1.3.2",
@@ -1821,7 +1766,7 @@ dependencies = [
 [[package]]
 name = "kclvm-config"
 version = "0.11.2"
-source = "git+https://github.com/kcl-lang/kcl#68b4062e1f6b818b2fc64cfc69ef0a692b35943d"
+source = "git+https://github.com/kcl-lang/kcl#09775b7383dc0b50c7aa201f1c03af88aadd1d3b"
 dependencies = [
  "anyhow",
  "chrono",
@@ -1844,7 +1789,7 @@ dependencies = [
 [[package]]
 name = "kclvm-driver"
 version = "0.11.2"
-source = "git+https://github.com/kcl-lang/kcl#68b4062e1f6b818b2fc64cfc69ef0a692b35943d"
+source = "git+https://github.com/kcl-lang/kcl#09775b7383dc0b50c7aa201f1c03af88aadd1d3b"
 dependencies = [
  "anyhow",
  "flate2",
@@ -1867,7 +1812,7 @@ dependencies = [
 [[package]]
 name = "kclvm-error"
 version = "0.11.2"
-source = "git+https://github.com/kcl-lang/kcl#68b4062e1f6b818b2fc64cfc69ef0a692b35943d"
+source = "git+https://github.com/kcl-lang/kcl#09775b7383dc0b50c7aa201f1c03af88aadd1d3b"
 dependencies = [
  "annotate-snippets",
  "anyhow",
@@ -1882,14 +1827,14 @@ dependencies = [
  "serde",
  "serde_json",
  "termize",
- "thiserror 1.0.69",
+ "thiserror 2.0.17",
  "tracing",
 ]
 
 [[package]]
 name = "kclvm-evaluator"
 version = "0.11.2"
-source = "git+https://github.com/kcl-lang/kcl#68b4062e1f6b818b2fc64cfc69ef0a692b35943d"
+source = "git+https://github.com/kcl-lang/kcl#09775b7383dc0b50c7aa201f1c03af88aadd1d3b"
 dependencies = [
  "anyhow",
  "generational-arena",
@@ -1904,7 +1849,7 @@ dependencies = [
 [[package]]
 name = "kclvm-lexer"
 version = "0.11.2"
-source = "git+https://github.com/kcl-lang/kcl#68b4062e1f6b818b2fc64cfc69ef0a692b35943d"
+source = "git+https://github.com/kcl-lang/kcl#09775b7383dc0b50c7aa201f1c03af88aadd1d3b"
 dependencies = [
  "kclvm-error",
  "rustc_lexer",
@@ -1914,7 +1859,7 @@ dependencies = [
 [[package]]
 name = "kclvm-loader"
 version = "0.11.2"
-source = "git+https://github.com/kcl-lang/kcl#68b4062e1f6b818b2fc64cfc69ef0a692b35943d"
+source = "git+https://github.com/kcl-lang/kcl#09775b7383dc0b50c7aa201f1c03af88aadd1d3b"
 dependencies = [
  "anyhow",
  "kclvm-ast",
@@ -1931,7 +1876,7 @@ dependencies = [
 [[package]]
 name = "kclvm-macros"
 version = "0.11.2"
-source = "git+https://github.com/kcl-lang/kcl#68b4062e1f6b818b2fc64cfc69ef0a692b35943d"
+source = "git+https://github.com/kcl-lang/kcl#09775b7383dc0b50c7aa201f1c03af88aadd1d3b"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -1942,7 +1887,7 @@ dependencies = [
 [[package]]
 name = "kclvm-parser"
 version = "0.11.2"
-source = "git+https://github.com/kcl-lang/kcl#68b4062e1f6b818b2fc64cfc69ef0a692b35943d"
+source = "git+https://github.com/kcl-lang/kcl#09775b7383dc0b50c7aa201f1c03af88aadd1d3b"
 dependencies = [
  "anyhow",
  "bstr",
@@ -1976,7 +1921,7 @@ dependencies = [
 [[package]]
 name = "kclvm-primitives"
 version = "0.11.2"
-source = "git+https://github.com/kcl-lang/kcl#68b4062e1f6b818b2fc64cfc69ef0a692b35943d"
+source = "git+https://github.com/kcl-lang/kcl#09775b7383dc0b50c7aa201f1c03af88aadd1d3b"
 dependencies = [
  "indexmap 2.9.0",
  "rustc-hash 2.1.1",
@@ -1985,7 +1930,7 @@ dependencies = [
 [[package]]
 name = "kclvm-query"
 version = "0.11.2"
-source = "git+https://github.com/kcl-lang/kcl#68b4062e1f6b818b2fc64cfc69ef0a692b35943d"
+source = "git+https://github.com/kcl-lang/kcl#09775b7383dc0b50c7aa201f1c03af88aadd1d3b"
 dependencies = [
  "anyhow",
  "compiler_base_macros",
@@ -2006,7 +1951,7 @@ dependencies = [
 [[package]]
 name = "kclvm-runner"
 version = "0.11.2"
-source = "git+https://github.com/kcl-lang/kcl#68b4062e1f6b818b2fc64cfc69ef0a692b35943d"
+source = "git+https://github.com/kcl-lang/kcl#09775b7383dc0b50c7aa201f1c03af88aadd1d3b"
 dependencies = [
  "anyhow",
  "cc",
@@ -2041,7 +1986,7 @@ dependencies = [
 [[package]]
 name = "kclvm-runtime"
 version = "0.11.2"
-source = "git+https://github.com/kcl-lang/kcl#68b4062e1f6b818b2fc64cfc69ef0a692b35943d"
+source = "git+https://github.com/kcl-lang/kcl#09775b7383dc0b50c7aa201f1c03af88aadd1d3b"
 dependencies = [
  "anyhow",
  "base32",
@@ -2051,7 +1996,7 @@ dependencies = [
  "chrono",
  "cidr",
  "dns-lookup",
- "encoding",
+ "encoding_rs",
  "fancy-regex",
  "generational-arena",
  "glob",
@@ -2081,7 +2026,7 @@ dependencies = [
 [[package]]
 name = "kclvm-sema"
 version = "0.11.2"
-source = "git+https://github.com/kcl-lang/kcl#68b4062e1f6b818b2fc64cfc69ef0a692b35943d"
+source = "git+https://github.com/kcl-lang/kcl#09775b7383dc0b50c7aa201f1c03af88aadd1d3b"
 dependencies = [
  "anyhow",
  "bit-set",
@@ -2114,7 +2059,7 @@ dependencies = [
 [[package]]
 name = "kclvm-span"
 version = "0.11.2"
-source = "git+https://github.com/kcl-lang/kcl#68b4062e1f6b818b2fc64cfc69ef0a692b35943d"
+source = "git+https://github.com/kcl-lang/kcl#09775b7383dc0b50c7aa201f1c03af88aadd1d3b"
 dependencies = [
  "compiler_base_span",
  "kclvm-macros",
@@ -2125,7 +2070,7 @@ dependencies = [
 [[package]]
 name = "kclvm-tools"
 version = "0.11.2"
-source = "git+https://github.com/kcl-lang/kcl#68b4062e1f6b818b2fc64cfc69ef0a692b35943d"
+source = "git+https://github.com/kcl-lang/kcl#09775b7383dc0b50c7aa201f1c03af88aadd1d3b"
 dependencies = [
  "anyhow",
  "compiler_base_session",
@@ -2156,7 +2101,7 @@ dependencies = [
 [[package]]
 name = "kclvm-utils"
 version = "0.11.2"
-source = "git+https://github.com/kcl-lang/kcl#68b4062e1f6b818b2fc64cfc69ef0a692b35943d"
+source = "git+https://github.com/kcl-lang/kcl#09775b7383dc0b50c7aa201f1c03af88aadd1d3b"
 dependencies = [
  "anyhow",
  "fslock",
@@ -2166,7 +2111,7 @@ dependencies = [
 [[package]]
 name = "kclvm-version"
 version = "0.11.2"
-source = "git+https://github.com/kcl-lang/kcl#68b4062e1f6b818b2fc64cfc69ef0a692b35943d"
+source = "git+https://github.com/kcl-lang/kcl#09775b7383dc0b50c7aa201f1c03af88aadd1d3b"
 dependencies = [
  "vergen-gitcl",
 ]
@@ -2174,7 +2119,7 @@ dependencies = [
 [[package]]
 name = "kclvm_runtime_internal_macros"
 version = "0.5.0"
-source = "git+https://github.com/kcl-lang/kcl#68b4062e1f6b818b2fc64cfc69ef0a692b35943d"
+source = "git+https://github.com/kcl-lang/kcl#09775b7383dc0b50c7aa201f1c03af88aadd1d3b"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -2656,7 +2601,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "8b7cafe60d6cf8e62e1b9b2ea516a089c008945bb5a275416789e7db0bc199dc"
 dependencies = [
  "memchr",
- "thiserror 2.0.8",
+ "thiserror 2.0.17",
  "ucd-trie",
 ]
 
@@ -2813,7 +2758,7 @@ dependencies = [
 [[package]]
 name = "proc_macro_crate"
 version = "0.1.0"
-source = "git+https://github.com/kcl-lang/kcl#68b4062e1f6b818b2fc64cfc69ef0a692b35943d"
+source = "git+https://github.com/kcl-lang/kcl#09775b7383dc0b50c7aa201f1c03af88aadd1d3b"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -2877,7 +2822,7 @@ dependencies = [
 [[package]]
 name = "prost-wkt"
 version = "0.4.1"
-source = "git+https://github.com/kcl-lang/kcl#68b4062e1f6b818b2fc64cfc69ef0a692b35943d"
+source = "git+https://github.com/kcl-lang/kcl#09775b7383dc0b50c7aa201f1c03af88aadd1d3b"
 dependencies = [
  "chrono",
  "inventory",
@@ -2891,7 +2836,7 @@ dependencies = [
 [[package]]
 name = "prost-wkt-build"
 version = "0.4.1"
-source = "git+https://github.com/kcl-lang/kcl#68b4062e1f6b818b2fc64cfc69ef0a692b35943d"
+source = "git+https://github.com/kcl-lang/kcl#09775b7383dc0b50c7aa201f1c03af88aadd1d3b"
 dependencies = [
  "heck 0.4.1",
  "prost",
@@ -2903,7 +2848,7 @@ dependencies = [
 [[package]]
 name = "prost-wkt-types"
 version = "0.4.1"
-source = "git+https://github.com/kcl-lang/kcl#68b4062e1f6b818b2fc64cfc69ef0a692b35943d"
+source = "git+https://github.com/kcl-lang/kcl#09775b7383dc0b50c7aa201f1c03af88aadd1d3b"
 dependencies = [
  "chrono",
  "prost",
@@ -2980,7 +2925,7 @@ dependencies = [
  "rustc-hash 2.1.1",
  "rustls",
  "socket2",
- "thiserror 2.0.8",
+ "thiserror 2.0.17",
  "tokio",
  "tracing",
 ]
@@ -2999,7 +2944,7 @@ dependencies = [
  "rustls",
  "rustls-pki-types",
  "slab",
- "thiserror 2.0.8",
+ "thiserror 2.0.17",
  "tinyvec",
  "tracing",
  "web-time",
@@ -3553,18 +3498,28 @@ checksum = "388a1df253eca08550bef6c72392cfe7c30914bf41df5269b68cbd6ff8f570a3"
 
 [[package]]
 name = "serde"
-version = "1.0.216"
+version = "1.0.228"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0b9781016e935a97e8beecf0c933758c97a5520d32930e460142b4cd80c6338e"
+checksum = "9a8e94ea7f378bd32cbbd37198a4a91436180c5bb472411e48b5ec2e2124ae9e"
+dependencies = [
+ "serde_core",
+ "serde_derive",
+]
+
+[[package]]
+name = "serde_core"
+version = "1.0.228"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "41d385c7d4ca58e59fc732af25c3983b67ac852c1a25000afe1175de458b67ad"
 dependencies = [
  "serde_derive",
 ]
 
 [[package]]
 name = "serde_derive"
-version = "1.0.216"
+version = "1.0.228"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "46f859dbbf73865c6627ed570e78961cd3ac92407a2d117204c49232485da55e"
+checksum = "d540f220d3187173da220f885ab66608367b6574e925011a9353e4badda91d79"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -3573,13 +3528,15 @@ dependencies = [
 
 [[package]]
 name = "serde_json"
-version = "1.0.115"
+version = "1.0.145"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "12dc5c46daa8e9fdf4f5e71b6cf9a53f2487da0e86e55808e2d35539666497dd"
+checksum = "402a6f66d8c709116cf22f558eab210f5a50187f702eb4d7e5ef38d9a7f1c79c"
 dependencies = [
  "itoa",
+ "memchr",
  "ryu",
  "serde",
+ "serde_core",
 ]
 
 [[package]]
@@ -3935,11 +3892,11 @@ dependencies = [
 
 [[package]]
 name = "thiserror"
-version = "2.0.8"
+version = "2.0.17"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "08f5383f3e0071702bf93ab5ee99b52d26936be9dedd9413067cbdcddcb6141a"
+checksum = "f63587ca0f12b72a0600bcba1d40081f830876000bb46dd2337a3051618f4fc8"
 dependencies = [
- "thiserror-impl 2.0.8",
+ "thiserror-impl 2.0.17",
 ]
 
 [[package]]
@@ -3955,9 +3912,9 @@ dependencies = [
 
 [[package]]
 name = "thiserror-impl"
-version = "2.0.8"
+version = "2.0.17"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f2f357fcec90b3caef6623a099691be676d033b40a058ac95d2a6ade6fa0c943"
+checksum = "3ff15c8ecd7de3849db632e14d18d2571fa09dfc5ed93479bc4485c7a517c913"
 dependencies = [
  "proc-macro2",
  "quote",
