@@ -46,7 +46,7 @@ mod ffi {
     }
 
     /// kcl main.k -E name=path
-    #[derive(Debug, Default,Clone)]
+    #[derive(Debug, Default, Clone)]
     pub struct ExternalPkg {
         pub pkg_name: String,
         pub pkg_path: String,
@@ -1451,9 +1451,7 @@ fn lint_path(args: &LintPathArgs) -> Result<LintPathResult> {
     Ok(LintPathResult::new(result))
 }
 
-fn build_load_settings_files_args(
-    args: &LoadSettingsFilesArgs,
-) -> kcl_api::LoadSettingsFilesArgs {
+fn build_load_settings_files_args(args: &LoadSettingsFilesArgs) -> kcl_api::LoadSettingsFilesArgs {
     kcl_api::LoadSettingsFilesArgs {
         work_dir: args.work_dir.clone(),
         files: args.files.clone(),

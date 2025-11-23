@@ -327,9 +327,9 @@ static bool checkreturn read_raw_value(pb_istream_t* stream, pb_wire_type_t wire
 
     case PB_WT_STRING:
         /* Calling read_raw_value with a PB_WT_STRING is an error.
-             * Explicitly handle this case and fallthrough to default to avoid
-             * compiler warnings.
-             */
+         * Explicitly handle this case and fallthrough to default to avoid
+         * compiler warnings.
+         */
 
     default:
         PB_RETURN_ERROR(stream, "invalid wire_type");
@@ -494,12 +494,12 @@ static bool checkreturn decode_static_field(pb_istream_t* stream, pb_wire_type_t
     case PB_HTYPE_ONEOF:
         if (PB_LTYPE_IS_SUBMSG(field->type) && *(pb_size_t*)field->pSize != field->tag) {
             /* We memset to zero so that any callbacks are set to NULL.
-                 * This is because the callbacks might otherwise have values
-                 * from some other union field.
-                 * If callbacks are needed inside oneof field, use .proto
-                 * option submsg_callback to have a separate callback function
-                 * that can set the fields before submessage is decoded.
-                 * pb_dec_submessage() will set any default values. */
+             * This is because the callbacks might otherwise have values
+             * from some other union field.
+             * If callbacks are needed inside oneof field, use .proto
+             * option submsg_callback to have a separate callback function
+             * that can set the fields before submessage is decoded.
+             * pb_dec_submessage() will set any default values. */
             memset(field->pData, 0, (size_t)field->data_size);
 
             /* Set default values for the submessage fields. */
@@ -637,8 +637,8 @@ static bool checkreturn decode_pointer_field(pb_istream_t* stream, pb_wire_type_
 
                 if ((size_t)*size + 1 > allocated_size) {
                     /* Allocate more storage. This tries to guess the
-                         * number of remaining entries. Round the division
-                         * upwards. */
+                     * number of remaining entries. Round the division
+                     * upwards. */
                     size_t remain = (substream.bytes_left - 1) / field->data_size + 1;
                     if (remain < PB_SIZE_MAX - allocated_size)
                         allocated_size += remain;
@@ -1308,11 +1308,11 @@ static bool checkreturn pb_dec_varint(pb_istream_t* stream, const pb_field_iter_
                 return false;
 
             /* See issue 97: Google's C++ protobuf allows negative varint values to
-            * be cast as int32_t, instead of the int64_t that should be used when
-            * encoding. Nanopb versions before 0.2.5 had a bug in encoding. In order to
-            * not break decoding of such messages, we cast <=32 bit fields to
-            * int32_t first to get the sign correct.
-            */
+             * be cast as int32_t, instead of the int64_t that should be used when
+             * encoding. Nanopb versions before 0.2.5 had a bug in encoding. In order to
+             * not break decoding of such messages, we cast <=32 bit fields to
+             * int32_t first to get the sign correct.
+             */
             if (field->data_size == sizeof(pb_int64_t))
                 svalue = (pb_int64_t)value;
             else
