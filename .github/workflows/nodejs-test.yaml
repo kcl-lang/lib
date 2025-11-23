@@ -38,17 +38,15 @@ jobs:
 
       - uses: pnpm/action-setup@v4
         with:
-          version: 8
+          version: 10
 
       - name: Setup node
         uses: actions/setup-node@v6
         with:
-          node-version: '18'
-          cache: pnpm
-          cache-dependency-path: "nodejs/pnpm-lock.yaml"
+          node-version: '22'
 
       - name: Install dependencies
-        run: pnpm install --no-save --frozen-lockfile
+        run: pnpm i
 
       - name: Check format
         run: pnpm exec prettier --check .
@@ -107,15 +105,14 @@ jobs:
       - uses: actions/checkout@v5
       - uses: pnpm/action-setup@v4
         with:
-          version: 8
+          version: 10
       - name: Setup node
         uses: actions/setup-node@v6
         with:
-          node-version: '18'
-          cache: pnpm
-          cache-dependency-path: "nodejs/pnpm-lock.yaml"
+          node-version: '22'
+
       - name: Install dependencies
-        run: pnpm install --no-save --frozen-lockfile
+        run: pnpm i
       - name: Build
         shell: bash
         working-directory: .
@@ -148,15 +145,14 @@ jobs:
       - uses: actions/checkout@v5
       - uses: pnpm/action-setup@v4
         with:
-          version: 8
+          version: 10
       - name: Setup node
         uses: actions/setup-node@v6
         with:
-          node-version: '18'
-          cache: pnpm
-          cache-dependency-path: "nodejs/pnpm-lock.yaml"
+          node-version: '22'
+
       - name: Install dependencies
-        run: pnpm install --no-save --frozen-lockfile
+        run: pnpm i
       - name: Build
         shell: bash
         run: ${{ matrix.settings.build }}
@@ -198,15 +194,14 @@ jobs:
       - uses: actions/checkout@v5
       - uses: pnpm/action-setup@v4
         with:
-          version: 8
+          version: 10
       - name: Setup node
         uses: actions/setup-node@v6
         with:
-          node-version: '18'
-          cache: pnpm
-          cache-dependency-path: "nodejs/pnpm-lock.yaml"
+          node-version: '22'
+
       - name: Install dependencies
-        run: pnpm install --no-save --frozen-lockfile
+        run: pnpm i
       - name: Build
         run: ${{ matrix.settings.build }}
         shell: bash
@@ -231,16 +226,14 @@ jobs:
       - uses: actions/checkout@v5
       - uses: pnpm/action-setup@v4
         with:
-          version: 8
+          version: 10
       - name: Setup node
         uses: actions/setup-node@v6
         with:
-          node-version: "18"
-          cache: pnpm
-          cache-dependency-path: "nodejs/pnpm-lock.yaml"
+          node-version: "22"
 
       - name: Install dependencies
-        run: pnpm install --no-save --frozen-lockfile
+        run: pnpm i
 
       - name: Download all artifacts
         uses: actions/download-artifact@v6
