@@ -72,7 +72,13 @@ jobs:
               -e NAPI_TARGET=x86_64-unknown-linux-gnu \
               -w /build/nodejs \
               ghcr.io/napi-rs/napi-rs/nodejs-rust:lts-debian \
-              bash -c "corepack prepare pnpm@9.15.4 --activate && pnpm build"
+              bash -c "corepack prepare pnpm@9.15.4 --activate && 
+              rustup update 1.88 &&
+              rustup default 1.88 &&
+              cargo --version &&
+              cargo clean && 
+              cargo update && 
+              pnpm build"
               cd nodejs
               # change owner to current user
               sudo chown -R 1001:121 *.node
@@ -84,8 +90,11 @@ jobs:
               -w /build/nodejs \
               ghcr.io/napi-rs/napi-rs/nodejs-rust:lts-debian-aarch64 \
               bash -c "set -e &&
+              rustup update 1.88 &&
+              rustup default 1.88 &&
               rustup target add aarch64-unknown-linux-gnu && 
               corepack prepare pnpm@9.15.4 --activate && 
+              cargo --version &&
               cargo clean && 
               cargo update && 
               pnpm build --target aarch64-unknown-linux-gnu &&
