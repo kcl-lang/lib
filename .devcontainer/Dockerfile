@@ -9,7 +9,7 @@ RUN yum -y install git
 
 RUN yum -y install python3
 
-RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain 1.83.0
+RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain 1.88.0
 
 ENV PATH="/root/.cargo/bin:${PATH}"
 
