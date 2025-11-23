@@ -1,8 +1,8 @@
 package com.kcl;
 
 import com.kcl.api.API;
-import com.kcl.api.Spec.ExecProgram_Args;
-import com.kcl.api.Spec.ExecProgram_Result;
+import com.kcl.api.Spec.ExecProgramArgs;
+import com.kcl.api.Spec.ExecProgramResult;
 
 import java.util.Collections;
 
@@ -16,9 +16,9 @@ public class PluginTest {
             return (int) args[0] + (int) args[1];
         }));
         API api = new API();
-        ExecProgram_Args exec_args = ExecProgram_Args.newBuilder().addKFilenameList("./src/test_data/plugin/plugin.k")
+        ExecProgramArgs exec_args = ExecProgramArgs.newBuilder().addKFilenameList("./src/test_data/plugin/plugin.k")
                 .build();
-        ExecProgram_Result result = api.execProgram(exec_args);
+        ExecProgramResult result = api.execProgram(exec_args);
 
         Assert.assertEquals(result.getYamlResult(), "result: 2");
 

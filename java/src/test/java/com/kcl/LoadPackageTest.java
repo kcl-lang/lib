@@ -1,9 +1,9 @@
 package com.kcl;
 
 import com.kcl.api.API;
-import com.kcl.api.Spec.LoadPackage_Args;
-import com.kcl.api.Spec.LoadPackage_Result;
-import com.kcl.api.Spec.ParseProgram_Args;
+import com.kcl.api.Spec.LoadPackageArgs;
+import com.kcl.api.Spec.LoadPackageResult;
+import com.kcl.api.Spec.ParseProgramArgs;
 import com.kcl.api.Spec.Scope;
 import com.kcl.api.Spec.Symbol;
 import com.kcl.api.Spec.SymbolIndex;
@@ -20,9 +20,9 @@ public class LoadPackageTest {
     public void testProgramSymbols() throws Exception {
         // API instance
         API api = new API();
-        LoadPackage_Result result = api.loadPackage(LoadPackage_Args.newBuilder().setResolveAst(true)
+        LoadPackageResult result = api.loadPackage(LoadPackageArgs.newBuilder().setResolveAst(true)
                 .setWithAstIndex(true)
-                .setParseArgs(ParseProgram_Args.newBuilder().addPaths("./src/test_data/schema.k").build()).build());
+                .setParseArgs(ParseProgramArgs.newBuilder().addPaths("./src/test_data/schema.k").build()).build());
         // Get parse errors
         Assert.assertEquals(result.getParseErrorsList().size(), 0);
         // Get Type errors
@@ -57,9 +57,9 @@ public class LoadPackageTest {
         // API instance
         API api = new API();
         // Note call `loadPackageWithCache` here.
-        LoadPackage_Result result = api.loadPackageWithCache(LoadPackage_Args.newBuilder().setResolveAst(true)
+        LoadPackageResult result = api.loadPackageWithCache(LoadPackageArgs.newBuilder().setResolveAst(true)
                 .setWithAstIndex(true)
-                .setParseArgs(ParseProgram_Args.newBuilder().addPaths("./src/test_data/schema.k").build()).build());
+                .setParseArgs(ParseProgramArgs.newBuilder().addPaths("./src/test_data/schema.k").build()).build());
         // Get parse errors
         Assert.assertEquals(result.getParseErrorsList().size(), 0);
         // Get Type errors

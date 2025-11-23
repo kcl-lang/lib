@@ -14,7 +14,7 @@ Write the code
 using KclLib.API;
 
 var api = new API();
-var execArgs = new ExecProgram_Args();
+var execArgs = new ExecProgramArgs();
 var path = Path.Combine("test_data", "schema.k");
 execArgs.KFilenameList.Add(path);
 var result = api.ExecProgram(execArgs);
@@ -56,7 +56,7 @@ C# Code
 ```csharp
 using KclLib.API;
 
-var execArgs = new ExecProgram_Args();
+var execArgs = new ExecProgramArgs();
 var path = "schema.k"
 execArgs.KFilenameList.Add(path);
 var result = new API().ExecProgram(execArgs);
@@ -89,7 +89,7 @@ C# Code
 using KclLib.API;
 
 var path = "schema.k"
-var args = new ParseFile_Args { Path = path };
+var args = new ParseFileArgs { Path = path };
 var result = new API().ParseFile(args);
 ```
 
@@ -120,7 +120,7 @@ C# Code
 using KclLib.API;
 
 var path = "schema.k";
-var args = new ParseProgram_Args();
+var args = new ParseProgramArgs();
 args.Paths.Add(path);
 var result = new API().ListOptions(args);
 ```
@@ -152,9 +152,9 @@ C# Code
 using KclLib.API;
 
 var path = "schema.k";
-var args = new LoadPackage_Args();
+var args = new LoadPackageArgs();
 args.ResolveAst = true;
-args.ParseArgs = new ParseProgram_Args();
+args.ParseArgs = new ParseProgramArgs();
 args.ParseArgs.Paths.Add(path);
 var result = new API().LoadPackage(args);
 ```
@@ -186,7 +186,7 @@ C# Code
 using KclLib.API;
 
 var api = new API();
-var args = new ListVariables_Args();
+var args = new ListVariablesArgs();
 var path = "schema.k";
 args.Files.Add(path);
 var result = api.ListVariables(args);
@@ -218,7 +218,7 @@ C# Code
 using KclLib.API;
 
 var path = "options.k";
-var args = new ParseProgram_Args();
+var args = new ParseProgramArgs();
 args.Paths.Add(path);
 var result = new API().ListOptions(args);
 ```
@@ -250,9 +250,9 @@ C# Code
 using KclLib.API;
 
 var path = "schema.k";
-var execArgs = new ExecProgram_Args();
+var execArgs = new ExecProgramArgs();
 execArgs.KFilenameList.Add(path);
-var args = new GetSchemaTypeMapping_Args();
+var args = new GetSchemaTypeMappingArgs();
 args.ExecArgs = execArgs;
 var result = new API().GetSchemaTypeMapping(args);
 ```
@@ -282,7 +282,7 @@ C# Code
 ```csharp
 using KclLib.API;
 
-var args = new OverrideFile_Args
+var args = new OverrideFileArgs
 {
     File = "main.k",
 };
@@ -310,7 +310,7 @@ string sourceCode = "schema Person:\n" + "    name:   str\n" + "    age:    int\
 string expectedFormattedCode = "schema Person:\n" + "    name: str\n" + "    age: int\n\n" + "    check:\n"
     + "        0 < age < 120\n\n";
 var api = new API();
-var args = new FormatCode_Args();
+var args = new FormatCodeArgs();
 args.Source = sourceCode;
 var result = api.FormatCode(args);
 ```
@@ -342,7 +342,7 @@ C# Code
 using KclLib.API;
 
 var api = new API();
-var args = new FormatPath_Args();
+var args = new FormatPathArgs();
 var path = "format_path.k";
 args.Path = path;
 var result = api.FormatPath(args);
@@ -372,7 +372,7 @@ C# Code
 using KclLib.API;
 
 var path = "lint_path.k"
-var args = new LintPath_Args();
+var args = new LintPathArgs();
 args.Paths.Add(path);
 var result = new API().LintPath(args);
 bool foundWarning = result.Results.Any(warning => warning.Contains("Module 'math' imported but unused"));
@@ -401,7 +401,7 @@ schema Person:
         0 < age < 120
 ";
 string data = "{\"name\": \"Alice\", \"age\": 10}";
-var args = new ValidateCode_Args
+var args = new ValidateCodeArgs
 {
     Code = code,
     Data = data,
@@ -432,10 +432,10 @@ C# Code
 ```csharp
 using KclLib.API;
 
-Rename_Args args = Rename_Args.newBuilder().setPackageRoot(".").setSymbolPath("a")
+RenameArgs args = RenameArgs.newBuilder().setPackageRoot(".").setSymbolPath("a")
         .addFilePaths("main.k").setNewName("a2").build();
 API apiInstance = new API();
-Rename_Result result = apiInstance.rename(args);
+RenameResult result = apiInstance.rename(args);
 ```
 
 </p>
@@ -453,7 +453,7 @@ C# Code
 ```csharp
 using KclLib.API;
 
-var args = new RenameCode_Args
+var args = new RenameCodeArgs
 {
     PackageRoot = "/mock/path",
     SymbolPath = "a",
@@ -479,7 +479,7 @@ C# Code
 using KclLib.API;
 
 var pkg = Path.Combine(parentDirectory, "test_data", "testing");
-var args = new Test_Args();
+var args = new TestArgs();
 args.PkgList.Add(pkg + "/...");
 var result = new API().Test(args);
 ```
@@ -511,7 +511,7 @@ using KclLib.API;
 
 var workDir = ".";
 var settingsFile = "kcl.yaml";
-var args = new LoadSettingsFiles_Args
+var args = new LoadSettingsFilesArgs
 {
     WorkDir = workDir,
 };
@@ -548,7 +548,7 @@ C# Code
 using KclLib.API;
 
 var manifestPath = "module";
-var args = new UpdateDependencies_Args { ManifestPath = manifestPath };
+var args = new UpdateDependenciesArgs { ManifestPath = manifestPath };
 var result = new API().UpdateDependencies(args);
 ```
 
@@ -591,9 +591,9 @@ API api = new API();
 
 var manifestPath = "module";
 var testFile = Path.Combine(manifestPath, "main.k");
-var updateArgs = new UpdateDependencies_Args { ManifestPath = manifestPath };
+var updateArgs = new UpdateDependenciesArgs { ManifestPath = manifestPath };
 var depResult = new API().UpdateDependencies(updateArgs);
-var execArgs = new ExecProgram_Args();
+var execArgs = new ExecProgramArgs();
 execArgs.KFilenameList.Add(testFile);
 execArgs.ExternalPkgs.AddRange(depResult.ExternalPkgs);
 var execResult = new API().ExecProgram(execArgs);
@@ -614,7 +614,7 @@ C# Code
 ```csharp
 using KclLib.API;
 
-var result = new API().GetVersion(new GetVersion_Args());
+var result = new API().GetVersion(new GetVersionArgs());
 ```
 
 </p>

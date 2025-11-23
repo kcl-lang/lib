@@ -32,8 +32,8 @@ fn main() -> Result<()> {
 More Rust APIs can be found [here](https://github.com/kcl-lang/kcl). If you want to use the sub crate of KCL Rust core, you can run the following command.
 
 ```shell
-# Take the kclvm-runtime as an example.
-cargo add --git https://github.com/kcl-lang/kcl kclvm-runtime
+# Take the kcl-runtime as an example.
+cargo add --git https://github.com/kcl-lang/kcl kcl-runtime
 ```
 
 ### Go
@@ -56,7 +56,7 @@ import (
 
 func main() {
 	client := native.NewNativeServiceClient()
-	result, err := client.ExecProgram(&api.ExecProgram_Args{
+	result, err := client.ExecProgram(&api.ExecProgramArgs{
 		KFilenameList: []string{"main.k"},
 		KCodeList:     []string{"a = 1"},
 	})
@@ -95,7 +95,7 @@ This way you'll be able to import the above dependency to use the SDK.
 <dependency>
     <groupId>com.kcl</groupId>
     <artifactId>kcl-lib</artifactId>
-    <version>0.11.1-SNAPSHOT</version>
+    <version>0.12.0-SNAPSHOT</version>
 </dependency>
 ```
 
@@ -103,14 +103,14 @@ Write the code
 
 ```java
 import com.kcl.api.API;
-import com.kcl.api.Spec.ExecProgram_Args;
-import com.kcl.api.Spec.ExecProgram_Result;
+import com.kcl.api.Spec.ExecProgramArgs;
+import com.kcl.api.Spec.ExecProgramResult;
 
 public class ExecProgramTest {
     public static void main(String[] args) throws Exception {
         API api = new API();
-        ExecProgram_Result result = api
-                .execProgram(ExecProgram_Args.newBuilder().addKFilenameList("path/to/kcl.k").build());
+        ExecProgramResult result = api
+                .execProgram(ExecProgramArgs.newBuilder().addKFilenameList("path/to/kcl.k").build());
         System.out.println(result.getYamlResult());
     }
 }
@@ -128,7 +128,7 @@ Write the code
 using KclLib.API;
 
 var api = new API();
-var execArgs = new ExecProgram_Args();
+var execArgs = new ExecProgramArgs();
 var path = Path.Combine("test_data", "schema.k");
 execArgs.KFilenameList.Add(path);
 var result = api.ExecProgram(execArgs);
@@ -146,7 +146,7 @@ Write the code
 ```python
 import kcl_lib.api as api
 
-args = api.ExecProgram_Args(k_filename_list=["./tests/test_data/schema.k"])
+args = api.ExecProgramArgs(k_filename_list=["./tests/test_data/schema.k"])
 api = api.API()
 result = api.exec_program(args)
 print(result.yaml_result)
@@ -197,7 +197,7 @@ This way you'll be able to import the above dependency to use the SDK.
 <dependency>
     <groupId>com.kcl</groupId>
     <artifactId>kcl-lib</artifactId>
-    <version>0.11.1-SNAPSHOT</version>
+    <version>0.12.0-SNAPSHOT</version>
 </dependency>
 ```
 
@@ -218,7 +218,7 @@ val result = api.execProgram(args)
 import KclLib
 
 let api = API()
-var execArgs = ExecProgram_Args()
+var execArgs = ExecProgramArgs()
 execArgs.kFilenameList.append("schema.k")
 let result = try api.execProgram(execArgs)
 ```
@@ -231,7 +231,7 @@ For CMake, you can use FetchContent to add KCL C++ Lib to your project.
 FetchContent_Declare(
   kcl-lib
   GIT_REPOSITORY https://github.com/kcl-lang/lib.git
-  GIT_TAG        v0.11.1
+  GIT_TAG        v0.12.0
   SOURCE_SUBDIR  cpp
 )
 FetchContent_MakeAvailable(kcl-lib)

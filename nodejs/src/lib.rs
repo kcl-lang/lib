@@ -20,7 +20,7 @@ use std::collections::HashMap;
 /// - load_builtin: Flag indicating whether to load built-in modules.
 /// - with_ast_index: Flag indicating whether to include AST index.
 #[napi]
-pub struct LoadPackageArgs(kclvm_api::LoadPackageArgs);
+pub struct LoadPackageArgs(kcl_api::LoadPackageArgs);
 
 #[napi]
 impl LoadPackageArgs {
@@ -32,8 +32,8 @@ impl LoadPackageArgs {
         load_builtin: Option<bool>,
         with_ast_index: Option<bool>,
     ) -> Result<Self> {
-        Ok(Self(kclvm_api::LoadPackageArgs {
-            parse_args: Some(kclvm_api::ParseProgramArgs {
+        Ok(Self(kcl_api::LoadPackageArgs {
+            parse_args: Some(kcl_api::ParseProgramArgs {
                 paths,
                 sources,
                 ..Default::default()
@@ -49,7 +49,7 @@ impl LoadPackageArgs {
 /// model information including symbols, types, definitions, etc.
 #[napi]
 pub fn load_package(args: &LoadPackageArgs) -> Result<LoadPackageResult> {
-    let api = kclvm_api::API::default();
+    let api = kcl_api::API::default();
     api.load_package(&args.0)
         .map_err(|e| napi::bindgen_prelude::Error::from_reason(e.to_string()))
         .map(LoadPackageResult::new)
@@ -61,7 +61,7 @@ pub fn load_package(args: &LoadPackageArgs) -> Result<LoadPackageResult> {
 
 /// Message for execute program request arguments.
 #[napi]
-pub struct ExecProgramArgs(kclvm_api::ExecProgramArgs);
+pub struct ExecProgramArgs(kcl_api::ExecProgramArgs);
 
 #[napi]
 impl ExecProgramArgs {
@@ -82,7 +82,7 @@ impl ExecProgramArgs {
         path_selector: Option<Vec<String>>,
         fast_eval: Option<bool>,
     ) -> Result<Self> {
-        Ok(Self(kclvm_api::ExecProgramArgs {
+        Ok(Self(kcl_api::ExecProgramArgs {
             k_filename_list: paths,
             k_code_list: sources.unwrap_or_default(),
             work_dir: work_dir.unwrap_or_default(),
@@ -90,22 +90,22 @@ impl ExecProgramArgs {
                 .into_iter()
                 .flat_map(|vec| {
                     vec.into_iter()
-                        .map(|a| kclvm_api::Argument {
+                        .map(|a| kcl_api::Argument {
                             name: a.name.clone(),
                             value: a.value.clone(),
                         })
-                        .collect::<Vec<kclvm_api::Argument>>()
+                        .collect::<Vec<kcl_api::Argument>>()
                 })
                 .collect(),
             external_pkgs: external_pkgs
                 .into_iter()
                 .flat_map(|vec| {
                     vec.into_iter()
-                        .map(|e| kclvm_api::ExternalPkg {
+                        .map(|e| kcl_api::ExternalPkg {
                             pkg_name: e.pkg_name.clone(),
                             pkg_path: e.pkg_path.clone(),
                         })
-                        .collect::<Vec<kclvm_api::ExternalPkg>>()
+                        .collect::<Vec<kcl_api::ExternalPkg>>()
                 })
                 .collect(),
             overrides: overrides.unwrap_or_default(),
@@ -125,7 +125,7 @@ impl ExecProgramArgs {
 /// Execute KCL file with arguments and return the JSON/YAML result.
 #[napi]
 pub fn exec_program(args: &ExecProgramArgs) -> Result<ExecProgramResult> {
-    let api = kclvm_api::API::default();
+    let api = kcl_api::API::default();
     api.exec_program(&args.0)
         .map_err(|e| napi::bindgen_prelude::Error::from_reason(e.to_string()))
         .map(ExecProgramResult::new)
@@ -136,7 +136,7 @@ pub fn exec_program(args: &ExecProgramArgs) -> Result<ExecProgramResult> {
 */
 
 #[napi]
-pub struct ParseProgramArgs(kclvm_api::ParseProgramArgs);
+pub struct ParseProgramArgs(kcl_api::ParseProgramArgs);
 
 #[napi]
 impl ParseProgramArgs {
@@ -146,18 +146,18 @@ impl ParseProgramArgs {
         sources: Option<Vec<String>>,
         external_pkgs: Option<Vec<ExternalPkg>>,
     ) -> Result<Self> {
-        Ok(Self(kclvm_api::ParseProgramArgs {
+        Ok(Self(kcl_api::ParseProgramArgs {
             paths,
             sources: sources.unwrap_or_default(),
             external_pkgs: external_pkgs
                 .into_iter()
                 .flat_map(|vec| {
                     vec.into_iter()
-                        .map(|e| kclvm_api::ExternalPkg {
+                        .map(|e| kcl_api::ExternalPkg {
                             pkg_name: e.pkg_name.clone(),
                             pkg_path: e.pkg_path.clone(),
                         })
-                        .collect::<Vec<kclvm_api::ExternalPkg>>()
+                        .collect::<Vec<kcl_api::ExternalPkg>>()
                 })
                 .collect(),
         }))
@@ -167,7 +167,7 @@ impl ParseProgramArgs {
 /// Parse KCL program with entry files.
 #[napi]
 pub fn parse_program(args: &ParseProgramArgs) -> Result<ParseProgramResult> {
-    let api = kclvm_api::API::default();
+    let api = kcl_api::API::default();
     api.parse_program(&args.0)
         .map_err(|e| napi::bindgen_prelude::Error::from_reason(e.to_string()))
         .map(ParseProgramResult::new)
@@ -178,7 +178,7 @@ pub fn parse_program(args: &ParseProgramArgs) -> Result<ParseProgramResult> {
 */
 
 #[napi]
-pub struct ParseFileArgs(kclvm_api::ParseFileArgs);
+pub struct ParseFileArgs(kcl_api::ParseFileArgs);
 
 #[napi]
 impl ParseFileArgs {
@@ -188,18 +188,18 @@ impl ParseFileArgs {
         source: Option<String>,
         external_pkgs: Option<Vec<ExternalPkg>>,
     ) -> Result<Self> {
-        Ok(Self(kclvm_api::ParseFileArgs {
+        Ok(Self(kcl_api::ParseFileArgs {
             path,
             source: source.unwrap_or_default(),
             external_pkgs: external_pkgs
                 .into_iter()
                 .flat_map(|vec| {
                     vec.into_iter()
-                        .map(|e| kclvm_api::ExternalPkg {
+                        .map(|e| kcl_api::ExternalPkg {
                             pkg_name: e.pkg_name.clone(),
                             pkg_path: e.pkg_path.clone(),
                         })
-                        .collect::<Vec<kclvm_api::ExternalPkg>>()
+                        .collect::<Vec<kcl_api::ExternalPkg>>()
                 })
                 .collect(),
         }))
@@ -210,7 +210,7 @@ impl ParseFileArgs {
 /// and parse errors.
 #[napi]
 pub fn parse_file(args: &ParseFileArgs) -> Result<ParseFileResult> {
-    let api = kclvm_api::API::default();
+    let api = kcl_api::API::default();
     api.parse_file(&args.0)
         .map_err(|e| napi::bindgen_prelude::Error::from_reason(e.to_string()))
         .map(ParseFileResult::new)
@@ -221,13 +221,13 @@ pub fn parse_file(args: &ParseFileArgs) -> Result<ParseFileResult> {
 */
 
 #[napi]
-pub struct ListOptionsArgs(kclvm_api::ParseProgramArgs);
+pub struct ListOptionsArgs(kcl_api::ParseProgramArgs);
 
 #[napi]
 impl ListOptionsArgs {
     #[napi(constructor)]
     pub fn new(paths: Vec<String>, sources: Option<Vec<String>>) -> Result<Self> {
-        Ok(Self(kclvm_api::ParseProgramArgs {
+        Ok(Self(kcl_api::ParseProgramArgs {
             paths,
             sources: sources.unwrap_or_default(),
             ..Default::default()
@@ -238,7 +238,7 @@ impl ListOptionsArgs {
 /// Provides users with the ability to parse kcl program and get all option information.
 #[napi]
 pub fn list_options(args: &ListOptionsArgs) -> Result<ListOptionsResult> {
-    let api = kclvm_api::API::default();
+    let api = kcl_api::API::default();
     api.list_options(&args.0)
         .map_err(|e| napi::bindgen_prelude::Error::from_reason(e.to_string()))
         .map(ListOptionsResult::new)
@@ -249,7 +249,7 @@ pub fn list_options(args: &ListOptionsArgs) -> Result<ListOptionsResult> {
 */
 
 #[napi]
-pub struct ListVariablesArgs(kclvm_api::ListVariablesArgs);
+pub struct ListVariablesArgs(kcl_api::ListVariablesArgs);
 
 #[napi]
 impl ListVariablesArgs {
@@ -259,10 +259,10 @@ impl ListVariablesArgs {
         specs: Vec<String>,
         opts: Option<ListVariablesOptions>,
     ) -> Result<Self> {
-        Ok(Self(kclvm_api::ListVariablesArgs {
+        Ok(Self(kcl_api::ListVariablesArgs {
             files,
             specs,
-            options: opts.map(|o| kclvm_api::ListVariablesOptions {
+            options: opts.map(|o| kcl_api::ListVariablesOptions {
                 merge_program: o.merge_program,
             }),
         }))
@@ -273,7 +273,7 @@ impl ListVariablesArgs {
 /// all variables by specs.
 #[napi]
 pub fn list_variables(args: &ListVariablesArgs) -> Result<ListVariablesResult> {
-    let api = kclvm_api::API::default();
+    let api = kcl_api::API::default();
     api.list_variables(&args.0)
         .map_err(|e| napi::bindgen_prelude::Error::from_reason(e.to_string()))
         .map(ListVariablesResult::new)
@@ -284,13 +284,13 @@ pub fn list_variables(args: &ListVariablesArgs) -> Result<ListVariablesResult> {
 */
 
 #[napi]
-pub struct OverrideFileArgs(kclvm_api::OverrideFileArgs);
+pub struct OverrideFileArgs(kcl_api::OverrideFileArgs);
 
 #[napi]
 impl OverrideFileArgs {
     #[napi(constructor)]
     pub fn new(file: String, specs: Vec<String>, import_paths: Vec<String>) -> Result<Self> {
-        Ok(Self(kclvm_api::OverrideFileArgs {
+        Ok(Self(kcl_api::OverrideFileArgs {
             file,
             specs,
             import_paths,
@@ -303,7 +303,7 @@ impl OverrideFileArgs {
 /// for more override spec guide.
 #[napi]
 pub fn override_file(args: &OverrideFileArgs) -> Result<OverrideFileResult> {
-    let api = kclvm_api::API::default();
+    let api = kcl_api::API::default();
     api.override_file(&args.0)
         .map_err(|e| napi::bindgen_prelude::Error::from_reason(e.to_string()))
         .map(OverrideFileResult::new)
@@ -314,7 +314,7 @@ pub fn override_file(args: &OverrideFileArgs) -> Result<OverrideFileResult> {
 */
 
 #[napi]
-pub struct GetSchemaTypeMappingArgs(kclvm_api::GetSchemaTypeMappingArgs);
+pub struct GetSchemaTypeMappingArgs(kcl_api::GetSchemaTypeMappingArgs);
 
 #[napi]
 impl GetSchemaTypeMappingArgs {
@@ -324,8 +324,8 @@ impl GetSchemaTypeMappingArgs {
         work_dir: Option<String>,
         schema_name: Option<String>,
     ) -> Result<Self> {
-        Ok(Self(kclvm_api::GetSchemaTypeMappingArgs {
-            exec_args: Some(kclvm_api::ExecProgramArgs {
+        Ok(Self(kcl_api::GetSchemaTypeMappingArgs {
+            exec_args: Some(kcl_api::ExecProgramArgs {
                 work_dir: work_dir.unwrap_or_default(),
                 k_filename_list: paths,
                 ..Default::default()
@@ -340,7 +340,7 @@ impl GetSchemaTypeMappingArgs {
 pub fn get_schema_type_mapping(
     args: &GetSchemaTypeMappingArgs,
 ) -> Result<GetSchemaTypeMappingResult> {
-    let api = kclvm_api::API::default();
+    let api = kcl_api::API::default();
     api.get_schema_type_mapping(&args.0)
         .map_err(|e| napi::bindgen_prelude::Error::from_reason(e.to_string()))
         .map(GetSchemaTypeMappingResult::new)
@@ -351,20 +351,20 @@ pub fn get_schema_type_mapping(
 */
 
 #[napi]
-pub struct FormatCodeArgs(kclvm_api::FormatCodeArgs);
+pub struct FormatCodeArgs(kcl_api::FormatCodeArgs);
 
 #[napi]
 impl FormatCodeArgs {
     #[napi(constructor)]
     pub fn new(source: String) -> Result<Self> {
-        Ok(Self(kclvm_api::FormatCodeArgs { source }))
+        Ok(Self(kcl_api::FormatCodeArgs { source }))
     }
 }
 
 /// Format KCL file or directory path contains KCL files and returns the changed file paths.
 #[napi]
 pub fn format_code(args: &FormatCodeArgs) -> Result<FormatCodeResult> {
-    let api = kclvm_api::API::default();
+    let api = kcl_api::API::default();
     api.format_code(&args.0)
         .map_err(|e| napi::bindgen_prelude::Error::from_reason(e.to_string()))
         .map(FormatCodeResult::new)
@@ -375,20 +375,20 @@ pub fn format_code(args: &FormatCodeArgs) -> Result<FormatCodeResult> {
 */
 
 #[napi]
-pub struct FormatPathArgs(kclvm_api::FormatPathArgs);
+pub struct FormatPathArgs(kcl_api::FormatPathArgs);
 
 #[napi]
 impl FormatPathArgs {
     #[napi(constructor)]
     pub fn new(path: String) -> Result<Self> {
-        Ok(Self(kclvm_api::FormatPathArgs { path }))
+        Ok(Self(kcl_api::FormatPathArgs { path }))
     }
 }
 
 /// Format KCL file or directory path contains KCL files and returns the changed file paths.
 #[napi]
 pub fn format_path(args: &FormatPathArgs) -> Result<FormatPathResult> {
-    let api = kclvm_api::API::default();
+    let api = kcl_api::API::default();
     api.format_path(&args.0)
         .map_err(|e| napi::bindgen_prelude::Error::from_reason(e.to_string()))
         .map(FormatPathResult::new)
@@ -399,20 +399,20 @@ pub fn format_path(args: &FormatPathArgs) -> Result<FormatPathResult> {
 */
 
 #[napi]
-pub struct LintPathArgs(kclvm_api::LintPathArgs);
+pub struct LintPathArgs(kcl_api::LintPathArgs);
 
 #[napi]
 impl LintPathArgs {
     #[napi(constructor)]
     pub fn new(paths: Vec<String>) -> Result<Self> {
-        Ok(Self(kclvm_api::LintPathArgs { paths }))
+        Ok(Self(kcl_api::LintPathArgs { paths }))
     }
 }
 
 /// Lint files and return error messages including errors and warnings.
 #[napi]
 pub fn lint_path(args: &LintPathArgs) -> Result<LintPathResult> {
-    let api = kclvm_api::API::default();
+    let api = kcl_api::API::default();
     api.lint_path(&args.0)
         .map_err(|e| napi::bindgen_prelude::Error::from_reason(e.to_string()))
         .map(LintPathResult::new)
@@ -423,7 +423,7 @@ pub fn lint_path(args: &LintPathArgs) -> Result<LintPathResult> {
 */
 
 #[napi]
-pub struct ValidateCodeArgs(kclvm_api::ValidateCodeArgs);
+pub struct ValidateCodeArgs(kcl_api::ValidateCodeArgs);
 
 #[napi]
 impl ValidateCodeArgs {
@@ -438,7 +438,7 @@ impl ValidateCodeArgs {
         format: Option<String>,
         external_pkgs: Option<Vec<ExternalPkg>>,
     ) -> Result<Self> {
-        Ok(Self(kclvm_api::ValidateCodeArgs {
+        Ok(Self(kcl_api::ValidateCodeArgs {
             datafile: datafile.unwrap_or_default(),
             data: data.unwrap_or_default(),
             file: file.unwrap_or_default(),
@@ -450,11 +450,11 @@ impl ValidateCodeArgs {
                 .into_iter()
                 .flat_map(|vec| {
                     vec.into_iter()
-                        .map(|e| kclvm_api::ExternalPkg {
+                        .map(|e| kcl_api::ExternalPkg {
                             pkg_name: e.pkg_name.clone(),
                             pkg_path: e.pkg_path.clone(),
                         })
-                        .collect::<Vec<kclvm_api::ExternalPkg>>()
+                        .collect::<Vec<kcl_api::ExternalPkg>>()
                 })
                 .collect(),
         }))
@@ -464,7 +464,7 @@ impl ValidateCodeArgs {
 /// Validate code using schema and data strings.
 #[napi]
 pub fn validate_code(args: &ValidateCodeArgs) -> Result<ValidateCodeResult> {
-    let api = kclvm_api::API::default();
+    let api = kcl_api::API::default();
     api.validate_code(&args.0)
         .map_err(|e| napi::bindgen_prelude::Error::from_reason(e.to_string()))
         .map(ValidateCodeResult::new)
@@ -475,20 +475,20 @@ pub fn validate_code(args: &ValidateCodeArgs) -> Result<ValidateCodeResult> {
 */
 
 #[napi]
-pub struct LoadSettingsFilesArgs(kclvm_api::LoadSettingsFilesArgs);
+pub struct LoadSettingsFilesArgs(kcl_api::LoadSettingsFilesArgs);
 
 #[napi]
 impl LoadSettingsFilesArgs {
     #[napi(constructor)]
     pub fn new(work_dir: String, files: Vec<String>) -> Result<Self> {
-        Ok(Self(kclvm_api::LoadSettingsFilesArgs { work_dir, files }))
+        Ok(Self(kcl_api::LoadSettingsFilesArgs { work_dir, files }))
     }
 }
 
 /// Load the setting file config defined in `kcl.yaml`
 #[napi]
 pub fn load_settings_files(args: &LoadSettingsFilesArgs) -> Result<LoadSettingsFilesResult> {
-    let api = kclvm_api::API::default();
+    let api = kcl_api::API::default();
     api.load_settings_files(&args.0)
         .map_err(|e| napi::bindgen_prelude::Error::from_reason(e.to_string()))
         .map(LoadSettingsFilesResult::new)
@@ -499,7 +499,7 @@ pub fn load_settings_files(args: &LoadSettingsFilesArgs) -> Result<LoadSettingsF
 */
 
 #[napi]
-pub struct RenameArgs(kclvm_api::RenameArgs);
+pub struct RenameArgs(kcl_api::RenameArgs);
 
 #[napi]
 impl RenameArgs {
@@ -510,7 +510,7 @@ impl RenameArgs {
         file_paths: Vec<String>,
         new_name: String,
     ) -> Result<Self> {
-        Ok(Self(kclvm_api::RenameArgs {
+        Ok(Self(kcl_api::RenameArgs {
             package_root,
             symbol_path,
             file_paths,
@@ -523,7 +523,7 @@ impl RenameArgs {
 /// Return the file paths that got changed.
 #[napi]
 pub fn rename(args: &RenameArgs) -> Result<RenameResult> {
-    let api = kclvm_api::API::default();
+    let api = kcl_api::API::default();
     api.rename(&args.0)
         .map_err(|e| napi::bindgen_prelude::Error::from_reason(e.to_string()))
         .map(RenameResult::new)
@@ -534,7 +534,7 @@ pub fn rename(args: &RenameArgs) -> Result<RenameResult> {
 */
 
 #[napi]
-pub struct RenameCodeArgs(kclvm_api::RenameCodeArgs);
+pub struct RenameCodeArgs(kcl_api::RenameCodeArgs);
 
 #[napi]
 impl RenameCodeArgs {
@@ -545,7 +545,7 @@ impl RenameCodeArgs {
         source_codes: HashMap<String, String>,
         new_name: String,
     ) -> Result<Self> {
-        Ok(Self(kclvm_api::RenameCodeArgs {
+        Ok(Self(kcl_api::RenameCodeArgs {
             package_root,
             symbol_path,
             source_codes,
@@ -558,7 +558,7 @@ impl RenameCodeArgs {
 /// rewrite files but return the changed code.
 #[napi]
 pub fn rename_code(args: &RenameCodeArgs) -> Result<RenameCodeResult> {
-    let api = kclvm_api::API::default();
+    let api = kcl_api::API::default();
     api.rename_code(&args.0)
         .map_err(|e| napi::bindgen_prelude::Error::from_reason(e.to_string()))
         .map(RenameCodeResult::new)
@@ -569,7 +569,7 @@ pub fn rename_code(args: &RenameCodeArgs) -> Result<RenameCodeResult> {
 */
 
 #[napi]
-pub struct TestArgs(kclvm_api::TestArgs);
+pub struct TestArgs(kcl_api::TestArgs);
 
 #[napi]
 impl TestArgs {
@@ -581,8 +581,8 @@ impl TestArgs {
         work_dir: Option<String>,
         paths: Option<Vec<String>>,
     ) -> Result<Self> {
-        Ok(Self(kclvm_api::TestArgs {
-            exec_args: Some(kclvm_api::ExecProgramArgs {
+        Ok(Self(kcl_api::TestArgs {
+            exec_args: Some(kcl_api::ExecProgramArgs {
                 work_dir: work_dir.unwrap_or_default(),
                 k_filename_list: paths.unwrap_or_default(),
                 ..Default::default()
@@ -597,7 +597,7 @@ impl TestArgs {
 /// Test KCL packages with test arguments.
 #[napi]
 pub fn test(args: &TestArgs) -> Result<TestResult> {
-    let api = kclvm_api::API::default();
+    let api = kcl_api::API::default();
     api.test(&args.0)
         .map_err(|e| napi::bindgen_prelude::Error::from_reason(e.to_string()))
         .map(TestResult::new)
@@ -608,13 +608,13 @@ pub fn test(args: &TestArgs) -> Result<TestResult> {
 */
 
 #[napi]
-pub struct UpdateDependenciesArgs(kclvm_api::UpdateDependenciesArgs);
+pub struct UpdateDependenciesArgs(kcl_api::UpdateDependenciesArgs);
 
 #[napi]
 impl UpdateDependenciesArgs {
     #[napi(constructor)]
     pub fn new(manifest_path: String, vendor: bool) -> Result<Self> {
-        Ok(Self(kclvm_api::UpdateDependenciesArgs {
+        Ok(Self(kcl_api::UpdateDependenciesArgs {
             manifest_path,
             vendor,
         }))
@@ -625,7 +625,7 @@ impl UpdateDependenciesArgs {
 /// external package name and location list.
 #[napi]
 pub fn update_dependencies(args: &UpdateDependenciesArgs) -> Result<UpdateDependenciesResult> {
-    let api = kclvm_api::API::default();
+    let api = kcl_api::API::default();
     api.update_dependencies(&args.0)
         .map_err(|e| napi::bindgen_prelude::Error::from_reason(e.to_string()))
         .map(UpdateDependenciesResult::new)
@@ -638,8 +638,8 @@ pub fn update_dependencies(args: &UpdateDependenciesArgs) -> Result<UpdateDepend
 /// Return the KCL service version information.
 #[napi]
 pub fn get_version() -> Result<GetVersionResult> {
-    let api = kclvm_api::API::default();
-    api.get_version(&kclvm_api::GetVersionArgs {})
+    let api = kcl_api::API::default();
+    api.get_version(&kcl_api::GetVersionArgs {})
         .map_err(|e| napi::bindgen_prelude::Error::from_reason(e.to_string()))
         .map(GetVersionResult::new)
 }

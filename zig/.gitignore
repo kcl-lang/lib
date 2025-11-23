@@ -13,11 +13,7 @@ zz_*
 /_build*
 *.dylib
 *.lock
-.kclvm
 
-# KCL cache and temp output
-.kclvm
-.kclvm_cov
 *.dylib
 *.so
 *.dll

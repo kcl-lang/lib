@@ -2,6 +2,7 @@
 // NO CHECKED-IN PROTOBUF GENCODE
 // source: spec.proto
 
+@file:com.google.protobuf.Generated
 // Generated files should ignore deprecation warnings
 @file:Suppress("DEPRECATION")
 package com.kcl.api;
@@ -47,7 +48,7 @@ public object VariableListKt {
      */
      public val variables: com.google.protobuf.kotlin.DslList<com.kcl.api.Spec.Variable, VariablesProxy>
       @kotlin.jvm.JvmSynthetic
-      get() = com.google.protobuf.kotlin.DslList(
+  get() = com.google.protobuf.kotlin.DslList(
         _builder.variablesList
       )
     /**
@@ -59,7 +60,7 @@ public object VariableListKt {
      * @param value The variables to add.
      */
     @kotlin.jvm.JvmSynthetic
-    @kotlin.jvm.JvmName("addVariables")
+@kotlin.jvm.JvmName("addVariables")
     public fun com.google.protobuf.kotlin.DslList<com.kcl.api.Spec.Variable, VariablesProxy>.add(value: com.kcl.api.Spec.Variable) {
       _builder.addVariables(value)
     }
@@ -72,7 +73,7 @@ public object VariableListKt {
      * @param value The variables to add.
      */
     @kotlin.jvm.JvmSynthetic
-    @kotlin.jvm.JvmName("plusAssignVariables")
+@kotlin.jvm.JvmName("plusAssignVariables")
     @Suppress("NOTHING_TO_INLINE")
     public inline operator fun com.google.protobuf.kotlin.DslList<com.kcl.api.Spec.Variable, VariablesProxy>.plusAssign(value: com.kcl.api.Spec.Variable) {
       add(value)
@@ -86,7 +87,7 @@ public object VariableListKt {
      * @param values The variables to add.
      */
     @kotlin.jvm.JvmSynthetic
-    @kotlin.jvm.JvmName("addAllVariables")
+@kotlin.jvm.JvmName("addAllVariables")
     public fun com.google.protobuf.kotlin.DslList<com.kcl.api.Spec.Variable, VariablesProxy>.addAll(values: kotlin.collections.Iterable<com.kcl.api.Spec.Variable>) {
       _builder.addAllVariables(values)
     }
@@ -99,7 +100,7 @@ public object VariableListKt {
      * @param values The variables to add.
      */
     @kotlin.jvm.JvmSynthetic
-    @kotlin.jvm.JvmName("plusAssignAllVariables")
+@kotlin.jvm.JvmName("plusAssignAllVariables")
     @Suppress("NOTHING_TO_INLINE")
     public inline operator fun com.google.protobuf.kotlin.DslList<com.kcl.api.Spec.Variable, VariablesProxy>.plusAssign(values: kotlin.collections.Iterable<com.kcl.api.Spec.Variable>) {
       addAll(values)
@@ -114,7 +115,7 @@ public object VariableListKt {
      * @param value The variables to set.
      */
     @kotlin.jvm.JvmSynthetic
-    @kotlin.jvm.JvmName("setVariables")
+@kotlin.jvm.JvmName("setVariables")
     public operator fun com.google.protobuf.kotlin.DslList<com.kcl.api.Spec.Variable, VariablesProxy>.set(index: kotlin.Int, value: com.kcl.api.Spec.Variable) {
       _builder.setVariables(index, value)
     }
@@ -126,11 +127,10 @@ public object VariableListKt {
      * `repeated .com.kcl.api.Variable variables = 1;`
      */
     @kotlin.jvm.JvmSynthetic
-    @kotlin.jvm.JvmName("clearVariables")
+@kotlin.jvm.JvmName("clearVariables")
     public fun com.google.protobuf.kotlin.DslList<com.kcl.api.Spec.Variable, VariablesProxy>.clear() {
       _builder.clearVariables()
     }
-
   }
 }
 @kotlin.jvm.JvmSynthetic

@@ -6,7 +6,7 @@ This repo is under development, PRs welcome!
 
 ### Prerequisites
 
-+ Zig 0.13.0+
++ Zig 0.15.0+
 
 ### Build and Test
 

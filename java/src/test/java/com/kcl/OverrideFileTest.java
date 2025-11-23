@@ -1,8 +1,8 @@
 package com.kcl;
 
 import com.kcl.api.API;
-import com.kcl.api.Spec.OverrideFile_Args;
-import com.kcl.api.Spec.OverrideFile_Result;
+import com.kcl.api.Spec.OverrideFileArgs;
+import com.kcl.api.Spec.OverrideFileResult;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -28,7 +28,7 @@ public class OverrideFileTest {
         Files.copy(source, target);
 
         for (String spec : testCases) {
-            OverrideFile_Result result = api.overrideFile(OverrideFile_Args.newBuilder()
+            OverrideFileResult result = api.overrideFile(OverrideFileArgs.newBuilder()
                     .setFile("./src/test_data/override_file/main.k").addSpecs(spec).build());
 
             Assert.assertEquals(result.getResult(), true);

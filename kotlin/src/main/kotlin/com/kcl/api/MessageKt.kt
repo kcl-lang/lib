@@ -2,6 +2,7 @@
 // NO CHECKED-IN PROTOBUF GENCODE
 // source: spec.proto
 
+@file:com.google.protobuf.Generated
 // Generated files should ignore deprecation warnings
 @file:Suppress("DEPRECATION")
 package com.kcl.api;
@@ -40,10 +41,10 @@ public object MessageKt {
      * `string msg = 1;`
      */
     public var msg: kotlin.String
-      @JvmName("getMsg")
-      get() = _builder.msg
-      @JvmName("setMsg")
-      set(value) {
+      @kotlin.jvm.JvmName("getMsg")
+        get() = _builder.msg
+      @kotlin.jvm.JvmName("setMsg")
+        set(value) {
         _builder.msg = value
       }
     /**
@@ -65,10 +66,10 @@ public object MessageKt {
      * `.com.kcl.api.Position pos = 2;`
      */
     public var pos: com.kcl.api.Spec.Position
-      @JvmName("getPos")
-      get() = _builder.pos
-      @JvmName("setPos")
-      set(value) {
+      @kotlin.jvm.JvmName("getPos")
+        get() = _builder.pos
+      @kotlin.jvm.JvmName("setPos")
+        set(value) {
         _builder.pos = value
       }
     /**

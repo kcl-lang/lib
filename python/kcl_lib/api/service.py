@@ -1,48 +1,48 @@
 import kcl_lib
 import kcl_lib.plugin as plugin
 from .spec_pb2 import (
-    Ping_Args,
-    Ping_Result,
-    GetVersion_Args,
-    GetVersion_Result,
-    ParseFile_Args,
-    ParseFile_Result,
-    ParseProgram_Args,
-    ParseProgram_Result,
-    LoadPackage_Args,
-    LoadPackage_Result,
-    ListOptions_Result,
-    ExecProgram_Args,
-    ExecProgram_Result,
-    BuildProgram_Args,
-    BuildProgram_Result,
-    ExecArtifact_Args,
-    FormatCode_Args,
-    FormatCode_Result,
-    FormatPath_Args,
-    FormatPath_Result,
-    LintPath_Args,
-    LintPath_Result,
-    OverrideFile_Args,
-    OverrideFile_Result,
-    ListVariables_Args,
-    ListVariables_Result,
-    GetSchemaTypeMapping_Args,
-    GetSchemaTypeMapping_Result,
-    ValidateCode_Args,
-    ValidateCode_Result,
-    ListDepFiles_Args,
-    ListDepFiles_Result,
-    LoadSettingsFiles_Args,
-    LoadSettingsFiles_Result,
-    Rename_Args,
-    Rename_Result,
-    RenameCode_Args,
-    RenameCode_Result,
-    Test_Args,
-    Test_Result,
-    UpdateDependencies_Args,
-    UpdateDependencies_Result,
+    PingArgs,
+    PingResult,
+    GetVersionArgs,
+    GetVersionResult,
+    ParseFileArgs,
+    ParseFileResult,
+    ParseProgramArgs,
+    ParseProgramResult,
+    LoadPackageArgs,
+    LoadPackageResult,
+    ListOptionsResult,
+    ExecProgramArgs,
+    ExecProgramResult,
+    BuildProgramArgs,
+    BuildProgramResult,
+    ExecArtifactArgs,
+    FormatCodeArgs,
+    FormatCodeResult,
+    FormatPathArgs,
+    FormatPathResult,
+    LintPathArgs,
+    LintPathResult,
+    OverrideFileArgs,
+    OverrideFileResult,
+    ListVariablesArgs,
+    ListVariablesResult,
+    GetSchemaTypeMappingArgs,
+    GetSchemaTypeMappingResult,
+    ValidateCodeArgs,
+    ValidateCodeResult,
+    ListDepFilesArgs,
+    ListDepFilesResult,
+    LoadSettingsFilesArgs,
+    LoadSettingsFilesResult,
+    RenameArgs,
+    RenameResult,
+    RenameCodeArgs,
+    RenameCodeResult,
+    TestArgs,
+    TestResult,
+    UpdateDependenciesArgs,
+    UpdateDependenciesResult,
 )
 from google.protobuf import message as _message
 
@@ -56,7 +56,7 @@ class API:
 
     ```python
     import kcl_lib.api as api
-    args = api.ExecProgram_Args(k_filename_list=["a.k"])
+    args = api.ExecProgramArgs(k_filename_list=["a.k"])
     api = api.API()
 
     result = api.exec_program(args)
@@ -67,10 +67,10 @@ class API:
     def __init__(self, plugin_agent: int = plugin.plugin_agent_addr):
         self.plugin_agent = plugin_agent
 
-    def ping(self, args: Ping_Args) -> Ping_Result:
-        return self.call("KclvmService.Ping", args)
+    def ping(self, args: PingArgs) -> PingResult:
+        return self.call("KclService.Ping", args)
 
-    def parse_program(self, args: ParseProgram_Args) -> ParseProgram_Result:
+    def parse_program(self, args: ParseProgramArgs) -> ParseProgramResult:
         """Parse KCL program with entry files and return the AST JSON string.
 
         ## Example
@@ -90,16 +90,16 @@ class API:
         ```python
         import kcl_lib.api as api
 
-        args = api.ParseProgram_Args(paths=["schema.k"])
+        args = api.ParseProgramArgs(paths=["schema.k"])
         api = api.API()
         result = api.parse_program(args)
         assert len(result.paths) == 1
         assert len(result.errors) == 0
         ```
         """
-        return self.call("KclvmService.ParseProgram", args)
+        return self.call("KclService.ParseProgram", args)
 
-    def exec_program(self, args: ExecProgram_Args) -> ExecProgram_Result:
+    def exec_program(self, args: ExecProgramArgs) -> ExecProgramResult:
         """Execute KCL file with arguments and return the JSON/YAML result.
 
         ## Examples
@@ -119,7 +119,7 @@ class API:
         ```python
         import kcl_lib.api as api
 
-        args = api.ExecProgram_Args(k_filename_list=["schema.k"])
+        args = api.ExecProgramArgs(k_filename_list=["schema.k"])
         api = api.API()
         result = api.exec_program(args)
         ```
@@ -129,7 +129,7 @@ class API:
         ```python
         import kcl_lib.api as api
         try:
-            args = api.ExecProgram_Args(k_filename_list=["file_not_found"])
+            args = api.ExecProgramArgs(k_filename_list=["file_not_found"])
             api = api.API()
             result = api.exec_program(args)
             assert False
@@ -137,9 +137,9 @@ class API:
             assert "Cannot find the kcl file" in str(err)
         ```
         """
-        return self.call("KclvmService.ExecProgram", args)
+        return self.call("KclService.ExecProgram", args)
 
-    def parse_file(self, args: ParseFile_Args) -> ParseFile_Result:
+    def parse_file(self, args: ParseFileArgs) -> ParseFileResult:
         """Parse KCL single file to Module AST JSON string with import dependencies and parse errors.
 
         ## Example
@@ -159,16 +159,16 @@ class API:
         ```python
         import kcl_lib.api as api
 
-        args = api.ParseProgram_Args(paths=[TEST_FILE])
+        args = api.ParseProgramArgs(paths=[TEST_FILE])
         api = api.API()
         result = api.parse_program(args)
         assert len(result.paths) == 1
         assert len(result.errors) == 0
         ```
         """
-        return self.call("KclvmService.ParseFile", args)
+        return self.call("KclService.ParseFile", args)
 
-    def parse_program(self, args: ParseProgram_Args) -> ParseProgram_Result:
+    def parse_program(self, args: ParseProgramArgs) -> ParseProgramResult:
         """Parse KCL program with entry files and return the AST JSON string.
 
         ## Example
@@ -188,16 +188,16 @@ class API:
         ```python
         import kcl_lib.api as api
 
-        args = api.ParseProgram_Args(paths=["schema.k"])
+        args = api.ParseProgramArgs(paths=["schema.k"])
         api = api.API()
         result = api.parse_program(args)
         assert len(result.paths) == 1
         assert len(result.errors) == 0
         ```
         """
-        return self.call("KclvmService.ParseProgram", args)
+        return self.call("KclService.ParseProgram", args)
 
-    def load_package(self, args: LoadPackage_Args) -> LoadPackage_Result:
+    def load_package(self, args: LoadPackageArgs) -> LoadPackageResult:
         """load_package provides users with the ability to parse KCL program and semantic model information including symbols, types, definitions, etc.
 
         ## Example
@@ -216,17 +216,17 @@ class API:
 
         ```python
         import kcl_lib.api as api
-        args = api.LoadPackage_Args(
-            parse_args=api.ParseProgram_Args(paths=["schema.k"]), resolve_ast=True
+        args = api.LoadPackageArgs(
+            parse_args=api.ParseProgramArgs(paths=["schema.k"]), resolve_ast=True
         )
         api = api.API()
         result = api.load_package(args)
         assert list(result.symbols.values())[0].ty.schema_name == "AppConfig"
         ```
         """
-        return self.call("KclvmService.LoadPackage", args)
+        return self.call("KclService.LoadPackage", args)
 
-    def list_options(self, args: ParseProgram_Args) -> ListOptions_Result:
+    def list_options(self, args: ParseProgramArgs) -> ListOptionsResult:
         """list_options provides users with the ability to parse KCL program and get all option information.
 
         ## Example
@@ -246,7 +246,7 @@ class API:
         ```python
         import kcl_lib.api as api
 
-        args = api.ParseProgram_Args(paths=["options.k"])
+        args = api.ParseProgramArgs(paths=["options.k"])
         api = api.API()
         result = api.list_options(args)
         assert len(result.options) == 3
@@ -255,9 +255,9 @@ class API:
         assert result.options[2].name == "metadata-key"
         ```
         """
-        return self.call("KclvmService.ListOptions", args)
+        return self.call("KclService.ListOptions", args)
 
-    def list_variables(self, args: ListVariables_Args) -> ListVariables_Result:
+    def list_variables(self, args: ListVariablesArgs) -> ListVariablesResult:
         """list_variables provides users with the ability to parse KCL program and get all variables by specs.
 
         ## Example
@@ -277,14 +277,14 @@ class API:
         ```python
         import kcl_lib.api as api
 
-        args = api.ListVariables_Args(files=[TEST_FILE])
+        args = api.ListVariablesArgs(files=[TEST_FILE])
         api = api.API()
         result = api.list_variables(args)
         ```
         """
-        return self.call("KclvmService.ListVariables", args)
+        return self.call("KclService.ListVariables", args)
 
-    def format_code(self, args: FormatCode_Args) -> FormatCode_Result:
+    def format_code(self, args: FormatCodeArgs) -> FormatCodeResult:
         """Format the code source.
 
         ## Example
@@ -294,16 +294,16 @@ class API:
         ```python
         import kcl_lib.api as api
         source_code = "a   =   1"
-        args = api.FormatCode_Args(source=source_code)
+        args = api.FormatCodeArgs(source=source_code)
         api_instance = api.API()
 
         result = api_instance.format_code(args)
         assert result.formatted.decode(), "a = 1"
         ```
         """
-        return self.call("KclvmService.FormatCode", args)
+        return self.call("KclService.FormatCode", args)
 
-    def format_path(self, args: FormatPath_Args) -> FormatPath_Result:
+    def format_path(self, args: FormatPathArgs) -> FormatPathResult:
         """Format KCL file or directory path contains KCL files and returns the changed file paths.
 
         ## Example
@@ -323,15 +323,15 @@ class API:
         ```python
         import kcl_lib.api as api
 
-        args = api.FormatPath_Args(path="format_path.k")
+        args = api.FormatPathArgs(path="format_path.k")
         api_instance = api.API()
         result = api_instance.format_path(args)
         print(result)
         ```
         """
-        return self.call("KclvmService.FormatPath", args)
+        return self.call("KclService.FormatPath", args)
 
-    def lint_path(self, args: LintPath_Args) -> LintPath_Result:
+    def lint_path(self, args: LintPathArgs) -> LintPathResult:
         """Lint files and return error messages including errors and warnings.
 
         ## Example
@@ -348,14 +348,14 @@ class API:
         ```python
         import kcl_lib.api as api
 
-        args = api.LintPath_Args(paths=["lint_path.k"])
+        args = api.LintPathArgs(paths=["lint_path.k"])
         api_instance = api.API()
         result = api_instance.lint_path(args)
         ```
         """
-        return self.call("KclvmService.LintPath", args)
+        return self.call("KclService.LintPath", args)
 
-    def override_file(self, args: OverrideFile_Args) -> OverrideFile_Result:
+    def override_file(self, args: OverrideFileArgs) -> OverrideFileResult:
         """Override KCL file with arguments. See [https://www.kcl-lang.io/docs/user_docs/guides/automation](https://www.kcl-lang.io/docs/user_docs/guides/automation) for more override spec guide.
 
         ## Example
@@ -377,7 +377,7 @@ class API:
         import pathlib
 
         test_file = "main.k"
-        args = api.OverrideFile_Args(
+        args = api.OverrideFileArgs(
             file=test_file,
             specs=["b.a=2"],
         )
@@ -393,12 +393,12 @@ class API:
         \"\"\"
         ```
         """
-        return self.call("KclvmService.OverrideFile", args)
+        return self.call("KclService.OverrideFile", args)
 
     def get_schema_type_mapping(
         self,
-        args: GetSchemaTypeMapping_Args,
-    ) -> GetSchemaTypeMapping_Result:
+        args: GetSchemaTypeMappingArgs,
+    ) -> GetSchemaTypeMappingResult:
         """Get schema type mapping defined in the program.
 
         ## Example
@@ -418,16 +418,16 @@ class API:
         ```python
         import kcl_lib.api as api
 
-        exec_args = api.ExecProgram_Args(k_filename_list=["schema.k"])
-        args = api.GetSchemaTypeMapping_Args(exec_args=exec_args)
+        exec_args = api.ExecProgramArgs(k_filename_list=["schema.k"])
+        args = api.GetSchemaTypeMappingArgs(exec_args=exec_args)
         api = api.API()
         result = api.get_schema_type_mapping(args)
         assert result.schema_type_mapping["app"].properties["replicas"].type == "int"
         ```
         """
-        return self.call("KclvmService.GetSchemaTypeMapping", args)
+        return self.call("KclService.GetSchemaTypeMapping", args)
 
-    def validate_code(self, args: ValidateCode_Args) -> ValidateCode_Result:
+    def validate_code(self, args: ValidateCodeArgs) -> ValidateCodeResult:
         """Validate code using schema and JSON/YAML data strings.
 
         ## Example
@@ -444,19 +444,19 @@ class API:
                 0 < age < 120
         \"\"\"
         data = '{"name": "Alice", "age": 10}'
-        args = api.ValidateCode_Args(code=code, data=data, format="json")
+        args = api.ValidateCodeArgs(code=code, data=data, format="json")
         api_instance = api.API()
         result = api_instance.validate_code(args)
         assert result.success == True
         assert result.err_message == ""
         ```
         """
-        return self.call("KclvmService.ValidateCode", args)
+        return self.call("KclService.ValidateCode", args)
 
     def load_settings_files(
         self,
-        args: LoadSettingsFiles_Args,
-    ) -> LoadSettingsFiles_Result:
+        args: LoadSettingsFilesArgs,
+    ) -> LoadSettingsFilesResult:
         """Load the setting file config defined in `kcl.yaml`
 
         ## Example
@@ -475,7 +475,7 @@ class API:
 
         ```python
         import kcl_lib.api as api
-        args = api.LoadSettingsFiles_Args(
+        args = api.LoadSettingsFilesArgs(
             work_dir=".", files=["kcl.yaml"]
         )
         api_instance = api.API()
@@ -487,9 +487,9 @@ class API:
         )
         ```
         """
-        return self.call("KclvmService.LoadSettingsFiles", args)
+        return self.call("KclService.LoadSettingsFiles", args)
 
-    def rename(self, args: Rename_Args) -> Rename_Result:
+    def rename(self, args: RenameArgs) -> RenameResult:
         """Rename all the occurrences of the target symbol in the files. This API will rewrite files if they contain symbols to be renamed. Return the file paths that got changed.
 
         ## Example
@@ -506,7 +506,7 @@ class API:
 
         ```python
         import kcl_lib.api as api
-        args = api.Rename_Args(
+        args = api.RenameArgs(
             package_root=".",
             symbol_path="a",
             file_paths=["main.k"],
@@ -516,9 +516,9 @@ class API:
         result = api_instance.rename(args)
         ```
         """
-        return self.call("KclvmService.Rename", args)
+        return self.call("KclService.Rename", args)
 
-    def rename_code(self, args: RenameCode_Args) -> RenameCode_Result:
+    def rename_code(self, args: RenameCodeArgs) -> RenameCodeResult:
         """Rename all the occurrences of the target symbol and return the modified code if any code has been changed. This API won't rewrite files but return the changed code.
 
         ## Example
@@ -527,7 +527,7 @@ class API:
 
         ```python
         import kcl_lib.api as api
-        args = api.RenameCode_Args(
+        args = api.RenameCodeArgs(
             package_root="/mock/path",
             symbol_path="a",
             source_codes={"/mock/path/main.k": "a = 1"},
@@ -538,9 +538,9 @@ class API:
         assert result.changed_codes["/mock/path/main.k"] == "a2 = 1"
         ```
         """
-        return self.call("KclvmService.RenameCode", args)
+        return self.call("KclService.RenameCode", args)
 
-    def test(self, args: Test_Args) -> Test_Result:
+    def test(self, args: TestArgs) -> TestResult:
         """Test KCL packages with test arguments.
 
         ## Example
@@ -549,18 +549,18 @@ class API:
 
         ```python
         import kcl_lib.api as api
-        args = api.Test_Args(
+        args = api.TestArgs(
             pkg_list=["path/to/testing/pkg/..."],
         )
         api_instance = api.API()
         result = api_instance.test(args)
         ```
         """
-        return self.call("KclvmService.Test", args)
+        return self.call("KclService.Test", args)
 
     def update_dependencies(
-        self, args: UpdateDependencies_Args
-    ) -> UpdateDependencies_Result:
+        self, args: UpdateDependenciesArgs
+    ) -> UpdateDependenciesResult:
         """Download and update dependencies defined in the `kcl.mod` file and return the external package name and location list.
 
         ## Examples
@@ -582,7 +582,7 @@ class API:
 
         ```python
         import kcl_lib.api as api
-        args = api.UpdateDependencies_Args(
+        args = api.UpdateDependenciesArgs(
             manifest_path="module"
         )
         api_instance = api.API()
@@ -620,12 +620,12 @@ class API:
 
         ```python
         import kcl_lib.api as api
-        args = api.UpdateDependencies_Args(
+        args = api.UpdateDependenciesArgs(
             manifest_path="module"
         )
         api_instance = api.API()
         result = api_instance.update_dependencies(args)
-        exec_args = api.ExecProgram_Args(
+        exec_args = api.ExecProgramArgs(
             k_filename_list=["module/main.k"],
             external_pkgs=result.external_pkgs,
         )
@@ -633,9 +633,9 @@ class API:
         assert result.yaml_result == "a: Hello World!"
         ```
         """
-        return self.call("KclvmService.UpdateDependencies", args)
+        return self.call("KclService.UpdateDependencies", args)
 
-    def get_version(self) -> GetVersion_Result:
+    def get_version(self) -> GetVersionResult:
         """Return the KCL service version information.
 
         ## Example
@@ -650,7 +650,7 @@ class API:
         print(result.version_info)
         ```
         """
-        return self.call("KclvmService.GetVersion", GetVersion_Args())
+        return self.call("KclService.GetVersion", GetVersionArgs())
 
     # Helper method to perform the call
     def call(self, name: str, args):
@@ -670,95 +670,95 @@ class API:
         return msg
 
     def create_method_req_message(self, method: str) -> _message.Message:
-        if method in ["Ping", "KclvmService.Ping"]:
-            return Ping_Args()
-        elif method in ["ExecProgram", "KclvmService.ExecProgram"]:
-            return ExecProgram_Args()
-        elif method in ["BuildProgram", "KclvmService.BuildProgram"]:
-            return BuildProgram_Args()
-        elif method in ["ExecArtifact", "KclvmService.ExecArtifact"]:
-            return ExecArtifact_Args()
-        elif method in ["ParseFile", "KclvmService.ParseFile"]:
-            return ParseFile_Args()
-        elif method in ["ParseProgram", "KclvmService.ParseProgram"]:
-            return ParseProgram_Args()
-        elif method in ["LoadPackage", "KclvmService.LoadPackage"]:
-            return LoadPackage_Args()
-        elif method in ["ListOptions", "KclvmService.ListOptions"]:
-            return ParseProgram_Args()
-        elif method in ["ListVariables", "KclvmService.ListVariables"]:
-            return ListVariables_Args()
-        elif method in ["FormatCode", "KclvmService.FormatCode"]:
-            return FormatCode_Args()
-        elif method in ["FormatPath", "KclvmService.FormatPath"]:
-            return FormatPath_Args()
-        elif method in ["LintPath", "KclvmService.LintPath"]:
-            return LintPath_Args()
-        elif method in ["OverrideFile", "KclvmService.OverrideFile"]:
-            return OverrideFile_Args()
-        elif method in ["GetSchemaTypeMapping", "KclvmService.GetSchemaTypeMapping"]:
-            return GetSchemaTypeMapping_Args()
-        elif method in ["ValidateCode", "KclvmService.ValidateCode"]:
-            return ValidateCode_Args()
-        elif method in ["ListDepFiles", "KclvmService.ListDepFiles"]:
-            return ListDepFiles_Args()
-        elif method in ["LoadSettingsFiles", "KclvmService.LoadSettingsFiles"]:
-            return LoadSettingsFiles_Args()
-        elif method in ["Rename", "KclvmService.Rename"]:
-            return Rename_Args()
-        elif method in ["RenameCode", "KclvmService.RenameCode"]:
-            return RenameCode_Args()
-        elif method in ["Test", "KclvmService.Test"]:
-            return Test_Args()
-        elif method in ["UpdateDependencies", "KclvmService.UpdateDependencies"]:
-            return UpdateDependencies_Args()
-        elif method in ["GetVersion", "KclvmService.GetVersion"]:
-            return GetVersion_Args()
+        if method in ["Ping", "KclService.Ping"]:
+            return PingArgs()
+        elif method in ["ExecProgram", "KclService.ExecProgram"]:
+            return ExecProgramArgs()
+        elif method in ["BuildProgram", "KclService.BuildProgram"]:
+            return BuildProgramArgs()
+        elif method in ["ExecArtifact", "KclService.ExecArtifact"]:
+            return ExecArtifactArgs()
+        elif method in ["ParseFile", "KclService.ParseFile"]:
+            return ParseFileArgs()
+        elif method in ["ParseProgram", "KclService.ParseProgram"]:
+            return ParseProgramArgs()
+        elif method in ["LoadPackage", "KclService.LoadPackage"]:
+            return LoadPackageArgs()
+        elif method in ["ListOptions", "KclService.ListOptions"]:
+            return ParseProgramArgs()
+        elif method in ["ListVariables", "KclService.ListVariables"]:
+            return ListVariablesArgs()
+        elif method in ["FormatCode", "KclService.FormatCode"]:
+            return FormatCodeArgs()
+        elif method in ["FormatPath", "KclService.FormatPath"]:
+            return FormatPathArgs()
+        elif method in ["LintPath", "KclService.LintPath"]:
+            return LintPathArgs()
+        elif method in ["OverrideFile", "KclService.OverrideFile"]:
+            return OverrideFileArgs()
+        elif method in ["GetSchemaTypeMapping", "KclService.GetSchemaTypeMapping"]:
+            return GetSchemaTypeMappingArgs()
+        elif method in ["ValidateCode", "KclService.ValidateCode"]:
+            return ValidateCodeArgs()
+        elif method in ["ListDepFiles", "KclService.ListDepFiles"]:
+            return ListDepFilesArgs()
+        elif method in ["LoadSettingsFiles", "KclService.LoadSettingsFiles"]:
+            return LoadSettingsFilesArgs()
+        elif method in ["Rename", "KclService.Rename"]:
+            return RenameArgs()
+        elif method in ["RenameCode", "KclService.RenameCode"]:
+            return RenameCodeArgs()
+        elif method in ["Test", "KclService.Test"]:
+            return TestArgs()
+        elif method in ["UpdateDependencies", "KclService.UpdateDependencies"]:
+            return UpdateDependenciesArgs()
+        elif method in ["GetVersion", "KclService.GetVersion"]:
+            return GetVersionArgs()
         raise Exception(f"unknown method: {method}")
 
     def create_method_resp_message(self, method: str) -> _message.Message:
-        if method in ["Ping", "KclvmService.Ping"]:
-            return Ping_Result()
-        elif method in ["ExecProgram", "KclvmService.ExecProgram"]:
-            return ExecProgram_Result()
-        elif method in ["BuildProgram", "KclvmService.BuildProgram"]:
-            return BuildProgram_Result()
-        elif method in ["ExecArtifact", "KclvmService.ExecArtifact"]:
-            return ExecProgram_Result()
-        elif method in ["ParseFile", "KclvmService.ParseFile"]:
-            return ParseFile_Result()
-        elif method in ["ParseProgram", "KclvmService.ParseProgram"]:
-            return ParseProgram_Result()
-        elif method in ["LoadPackage", "KclvmService.LoadPackage"]:
-            return LoadPackage_Result()
-        elif method in ["ListOptions", "KclvmService.ListOptions"]:
-            return ListOptions_Result()
-        elif method in ["ListVariables", "KclvmService.ListVariables"]:
-            return ListVariables_Result()
-        elif method in ["FormatCode", "KclvmService.FormatCode"]:
-            return FormatCode_Result()
-        elif method in ["FormatPath", "KclvmService.FormatPath"]:
-            return FormatPath_Result()
-        elif method in ["LintPath", "KclvmService.LintPath"]:
-            return LintPath_Result()
-        elif method in ["OverrideFile", "KclvmService.OverrideFile"]:
-            return OverrideFile_Result()
-        elif method in ["GetSchemaTypeMapping", "KclvmService.GetSchemaTypeMapping"]:
-            return GetSchemaTypeMapping_Result()
-        elif method in ["ValidateCode", "KclvmService.ValidateCode"]:
-            return ValidateCode_Result()
-        elif method in ["ListDepFiles", "KclvmService.ListDepFiles"]:
-            return ListDepFiles_Result()
-        elif method in ["LoadSettingsFiles", "KclvmService.LoadSettingsFiles"]:
-            return LoadSettingsFiles_Result()
-        elif method in ["Rename", "KclvmService.Rename"]:
-            return Rename_Result()
-        elif method in ["RenameCode", "KclvmService.RenameCode"]:
-            return RenameCode_Result()
-        elif method in ["Test", "KclvmService.Test"]:
-            return Test_Result()
-        elif method in ["UpdateDependencies", "KclvmService.UpdateDependencies"]:
-            return UpdateDependencies_Result()
-        elif method in ["GetVersion", "KclvmService.GetVersion"]:
-            return GetVersion_Result()
+        if method in ["Ping", "KclService.Ping"]:
+            return PingResult()
+        elif method in ["ExecProgram", "KclService.ExecProgram"]:
+            return ExecProgramResult()
+        elif method in ["BuildProgram", "KclService.BuildProgram"]:
+            return BuildProgramResult()
+        elif method in ["ExecArtifact", "KclService.ExecArtifact"]:
+            return ExecProgramResult()
+        elif method in ["ParseFile", "KclService.ParseFile"]:
+            return ParseFileResult()
+        elif method in ["ParseProgram", "KclService.ParseProgram"]:
+            return ParseProgramResult()
+        elif method in ["LoadPackage", "KclService.LoadPackage"]:
+            return LoadPackageResult()
+        elif method in ["ListOptions", "KclService.ListOptions"]:
+            return ListOptionsResult()
+        elif method in ["ListVariables", "KclService.ListVariables"]:
+            return ListVariablesResult()
+        elif method in ["FormatCode", "KclService.FormatCode"]:
+            return FormatCodeResult()
+        elif method in ["FormatPath", "KclService.FormatPath"]:
+            return FormatPathResult()
+        elif method in ["LintPath", "KclService.LintPath"]:
+            return LintPathResult()
+        elif method in ["OverrideFile", "KclService.OverrideFile"]:
+            return OverrideFileResult()
+        elif method in ["GetSchemaTypeMapping", "KclService.GetSchemaTypeMapping"]:
+            return GetSchemaTypeMappingResult()
+        elif method in ["ValidateCode", "KclService.ValidateCode"]:
+            return ValidateCodeResult()
+        elif method in ["ListDepFiles", "KclService.ListDepFiles"]:
+            return ListDepFilesResult()
+        elif method in ["LoadSettingsFiles", "KclService.LoadSettingsFiles"]:
+            return LoadSettingsFilesResult()
+        elif method in ["Rename", "KclService.Rename"]:
+            return RenameResult()
+        elif method in ["RenameCode", "KclService.RenameCode"]:
+            return RenameCodeResult()
+        elif method in ["Test", "KclService.Test"]:
+            return TestResult()
+        elif method in ["UpdateDependencies", "KclService.UpdateDependencies"]:
+            return UpdateDependenciesResult()
+        elif method in ["GetVersion", "KclService.GetVersion"]:
+            return GetVersionResult()
         raise Exception(f"unknown method: {method}")

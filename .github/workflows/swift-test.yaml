@@ -43,12 +43,12 @@ jobs:
     - name: Install Rust
       uses: actions-rs/toolchain@v1
       with:
-        toolchain: 1.83
+        toolchain: 1.88
         override: true
         components: clippy, rustfmt
     - name: Setup Swift toolchain
       uses: swift-actions/setup-swift@v2
       with:
-        swift-version: 5
+        swift-version: 6
     - name: Build and run tests
       run: make test

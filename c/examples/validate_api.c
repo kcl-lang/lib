@@ -7,14 +7,14 @@ int validate(const char* code_str, const char* data_str)
     size_t message_length;
     bool status;
 
-    ValidateCode_Args validate_args = ValidateCode_Args_init_zero;
+    ValidateCodeArgs validate_args = ValidateCodeArgs_init_zero;
     validate_args.code.funcs.encode = encode_string;
     validate_args.code.arg = (void*)code_str;
     validate_args.data.funcs.encode = encode_string;
     validate_args.data.arg = (void*)data_str;
 
     pb_ostream_t stream = pb_ostream_from_buffer(buffer, sizeof(buffer));
-    status = pb_encode(&stream, ValidateCode_Args_fields, &validate_args);
+    status = pb_encode(&stream, ValidateCodeArgs_fields, &validate_args);
     message_length = stream.bytes_written;
 
     if (!status) {
@@ -22,16 +22,16 @@ int validate(const char* code_str, const char* data_str)
         return 1;
     }
 
-    const char* api_str = "KclvmService.ValidateCode";
+    const char* api_str = "KclService.ValidateCode";
     size_t result_length = call_native((const uint8_t*)api_str, strlen(api_str), buffer, message_length, result_buffer);
     pb_istream_t istream = pb_istream_from_buffer(result_buffer, result_length);
-    ValidateCode_Result result = ValidateCode_Result_init_default;
+    ValidateCodeResult result = ValidateCodeResult_init_default;
 
     result.err_message.funcs.decode = decode_string;
     uint8_t value_buffer[BUFFER_SIZE] = { 0 };
     result.err_message.arg = value_buffer;
 
-    status = pb_decode(&istream, ValidateCode_Result_fields, &result);
+    status = pb_decode(&istream, ValidateCodeResult_fields, &result);
 
     if (!status) {
         printf("Decoding failed: %s\n", PB_GET_ERROR(&istream));

@@ -17,13 +17,13 @@ pub fn build(b: *std.Build) void {
 
     const os = target.query.os_tag orelse builtin.os.tag;
 
-    const lib = b.addStaticLibrary(.{
+    const lib = b.addLibrary(.{
         .name = "kcl_lib_zig",
-        // In this case the main source file is merely a path, however, in more
-        // complicated build scripts, this could be a generated file.
-        .root_source_file = b.path("src/root.zig"),
-        .target = target,
-        .optimize = optimize,
+        .root_module = b.createModule(.{
+            .root_source_file = b.path("src/root.zig"),
+            .target = b.graph.host,
+            .optimize = optimize,
+        }),
     });
 
     lib.linkLibC();
@@ -44,9 +44,11 @@ pub fn build(b: *std.Build) void {
     // Creates a step for unit testing. This only builds the test executable
     // but does not run it.
     const lib_unit_tests = b.addTest(.{
-        .root_source_file = b.path("src/root.zig"),
-        .target = target,
-        .optimize = optimize,
+        .root_module = b.createModule(.{
+            .root_source_file = b.path("src/root.zig"),
+            .target = b.graph.host,
+            .optimize = optimize,
+        }),
     });
 
     lib_unit_tests.linkLibC();
@@ -79,7 +81,7 @@ fn linkMacOSLibraries(lib: *std.Build.Step.Compile) void {
 }
 
 fn kclLibName() []const u8 {
-    return "kclvm_cli_cdylib";
+    return "kcl";
 }
 
 fn kclLibPath(b: *std.Build, target: *const std.Build.ResolvedTarget) std.Build.LazyPath {

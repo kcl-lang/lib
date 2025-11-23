@@ -1,18 +1,13 @@
 from google.protobuf.internal import containers as _containers
 from google.protobuf import descriptor as _descriptor
 from google.protobuf import message as _message
-from typing import (
-    ClassVar as _ClassVar,
-    Iterable as _Iterable,
-    Mapping as _Mapping,
-    Optional as _Optional,
-    Union as _Union,
-)
+from collections.abc import Iterable as _Iterable, Mapping as _Mapping
+from typing import ClassVar as _ClassVar, Optional as _Optional, Union as _Union
 
 DESCRIPTOR: _descriptor.FileDescriptor
 
 class ExternalPkg(_message.Message):
-    __slots__ = ("pkg_name", "pkg_path")
+    __slots__ = ()
     PKG_NAME_FIELD_NUMBER: _ClassVar[int]
     PKG_PATH_FIELD_NUMBER: _ClassVar[int]
     pkg_name: str
@@ -22,7 +17,7 @@ class ExternalPkg(_message.Message):
     ) -> None: ...
 
 class Argument(_message.Message):
-    __slots__ = ("name", "value")
+    __slots__ = ()
     NAME_FIELD_NUMBER: _ClassVar[int]
     VALUE_FIELD_NUMBER: _ClassVar[int]
     name: str
@@ -32,7 +27,7 @@ class Argument(_message.Message):
     ) -> None: ...
 
 class Error(_message.Message):
-    __slots__ = ("level", "code", "messages")
+    __slots__ = ()
     LEVEL_FIELD_NUMBER: _ClassVar[int]
     CODE_FIELD_NUMBER: _ClassVar[int]
     MESSAGES_FIELD_NUMBER: _ClassVar[int]
@@ -47,7 +42,7 @@ class Error(_message.Message):
     ) -> None: ...
 
 class Message(_message.Message):
-    __slots__ = ("msg", "pos")
+    __slots__ = ()
     MSG_FIELD_NUMBER: _ClassVar[int]
     POS_FIELD_NUMBER: _ClassVar[int]
     msg: str
@@ -58,24 +53,24 @@ class Message(_message.Message):
         pos: _Optional[_Union[Position, _Mapping]] = ...,
     ) -> None: ...
 
-class Ping_Args(_message.Message):
-    __slots__ = ("value",)
+class PingArgs(_message.Message):
+    __slots__ = ()
     VALUE_FIELD_NUMBER: _ClassVar[int]
     value: str
     def __init__(self, value: _Optional[str] = ...) -> None: ...
 
-class Ping_Result(_message.Message):
-    __slots__ = ("value",)
+class PingResult(_message.Message):
+    __slots__ = ()
     VALUE_FIELD_NUMBER: _ClassVar[int]
     value: str
     def __init__(self, value: _Optional[str] = ...) -> None: ...
 
-class GetVersion_Args(_message.Message):
+class GetVersionArgs(_message.Message):
     __slots__ = ()
     def __init__(self) -> None: ...
 
-class GetVersion_Result(_message.Message):
-    __slots__ = ("version", "checksum", "git_sha", "version_info")
+class GetVersionResult(_message.Message):
+    __slots__ = ()
     VERSION_FIELD_NUMBER: _ClassVar[int]
     CHECKSUM_FIELD_NUMBER: _ClassVar[int]
     GIT_SHA_FIELD_NUMBER: _ClassVar[int]
@@ -92,18 +87,18 @@ class GetVersion_Result(_message.Message):
         version_info: _Optional[str] = ...,
     ) -> None: ...
 
-class ListMethod_Args(_message.Message):
+class ListMethodArgs(_message.Message):
     __slots__ = ()
     def __init__(self) -> None: ...
 
-class ListMethod_Result(_message.Message):
-    __slots__ = ("method_name_list",)
+class ListMethodResult(_message.Message):
+    __slots__ = ()
     METHOD_NAME_LIST_FIELD_NUMBER: _ClassVar[int]
     method_name_list: _containers.RepeatedScalarFieldContainer[str]
     def __init__(self, method_name_list: _Optional[_Iterable[str]] = ...) -> None: ...
 
-class ParseFile_Args(_message.Message):
-    __slots__ = ("path", "source", "external_pkgs")
+class ParseFileArgs(_message.Message):
+    __slots__ = ()
     PATH_FIELD_NUMBER: _ClassVar[int]
     SOURCE_FIELD_NUMBER: _ClassVar[int]
     EXTERNAL_PKGS_FIELD_NUMBER: _ClassVar[int]
@@ -117,8 +112,8 @@ class ParseFile_Args(_message.Message):
         external_pkgs: _Optional[_Iterable[_Union[ExternalPkg, _Mapping]]] = ...,
     ) -> None: ...
 
-class ParseFile_Result(_message.Message):
-    __slots__ = ("ast_json", "deps", "errors")
+class ParseFileResult(_message.Message):
+    __slots__ = ()
     AST_JSON_FIELD_NUMBER: _ClassVar[int]
     DEPS_FIELD_NUMBER: _ClassVar[int]
     ERRORS_FIELD_NUMBER: _ClassVar[int]
@@ -132,8 +127,8 @@ class ParseFile_Result(_message.Message):
         errors: _Optional[_Iterable[_Union[Error, _Mapping]]] = ...,
     ) -> None: ...
 
-class ParseProgram_Args(_message.Message):
-    __slots__ = ("paths", "sources", "external_pkgs")
+class ParseProgramArgs(_message.Message):
+    __slots__ = ()
     PATHS_FIELD_NUMBER: _ClassVar[int]
     SOURCES_FIELD_NUMBER: _ClassVar[int]
     EXTERNAL_PKGS_FIELD_NUMBER: _ClassVar[int]
@@ -147,8 +142,8 @@ class ParseProgram_Args(_message.Message):
         external_pkgs: _Optional[_Iterable[_Union[ExternalPkg, _Mapping]]] = ...,
     ) -> None: ...
 
-class ParseProgram_Result(_message.Message):
-    __slots__ = ("ast_json", "paths", "errors")
+class ParseProgramResult(_message.Message):
+    __slots__ = ()
     AST_JSON_FIELD_NUMBER: _ClassVar[int]
     PATHS_FIELD_NUMBER: _ClassVar[int]
     ERRORS_FIELD_NUMBER: _ClassVar[int]
@@ -162,40 +157,29 @@ class ParseProgram_Result(_message.Message):
         errors: _Optional[_Iterable[_Union[Error, _Mapping]]] = ...,
     ) -> None: ...
 
-class LoadPackage_Args(_message.Message):
-    __slots__ = ("parse_args", "resolve_ast", "load_builtin", "with_ast_index")
+class LoadPackageArgs(_message.Message):
+    __slots__ = ()
     PARSE_ARGS_FIELD_NUMBER: _ClassVar[int]
     RESOLVE_AST_FIELD_NUMBER: _ClassVar[int]
     LOAD_BUILTIN_FIELD_NUMBER: _ClassVar[int]
     WITH_AST_INDEX_FIELD_NUMBER: _ClassVar[int]
-    parse_args: ParseProgram_Args
+    parse_args: ParseProgramArgs
     resolve_ast: bool
     load_builtin: bool
     with_ast_index: bool
     def __init__(
         self,
-        parse_args: _Optional[_Union[ParseProgram_Args, _Mapping]] = ...,
-        resolve_ast: bool = ...,
-        load_builtin: bool = ...,
-        with_ast_index: bool = ...,
+        parse_args: _Optional[_Union[ParseProgramArgs, _Mapping]] = ...,
+        resolve_ast: _Optional[bool] = ...,
+        load_builtin: _Optional[bool] = ...,
+        with_ast_index: _Optional[bool] = ...,
     ) -> None: ...
 
-class LoadPackage_Result(_message.Message):
-    __slots__ = (
-        "program",
-        "paths",
-        "parse_errors",
-        "type_errors",
-        "scopes",
-        "symbols",
-        "node_symbol_map",
-        "symbol_node_map",
-        "fully_qualified_name_map",
-        "pkg_scope_map",
-    )
+class LoadPackageResult(_message.Message):
+    __slots__ = ()
 
     class ScopesEntry(_message.Message):
-        __slots__ = ("key", "value")
+        __slots__ = ()
         KEY_FIELD_NUMBER: _ClassVar[int]
         VALUE_FIELD_NUMBER: _ClassVar[int]
         key: str
@@ -207,7 +191,7 @@ class LoadPackage_Result(_message.Message):
         ) -> None: ...
 
     class SymbolsEntry(_message.Message):
-        __slots__ = ("key", "value")
+        __slots__ = ()
         KEY_FIELD_NUMBER: _ClassVar[int]
         VALUE_FIELD_NUMBER: _ClassVar[int]
         key: str
@@ -219,7 +203,7 @@ class LoadPackage_Result(_message.Message):
         ) -> None: ...
 
     class NodeSymbolMapEntry(_message.Message):
-        __slots__ = ("key", "value")
+        __slots__ = ()
         KEY_FIELD_NUMBER: _ClassVar[int]
         VALUE_FIELD_NUMBER: _ClassVar[int]
         key: str
@@ -231,7 +215,7 @@ class LoadPackage_Result(_message.Message):
         ) -> None: ...
 
     class SymbolNodeMapEntry(_message.Message):
-        __slots__ = ("key", "value")
+        __slots__ = ()
         KEY_FIELD_NUMBER: _ClassVar[int]
         VALUE_FIELD_NUMBER: _ClassVar[int]
         key: str
@@ -241,7 +225,7 @@ class LoadPackage_Result(_message.Message):
         ) -> None: ...
 
     class FullyQualifiedNameMapEntry(_message.Message):
-        __slots__ = ("key", "value")
+        __slots__ = ()
         KEY_FIELD_NUMBER: _ClassVar[int]
         VALUE_FIELD_NUMBER: _ClassVar[int]
         key: str
@@ -253,7 +237,7 @@ class LoadPackage_Result(_message.Message):
         ) -> None: ...
 
     class PkgScopeMapEntry(_message.Message):
-        __slots__ = ("key", "value")
+        __slots__ = ()
         KEY_FIELD_NUMBER: _ClassVar[int]
         VALUE_FIELD_NUMBER: _ClassVar[int]
         key: str
@@ -298,8 +282,8 @@ class LoadPackage_Result(_message.Message):
         pkg_scope_map: _Optional[_Mapping[str, ScopeIndex]] = ...,
     ) -> None: ...
 
-class ListOptions_Result(_message.Message):
-    __slots__ = ("options",)
+class ListOptionsResult(_message.Message):
+    __slots__ = ()
     OPTIONS_FIELD_NUMBER: _ClassVar[int]
     options: _containers.RepeatedCompositeFieldContainer[OptionHelp]
     def __init__(
@@ -307,7 +291,7 @@ class ListOptions_Result(_message.Message):
     ) -> None: ...
 
 class OptionHelp(_message.Message):
-    __slots__ = ("name", "type", "required", "default_value", "help")
+    __slots__ = ()
     NAME_FIELD_NUMBER: _ClassVar[int]
     TYPE_FIELD_NUMBER: _ClassVar[int]
     REQUIRED_FIELD_NUMBER: _ClassVar[int]
@@ -322,13 +306,13 @@ class OptionHelp(_message.Message):
         self,
         name: _Optional[str] = ...,
         type: _Optional[str] = ...,
-        required: bool = ...,
+        required: _Optional[bool] = ...,
         default_value: _Optional[str] = ...,
         help: _Optional[str] = ...,
     ) -> None: ...
 
 class Symbol(_message.Message):
-    __slots__ = ("ty", "name", "owner", "attrs", "is_global")
+    __slots__ = ()
     TY_FIELD_NUMBER: _ClassVar[int]
     NAME_FIELD_NUMBER: _ClassVar[int]
     OWNER_FIELD_NUMBER: _ClassVar[int]
@@ -346,12 +330,12 @@ class Symbol(_message.Message):
         name: _Optional[str] = ...,
         owner: _Optional[_Union[SymbolIndex, _Mapping]] = ...,
         attrs: _Optional[_Iterable[_Union[SymbolIndex, _Mapping]]] = ...,
-        is_global: bool = ...,
+        is_global: _Optional[bool] = ...,
         **kwargs
     ) -> None: ...
 
 class Scope(_message.Message):
-    __slots__ = ("kind", "parent", "owner", "children", "defs")
+    __slots__ = ()
     KIND_FIELD_NUMBER: _ClassVar[int]
     PARENT_FIELD_NUMBER: _ClassVar[int]
     OWNER_FIELD_NUMBER: _ClassVar[int]
@@ -372,7 +356,7 @@ class Scope(_message.Message):
     ) -> None: ...
 
 class SymbolIndex(_message.Message):
-    __slots__ = ("i", "g", "kind")
+    __slots__ = ()
     I_FIELD_NUMBER: _ClassVar[int]
     G_FIELD_NUMBER: _ClassVar[int]
     KIND_FIELD_NUMBER: _ClassVar[int]
@@ -387,7 +371,7 @@ class SymbolIndex(_message.Message):
     ) -> None: ...
 
 class ScopeIndex(_message.Message):
-    __slots__ = ("i", "g", "kind")
+    __slots__ = ()
     I_FIELD_NUMBER: _ClassVar[int]
     G_FIELD_NUMBER: _ClassVar[int]
     KIND_FIELD_NUMBER: _ClassVar[int]
@@ -401,27 +385,8 @@ class ScopeIndex(_message.Message):
         kind: _Optional[str] = ...,
     ) -> None: ...
 
-class ExecProgram_Args(_message.Message):
-    __slots__ = (
-        "work_dir",
-        "k_filename_list",
-        "k_code_list",
-        "args",
-        "overrides",
-        "disable_yaml_result",
-        "print_override_ast",
-        "strict_range_check",
-        "disable_none",
-        "verbose",
-        "debug",
-        "sort_keys",
-        "external_pkgs",
-        "include_schema_type_path",
-        "compile_only",
-        "show_hidden",
-        "path_selector",
-        "fast_eval",
-    )
+class ExecProgramArgs(_message.Message):
+    __slots__ = ()
     WORK_DIR_FIELD_NUMBER: _ClassVar[int]
     K_FILENAME_LIST_FIELD_NUMBER: _ClassVar[int]
     K_CODE_LIST_FIELD_NUMBER: _ClassVar[int]
@@ -465,23 +430,23 @@ class ExecProgram_Args(_message.Message):
         k_code_list: _Optional[_Iterable[str]] = ...,
         args: _Optional[_Iterable[_Union[Argument, _Mapping]]] = ...,
         overrides: _Optional[_Iterable[str]] = ...,
-        disable_yaml_result: bool = ...,
-        print_override_ast: bool = ...,
-        strict_range_check: bool = ...,
-        disable_none: bool = ...,
+        disable_yaml_result: _Optional[bool] = ...,
+        print_override_ast: _Optional[bool] = ...,
+        strict_range_check: _Optional[bool] = ...,
+        disable_none: _Optional[bool] = ...,
         verbose: _Optional[int] = ...,
         debug: _Optional[int] = ...,
-        sort_keys: bool = ...,
+        sort_keys: _Optional[bool] = ...,
         external_pkgs: _Optional[_Iterable[_Union[ExternalPkg, _Mapping]]] = ...,
-        include_schema_type_path: bool = ...,
-        compile_only: bool = ...,
-        show_hidden: bool = ...,
+        include_schema_type_path: _Optional[bool] = ...,
+        compile_only: _Optional[bool] = ...,
+        show_hidden: _Optional[bool] = ...,
         path_selector: _Optional[_Iterable[str]] = ...,
-        fast_eval: bool = ...,
+        fast_eval: _Optional[bool] = ...,
     ) -> None: ...
 
-class ExecProgram_Result(_message.Message):
-    __slots__ = ("json_result", "yaml_result", "log_message", "err_message")
+class ExecProgramResult(_message.Message):
+    __slots__ = ()
     JSON_RESULT_FIELD_NUMBER: _ClassVar[int]
     YAML_RESULT_FIELD_NUMBER: _ClassVar[int]
     LOG_MESSAGE_FIELD_NUMBER: _ClassVar[int]
@@ -498,74 +463,74 @@ class ExecProgram_Result(_message.Message):
         err_message: _Optional[str] = ...,
     ) -> None: ...
 
-class BuildProgram_Args(_message.Message):
-    __slots__ = ("exec_args", "output")
+class BuildProgramArgs(_message.Message):
+    __slots__ = ()
     EXEC_ARGS_FIELD_NUMBER: _ClassVar[int]
     OUTPUT_FIELD_NUMBER: _ClassVar[int]
-    exec_args: ExecProgram_Args
+    exec_args: ExecProgramArgs
     output: str
     def __init__(
         self,
-        exec_args: _Optional[_Union[ExecProgram_Args, _Mapping]] = ...,
+        exec_args: _Optional[_Union[ExecProgramArgs, _Mapping]] = ...,
         output: _Optional[str] = ...,
     ) -> None: ...
 
-class BuildProgram_Result(_message.Message):
-    __slots__ = ("path",)
+class BuildProgramResult(_message.Message):
+    __slots__ = ()
     PATH_FIELD_NUMBER: _ClassVar[int]
     path: str
     def __init__(self, path: _Optional[str] = ...) -> None: ...
 
-class ExecArtifact_Args(_message.Message):
-    __slots__ = ("path", "exec_args")
+class ExecArtifactArgs(_message.Message):
+    __slots__ = ()
     PATH_FIELD_NUMBER: _ClassVar[int]
     EXEC_ARGS_FIELD_NUMBER: _ClassVar[int]
     path: str
-    exec_args: ExecProgram_Args
+    exec_args: ExecProgramArgs
     def __init__(
         self,
         path: _Optional[str] = ...,
-        exec_args: _Optional[_Union[ExecProgram_Args, _Mapping]] = ...,
+        exec_args: _Optional[_Union[ExecProgramArgs, _Mapping]] = ...,
     ) -> None: ...
 
-class FormatCode_Args(_message.Message):
-    __slots__ = ("source",)
+class FormatCodeArgs(_message.Message):
+    __slots__ = ()
     SOURCE_FIELD_NUMBER: _ClassVar[int]
     source: str
     def __init__(self, source: _Optional[str] = ...) -> None: ...
 
-class FormatCode_Result(_message.Message):
-    __slots__ = ("formatted",)
+class FormatCodeResult(_message.Message):
+    __slots__ = ()
     FORMATTED_FIELD_NUMBER: _ClassVar[int]
     formatted: bytes
     def __init__(self, formatted: _Optional[bytes] = ...) -> None: ...
 
-class FormatPath_Args(_message.Message):
-    __slots__ = ("path",)
+class FormatPathArgs(_message.Message):
+    __slots__ = ()
     PATH_FIELD_NUMBER: _ClassVar[int]
     path: str
     def __init__(self, path: _Optional[str] = ...) -> None: ...
 
-class FormatPath_Result(_message.Message):
-    __slots__ = ("changed_paths",)
+class FormatPathResult(_message.Message):
+    __slots__ = ()
     CHANGED_PATHS_FIELD_NUMBER: _ClassVar[int]
     changed_paths: _containers.RepeatedScalarFieldContainer[str]
     def __init__(self, changed_paths: _Optional[_Iterable[str]] = ...) -> None: ...
 
-class LintPath_Args(_message.Message):
-    __slots__ = ("paths",)
+class LintPathArgs(_message.Message):
+    __slots__ = ()
     PATHS_FIELD_NUMBER: _ClassVar[int]
     paths: _containers.RepeatedScalarFieldContainer[str]
     def __init__(self, paths: _Optional[_Iterable[str]] = ...) -> None: ...
 
-class LintPath_Result(_message.Message):
-    __slots__ = ("results",)
+class LintPathResult(_message.Message):
+    __slots__ = ()
     RESULTS_FIELD_NUMBER: _ClassVar[int]
     results: _containers.RepeatedScalarFieldContainer[str]
     def __init__(self, results: _Optional[_Iterable[str]] = ...) -> None: ...
 
-class OverrideFile_Args(_message.Message):
-    __slots__ = ("file", "specs", "import_paths")
+class OverrideFileArgs(_message.Message):
+    __slots__ = ()
     FILE_FIELD_NUMBER: _ClassVar[int]
     SPECS_FIELD_NUMBER: _ClassVar[int]
     IMPORT_PATHS_FIELD_NUMBER: _ClassVar[int]
@@ -579,52 +544,52 @@ class OverrideFile_Args(_message.Message):
         import_paths: _Optional[_Iterable[str]] = ...,
     ) -> None: ...
 
-class OverrideFile_Result(_message.Message):
-    __slots__ = ("result", "parse_errors")
+class OverrideFileResult(_message.Message):
+    __slots__ = ()
     RESULT_FIELD_NUMBER: _ClassVar[int]
     PARSE_ERRORS_FIELD_NUMBER: _ClassVar[int]
     result: bool
     parse_errors: _containers.RepeatedCompositeFieldContainer[Error]
     def __init__(
         self,
-        result: bool = ...,
+        result: _Optional[bool] = ...,
         parse_errors: _Optional[_Iterable[_Union[Error, _Mapping]]] = ...,
     ) -> None: ...
 
-class ListVariables_Options(_message.Message):
-    __slots__ = ("merge_program",)
+class ListVariablesOptions(_message.Message):
+    __slots__ = ()
     MERGE_PROGRAM_FIELD_NUMBER: _ClassVar[int]
     merge_program: bool
-    def __init__(self, merge_program: bool = ...) -> None: ...
+    def __init__(self, merge_program: _Optional[bool] = ...) -> None: ...
 
 class VariableList(_message.Message):
-    __slots__ = ("variables",)
+    __slots__ = ()
     VARIABLES_FIELD_NUMBER: _ClassVar[int]
     variables: _containers.RepeatedCompositeFieldContainer[Variable]
     def __init__(
         self, variables: _Optional[_Iterable[_Union[Variable, _Mapping]]] = ...
     ) -> None: ...
 
-class ListVariables_Args(_message.Message):
-    __slots__ = ("files", "specs", "options")
+class ListVariablesArgs(_message.Message):
+    __slots__ = ()
     FILES_FIELD_NUMBER: _ClassVar[int]
     SPECS_FIELD_NUMBER: _ClassVar[int]
     OPTIONS_FIELD_NUMBER: _ClassVar[int]
     files: _containers.RepeatedScalarFieldContainer[str]
     specs: _containers.RepeatedScalarFieldContainer[str]
-    options: ListVariables_Options
+    options: ListVariablesOptions
     def __init__(
         self,
         files: _Optional[_Iterable[str]] = ...,
         specs: _Optional[_Iterable[str]] = ...,
-        options: _Optional[_Union[ListVariables_Options, _Mapping]] = ...,
+        options: _Optional[_Union[ListVariablesOptions, _Mapping]] = ...,
     ) -> None: ...
 
-class ListVariables_Result(_message.Message):
-    __slots__ = ("variables", "unsupported_codes", "parse_errors")
+class ListVariablesResult(_message.Message):
+    __slots__ = ()
 
     class VariablesEntry(_message.Message):
-        __slots__ = ("key", "value")
+        __slots__ = ()
         KEY_FIELD_NUMBER: _ClassVar[int]
         VALUE_FIELD_NUMBER: _ClassVar[int]
         key: str
@@ -649,7 +614,7 @@ class ListVariables_Result(_message.Message):
     ) -> None: ...
 
 class Variable(_message.Message):
-    __slots__ = ("value", "type_name", "op_sym", "list_items", "dict_entries")
+    __slots__ = ()
     VALUE_FIELD_NUMBER: _ClassVar[int]
     TYPE_NAME_FIELD_NUMBER: _ClassVar[int]
     OP_SYM_FIELD_NUMBER: _ClassVar[int]
@@ -670,7 +635,7 @@ class Variable(_message.Message):
     ) -> None: ...
 
 class MapEntry(_message.Message):
-    __slots__ = ("key", "value")
+    __slots__ = ()
     KEY_FIELD_NUMBER: _ClassVar[int]
     VALUE_FIELD_NUMBER: _ClassVar[int]
     key: str
@@ -681,23 +646,23 @@ class MapEntry(_message.Message):
         value: _Optional[_Union[Variable, _Mapping]] = ...,
     ) -> None: ...
 
-class GetSchemaTypeMapping_Args(_message.Message):
-    __slots__ = ("exec_args", "schema_name")
+class GetSchemaTypeMappingArgs(_message.Message):
+    __slots__ = ()
     EXEC_ARGS_FIELD_NUMBER: _ClassVar[int]
     SCHEMA_NAME_FIELD_NUMBER: _ClassVar[int]
-    exec_args: ExecProgram_Args
+    exec_args: ExecProgramArgs
     schema_name: str
     def __init__(
         self,
-        exec_args: _Optional[_Union[ExecProgram_Args, _Mapping]] = ...,
+        exec_args: _Optional[_Union[ExecProgramArgs, _Mapping]] = ...,
         schema_name: _Optional[str] = ...,
     ) -> None: ...
 
-class GetSchemaTypeMapping_Result(_message.Message):
-    __slots__ = ("schema_type_mapping",)
+class GetSchemaTypeMappingResult(_message.Message):
+    __slots__ = ()
 
     class SchemaTypeMappingEntry(_message.Message):
-        __slots__ = ("key", "value")
+        __slots__ = ()
         KEY_FIELD_NUMBER: _ClassVar[int]
         VALUE_FIELD_NUMBER: _ClassVar[int]
         key: str
@@ -714,16 +679,37 @@ class GetSchemaTypeMapping_Result(_message.Message):
         self, schema_type_mapping: _Optional[_Mapping[str, KclType]] = ...
     ) -> None: ...
 
-class ValidateCode_Args(_message.Message):
-    __slots__ = (
-        "datafile",
-        "data",
-        "file",
-        "code",
-        "schema",
-        "attribute_name",
-        "format",
-    )
+class GetSchemaTypeMappingUnderPathResult(_message.Message):
+    __slots__ = ()
+
+    class SchemaTypeMappingEntry(_message.Message):
+        __slots__ = ()
+        KEY_FIELD_NUMBER: _ClassVar[int]
+        VALUE_FIELD_NUMBER: _ClassVar[int]
+        key: str
+        value: SchemaTypes
+        def __init__(
+            self,
+            key: _Optional[str] = ...,
+            value: _Optional[_Union[SchemaTypes, _Mapping]] = ...,
+        ) -> None: ...
+
+    SCHEMA_TYPE_MAPPING_FIELD_NUMBER: _ClassVar[int]
+    schema_type_mapping: _containers.MessageMap[str, SchemaTypes]
+    def __init__(
+        self, schema_type_mapping: _Optional[_Mapping[str, SchemaTypes]] = ...
+    ) -> None: ...
+
+class SchemaTypes(_message.Message):
+    __slots__ = ()
+    SCHEMA_TYPE_FIELD_NUMBER: _ClassVar[int]
+    schema_type: _containers.RepeatedCompositeFieldContainer[KclType]
+    def __init__(
+        self, schema_type: _Optional[_Iterable[_Union[KclType, _Mapping]]] = ...
+    ) -> None: ...
+
+class ValidateCodeArgs(_message.Message):
+    __slots__ = ()
     DATAFILE_FIELD_NUMBER: _ClassVar[int]
     DATA_FIELD_NUMBER: _ClassVar[int]
     FILE_FIELD_NUMBER: _ClassVar[int]
@@ -731,6 +717,7 @@ class ValidateCode_Args(_message.Message):
     SCHEMA_FIELD_NUMBER: _ClassVar[int]
     ATTRIBUTE_NAME_FIELD_NUMBER: _ClassVar[int]
     FORMAT_FIELD_NUMBER: _ClassVar[int]
+    EXTERNAL_PKGS_FIELD_NUMBER: _ClassVar[int]
     datafile: str
     data: str
     file: str
@@ -738,6 +725,7 @@ class ValidateCode_Args(_message.Message):
     schema: str
     attribute_name: str
     format: str
+    external_pkgs: _containers.RepeatedCompositeFieldContainer[ExternalPkg]
     def __init__(
         self,
         datafile: _Optional[str] = ...,
@@ -747,20 +735,21 @@ class ValidateCode_Args(_message.Message):
         schema: _Optional[str] = ...,
         attribute_name: _Optional[str] = ...,
         format: _Optional[str] = ...,
+        external_pkgs: _Optional[_Iterable[_Union[ExternalPkg, _Mapping]]] = ...,
     ) -> None: ...
 
-class ValidateCode_Result(_message.Message):
-    __slots__ = ("success", "err_message")
+class ValidateCodeResult(_message.Message):
+    __slots__ = ()
     SUCCESS_FIELD_NUMBER: _ClassVar[int]
     ERR_MESSAGE_FIELD_NUMBER: _ClassVar[int]
     success: bool
     err_message: str
     def __init__(
-        self, success: bool = ..., err_message: _Optional[str] = ...
+        self, success: _Optional[bool] = ..., err_message: _Optional[str] = ...
     ) -> None: ...
 
 class Position(_message.Message):
-    __slots__ = ("line", "column", "filename")
+    __slots__ = ()
     LINE_FIELD_NUMBER: _ClassVar[int]
     COLUMN_FIELD_NUMBER: _ClassVar[int]
     FILENAME_FIELD_NUMBER: _ClassVar[int]
@@ -774,8 +763,8 @@ class Position(_message.Message):
         filename: _Optional[str] = ...,
     ) -> None: ...
 
-class ListDepFiles_Args(_message.Message):
-    __slots__ = ("work_dir", "use_abs_path", "include_all", "use_fast_parser")
+class ListDepFilesArgs(_message.Message):
+    __slots__ = ()
     WORK_DIR_FIELD_NUMBER: _ClassVar[int]
     USE_ABS_PATH_FIELD_NUMBER: _ClassVar[int]
     INCLUDE_ALL_FIELD_NUMBER: _ClassVar[int]
@@ -787,13 +776,13 @@ class ListDepFiles_Args(_message.Message):
     def __init__(
         self,
         work_dir: _Optional[str] = ...,
-        use_abs_path: bool = ...,
-        include_all: bool = ...,
-        use_fast_parser: bool = ...,
+        use_abs_path: _Optional[bool] = ...,
+        include_all: _Optional[bool] = ...,
+        use_fast_parser: _Optional[bool] = ...,
     ) -> None: ...
 
-class ListDepFiles_Result(_message.Message):
-    __slots__ = ("pkgroot", "pkgpath", "files")
+class ListDepFilesResult(_message.Message):
+    __slots__ = ()
     PKGROOT_FIELD_NUMBER: _ClassVar[int]
     PKGPATH_FIELD_NUMBER: _ClassVar[int]
     FILES_FIELD_NUMBER: _ClassVar[int]
@@ -807,8 +796,8 @@ class ListDepFiles_Result(_message.Message):
         files: _Optional[_Iterable[str]] = ...,
     ) -> None: ...
 
-class LoadSettingsFiles_Args(_message.Message):
-    __slots__ = ("work_dir", "files")
+class LoadSettingsFilesArgs(_message.Message):
+    __slots__ = ()
     WORK_DIR_FIELD_NUMBER: _ClassVar[int]
     FILES_FIELD_NUMBER: _ClassVar[int]
     work_dir: str
@@ -817,8 +806,8 @@ class LoadSettingsFiles_Args(_message.Message):
         self, work_dir: _Optional[str] = ..., files: _Optional[_Iterable[str]] = ...
     ) -> None: ...
 
-class LoadSettingsFiles_Result(_message.Message):
-    __slots__ = ("kcl_cli_configs", "kcl_options")
+class LoadSettingsFilesResult(_message.Message):
+    __slots__ = ()
     KCL_CLI_CONFIGS_FIELD_NUMBER: _ClassVar[int]
     KCL_OPTIONS_FIELD_NUMBER: _ClassVar[int]
     kcl_cli_configs: CliConfig
@@ -830,20 +819,7 @@ class LoadSettingsFiles_Result(_message.Message):
     ) -> None: ...
 
 class CliConfig(_message.Message):
-    __slots__ = (
-        "files",
-        "output",
-        "overrides",
-        "path_selector",
-        "strict_range_check",
-        "disable_none",
-        "verbose",
-        "debug",
-        "sort_keys",
-        "show_hidden",
-        "include_schema_type_path",
-        "fast_eval",
-    )
+    __slots__ = ()
     FILES_FIELD_NUMBER: _ClassVar[int]
     OUTPUT_FIELD_NUMBER: _ClassVar[int]
     OVERRIDES_FIELD_NUMBER: _ClassVar[int]
@@ -874,18 +850,18 @@ class CliConfig(_message.Message):
         output: _Optional[str] = ...,
         overrides: _Optional[_Iterable[str]] = ...,
         path_selector: _Optional[_Iterable[str]] = ...,
-        strict_range_check: bool = ...,
-        disable_none: bool = ...,
+        strict_range_check: _Optional[bool] = ...,
+        disable_none: _Optional[bool] = ...,
         verbose: _Optional[int] = ...,
-        debug: bool = ...,
-        sort_keys: bool = ...,
-        show_hidden: bool = ...,
-        include_schema_type_path: bool = ...,
-        fast_eval: bool = ...,
+        debug: _Optional[bool] = ...,
+        sort_keys: _Optional[bool] = ...,
+        show_hidden: _Optional[bool] = ...,
+        include_schema_type_path: _Optional[bool] = ...,
+        fast_eval: _Optional[bool] = ...,
     ) -> None: ...
 
 class KeyValuePair(_message.Message):
-    __slots__ = ("key", "value")
+    __slots__ = ()
     KEY_FIELD_NUMBER: _ClassVar[int]
     VALUE_FIELD_NUMBER: _ClassVar[int]
     key: str
@@ -894,8 +870,8 @@ class KeyValuePair(_message.Message):
         self, key: _Optional[str] = ..., value: _Optional[str] = ...
     ) -> None: ...
 
-class Rename_Args(_message.Message):
-    __slots__ = ("package_root", "symbol_path", "file_paths", "new_name")
+class RenameArgs(_message.Message):
+    __slots__ = ()
     PACKAGE_ROOT_FIELD_NUMBER: _ClassVar[int]
     SYMBOL_PATH_FIELD_NUMBER: _ClassVar[int]
     FILE_PATHS_FIELD_NUMBER: _ClassVar[int]
@@ -912,17 +888,17 @@ class Rename_Args(_message.Message):
         new_name: _Optional[str] = ...,
     ) -> None: ...
 
-class Rename_Result(_message.Message):
-    __slots__ = ("changed_files",)
+class RenameResult(_message.Message):
+    __slots__ = ()
     CHANGED_FILES_FIELD_NUMBER: _ClassVar[int]
     changed_files: _containers.RepeatedScalarFieldContainer[str]
     def __init__(self, changed_files: _Optional[_Iterable[str]] = ...) -> None: ...
 
-class RenameCode_Args(_message.Message):
-    __slots__ = ("package_root", "symbol_path", "source_codes", "new_name")
+class RenameCodeArgs(_message.Message):
+    __slots__ = ()
 
     class SourceCodesEntry(_message.Message):
-        __slots__ = ("key", "value")
+        __slots__ = ()
         KEY_FIELD_NUMBER: _ClassVar[int]
         VALUE_FIELD_NUMBER: _ClassVar[int]
         key: str
@@ -947,11 +923,11 @@ class RenameCode_Args(_message.Message):
         new_name: _Optional[str] = ...,
     ) -> None: ...
 
-class RenameCode_Result(_message.Message):
-    __slots__ = ("changed_codes",)
+class RenameCodeResult(_message.Message):
+    __slots__ = ()
 
     class ChangedCodesEntry(_message.Message):
-        __slots__ = ("key", "value")
+        __slots__ = ()
         KEY_FIELD_NUMBER: _ClassVar[int]
         VALUE_FIELD_NUMBER: _ClassVar[int]
         key: str
@@ -964,26 +940,26 @@ class RenameCode_Result(_message.Message):
     changed_codes: _containers.ScalarMap[str, str]
     def __init__(self, changed_codes: _Optional[_Mapping[str, str]] = ...) -> None: ...
 
-class Test_Args(_message.Message):
-    __slots__ = ("exec_args", "pkg_list", "run_regexp", "fail_fast")
+class TestArgs(_message.Message):
+    __slots__ = ()
     EXEC_ARGS_FIELD_NUMBER: _ClassVar[int]
     PKG_LIST_FIELD_NUMBER: _ClassVar[int]
     RUN_REGEXP_FIELD_NUMBER: _ClassVar[int]
     FAIL_FAST_FIELD_NUMBER: _ClassVar[int]
-    exec_args: ExecProgram_Args
+    exec_args: ExecProgramArgs
     pkg_list: _containers.RepeatedScalarFieldContainer[str]
     run_regexp: str
     fail_fast: bool
     def __init__(
         self,
-        exec_args: _Optional[_Union[ExecProgram_Args, _Mapping]] = ...,
+        exec_args: _Optional[_Union[ExecProgramArgs, _Mapping]] = ...,
         pkg_list: _Optional[_Iterable[str]] = ...,
         run_regexp: _Optional[str] = ...,
-        fail_fast: bool = ...,
+        fail_fast: _Optional[bool] = ...,
     ) -> None: ...
 
-class Test_Result(_message.Message):
-    __slots__ = ("info",)
+class TestResult(_message.Message):
+    __slots__ = ()
     INFO_FIELD_NUMBER: _ClassVar[int]
     info: _containers.RepeatedCompositeFieldContainer[TestCaseInfo]
     def __init__(
@@ -991,7 +967,7 @@ class Test_Result(_message.Message):
     ) -> None: ...
 
 class TestCaseInfo(_message.Message):
-    __slots__ = ("name", "error", "duration", "log_message")
+    __slots__ = ()
     NAME_FIELD_NUMBER: _ClassVar[int]
     ERROR_FIELD_NUMBER: _ClassVar[int]
     DURATION_FIELD_NUMBER: _ClassVar[int]
@@ -1008,18 +984,18 @@ class TestCaseInfo(_message.Message):
         log_message: _Optional[str] = ...,
     ) -> None: ...
 
-class UpdateDependencies_Args(_message.Message):
-    __slots__ = ("manifest_path", "vendor")
+class UpdateDependenciesArgs(_message.Message):
+    __slots__ = ()
     MANIFEST_PATH_FIELD_NUMBER: _ClassVar[int]
     VENDOR_FIELD_NUMBER: _ClassVar[int]
     manifest_path: str
     vendor: bool
     def __init__(
-        self, manifest_path: _Optional[str] = ..., vendor: bool = ...
+        self, manifest_path: _Optional[str] = ..., vendor: _Optional[bool] = ...
     ) -> None: ...
 
-class UpdateDependencies_Result(_message.Message):
-    __slots__ = ("external_pkgs",)
+class UpdateDependenciesResult(_message.Message):
+    __slots__ = ()
     EXTERNAL_PKGS_FIELD_NUMBER: _ClassVar[int]
     external_pkgs: _containers.RepeatedCompositeFieldContainer[ExternalPkg]
     def __init__(
@@ -1027,27 +1003,10 @@ class UpdateDependencies_Result(_message.Message):
     ) -> None: ...
 
 class KclType(_message.Message):
-    __slots__ = (
-        "type",
-        "union_types",
-        "default",
-        "schema_name",
-        "schema_doc",
-        "properties",
-        "required",
-        "key",
-        "item",
-        "line",
-        "decorators",
-        "filename",
-        "pkg_path",
-        "description",
-        "examples",
-        "base_schema",
-    )
+    __slots__ = ()
 
     class PropertiesEntry(_message.Message):
-        __slots__ = ("key", "value")
+        __slots__ = ()
         KEY_FIELD_NUMBER: _ClassVar[int]
         VALUE_FIELD_NUMBER: _ClassVar[int]
         key: str
@@ -1059,7 +1018,7 @@ class KclType(_message.Message):
         ) -> None: ...
 
     class ExamplesEntry(_message.Message):
-        __slots__ = ("key", "value")
+        __slots__ = ()
         KEY_FIELD_NUMBER: _ClassVar[int]
         VALUE_FIELD_NUMBER: _ClassVar[int]
         key: str
@@ -1123,10 +1082,10 @@ class KclType(_message.Message):
     ) -> None: ...
 
 class Decorator(_message.Message):
-    __slots__ = ("name", "arguments", "keywords")
+    __slots__ = ()
 
     class KeywordsEntry(_message.Message):
-        __slots__ = ("key", "value")
+        __slots__ = ()
         KEY_FIELD_NUMBER: _ClassVar[int]
         VALUE_FIELD_NUMBER: _ClassVar[int]
         key: str
@@ -1149,7 +1108,7 @@ class Decorator(_message.Message):
     ) -> None: ...
 
 class Example(_message.Message):
-    __slots__ = ("summary", "description", "value")
+    __slots__ = ()
     SUMMARY_FIELD_NUMBER: _ClassVar[int]
     DESCRIPTION_FIELD_NUMBER: _ClassVar[int]
     VALUE_FIELD_NUMBER: _ClassVar[int]

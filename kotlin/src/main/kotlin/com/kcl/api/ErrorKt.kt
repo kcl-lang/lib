@@ -2,6 +2,7 @@
 // NO CHECKED-IN PROTOBUF GENCODE
 // source: spec.proto
 
+@file:com.google.protobuf.Generated
 // Generated files should ignore deprecation warnings
 @file:Suppress("DEPRECATION")
 package com.kcl.api;
@@ -40,10 +41,10 @@ public object ErrorKt {
      * `string level = 1;`
      */
     public var level: kotlin.String
-      @JvmName("getLevel")
-      get() = _builder.level
-      @JvmName("setLevel")
-      set(value) {
+      @kotlin.jvm.JvmName("getLevel")
+        get() = _builder.level
+      @kotlin.jvm.JvmName("setLevel")
+        set(value) {
         _builder.level = value
       }
     /**
@@ -65,10 +66,10 @@ public object ErrorKt {
      * `string code = 2;`
      */
     public var code: kotlin.String
-      @JvmName("getCode")
-      get() = _builder.code
-      @JvmName("setCode")
-      set(value) {
+      @kotlin.jvm.JvmName("getCode")
+        get() = _builder.code
+      @kotlin.jvm.JvmName("setCode")
+        set(value) {
         _builder.code = value
       }
     /**
@@ -97,7 +98,7 @@ public object ErrorKt {
      */
      public val messages: com.google.protobuf.kotlin.DslList<com.kcl.api.Spec.Message, MessagesProxy>
       @kotlin.jvm.JvmSynthetic
-      get() = com.google.protobuf.kotlin.DslList(
+  get() = com.google.protobuf.kotlin.DslList(
         _builder.messagesList
       )
     /**
@@ -109,7 +110,7 @@ public object ErrorKt {
      * @param value The messages to add.
      */
     @kotlin.jvm.JvmSynthetic
-    @kotlin.jvm.JvmName("addMessages")
+@kotlin.jvm.JvmName("addMessages")
     public fun com.google.protobuf.kotlin.DslList<com.kcl.api.Spec.Message, MessagesProxy>.add(value: com.kcl.api.Spec.Message) {
       _builder.addMessages(value)
     }
@@ -122,7 +123,7 @@ public object ErrorKt {
      * @param value The messages to add.
      */
     @kotlin.jvm.JvmSynthetic
-    @kotlin.jvm.JvmName("plusAssignMessages")
+@kotlin.jvm.JvmName("plusAssignMessages")
     @Suppress("NOTHING_TO_INLINE")
     public inline operator fun com.google.protobuf.kotlin.DslList<com.kcl.api.Spec.Message, MessagesProxy>.plusAssign(value: com.kcl.api.Spec.Message) {
       add(value)
@@ -136,7 +137,7 @@ public object ErrorKt {
      * @param values The messages to add.
      */
     @kotlin.jvm.JvmSynthetic
-    @kotlin.jvm.JvmName("addAllMessages")
+@kotlin.jvm.JvmName("addAllMessages")
     public fun com.google.protobuf.kotlin.DslList<com.kcl.api.Spec.Message, MessagesProxy>.addAll(values: kotlin.collections.Iterable<com.kcl.api.Spec.Message>) {
       _builder.addAllMessages(values)
     }
@@ -149,7 +150,7 @@ public object ErrorKt {
      * @param values The messages to add.
      */
     @kotlin.jvm.JvmSynthetic
-    @kotlin.jvm.JvmName("plusAssignAllMessages")
+@kotlin.jvm.JvmName("plusAssignAllMessages")
     @Suppress("NOTHING_TO_INLINE")
     public inline operator fun com.google.protobuf.kotlin.DslList<com.kcl.api.Spec.Message, MessagesProxy>.plusAssign(values: kotlin.collections.Iterable<com.kcl.api.Spec.Message>) {
       addAll(values)
@@ -164,7 +165,7 @@ public object ErrorKt {
      * @param value The messages to set.
      */
     @kotlin.jvm.JvmSynthetic
-    @kotlin.jvm.JvmName("setMessages")
+@kotlin.jvm.JvmName("setMessages")
     public operator fun com.google.protobuf.kotlin.DslList<com.kcl.api.Spec.Message, MessagesProxy>.set(index: kotlin.Int, value: com.kcl.api.Spec.Message) {
       _builder.setMessages(index, value)
     }
@@ -176,11 +177,10 @@ public object ErrorKt {
      * `repeated .com.kcl.api.Message messages = 3;`
      */
     @kotlin.jvm.JvmSynthetic
-    @kotlin.jvm.JvmName("clearMessages")
+@kotlin.jvm.JvmName("clearMessages")
     public fun com.google.protobuf.kotlin.DslList<com.kcl.api.Spec.Message, MessagesProxy>.clear() {
       _builder.clearMessages()
     }
-
   }
 }
 @kotlin.jvm.JvmSynthetic

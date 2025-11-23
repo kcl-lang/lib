@@ -2,6 +2,7 @@
 // NO CHECKED-IN PROTOBUF GENCODE
 // source: spec.proto
 
+@file:com.google.protobuf.Generated
 // Generated files should ignore deprecation warnings
 @file:Suppress("DEPRECATION")
 package com.kcl.api;
@@ -40,10 +41,10 @@ public object DecoratorKt {
      * `string name = 1;`
      */
     public var name: kotlin.String
-      @JvmName("getName")
-      get() = _builder.name
-      @JvmName("setName")
-      set(value) {
+      @kotlin.jvm.JvmName("getName")
+        get() = _builder.name
+      @kotlin.jvm.JvmName("setName")
+        set(value) {
         _builder.name = value
       }
     /**
@@ -72,7 +73,7 @@ public object DecoratorKt {
      * @return A list containing the arguments.
      */
     public val arguments: com.google.protobuf.kotlin.DslList<kotlin.String, ArgumentsProxy>
-      @kotlin.jvm.JvmSynthetic
+    @kotlin.OptIn(com.google.protobuf.kotlin.OnlyForUseByGeneratedProtoCode::class)
       get() = com.google.protobuf.kotlin.DslList(
         _builder.argumentsList
       )
@@ -85,7 +86,7 @@ public object DecoratorKt {
      * @param value The arguments to add.
      */
     @kotlin.jvm.JvmSynthetic
-    @kotlin.jvm.JvmName("addArguments")
+@kotlin.jvm.JvmName("addArguments")
     public fun com.google.protobuf.kotlin.DslList<kotlin.String, ArgumentsProxy>.add(value: kotlin.String) {
       _builder.addArguments(value)
     }
@@ -98,7 +99,7 @@ public object DecoratorKt {
      * @param value The arguments to add.
      */
     @kotlin.jvm.JvmSynthetic
-    @kotlin.jvm.JvmName("plusAssignArguments")
+@kotlin.jvm.JvmName("plusAssignArguments")
     @Suppress("NOTHING_TO_INLINE")
     public inline operator fun com.google.protobuf.kotlin.DslList<kotlin.String, ArgumentsProxy>.plusAssign(value: kotlin.String) {
       add(value)
@@ -112,7 +113,7 @@ public object DecoratorKt {
      * @param values The arguments to add.
      */
     @kotlin.jvm.JvmSynthetic
-    @kotlin.jvm.JvmName("addAllArguments")
+@kotlin.jvm.JvmName("addAllArguments")
     public fun com.google.protobuf.kotlin.DslList<kotlin.String, ArgumentsProxy>.addAll(values: kotlin.collections.Iterable<kotlin.String>) {
       _builder.addAllArguments(values)
     }
@@ -125,7 +126,7 @@ public object DecoratorKt {
      * @param values The arguments to add.
      */
     @kotlin.jvm.JvmSynthetic
-    @kotlin.jvm.JvmName("plusAssignAllArguments")
+@kotlin.jvm.JvmName("plusAssignAllArguments")
     @Suppress("NOTHING_TO_INLINE")
     public inline operator fun com.google.protobuf.kotlin.DslList<kotlin.String, ArgumentsProxy>.plusAssign(values: kotlin.collections.Iterable<kotlin.String>) {
       addAll(values)
@@ -140,7 +141,7 @@ public object DecoratorKt {
      * @param value The arguments to set.
      */
     @kotlin.jvm.JvmSynthetic
-    @kotlin.jvm.JvmName("setArguments")
+@kotlin.jvm.JvmName("setArguments")
     public operator fun com.google.protobuf.kotlin.DslList<kotlin.String, ArgumentsProxy>.set(index: kotlin.Int, value: kotlin.String) {
       _builder.setArguments(index, value)
     }/**
@@ -151,7 +152,7 @@ public object DecoratorKt {
      * `repeated string arguments = 2;`
      */
     @kotlin.jvm.JvmSynthetic
-    @kotlin.jvm.JvmName("clearArguments")
+@kotlin.jvm.JvmName("setArguments")
     public fun com.google.protobuf.kotlin.DslList<kotlin.String, ArgumentsProxy>.clear() {
       _builder.clearArguments()
     }
@@ -170,7 +171,7 @@ public object DecoratorKt {
      */
      public val keywords: com.google.protobuf.kotlin.DslMap<kotlin.String, kotlin.String, KeywordsProxy>
       @kotlin.jvm.JvmSynthetic
-      @JvmName("getKeywordsMap")
+@kotlin.jvm.JvmName("getKeywordsMap")
       get() = com.google.protobuf.kotlin.DslMap(
         _builder.keywordsMap
       )
@@ -181,7 +182,7 @@ public object DecoratorKt {
      *
      * `map<string, string> keywords = 3;`
      */
-    @JvmName("putKeywords")
+    @kotlin.jvm.JvmName("putKeywords")
     public fun com.google.protobuf.kotlin.DslMap<kotlin.String, kotlin.String, KeywordsProxy>
       .put(key: kotlin.String, value: kotlin.String) {
          _builder.putKeywords(key, value)
@@ -194,7 +195,7 @@ public object DecoratorKt {
      * `map<string, string> keywords = 3;`
      */
     @kotlin.jvm.JvmSynthetic
-    @JvmName("setKeywords")
+@kotlin.jvm.JvmName("setKeywords")
     @Suppress("NOTHING_TO_INLINE")
     public inline operator fun com.google.protobuf.kotlin.DslMap<kotlin.String, kotlin.String, KeywordsProxy>
       .set(key: kotlin.String, value: kotlin.String) {
@@ -208,7 +209,7 @@ public object DecoratorKt {
      * `map<string, string> keywords = 3;`
      */
     @kotlin.jvm.JvmSynthetic
-    @JvmName("removeKeywords")
+@kotlin.jvm.JvmName("removeKeywords")
     public fun com.google.protobuf.kotlin.DslMap<kotlin.String, kotlin.String, KeywordsProxy>
       .remove(key: kotlin.String) {
          _builder.removeKeywords(key)
@@ -221,7 +222,7 @@ public object DecoratorKt {
      * `map<string, string> keywords = 3;`
      */
     @kotlin.jvm.JvmSynthetic
-    @JvmName("putAllKeywords")
+@kotlin.jvm.JvmName("putAllKeywords")
     public fun com.google.protobuf.kotlin.DslMap<kotlin.String, kotlin.String, KeywordsProxy>
       .putAll(map: kotlin.collections.Map<kotlin.String, kotlin.String>) {
          _builder.putAllKeywords(map)
@@ -234,7 +235,7 @@ public object DecoratorKt {
      * `map<string, string> keywords = 3;`
      */
     @kotlin.jvm.JvmSynthetic
-    @JvmName("clearKeywords")
+@kotlin.jvm.JvmName("clearKeywords")
     public fun com.google.protobuf.kotlin.DslMap<kotlin.String, kotlin.String, KeywordsProxy>
       .clear() {
          _builder.clearKeywords()

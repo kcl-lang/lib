@@ -2,6 +2,7 @@
 // NO CHECKED-IN PROTOBUF GENCODE
 // source: spec.proto
 
+@file:com.google.protobuf.Generated
 // Generated files should ignore deprecation warnings
 @file:Suppress("DEPRECATION")
 package com.kcl.api;
@@ -40,10 +41,10 @@ public object OptionHelpKt {
      * `string name = 1;`
      */
     public var name: kotlin.String
-      @JvmName("getName")
-      get() = _builder.name
-      @JvmName("setName")
-      set(value) {
+      @kotlin.jvm.JvmName("getName")
+        get() = _builder.name
+      @kotlin.jvm.JvmName("setName")
+        set(value) {
         _builder.name = value
       }
     /**
@@ -65,10 +66,10 @@ public object OptionHelpKt {
      * `string type = 2;`
      */
     public var type: kotlin.String
-      @JvmName("getType")
-      get() = _builder.type
-      @JvmName("setType")
-      set(value) {
+      @kotlin.jvm.JvmName("getType")
+        get() = _builder.type
+      @kotlin.jvm.JvmName("setType")
+        set(value) {
         _builder.type = value
       }
     /**
@@ -90,10 +91,10 @@ public object OptionHelpKt {
      * `bool required = 3;`
      */
     public var required: kotlin.Boolean
-      @JvmName("getRequired")
-      get() = _builder.required
-      @JvmName("setRequired")
-      set(value) {
+      @kotlin.jvm.JvmName("getRequired")
+        get() = _builder.required
+      @kotlin.jvm.JvmName("setRequired")
+        set(value) {
         _builder.required = value
       }
     /**
@@ -115,10 +116,10 @@ public object OptionHelpKt {
      * `string default_value = 4;`
      */
     public var defaultValue: kotlin.String
-      @JvmName("getDefaultValue")
-      get() = _builder.defaultValue
-      @JvmName("setDefaultValue")
-      set(value) {
+      @kotlin.jvm.JvmName("getDefaultValue")
+        get() = _builder.defaultValue
+      @kotlin.jvm.JvmName("setDefaultValue")
+        set(value) {
         _builder.defaultValue = value
       }
     /**
@@ -140,10 +141,10 @@ public object OptionHelpKt {
      * `string help = 5;`
      */
     public var help: kotlin.String
-      @JvmName("getHelp")
-      get() = _builder.help
-      @JvmName("setHelp")
-      set(value) {
+      @kotlin.jvm.JvmName("getHelp")
+        get() = _builder.help
+      @kotlin.jvm.JvmName("setHelp")
+        set(value) {
         _builder.help = value
       }
     /**

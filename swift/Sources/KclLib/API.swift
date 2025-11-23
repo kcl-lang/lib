@@ -8,128 +8,128 @@ public class API: Service {
   public init() {}
 
   // Parses a single KCL file and returns its Abstract Syntax Tree (AST) as a JSON string.
-  public func parseFile(_ args: ParseFile_Args) throws -> ParseFile_Result {
-    return try ParseFile_Result(
-      serializedBytes: callNative(name: "KclvmService.ParseFile", args: try args.serializedBytes()))
+  public func parseFile(_ args: ParseFileArgs) throws -> ParseFileResult {
+    return try ParseFileResult(
+      serializedBytes: callNative(name: "KclService.ParseFile", args: try args.serializedBytes()))
   }
 
   // Parses a KCL program and returns the Abstract Syntax Tree (AST) in JSON format.
-  public func parseProgram(_ args: ParseProgram_Args) throws -> ParseProgram_Result {
-    return try ParseProgram_Result(
+  public func parseProgram(_ args: ParseProgramArgs) throws -> ParseProgramResult {
+    return try ParseProgramResult(
       serializedBytes: callNative(
-        name: "KclvmService.ParseProgram", args: try args.serializedBytes()))
+        name: "KclService.ParseProgram", args: try args.serializedBytes()))
   }
 
   // Loads a KCL package and retrieves AST, symbol, type, and definition information.
-  public func loadPackage(_ args: LoadPackage_Args) throws -> LoadPackage_Result {
-    return try LoadPackage_Result(
+  public func loadPackage(_ args: LoadPackageArgs) throws -> LoadPackageResult {
+    return try LoadPackageResult(
       serializedBytes: callNative(
-        name: "KclvmService.LoadPackage", args: try args.serializedBytes()))
+        name: "KclService.LoadPackage", args: try args.serializedBytes()))
   }
 
   // Executes a KCL file with provided arguments.
-  public func execProgram(_ args: ExecProgram_Args) throws -> ExecProgram_Result {
-    return try ExecProgram_Result(
+  public func execProgram(_ args: ExecProgramArgs) throws -> ExecProgramResult {
+    return try ExecProgramResult(
       serializedBytes: callNative(
-        name: "KclvmService.ExecProgram", args: try args.serializedBytes()))
+        name: "KclService.ExecProgram", args: try args.serializedBytes()))
   }
 
   // Overrides specified elements in a KCL file according to given arguments.
-  public func overrideFile(_ args: OverrideFile_Args) throws -> OverrideFile_Result {
-    return try OverrideFile_Result(
+  public func overrideFile(_ args: OverrideFileArgs) throws -> OverrideFileResult {
+    return try OverrideFileResult(
       serializedBytes: callNative(
-        name: "KclvmService.OverrideFile", args: try args.serializedBytes()))
+        name: "KclService.OverrideFile", args: try args.serializedBytes()))
   }
 
   // Lists all variables declared in a KCL file.
-  public func listVariables(_ args: ListVariables_Args) throws -> ListVariables_Result {
-    return try ListVariables_Result(
+  public func listVariables(_ args: ListVariablesArgs) throws -> ListVariablesResult {
+    return try ListVariablesResult(
       serializedBytes: callNative(
-        name: "KclvmService.ListVariables", args: try args.serializedBytes()))
+        name: "KclService.ListVariables", args: try args.serializedBytes()))
   }
 
   // Lists all options defined in a KCL program.
-  public func listOptions(_ args: ParseProgram_Args) throws -> ListOptions_Result {
-    return try ListOptions_Result(
+  public func listOptions(_ args: ParseProgramArgs) throws -> ListOptionsResult {
+    return try ListOptionsResult(
       serializedBytes: callNative(
-        name: "KclvmService.ListOptions", args: try args.serializedBytes()))
+        name: "KclService.ListOptions", args: try args.serializedBytes()))
   }
 
   // Retrieves the full schema type mapping for a KCL program.
-  public func getSchemaTypeMapping(_ args: GetSchemaTypeMapping_Args) throws
-    -> GetSchemaTypeMapping_Result
+  public func getSchemaTypeMapping(_ args: GetSchemaTypeMappingArgs) throws
+    -> GetSchemaTypeMappingResult
   {
-    return try GetSchemaTypeMapping_Result(
+    return try GetSchemaTypeMappingResult(
       serializedBytes: callNative(
-        name: "KclvmService.GetSchemaTypeMapping", args: try args.serializedBytes()))
+        name: "KclService.GetSchemaTypeMapping", args: try args.serializedBytes()))
   }
 
   // Formats source code according to KCL style guidelines.
-  public func formatCode(_ args: FormatCode_Args) throws -> FormatCode_Result {
-    return try FormatCode_Result(
-      serializedBytes: callNative(name: "KclvmService.FormatCode", args: try args.serializedBytes())
+  public func formatCode(_ args: FormatCodeArgs) throws -> FormatCodeResult {
+    return try FormatCodeResult(
+      serializedBytes: callNative(name: "KclService.FormatCode", args: try args.serializedBytes())
     )
   }
 
   // Formats KCL files or directories to conform to style guidelines.
-  public func formatPath(_ args: FormatPath_Args) throws -> FormatPath_Result {
-    return try FormatPath_Result(
-      serializedBytes: callNative(name: "KclvmService.FormatPath", args: try args.serializedBytes())
+  public func formatPath(_ args: FormatPathArgs) throws -> FormatPathResult {
+    return try FormatPathResult(
+      serializedBytes: callNative(name: "KclService.FormatPath", args: try args.serializedBytes())
     )
   }
 
   // Runs linting checks on KCL files and reports errors and warnings.
-  public func lintPath(_ args: LintPath_Args) throws -> LintPath_Result {
-    return try LintPath_Result(
-      serializedBytes: callNative(name: "KclvmService.LintPath", args: try args.serializedBytes()))
+  public func lintPath(_ args: LintPathArgs) throws -> LintPathResult {
+    return try LintPathResult(
+      serializedBytes: callNative(name: "KclService.LintPath", args: try args.serializedBytes()))
   }
 
   // Validates a data string against a schema defined in a KCL code string.
-  public func validateCode(_ args: ValidateCode_Args) throws -> ValidateCode_Result {
-    return try ValidateCode_Result(
+  public func validateCode(_ args: ValidateCodeArgs) throws -> ValidateCodeResult {
+    return try ValidateCodeResult(
       serializedBytes: callNative(
-        name: "KclvmService.ValidateCode", args: try args.serializedBytes()))
+        name: "KclService.ValidateCode", args: try args.serializedBytes()))
   }
 
   // Builds configuration from settings files.
-  public func loadSettingsFiles(_ args: LoadSettingsFiles_Args) throws -> LoadSettingsFiles_Result {
-    return try LoadSettingsFiles_Result(
+  public func loadSettingsFiles(_ args: LoadSettingsFilesArgs) throws -> LoadSettingsFilesResult {
+    return try LoadSettingsFilesResult(
       serializedBytes: callNative(
-        name: "KclvmService.LoadSettingsFiles", args: try args.serializedBytes()))
+        name: "KclService.LoadSettingsFiles", args: try args.serializedBytes()))
   }
 
   // Renames symbols across files within a KCL package.
-  public func rename(_ args: Rename_Args) throws -> Rename_Result {
-    return try Rename_Result(
-      serializedBytes: callNative(name: "KclvmService.Rename", args: try args.serializedBytes()))
+  public func rename(_ args: RenameArgs) throws -> RenameResult {
+    return try RenameResult(
+      serializedBytes: callNative(name: "KclService.Rename", args: try args.serializedBytes()))
   }
 
   // Renames symbols in source code without modifying files directly.
-  public func renameCode(_ args: RenameCode_Args) throws -> RenameCode_Result {
-    return try RenameCode_Result(
-      serializedBytes: callNative(name: "KclvmService.RenameCode", args: try args.serializedBytes())
+  public func renameCode(_ args: RenameCodeArgs) throws -> RenameCodeResult {
+    return try RenameCodeResult(
+      serializedBytes: callNative(name: "KclService.RenameCode", args: try args.serializedBytes())
     )
   }
 
   // Executes tests on KCL packages using specified test arguments.
-  public func test(_ args: Test_Args) throws -> Test_Result {
-    return try Test_Result(
-      serializedBytes: callNative(name: "KclvmService.Test", args: try args.serializedBytes()))
+  public func test(_ args: TestArgs) throws -> TestResult {
+    return try TestResult(
+      serializedBytes: callNative(name: "KclService.Test", args: try args.serializedBytes()))
   }
 
   // Updates dependencies for a KCL project based on defined specifications.
-  public func updateDependencies(_ args: UpdateDependencies_Args) throws
-    -> UpdateDependencies_Result
+  public func updateDependencies(_ args: UpdateDependenciesArgs) throws
+    -> UpdateDependenciesResult
   {
-    return try UpdateDependencies_Result(
+    return try UpdateDependenciesResult(
       serializedBytes: callNative(
-        name: "KclvmService.UpdateDependencies", args: try args.serializedBytes()))
+        name: "KclService.UpdateDependencies", args: try args.serializedBytes()))
   }
 
   // Retrieves version information about the KCL service.
-  public func getVersion(_ args: GetVersion_Args) throws -> GetVersion_Result {
-    return try GetVersion_Result(
-      serializedBytes: callNative(name: "KclvmService.GetVersion", args: try args.serializedBytes())
+  public func getVersion(_ args: GetVersionArgs) throws -> GetVersionResult {
+    return try GetVersionResult(
+      serializedBytes: callNative(name: "KclService.GetVersion", args: try args.serializedBytes())
     )
   }
 

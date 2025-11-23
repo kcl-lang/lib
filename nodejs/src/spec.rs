@@ -67,7 +67,7 @@ pub struct ParseFileResult {
 }
 
 impl ParseFileResult {
-    pub fn new(r: kclvm_api::ParseFileResult) -> Self {
+    pub fn new(r: kcl_api::ParseFileResult) -> Self {
         Self {
             ast_json: r.ast_json,
             deps: r.deps,
@@ -88,7 +88,7 @@ pub struct ParseProgramResult {
 }
 
 impl ParseProgramResult {
-    pub fn new(r: kclvm_api::ParseProgramResult) -> Self {
+    pub fn new(r: kcl_api::ParseProgramResult) -> Self {
         Self {
             ast_json: r.ast_json,
             paths: r.paths,
@@ -98,7 +98,7 @@ impl ParseProgramResult {
 }
 
 impl crate::spec::Error {
-    pub fn new(e: &kclvm_api::Error) -> Self {
+    pub fn new(e: &kcl_api::Error) -> Self {
         Self {
             level: e.level.clone(),
             code: e.code.clone(),
@@ -119,7 +119,7 @@ impl crate::spec::Error {
 }
 
 impl ScopeIndex {
-    pub fn new(v: &kclvm_api::ScopeIndex) -> Self {
+    pub fn new(v: &kcl_api::ScopeIndex) -> Self {
         ScopeIndex {
             i: v.i as u32,
             g: v.g as u32,
@@ -129,7 +129,7 @@ impl ScopeIndex {
 }
 
 impl SymbolIndex {
-    pub fn new(v: &kclvm_api::SymbolIndex) -> Self {
+    pub fn new(v: &kcl_api::SymbolIndex) -> Self {
         SymbolIndex {
             i: v.i as u32,
             g: v.g as u32,
@@ -139,7 +139,7 @@ impl SymbolIndex {
 }
 
 impl crate::spec::Symbol {
-    pub fn new(v: &kclvm_api::Symbol) -> Self {
+    pub fn new(v: &kcl_api::Symbol) -> Self {
         crate::spec::Symbol {
             ty: v.ty.as_ref().map(|ty| ty.r#type.clone()),
             name: v.name.clone(),
@@ -152,7 +152,7 @@ impl crate::spec::Symbol {
 }
 
 impl LoadPackageResult {
-    pub fn new(r: kclvm_api::LoadPackageResult) -> Self {
+    pub fn new(r: kcl_api::LoadPackageResult) -> Self {
         Self {
             program: r.program,
             paths: r.paths,
@@ -232,7 +232,7 @@ pub struct ListOptionsResult {
 }
 
 impl ListOptionsResult {
-    pub fn new(r: kclvm_api::ListOptionsResult) -> Self {
+    pub fn new(r: kcl_api::ListOptionsResult) -> Self {
         Self {
             options: r
                 .options
@@ -326,7 +326,7 @@ pub struct ExecProgramResult {
 }
 
 impl ExecProgramResult {
-    pub fn new(r: kclvm_api::ExecProgramResult) -> Self {
+    pub fn new(r: kcl_api::ExecProgramResult) -> Self {
         Self {
             json_result: r.json_result,
             yaml_result: r.yaml_result,
@@ -351,7 +351,7 @@ pub struct FormatCodeResult {
 }
 
 impl FormatCodeResult {
-    pub fn new(r: kclvm_api::FormatCodeResult) -> Self {
+    pub fn new(r: kcl_api::FormatCodeResult) -> Self {
         Self {
             formatted: String::from_utf8(r.formatted).unwrap(),
         }
@@ -366,7 +366,7 @@ pub struct FormatPathResult {
 }
 
 impl FormatPathResult {
-    pub fn new(r: kclvm_api::FormatPathResult) -> Self {
+    pub fn new(r: kcl_api::FormatPathResult) -> Self {
         Self {
             changed_paths: r.changed_paths,
         }
@@ -381,7 +381,7 @@ pub struct LintPathResult {
 }
 
 impl LintPathResult {
-    pub fn new(r: kclvm_api::LintPathResult) -> Self {
+    pub fn new(r: kcl_api::LintPathResult) -> Self {
         Self { results: r.results }
     }
 }
@@ -396,7 +396,7 @@ pub struct OverrideFileResult {
 }
 
 impl OverrideFileResult {
-    pub fn new(r: kclvm_api::OverrideFileResult) -> Self {
+    pub fn new(r: kcl_api::OverrideFileResult) -> Self {
         Self {
             result: r.result,
             parse_errors: r.parse_errors.iter().map(crate::spec::Error::new).collect(),
@@ -439,7 +439,7 @@ pub struct Variable {
 }
 
 impl Variable {
-    pub fn new(v: &kclvm_api::Variable) -> Self {
+    pub fn new(v: &kcl_api::Variable) -> Self {
         Self {
             value: v.value.to_string(),
             type_name: v.type_name.to_string(),
@@ -460,7 +460,7 @@ impl Variable {
 }
 
 impl ListVariablesResult {
-    pub fn new(r: kclvm_api::ListVariablesResult) -> Self {
+    pub fn new(r: kcl_api::ListVariablesResult) -> Self {
         Self {
             variables: r
                 .variables
@@ -486,7 +486,7 @@ pub struct GetSchemaTypeMappingResult {
 }
 
 impl GetSchemaTypeMappingResult {
-    pub fn new(r: kclvm_api::GetSchemaTypeMappingResult) -> Self {
+    pub fn new(r: kcl_api::GetSchemaTypeMappingResult) -> Self {
         Self {
             schema_type_mapping: r
                 .schema_type_mapping
@@ -507,7 +507,7 @@ pub struct ValidateCodeResult {
 }
 
 impl ValidateCodeResult {
-    pub fn new(r: kclvm_api::ValidateCodeResult) -> Self {
+    pub fn new(r: kcl_api::ValidateCodeResult) -> Self {
         Self {
             success: r.success,
             err_message: r.err_message,
@@ -536,7 +536,7 @@ pub struct LoadSettingsFilesResult {
 }
 
 impl LoadSettingsFilesResult {
-    pub fn new(r: kclvm_api::LoadSettingsFilesResult) -> Self {
+    pub fn new(r: kcl_api::LoadSettingsFilesResult) -> Self {
         Self {
             kcl_cli_configs: r.kcl_cli_configs.map(|r| CliConfig {
                 files: r.files.clone(),
@@ -609,7 +609,7 @@ pub struct RenameResult {
 }
 
 impl RenameResult {
-    pub fn new(r: kclvm_api::RenameResult) -> Self {
+    pub fn new(r: kcl_api::RenameResult) -> Self {
         Self {
             changed_files: r.changed_files,
         }
@@ -624,7 +624,7 @@ pub struct RenameCodeResult {
 }
 
 impl RenameCodeResult {
-    pub fn new(r: kclvm_api::RenameCodeResult) -> Self {
+    pub fn new(r: kcl_api::RenameCodeResult) -> Self {
         Self {
             changed_codes: r.changed_codes,
         }
@@ -639,7 +639,7 @@ pub struct TestResult {
 }
 
 impl TestResult {
-    pub fn new(r: kclvm_api::TestResult) -> Self {
+    pub fn new(r: kcl_api::TestResult) -> Self {
         Self {
             info: r
                 .info
@@ -732,7 +732,7 @@ pub struct UpdateDependenciesResult {
 }
 
 impl UpdateDependenciesResult {
-    pub fn new(r: kclvm_api::UpdateDependenciesResult) -> Self {
+    pub fn new(r: kcl_api::UpdateDependenciesResult) -> Self {
         Self {
             external_pkgs: r
                 .external_pkgs
@@ -755,7 +755,7 @@ pub struct GetVersionResult {
 }
 
 impl GetVersionResult {
-    pub fn new(r: kclvm_api::GetVersionResult) -> Self {
+    pub fn new(r: kcl_api::GetVersionResult) -> Self {
         Self {
             version: r.version.clone(),
             checksum: r.checksum.clone(),

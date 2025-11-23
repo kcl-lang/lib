@@ -80,7 +80,7 @@ func ParseFileASTJson(filename string, src interface{}) (result string, err erro
 		}
 	}
 	client := NewNativeServiceClient()
-	resp, err := client.ParseFile(&api.ParseFile_Args{
+	resp, err := client.ParseFile(&api.ParseFileArgs{
 		Path:   filename,
 		Source: code,
 	})

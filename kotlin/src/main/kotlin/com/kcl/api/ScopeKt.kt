@@ -2,6 +2,7 @@
 // NO CHECKED-IN PROTOBUF GENCODE
 // source: spec.proto
 
+@file:com.google.protobuf.Generated
 // Generated files should ignore deprecation warnings
 @file:Suppress("DEPRECATION")
 package com.kcl.api;
@@ -40,10 +41,10 @@ public object ScopeKt {
      * `string kind = 1;`
      */
     public var kind: kotlin.String
-      @JvmName("getKind")
-      get() = _builder.kind
-      @JvmName("setKind")
-      set(value) {
+      @kotlin.jvm.JvmName("getKind")
+        get() = _builder.kind
+      @kotlin.jvm.JvmName("setKind")
+        set(value) {
         _builder.kind = value
       }
     /**
@@ -65,10 +66,10 @@ public object ScopeKt {
      * `.com.kcl.api.ScopeIndex parent = 2;`
      */
     public var parent: com.kcl.api.Spec.ScopeIndex
-      @JvmName("getParent")
-      get() = _builder.parent
-      @JvmName("setParent")
-      set(value) {
+      @kotlin.jvm.JvmName("getParent")
+        get() = _builder.parent
+      @kotlin.jvm.JvmName("setParent")
+        set(value) {
         _builder.parent = value
       }
     /**
@@ -104,10 +105,10 @@ public object ScopeKt {
      * `.com.kcl.api.SymbolIndex owner = 3;`
      */
     public var owner: com.kcl.api.Spec.SymbolIndex
-      @JvmName("getOwner")
-      get() = _builder.owner
-      @JvmName("setOwner")
-      set(value) {
+      @kotlin.jvm.JvmName("getOwner")
+        get() = _builder.owner
+      @kotlin.jvm.JvmName("setOwner")
+        set(value) {
         _builder.owner = value
       }
     /**
@@ -150,7 +151,7 @@ public object ScopeKt {
      */
      public val children: com.google.protobuf.kotlin.DslList<com.kcl.api.Spec.ScopeIndex, ChildrenProxy>
       @kotlin.jvm.JvmSynthetic
-      get() = com.google.protobuf.kotlin.DslList(
+  get() = com.google.protobuf.kotlin.DslList(
         _builder.childrenList
       )
     /**
@@ -162,7 +163,7 @@ public object ScopeKt {
      * @param value The children to add.
      */
     @kotlin.jvm.JvmSynthetic
-    @kotlin.jvm.JvmName("addChildren")
+@kotlin.jvm.JvmName("addChildren")
     public fun com.google.protobuf.kotlin.DslList<com.kcl.api.Spec.ScopeIndex, ChildrenProxy>.add(value: com.kcl.api.Spec.ScopeIndex) {
       _builder.addChildren(value)
     }
@@ -175,7 +176,7 @@ public object ScopeKt {
      * @param value The children to add.
      */
     @kotlin.jvm.JvmSynthetic
-    @kotlin.jvm.JvmName("plusAssignChildren")
+@kotlin.jvm.JvmName("plusAssignChildren")
     @Suppress("NOTHING_TO_INLINE")
     public inline operator fun com.google.protobuf.kotlin.DslList<com.kcl.api.Spec.ScopeIndex, ChildrenProxy>.plusAssign(value: com.kcl.api.Spec.ScopeIndex) {
       add(value)
@@ -189,7 +190,7 @@ public object ScopeKt {
      * @param values The children to add.
      */
     @kotlin.jvm.JvmSynthetic
-    @kotlin.jvm.JvmName("addAllChildren")
+@kotlin.jvm.JvmName("addAllChildren")
     public fun com.google.protobuf.kotlin.DslList<com.kcl.api.Spec.ScopeIndex, ChildrenProxy>.addAll(values: kotlin.collections.Iterable<com.kcl.api.Spec.ScopeIndex>) {
       _builder.addAllChildren(values)
     }
@@ -202,7 +203,7 @@ public object ScopeKt {
      * @param values The children to add.
      */
     @kotlin.jvm.JvmSynthetic
-    @kotlin.jvm.JvmName("plusAssignAllChildren")
+@kotlin.jvm.JvmName("plusAssignAllChildren")
     @Suppress("NOTHING_TO_INLINE")
     public inline operator fun com.google.protobuf.kotlin.DslList<com.kcl.api.Spec.ScopeIndex, ChildrenProxy>.plusAssign(values: kotlin.collections.Iterable<com.kcl.api.Spec.ScopeIndex>) {
       addAll(values)
@@ -217,7 +218,7 @@ public object ScopeKt {
      * @param value The children to set.
      */
     @kotlin.jvm.JvmSynthetic
-    @kotlin.jvm.JvmName("setChildren")
+@kotlin.jvm.JvmName("setChildren")
     public operator fun com.google.protobuf.kotlin.DslList<com.kcl.api.Spec.ScopeIndex, ChildrenProxy>.set(index: kotlin.Int, value: com.kcl.api.Spec.ScopeIndex) {
       _builder.setChildren(index, value)
     }
@@ -229,11 +230,10 @@ public object ScopeKt {
      * `repeated .com.kcl.api.ScopeIndex children = 4;`
      */
     @kotlin.jvm.JvmSynthetic
-    @kotlin.jvm.JvmName("clearChildren")
+@kotlin.jvm.JvmName("clearChildren")
     public fun com.google.protobuf.kotlin.DslList<com.kcl.api.Spec.ScopeIndex, ChildrenProxy>.clear() {
       _builder.clearChildren()
     }
-
 
     /**
      * An uninstantiable, behaviorless type to represent the field in
@@ -250,7 +250,7 @@ public object ScopeKt {
      */
      public val defs: com.google.protobuf.kotlin.DslList<com.kcl.api.Spec.SymbolIndex, DefsProxy>
       @kotlin.jvm.JvmSynthetic
-      get() = com.google.protobuf.kotlin.DslList(
+  get() = com.google.protobuf.kotlin.DslList(
         _builder.defsList
       )
     /**
@@ -262,7 +262,7 @@ public object ScopeKt {
      * @param value The defs to add.
      */
     @kotlin.jvm.JvmSynthetic
-    @kotlin.jvm.JvmName("addDefs")
+@kotlin.jvm.JvmName("addDefs")
     public fun com.google.protobuf.kotlin.DslList<com.kcl.api.Spec.SymbolIndex, DefsProxy>.add(value: com.kcl.api.Spec.SymbolIndex) {
       _builder.addDefs(value)
     }
@@ -275,7 +275,7 @@ public object ScopeKt {
      * @param value The defs to add.
      */
     @kotlin.jvm.JvmSynthetic
-    @kotlin.jvm.JvmName("plusAssignDefs")
+@kotlin.jvm.JvmName("plusAssignDefs")
     @Suppress("NOTHING_TO_INLINE")
     public inline operator fun com.google.protobuf.kotlin.DslList<com.kcl.api.Spec.SymbolIndex, DefsProxy>.plusAssign(value: com.kcl.api.Spec.SymbolIndex) {
       add(value)
@@ -289,7 +289,7 @@ public object ScopeKt {
      * @param values The defs to add.
      */
     @kotlin.jvm.JvmSynthetic
-    @kotlin.jvm.JvmName("addAllDefs")
+@kotlin.jvm.JvmName("addAllDefs")
     public fun com.google.protobuf.kotlin.DslList<com.kcl.api.Spec.SymbolIndex, DefsProxy>.addAll(values: kotlin.collections.Iterable<com.kcl.api.Spec.SymbolIndex>) {
       _builder.addAllDefs(values)
     }
@@ -302,7 +302,7 @@ public object ScopeKt {
      * @param values The defs to add.
      */
     @kotlin.jvm.JvmSynthetic
-    @kotlin.jvm.JvmName("plusAssignAllDefs")
+@kotlin.jvm.JvmName("plusAssignAllDefs")
     @Suppress("NOTHING_TO_INLINE")
     public inline operator fun com.google.protobuf.kotlin.DslList<com.kcl.api.Spec.SymbolIndex, DefsProxy>.plusAssign(values: kotlin.collections.Iterable<com.kcl.api.Spec.SymbolIndex>) {
       addAll(values)
@@ -317,7 +317,7 @@ public object ScopeKt {
      * @param value The defs to set.
      */
     @kotlin.jvm.JvmSynthetic
-    @kotlin.jvm.JvmName("setDefs")
+@kotlin.jvm.JvmName("setDefs")
     public operator fun com.google.protobuf.kotlin.DslList<com.kcl.api.Spec.SymbolIndex, DefsProxy>.set(index: kotlin.Int, value: com.kcl.api.Spec.SymbolIndex) {
       _builder.setDefs(index, value)
     }
@@ -329,11 +329,10 @@ public object ScopeKt {
      * `repeated .com.kcl.api.SymbolIndex defs = 5;`
      */
     @kotlin.jvm.JvmSynthetic
-    @kotlin.jvm.JvmName("clearDefs")
+@kotlin.jvm.JvmName("clearDefs")
     public fun com.google.protobuf.kotlin.DslList<com.kcl.api.Spec.SymbolIndex, DefsProxy>.clear() {
       _builder.clearDefs()
     }
-
   }
 }
 @kotlin.jvm.JvmSynthetic

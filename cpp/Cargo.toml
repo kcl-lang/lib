@@ -1,8 +1,8 @@
 [package]
 name = "kcl-lib-cpp"
 publish = false
-edition = "2021"
-version = "0.11.2"
+edition = "2024"
+version = "0.12.0"
 
 [lib]
 crate-type = ["staticlib"]
@@ -10,7 +10,7 @@ crate-type = ["staticlib"]
 [dependencies]
 anyhow = "1.0"
 cxx = "1.0"
-kclvm-api = { git = "https://github.com/kcl-lang/kcl", version = "0.11.2" }
+kcl-api = { git = "https://github.com/kcl-lang/kcl", version = "0.12.0" }
 
 [build-dependencies]
 cxx-build = "1.0"

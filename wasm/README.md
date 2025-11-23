@@ -89,7 +89,7 @@ npm install
 ### Building
 
 ```shell
-npm run compile
+npm run build
 ```
 
 ### Testing

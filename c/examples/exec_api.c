@@ -12,12 +12,12 @@ int exec_file(const char* file_str)
     };
     struct Buffer* files[] = { &file };
     struct RepeatedString strs = { .repeated = &files[0], .index = 0, .max_size = 1 };
-    ExecProgram_Args args = ExecProgram_Args_init_zero;
+    ExecProgramArgs args = ExecProgramArgs_init_zero;
     args.k_filename_list.funcs.encode = encode_str_list;
     args.k_filename_list.arg = &strs;
 
     pb_ostream_t stream = pb_ostream_from_buffer(buffer, sizeof(buffer));
-    status = pb_encode(&stream, ExecProgram_Args_fields, &args);
+    status = pb_encode(&stream, ExecProgramArgs_fields, &args);
     message_length = stream.bytes_written;
 
     if (!status) {
@@ -25,7 +25,7 @@ int exec_file(const char* file_str)
         return 1;
     }
 
-    const char* api_str = "KclvmService.ExecProgram";
+    const char* api_str = "KclService.ExecProgram";
     size_t result_length = call_native((const uint8_t*)api_str, strlen(api_str), buffer, message_length, result_buffer);
     if (check_error_prefix(result_buffer)) {
         printf("%s", result_buffer);
@@ -33,7 +33,7 @@ int exec_file(const char* file_str)
     }
     pb_istream_t istream = pb_istream_from_buffer(result_buffer, result_length);
 
-    ExecProgram_Result result = ExecProgram_Result_init_default;
+    ExecProgramResult result = ExecProgramResult_init_default;
 
     uint8_t yaml_value_buffer[BUFFER_SIZE] = { 0 };
     result.yaml_result.arg = yaml_value_buffer;
@@ -51,7 +51,7 @@ int exec_file(const char* file_str)
     result.log_message.arg = log_value_buffer;
     result.log_message.funcs.decode = decode_string;
 
-    status = pb_decode(&istream, ExecProgram_Result_fields, &result);
+    status = pb_decode(&istream, ExecProgramResult_fields, &result);
 
     if (!status) {
         printf("Decoding failed: %s\n", PB_GET_ERROR(&istream));

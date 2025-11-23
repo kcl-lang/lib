@@ -14,43 +14,43 @@ PB_BIND(Error, Error, AUTO)
 
 PB_BIND(Message, Message, AUTO)
 
-PB_BIND(Ping_Args, Ping_Args, AUTO)
+PB_BIND(PingArgs, PingArgs, AUTO)
 
-PB_BIND(Ping_Result, Ping_Result, AUTO)
+PB_BIND(PingResult, PingResult, AUTO)
 
-PB_BIND(GetVersion_Args, GetVersion_Args, AUTO)
+PB_BIND(GetVersionArgs, GetVersionArgs, AUTO)
 
-PB_BIND(GetVersion_Result, GetVersion_Result, AUTO)
+PB_BIND(GetVersionResult, GetVersionResult, AUTO)
 
-PB_BIND(ListMethod_Args, ListMethod_Args, AUTO)
+PB_BIND(ListMethodArgs, ListMethodArgs, AUTO)
 
-PB_BIND(ListMethod_Result, ListMethod_Result, AUTO)
+PB_BIND(ListMethodResult, ListMethodResult, AUTO)
 
-PB_BIND(ParseFile_Args, ParseFile_Args, AUTO)
+PB_BIND(ParseFileArgs, ParseFileArgs, AUTO)
 
-PB_BIND(ParseFile_Result, ParseFile_Result, AUTO)
+PB_BIND(ParseFileResult, ParseFileResult, AUTO)
 
-PB_BIND(ParseProgram_Args, ParseProgram_Args, AUTO)
+PB_BIND(ParseProgramArgs, ParseProgramArgs, AUTO)
 
-PB_BIND(ParseProgram_Result, ParseProgram_Result, AUTO)
+PB_BIND(ParseProgramResult, ParseProgramResult, AUTO)
 
-PB_BIND(LoadPackage_Args, LoadPackage_Args, AUTO)
+PB_BIND(LoadPackageArgs, LoadPackageArgs, AUTO)
 
-PB_BIND(LoadPackage_Result, LoadPackage_Result, AUTO)
+PB_BIND(LoadPackageResult, LoadPackageResult, AUTO)
 
-PB_BIND(LoadPackage_Result_ScopesEntry, LoadPackage_Result_ScopesEntry, AUTO)
+PB_BIND(LoadPackageResult_ScopesEntry, LoadPackageResult_ScopesEntry, AUTO)
 
-PB_BIND(LoadPackage_Result_SymbolsEntry, LoadPackage_Result_SymbolsEntry, 2)
+PB_BIND(LoadPackageResult_SymbolsEntry, LoadPackageResult_SymbolsEntry, 2)
 
-PB_BIND(LoadPackage_Result_NodeSymbolMapEntry, LoadPackage_Result_NodeSymbolMapEntry, AUTO)
+PB_BIND(LoadPackageResult_NodeSymbolMapEntry, LoadPackageResult_NodeSymbolMapEntry, AUTO)
 
-PB_BIND(LoadPackage_Result_SymbolNodeMapEntry, LoadPackage_Result_SymbolNodeMapEntry, AUTO)
+PB_BIND(LoadPackageResult_SymbolNodeMapEntry, LoadPackageResult_SymbolNodeMapEntry, AUTO)
 
-PB_BIND(LoadPackage_Result_FullyQualifiedNameMapEntry, LoadPackage_Result_FullyQualifiedNameMapEntry, AUTO)
+PB_BIND(LoadPackageResult_FullyQualifiedNameMapEntry, LoadPackageResult_FullyQualifiedNameMapEntry, AUTO)
 
-PB_BIND(LoadPackage_Result_PkgScopeMapEntry, LoadPackage_Result_PkgScopeMapEntry, AUTO)
+PB_BIND(LoadPackageResult_PkgScopeMapEntry, LoadPackageResult_PkgScopeMapEntry, AUTO)
 
-PB_BIND(ListOptions_Result, ListOptions_Result, AUTO)
+PB_BIND(ListOptionsResult, ListOptionsResult, AUTO)
 
 PB_BIND(OptionHelp, OptionHelp, AUTO)
 
@@ -62,91 +62,91 @@ PB_BIND(SymbolIndex, SymbolIndex, AUTO)
 
 PB_BIND(ScopeIndex, ScopeIndex, AUTO)
 
-PB_BIND(ExecProgram_Args, ExecProgram_Args, AUTO)
+PB_BIND(ExecProgramArgs, ExecProgramArgs, AUTO)
 
-PB_BIND(ExecProgram_Result, ExecProgram_Result, AUTO)
+PB_BIND(ExecProgramResult, ExecProgramResult, AUTO)
 
-PB_BIND(BuildProgram_Args, BuildProgram_Args, AUTO)
+PB_BIND(BuildProgramArgs, BuildProgramArgs, AUTO)
 
-PB_BIND(BuildProgram_Result, BuildProgram_Result, AUTO)
+PB_BIND(BuildProgramResult, BuildProgramResult, AUTO)
 
-PB_BIND(ExecArtifact_Args, ExecArtifact_Args, AUTO)
+PB_BIND(ExecArtifactArgs, ExecArtifactArgs, AUTO)
 
-PB_BIND(FormatCode_Args, FormatCode_Args, AUTO)
+PB_BIND(FormatCodeArgs, FormatCodeArgs, AUTO)
 
-PB_BIND(FormatCode_Result, FormatCode_Result, AUTO)
+PB_BIND(FormatCodeResult, FormatCodeResult, AUTO)
 
-PB_BIND(FormatPath_Args, FormatPath_Args, AUTO)
+PB_BIND(FormatPathArgs, FormatPathArgs, AUTO)
 
-PB_BIND(FormatPath_Result, FormatPath_Result, AUTO)
+PB_BIND(FormatPathResult, FormatPathResult, AUTO)
 
-PB_BIND(LintPath_Args, LintPath_Args, AUTO)
+PB_BIND(LintPathArgs, LintPathArgs, AUTO)
 
-PB_BIND(LintPath_Result, LintPath_Result, AUTO)
+PB_BIND(LintPathResult, LintPathResult, AUTO)
 
-PB_BIND(OverrideFile_Args, OverrideFile_Args, AUTO)
+PB_BIND(OverrideFileArgs, OverrideFileArgs, AUTO)
 
-PB_BIND(OverrideFile_Result, OverrideFile_Result, AUTO)
+PB_BIND(OverrideFileResult, OverrideFileResult, AUTO)
 
-PB_BIND(ListVariables_Options, ListVariables_Options, AUTO)
+PB_BIND(ListVariablesOptions, ListVariablesOptions, AUTO)
 
 PB_BIND(VariableList, VariableList, AUTO)
 
-PB_BIND(ListVariables_Args, ListVariables_Args, AUTO)
+PB_BIND(ListVariablesArgs, ListVariablesArgs, AUTO)
 
-PB_BIND(ListVariables_Result, ListVariables_Result, AUTO)
+PB_BIND(ListVariablesResult, ListVariablesResult, AUTO)
 
-PB_BIND(ListVariables_Result_VariablesEntry, ListVariables_Result_VariablesEntry, AUTO)
+PB_BIND(ListVariablesResult_VariablesEntry, ListVariablesResult_VariablesEntry, AUTO)
 
 PB_BIND(Variable, Variable, AUTO)
 
 PB_BIND(MapEntry, MapEntry, AUTO)
 
-PB_BIND(GetSchemaTypeMapping_Args, GetSchemaTypeMapping_Args, AUTO)
+PB_BIND(GetSchemaTypeMappingArgs, GetSchemaTypeMappingArgs, AUTO)
 
-PB_BIND(GetSchemaTypeMapping_Result, GetSchemaTypeMapping_Result, AUTO)
+PB_BIND(GetSchemaTypeMappingResult, GetSchemaTypeMappingResult, AUTO)
 
-PB_BIND(GetSchemaTypeMapping_Result_SchemaTypeMappingEntry, GetSchemaTypeMapping_Result_SchemaTypeMappingEntry, 2)
+PB_BIND(GetSchemaTypeMappingResult_SchemaTypeMappingEntry, GetSchemaTypeMappingResult_SchemaTypeMappingEntry, 2)
 
-PB_BIND(ValidateCode_Args, ValidateCode_Args, AUTO)
+PB_BIND(ValidateCodeArgs, ValidateCodeArgs, AUTO)
 
-PB_BIND(ValidateCode_Result, ValidateCode_Result, AUTO)
+PB_BIND(ValidateCodeResult, ValidateCodeResult, AUTO)
 
 PB_BIND(Position, Position, AUTO)
 
-PB_BIND(ListDepFiles_Args, ListDepFiles_Args, AUTO)
+PB_BIND(ListDepFilesArgs, ListDepFilesArgs, AUTO)
 
-PB_BIND(ListDepFiles_Result, ListDepFiles_Result, AUTO)
+PB_BIND(ListDepFilesResult, ListDepFilesResult, AUTO)
 
-PB_BIND(LoadSettingsFiles_Args, LoadSettingsFiles_Args, AUTO)
+PB_BIND(LoadSettingsFilesArgs, LoadSettingsFilesArgs, AUTO)
 
-PB_BIND(LoadSettingsFiles_Result, LoadSettingsFiles_Result, AUTO)
+PB_BIND(LoadSettingsFilesResult, LoadSettingsFilesResult, AUTO)
 
 PB_BIND(CliConfig, CliConfig, AUTO)
 
 PB_BIND(KeyValuePair, KeyValuePair, AUTO)
 
-PB_BIND(Rename_Args, Rename_Args, AUTO)
+PB_BIND(RenameArgs, RenameArgs, AUTO)
 
-PB_BIND(Rename_Result, Rename_Result, AUTO)
+PB_BIND(RenameResult, RenameResult, AUTO)
 
-PB_BIND(RenameCode_Args, RenameCode_Args, AUTO)
+PB_BIND(RenameCodeArgs, RenameCodeArgs, AUTO)
 
-PB_BIND(RenameCode_Args_SourceCodesEntry, RenameCode_Args_SourceCodesEntry, AUTO)
+PB_BIND(RenameCodeArgs_SourceCodesEntry, RenameCodeArgs_SourceCodesEntry, AUTO)
 
-PB_BIND(RenameCode_Result, RenameCode_Result, AUTO)
+PB_BIND(RenameCodeResult, RenameCodeResult, AUTO)
 
-PB_BIND(RenameCode_Result_ChangedCodesEntry, RenameCode_Result_ChangedCodesEntry, AUTO)
+PB_BIND(RenameCodeResult_ChangedCodesEntry, RenameCodeResult_ChangedCodesEntry, AUTO)
 
-PB_BIND(Test_Args, Test_Args, AUTO)
+PB_BIND(TestArgs, TestArgs, AUTO)
 
-PB_BIND(Test_Result, Test_Result, AUTO)
+PB_BIND(TestResult, TestResult, AUTO)
 
 PB_BIND(TestCaseInfo, TestCaseInfo, AUTO)
 
-PB_BIND(UpdateDependencies_Args, UpdateDependencies_Args, AUTO)
+PB_BIND(UpdateDependenciesArgs, UpdateDependenciesArgs, AUTO)
 
-PB_BIND(UpdateDependencies_Result, UpdateDependencies_Result, AUTO)
+PB_BIND(UpdateDependenciesResult, UpdateDependenciesResult, AUTO)
 
 PB_BIND(KclType, KclType, 2)
 

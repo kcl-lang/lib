@@ -2,6 +2,7 @@
 // NO CHECKED-IN PROTOBUF GENCODE
 // source: spec.proto
 
+@file:com.google.protobuf.Generated
 // Generated files should ignore deprecation warnings
 @file:Suppress("DEPRECATION")
 package com.kcl.api;
@@ -40,10 +41,10 @@ public object SymbolKt {
      * `.com.kcl.api.KclType ty = 1;`
      */
     public var ty: com.kcl.api.Spec.KclType
-      @JvmName("getTy")
-      get() = _builder.ty
-      @JvmName("setTy")
-      set(value) {
+      @kotlin.jvm.JvmName("getTy")
+        get() = _builder.ty
+      @kotlin.jvm.JvmName("setTy")
+        set(value) {
         _builder.ty = value
       }
     /**
@@ -79,10 +80,10 @@ public object SymbolKt {
      * `string name = 2;`
      */
     public var name: kotlin.String
-      @JvmName("getName")
-      get() = _builder.name
-      @JvmName("setName")
-      set(value) {
+      @kotlin.jvm.JvmName("getName")
+        get() = _builder.name
+      @kotlin.jvm.JvmName("setName")
+        set(value) {
         _builder.name = value
       }
     /**
@@ -104,10 +105,10 @@ public object SymbolKt {
      * `.com.kcl.api.SymbolIndex owner = 3;`
      */
     public var owner: com.kcl.api.Spec.SymbolIndex
-      @JvmName("getOwner")
-      get() = _builder.owner
-      @JvmName("setOwner")
-      set(value) {
+      @kotlin.jvm.JvmName("getOwner")
+        get() = _builder.owner
+      @kotlin.jvm.JvmName("setOwner")
+        set(value) {
         _builder.owner = value
       }
     /**
@@ -143,10 +144,10 @@ public object SymbolKt {
      * `.com.kcl.api.SymbolIndex def = 4;`
      */
     public var def: com.kcl.api.Spec.SymbolIndex
-      @JvmName("getDef")
-      get() = _builder.def
-      @JvmName("setDef")
-      set(value) {
+      @kotlin.jvm.JvmName("getDef")
+        get() = _builder.def
+      @kotlin.jvm.JvmName("setDef")
+        set(value) {
         _builder.def = value
       }
     /**
@@ -189,7 +190,7 @@ public object SymbolKt {
      */
      public val attrs: com.google.protobuf.kotlin.DslList<com.kcl.api.Spec.SymbolIndex, AttrsProxy>
       @kotlin.jvm.JvmSynthetic
-      get() = com.google.protobuf.kotlin.DslList(
+  get() = com.google.protobuf.kotlin.DslList(
         _builder.attrsList
       )
     /**
@@ -201,7 +202,7 @@ public object SymbolKt {
      * @param value The attrs to add.
      */
     @kotlin.jvm.JvmSynthetic
-    @kotlin.jvm.JvmName("addAttrs")
+@kotlin.jvm.JvmName("addAttrs")
     public fun com.google.protobuf.kotlin.DslList<com.kcl.api.Spec.SymbolIndex, AttrsProxy>.add(value: com.kcl.api.Spec.SymbolIndex) {
       _builder.addAttrs(value)
     }
@@ -214,7 +215,7 @@ public object SymbolKt {
      * @param value The attrs to add.
      */
     @kotlin.jvm.JvmSynthetic
-    @kotlin.jvm.JvmName("plusAssignAttrs")
+@kotlin.jvm.JvmName("plusAssignAttrs")
     @Suppress("NOTHING_TO_INLINE")
     public inline operator fun com.google.protobuf.kotlin.DslList<com.kcl.api.Spec.SymbolIndex, AttrsProxy>.plusAssign(value: com.kcl.api.Spec.SymbolIndex) {
       add(value)
@@ -228,7 +229,7 @@ public object SymbolKt {
      * @param values The attrs to add.
      */
     @kotlin.jvm.JvmSynthetic
-    @kotlin.jvm.JvmName("addAllAttrs")
+@kotlin.jvm.JvmName("addAllAttrs")
     public fun com.google.protobuf.kotlin.DslList<com.kcl.api.Spec.SymbolIndex, AttrsProxy>.addAll(values: kotlin.collections.Iterable<com.kcl.api.Spec.SymbolIndex>) {
       _builder.addAllAttrs(values)
     }
@@ -241,7 +242,7 @@ public object SymbolKt {
      * @param values The attrs to add.
      */
     @kotlin.jvm.JvmSynthetic
-    @kotlin.jvm.JvmName("plusAssignAllAttrs")
+@kotlin.jvm.JvmName("plusAssignAllAttrs")
     @Suppress("NOTHING_TO_INLINE")
     public inline operator fun com.google.protobuf.kotlin.DslList<com.kcl.api.Spec.SymbolIndex, AttrsProxy>.plusAssign(values: kotlin.collections.Iterable<com.kcl.api.Spec.SymbolIndex>) {
       addAll(values)
@@ -256,7 +257,7 @@ public object SymbolKt {
      * @param value The attrs to set.
      */
     @kotlin.jvm.JvmSynthetic
-    @kotlin.jvm.JvmName("setAttrs")
+@kotlin.jvm.JvmName("setAttrs")
     public operator fun com.google.protobuf.kotlin.DslList<com.kcl.api.Spec.SymbolIndex, AttrsProxy>.set(index: kotlin.Int, value: com.kcl.api.Spec.SymbolIndex) {
       _builder.setAttrs(index, value)
     }
@@ -268,11 +269,10 @@ public object SymbolKt {
      * `repeated .com.kcl.api.SymbolIndex attrs = 5;`
      */
     @kotlin.jvm.JvmSynthetic
-    @kotlin.jvm.JvmName("clearAttrs")
+@kotlin.jvm.JvmName("clearAttrs")
     public fun com.google.protobuf.kotlin.DslList<com.kcl.api.Spec.SymbolIndex, AttrsProxy>.clear() {
       _builder.clearAttrs()
     }
-
 
     /**
      * ```
@@ -282,10 +282,10 @@ public object SymbolKt {
      * `bool is_global = 6;`
      */
     public var isGlobal: kotlin.Boolean
-      @JvmName("getIsGlobal")
-      get() = _builder.isGlobal
-      @JvmName("setIsGlobal")
-      set(value) {
+      @kotlin.jvm.JvmName("getIsGlobal")
+        get() = _builder.isGlobal
+      @kotlin.jvm.JvmName("setIsGlobal")
+        set(value) {
         _builder.isGlobal = value
       }
     /**
