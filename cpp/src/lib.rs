@@ -1,4 +1,4 @@
-extern crate kclvm_api;
+extern crate kcl_api;
 
 use anyhow::Result;
 
@@ -772,7 +772,7 @@ use ffi::*;
 
 impl crate::ffi::Error {
     #[inline]
-    fn new(e: &kclvm_api::Error) -> Self {
+    fn new(e: &kcl_api::Error) -> Self {
         Self {
             level: e.level.clone(),
             code: e.code.clone(),
@@ -798,7 +798,7 @@ impl crate::ffi::Error {
 
 impl UpdateDependenciesResult {
     #[inline]
-    fn new(r: kclvm_api::UpdateDependenciesResult) -> Self {
+    fn new(r: kcl_api::UpdateDependenciesResult) -> Self {
         Self {
             external_pkgs: r
                 .external_pkgs
@@ -813,27 +813,27 @@ impl UpdateDependenciesResult {
 }
 
 #[inline]
-fn build_exec_program_args(args: &ExecProgramArgs) -> kclvm_api::ExecProgramArgs {
-    kclvm_api::ExecProgramArgs {
+fn build_exec_program_args(args: &ExecProgramArgs) -> kcl_api::ExecProgramArgs {
+    kcl_api::ExecProgramArgs {
         work_dir: args.work_dir.clone(),
         k_filename_list: args.k_filename_list.clone(),
         k_code_list: args.k_code_list.clone(),
         args: args
             .args
             .iter()
-            .map(|a| kclvm_api::Argument {
+            .map(|a| kcl_api::Argument {
                 name: a.name.clone(),
                 value: a.value.clone(),
             })
-            .collect::<Vec<kclvm_api::Argument>>(),
+            .collect::<Vec<kcl_api::Argument>>(),
         external_pkgs: args
             .external_pkgs
             .iter()
-            .map(|e| kclvm_api::ExternalPkg {
+            .map(|e| kcl_api::ExternalPkg {
                 pkg_name: e.pkg_name.clone(),
                 pkg_path: e.pkg_path.clone(),
             })
-            .collect::<Vec<kclvm_api::ExternalPkg>>(),
+            .collect::<Vec<kcl_api::ExternalPkg>>(),
         overrides: args.overrides.clone(),
         strict_range_check: args.strict_range_check,
         disable_none: args.disable_none,
@@ -853,7 +853,7 @@ fn build_exec_program_args(args: &ExecProgramArgs) -> kclvm_api::ExecProgramArgs
 #[inline]
 fn build_optional_exec_program_args(
     args: &OptionalExecProgramArgs,
-) -> Option<kclvm_api::ExecProgramArgs> {
+) -> Option<kcl_api::ExecProgramArgs> {
     if args.has_value {
         Some(build_exec_program_args(&args.value))
     } else {
@@ -863,7 +863,7 @@ fn build_optional_exec_program_args(
 
 /// Execute KCL file with arguments and return the JSON/YAML result.
 fn exec_program(args: &ExecProgramArgs) -> Result<ExecProgramResult> {
-    let api = kclvm_api::API::default();
+    let api = kcl_api::API::default();
     let result = api.exec_program(&build_exec_program_args(args))?;
     Ok(ExecProgramResult {
         yaml_result: result.yaml_result,
@@ -875,8 +875,8 @@ fn exec_program(args: &ExecProgramArgs) -> Result<ExecProgramResult> {
 
 /// Validate code using schema and JSON/YAML data strings.
 fn validate_code(args: &ValidateCodeArgs) -> Result<ValidateCodeResult> {
-    let api = kclvm_api::API::default();
-    let result = api.validate_code(&kclvm_api::ValidateCodeArgs {
+    let api = kcl_api::API::default();
+    let result = api.validate_code(&kcl_api::ValidateCodeArgs {
         datafile: args.datafile.clone(),
         data: args.data.clone(),
         file: args.file.clone(),
@@ -887,11 +887,11 @@ fn validate_code(args: &ValidateCodeArgs) -> Result<ValidateCodeResult> {
         external_pkgs: args
             .external_pkgs
             .iter()
-            .map(|e| kclvm_api::ExternalPkg {
+            .map(|e| kcl_api::ExternalPkg {
                 pkg_name: e.pkg_name.clone(),
                 pkg_path: e.pkg_path.clone(),
             })
-            .collect::<Vec<kclvm_api::ExternalPkg>>(),
+            .collect::<Vec<kcl_api::ExternalPkg>>(),
     })?;
     Ok(ValidateCodeResult {
         success: result.success,
@@ -903,8 +903,8 @@ fn validate_code(args: &ValidateCodeArgs) -> Result<ValidateCodeResult> {
 /// See [https://www.kcl-lang.io/docs/user_docs/guides/automation](https://www.kcl-lang.io/docs/user_docs/guides/automation)
 /// for more override spec guide.
 fn override_file(args: &OverrideFileArgs) -> Result<OverrideFileResult> {
-    let api = kclvm_api::API::default();
-    let result = api.override_file(&kclvm_api::OverrideFileArgs {
+    let api = kcl_api::API::default();
+    let result = api.override_file(&kcl_api::OverrideFileArgs {
         file: args.file.clone(),
         specs: args.specs.clone(),
         import_paths: args.import_paths.clone(),
@@ -922,8 +922,8 @@ fn override_file(args: &OverrideFileArgs) -> Result<OverrideFileResult> {
 /// Download and update dependencies defined in the `kcl.mod` file and return the
 /// external package name and location list.
 fn update_dependencies(args: &UpdateDependenciesArgs) -> Result<UpdateDependenciesResult> {
-    let api = kclvm_api::API::default();
-    let result = api.update_dependencies(&kclvm_api::UpdateDependenciesArgs {
+    let api = kcl_api::API::default();
+    let result = api.update_dependencies(&kcl_api::UpdateDependenciesArgs {
         manifest_path: args.manifest_path.clone(),
         vendor: args.vendor,
     })?;
@@ -931,8 +931,8 @@ fn update_dependencies(args: &UpdateDependenciesArgs) -> Result<UpdateDependenci
 }
 
 #[inline]
-fn build_load_package_args(args: &LoadPackageArgs) -> kclvm_api::LoadPackageArgs {
-    kclvm_api::LoadPackageArgs {
+fn build_load_package_args(args: &LoadPackageArgs) -> kcl_api::LoadPackageArgs {
+    kcl_api::LoadPackageArgs {
         parse_args: build_optional_parse_program_args(&args.parse_args),
         resolve_ast: args.resolve_ast,
         load_builtin: args.load_builtin,
@@ -942,7 +942,7 @@ fn build_load_package_args(args: &LoadPackageArgs) -> kclvm_api::LoadPackageArgs
 
 impl LoadPackageResult {
     #[inline]
-    fn new(r: kclvm_api::LoadPackageResult) -> Self {
+    fn new(r: kcl_api::LoadPackageResult) -> Self {
         Self {
             program: r.program,
             paths: r.paths,
@@ -1008,7 +1008,7 @@ impl LoadPackageResult {
 
 impl ScopeIndex {
     #[inline]
-    pub fn new(v: &kclvm_api::ScopeIndex) -> Self {
+    pub fn new(v: &kcl_api::ScopeIndex) -> Self {
         ScopeIndex {
             i: v.i,
             g: v.g,
@@ -1019,7 +1019,7 @@ impl ScopeIndex {
 
 impl OptionalScopeIndex {
     #[inline]
-    fn new(v: &Option<kclvm_api::ScopeIndex>) -> Self {
+    fn new(v: &Option<kcl_api::ScopeIndex>) -> Self {
         match v {
             Some(v) => Self {
                 has_value: true,
@@ -1035,7 +1035,7 @@ impl OptionalScopeIndex {
 
 impl SymbolIndex {
     #[inline]
-    fn new(v: &kclvm_api::SymbolIndex) -> Self {
+    fn new(v: &kcl_api::SymbolIndex) -> Self {
         Self {
             i: v.i,
             g: v.g,
@@ -1046,7 +1046,7 @@ impl SymbolIndex {
 
 impl OptionalSymbolIndex {
     #[inline]
-    fn new(v: &Option<kclvm_api::SymbolIndex>) -> Self {
+    fn new(v: &Option<kcl_api::SymbolIndex>) -> Self {
         match v {
             Some(v) => Self {
                 has_value: true,
@@ -1062,7 +1062,7 @@ impl OptionalSymbolIndex {
 
 impl Symbol {
     #[inline]
-    pub fn new(v: &kclvm_api::Symbol) -> Self {
+    pub fn new(v: &kcl_api::Symbol) -> Self {
         Self {
             ty: OptionalKclType::new(&v.ty),
             name: v.name.clone(),
@@ -1077,42 +1077,42 @@ impl Symbol {
 /// Provides users with the ability to parse KCL program and semantic
 /// model information including symbols, types, definitions, etc.
 fn load_package(args: &LoadPackageArgs) -> Result<LoadPackageResult> {
-    let api = kclvm_api::API::default();
+    let api = kcl_api::API::default();
     let result = api.load_package(&build_load_package_args(args))?;
     Ok(LoadPackageResult::new(result))
 }
 
-fn build_parse_program_args(args: &ParseProgramArgs) -> kclvm_api::ParseProgramArgs {
-    kclvm_api::ParseProgramArgs {
+fn build_parse_program_args(args: &ParseProgramArgs) -> kcl_api::ParseProgramArgs {
+    kcl_api::ParseProgramArgs {
         paths: args.paths.clone(),
         sources: args.sources.clone(),
         external_pkgs: args
             .external_pkgs
             .iter()
-            .map(|e| kclvm_api::ExternalPkg {
+            .map(|e| kcl_api::ExternalPkg {
                 pkg_name: e.pkg_name.clone(),
                 pkg_path: e.pkg_path.clone(),
             })
-            .collect::<Vec<kclvm_api::ExternalPkg>>(),
+            .collect::<Vec<kcl_api::ExternalPkg>>(),
     }
 }
 
 fn build_optional_parse_program_args(
     args: &OptionalParseProgramArgs,
-) -> Option<kclvm_api::ParseProgramArgs> {
+) -> Option<kcl_api::ParseProgramArgs> {
     if args.has_value {
         let args = &args.value;
-        Some(kclvm_api::ParseProgramArgs {
+        Some(kcl_api::ParseProgramArgs {
             paths: args.paths.clone(),
             sources: args.sources.clone(),
             external_pkgs: args
                 .external_pkgs
                 .iter()
-                .map(|e| kclvm_api::ExternalPkg {
+                .map(|e| kcl_api::ExternalPkg {
                     pkg_name: e.pkg_name.clone(),
                     pkg_path: e.pkg_path.clone(),
                 })
-                .collect::<Vec<kclvm_api::ExternalPkg>>(),
+                .collect::<Vec<kcl_api::ExternalPkg>>(),
         })
     } else {
         None
@@ -1121,7 +1121,7 @@ fn build_optional_parse_program_args(
 
 impl ParseProgramResult {
     #[inline]
-    fn new(r: kclvm_api::ParseProgramResult) -> Self {
+    fn new(r: kcl_api::ParseProgramResult) -> Self {
         Self {
             ast_json: r.ast_json,
             paths: r.paths,
@@ -1132,29 +1132,29 @@ impl ParseProgramResult {
 
 /// Parse KCL program with entry files.
 fn parse_program(args: &ParseProgramArgs) -> Result<ParseProgramResult> {
-    let api = kclvm_api::API::default();
+    let api = kcl_api::API::default();
     let result = api.parse_program(&build_parse_program_args(args))?;
     Ok(ParseProgramResult::new(result))
 }
 
-fn build_parse_file_args(args: &ParseFileArgs) -> kclvm_api::ParseFileArgs {
-    kclvm_api::ParseFileArgs {
+fn build_parse_file_args(args: &ParseFileArgs) -> kcl_api::ParseFileArgs {
+    kcl_api::ParseFileArgs {
         path: args.path.clone(),
         source: args.source.clone(),
         external_pkgs: args
             .external_pkgs
             .iter()
-            .map(|e| kclvm_api::ExternalPkg {
+            .map(|e| kcl_api::ExternalPkg {
                 pkg_name: e.pkg_name.clone(),
                 pkg_path: e.pkg_path.clone(),
             })
-            .collect::<Vec<kclvm_api::ExternalPkg>>(),
+            .collect::<Vec<kcl_api::ExternalPkg>>(),
     }
 }
 
 impl ParseFileResult {
     #[inline]
-    fn new(r: kclvm_api::ParseFileResult) -> Self {
+    fn new(r: kcl_api::ParseFileResult) -> Self {
         Self {
             ast_json: r.ast_json,
             deps: r.deps,
@@ -1166,14 +1166,14 @@ impl ParseFileResult {
 /// Parse KCL single file to Module AST JSON string with import dependencies
 /// and parse errors.
 fn parse_file(args: &ParseFileArgs) -> Result<ParseFileResult> {
-    let api = kclvm_api::API::default();
+    let api = kcl_api::API::default();
     let result = api.parse_file(&build_parse_file_args(args))?;
     Ok(ParseFileResult::new(result))
 }
 
 impl ListOptionsResult {
     #[inline]
-    fn new(r: kclvm_api::ListOptionsResult) -> Self {
+    fn new(r: kcl_api::ListOptionsResult) -> Self {
         Self {
             options: r
                 .options
@@ -1192,17 +1192,17 @@ impl ListOptionsResult {
 
 /// Provides users with the ability to parse kcl program and get all option information.
 fn list_options(args: &ParseProgramArgs) -> Result<ListOptionsResult> {
-    let api = kclvm_api::API::default();
+    let api = kcl_api::API::default();
     let result = api.list_options(&build_parse_program_args(args))?;
     Ok(ListOptionsResult::new(result))
 }
 
-fn build_list_variables_args(args: &ListVariablesArgs) -> kclvm_api::ListVariablesArgs {
-    kclvm_api::ListVariablesArgs {
+fn build_list_variables_args(args: &ListVariablesArgs) -> kcl_api::ListVariablesArgs {
+    kcl_api::ListVariablesArgs {
         files: args.files.clone(),
         specs: args.specs.clone(),
         options: match args.options.has_value {
-            true => Some(kclvm_api::ListVariablesOptions {
+            true => Some(kcl_api::ListVariablesOptions {
                 merge_program: args.options.value.merge_program,
             }),
             false => None,
@@ -1211,7 +1211,7 @@ fn build_list_variables_args(args: &ListVariablesArgs) -> kclvm_api::ListVariabl
 }
 
 impl Variable {
-    pub fn new(v: &kclvm_api::Variable) -> Self {
+    pub fn new(v: &kcl_api::Variable) -> Self {
         Self {
             value: v.value.to_string(),
             type_name: v.type_name.to_string(),
@@ -1240,7 +1240,7 @@ impl Variable {
 
 impl ListVariablesResult {
     #[inline]
-    fn new(r: kclvm_api::ListVariablesResult) -> Self {
+    fn new(r: kcl_api::ListVariablesResult) -> Self {
         Self {
             variables: r
                 .variables
@@ -1259,15 +1259,15 @@ impl ListVariablesResult {
 /// Provides users with the ability to parse KCL program and get
 /// all variables by specs.
 fn list_variables(args: &ListVariablesArgs) -> Result<ListVariablesResult> {
-    let api = kclvm_api::API::default();
+    let api = kcl_api::API::default();
     let result = api.list_variables(&build_list_variables_args(args))?;
     Ok(ListVariablesResult::new(result))
 }
 
 fn build_get_schema_type_mapping_args(
     args: &GetSchemaTypeMappingArgs,
-) -> kclvm_api::GetSchemaTypeMappingArgs {
-    kclvm_api::GetSchemaTypeMappingArgs {
+) -> kcl_api::GetSchemaTypeMappingArgs {
+    kcl_api::GetSchemaTypeMappingArgs {
         exec_args: if args.exec_args.has_value {
             Some(build_exec_program_args(&args.exec_args.value))
         } else {
@@ -1279,7 +1279,7 @@ fn build_get_schema_type_mapping_args(
 
 impl GetSchemaTypeMappingResult {
     #[inline]
-    fn new(r: kclvm_api::GetSchemaTypeMappingResult) -> Self {
+    fn new(r: kcl_api::GetSchemaTypeMappingResult) -> Self {
         Self {
             schema_type_mapping: r
                 .schema_type_mapping
@@ -1295,7 +1295,7 @@ impl GetSchemaTypeMappingResult {
 
 impl KclType {
     #[inline]
-    fn new(r: &kclvm_api::KclType) -> Self {
+    fn new(r: &kcl_api::KclType) -> Self {
         Self {
             ty: r.r#type.clone(),
             union_types: r.union_types.iter().map(|r| KclType::new(r)).collect(),
@@ -1352,7 +1352,7 @@ impl KclType {
 
 impl OptionalKclType {
     #[inline]
-    fn new(r: &Option<kclvm_api::KclType>) -> Self {
+    fn new(r: &Option<kcl_api::KclType>) -> Self {
         match r.as_ref() {
             None => Self {
                 has_value: false,
@@ -1366,7 +1366,7 @@ impl OptionalKclType {
     }
 
     #[inline]
-    fn new_from_box(r: &Option<Box<kclvm_api::KclType>>) -> Self {
+    fn new_from_box(r: &Option<Box<kcl_api::KclType>>) -> Self {
         match r.as_ref() {
             None => Self {
                 has_value: false,
@@ -1382,20 +1382,20 @@ impl OptionalKclType {
 
 /// Get schema type mapping.
 fn get_schema_type_mapping(args: &GetSchemaTypeMappingArgs) -> Result<GetSchemaTypeMappingResult> {
-    let api = kclvm_api::API::default();
+    let api = kcl_api::API::default();
     let result = api.get_schema_type_mapping(&build_get_schema_type_mapping_args(args))?;
     Ok(GetSchemaTypeMappingResult::new(result))
 }
 
-fn build_format_code_args(args: &FormatCodeArgs) -> kclvm_api::FormatCodeArgs {
-    kclvm_api::FormatCodeArgs {
+fn build_format_code_args(args: &FormatCodeArgs) -> kcl_api::FormatCodeArgs {
+    kcl_api::FormatCodeArgs {
         source: args.source.clone(),
     }
 }
 
 impl FormatCodeResult {
     #[inline]
-    fn new(r: kclvm_api::FormatCodeResult) -> Self {
+    fn new(r: kcl_api::FormatCodeResult) -> Self {
         Self {
             formatted: String::from_utf8(r.formatted).unwrap(),
         }
@@ -1404,20 +1404,20 @@ impl FormatCodeResult {
 
 /// Format KCL file or directory path contains KCL files and returns the changed file paths.
 fn format_code(args: &FormatCodeArgs) -> Result<FormatCodeResult> {
-    let api = kclvm_api::API::default();
+    let api = kcl_api::API::default();
     let result = api.format_code(&build_format_code_args(args))?;
     Ok(FormatCodeResult::new(result))
 }
 
-fn build_format_path_args(args: &FormatPathArgs) -> kclvm_api::FormatPathArgs {
-    kclvm_api::FormatPathArgs {
+fn build_format_path_args(args: &FormatPathArgs) -> kcl_api::FormatPathArgs {
+    kcl_api::FormatPathArgs {
         path: args.path.clone(),
     }
 }
 
 impl FormatPathResult {
     #[inline]
-    fn new(r: kclvm_api::FormatPathResult) -> Self {
+    fn new(r: kcl_api::FormatPathResult) -> Self {
         Self {
             changed_paths: r.changed_paths,
         }
@@ -1426,35 +1426,35 @@ impl FormatPathResult {
 
 /// Format KCL file or directory path contains KCL files and returns the changed file paths.
 fn format_path(args: &FormatPathArgs) -> Result<FormatPathResult> {
-    let api = kclvm_api::API::default();
+    let api = kcl_api::API::default();
     let result = api.format_path(&build_format_path_args(args))?;
     Ok(FormatPathResult::new(result))
 }
 
-fn build_lint_path_args(args: &LintPathArgs) -> kclvm_api::LintPathArgs {
-    kclvm_api::LintPathArgs {
+fn build_lint_path_args(args: &LintPathArgs) -> kcl_api::LintPathArgs {
+    kcl_api::LintPathArgs {
         paths: args.paths.clone(),
     }
 }
 
 impl LintPathResult {
     #[inline]
-    fn new(r: kclvm_api::LintPathResult) -> Self {
+    fn new(r: kcl_api::LintPathResult) -> Self {
         Self { results: r.results }
     }
 }
 
 /// Lint files and return error messages including errors and warnings.
 fn lint_path(args: &LintPathArgs) -> Result<LintPathResult> {
-    let api = kclvm_api::API::default();
+    let api = kcl_api::API::default();
     let result = api.lint_path(&build_lint_path_args(args))?;
     Ok(LintPathResult::new(result))
 }
 
 fn build_load_settings_files_args(
     args: &LoadSettingsFilesArgs,
-) -> kclvm_api::LoadSettingsFilesArgs {
-    kclvm_api::LoadSettingsFilesArgs {
+) -> kcl_api::LoadSettingsFilesArgs {
+    kcl_api::LoadSettingsFilesArgs {
         work_dir: args.work_dir.clone(),
         files: args.files.clone(),
     }
@@ -1462,7 +1462,7 @@ fn build_load_settings_files_args(
 
 impl LoadSettingsFilesResult {
     #[inline]
-    fn new(r: kclvm_api::LoadSettingsFilesResult) -> Self {
+    fn new(r: kcl_api::LoadSettingsFilesResult) -> Self {
         Self {
             kcl_cli_configs: OptionalCliConfig::new(r.kcl_cli_configs),
             kcl_options: r
@@ -1478,7 +1478,7 @@ impl LoadSettingsFilesResult {
 }
 
 impl OptionalCliConfig {
-    fn new(r: Option<kclvm_api::CliConfig>) -> Self {
+    fn new(r: Option<kcl_api::CliConfig>) -> Self {
         match r {
             Some(r) => Self {
                 has_value: true,
@@ -1507,13 +1507,13 @@ impl OptionalCliConfig {
 
 /// Load the setting file config defined in `kcl.yaml`
 fn load_settings_files(args: &LoadSettingsFilesArgs) -> Result<LoadSettingsFilesResult> {
-    let api = kclvm_api::API::default();
+    let api = kcl_api::API::default();
     let result = api.load_settings_files(&build_load_settings_files_args(args))?;
     Ok(LoadSettingsFilesResult::new(result))
 }
 
-fn build_rename_args(args: &RenameArgs) -> kclvm_api::RenameArgs {
-    kclvm_api::RenameArgs {
+fn build_rename_args(args: &RenameArgs) -> kcl_api::RenameArgs {
+    kcl_api::RenameArgs {
         package_root: args.package_root.clone(),
         symbol_path: args.symbol_path.clone(),
         file_paths: args.file_paths.clone(),
@@ -1523,7 +1523,7 @@ fn build_rename_args(args: &RenameArgs) -> kclvm_api::RenameArgs {
 
 impl RenameResult {
     #[inline]
-    fn new(r: kclvm_api::RenameResult) -> Self {
+    fn new(r: kcl_api::RenameResult) -> Self {
         Self {
             changed_files: r.changed_files,
         }
@@ -1533,13 +1533,13 @@ impl RenameResult {
 /// Rename all the occurrences of the target symbol in the files. This API will rewrite files if they contain symbols to be renamed.
 /// Return the file paths that got changed.
 fn rename(args: &RenameArgs) -> Result<RenameResult> {
-    let api = kclvm_api::API::default();
+    let api = kcl_api::API::default();
     let result = api.rename(&build_rename_args(args))?;
     Ok(RenameResult::new(result))
 }
 
-fn build_rename_code_args(args: &RenameCodeArgs) -> kclvm_api::RenameCodeArgs {
-    kclvm_api::RenameCodeArgs {
+fn build_rename_code_args(args: &RenameCodeArgs) -> kcl_api::RenameCodeArgs {
+    kcl_api::RenameCodeArgs {
         package_root: args.package_root.clone(),
         symbol_path: args.symbol_path.clone(),
         source_codes: args
@@ -1553,7 +1553,7 @@ fn build_rename_code_args(args: &RenameCodeArgs) -> kclvm_api::RenameCodeArgs {
 
 impl RenameCodeResult {
     #[inline]
-    fn new(r: kclvm_api::RenameCodeResult) -> Self {
+    fn new(r: kcl_api::RenameCodeResult) -> Self {
         Self {
             changed_codes: r
                 .changed_codes
@@ -1570,13 +1570,13 @@ impl RenameCodeResult {
 /// Rename all the occurrences of the target symbol and return the modified code if any code has been changed. This API won't
 /// rewrite files but return the changed code.
 fn rename_code(args: &RenameCodeArgs) -> Result<RenameCodeResult> {
-    let api = kclvm_api::API::default();
+    let api = kcl_api::API::default();
     let result = api.rename_code(&build_rename_code_args(args))?;
     Ok(RenameCodeResult::new(result))
 }
 
-fn build_test_args(args: &TestArgs) -> kclvm_api::TestArgs {
-    kclvm_api::TestArgs {
+fn build_test_args(args: &TestArgs) -> kcl_api::TestArgs {
+    kcl_api::TestArgs {
         exec_args: build_optional_exec_program_args(&args.exec_args),
         pkg_list: args.pkg_list.clone(),
         run_regexp: args.run_regexp.clone(),
@@ -1586,7 +1586,7 @@ fn build_test_args(args: &TestArgs) -> kclvm_api::TestArgs {
 
 impl TestResult {
     #[inline]
-    fn new(r: kclvm_api::TestResult) -> Self {
+    fn new(r: kcl_api::TestResult) -> Self {
         Self {
             info: r
                 .info
@@ -1604,15 +1604,15 @@ impl TestResult {
 
 /// Test KCL packages with test arguments.
 fn test(args: &TestArgs) -> Result<TestResult> {
-    let api = kclvm_api::API::default();
+    let api = kcl_api::API::default();
     let result = api.test(&build_test_args(args))?;
     Ok(TestResult::new(result))
 }
 
 /// Return the KCL service version information.
 fn get_version() -> Result<GetVersionResult> {
-    let api = kclvm_api::API::default();
-    let result = api.get_version(&kclvm_api::GetVersionArgs {})?;
+    let api = kcl_api::API::default();
+    let result = api.get_version(&kcl_api::GetVersionArgs {})?;
     Ok(GetVersionResult {
         version: result.version,
         checksum: result.checksum,

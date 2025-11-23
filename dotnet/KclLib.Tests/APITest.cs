@@ -11,7 +11,7 @@ public class APITest
     public void TestExecProgramAPI()
     {
         var api = new API();
-        var execArgs = new ExecProgram_Args();
+        var execArgs = new ExecProgramArgs();
         var path = Path.Combine(parentDirectory, "test_data", "schema.k");
         execArgs.KFilenameList.Add(path);
         var result = api.ExecProgram(execArgs);
@@ -22,7 +22,7 @@ public class APITest
     public void TestExecProgramAPIFileNotFound()
     {
         var api = new API();
-        var execArgs = new ExecProgram_Args();
+        var execArgs = new ExecProgramArgs();
         var path = Path.Combine(parentDirectory, "test_data", "file_not_found.k");
         execArgs.KFilenameList.Add(path);
         try
@@ -41,7 +41,7 @@ public class APITest
     {
         var path = Path.Combine(parentDirectory, "test_data", "schema.k");
         // Prepare arguments for parsing the KCL program
-        var args = new ParseProgram_Args();
+        var args = new ParseProgramArgs();
         args.Paths.Add(path);
         // Instantiate API and call parse_program method
 
@@ -57,7 +57,7 @@ public class APITest
     {
         var path = Path.Combine(parentDirectory, "test_data", "schema.k");
         // Prepare arguments for parsing a single KCL file
-        var args = new ParseFile_Args { Path = path };
+        var args = new ParseFileArgs { Path = path };
 
         // Instantiate API and call parse_file method
         var result = new API().ParseFile(args);
@@ -76,7 +76,7 @@ public class APITest
         File.WriteAllText(testFile, File.ReadAllText(bakFile));
 
         // Prepare arguments for overriding the KCL file
-        var args = new OverrideFile_Args
+        var args = new OverrideFileArgs
         {
             File = testFile,
         };
@@ -94,7 +94,7 @@ public class APITest
     public void TestFormatPathAPI()
     {
         var api = new API();
-        var args = new FormatPath_Args();
+        var args = new FormatPathArgs();
         var path = Path.Combine(parentDirectory, "test_data", "format_path", "test.k");
         args.Path = path;
         var result = api.FormatPath(args);
@@ -108,7 +108,7 @@ public class APITest
         string expectedFormattedCode = "schema Person:\n" + "    name: str\n" + "    age: int\n\n" + "    check:\n"
                 + "        0 < age < 120\n\n";
         var api = new API();
-        var args = new FormatCode_Args();
+        var args = new FormatCodeArgs();
         args.Source = sourceCode;
         var result = api.FormatCode(args);
         Assert.AreEqual(expectedFormattedCode, result.Formatted.ToStringUtf8(), result.ToString());
@@ -118,9 +118,9 @@ public class APITest
     public void TestGetSchemaTypeAPI()
     {
         var path = Path.Combine(parentDirectory, "test_data", "schema.k");
-        var execArgs = new ExecProgram_Args();
+        var execArgs = new ExecProgramArgs();
         execArgs.KFilenameList.Add(path);
-        var args = new GetSchemaTypeMapping_Args();
+        var args = new GetSchemaTypeMappingArgs();
         args.ExecArgs = execArgs;
         var result = new API().GetSchemaTypeMapping(args);
         Assert.AreEqual("int", result.SchemaTypeMapping["app"].Properties["replicas"].Type, result.ToString());
@@ -130,7 +130,7 @@ public class APITest
     public void TestListOptionsAPI()
     {
         var path = Path.Combine(parentDirectory, "test_data", "option", "main.k");
-        var args = new ParseProgram_Args();
+        var args = new ParseProgramArgs();
         args.Paths.Add(path);
         var result = new API().ListOptions(args);
         Assert.AreEqual("key1", result.Options[0].Name);
@@ -142,7 +142,7 @@ public class APITest
     public void TestListVariablesAPI()
     {
         var api = new API();
-        var args = new ListVariables_Args();
+        var args = new ListVariablesArgs();
         var path = Path.Combine(parentDirectory, "test_data", "schema.k");
         args.Files.Add(path);
         var result = api.ListVariables(args);
@@ -153,9 +153,9 @@ public class APITest
     public void TestLoadPackagesAPI()
     {
         var path = Path.Combine(parentDirectory, "test_data", "schema.k");
-        var args = new LoadPackage_Args();
+        var args = new LoadPackageArgs();
         args.ResolveAst = true;
-        args.ParseArgs = new ParseProgram_Args();
+        args.ParseArgs = new ParseProgramArgs();
         args.ParseArgs.Paths.Add(path);
         var result = new API().LoadPackage(args);
         var firstSymbol = result.Symbols.Values.FirstOrDefault();
@@ -166,7 +166,7 @@ public class APITest
     public void TestLintPathAPI()
     {
         var path = Path.Combine(parentDirectory, "test_data", "lint_path", "test-lint.k");
-        var args = new LintPath_Args();
+        var args = new LintPathArgs();
         args.Paths.Add(path);
         var result = new API().LintPath(args);
         bool foundWarning = result.Results.Any(warning => warning.Contains("Module 'math' imported but unused"));
@@ -187,7 +187,7 @@ schema Person:
         string data = "{\"name\": \"Alice\", \"age\": 10}";
 
         // Prepare arguments for validating the code
-        var args = new ValidateCode_Args
+        var args = new ValidateCodeArgs
         {
             Code = code,
             Data = data,
@@ -210,7 +210,7 @@ schema Person:
         var renameFilePath = Path.Combine(parentDirectory, "test_data", "rename", "main.k");
         var renameBakFilePath = Path.Combine(parentDirectory, "test_data", "rename", "main.bak");
         File.WriteAllText(renameFilePath, File.ReadAllText(renameBakFilePath));
-        var args = new Rename_Args
+        var args = new RenameArgs
         {
             PackageRoot = root,
             SymbolPath = "a",
@@ -225,7 +225,7 @@ schema Person:
     [TestMethod]
     public void TestRenameCodeAPI()
     {
-        var args = new RenameCode_Args
+        var args = new RenameCodeArgs
         {
             PackageRoot = "/mock/path",
             SymbolPath = "a",
@@ -241,7 +241,7 @@ schema Person:
     public void TestTestingAPI()
     {
         var pkg = Path.Combine(parentDirectory, "test_data", "testing");
-        var args = new Test_Args();
+        var args = new TestArgs();
         args.PkgList.Add(pkg + "/...");
 
         var result = new API().Test(args);
@@ -253,7 +253,7 @@ schema Person:
     {
         var workDir = Path.Combine(parentDirectory, "test_data");
         var settingsFile = Path.Combine(workDir, "settings", "kcl.yaml");
-        var args = new LoadSettingsFiles_Args
+        var args = new LoadSettingsFilesArgs
         {
             WorkDir = workDir,
         };
@@ -270,7 +270,7 @@ schema Person:
     {
         var manifestPath = Path.Combine(parentDirectory, "test_data", "update_dependencies");
         // Prepare arguments for updating dependencies.
-        var args = new UpdateDependencies_Args { ManifestPath = manifestPath };
+        var args = new UpdateDependenciesArgs { ManifestPath = manifestPath };
         // Instantiate API and call update_dependencies method.
 
         var result = new API().UpdateDependencies(args);
@@ -286,11 +286,11 @@ schema Person:
         var manifestPath = Path.Combine(parentDirectory, "test_data", "update_dependencies");
         var testFile = Path.Combine(manifestPath, "main.k");
         // First, update dependencies.
-        var updateArgs = new UpdateDependencies_Args { ManifestPath = manifestPath };
+        var updateArgs = new UpdateDependenciesArgs { ManifestPath = manifestPath };
 
         var depResult = new API().UpdateDependencies(updateArgs);
         // Prepare arguments for executing the program with external dependencies.
-        var execArgs = new ExecProgram_Args();
+        var execArgs = new ExecProgramArgs();
         execArgs.KFilenameList.Add(testFile);
         execArgs.ExternalPkgs.AddRange(depResult.ExternalPkgs);
         // Execute the program and assert the result.
@@ -301,7 +301,7 @@ schema Person:
     [TestMethod]
     public void TestGetVersion()
     {
-        var result = new API().GetVersion(new GetVersion_Args());
+        var result = new API().GetVersion(new GetVersionArgs());
         Assert.AreEqual(true, result.VersionInfo.Contains("Version"), result.ToString());
         Assert.AreEqual(true, result.VersionInfo.Contains("GitCommit"), result.ToString());
     }

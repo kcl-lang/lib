@@ -94,8 +94,8 @@ public class API implements Service {
      * import com.kcl.util.JsonUtil;
      *
      * API api = new API();
-     * ParseProgram_Result result = api.parseProgram(
-     *    ParseProgram_Args.newBuilder().addPaths("path/to/kcl.k").build()
+     * ParseProgramResult result = api.parseProgram(
+     *    ParseProgramArgs.newBuilder().addPaths("path/to/kcl.k").build()
      * );
      * System.out.println(result.getAstJson());
      * Program program = JsonUtil.deserializeProgram(result.getAstJson());
@@ -111,8 +111,8 @@ public class API implements Service {
      *             if an error occurs during the remote procedure call.
      */
     @Override
-    public ParseProgram_Result parseProgram(ParseProgram_Args args) throws Exception {
-        return ParseProgram_Result.parseFrom(call("KclvmService.ParseProgram", args.toByteArray()));
+    public ParseProgramResult parseProgram(ParseProgramArgs args) throws Exception {
+        return ParseProgramResult.parseFrom(call("KclService.ParseProgram", args.toByteArray()));
     }
 
     /**
@@ -125,9 +125,9 @@ public class API implements Service {
      * {@code
      * import com.kcl.api.*;
      * 
-     * ParseFile_Args args = ParseFile_Args.newBuilder().setPath("./src/test_data/parse/main.k").build();
+     * ParseFileArgs args = ParseFileArgs.newBuilder().setPath("./src/test_data/parse/main.k").build();
      * API apiInstance = new API();
-     * ParseFile_Result result = apiInstance.parseFile(args);
+     * ParseFileResult result = apiInstance.parseFile(args);
      * }
      * </pre>
      * 
@@ -140,8 +140,8 @@ public class API implements Service {
      *             if an error occurs during the remote procedure call.
      */
     @Override
-    public ParseFile_Result parseFile(ParseFile_Args args) throws Exception {
-        return ParseFile_Result.parseFrom(call("KclvmService.ParseFile", args.toByteArray()));
+    public ParseFileResult parseFile(ParseFileArgs args) throws Exception {
+        return ParseFileResult.parseFrom(call("KclService.ParseFile", args.toByteArray()));
     }
 
     /**
@@ -155,9 +155,9 @@ public class API implements Service {
      * import com.kcl.api.*;
      *
      * API api = new API();
-     * LoadPackage_Result result = api.loadPackage(
-     *     LoadPackage_Args.newBuilder().setResolveAst(true).setParseArgs(
-     *        ParseProgram_Args.newBuilder().addPaths("/path/to/kcl.k").build())
+     * LoadPackageResult result = api.loadPackage(
+     *     LoadPackageArgs.newBuilder().setResolveAst(true).setParseArgs(
+     *        ParseProgramArgs.newBuilder().addPaths("/path/to/kcl.k").build())
      *     .build());
      * result.getSymbolsMap().values().forEach(s -> System.out.println(s));
      * }
@@ -172,8 +172,8 @@ public class API implements Service {
      *             if an error occurs during the remote procedure call.
      */
     @Override
-    public LoadPackage_Result loadPackage(LoadPackage_Args args) throws Exception {
-        return LoadPackage_Result.parseFrom(call("KclvmService.LoadPackage", args.toByteArray()));
+    public LoadPackageResult loadPackage(LoadPackageArgs args) throws Exception {
+        return LoadPackageResult.parseFrom(call("KclService.LoadPackage", args.toByteArray()));
     }
 
     /**
@@ -187,9 +187,9 @@ public class API implements Service {
      * import com.kcl.api.*;
      *
      * API api = new API();
-     * ListVariables_Result result = api.listVariables(
-     *     ListVariables_Args.newBuilder().setResolveAst(true).setParseArgs(
-     *     ParseProgram_Args.newBuilder().addPaths("/path/to/kcl.k").build())
+     * ListVariablesResult result = api.listVariables(
+     *     ListVariablesArgs.newBuilder().setResolveAst(true).setParseArgs(
+     *     ParseProgramArgs.newBuilder().addPaths("/path/to/kcl.k").build())
      *     .build());
      * result.getSymbolsMap().values().forEach(s -> System.out.println(s));
      * }
@@ -204,8 +204,8 @@ public class API implements Service {
      *             if an error occurs during the remote procedure call.
      */
     @Override
-    public ListVariables_Result listVariables(ListVariables_Args args) throws Exception {
-        return ListVariables_Result.parseFrom(call("KclvmService.ListVariables", args.toByteArray()));
+    public ListVariablesResult listVariables(ListVariablesArgs args) throws Exception {
+        return ListVariablesResult.parseFrom(call("KclService.ListVariables", args.toByteArray()));
     }
 
     /**
@@ -218,9 +218,9 @@ public class API implements Service {
      * {@code
      * import com.kcl.api.*;
      *
-     * ParseProgram_Args args = ParseProgram_Args.newBuilder().addPaths("./src/test_data/option/main.k").build();
+     * ParseProgramArgs args = ParseProgramArgs.newBuilder().addPaths("./src/test_data/option/main.k").build();
      * API apiInstance = new API();
-     * ListOptions_Result result = apiInstance.listOptions(args);
+     * ListOptionsResult result = apiInstance.listOptions(args);
      * }
      * </pre>
      *
@@ -233,8 +233,8 @@ public class API implements Service {
      *             if an error occurs during the remote procedure call.
      */
     @Override
-    public ListOptions_Result listOptions(ParseProgram_Args args) throws Exception {
-        return ListOptions_Result.parseFrom(call("KclvmService.ListOptions", args.toByteArray()));
+    public ListOptionsResult listOptions(ParseProgramArgs args) throws Exception {
+        return ListOptionsResult.parseFrom(call("KclService.ListOptions", args.toByteArray()));
     }
 
     /**
@@ -248,9 +248,9 @@ public class API implements Service {
      * import com.kcl.api.*;
      *
      * API api = new API();
-     * LoadPackage_Result result = api.loadPackageWithCache(
-     *     LoadPackage_Args.newBuilder().setResolveAst(true).setParseArgs(
-     *        ParseProgram_Args.newBuilder().addPaths("/path/to/kcl.k").build())
+     * LoadPackageResult result = api.loadPackageWithCache(
+     *     LoadPackageArgs.newBuilder().setResolveAst(true).setParseArgs(
+     *        ParseProgramArgs.newBuilder().addPaths("/path/to/kcl.k").build())
      *     .build());
      * result.getSymbolsMap().values().forEach(s -> System.out.println(s));
      * }
@@ -265,8 +265,8 @@ public class API implements Service {
      *             if an error occurs during the remote procedure call.
      */
     @Override
-    public LoadPackage_Result loadPackageWithCache(LoadPackage_Args args) throws Exception {
-        return LoadPackage_Result.parseFrom(callLoadPackageWithCache(args.toByteArray()));
+    public LoadPackageResult loadPackageWithCache(LoadPackageArgs args) throws Exception {
+        return LoadPackageResult.parseFrom(callLoadPackageWithCache(args.toByteArray()));
     }
 
     /**
@@ -279,9 +279,9 @@ public class API implements Service {
      * {@code
      * import com.kcl.api.*;
      *
-     * ExecProgram_Args args = ExecProgram_Args.newBuilder().addKFilenameList("schema.k").build();
+     * ExecProgramArgs args = ExecProgramArgs.newBuilder().addKFilenameList("schema.k").build();
      * API apiInstance = new API();
-     * ExecProgram_Result result = apiInstance.execProgram(args);
+     * ExecProgramResult result = apiInstance.execProgram(args);
      * }
      * </pre>
      * 
@@ -293,8 +293,8 @@ public class API implements Service {
      * @throws Exception
      *             if an error occurs during the remote procedure call.
      */
-    public ExecProgram_Result execProgram(ExecProgram_Args args) throws Exception {
-        return ExecProgram_Result.parseFrom(call("KclvmService.ExecProgram", args.toByteArray()));
+    public ExecProgramResult execProgram(ExecProgramArgs args) throws Exception {
+        return ExecProgramResult.parseFrom(call("KclService.ExecProgram", args.toByteArray()));
     }
 
     /**
@@ -309,7 +309,7 @@ public class API implements Service {
      *
      * API api = new API();
      * String spec = "a=2";
-     * OverrideFile_Result result = api.overrideFile(OverrideFile_Args.newBuilder()
+     * OverrideFileResult result = api.overrideFile(OverrideFileArgs.newBuilder()
      *     .setFile("./src/test_data/override_file/main.k").addSpecs(spec).build());
      * }
      * </pre>
@@ -323,8 +323,8 @@ public class API implements Service {
      *             if an error occurs during the remote procedure call.
      */
     @Override
-    public OverrideFile_Result overrideFile(OverrideFile_Args args) throws Exception {
-        return OverrideFile_Result.parseFrom(call("KclvmService.OverrideFile", args.toByteArray()));
+    public OverrideFileResult overrideFile(OverrideFileArgs args) throws Exception {
+        return OverrideFileResult.parseFrom(call("KclService.OverrideFile", args.toByteArray()));
     }
 
     /**
@@ -337,10 +337,10 @@ public class API implements Service {
      * {@code
      * import com.kcl.api.*;
      * 
-     * ExecProgram_Args execArgs = ExecProgram_Args.newBuilder().addKFilenameList("schema.k").build();
-     * GetSchemaTypeMapping_Args args = GetSchemaTypeMapping_Args.newBuilder().setExecArgs(execArgs).build();
+     * ExecProgramArgs execArgs = ExecProgramArgs.newBuilder().addKFilenameList("schema.k").build();
+     * GetSchemaTypeMappingArgs args = GetSchemaTypeMappingArgs.newBuilder().setExecArgs(execArgs).build();
      * API apiInstance = new API();
-     * GetSchemaTypeMapping_Result result = apiInstance.getSchemaTypeMapping(args);
+     * GetSchemaTypeMappingResult result = apiInstance.getSchemaTypeMapping(args);
      * KclType appSchemaType = result.getSchemaTypeMappingMap().get("app");
      * String replicasType = appSchemaType.getPropertiesOrThrow("replicas").getType();
      * }
@@ -355,8 +355,8 @@ public class API implements Service {
      *             if an error occurs during the remote procedure call.
      */
     @Override
-    public GetSchemaTypeMapping_Result getSchemaTypeMapping(GetSchemaTypeMapping_Args args) throws Exception {
-        return GetSchemaTypeMapping_Result.parseFrom(call("KclvmService.GetSchemaTypeMapping", args.toByteArray()));
+    public GetSchemaTypeMappingResult getSchemaTypeMapping(GetSchemaTypeMappingArgs args) throws Exception {
+        return GetSchemaTypeMappingResult.parseFrom(call("KclService.GetSchemaTypeMapping", args.toByteArray()));
     }
 
     /**
@@ -371,9 +371,9 @@ public class API implements Service {
      *
      * String sourceCode = "schema Person:\n" + "    name:   str\n" + "    age:    int\n" + "    check:\n"
      *         + "        0 <   age <   120\n";
-     * FormatCode_Args args = FormatCode_Args.newBuilder().setSource(sourceCode).build();
+     * FormatCodeArgs args = FormatCodeArgs.newBuilder().setSource(sourceCode).build();
      * API apiInstance = new API();
-     * FormatCode_Result result = apiInstance.formatCode(args);
+     * FormatCodeResult result = apiInstance.formatCode(args);
      * String expectedFormattedCode = "schema Person:\n" + "    name: str\n" + "    age: int\n\n" + "    check:\n"
      *         + "        0 < age < 120\n\n";
      * }
@@ -388,8 +388,8 @@ public class API implements Service {
      *             if an error occurs during the remote procedure call.
      */
     @Override
-    public FormatCode_Result formatCode(FormatCode_Args args) throws Exception {
-        return FormatCode_Result.parseFrom(call("KclvmService.FormatCode", args.toByteArray()));
+    public FormatCodeResult formatCode(FormatCodeArgs args) throws Exception {
+        return FormatCodeResult.parseFrom(call("KclService.FormatCode", args.toByteArray()));
     }
 
     /**
@@ -402,9 +402,9 @@ public class API implements Service {
      * {@code
      * import com.kcl.api.*;
      *
-     * FormatPath_Args args = FormatPath_Args.newBuilder().setPath("test.k").build();
+     * FormatPathArgs args = FormatPathArgs.newBuilder().setPath("test.k").build();
      * API apiInstance = new API();
-     * FormatPath_Result result = apiInstance.formatPath(args);
+     * FormatPathResult result = apiInstance.formatPath(args);
      * Assert.assertTrue(result.getChangedPathsList().isEmpty());
      * }
      * </pre>
@@ -418,8 +418,8 @@ public class API implements Service {
      *             if an error occurs during the remote procedure call.
      */
     @Override
-    public FormatPath_Result formatPath(FormatPath_Args args) throws Exception {
-        return FormatPath_Result.parseFrom(call("KclvmService.FormatPath", args.toByteArray()));
+    public FormatPathResult formatPath(FormatPathArgs args) throws Exception {
+        return FormatPathResult.parseFrom(call("KclService.FormatPath", args.toByteArray()));
     }
 
     /**
@@ -432,9 +432,9 @@ public class API implements Service {
      * {@code
      * import com.kcl.api.*;
      *
-     * LintPath_Args args = LintPath_Args.newBuilder().addPaths("test.k").build();
+     * LintPathArgs args = LintPathArgs.newBuilder().addPaths("test.k").build();
      * API apiInstance = new API();
-     * LintPath_Result result = apiInstance.lintPath(args);
+     * LintPathResult result = apiInstance.lintPath(args);
      * boolean foundWarning = result.getResultsList().stream()
      *         .anyMatch(warning -> warning.contains("Module 'math' imported but unused"));
      * }
@@ -449,8 +449,8 @@ public class API implements Service {
      *             if an error occurs during the remote procedure call.
      */
     @Override
-    public LintPath_Result lintPath(LintPath_Args args) throws Exception {
-        return LintPath_Result.parseFrom(call("KclvmService.LintPath", args.toByteArray()));
+    public LintPathResult lintPath(LintPathArgs args) throws Exception {
+        return LintPathResult.parseFrom(call("KclService.LintPath", args.toByteArray()));
     }
 
     /**
@@ -466,9 +466,9 @@ public class API implements Service {
      * String code = "schema Person:\n" + "    name: str\n" + "    age: int\n" + "    check:\n"
      *         + "        0 < age < 120\n";
      * String data = "{\"name\": \"Alice\", \"age\": 10}";
-     * ValidateCode_Args args = ValidateCode_Args.newBuilder().setCode(code).setData(data).setFormat("json").build();
+     * ValidateCodeArgs args = ValidateCodeArgs.newBuilder().setCode(code).setData(data).setFormat("json").build();
      * API apiInstance = new API();
-     * ValidateCode_Result result = apiInstance.validateCode(args);
+     * ValidateCodeResult result = apiInstance.validateCode(args);
      * }
      * </pre>
      * 
@@ -481,8 +481,8 @@ public class API implements Service {
      *             if an error occurs during the remote procedure call.
      */
     @Override
-    public ValidateCode_Result validateCode(ValidateCode_Args args) throws Exception {
-        return ValidateCode_Result.parseFrom(call("KclvmService.ValidateCode", args.toByteArray()));
+    public ValidateCodeResult validateCode(ValidateCodeArgs args) throws Exception {
+        return ValidateCodeResult.parseFrom(call("KclService.ValidateCode", args.toByteArray()));
     }
 
     /**
@@ -496,9 +496,9 @@ public class API implements Service {
      * import com.kcl.api.*;
      *
      * API api = new API();
-     * LoadSettingsFiles_Args args = LoadSettingsFiles_Args.newBuilder().addFiles("kcl.yaml")
+     * LoadSettingsFilesArgs args = LoadSettingsFilesArgs.newBuilder().addFiles("kcl.yaml")
      *         .build();
-     * LoadSettingsFiles_Result result = api.loadSettingsFiles(args);
+     * LoadSettingsFilesResult result = api.loadSettingsFiles(args);
      * }
      * </pre>
      * 
@@ -511,8 +511,8 @@ public class API implements Service {
      *             if an error occurs during the remote procedure call.
      */
     @Override
-    public LoadSettingsFiles_Result loadSettingsFiles(LoadSettingsFiles_Args args) throws Exception {
-        return LoadSettingsFiles_Result.parseFrom(call("KclvmService.LoadSettingsFiles", args.toByteArray()));
+    public LoadSettingsFilesResult loadSettingsFiles(LoadSettingsFilesArgs args) throws Exception {
+        return LoadSettingsFilesResult.parseFrom(call("KclService.LoadSettingsFiles", args.toByteArray()));
     }
 
     /**
@@ -525,10 +525,10 @@ public class API implements Service {
      * {@code
      * import com.kcl.api.*;
      *
-     * Rename_Args args = Rename_Args.newBuilder().setPackageRoot("./src/test_data/rename").setSymbolPath("a")
+     * RenameArgs args = RenameArgs.newBuilder().setPackageRoot("./src/test_data/rename").setSymbolPath("a")
      *         .addFilePaths("./src/test_data/rename/main.k").setNewName("a2").build();
      * API apiInstance = new API();
-     * Rename_Result result = apiInstance.rename(args);
+     * RenameResult result = apiInstance.rename(args);
      * }
      * </pre>
      * 
@@ -541,8 +541,8 @@ public class API implements Service {
      *             if an error occurs during the remote procedure call.
      */
     @Override
-    public Rename_Result rename(Rename_Args args) throws Exception {
-        return Rename_Result.parseFrom(call("KclvmService.Rename", args.toByteArray()));
+    public RenameResult rename(RenameArgs args) throws Exception {
+        return RenameResult.parseFrom(call("KclService.Rename", args.toByteArray()));
     }
 
     /**
@@ -556,9 +556,9 @@ public class API implements Service {
      * import com.kcl.api.*;
      *
      * API api = new API();
-     * RenameCode_Args args = RenameCode_Args.newBuilder().setPackageRoot("/mock/path").setSymbolPath("a")
+     * RenameCodeArgs args = RenameCodeArgs.newBuilder().setPackageRoot("/mock/path").setSymbolPath("a")
      *         .putSourceCodes("/mock/path/main.k", "a = 1\nb = a").setNewName("a2").build();
-     * RenameCode_Result result = api.renameCode(args);
+     * RenameCodeResult result = api.renameCode(args);
      * }
      * </pre>
      * 
@@ -571,8 +571,8 @@ public class API implements Service {
      *             if an error occurs during the remote procedure call.
      */
     @Override
-    public RenameCode_Result renameCode(RenameCode_Args args) throws Exception {
-        return RenameCode_Result.parseFrom(call("KclvmService.RenameCode", args.toByteArray()));
+    public RenameCodeResult renameCode(RenameCodeArgs args) throws Exception {
+        return RenameCodeResult.parseFrom(call("KclService.RenameCode", args.toByteArray()));
     }
 
     /**
@@ -586,8 +586,8 @@ public class API implements Service {
      * import com.kcl.api.*;
      *
      * API apiInstance = new API();
-     * Test_Args args = Test_Args.newBuilder().addPkgList("./src/test_data/testing/...").build();
-     * Test_Result result = apiInstance.test(args);
+     * TestArgs args = TestArgs.newBuilder().addPkgList("./src/test_data/testing/...").build();
+     * TestResult result = apiInstance.test(args);
      * }
      * </pre>
      * 
@@ -600,8 +600,8 @@ public class API implements Service {
      *             if an error occurs during the remote procedure call.
      */
     @Override
-    public Test_Result test(Test_Args args) throws Exception {
-        return Test_Result.parseFrom(call("KclvmService.Test", args.toByteArray()));
+    public TestResult test(TestArgs args) throws Exception {
+        return TestResult.parseFrom(call("KclService.Test", args.toByteArray()));
     }
 
     /**
@@ -615,8 +615,8 @@ public class API implements Service {
      * import com.kcl.api.*;
      *
      * API api = new API();
-     * UpdateDependencies_Result result = api.updateDependencies(
-     *         UpdateDependencies_Args.newBuilder().setManifestPath("/path/to/module").build());
+     * UpdateDependenciesResult result = api.updateDependencies(
+     *         UpdateDependenciesArgs.newBuilder().setManifestPath("/path/to/module").build());
      * }
      * </pre>
      * 
@@ -629,8 +629,8 @@ public class API implements Service {
      *             if an error occurs during the remote procedure call.
      */
     @Override
-    public UpdateDependencies_Result updateDependencies(UpdateDependencies_Args args) throws Exception {
-        return UpdateDependencies_Result.parseFrom(call("KclvmService.UpdateDependencies", args.toByteArray()));
+    public UpdateDependenciesResult updateDependencies(UpdateDependenciesArgs args) throws Exception {
+        return UpdateDependenciesResult.parseFrom(call("KclService.UpdateDependencies", args.toByteArray()));
     }
 
     /**
@@ -645,8 +645,8 @@ public class API implements Service {
      *             if an error occurs during the remote procedure call.
      */
     @Override
-    public GetVersion_Result getVersion(GetVersion_Args args) throws Exception {
-        return GetVersion_Result.parseFrom(call("KclvmService.GetVersion", args.toByteArray()));
+    public GetVersionResult getVersion(GetVersionArgs args) throws Exception {
+        return GetVersionResult.parseFrom(call("KclService.GetVersion", args.toByteArray()));
     }
 
     private byte[] call(String name, byte[] args) throws Exception {

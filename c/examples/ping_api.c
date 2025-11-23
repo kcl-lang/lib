@@ -7,12 +7,12 @@ int ping(const char* msg)
     size_t message_length;
     bool status;
 
-    Ping_Args ping_args = Ping_Args_init_zero;
+    PingArgs ping_args = PingArgs_init_zero;
     pb_ostream_t stream = pb_ostream_from_buffer(buffer, sizeof(buffer));
     ping_args.value.funcs.encode = encode_string;
     ping_args.value.arg = (void*)msg;
 
-    status = pb_encode(&stream, Ping_Args_fields, &ping_args);
+    status = pb_encode(&stream, PingArgs_fields, &ping_args);
     message_length = stream.bytes_written;
 
     if (!status) {
@@ -20,16 +20,16 @@ int ping(const char* msg)
         return 1;
     }
 
-    const char* api_str = "KclvmService.Ping";
+    const char* api_str = "KclService.Ping";
     size_t result_length = call_native((const uint8_t*)api_str, strlen(api_str), buffer, message_length, result_buffer);
 
     pb_istream_t istream = pb_istream_from_buffer(result_buffer, result_length);
-    Ping_Result decoded_ping_args = Ping_Result_init_default;
+    PingResult decoded_ping_args = PingResult_init_default;
     decoded_ping_args.value.funcs.decode = decode_string;
     uint8_t value_buffer[BUFFER_SIZE] = { 0 };
     decoded_ping_args.value.arg = value_buffer;
 
-    status = pb_decode(&istream, Ping_Result_fields, &decoded_ping_args);
+    status = pb_decode(&istream, PingResult_fields, &decoded_ping_args);
 
     if (!status) {
         printf("Decoding failed: %s\n", PB_GET_ERROR(&istream));

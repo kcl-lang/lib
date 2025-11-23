@@ -1,6 +1,6 @@
 [package]
 name = "kcl-lang"
-version = "0.11.2"
+version = "0.12.0"
 edition = "2021"
 readme = "README.md"
 documentation = "kcl-lang.io"
@@ -11,9 +11,9 @@ license = "Apache-2.0"
 
 [dependencies]
 anyhow = "1"
-kclvm-api = { git = "https://github.com/kcl-lang/kcl", version = "0.11.2" }
-kclvm-evaluator = { git = "https://github.com/kcl-lang/kcl", version = "0.11.2" }
-kclvm-loader = { git = "https://github.com/kcl-lang/kcl", version = "0.11.2" }
-kclvm-parser = { git = "https://github.com/kcl-lang/kcl", version = "0.11.2" }
-kclvm-runtime = { git = "https://github.com/kcl-lang/kcl", version = "0.11.2" }
-kclvm-primitives = { git = "https://github.com/kcl-lang/kcl", version = "0.11.2" }
+kcl-api = { git = "https://github.com/kcl-lang/kcl", version = "0.12.0" }
+kcl-evaluator = { git = "https://github.com/kcl-lang/kcl", version = "0.12.0" }
+kcl-loader = { git = "https://github.com/kcl-lang/kcl", version = "0.12.0" }
+kcl-parser = { git = "https://github.com/kcl-lang/kcl", version = "0.12.0" }
+kcl-runtime = { git = "https://github.com/kcl-lang/kcl", version = "0.12.0" }
+kcl-primitives = { git = "https://github.com/kcl-lang/kcl", version = "0.12.0" }

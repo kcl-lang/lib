@@ -79,7 +79,7 @@ fn linkMacOSLibraries(lib: *std.Build.Step.Compile) void {
 }
 
 fn kclLibName() []const u8 {
-    return "kclvm_cli_cdylib";
+    return "kcl";
 }
 
 fn kclLibPath(b: *std.Build, target: *const std.Build.ResolvedTarget) std.Build.LazyPath {

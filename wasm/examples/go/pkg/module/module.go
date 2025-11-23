@@ -42,7 +42,7 @@ func New(path string) (*KCLModule, error) {
 	}
 	linker := wasmtime.NewLinker(engine)
 	err = linker.DefineWasi()
-	linker.FuncWrap("env", "kclvm_plugin_invoke_json_wasm", func(_name int32, _args int32, _kwargs int32) int32 {
+	linker.FuncWrap("env", "kcl_plugin_invoke_json_wasm", func(_name int32, _args int32, _kwargs int32) int32 {
 		return 0
 	})
 	if err != nil {

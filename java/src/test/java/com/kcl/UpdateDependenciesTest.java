@@ -1,10 +1,10 @@
 package com.kcl;
 
 import com.kcl.api.API;
-import com.kcl.api.Spec.ExecProgram_Args;
-import com.kcl.api.Spec.ExecProgram_Result;
-import com.kcl.api.Spec.UpdateDependencies_Args;
-import com.kcl.api.Spec.UpdateDependencies_Result;
+import com.kcl.api.Spec.ExecProgramArgs;
+import com.kcl.api.Spec.ExecProgramResult;
+import com.kcl.api.Spec.UpdateDependenciesArgs;
+import com.kcl.api.Spec.UpdateDependenciesResult;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -15,8 +15,8 @@ public class UpdateDependenciesTest {
         // API instance
         API api = new API();
 
-        UpdateDependencies_Result result = api.updateDependencies(
-                UpdateDependencies_Args.newBuilder().setManifestPath("./src/test_data/update_dependencies").build());
+        UpdateDependenciesResult result = api.updateDependencies(
+                UpdateDependenciesArgs.newBuilder().setManifestPath("./src/test_data/update_dependencies").build());
         Assert.assertEquals(result.getExternalPkgsCount(), 2);
     }
 
@@ -25,14 +25,14 @@ public class UpdateDependenciesTest {
         // API instance
         API api = new API();
 
-        UpdateDependencies_Result result = api.updateDependencies(
-                UpdateDependencies_Args.newBuilder().setManifestPath("./src/test_data/update_dependencies").build());
+        UpdateDependenciesResult result = api.updateDependencies(
+                UpdateDependenciesArgs.newBuilder().setManifestPath("./src/test_data/update_dependencies").build());
         Assert.assertEquals(result.getExternalPkgsCount(), 2);
 
-        ExecProgram_Args execArgs = ExecProgram_Args.newBuilder().addAllExternalPkgs(result.getExternalPkgsList())
+        ExecProgramArgs execArgs = ExecProgramArgs.newBuilder().addAllExternalPkgs(result.getExternalPkgsList())
                 .addKFilenameList("./src/test_data/update_dependencies/main.k").build();
 
-        ExecProgram_Result execResult = api.execProgram(execArgs);
+        ExecProgramResult execResult = api.execProgram(execArgs);
         Assert.assertEquals(execResult.getYamlResult(), "a: Hello World!");
     }
 }

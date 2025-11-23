@@ -2,6 +2,7 @@
 // NO CHECKED-IN PROTOBUF GENCODE
 // source: spec.proto
 
+@file:com.google.protobuf.Generated
 // Generated files should ignore deprecation warnings
 @file:Suppress("DEPRECATION")
 package com.kcl.api;
@@ -41,10 +42,10 @@ public object ExternalPkgKt {
      * `string pkg_name = 1;`
      */
     public var pkgName: kotlin.String
-      @JvmName("getPkgName")
-      get() = _builder.pkgName
-      @JvmName("setPkgName")
-      set(value) {
+      @kotlin.jvm.JvmName("getPkgName")
+        get() = _builder.pkgName
+      @kotlin.jvm.JvmName("setPkgName")
+        set(value) {
         _builder.pkgName = value
       }
     /**
@@ -66,10 +67,10 @@ public object ExternalPkgKt {
      * `string pkg_path = 2;`
      */
     public var pkgPath: kotlin.String
-      @JvmName("getPkgPath")
-      get() = _builder.pkgPath
-      @JvmName("setPkgPath")
-      set(value) {
+      @kotlin.jvm.JvmName("getPkgPath")
+        get() = _builder.pkgPath
+      @kotlin.jvm.JvmName("setPkgPath")
+        set(value) {
         _builder.pkgPath = value
       }
     /**

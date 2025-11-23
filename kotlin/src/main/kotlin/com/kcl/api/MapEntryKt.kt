@@ -2,6 +2,7 @@
 // NO CHECKED-IN PROTOBUF GENCODE
 // source: spec.proto
 
+@file:com.google.protobuf.Generated
 // Generated files should ignore deprecation warnings
 @file:Suppress("DEPRECATION")
 package com.kcl.api;
@@ -40,10 +41,10 @@ public object MapEntryKt {
      * `string key = 1;`
      */
     public var key: kotlin.String
-      @JvmName("getKey")
-      get() = _builder.key
-      @JvmName("setKey")
-      set(value) {
+      @kotlin.jvm.JvmName("getKey")
+        get() = _builder.key
+      @kotlin.jvm.JvmName("setKey")
+        set(value) {
         _builder.key = value
       }
     /**
@@ -65,10 +66,10 @@ public object MapEntryKt {
      * `.com.kcl.api.Variable value = 2;`
      */
     public var value: com.kcl.api.Spec.Variable
-      @JvmName("getValue")
-      get() = _builder.value
-      @JvmName("setValue")
-      set(value) {
+      @kotlin.jvm.JvmName("getValue")
+        get() = _builder.value
+      @kotlin.jvm.JvmName("setValue")
+        set(value) {
         _builder.value = value
       }
     /**

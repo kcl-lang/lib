@@ -28,7 +28,7 @@ func init() {
 
 func TestExecProgramWithPlugin(t *testing.T) {
 	client := NewNativeServiceClient()
-	result, err := client.ExecProgram(&api.ExecProgram_Args{
+	result, err := client.ExecProgram(&api.ExecProgramArgs{
 		KFilenameList: []string{"main.k"},
 		KCodeList:     []string{code},
 		Args: []*api.Argument{
@@ -52,7 +52,7 @@ func TestExecProgramWithPlugin(t *testing.T) {
 
 func TestExecProgramWithPluginError(t *testing.T) {
 	client := NewNativeServiceClient()
-	result, err := client.ExecProgram(&api.ExecProgram_Args{
+	result, err := client.ExecProgram(&api.ExecProgramArgs{
 		KFilenameList: []string{"main.k"},
 		KCodeList:     []string{code},
 	})

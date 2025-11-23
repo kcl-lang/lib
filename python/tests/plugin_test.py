@@ -6,7 +6,7 @@ TEST_FILE = "./tests/test_data/plugin.k"
 
 def test_exec_api():
     plugin.register_plugin("my_plugin", {"add": lambda x, y: x + y})
-    result = api.API().exec_program(api.ExecProgram_Args(k_filename_list=[TEST_FILE]))
+    result = api.API().exec_program(api.ExecProgramArgs(k_filename_list=[TEST_FILE]))
     assert result.yaml_result == "result: 2"
 
 
@@ -17,5 +17,5 @@ def test_exec_api_failed():
         raise ValueError(error_msg)
 
     plugin.register_plugin("my_plugin", {"add": func})
-    result = api.API().exec_program(api.ExecProgram_Args(k_filename_list=[TEST_FILE]))
+    result = api.API().exec_program(api.ExecProgramArgs(k_filename_list=[TEST_FILE]))
     assert error_msg in result.err_message

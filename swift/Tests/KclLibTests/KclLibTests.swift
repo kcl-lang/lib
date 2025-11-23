@@ -5,7 +5,7 @@ import XCTest
 final class KClLibTests: XCTestCase {
     func testExecProgram() throws {
         let api = API()
-        var execArgs = ExecProgram_Args()
+        var execArgs = ExecProgramArgs()
         execArgs.kFilenameList.append("test_data/schema.k")
         do {
             let result = try api.execProgram(execArgs)

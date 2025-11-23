@@ -26,12 +26,12 @@
 //! }
 //! ```
 
-pub use kclvm_api::gpyrpc::*;
-use kclvm_api::service::service_impl::KclvmServiceImpl;
+pub use kcl_api::gpyrpc::*;
+use kcl_api::service::service_impl::KclServiceImpl;
 
 use anyhow::Result;
 
-pub type API = KclvmServiceImpl;
+pub type API = KclServiceImpl;
 
 #[cfg(test)]
 mod tests;
@@ -48,5 +48,5 @@ pub fn call_with_plugin_agent<'a>(
     args: &'a [u8],
     plugin_agent: u64,
 ) -> Result<Vec<u8>> {
-    kclvm_api::call_with_plugin_agent(name, args, plugin_agent)
+    kcl_api::call_with_plugin_agent(name, args, plugin_agent)
 }

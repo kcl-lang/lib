@@ -10,7 +10,7 @@ import (
 	"github.com/gofrs/flock"
 )
 
-const KCLVM_VERSION = "v0.11.2"
+const KCL_VERSION = "v0.12.0"
 
 func findPath(name string) string {
 	if path, err := exec.LookPath(name); err == nil {
@@ -20,25 +20,25 @@ func findPath(name string) string {
 }
 
 func getVersion() string {
-	return fmt.Sprintf("%s-%s-%s", KCLVM_VERSION, runtime.GOOS, runtime.GOARCH)
+	return fmt.Sprintf("%s-%s-%s", KCL_VERSION, runtime.GOOS, runtime.GOARCH)
 }
 
-func checkVersion(kclvmVersionDir string) (bool, error) {
-	kclvmVersionPath := filepath.Join(kclvmVersionDir, "kclvm.version")
-	_, err := os.Stat(kclvmVersionPath)
+func checkVersion(kclVersionDir string) (bool, error) {
+	kclVersionPath := filepath.Join(kclVersionDir, "kcl.version")
+	_, err := os.Stat(kclVersionPath)
 
 	if os.IsNotExist(err) {
-		err := os.MkdirAll(kclvmVersionDir, 0777)
+		err := os.MkdirAll(kclVersionDir, 0777)
 		if err != nil {
 			return false, err
 		}
-		versionFile, err := os.Create(kclvmVersionPath)
+		versionFile, err := os.Create(kclVersionPath)
 		defer func() {
 			versionFile.Close()
 		}()
 		return false, err
 	}
-	version, err := os.ReadFile(kclvmVersionPath)
+	version, err := os.ReadFile(kclVersionPath)
 
 	if err != nil {
 		return false, err
@@ -48,7 +48,7 @@ func checkVersion(kclvmVersionDir string) (bool, error) {
 
 }
 
-func InstallKclvm(installRoot string) error {
+func InstallKcl(installRoot string) error {
 	installRoot, err := filepath.Abs(installRoot)
 	if err != nil {
 		return err
@@ -75,15 +75,15 @@ func InstallKclvm(installRoot string) error {
 		return err
 	}
 
-	// Install kclvm libs.
-	err = installLib(installRoot, "kclvm_cli_cdylib", versionMatched)
+	// Install kcl libs.
+	err = installLib(installRoot, "kcl", versionMatched)
 	if err != nil {
 		return err
 	}
 
 	if !versionMatched {
-		kclvmVersionPath := filepath.Join(installRoot, "kclvm.version")
-		err = os.WriteFile(kclvmVersionPath, []byte(getVersion()), os.FileMode(os.O_WRONLY|os.O_TRUNC))
+		kclVersionPath := filepath.Join(installRoot, "kcl.version")
+		err = os.WriteFile(kclVersionPath, []byte(getVersion()), os.FileMode(os.O_WRONLY|os.O_TRUNC))
 		if err != nil {
 			return err
 		}

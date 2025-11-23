@@ -107,7 +107,7 @@ public struct Message: Sendable {
 }
 
 /// Message for ping request arguments.
-public struct Ping_Args: Sendable {
+public struct PingArgs: Sendable {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
@@ -121,7 +121,7 @@ public struct Ping_Args: Sendable {
 }
 
 /// Message for ping response.
-public struct Ping_Result: Sendable {
+public struct PingResult: Sendable {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
@@ -135,7 +135,7 @@ public struct Ping_Result: Sendable {
 }
 
 /// Message for version request arguments. Empty message.
-public struct GetVersion_Args: Sendable {
+public struct GetVersionArgs: Sendable {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
@@ -146,7 +146,7 @@ public struct GetVersion_Args: Sendable {
 }
 
 /// Message for version response.
-public struct GetVersion_Result: Sendable {
+public struct GetVersionResult: Sendable {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
@@ -169,7 +169,7 @@ public struct GetVersion_Result: Sendable {
 }
 
 /// Message for list method request arguments. Empty message.
-public struct ListMethod_Args: Sendable {
+public struct ListMethodArgs: Sendable {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
@@ -180,7 +180,7 @@ public struct ListMethod_Args: Sendable {
 }
 
 /// Message for list method response.
-public struct ListMethod_Result: Sendable {
+public struct ListMethodResult: Sendable {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
@@ -194,7 +194,7 @@ public struct ListMethod_Result: Sendable {
 }
 
 /// Message for parse file request arguments.
-public struct ParseFile_Args: Sendable {
+public struct ParseFileArgs: Sendable {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
@@ -214,7 +214,7 @@ public struct ParseFile_Args: Sendable {
 }
 
 /// Message for parse file response.
-public struct ParseFile_Result: Sendable {
+public struct ParseFileResult: Sendable {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
@@ -234,7 +234,7 @@ public struct ParseFile_Result: Sendable {
 }
 
 /// Message for parse program request arguments.
-public struct ParseProgram_Args: Sendable {
+public struct ParseProgramArgs: Sendable {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
@@ -254,7 +254,7 @@ public struct ParseProgram_Args: Sendable {
 }
 
 /// Message for parse program response.
-public struct ParseProgram_Result: Sendable {
+public struct ParseProgramResult: Sendable {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
@@ -274,14 +274,14 @@ public struct ParseProgram_Result: Sendable {
 }
 
 /// Message for load package request arguments.
-public struct LoadPackage_Args: Sendable {
+public struct LoadPackageArgs: Sendable {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
 
   /// Arguments for parsing the program.
-  public var parseArgs: ParseProgram_Args {
-    get {return _parseArgs ?? ParseProgram_Args()}
+  public var parseArgs: ParseProgramArgs {
+    get {return _parseArgs ?? ParseProgramArgs()}
     set {_parseArgs = newValue}
   }
   /// Returns true if `parseArgs` has been explicitly set.
@@ -302,11 +302,11 @@ public struct LoadPackage_Args: Sendable {
 
   public init() {}
 
-  fileprivate var _parseArgs: ParseProgram_Args? = nil
+  fileprivate var _parseArgs: ParseProgramArgs? = nil
 }
 
 /// Message for load package response.
-public struct LoadPackage_Result: Sendable {
+public struct LoadPackageResult: Sendable {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
@@ -347,7 +347,7 @@ public struct LoadPackage_Result: Sendable {
 }
 
 /// Message for list options response.
-public struct ListOptions_Result: Sendable {
+public struct ListOptionsResult: Sendable {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
@@ -524,7 +524,7 @@ public struct ScopeIndex: Sendable {
 }
 
 /// Message for execute program request arguments.
-public struct ExecProgram_Args: @unchecked Sendable {
+public struct ExecProgramArgs: @unchecked Sendable {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
@@ -645,7 +645,7 @@ public struct ExecProgram_Args: @unchecked Sendable {
 }
 
 /// Message for execute program response.
-public struct ExecProgram_Result: Sendable {
+public struct ExecProgramResult: Sendable {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
@@ -668,14 +668,14 @@ public struct ExecProgram_Result: Sendable {
 }
 
 /// Message for build program request arguments.
-public struct BuildProgram_Args: Sendable {
+public struct BuildProgramArgs: Sendable {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
 
   /// Arguments for executing the program.
-  public var execArgs: ExecProgram_Args {
-    get {return _execArgs ?? ExecProgram_Args()}
+  public var execArgs: ExecProgramArgs {
+    get {return _execArgs ?? ExecProgramArgs()}
     set {_execArgs = newValue}
   }
   /// Returns true if `execArgs` has been explicitly set.
@@ -690,11 +690,11 @@ public struct BuildProgram_Args: Sendable {
 
   public init() {}
 
-  fileprivate var _execArgs: ExecProgram_Args? = nil
+  fileprivate var _execArgs: ExecProgramArgs? = nil
 }
 
 /// Message for build program response.
-public struct BuildProgram_Result: Sendable {
+public struct BuildProgramResult: Sendable {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
@@ -708,7 +708,7 @@ public struct BuildProgram_Result: Sendable {
 }
 
 /// Message for execute artifact request arguments.
-public struct ExecArtifact_Args: Sendable {
+public struct ExecArtifactArgs: Sendable {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
@@ -717,8 +717,8 @@ public struct ExecArtifact_Args: Sendable {
   public var path: String = String()
 
   /// Arguments for executing the program.
-  public var execArgs: ExecProgram_Args {
-    get {return _execArgs ?? ExecProgram_Args()}
+  public var execArgs: ExecProgramArgs {
+    get {return _execArgs ?? ExecProgramArgs()}
     set {_execArgs = newValue}
   }
   /// Returns true if `execArgs` has been explicitly set.
@@ -730,11 +730,11 @@ public struct ExecArtifact_Args: Sendable {
 
   public init() {}
 
-  fileprivate var _execArgs: ExecProgram_Args? = nil
+  fileprivate var _execArgs: ExecProgramArgs? = nil
 }
 
 /// Message for format code request arguments.
-public struct FormatCode_Args: Sendable {
+public struct FormatCodeArgs: Sendable {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
@@ -748,7 +748,7 @@ public struct FormatCode_Args: Sendable {
 }
 
 /// Message for format code response.
-public struct FormatCode_Result: @unchecked Sendable {
+public struct FormatCodeResult: @unchecked Sendable {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
@@ -762,7 +762,7 @@ public struct FormatCode_Result: @unchecked Sendable {
 }
 
 /// Message for format file path request arguments.
-public struct FormatPath_Args: Sendable {
+public struct FormatPathArgs: Sendable {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
@@ -776,7 +776,7 @@ public struct FormatPath_Args: Sendable {
 }
 
 /// Message for format file path response.
-public struct FormatPath_Result: Sendable {
+public struct FormatPathResult: Sendable {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
@@ -790,7 +790,7 @@ public struct FormatPath_Result: Sendable {
 }
 
 /// Message for lint file path request arguments.
-public struct LintPath_Args: Sendable {
+public struct LintPathArgs: Sendable {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
@@ -804,7 +804,7 @@ public struct LintPath_Args: Sendable {
 }
 
 /// Message for lint file path response.
-public struct LintPath_Result: Sendable {
+public struct LintPathResult: Sendable {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
@@ -818,7 +818,7 @@ public struct LintPath_Result: Sendable {
 }
 
 /// Message for override file request arguments.
-public struct OverrideFile_Args: Sendable {
+public struct OverrideFileArgs: Sendable {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
@@ -838,7 +838,7 @@ public struct OverrideFile_Args: Sendable {
 }
 
 /// Message for override file response.
-public struct OverrideFile_Result: Sendable {
+public struct OverrideFileResult: Sendable {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
@@ -855,7 +855,7 @@ public struct OverrideFile_Result: Sendable {
 }
 
 /// Message for list variables options.
-public struct ListVariables_Options: Sendable {
+public struct ListVariablesOptions: Sendable {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
@@ -883,7 +883,7 @@ public struct VariableList: Sendable {
 }
 
 /// Message for list variables request arguments.
-public struct ListVariables_Args: Sendable {
+public struct ListVariablesArgs: Sendable {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
@@ -895,8 +895,8 @@ public struct ListVariables_Args: Sendable {
   public var specs: [String] = []
 
   /// Options for listing variables.
-  public var options: ListVariables_Options {
-    get {return _options ?? ListVariables_Options()}
+  public var options: ListVariablesOptions {
+    get {return _options ?? ListVariablesOptions()}
     set {_options = newValue}
   }
   /// Returns true if `options` has been explicitly set.
@@ -908,11 +908,11 @@ public struct ListVariables_Args: Sendable {
 
   public init() {}
 
-  fileprivate var _options: ListVariables_Options? = nil
+  fileprivate var _options: ListVariablesOptions? = nil
 }
 
 /// Message for list variables response.
-public struct ListVariables_Result: Sendable {
+public struct ListVariablesResult: Sendable {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
@@ -984,14 +984,14 @@ public struct MapEntry: Sendable {
 }
 
 /// Message for get schema type mapping request arguments.
-public struct GetSchemaTypeMapping_Args: Sendable {
+public struct GetSchemaTypeMappingArgs: Sendable {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
 
   /// Arguments for executing the program.
-  public var execArgs: ExecProgram_Args {
-    get {return _execArgs ?? ExecProgram_Args()}
+  public var execArgs: ExecProgramArgs {
+    get {return _execArgs ?? ExecProgramArgs()}
     set {_execArgs = newValue}
   }
   /// Returns true if `execArgs` has been explicitly set.
@@ -1006,11 +1006,11 @@ public struct GetSchemaTypeMapping_Args: Sendable {
 
   public init() {}
 
-  fileprivate var _execArgs: ExecProgram_Args? = nil
+  fileprivate var _execArgs: ExecProgramArgs? = nil
 }
 
 /// Message for get schema type mapping response.
-public struct GetSchemaTypeMapping_Result: Sendable {
+public struct GetSchemaTypeMappingResult: Sendable {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
@@ -1024,7 +1024,7 @@ public struct GetSchemaTypeMapping_Result: Sendable {
 }
 
 /// Message for validate code request arguments.
-public struct ValidateCode_Args: Sendable {
+public struct ValidateCodeArgs: Sendable {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
@@ -1056,7 +1056,7 @@ public struct ValidateCode_Args: Sendable {
 }
 
 /// Message for validate code response.
-public struct ValidateCode_Result: Sendable {
+public struct ValidateCodeResult: Sendable {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
@@ -1093,7 +1093,7 @@ public struct Position: Sendable {
 }
 
 /// Message for list dependency files request arguments.
-public struct ListDepFiles_Args: Sendable {
+public struct ListDepFilesArgs: Sendable {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
@@ -1116,7 +1116,7 @@ public struct ListDepFiles_Args: Sendable {
 }
 
 /// Message for list dependency files response.
-public struct ListDepFiles_Result: Sendable {
+public struct ListDepFilesResult: Sendable {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
@@ -1136,7 +1136,7 @@ public struct ListDepFiles_Result: Sendable {
 }
 
 /// Message for load settings files request arguments.
-public struct LoadSettingsFiles_Args: Sendable {
+public struct LoadSettingsFilesArgs: Sendable {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
@@ -1153,7 +1153,7 @@ public struct LoadSettingsFiles_Args: Sendable {
 }
 
 /// Message for load settings files response.
-public struct LoadSettingsFiles_Result: Sendable {
+public struct LoadSettingsFilesResult: Sendable {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
@@ -1243,7 +1243,7 @@ public struct KeyValuePair: Sendable {
 }
 
 /// Message for rename request arguments.
-public struct Rename_Args: Sendable {
+public struct RenameArgs: Sendable {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
@@ -1266,7 +1266,7 @@ public struct Rename_Args: Sendable {
 }
 
 /// Message for rename response.
-public struct Rename_Result: Sendable {
+public struct RenameResult: Sendable {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
@@ -1280,7 +1280,7 @@ public struct Rename_Result: Sendable {
 }
 
 /// Message for rename code request arguments.
-public struct RenameCode_Args: Sendable {
+public struct RenameCodeArgs: Sendable {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
@@ -1303,7 +1303,7 @@ public struct RenameCode_Args: Sendable {
 }
 
 /// Message for rename code response.
-public struct RenameCode_Result: Sendable {
+public struct RenameCodeResult: Sendable {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
@@ -1317,14 +1317,14 @@ public struct RenameCode_Result: Sendable {
 }
 
 /// Message for test request arguments.
-public struct Test_Args: Sendable {
+public struct TestArgs: Sendable {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
 
   /// Execution program arguments.
-  public var execArgs: ExecProgram_Args {
-    get {return _execArgs ?? ExecProgram_Args()}
+  public var execArgs: ExecProgramArgs {
+    get {return _execArgs ?? ExecProgramArgs()}
     set {_execArgs = newValue}
   }
   /// Returns true if `execArgs` has been explicitly set.
@@ -1345,11 +1345,11 @@ public struct Test_Args: Sendable {
 
   public init() {}
 
-  fileprivate var _execArgs: ExecProgram_Args? = nil
+  fileprivate var _execArgs: ExecProgramArgs? = nil
 }
 
 /// Message for test response.
-public struct Test_Result: Sendable {
+public struct TestResult: Sendable {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
@@ -1386,7 +1386,7 @@ public struct TestCaseInfo: Sendable {
 }
 
 /// Message for update dependencies request arguments.
-public struct UpdateDependencies_Args: Sendable {
+public struct UpdateDependenciesArgs: Sendable {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
@@ -1403,7 +1403,7 @@ public struct UpdateDependencies_Args: Sendable {
 }
 
 /// Message for update dependencies response.
-public struct UpdateDependencies_Result: Sendable {
+public struct UpdateDependenciesResult: Sendable {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
@@ -1741,8 +1741,8 @@ extension Message: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBa
   }
 }
 
-extension Ping_Args: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  public static let protoMessageName: String = "Ping_Args"
+extension PingArgs: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = "PingArgs"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "value"),
   ]
@@ -1766,15 +1766,15 @@ extension Ping_Args: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementation
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  public static func ==(lhs: Ping_Args, rhs: Ping_Args) -> Bool {
+  public static func ==(lhs: PingArgs, rhs: PingArgs) -> Bool {
     if lhs.value != rhs.value {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }
 }
 
-extension Ping_Result: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  public static let protoMessageName: String = "Ping_Result"
+extension PingResult: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = "PingResult"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "value"),
   ]
@@ -1798,15 +1798,15 @@ extension Ping_Result: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementati
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  public static func ==(lhs: Ping_Result, rhs: Ping_Result) -> Bool {
+  public static func ==(lhs: PingResult, rhs: PingResult) -> Bool {
     if lhs.value != rhs.value {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }
 }
 
-extension GetVersion_Args: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  public static let protoMessageName: String = "GetVersion_Args"
+extension GetVersionArgs: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = "GetVersionArgs"
   public static let _protobuf_nameMap = SwiftProtobuf._NameMap()
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -1818,14 +1818,14 @@ extension GetVersion_Args: SwiftProtobuf.Message, SwiftProtobuf._MessageImplemen
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  public static func ==(lhs: GetVersion_Args, rhs: GetVersion_Args) -> Bool {
+  public static func ==(lhs: GetVersionArgs, rhs: GetVersionArgs) -> Bool {
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }
 }
 
-extension GetVersion_Result: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  public static let protoMessageName: String = "GetVersion_Result"
+extension GetVersionResult: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = "GetVersionResult"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "version"),
     2: .same(proto: "checksum"),
@@ -1864,7 +1864,7 @@ extension GetVersion_Result: SwiftProtobuf.Message, SwiftProtobuf._MessageImplem
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  public static func ==(lhs: GetVersion_Result, rhs: GetVersion_Result) -> Bool {
+  public static func ==(lhs: GetVersionResult, rhs: GetVersionResult) -> Bool {
     if lhs.version != rhs.version {return false}
     if lhs.checksum != rhs.checksum {return false}
     if lhs.gitSha != rhs.gitSha {return false}
@@ -1874,8 +1874,8 @@ extension GetVersion_Result: SwiftProtobuf.Message, SwiftProtobuf._MessageImplem
   }
 }
 
-extension ListMethod_Args: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  public static let protoMessageName: String = "ListMethod_Args"
+extension ListMethodArgs: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = "ListMethodArgs"
   public static let _protobuf_nameMap = SwiftProtobuf._NameMap()
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -1887,14 +1887,14 @@ extension ListMethod_Args: SwiftProtobuf.Message, SwiftProtobuf._MessageImplemen
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  public static func ==(lhs: ListMethod_Args, rhs: ListMethod_Args) -> Bool {
+  public static func ==(lhs: ListMethodArgs, rhs: ListMethodArgs) -> Bool {
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }
 }
 
-extension ListMethod_Result: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  public static let protoMessageName: String = "ListMethod_Result"
+extension ListMethodResult: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = "ListMethodResult"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .standard(proto: "method_name_list"),
   ]
@@ -1918,15 +1918,15 @@ extension ListMethod_Result: SwiftProtobuf.Message, SwiftProtobuf._MessageImplem
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  public static func ==(lhs: ListMethod_Result, rhs: ListMethod_Result) -> Bool {
+  public static func ==(lhs: ListMethodResult, rhs: ListMethodResult) -> Bool {
     if lhs.methodNameList != rhs.methodNameList {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }
 }
 
-extension ParseFile_Args: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  public static let protoMessageName: String = "ParseFile_Args"
+extension ParseFileArgs: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = "ParseFileArgs"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "path"),
     2: .same(proto: "source"),
@@ -1960,7 +1960,7 @@ extension ParseFile_Args: SwiftProtobuf.Message, SwiftProtobuf._MessageImplement
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  public static func ==(lhs: ParseFile_Args, rhs: ParseFile_Args) -> Bool {
+  public static func ==(lhs: ParseFileArgs, rhs: ParseFileArgs) -> Bool {
     if lhs.path != rhs.path {return false}
     if lhs.source != rhs.source {return false}
     if lhs.externalPkgs != rhs.externalPkgs {return false}
@@ -1969,8 +1969,8 @@ extension ParseFile_Args: SwiftProtobuf.Message, SwiftProtobuf._MessageImplement
   }
 }
 
-extension ParseFile_Result: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  public static let protoMessageName: String = "ParseFile_Result"
+extension ParseFileResult: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = "ParseFileResult"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .standard(proto: "ast_json"),
     2: .same(proto: "deps"),
@@ -2004,7 +2004,7 @@ extension ParseFile_Result: SwiftProtobuf.Message, SwiftProtobuf._MessageImpleme
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  public static func ==(lhs: ParseFile_Result, rhs: ParseFile_Result) -> Bool {
+  public static func ==(lhs: ParseFileResult, rhs: ParseFileResult) -> Bool {
     if lhs.astJson != rhs.astJson {return false}
     if lhs.deps != rhs.deps {return false}
     if lhs.errors != rhs.errors {return false}
@@ -2013,8 +2013,8 @@ extension ParseFile_Result: SwiftProtobuf.Message, SwiftProtobuf._MessageImpleme
   }
 }
 
-extension ParseProgram_Args: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  public static let protoMessageName: String = "ParseProgram_Args"
+extension ParseProgramArgs: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = "ParseProgramArgs"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "paths"),
     2: .same(proto: "sources"),
@@ -2048,7 +2048,7 @@ extension ParseProgram_Args: SwiftProtobuf.Message, SwiftProtobuf._MessageImplem
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  public static func ==(lhs: ParseProgram_Args, rhs: ParseProgram_Args) -> Bool {
+  public static func ==(lhs: ParseProgramArgs, rhs: ParseProgramArgs) -> Bool {
     if lhs.paths != rhs.paths {return false}
     if lhs.sources != rhs.sources {return false}
     if lhs.externalPkgs != rhs.externalPkgs {return false}
@@ -2057,8 +2057,8 @@ extension ParseProgram_Args: SwiftProtobuf.Message, SwiftProtobuf._MessageImplem
   }
 }
 
-extension ParseProgram_Result: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  public static let protoMessageName: String = "ParseProgram_Result"
+extension ParseProgramResult: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = "ParseProgramResult"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .standard(proto: "ast_json"),
     2: .same(proto: "paths"),
@@ -2092,7 +2092,7 @@ extension ParseProgram_Result: SwiftProtobuf.Message, SwiftProtobuf._MessageImpl
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  public static func ==(lhs: ParseProgram_Result, rhs: ParseProgram_Result) -> Bool {
+  public static func ==(lhs: ParseProgramResult, rhs: ParseProgramResult) -> Bool {
     if lhs.astJson != rhs.astJson {return false}
     if lhs.paths != rhs.paths {return false}
     if lhs.errors != rhs.errors {return false}
@@ -2101,8 +2101,8 @@ extension ParseProgram_Result: SwiftProtobuf.Message, SwiftProtobuf._MessageImpl
   }
 }
 
-extension LoadPackage_Args: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  public static let protoMessageName: String = "LoadPackage_Args"
+extension LoadPackageArgs: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = "LoadPackageArgs"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .standard(proto: "parse_args"),
     2: .standard(proto: "resolve_ast"),
@@ -2145,7 +2145,7 @@ extension LoadPackage_Args: SwiftProtobuf.Message, SwiftProtobuf._MessageImpleme
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  public static func ==(lhs: LoadPackage_Args, rhs: LoadPackage_Args) -> Bool {
+  public static func ==(lhs: LoadPackageArgs, rhs: LoadPackageArgs) -> Bool {
     if lhs._parseArgs != rhs._parseArgs {return false}
     if lhs.resolveAst != rhs.resolveAst {return false}
     if lhs.loadBuiltin != rhs.loadBuiltin {return false}
@@ -2155,8 +2155,8 @@ extension LoadPackage_Args: SwiftProtobuf.Message, SwiftProtobuf._MessageImpleme
   }
 }
 
-extension LoadPackage_Result: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  public static let protoMessageName: String = "LoadPackage_Result"
+extension LoadPackageResult: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = "LoadPackageResult"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "program"),
     2: .same(proto: "paths"),
@@ -2225,7 +2225,7 @@ extension LoadPackage_Result: SwiftProtobuf.Message, SwiftProtobuf._MessageImple
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  public static func ==(lhs: LoadPackage_Result, rhs: LoadPackage_Result) -> Bool {
+  public static func ==(lhs: LoadPackageResult, rhs: LoadPackageResult) -> Bool {
     if lhs.program != rhs.program {return false}
     if lhs.paths != rhs.paths {return false}
     if lhs.parseErrors != rhs.parseErrors {return false}
@@ -2241,8 +2241,8 @@ extension LoadPackage_Result: SwiftProtobuf.Message, SwiftProtobuf._MessageImple
   }
 }
 
-extension ListOptions_Result: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  public static let protoMessageName: String = "ListOptions_Result"
+extension ListOptionsResult: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = "ListOptionsResult"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     2: .same(proto: "options"),
   ]
@@ -2266,7 +2266,7 @@ extension ListOptions_Result: SwiftProtobuf.Message, SwiftProtobuf._MessageImple
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  public static func ==(lhs: ListOptions_Result, rhs: ListOptions_Result) -> Bool {
+  public static func ==(lhs: ListOptionsResult, rhs: ListOptionsResult) -> Bool {
     if lhs.options != rhs.options {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
@@ -2543,8 +2543,8 @@ extension ScopeIndex: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementatio
   }
 }
 
-extension ExecProgram_Args: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  public static let protoMessageName: String = "ExecProgram_Args"
+extension ExecProgramArgs: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = "ExecProgramArgs"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .standard(proto: "work_dir"),
     2: .standard(proto: "k_filename_list"),
@@ -2719,7 +2719,7 @@ extension ExecProgram_Args: SwiftProtobuf.Message, SwiftProtobuf._MessageImpleme
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  public static func ==(lhs: ExecProgram_Args, rhs: ExecProgram_Args) -> Bool {
+  public static func ==(lhs: ExecProgramArgs, rhs: ExecProgramArgs) -> Bool {
     if lhs._storage !== rhs._storage {
       let storagesAreEqual: Bool = withExtendedLifetime((lhs._storage, rhs._storage)) { (_args: (_StorageClass, _StorageClass)) in
         let _storage = _args.0
@@ -2751,8 +2751,8 @@ extension ExecProgram_Args: SwiftProtobuf.Message, SwiftProtobuf._MessageImpleme
   }
 }
 
-extension ExecProgram_Result: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  public static let protoMessageName: String = "ExecProgram_Result"
+extension ExecProgramResult: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = "ExecProgramResult"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .standard(proto: "json_result"),
     2: .standard(proto: "yaml_result"),
@@ -2791,7 +2791,7 @@ extension ExecProgram_Result: SwiftProtobuf.Message, SwiftProtobuf._MessageImple
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  public static func ==(lhs: ExecProgram_Result, rhs: ExecProgram_Result) -> Bool {
+  public static func ==(lhs: ExecProgramResult, rhs: ExecProgramResult) -> Bool {
     if lhs.jsonResult != rhs.jsonResult {return false}
     if lhs.yamlResult != rhs.yamlResult {return false}
     if lhs.logMessage != rhs.logMessage {return false}
@@ -2801,8 +2801,8 @@ extension ExecProgram_Result: SwiftProtobuf.Message, SwiftProtobuf._MessageImple
   }
 }
 
-extension BuildProgram_Args: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  public static let protoMessageName: String = "BuildProgram_Args"
+extension BuildProgramArgs: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = "BuildProgramArgs"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .standard(proto: "exec_args"),
     2: .same(proto: "output"),
@@ -2835,7 +2835,7 @@ extension BuildProgram_Args: SwiftProtobuf.Message, SwiftProtobuf._MessageImplem
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  public static func ==(lhs: BuildProgram_Args, rhs: BuildProgram_Args) -> Bool {
+  public static func ==(lhs: BuildProgramArgs, rhs: BuildProgramArgs) -> Bool {
     if lhs._execArgs != rhs._execArgs {return false}
     if lhs.output != rhs.output {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
@@ -2843,8 +2843,8 @@ extension BuildProgram_Args: SwiftProtobuf.Message, SwiftProtobuf._MessageImplem
   }
 }
 
-extension BuildProgram_Result: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  public static let protoMessageName: String = "BuildProgram_Result"
+extension BuildProgramResult: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = "BuildProgramResult"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "path"),
   ]
@@ -2868,15 +2868,15 @@ extension BuildProgram_Result: SwiftProtobuf.Message, SwiftProtobuf._MessageImpl
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  public static func ==(lhs: BuildProgram_Result, rhs: BuildProgram_Result) -> Bool {
+  public static func ==(lhs: BuildProgramResult, rhs: BuildProgramResult) -> Bool {
     if lhs.path != rhs.path {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }
 }
 
-extension ExecArtifact_Args: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  public static let protoMessageName: String = "ExecArtifact_Args"
+extension ExecArtifactArgs: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = "ExecArtifactArgs"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "path"),
     2: .standard(proto: "exec_args"),
@@ -2909,7 +2909,7 @@ extension ExecArtifact_Args: SwiftProtobuf.Message, SwiftProtobuf._MessageImplem
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  public static func ==(lhs: ExecArtifact_Args, rhs: ExecArtifact_Args) -> Bool {
+  public static func ==(lhs: ExecArtifactArgs, rhs: ExecArtifactArgs) -> Bool {
     if lhs.path != rhs.path {return false}
     if lhs._execArgs != rhs._execArgs {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
@@ -2917,8 +2917,8 @@ extension ExecArtifact_Args: SwiftProtobuf.Message, SwiftProtobuf._MessageImplem
   }
 }
 
-extension FormatCode_Args: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  public static let protoMessageName: String = "FormatCode_Args"
+extension FormatCodeArgs: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = "FormatCodeArgs"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "source"),
   ]
@@ -2942,15 +2942,15 @@ extension FormatCode_Args: SwiftProtobuf.Message, SwiftProtobuf._MessageImplemen
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  public static func ==(lhs: FormatCode_Args, rhs: FormatCode_Args) -> Bool {
+  public static func ==(lhs: FormatCodeArgs, rhs: FormatCodeArgs) -> Bool {
     if lhs.source != rhs.source {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }
 }
 
-extension FormatCode_Result: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  public static let protoMessageName: String = "FormatCode_Result"
+extension FormatCodeResult: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = "FormatCodeResult"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "formatted"),
   ]
@@ -2974,15 +2974,15 @@ extension FormatCode_Result: SwiftProtobuf.Message, SwiftProtobuf._MessageImplem
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  public static func ==(lhs: FormatCode_Result, rhs: FormatCode_Result) -> Bool {
+  public static func ==(lhs: FormatCodeResult, rhs: FormatCodeResult) -> Bool {
     if lhs.formatted != rhs.formatted {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }
 }
 
-extension FormatPath_Args: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  public static let protoMessageName: String = "FormatPath_Args"
+extension FormatPathArgs: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = "FormatPathArgs"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "path"),
   ]
@@ -3006,15 +3006,15 @@ extension FormatPath_Args: SwiftProtobuf.Message, SwiftProtobuf._MessageImplemen
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  public static func ==(lhs: FormatPath_Args, rhs: FormatPath_Args) -> Bool {
+  public static func ==(lhs: FormatPathArgs, rhs: FormatPathArgs) -> Bool {
     if lhs.path != rhs.path {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }
 }
 
-extension FormatPath_Result: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  public static let protoMessageName: String = "FormatPath_Result"
+extension FormatPathResult: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = "FormatPathResult"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .standard(proto: "changed_paths"),
   ]
@@ -3038,15 +3038,15 @@ extension FormatPath_Result: SwiftProtobuf.Message, SwiftProtobuf._MessageImplem
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  public static func ==(lhs: FormatPath_Result, rhs: FormatPath_Result) -> Bool {
+  public static func ==(lhs: FormatPathResult, rhs: FormatPathResult) -> Bool {
     if lhs.changedPaths != rhs.changedPaths {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }
 }
 
-extension LintPath_Args: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  public static let protoMessageName: String = "LintPath_Args"
+extension LintPathArgs: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = "LintPathArgs"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "paths"),
   ]
@@ -3070,15 +3070,15 @@ extension LintPath_Args: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementa
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  public static func ==(lhs: LintPath_Args, rhs: LintPath_Args) -> Bool {
+  public static func ==(lhs: LintPathArgs, rhs: LintPathArgs) -> Bool {
     if lhs.paths != rhs.paths {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }
 }
 
-extension LintPath_Result: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  public static let protoMessageName: String = "LintPath_Result"
+extension LintPathResult: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = "LintPathResult"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "results"),
   ]
@@ -3102,15 +3102,15 @@ extension LintPath_Result: SwiftProtobuf.Message, SwiftProtobuf._MessageImplemen
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  public static func ==(lhs: LintPath_Result, rhs: LintPath_Result) -> Bool {
+  public static func ==(lhs: LintPathResult, rhs: LintPathResult) -> Bool {
     if lhs.results != rhs.results {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }
 }
 
-extension OverrideFile_Args: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  public static let protoMessageName: String = "OverrideFile_Args"
+extension OverrideFileArgs: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = "OverrideFileArgs"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "file"),
     2: .same(proto: "specs"),
@@ -3144,7 +3144,7 @@ extension OverrideFile_Args: SwiftProtobuf.Message, SwiftProtobuf._MessageImplem
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  public static func ==(lhs: OverrideFile_Args, rhs: OverrideFile_Args) -> Bool {
+  public static func ==(lhs: OverrideFileArgs, rhs: OverrideFileArgs) -> Bool {
     if lhs.file != rhs.file {return false}
     if lhs.specs != rhs.specs {return false}
     if lhs.importPaths != rhs.importPaths {return false}
@@ -3153,8 +3153,8 @@ extension OverrideFile_Args: SwiftProtobuf.Message, SwiftProtobuf._MessageImplem
   }
 }
 
-extension OverrideFile_Result: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  public static let protoMessageName: String = "OverrideFile_Result"
+extension OverrideFileResult: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = "OverrideFileResult"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "result"),
     2: .standard(proto: "parse_errors"),
@@ -3183,7 +3183,7 @@ extension OverrideFile_Result: SwiftProtobuf.Message, SwiftProtobuf._MessageImpl
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  public static func ==(lhs: OverrideFile_Result, rhs: OverrideFile_Result) -> Bool {
+  public static func ==(lhs: OverrideFileResult, rhs: OverrideFileResult) -> Bool {
     if lhs.result != rhs.result {return false}
     if lhs.parseErrors != rhs.parseErrors {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
@@ -3191,8 +3191,8 @@ extension OverrideFile_Result: SwiftProtobuf.Message, SwiftProtobuf._MessageImpl
   }
 }
 
-extension ListVariables_Options: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  public static let protoMessageName: String = "ListVariables_Options"
+extension ListVariablesOptions: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = "ListVariablesOptions"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .standard(proto: "merge_program"),
   ]
@@ -3216,7 +3216,7 @@ extension ListVariables_Options: SwiftProtobuf.Message, SwiftProtobuf._MessageIm
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  public static func ==(lhs: ListVariables_Options, rhs: ListVariables_Options) -> Bool {
+  public static func ==(lhs: ListVariablesOptions, rhs: ListVariablesOptions) -> Bool {
     if lhs.mergeProgram != rhs.mergeProgram {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
@@ -3255,8 +3255,8 @@ extension VariableList: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementat
   }
 }
 
-extension ListVariables_Args: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  public static let protoMessageName: String = "ListVariables_Args"
+extension ListVariablesArgs: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = "ListVariablesArgs"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "files"),
     2: .same(proto: "specs"),
@@ -3294,7 +3294,7 @@ extension ListVariables_Args: SwiftProtobuf.Message, SwiftProtobuf._MessageImple
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  public static func ==(lhs: ListVariables_Args, rhs: ListVariables_Args) -> Bool {
+  public static func ==(lhs: ListVariablesArgs, rhs: ListVariablesArgs) -> Bool {
     if lhs.files != rhs.files {return false}
     if lhs.specs != rhs.specs {return false}
     if lhs._options != rhs._options {return false}
@@ -3303,8 +3303,8 @@ extension ListVariables_Args: SwiftProtobuf.Message, SwiftProtobuf._MessageImple
   }
 }
 
-extension ListVariables_Result: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  public static let protoMessageName: String = "ListVariables_Result"
+extension ListVariablesResult: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = "ListVariablesResult"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "variables"),
     2: .standard(proto: "unsupported_codes"),
@@ -3338,7 +3338,7 @@ extension ListVariables_Result: SwiftProtobuf.Message, SwiftProtobuf._MessageImp
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  public static func ==(lhs: ListVariables_Result, rhs: ListVariables_Result) -> Bool {
+  public static func ==(lhs: ListVariablesResult, rhs: ListVariablesResult) -> Bool {
     if lhs.variables != rhs.variables {return false}
     if lhs.unsupportedCodes != rhs.unsupportedCodes {return false}
     if lhs.parseErrors != rhs.parseErrors {return false}
@@ -3445,8 +3445,8 @@ extension MapEntry: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationB
   }
 }
 
-extension GetSchemaTypeMapping_Args: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  public static let protoMessageName: String = "GetSchemaTypeMapping_Args"
+extension GetSchemaTypeMappingArgs: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = "GetSchemaTypeMappingArgs"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .standard(proto: "exec_args"),
     2: .standard(proto: "schema_name"),
@@ -3479,7 +3479,7 @@ extension GetSchemaTypeMapping_Args: SwiftProtobuf.Message, SwiftProtobuf._Messa
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  public static func ==(lhs: GetSchemaTypeMapping_Args, rhs: GetSchemaTypeMapping_Args) -> Bool {
+  public static func ==(lhs: GetSchemaTypeMappingArgs, rhs: GetSchemaTypeMappingArgs) -> Bool {
     if lhs._execArgs != rhs._execArgs {return false}
     if lhs.schemaName != rhs.schemaName {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
@@ -3487,8 +3487,8 @@ extension GetSchemaTypeMapping_Args: SwiftProtobuf.Message, SwiftProtobuf._Messa
   }
 }
 
-extension GetSchemaTypeMapping_Result: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  public static let protoMessageName: String = "GetSchemaTypeMapping_Result"
+extension GetSchemaTypeMappingResult: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = "GetSchemaTypeMappingResult"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .standard(proto: "schema_type_mapping"),
   ]
@@ -3512,15 +3512,15 @@ extension GetSchemaTypeMapping_Result: SwiftProtobuf.Message, SwiftProtobuf._Mes
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  public static func ==(lhs: GetSchemaTypeMapping_Result, rhs: GetSchemaTypeMapping_Result) -> Bool {
+  public static func ==(lhs: GetSchemaTypeMappingResult, rhs: GetSchemaTypeMappingResult) -> Bool {
     if lhs.schemaTypeMapping != rhs.schemaTypeMapping {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }
 }
 
-extension ValidateCode_Args: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  public static let protoMessageName: String = "ValidateCode_Args"
+extension ValidateCodeArgs: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = "ValidateCodeArgs"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "datafile"),
     2: .same(proto: "data"),
@@ -3574,7 +3574,7 @@ extension ValidateCode_Args: SwiftProtobuf.Message, SwiftProtobuf._MessageImplem
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  public static func ==(lhs: ValidateCode_Args, rhs: ValidateCode_Args) -> Bool {
+  public static func ==(lhs: ValidateCodeArgs, rhs: ValidateCodeArgs) -> Bool {
     if lhs.datafile != rhs.datafile {return false}
     if lhs.data != rhs.data {return false}
     if lhs.file != rhs.file {return false}
@@ -3587,8 +3587,8 @@ extension ValidateCode_Args: SwiftProtobuf.Message, SwiftProtobuf._MessageImplem
   }
 }
 
-extension ValidateCode_Result: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  public static let protoMessageName: String = "ValidateCode_Result"
+extension ValidateCodeResult: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = "ValidateCodeResult"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "success"),
     2: .standard(proto: "err_message"),
@@ -3617,7 +3617,7 @@ extension ValidateCode_Result: SwiftProtobuf.Message, SwiftProtobuf._MessageImpl
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  public static func ==(lhs: ValidateCode_Result, rhs: ValidateCode_Result) -> Bool {
+  public static func ==(lhs: ValidateCodeResult, rhs: ValidateCodeResult) -> Bool {
     if lhs.success != rhs.success {return false}
     if lhs.errMessage != rhs.errMessage {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
@@ -3669,8 +3669,8 @@ extension Position: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationB
   }
 }
 
-extension ListDepFiles_Args: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  public static let protoMessageName: String = "ListDepFiles_Args"
+extension ListDepFilesArgs: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = "ListDepFilesArgs"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .standard(proto: "work_dir"),
     2: .standard(proto: "use_abs_path"),
@@ -3709,7 +3709,7 @@ extension ListDepFiles_Args: SwiftProtobuf.Message, SwiftProtobuf._MessageImplem
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  public static func ==(lhs: ListDepFiles_Args, rhs: ListDepFiles_Args) -> Bool {
+  public static func ==(lhs: ListDepFilesArgs, rhs: ListDepFilesArgs) -> Bool {
     if lhs.workDir != rhs.workDir {return false}
     if lhs.useAbsPath != rhs.useAbsPath {return false}
     if lhs.includeAll != rhs.includeAll {return false}
@@ -3719,8 +3719,8 @@ extension ListDepFiles_Args: SwiftProtobuf.Message, SwiftProtobuf._MessageImplem
   }
 }
 
-extension ListDepFiles_Result: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  public static let protoMessageName: String = "ListDepFiles_Result"
+extension ListDepFilesResult: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = "ListDepFilesResult"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "pkgroot"),
     2: .same(proto: "pkgpath"),
@@ -3754,7 +3754,7 @@ extension ListDepFiles_Result: SwiftProtobuf.Message, SwiftProtobuf._MessageImpl
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  public static func ==(lhs: ListDepFiles_Result, rhs: ListDepFiles_Result) -> Bool {
+  public static func ==(lhs: ListDepFilesResult, rhs: ListDepFilesResult) -> Bool {
     if lhs.pkgroot != rhs.pkgroot {return false}
     if lhs.pkgpath != rhs.pkgpath {return false}
     if lhs.files != rhs.files {return false}
@@ -3763,8 +3763,8 @@ extension ListDepFiles_Result: SwiftProtobuf.Message, SwiftProtobuf._MessageImpl
   }
 }
 
-extension LoadSettingsFiles_Args: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  public static let protoMessageName: String = "LoadSettingsFiles_Args"
+extension LoadSettingsFilesArgs: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = "LoadSettingsFilesArgs"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .standard(proto: "work_dir"),
     2: .same(proto: "files"),
@@ -3793,7 +3793,7 @@ extension LoadSettingsFiles_Args: SwiftProtobuf.Message, SwiftProtobuf._MessageI
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  public static func ==(lhs: LoadSettingsFiles_Args, rhs: LoadSettingsFiles_Args) -> Bool {
+  public static func ==(lhs: LoadSettingsFilesArgs, rhs: LoadSettingsFilesArgs) -> Bool {
     if lhs.workDir != rhs.workDir {return false}
     if lhs.files != rhs.files {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
@@ -3801,8 +3801,8 @@ extension LoadSettingsFiles_Args: SwiftProtobuf.Message, SwiftProtobuf._MessageI
   }
 }
 
-extension LoadSettingsFiles_Result: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  public static let protoMessageName: String = "LoadSettingsFiles_Result"
+extension LoadSettingsFilesResult: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = "LoadSettingsFilesResult"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .standard(proto: "kcl_cli_configs"),
     2: .standard(proto: "kcl_options"),
@@ -3835,7 +3835,7 @@ extension LoadSettingsFiles_Result: SwiftProtobuf.Message, SwiftProtobuf._Messag
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  public static func ==(lhs: LoadSettingsFiles_Result, rhs: LoadSettingsFiles_Result) -> Bool {
+  public static func ==(lhs: LoadSettingsFilesResult, rhs: LoadSettingsFilesResult) -> Bool {
     if lhs._kclCliConfigs != rhs._kclCliConfigs {return false}
     if lhs.kclOptions != rhs.kclOptions {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
@@ -3979,8 +3979,8 @@ extension KeyValuePair: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementat
   }
 }
 
-extension Rename_Args: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  public static let protoMessageName: String = "Rename_Args"
+extension RenameArgs: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = "RenameArgs"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .standard(proto: "package_root"),
     2: .standard(proto: "symbol_path"),
@@ -4019,7 +4019,7 @@ extension Rename_Args: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementati
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  public static func ==(lhs: Rename_Args, rhs: Rename_Args) -> Bool {
+  public static func ==(lhs: RenameArgs, rhs: RenameArgs) -> Bool {
     if lhs.packageRoot != rhs.packageRoot {return false}
     if lhs.symbolPath != rhs.symbolPath {return false}
     if lhs.filePaths != rhs.filePaths {return false}
@@ -4029,8 +4029,8 @@ extension Rename_Args: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementati
   }
 }
 
-extension Rename_Result: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  public static let protoMessageName: String = "Rename_Result"
+extension RenameResult: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = "RenameResult"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .standard(proto: "changed_files"),
   ]
@@ -4054,15 +4054,15 @@ extension Rename_Result: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementa
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  public static func ==(lhs: Rename_Result, rhs: Rename_Result) -> Bool {
+  public static func ==(lhs: RenameResult, rhs: RenameResult) -> Bool {
     if lhs.changedFiles != rhs.changedFiles {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }
 }
 
-extension RenameCode_Args: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  public static let protoMessageName: String = "RenameCode_Args"
+extension RenameCodeArgs: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = "RenameCodeArgs"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .standard(proto: "package_root"),
     2: .standard(proto: "symbol_path"),
@@ -4101,7 +4101,7 @@ extension RenameCode_Args: SwiftProtobuf.Message, SwiftProtobuf._MessageImplemen
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  public static func ==(lhs: RenameCode_Args, rhs: RenameCode_Args) -> Bool {
+  public static func ==(lhs: RenameCodeArgs, rhs: RenameCodeArgs) -> Bool {
     if lhs.packageRoot != rhs.packageRoot {return false}
     if lhs.symbolPath != rhs.symbolPath {return false}
     if lhs.sourceCodes != rhs.sourceCodes {return false}
@@ -4111,8 +4111,8 @@ extension RenameCode_Args: SwiftProtobuf.Message, SwiftProtobuf._MessageImplemen
   }
 }
 
-extension RenameCode_Result: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  public static let protoMessageName: String = "RenameCode_Result"
+extension RenameCodeResult: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = "RenameCodeResult"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .standard(proto: "changed_codes"),
   ]
@@ -4136,15 +4136,15 @@ extension RenameCode_Result: SwiftProtobuf.Message, SwiftProtobuf._MessageImplem
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  public static func ==(lhs: RenameCode_Result, rhs: RenameCode_Result) -> Bool {
+  public static func ==(lhs: RenameCodeResult, rhs: RenameCodeResult) -> Bool {
     if lhs.changedCodes != rhs.changedCodes {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }
 }
 
-extension Test_Args: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  public static let protoMessageName: String = "Test_Args"
+extension TestArgs: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = "TestArgs"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .standard(proto: "exec_args"),
     2: .standard(proto: "pkg_list"),
@@ -4187,7 +4187,7 @@ extension Test_Args: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementation
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  public static func ==(lhs: Test_Args, rhs: Test_Args) -> Bool {
+  public static func ==(lhs: TestArgs, rhs: TestArgs) -> Bool {
     if lhs._execArgs != rhs._execArgs {return false}
     if lhs.pkgList != rhs.pkgList {return false}
     if lhs.runRegexp != rhs.runRegexp {return false}
@@ -4197,8 +4197,8 @@ extension Test_Args: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementation
   }
 }
 
-extension Test_Result: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  public static let protoMessageName: String = "Test_Result"
+extension TestResult: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = "TestResult"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     2: .same(proto: "info"),
   ]
@@ -4222,7 +4222,7 @@ extension Test_Result: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementati
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  public static func ==(lhs: Test_Result, rhs: Test_Result) -> Bool {
+  public static func ==(lhs: TestResult, rhs: TestResult) -> Bool {
     if lhs.info != rhs.info {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
@@ -4279,8 +4279,8 @@ extension TestCaseInfo: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementat
   }
 }
 
-extension UpdateDependencies_Args: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  public static let protoMessageName: String = "UpdateDependencies_Args"
+extension UpdateDependenciesArgs: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = "UpdateDependenciesArgs"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .standard(proto: "manifest_path"),
     2: .same(proto: "vendor"),
@@ -4309,7 +4309,7 @@ extension UpdateDependencies_Args: SwiftProtobuf.Message, SwiftProtobuf._Message
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  public static func ==(lhs: UpdateDependencies_Args, rhs: UpdateDependencies_Args) -> Bool {
+  public static func ==(lhs: UpdateDependenciesArgs, rhs: UpdateDependenciesArgs) -> Bool {
     if lhs.manifestPath != rhs.manifestPath {return false}
     if lhs.vendor != rhs.vendor {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
@@ -4317,8 +4317,8 @@ extension UpdateDependencies_Args: SwiftProtobuf.Message, SwiftProtobuf._Message
   }
 }
 
-extension UpdateDependencies_Result: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  public static let protoMessageName: String = "UpdateDependencies_Result"
+extension UpdateDependenciesResult: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = "UpdateDependenciesResult"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     3: .standard(proto: "external_pkgs"),
   ]
@@ -4342,7 +4342,7 @@ extension UpdateDependencies_Result: SwiftProtobuf.Message, SwiftProtobuf._Messa
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  public static func ==(lhs: UpdateDependencies_Result, rhs: UpdateDependencies_Result) -> Bool {
+  public static func ==(lhs: UpdateDependenciesResult, rhs: UpdateDependenciesResult) -> Bool {
     if lhs.externalPkgs != rhs.externalPkgs {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true

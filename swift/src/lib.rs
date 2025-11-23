@@ -1,4 +1,4 @@
-extern crate kclvm_api;
+extern crate kcl_api;
 
 #[no_mangle]
 pub extern "C" fn callNative(
@@ -8,5 +8,5 @@ pub extern "C" fn callNative(
     args_len: usize,
     result_ptr: *mut u8,
 ) -> usize {
-    kclvm_api::call_native(name_ptr, name_len, args_ptr, args_len, result_ptr)
+    kcl_api::call_native(name_ptr, name_len, args_ptr, args_len, result_ptr)
 }

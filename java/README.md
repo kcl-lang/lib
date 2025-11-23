@@ -26,7 +26,7 @@ This way you'll be able to import the above dependency to use the SDK.
 <dependency>
     <groupId>com.kcl</groupId>
     <artifactId>kcl-lib</artifactId>
-    <version>0.11.2-SNAPSHOT</version>
+    <version>0.12.0-SNAPSHOT</version>
 </dependency>
 ```
 
@@ -34,14 +34,14 @@ Write the code
 
 ```java
 import com.kcl.api.API;
-import com.kcl.api.Spec.ExecProgram_Args;
-import com.kcl.api.Spec.ExecProgram_Result;
+import com.kcl.api.Spec.ExecProgramArgs;
+import com.kcl.api.Spec.ExecProgramResult;
 
 public class ExecProgramTest {
     public static void main(String[] args) throws Exception {
         API api = new API();
-        ExecProgram_Result result = api
-                .execProgram(ExecProgram_Args.newBuilder().addKFilenameList("path/to/kcl.k").build());
+        ExecProgramResult result = api
+                .execProgram(ExecProgramArgs.newBuilder().addKFilenameList("path/to/kcl.k").build());
         System.out.println(result.getYamlResult());
     }
 }
@@ -96,9 +96,9 @@ Java Code
 ```java
 import com.kcl.api.*;
 
-ExecProgram_Args args = ExecProgram_Args.newBuilder().addKFilenameList("schema.k").build();
+ExecProgramArgs args = ExecProgramArgs.newBuilder().addKFilenameList("schema.k").build();
 API apiInstance = new API();
-ExecProgram_Result result = apiInstance.execProgram(args);
+ExecProgramResult result = apiInstance.execProgram(args);
 ```
 
 </p>
@@ -127,9 +127,9 @@ Java Code
 ```java
 import com.kcl.api.*;
 
-ParseFile_Args args = ParseFile_Args.newBuilder().setPath("schema.k").build();
+ParseFileArgs args = ParseFileArgs.newBuilder().setPath("schema.k").build();
 API apiInstance = new API();
-ParseFile_Result result = apiInstance.parseFile(args);
+ParseFileResult result = apiInstance.parseFile(args);
 ```
 
 </p>
@@ -159,9 +159,9 @@ Java Code
 import com.kcl.api.*;
 
 API api = new API();
-LoadPackage_Result result = api.loadPackage(LoadPackage_Args.newBuilder().setResolveAst(true)
+LoadPackageResult result = api.loadPackage(LoadPackageArgs.newBuilder().setResolveAst(true)
     .setWithAstIndex(true)
-    .setParseArgs(ParseProgram_Args.newBuilder().addPaths("schema.k").build()).build());
+    .setParseArgs(ParseProgramArgs.newBuilder().addPaths("schema.k").build()).build());
 ```
 
 </p>
@@ -191,9 +191,9 @@ Java Code
 import com.kcl.api.*;
 
 API api = new API();
-ListVariables_Result result = api.listVariables(
-    ListVariables_Args.newBuilder().setResolveAst(true).setParseArgs(
-    ParseProgram_Args.newBuilder().addPaths("/path/to/kcl.k").build())
+ListVariablesResult result = api.listVariables(
+    ListVariablesArgs.newBuilder().setResolveAst(true).setParseArgs(
+    ParseProgramArgs.newBuilder().addPaths("/path/to/kcl.k").build())
     .build());
 result.getSymbolsMap().values().forEach(s -> System.out.println(s));
 ```
@@ -223,9 +223,9 @@ Java Code
 ```java
 import com.kcl.api.*;
 
-ParseProgram_Args args = ParseProgram_Args.newBuilder().addPaths("./src/test_data/option/main.k").build();
+ParseProgramArgs args = ParseProgramArgs.newBuilder().addPaths("./src/test_data/option/main.k").build();
 API apiInstance = new API();
-ListOptions_Result result = apiInstance.listOptions(args);
+ListOptionsResult result = apiInstance.listOptions(args);
 ```
 
 </p>
@@ -254,10 +254,10 @@ Java Code
 ```java
 import com.kcl.api.*;
 
-ExecProgram_Args execArgs = ExecProgram_Args.newBuilder().addKFilenameList("schema.k").build();
-GetSchemaTypeMapping_Args args = GetSchemaTypeMapping_Args.newBuilder().setExecArgs(execArgs).build();
+ExecProgramArgs execArgs = ExecProgramArgs.newBuilder().addKFilenameList("schema.k").build();
+GetSchemaTypeMappingArgs args = GetSchemaTypeMappingArgs.newBuilder().setExecArgs(execArgs).build();
 API apiInstance = new API();
-GetSchemaTypeMapping_Result result = apiInstance.getSchemaTypeMapping(args);
+GetSchemaTypeMappingResult result = apiInstance.getSchemaTypeMapping(args);
 KclType appSchemaType = result.getSchemaTypeMappingMap().get("app");
 String replicasType = appSchemaType.getPropertiesOrThrow("replicas").getType();
 ```
@@ -289,7 +289,7 @@ import com.kcl.api.*;
 
 API api = new API();
 String spec = "a=2";
-OverrideFile_Result result = api.overrideFile(OverrideFile_Args.newBuilder()
+OverrideFileResult result = api.overrideFile(OverrideFileArgs.newBuilder()
     .setFile("./src/test_data/override_file/main.k").addSpecs(spec).build());
 ```
 
@@ -310,9 +310,9 @@ import com.kcl.api.*;
 
 String sourceCode = "schema Person:\n" + "    name:   str\n" + "    age:    int\n" + "    check:\n"
         + "        0 <   age <   120\n";
-FormatCode_Args args = FormatCode_Args.newBuilder().setSource(sourceCode).build();
+FormatCodeArgs args = FormatCodeArgs.newBuilder().setSource(sourceCode).build();
 API apiInstance = new API();
-FormatCode_Result result = apiInstance.formatCode(args);
+FormatCodeResult result = apiInstance.formatCode(args);
 String expectedFormattedCode = "schema Person:\n" + "    name: str\n" + "    age: int\n\n" + "    check:\n"
         + "        0 < age < 120\n\n";
 ```
@@ -343,9 +343,9 @@ Java Code
 ```java
 import com.kcl.api.*;
 
-FormatPath_Args args = FormatPath_Args.newBuilder().setPath("format_path.k").build();
+FormatPathArgs args = FormatPathArgs.newBuilder().setPath("format_path.k").build();
 API apiInstance = new API();
-FormatPath_Result result = apiInstance.formatPath(args);
+FormatPathResult result = apiInstance.formatPath(args);
 Assert.assertTrue(result.getChangedPathsList().isEmpty());
 ```
 
@@ -372,9 +372,9 @@ Java Code
 ```java
 import com.kcl.api.*;
 
-LintPath_Args args = LintPath_Args.newBuilder().addPaths("lint_path.k").build();
+LintPathArgs args = LintPathArgs.newBuilder().addPaths("lint_path.k").build();
 API apiInstance = new API();
-LintPath_Result result = apiInstance.lintPath(args);
+LintPathResult result = apiInstance.lintPath(args);
 boolean foundWarning = result.getResultsList().stream()
         .anyMatch(warning -> warning.contains("Module 'math' imported but unused"));
 ```
@@ -397,9 +397,9 @@ import com.kcl.api.*;
 String code = "schema Person:\n" + "    name: str\n" + "    age: int\n" + "    check:\n"
         + "        0 < age < 120\n";
 String data = "{\"name\": \"Alice\", \"age\": 10}";
-ValidateCode_Args args = ValidateCode_Args.newBuilder().setCode(code).setData(data).setFormat("json").build();
+ValidateCodeArgs args = ValidateCodeArgs.newBuilder().setCode(code).setData(data).setFormat("json").build();
 API apiInstance = new API();
-ValidateCode_Result result = apiInstance.validateCode(args);
+ValidateCodeResult result = apiInstance.validateCode(args);
 ```
 
 </p>
@@ -424,10 +424,10 @@ Java Code
 ```java
 import com.kcl.api.*;
 
-Rename_Args args = Rename_Args.newBuilder().setPackageRoot(".").setSymbolPath("a")
+RenameArgs args = RenameArgs.newBuilder().setPackageRoot(".").setSymbolPath("a")
         .addFilePaths("main.k").setNewName("a2").build();
 API apiInstance = new API();
-Rename_Result result = apiInstance.rename(args);
+RenameResult result = apiInstance.rename(args);
 ```
 
 </p>
@@ -446,9 +446,9 @@ Java Code
 import com.kcl.api.*;
 
 API api = new API();
-RenameCode_Args args = RenameCode_Args.newBuilder().setPackageRoot("/mock/path").setSymbolPath("a")
+RenameCodeArgs args = RenameCodeArgs.newBuilder().setPackageRoot("/mock/path").setSymbolPath("a")
         .putSourceCodes("/mock/path/main.k", "a = 1\nb = a").setNewName("a2").build();
-RenameCode_Result result = api.renameCode(args);
+RenameCodeResult result = api.renameCode(args);
 ```
 
 </p>
@@ -467,8 +467,8 @@ Java Code
 import com.kcl.api.*;
 
 API apiInstance = new API();
-Test_Args args = Test_Args.newBuilder().addPkgList("/path/to/test/package").build();
-Test_Result result = apiInstance.test(args);
+TestArgs args = TestArgs.newBuilder().addPkgList("/path/to/test/package").build();
+TestResult result = apiInstance.test(args);
 ```
 
 </p>
@@ -497,9 +497,9 @@ Java Code
 import com.kcl.api.*;
 
 API api = new API();
-LoadSettingsFiles_Args args = LoadSettingsFiles_Args.newBuilder().addFiles("kcl.yaml")
+LoadSettingsFilesArgs args = LoadSettingsFilesArgs.newBuilder().addFiles("kcl.yaml")
         .build();
-LoadSettingsFiles_Result result = api.loadSettingsFiles(args);
+LoadSettingsFilesResult result = api.loadSettingsFiles(args);
 ```
 
 </p>
@@ -532,8 +532,8 @@ import com.kcl.api.*;
 
 API api = new API();
 
-UpdateDependencies_Result result = api.updateDependencies(
-    UpdateDependencies_Args.newBuilder().setManifestPath("module").build());
+UpdateDependenciesResult result = api.updateDependencies(
+    UpdateDependenciesArgs.newBuilder().setManifestPath("module").build());
 ```
 
 </p>
@@ -573,13 +573,13 @@ import com.kcl.api.*;
 
 API api = new API();
 
-UpdateDependencies_Result result = api.updateDependencies(
-        UpdateDependencies_Args.newBuilder().setManifestPath("./src/test_data/update_dependencies").build());
+UpdateDependenciesResult result = api.updateDependencies(
+        UpdateDependenciesArgs.newBuilder().setManifestPath("./src/test_data/update_dependencies").build());
 
-ExecProgram_Args execArgs = ExecProgram_Args.newBuilder().  addAllExternalPkgs(result.getExternalPkgsList())
+ExecProgramArgs execArgs = ExecProgramArgs.newBuilder().  addAllExternalPkgs(result.getExternalPkgsList())
     .addKFilenameList("./src/test_data/update_dependencies/main.k").build();
 
-ExecProgram_Result execResult = api.execProgram(execArgs);
+ExecProgramResult execResult = api.execProgram(execArgs);
 ```
 
 </p>
@@ -598,8 +598,8 @@ Java Code
 import com.kcl.api.*;
 
 API api = new API();
-GetVersion_Args version_args = GetVersion_Args.newBuilder().build();
-GetVersion_Result result = api.getVersion(version_args);
+GetVersionArgs version_args = GetVersionArgs.newBuilder().build();
+GetVersionResult result = api.getVersion(version_args);
 ```
 
 </p>

@@ -6,7 +6,7 @@ def test_exec_api():
     import kcl_lib.api as api
 
     # Call the `exec_program` method with appropriate arguments
-    args = api.ExecProgram_Args(k_filename_list=[TEST_FILE])
+    args = api.ExecProgramArgs(k_filename_list=[TEST_FILE])
     # Usage
     api = api.API()
     result = api.exec_program(args)
@@ -19,7 +19,7 @@ def test_exec_api_failed():
 
     try:
         # Call the `exec_program` method with appropriate arguments
-        args = api.ExecProgram_Args(k_filename_list=["file_not_found"])
+        args = api.ExecProgramArgs(k_filename_list=["file_not_found"])
         # Usage
         api = api.API()
         result = api.exec_program(args)
@@ -32,7 +32,7 @@ def test_parse_program_api():
     """Parse KCL program with entry files and return the AST JSON string."""
     import kcl_lib.api as api
 
-    args = api.ParseProgram_Args(paths=[TEST_FILE])
+    args = api.ParseProgramArgs(paths=[TEST_FILE])
     api = api.API()
     result = api.parse_program(args)
     assert len(result.paths) == 1
@@ -43,7 +43,7 @@ def test_parse_file_api():
     """Parse KCL single file to Module AST JSON string with import dependencies and parse errors."""
     import kcl_lib.api as api
 
-    args = api.ParseFile_Args(path=TEST_FILE)
+    args = api.ParseFileArgs(path=TEST_FILE)
     api = api.API()
     result = api.parse_file(args)
     assert len(result.deps) == 0
@@ -57,8 +57,8 @@ def test_load_package_api():
     import kcl_lib.api as api
 
     # Call the `load_package` method with appropriate arguments
-    args = api.LoadPackage_Args(
-        parse_args=api.ParseProgram_Args(paths=[TEST_FILE]), resolve_ast=True
+    args = api.LoadPackageArgs(
+        parse_args=api.ParseProgramArgs(paths=[TEST_FILE]), resolve_ast=True
     )
     # Usage
     api = api.API()
@@ -72,7 +72,7 @@ def test_list_variables_api():
     import kcl_lib.api as api
 
     # Call the `list_variable` method with appropriate arguments
-    args = api.ListVariables_Args(files=[TEST_FILE])
+    args = api.ListVariablesArgs(files=[TEST_FILE])
     # Usage
     api = api.API()
     result = api.list_variables(args)
@@ -85,7 +85,7 @@ def test_list_options_api():
     """list_options provides users with the ability to parse KCL program and get all option information."""
     import kcl_lib.api as api
 
-    args = api.ParseProgram_Args(paths=["./tests/test_data/option/main.k"])
+    args = api.ParseProgramArgs(paths=["./tests/test_data/option/main.k"])
     api = api.API()
     result = api.list_options(args)
     assert len(result.options) == 3
@@ -98,9 +98,9 @@ def test_get_schema_type_api():
     """Get schema type mapping defined in the program."""
     import kcl_lib.api as api
 
-    exec_args = api.ExecProgram_Args(k_filename_list=[TEST_FILE])
+    exec_args = api.ExecProgramArgs(k_filename_list=[TEST_FILE])
     # Call the `get_schema_type_mapping` method with appropriate arguments
-    args = api.GetSchemaTypeMapping_Args(exec_args=exec_args)
+    args = api.GetSchemaTypeMappingArgs(exec_args=exec_args)
     # Usage
     api = api.API()
     result = api.get_schema_type_mapping(args)
@@ -119,7 +119,7 @@ def test_override_file_api():
 
     pathlib.Path(test_file).write_text(pathlib.Path(bak_file).read_text())
 
-    args = api.OverrideFile_Args(
+    args = api.OverrideFileArgs(
         file=test_file,
         specs=["b.a=2"],
     )
@@ -152,7 +152,7 @@ schema Person:
         0 <   age <   120
 """
 
-    args = api.FormatCode_Args(source=source_code)
+    args = api.FormatCodeArgs(source=source_code)
 
     api_instance = api.API()
     result = api_instance.format_code(args)
@@ -177,7 +177,7 @@ def test_format_path_api():
 
     TEST_PATH = "./tests/test_data/format_path/test.k"
 
-    args = api.FormatPath_Args(path=TEST_PATH)
+    args = api.FormatPathArgs(path=TEST_PATH)
 
     api_instance = api.API()
     result = api_instance.format_path(args)
@@ -191,7 +191,7 @@ def test_lint_path_api():
 
     TEST_PATH = "./tests/test_data/lint_path/test-lint.k"
 
-    args = api.LintPath_Args(paths=[TEST_PATH])
+    args = api.LintPathArgs(paths=[TEST_PATH])
 
     api_instance = api.API()
     result = api_instance.lint_path(args)
@@ -213,7 +213,7 @@ schema Person:
 """
     data = '{"name": "Alice", "age": 10}'
 
-    args = api.ValidateCode_Args(code=code, data=data, format="json")
+    args = api.ValidateCodeArgs(code=code, data=data, format="json")
 
     api_instance = api.API()
     result = api_instance.validate_code(args)
@@ -233,7 +233,7 @@ def test_rename_api():
         pathlib.Path("./tests/test_data/rename/main.bak").read_text()
     )
 
-    args = api.Rename_Args(
+    args = api.RenameArgs(
         package_root="./tests/test_data/rename",
         symbol_path="a",
         file_paths=["./tests/test_data/rename/main.k"],
@@ -252,7 +252,7 @@ def test_rename_code_api():
     """
     import kcl_lib.api as api
 
-    args = api.RenameCode_Args(
+    args = api.RenameCodeArgs(
         package_root="/mock/path",
         symbol_path="a",
         source_codes={"/mock/path/main.k": "a = 1\nb = a"},
@@ -269,7 +269,7 @@ def test_testing_api():
     """Test KCL packages with test arguments."""
     import kcl_lib.api as api
 
-    args = api.Test_Args(
+    args = api.TestArgs(
         pkg_list=["./tests/test_data/testing/..."],
     )
 
@@ -283,7 +283,7 @@ def test_load_settings_files_api():
     """Load the setting file config defined in `kcl.yaml`"""
     import kcl_lib.api as api
 
-    args = api.LoadSettingsFiles_Args(
+    args = api.LoadSettingsFilesArgs(
         work_dir="./tests/test_data", files=["./tests/test_data/settings/kcl.yaml"]
     )
 
@@ -303,7 +303,7 @@ def test_update_dependencies_api():
     """
     import kcl_lib.api as api
 
-    args = api.UpdateDependencies_Args(
+    args = api.UpdateDependenciesArgs(
         manifest_path="./tests/test_data/update_dependencies"
     )
 
@@ -319,13 +319,13 @@ def test_update_dependencies_api():
 def test_exec_api_with_external_dependencies():
     import kcl_lib.api as api
 
-    args = api.UpdateDependencies_Args(
+    args = api.UpdateDependenciesArgs(
         manifest_path="./tests/test_data/update_dependencies"
     )
 
     api_instance = api.API()
     result = api_instance.update_dependencies(args)
-    exec_args = api.ExecProgram_Args(
+    exec_args = api.ExecProgramArgs(
         k_filename_list=["./tests/test_data/update_dependencies/main.k"],
         external_pkgs=result.external_pkgs,
     )

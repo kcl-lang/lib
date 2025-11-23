@@ -1,1 +1,1 @@
-extern crate kclvm_api;
+extern crate kcl_api;

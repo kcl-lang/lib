@@ -2,6 +2,7 @@
 // NO CHECKED-IN PROTOBUF GENCODE
 // source: spec.proto
 
+@file:com.google.protobuf.Generated
 // Generated files should ignore deprecation warnings
 @file:Suppress("DEPRECATION")
 package com.kcl.api;
@@ -41,10 +42,10 @@ public object ArgumentKt {
      * `string name = 1;`
      */
     public var name: kotlin.String
-      @JvmName("getName")
-      get() = _builder.name
-      @JvmName("setName")
-      set(value) {
+      @kotlin.jvm.JvmName("getName")
+        get() = _builder.name
+      @kotlin.jvm.JvmName("setName")
+        set(value) {
         _builder.name = value
       }
     /**
@@ -66,10 +67,10 @@ public object ArgumentKt {
      * `string value = 2;`
      */
     public var value: kotlin.String
-      @JvmName("getValue")
-      get() = _builder.value
-      @JvmName("setValue")
-      set(value) {
+      @kotlin.jvm.JvmName("getValue")
+        get() = _builder.value
+      @kotlin.jvm.JvmName("setValue")
+        set(value) {
         _builder.value = value
       }
     /**

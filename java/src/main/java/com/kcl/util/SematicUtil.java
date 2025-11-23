@@ -1,6 +1,6 @@
 package com.kcl.util;
 
-import com.kcl.api.Spec.LoadPackage_Result;
+import com.kcl.api.Spec.LoadPackageResult;
 import com.kcl.api.Spec.Scope;
 import com.kcl.api.Spec.ScopeIndex;
 import com.kcl.api.Spec.Symbol;
@@ -12,7 +12,7 @@ import java.util.Map;
 public class SematicUtil {
     static String indexStringFormat = "{\"i\":%d,\"g\":%d,\"kind\":\"%s\"}";
 
-    public static Symbol findSymbol(LoadPackage_Result result, SymbolIndex index) throws Exception {
+    public static Symbol findSymbol(LoadPackageResult result, SymbolIndex index) throws Exception {
         if (result == null || index == null) {
             return null;
         }
@@ -21,14 +21,14 @@ public class SematicUtil {
         return symbols.get(key);
     }
 
-    public static Symbol findSymbolByAstId(LoadPackage_Result result, String id) throws Exception {
+    public static Symbol findSymbolByAstId(LoadPackageResult result, String id) throws Exception {
         if (id == null) {
             return null;
         }
         return findSymbol(result, result.getNodeSymbolMapOrDefault(id, null));
     }
 
-    public static Scope findScope(LoadPackage_Result result, ScopeIndex index) throws Exception {
+    public static Scope findScope(LoadPackageResult result, ScopeIndex index) throws Exception {
         if (result == null || index == null) {
             return null;
         }
@@ -37,14 +37,14 @@ public class SematicUtil {
         return scopes.get(key);
     }
 
-    public static Scope findScopeByAstId(LoadPackage_Result result, String id) throws Exception {
+    public static Scope findScopeByAstId(LoadPackageResult result, String id) throws Exception {
         if (result == null || id == null) {
             return null;
         }
         return findScopeBySymbol(result, result.getNodeSymbolMapOrDefault(id, null));
     }
 
-    public static Scope findScopeBySymbol(LoadPackage_Result result, SymbolIndex index) throws Exception {
+    public static Scope findScopeBySymbol(LoadPackageResult result, SymbolIndex index) throws Exception {
         if (result == null || index == null) {
             return null;
         }
@@ -57,7 +57,7 @@ public class SematicUtil {
         return null;
     }
 
-    public static Map<SymbolIndex, ScopeIndex> getSymbolScopeMap(LoadPackage_Result result) throws Exception {
+    public static Map<SymbolIndex, ScopeIndex> getSymbolScopeMap(LoadPackageResult result) throws Exception {
         if (result == null) {
             return null;
         }
@@ -68,7 +68,7 @@ public class SematicUtil {
         return map;
     }
 
-    private static void constructSymbolScopeMap(Map<SymbolIndex, ScopeIndex> map, LoadPackage_Result result,
+    private static void constructSymbolScopeMap(Map<SymbolIndex, ScopeIndex> map, LoadPackageResult result,
             ScopeIndex scopeIndex) throws Exception {
         Scope scope = findScope(result, scopeIndex);
         if (scope != null) {
@@ -81,7 +81,7 @@ public class SematicUtil {
         }
     }
 
-    private static Scope symbolCurrentScope(LoadPackage_Result result, SymbolIndex symbolIndex, ScopeIndex scopeIndex)
+    private static Scope symbolCurrentScope(LoadPackageResult result, SymbolIndex symbolIndex, ScopeIndex scopeIndex)
             throws Exception {
         Scope scope = findScope(result, scopeIndex);
         if (scope != null) {
@@ -100,7 +100,7 @@ public class SematicUtil {
         return null;
     }
 
-    public static Scope findPackageScope(LoadPackage_Result result, String pkg) throws Exception {
+    public static Scope findPackageScope(LoadPackageResult result, String pkg) throws Exception {
         if (result == null) {
             return null;
         }
@@ -110,11 +110,11 @@ public class SematicUtil {
         return findScope(result, result.getPkgScopeMapOrDefault(pkg, null));
     }
 
-    public static Scope findMainPackageScope(LoadPackage_Result result) throws Exception {
+    public static Scope findMainPackageScope(LoadPackageResult result) throws Exception {
         return findPackageScope(result, Program.MAIN_PKG);
     }
 
-    public static String findNodeBySymbol(LoadPackage_Result result, SymbolIndex index) throws Exception {
+    public static String findNodeBySymbol(LoadPackageResult result, SymbolIndex index) throws Exception {
         if (result == null || index == null) {
             return null;
         }

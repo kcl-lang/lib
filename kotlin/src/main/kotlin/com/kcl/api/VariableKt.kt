@@ -2,6 +2,7 @@
 // NO CHECKED-IN PROTOBUF GENCODE
 // source: spec.proto
 
+@file:com.google.protobuf.Generated
 // Generated files should ignore deprecation warnings
 @file:Suppress("DEPRECATION")
 package com.kcl.api;
@@ -40,10 +41,10 @@ public object VariableKt {
      * `string value = 1;`
      */
     public var value: kotlin.String
-      @JvmName("getValue")
-      get() = _builder.value
-      @JvmName("setValue")
-      set(value) {
+      @kotlin.jvm.JvmName("getValue")
+        get() = _builder.value
+      @kotlin.jvm.JvmName("setValue")
+        set(value) {
         _builder.value = value
       }
     /**
@@ -65,10 +66,10 @@ public object VariableKt {
      * `string type_name = 2;`
      */
     public var typeName: kotlin.String
-      @JvmName("getTypeName")
-      get() = _builder.typeName
-      @JvmName("setTypeName")
-      set(value) {
+      @kotlin.jvm.JvmName("getTypeName")
+        get() = _builder.typeName
+      @kotlin.jvm.JvmName("setTypeName")
+        set(value) {
         _builder.typeName = value
       }
     /**
@@ -90,10 +91,10 @@ public object VariableKt {
      * `string op_sym = 3;`
      */
     public var opSym: kotlin.String
-      @JvmName("getOpSym")
-      get() = _builder.opSym
-      @JvmName("setOpSym")
-      set(value) {
+      @kotlin.jvm.JvmName("getOpSym")
+        get() = _builder.opSym
+      @kotlin.jvm.JvmName("setOpSym")
+        set(value) {
         _builder.opSym = value
       }
     /**
@@ -122,7 +123,7 @@ public object VariableKt {
      */
      public val listItems: com.google.protobuf.kotlin.DslList<com.kcl.api.Spec.Variable, ListItemsProxy>
       @kotlin.jvm.JvmSynthetic
-      get() = com.google.protobuf.kotlin.DslList(
+  get() = com.google.protobuf.kotlin.DslList(
         _builder.listItemsList
       )
     /**
@@ -134,7 +135,7 @@ public object VariableKt {
      * @param value The listItems to add.
      */
     @kotlin.jvm.JvmSynthetic
-    @kotlin.jvm.JvmName("addListItems")
+@kotlin.jvm.JvmName("addListItems")
     public fun com.google.protobuf.kotlin.DslList<com.kcl.api.Spec.Variable, ListItemsProxy>.add(value: com.kcl.api.Spec.Variable) {
       _builder.addListItems(value)
     }
@@ -147,7 +148,7 @@ public object VariableKt {
      * @param value The listItems to add.
      */
     @kotlin.jvm.JvmSynthetic
-    @kotlin.jvm.JvmName("plusAssignListItems")
+@kotlin.jvm.JvmName("plusAssignListItems")
     @Suppress("NOTHING_TO_INLINE")
     public inline operator fun com.google.protobuf.kotlin.DslList<com.kcl.api.Spec.Variable, ListItemsProxy>.plusAssign(value: com.kcl.api.Spec.Variable) {
       add(value)
@@ -161,7 +162,7 @@ public object VariableKt {
      * @param values The listItems to add.
      */
     @kotlin.jvm.JvmSynthetic
-    @kotlin.jvm.JvmName("addAllListItems")
+@kotlin.jvm.JvmName("addAllListItems")
     public fun com.google.protobuf.kotlin.DslList<com.kcl.api.Spec.Variable, ListItemsProxy>.addAll(values: kotlin.collections.Iterable<com.kcl.api.Spec.Variable>) {
       _builder.addAllListItems(values)
     }
@@ -174,7 +175,7 @@ public object VariableKt {
      * @param values The listItems to add.
      */
     @kotlin.jvm.JvmSynthetic
-    @kotlin.jvm.JvmName("plusAssignAllListItems")
+@kotlin.jvm.JvmName("plusAssignAllListItems")
     @Suppress("NOTHING_TO_INLINE")
     public inline operator fun com.google.protobuf.kotlin.DslList<com.kcl.api.Spec.Variable, ListItemsProxy>.plusAssign(values: kotlin.collections.Iterable<com.kcl.api.Spec.Variable>) {
       addAll(values)
@@ -189,7 +190,7 @@ public object VariableKt {
      * @param value The listItems to set.
      */
     @kotlin.jvm.JvmSynthetic
-    @kotlin.jvm.JvmName("setListItems")
+@kotlin.jvm.JvmName("setListItems")
     public operator fun com.google.protobuf.kotlin.DslList<com.kcl.api.Spec.Variable, ListItemsProxy>.set(index: kotlin.Int, value: com.kcl.api.Spec.Variable) {
       _builder.setListItems(index, value)
     }
@@ -201,11 +202,10 @@ public object VariableKt {
      * `repeated .com.kcl.api.Variable list_items = 4;`
      */
     @kotlin.jvm.JvmSynthetic
-    @kotlin.jvm.JvmName("clearListItems")
+@kotlin.jvm.JvmName("clearListItems")
     public fun com.google.protobuf.kotlin.DslList<com.kcl.api.Spec.Variable, ListItemsProxy>.clear() {
       _builder.clearListItems()
     }
-
 
     /**
      * An uninstantiable, behaviorless type to represent the field in
@@ -222,7 +222,7 @@ public object VariableKt {
      */
      public val dictEntries: com.google.protobuf.kotlin.DslList<com.kcl.api.Spec.MapEntry, DictEntriesProxy>
       @kotlin.jvm.JvmSynthetic
-      get() = com.google.protobuf.kotlin.DslList(
+  get() = com.google.protobuf.kotlin.DslList(
         _builder.dictEntriesList
       )
     /**
@@ -234,7 +234,7 @@ public object VariableKt {
      * @param value The dictEntries to add.
      */
     @kotlin.jvm.JvmSynthetic
-    @kotlin.jvm.JvmName("addDictEntries")
+@kotlin.jvm.JvmName("addDictEntries")
     public fun com.google.protobuf.kotlin.DslList<com.kcl.api.Spec.MapEntry, DictEntriesProxy>.add(value: com.kcl.api.Spec.MapEntry) {
       _builder.addDictEntries(value)
     }
@@ -247,7 +247,7 @@ public object VariableKt {
      * @param value The dictEntries to add.
      */
     @kotlin.jvm.JvmSynthetic
-    @kotlin.jvm.JvmName("plusAssignDictEntries")
+@kotlin.jvm.JvmName("plusAssignDictEntries")
     @Suppress("NOTHING_TO_INLINE")
     public inline operator fun com.google.protobuf.kotlin.DslList<com.kcl.api.Spec.MapEntry, DictEntriesProxy>.plusAssign(value: com.kcl.api.Spec.MapEntry) {
       add(value)
@@ -261,7 +261,7 @@ public object VariableKt {
      * @param values The dictEntries to add.
      */
     @kotlin.jvm.JvmSynthetic
-    @kotlin.jvm.JvmName("addAllDictEntries")
+@kotlin.jvm.JvmName("addAllDictEntries")
     public fun com.google.protobuf.kotlin.DslList<com.kcl.api.Spec.MapEntry, DictEntriesProxy>.addAll(values: kotlin.collections.Iterable<com.kcl.api.Spec.MapEntry>) {
       _builder.addAllDictEntries(values)
     }
@@ -274,7 +274,7 @@ public object VariableKt {
      * @param values The dictEntries to add.
      */
     @kotlin.jvm.JvmSynthetic
-    @kotlin.jvm.JvmName("plusAssignAllDictEntries")
+@kotlin.jvm.JvmName("plusAssignAllDictEntries")
     @Suppress("NOTHING_TO_INLINE")
     public inline operator fun com.google.protobuf.kotlin.DslList<com.kcl.api.Spec.MapEntry, DictEntriesProxy>.plusAssign(values: kotlin.collections.Iterable<com.kcl.api.Spec.MapEntry>) {
       addAll(values)
@@ -289,7 +289,7 @@ public object VariableKt {
      * @param value The dictEntries to set.
      */
     @kotlin.jvm.JvmSynthetic
-    @kotlin.jvm.JvmName("setDictEntries")
+@kotlin.jvm.JvmName("setDictEntries")
     public operator fun com.google.protobuf.kotlin.DslList<com.kcl.api.Spec.MapEntry, DictEntriesProxy>.set(index: kotlin.Int, value: com.kcl.api.Spec.MapEntry) {
       _builder.setDictEntries(index, value)
     }
@@ -301,11 +301,10 @@ public object VariableKt {
      * `repeated .com.kcl.api.MapEntry dict_entries = 5;`
      */
     @kotlin.jvm.JvmSynthetic
-    @kotlin.jvm.JvmName("clearDictEntries")
+@kotlin.jvm.JvmName("clearDictEntries")
     public fun com.google.protobuf.kotlin.DslList<com.kcl.api.Spec.MapEntry, DictEntriesProxy>.clear() {
       _builder.clearDictEntries()
     }
-
   }
 }
 @kotlin.jvm.JvmSynthetic

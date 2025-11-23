@@ -40,9 +40,9 @@ func initClient(pluginAgent uint64) {
 		if err != nil {
 			panic(err)
 		}
-		purego.RegisterLibFunc(&serviceNew, lib, "kclvm_service_new")
-		purego.RegisterLibFunc(&serviceDelete, lib, "kclvm_service_delete")
-		purego.RegisterLibFunc(&serviceCall, lib, "kclvm_service_call_with_length")
+		purego.RegisterLibFunc(&serviceNew, lib, "kcl_service_new")
+		purego.RegisterLibFunc(&serviceDelete, lib, "kcl_service_delete")
+		purego.RegisterLibFunc(&serviceCall, lib, "kcl_service_call_with_length")
 		purego.RegisterLibFunc(&free, lib, "kcl_free")
 		client = new(NativeServiceClient)
 		client.svc = serviceNew(pluginAgent)
@@ -76,7 +76,7 @@ func cApiCall[I interface {
 	protoreflect.ProtoMessage
 }, TI any, TO any](c *NativeServiceClient, callName string, in I) (O, error) {
 	if callName == "" {
-		return nil, errors.New("kclvm service c api call: empty method name")
+		return nil, errors.New("kcl service c api call: empty method name")
 	}
 
 	if in == nil {
@@ -123,92 +123,92 @@ func GoBytes(c uintptr, length uint) []byte {
 	return unsafe.Slice((*byte)(ptr), length)
 }
 
-func (c *NativeServiceClient) Ping(in *api.Ping_Args) (*api.Ping_Result, error) {
-	return cApiCall[*api.Ping_Args, *api.Ping_Result](c, "KclvmService.Ping", in)
+func (c *NativeServiceClient) Ping(in *api.PingArgs) (*api.PingResult, error) {
+	return cApiCall[*api.PingArgs, *api.PingResult](c, "KclService.Ping", in)
 }
 
-func (c *NativeServiceClient) ExecProgram(in *api.ExecProgram_Args) (*api.ExecProgram_Result, error) {
-	return cApiCall[*api.ExecProgram_Args, *api.ExecProgram_Result](c, "KclvmService.ExecProgram", in)
+func (c *NativeServiceClient) ExecProgram(in *api.ExecProgramArgs) (*api.ExecProgramResult, error) {
+	return cApiCall[*api.ExecProgramArgs, *api.ExecProgramResult](c, "KclService.ExecProgram", in)
 }
 
-// Depreciated: Please use the env.EnableFastEvalMode() and c.ExecutProgram method and will be removed in v0.11.1.
-func (c *NativeServiceClient) BuildProgram(in *api.BuildProgram_Args) (*api.BuildProgram_Result, error) {
-	return cApiCall[*api.BuildProgram_Args, *api.BuildProgram_Result](c, "KclvmService.BuildProgram", in)
+// Depreciated: Please use the env.EnableFastEvalMode() and c.ExecutProgram method and will be removed in v0.12.0.
+func (c *NativeServiceClient) BuildProgram(in *api.BuildProgramArgs) (*api.BuildProgramResult, error) {
+	return cApiCall[*api.BuildProgramArgs, *api.BuildProgramResult](c, "KclService.BuildProgram", in)
 }
 
-// Depreciated: Please use the env.EnableFastEvalMode() and c.ExecutProgram method and will be removed in v0.11.1.
-func (c *NativeServiceClient) ExecArtifact(in *api.ExecArtifact_Args) (*api.ExecProgram_Result, error) {
-	return cApiCall[*api.ExecArtifact_Args, *api.ExecProgram_Result](c, "KclvmService.ExecArtifact", in)
+// Depreciated: Please use the env.EnableFastEvalMode() and c.ExecutProgram method and will be removed in v0.12.0.
+func (c *NativeServiceClient) ExecArtifact(in *api.ExecArtifactArgs) (*api.ExecProgramResult, error) {
+	return cApiCall[*api.ExecArtifactArgs, *api.ExecProgramResult](c, "KclService.ExecArtifact", in)
 }
 
-func (c *NativeServiceClient) ParseFile(in *api.ParseFile_Args) (*api.ParseFile_Result, error) {
-	return cApiCall[*api.ParseFile_Args, *api.ParseFile_Result](c, "KclvmService.ParseFile", in)
+func (c *NativeServiceClient) ParseFile(in *api.ParseFileArgs) (*api.ParseFileResult, error) {
+	return cApiCall[*api.ParseFileArgs, *api.ParseFileResult](c, "KclService.ParseFile", in)
 }
 
-func (c *NativeServiceClient) ParseProgram(in *api.ParseProgram_Args) (*api.ParseProgram_Result, error) {
-	return cApiCall[*api.ParseProgram_Args, *api.ParseProgram_Result](c, "KclvmService.ParseProgram", in)
+func (c *NativeServiceClient) ParseProgram(in *api.ParseProgramArgs) (*api.ParseProgramResult, error) {
+	return cApiCall[*api.ParseProgramArgs, *api.ParseProgramResult](c, "KclService.ParseProgram", in)
 }
 
-func (c *NativeServiceClient) ListOptions(in *api.ParseProgram_Args) (*api.ListOptions_Result, error) {
-	return cApiCall[*api.ParseProgram_Args, *api.ListOptions_Result](c, "KclvmService.ListOptions", in)
+func (c *NativeServiceClient) ListOptions(in *api.ParseProgramArgs) (*api.ListOptionsResult, error) {
+	return cApiCall[*api.ParseProgramArgs, *api.ListOptionsResult](c, "KclService.ListOptions", in)
 }
 
-func (c *NativeServiceClient) ListVariables(in *api.ListVariables_Args) (*api.ListVariables_Result, error) {
-	return cApiCall[*api.ListVariables_Args, *api.ListVariables_Result](c, "KclvmService.ListVariables", in)
+func (c *NativeServiceClient) ListVariables(in *api.ListVariablesArgs) (*api.ListVariablesResult, error) {
+	return cApiCall[*api.ListVariablesArgs, *api.ListVariablesResult](c, "KclService.ListVariables", in)
 }
 
-func (c *NativeServiceClient) LoadPackage(in *api.LoadPackage_Args) (*api.LoadPackage_Result, error) {
-	return cApiCall[*api.LoadPackage_Args, *api.LoadPackage_Result](c, "KclvmService.LoadPackage", in)
+func (c *NativeServiceClient) LoadPackage(in *api.LoadPackageArgs) (*api.LoadPackageResult, error) {
+	return cApiCall[*api.LoadPackageArgs, *api.LoadPackageResult](c, "KclService.LoadPackage", in)
 }
 
-func (c *NativeServiceClient) FormatCode(in *api.FormatCode_Args) (*api.FormatCode_Result, error) {
-	return cApiCall[*api.FormatCode_Args, *api.FormatCode_Result](c, "KclvmService.FormatCode", in)
+func (c *NativeServiceClient) FormatCode(in *api.FormatCodeArgs) (*api.FormatCodeResult, error) {
+	return cApiCall[*api.FormatCodeArgs, *api.FormatCodeResult](c, "KclService.FormatCode", in)
 }
 
-func (c *NativeServiceClient) FormatPath(in *api.FormatPath_Args) (*api.FormatPath_Result, error) {
-	return cApiCall[*api.FormatPath_Args, *api.FormatPath_Result](c, "KclvmService.FormatPath", in)
+func (c *NativeServiceClient) FormatPath(in *api.FormatPathArgs) (*api.FormatPathResult, error) {
+	return cApiCall[*api.FormatPathArgs, *api.FormatPathResult](c, "KclService.FormatPath", in)
 }
 
-func (c *NativeServiceClient) LintPath(in *api.LintPath_Args) (*api.LintPath_Result, error) {
-	return cApiCall[*api.LintPath_Args, *api.LintPath_Result](c, "KclvmService.LintPath", in)
+func (c *NativeServiceClient) LintPath(in *api.LintPathArgs) (*api.LintPathResult, error) {
+	return cApiCall[*api.LintPathArgs, *api.LintPathResult](c, "KclService.LintPath", in)
 }
 
-func (c *NativeServiceClient) OverrideFile(in *api.OverrideFile_Args) (*api.OverrideFile_Result, error) {
-	return cApiCall[*api.OverrideFile_Args, *api.OverrideFile_Result](c, "KclvmService.OverrideFile", in)
+func (c *NativeServiceClient) OverrideFile(in *api.OverrideFileArgs) (*api.OverrideFileResult, error) {
+	return cApiCall[*api.OverrideFileArgs, *api.OverrideFileResult](c, "KclService.OverrideFile", in)
 }
 
-func (c *NativeServiceClient) GetSchemaTypeMapping(in *api.GetSchemaTypeMapping_Args) (*api.GetSchemaTypeMapping_Result, error) {
-	return cApiCall[*api.GetSchemaTypeMapping_Args, *api.GetSchemaTypeMapping_Result](c, "KclvmService.GetSchemaTypeMapping", in)
+func (c *NativeServiceClient) GetSchemaTypeMapping(in *api.GetSchemaTypeMappingArgs) (*api.GetSchemaTypeMappingResult, error) {
+	return cApiCall[*api.GetSchemaTypeMappingArgs, *api.GetSchemaTypeMappingResult](c, "KclService.GetSchemaTypeMapping", in)
 }
 
-func (c *NativeServiceClient) ValidateCode(in *api.ValidateCode_Args) (*api.ValidateCode_Result, error) {
-	return cApiCall[*api.ValidateCode_Args, *api.ValidateCode_Result](c, "KclvmService.ValidateCode", in)
+func (c *NativeServiceClient) ValidateCode(in *api.ValidateCodeArgs) (*api.ValidateCodeResult, error) {
+	return cApiCall[*api.ValidateCodeArgs, *api.ValidateCodeResult](c, "KclService.ValidateCode", in)
 }
 
-func (c *NativeServiceClient) ListDepFiles(in *api.ListDepFiles_Args) (*api.ListDepFiles_Result, error) {
-	return cApiCall[*api.ListDepFiles_Args, *api.ListDepFiles_Result](c, "KclvmService.ListDepFiles", in)
+func (c *NativeServiceClient) ListDepFiles(in *api.ListDepFilesArgs) (*api.ListDepFilesResult, error) {
+	return cApiCall[*api.ListDepFilesArgs, *api.ListDepFilesResult](c, "KclService.ListDepFiles", in)
 }
 
-func (c *NativeServiceClient) LoadSettingsFiles(in *api.LoadSettingsFiles_Args) (*api.LoadSettingsFiles_Result, error) {
-	return cApiCall[*api.LoadSettingsFiles_Args, *api.LoadSettingsFiles_Result](c, "KclvmService.LoadSettingsFiles", in)
+func (c *NativeServiceClient) LoadSettingsFiles(in *api.LoadSettingsFilesArgs) (*api.LoadSettingsFilesResult, error) {
+	return cApiCall[*api.LoadSettingsFilesArgs, *api.LoadSettingsFilesResult](c, "KclService.LoadSettingsFiles", in)
 }
 
-func (c *NativeServiceClient) Rename(in *api.Rename_Args) (*api.Rename_Result, error) {
-	return cApiCall[*api.Rename_Args, *api.Rename_Result](c, "KclvmService.Rename", in)
+func (c *NativeServiceClient) Rename(in *api.RenameArgs) (*api.RenameResult, error) {
+	return cApiCall[*api.RenameArgs, *api.RenameResult](c, "KclService.Rename", in)
 }
 
-func (c *NativeServiceClient) RenameCode(in *api.RenameCode_Args) (*api.RenameCode_Result, error) {
-	return cApiCall[*api.RenameCode_Args, *api.RenameCode_Result](c, "KclvmService.RenameCode", in)
+func (c *NativeServiceClient) RenameCode(in *api.RenameCodeArgs) (*api.RenameCodeResult, error) {
+	return cApiCall[*api.RenameCodeArgs, *api.RenameCodeResult](c, "KclService.RenameCode", in)
 }
 
-func (c *NativeServiceClient) Test(in *api.Test_Args) (*api.Test_Result, error) {
-	return cApiCall[*api.Test_Args, *api.Test_Result](c, "KclvmService.Test", in)
+func (c *NativeServiceClient) Test(in *api.TestArgs) (*api.TestResult, error) {
+	return cApiCall[*api.TestArgs, *api.TestResult](c, "KclService.Test", in)
 }
 
-func (c *NativeServiceClient) UpdateDependencies(in *api.UpdateDependencies_Args) (*api.UpdateDependencies_Result, error) {
-	return cApiCall[*api.UpdateDependencies_Args, *api.UpdateDependencies_Result](c, "KclvmService.UpdateDependencies", in)
+func (c *NativeServiceClient) UpdateDependencies(in *api.UpdateDependenciesArgs) (*api.UpdateDependenciesResult, error) {
+	return cApiCall[*api.UpdateDependenciesArgs, *api.UpdateDependenciesResult](c, "KclService.UpdateDependencies", in)
 }
 
-func (c *NativeServiceClient) GetVersion(in *api.GetVersion_Args) (*api.GetVersion_Result, error) {
-	return cApiCall[*api.GetVersion_Args, *api.GetVersion_Result](c, "KclvmService.GetVersion", in)
+func (c *NativeServiceClient) GetVersion(in *api.GetVersionArgs) (*api.GetVersionResult, error) {
+	return cApiCall[*api.GetVersionArgs, *api.GetVersionResult](c, "KclService.GetVersion", in)
 }

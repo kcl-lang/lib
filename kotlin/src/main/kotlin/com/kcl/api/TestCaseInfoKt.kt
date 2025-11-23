@@ -2,6 +2,7 @@
 // NO CHECKED-IN PROTOBUF GENCODE
 // source: spec.proto
 
+@file:com.google.protobuf.Generated
 // Generated files should ignore deprecation warnings
 @file:Suppress("DEPRECATION")
 package com.kcl.api;
@@ -40,10 +41,10 @@ public object TestCaseInfoKt {
      * `string name = 1;`
      */
     public var name: kotlin.String
-      @JvmName("getName")
-      get() = _builder.name
-      @JvmName("setName")
-      set(value) {
+      @kotlin.jvm.JvmName("getName")
+        get() = _builder.name
+      @kotlin.jvm.JvmName("setName")
+        set(value) {
         _builder.name = value
       }
     /**
@@ -65,10 +66,10 @@ public object TestCaseInfoKt {
      * `string error = 2;`
      */
     public var error: kotlin.String
-      @JvmName("getError")
-      get() = _builder.error
-      @JvmName("setError")
-      set(value) {
+      @kotlin.jvm.JvmName("getError")
+        get() = _builder.error
+      @kotlin.jvm.JvmName("setError")
+        set(value) {
         _builder.error = value
       }
     /**
@@ -90,10 +91,10 @@ public object TestCaseInfoKt {
      * `uint64 duration = 3;`
      */
     public var duration: kotlin.Long
-      @JvmName("getDuration")
-      get() = _builder.duration
-      @JvmName("setDuration")
-      set(value) {
+      @kotlin.jvm.JvmName("getDuration")
+        get() = _builder.duration
+      @kotlin.jvm.JvmName("setDuration")
+        set(value) {
         _builder.duration = value
       }
     /**
@@ -115,10 +116,10 @@ public object TestCaseInfoKt {
      * `string log_message = 4;`
      */
     public var logMessage: kotlin.String
-      @JvmName("getLogMessage")
-      get() = _builder.logMessage
-      @JvmName("setLogMessage")
-      set(value) {
+      @kotlin.jvm.JvmName("getLogMessage")
+        get() = _builder.logMessage
+      @kotlin.jvm.JvmName("setLogMessage")
+        set(value) {
         _builder.logMessage = value
       }
     /**

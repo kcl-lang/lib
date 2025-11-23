@@ -22,94 +22,94 @@ public class API : IService
     }
 
     // Implementing IService methods
-    public ParseProgram_Result ParseProgram(ParseProgram_Args args)
+    public ParseProgramResult ParseProgram(ParseProgramArgs args)
     {
-        return ParseProgram_Result.Parser.ParseFrom(Call("KclvmService.ParseProgram", args.ToByteArray()));
+        return ParseProgramResult.Parser.ParseFrom(Call("KclService.ParseProgram", args.ToByteArray()));
     }
 
-    public ParseFile_Result ParseFile(ParseFile_Args args)
+    public ParseFileResult ParseFile(ParseFileArgs args)
     {
-        return ParseFile_Result.Parser.ParseFrom(Call("KclvmService.ParseFile", args.ToByteArray()));
+        return ParseFileResult.Parser.ParseFrom(Call("KclService.ParseFile", args.ToByteArray()));
     }
 
-    public LoadPackage_Result LoadPackage(LoadPackage_Args args)
+    public LoadPackageResult LoadPackage(LoadPackageArgs args)
     {
-        return LoadPackage_Result.Parser.ParseFrom(Call("KclvmService.LoadPackage", args.ToByteArray()));
+        return LoadPackageResult.Parser.ParseFrom(Call("KclService.LoadPackage", args.ToByteArray()));
     }
 
-    public ListVariables_Result ListVariables(ListVariables_Args args)
+    public ListVariablesResult ListVariables(ListVariablesArgs args)
     {
-        return ListVariables_Result.Parser.ParseFrom(Call("KclvmService.ListVariables", args.ToByteArray()));
+        return ListVariablesResult.Parser.ParseFrom(Call("KclService.ListVariables", args.ToByteArray()));
     }
 
-    public ListOptions_Result ListOptions(ParseProgram_Args args)
+    public ListOptionsResult ListOptions(ParseProgramArgs args)
     {
-        return ListOptions_Result.Parser.ParseFrom(Call("KclvmService.ListOptions", args.ToByteArray()));
+        return ListOptionsResult.Parser.ParseFrom(Call("KclService.ListOptions", args.ToByteArray()));
     }
 
-    public ExecProgram_Result ExecProgram(ExecProgram_Args args)
+    public ExecProgramResult ExecProgram(ExecProgramArgs args)
     {
-        return ExecProgram_Result.Parser.ParseFrom(Call("KclvmService.ExecProgram", args.ToByteArray()));
+        return ExecProgramResult.Parser.ParseFrom(Call("KclService.ExecProgram", args.ToByteArray()));
     }
 
-    public OverrideFile_Result OverrideFile(OverrideFile_Args args)
+    public OverrideFileResult OverrideFile(OverrideFileArgs args)
     {
-        return OverrideFile_Result.Parser.ParseFrom(Call("KclvmService.OverrideFile", args.ToByteArray()));
+        return OverrideFileResult.Parser.ParseFrom(Call("KclService.OverrideFile", args.ToByteArray()));
     }
 
-    public GetSchemaTypeMapping_Result GetSchemaTypeMapping(GetSchemaTypeMapping_Args args)
+    public GetSchemaTypeMappingResult GetSchemaTypeMapping(GetSchemaTypeMappingArgs args)
     {
-        return GetSchemaTypeMapping_Result.Parser.ParseFrom(Call("KclvmService.GetSchemaTypeMapping", args.ToByteArray()));
+        return GetSchemaTypeMappingResult.Parser.ParseFrom(Call("KclService.GetSchemaTypeMapping", args.ToByteArray()));
     }
 
-    public FormatCode_Result FormatCode(FormatCode_Args args)
+    public FormatCodeResult FormatCode(FormatCodeArgs args)
     {
-        return FormatCode_Result.Parser.ParseFrom(Call("KclvmService.FormatCode", args.ToByteArray()));
+        return FormatCodeResult.Parser.ParseFrom(Call("KclService.FormatCode", args.ToByteArray()));
     }
 
-    public FormatPath_Result FormatPath(FormatPath_Args args)
+    public FormatPathResult FormatPath(FormatPathArgs args)
     {
-        return FormatPath_Result.Parser.ParseFrom(Call("KclvmService.FormatPath", args.ToByteArray()));
+        return FormatPathResult.Parser.ParseFrom(Call("KclService.FormatPath", args.ToByteArray()));
     }
 
-    public LintPath_Result LintPath(LintPath_Args args)
+    public LintPathResult LintPath(LintPathArgs args)
     {
-        return LintPath_Result.Parser.ParseFrom(Call("KclvmService.LintPath", args.ToByteArray()));
+        return LintPathResult.Parser.ParseFrom(Call("KclService.LintPath", args.ToByteArray()));
     }
 
-    public ValidateCode_Result ValidateCode(ValidateCode_Args args)
+    public ValidateCodeResult ValidateCode(ValidateCodeArgs args)
     {
-        return ValidateCode_Result.Parser.ParseFrom(Call("KclvmService.ValidateCode", args.ToByteArray()));
+        return ValidateCodeResult.Parser.ParseFrom(Call("KclService.ValidateCode", args.ToByteArray()));
     }
 
-    public LoadSettingsFiles_Result LoadSettingsFiles(LoadSettingsFiles_Args args)
+    public LoadSettingsFilesResult LoadSettingsFiles(LoadSettingsFilesArgs args)
     {
-        return LoadSettingsFiles_Result.Parser.ParseFrom(Call("KclvmService.LoadSettingsFiles", args.ToByteArray()));
+        return LoadSettingsFilesResult.Parser.ParseFrom(Call("KclService.LoadSettingsFiles", args.ToByteArray()));
     }
 
-    public Rename_Result Rename(Rename_Args args)
+    public RenameResult Rename(RenameArgs args)
     {
-        return Rename_Result.Parser.ParseFrom(Call("KclvmService.Rename", args.ToByteArray()));
+        return RenameResult.Parser.ParseFrom(Call("KclService.Rename", args.ToByteArray()));
     }
 
-    public RenameCode_Result RenameCode(RenameCode_Args args)
+    public RenameCodeResult RenameCode(RenameCodeArgs args)
     {
-        return RenameCode_Result.Parser.ParseFrom(Call("KclvmService.RenameCode", args.ToByteArray()));
+        return RenameCodeResult.Parser.ParseFrom(Call("KclService.RenameCode", args.ToByteArray()));
     }
 
-    public Test_Result Test(Test_Args args)
+    public TestResult Test(TestArgs args)
     {
-        return Test_Result.Parser.ParseFrom(Call("KclvmService.Test", args.ToByteArray()));
+        return TestResult.Parser.ParseFrom(Call("KclService.Test", args.ToByteArray()));
     }
 
-    public UpdateDependencies_Result UpdateDependencies(UpdateDependencies_Args args)
+    public UpdateDependenciesResult UpdateDependencies(UpdateDependenciesArgs args)
     {
-        return UpdateDependencies_Result.Parser.ParseFrom(Call("KclvmService.UpdateDependencies", args.ToByteArray()));
+        return UpdateDependenciesResult.Parser.ParseFrom(Call("KclService.UpdateDependencies", args.ToByteArray()));
     }
 
-    public GetVersion_Result GetVersion(GetVersion_Args args)
+    public GetVersionResult GetVersion(GetVersionArgs args)
     {
-        return GetVersion_Result.Parser.ParseFrom(Call("KclvmService.GetVersion", args.ToByteArray()));
+        return GetVersionResult.Parser.ParseFrom(Call("KclService.GetVersion", args.ToByteArray()));
     }
 
     private byte[] Call(string name, byte[] args)

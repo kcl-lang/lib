@@ -2,6 +2,7 @@
 // NO CHECKED-IN PROTOBUF GENCODE
 // source: spec.proto
 
+@file:com.google.protobuf.Generated
 // Generated files should ignore deprecation warnings
 @file:Suppress("DEPRECATION")
 package com.kcl.api;
@@ -40,10 +41,10 @@ public object SymbolIndexKt {
      * `uint64 i = 1;`
      */
     public var i: kotlin.Long
-      @JvmName("getI")
-      get() = _builder.i
-      @JvmName("setI")
-      set(value) {
+      @kotlin.jvm.JvmName("getI")
+        get() = _builder.i
+      @kotlin.jvm.JvmName("setI")
+        set(value) {
         _builder.i = value
       }
     /**
@@ -65,10 +66,10 @@ public object SymbolIndexKt {
      * `uint64 g = 2;`
      */
     public var g: kotlin.Long
-      @JvmName("getG")
-      get() = _builder.g
-      @JvmName("setG")
-      set(value) {
+      @kotlin.jvm.JvmName("getG")
+        get() = _builder.g
+      @kotlin.jvm.JvmName("setG")
+        set(value) {
         _builder.g = value
       }
     /**
@@ -90,10 +91,10 @@ public object SymbolIndexKt {
      * `string kind = 3;`
      */
     public var kind: kotlin.String
-      @JvmName("getKind")
-      get() = _builder.kind
-      @JvmName("setKind")
-      set(value) {
+      @kotlin.jvm.JvmName("getKind")
+        get() = _builder.kind
+      @kotlin.jvm.JvmName("setKind")
+        set(value) {
         _builder.kind = value
       }
     /**

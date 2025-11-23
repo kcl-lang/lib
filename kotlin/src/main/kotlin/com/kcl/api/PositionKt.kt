@@ -2,6 +2,7 @@
 // NO CHECKED-IN PROTOBUF GENCODE
 // source: spec.proto
 
+@file:com.google.protobuf.Generated
 // Generated files should ignore deprecation warnings
 @file:Suppress("DEPRECATION")
 package com.kcl.api;
@@ -40,10 +41,10 @@ public object PositionKt {
      * `int64 line = 1;`
      */
     public var line: kotlin.Long
-      @JvmName("getLine")
-      get() = _builder.line
-      @JvmName("setLine")
-      set(value) {
+      @kotlin.jvm.JvmName("getLine")
+        get() = _builder.line
+      @kotlin.jvm.JvmName("setLine")
+        set(value) {
         _builder.line = value
       }
     /**
@@ -65,10 +66,10 @@ public object PositionKt {
      * `int64 column = 2;`
      */
     public var column: kotlin.Long
-      @JvmName("getColumn")
-      get() = _builder.column
-      @JvmName("setColumn")
-      set(value) {
+      @kotlin.jvm.JvmName("getColumn")
+        get() = _builder.column
+      @kotlin.jvm.JvmName("setColumn")
+        set(value) {
         _builder.column = value
       }
     /**
@@ -90,10 +91,10 @@ public object PositionKt {
      * `string filename = 3;`
      */
     public var filename: kotlin.String
-      @JvmName("getFilename")
-      get() = _builder.filename
-      @JvmName("setFilename")
-      set(value) {
+      @kotlin.jvm.JvmName("getFilename")
+        get() = _builder.filename
+      @kotlin.jvm.JvmName("setFilename")
+        set(value) {
         _builder.filename = value
       }
     /**

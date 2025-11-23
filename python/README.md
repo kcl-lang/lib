@@ -11,7 +11,7 @@ python3 -m pip install kcl-lib
 ```python
 import kcl_lib.api as api
 
-args = api.ExecProgram_Args(k_filename_list=["/path/to/kcl_file.k"])
+args = api.ExecProgramArgs(k_filename_list=["/path/to/kcl_file.k"])
 api = api.API()
 result = api.exec_program(args)
 print(result.yaml_result)
@@ -34,7 +34,7 @@ source venv/bin/activate
 Install maturin:
 
 ```shell
-cargo install maturin
+python3 -m pip install maturin
 ```
 
 Build bindings:
@@ -74,7 +74,7 @@ Python Code
 ```python
 import kcl_lib.api as api
 
-args = api.ExecProgram_Args(k_filename_list=["schema.k"])
+args = api.ExecProgramArgs(k_filename_list=["schema.k"])
 api = api.API()
 result = api.exec_program(args)
 assert result.yaml_result == "app:\n  replicas: 2"
@@ -92,7 +92,7 @@ A case with the file not found error
 import kcl_lib.api as api
 
 try:
-    args = api.ExecProgram_Args(k_filename_list=["file_not_found"])
+    args = api.ExecProgramArgs(k_filename_list=["file_not_found"])
     api = api.API()
     result = api.exec_program(args)
     assert False
@@ -126,7 +126,7 @@ Python Code
 ```python
 import kcl_lib.api as api
 
-args = api.ParseParseFile_Args(path=TEST_FILE)
+args = api.ParseParseFileArgs(path=TEST_FILE)
 api = api.API()
 result = api.parse_file(args)
 ```
@@ -157,7 +157,7 @@ Python Code
 ```python
 import kcl_lib.api as api
 
-args = api.ParseProgram_Args(paths=["schema.k"])
+args = api.ParseProgramArgs(paths=["schema.k"])
 api = api.API()
 result = api.parse_program(args)
 assert len(result.paths) == 1
@@ -190,8 +190,8 @@ Python Code
 ```python
 import kcl_lib.api as api
 
-args = api.LoadPackage_Args(
-    parse_args=api.ParseProgram_Args(paths=["schema.k"]), resolve_ast=True
+args = api.LoadPackageArgs(
+    parse_args=api.ParseProgramArgs(paths=["schema.k"]), resolve_ast=True
 )
 api = api.API()
 result = api.load_package(args)
@@ -224,7 +224,7 @@ Python Code
 ```python
 import kcl_lib.api as api
 
-args = api.ListVariables_Args(files=[TEST_FILE])
+args = api.ListVariablesArgs(files=[TEST_FILE])
 api = api.API()
 result = api.list_variables(args)
 ```
@@ -254,7 +254,7 @@ Python Code
 ```python
 import kcl_lib.api as api
 
-args = api.ParseProgram_Args(paths=["options.k"])
+args = api.ParseProgramArgs(paths=["options.k"])
 api = api.API()
 result = api.list_options(args)
 assert len(result.options) == 3
@@ -289,8 +289,8 @@ Python Code
 ```python
 import kcl_lib.api as api
 
-exec_args = api.ExecProgram_Args(k_filename_list=["schema.k"])
-args = api.GetSchemaTypeMapping_Args(exec_args=exec_args)
+exec_args = api.ExecProgramArgs(k_filename_list=["schema.k"])
+args = api.GetSchemaTypeMappingArgs(exec_args=exec_args)
 api = api.API()
 result = api.get_schema_type_mapping(args)
 assert result.schema_type_mapping["app"].properties["replicas"].type == "int"
@@ -323,7 +323,7 @@ import kcl_lib.api as api
 import pathlib
 
 test_file = "main.k"
-args = api.OverrideFile_Args(
+args = api.OverrideFileArgs(
     file=test_file,
     specs=["b.a=2"],
 )
@@ -363,7 +363,7 @@ schema Person:
     check:
         0 <   age <   120
 """
-args = api.FormatCode_Args(source=source_code)
+args = api.FormatCodeArgs(source=source_code)
 api_instance = api.API()
 result = api_instance.format_code(args)
 assert (
@@ -406,7 +406,7 @@ Python Code
 ```python
 import kcl_lib.api as api
 
-args = api.FormatPath_Args(path="format_path.k")
+args = api.FormatPathArgs(path="format_path.k")
 api_instance = api.API()
 result = api_instance.format_path(args)
 print(result)
@@ -435,7 +435,7 @@ Python Code
 ```python
 import kcl_lib.api as api
 
-args = api.LintPath_Args(paths=["lint_path.k"])
+args = api.LintPathArgs(paths=["lint_path.k"])
 api_instance = api.API()
 result = api_instance.lint_path(args)
 ```
@@ -464,7 +464,7 @@ schema Person:
         0 < age < 120
 """
 data = '{"name": "Alice", "age": 10}'
-args = api.ValidateCode_Args(code=code, data=data, format="json")
+args = api.ValidateCodeArgs(code=code, data=data, format="json")
 api_instance = api.API()
 result = api_instance.validate_code(args)
 assert result.success == True
@@ -493,7 +493,7 @@ Python Code
 ```python
 import kcl_lib.api as api
 
-args = api.Rename_Args(
+args = api.RenameArgs(
     package_root=".",
     symbol_path="a",
     file_paths=["main.k"],
@@ -518,7 +518,7 @@ Python Code
 ```python
 import kcl_lib.api as api
 
-args = api.RenameCode_Args(
+args = api.RenameCodeArgs(
     package_root="/mock/path",
     symbol_path="a",
     source_codes={"/mock/path/main.k": "a = 1\nb = a"},
@@ -543,7 +543,7 @@ Python Code
 
 ```python
 import kcl_lib.api as api
-args = api.Test_Args(
+args = api.TestArgs(
     pkg_list=["path/to/testing/pkg/..."],
 )
 api_instance = api.API()
@@ -575,7 +575,7 @@ Python Code
 ```python
 import kcl_lib.api as api
 
-args = api.LoadSettingsFiles_Args(
+args = api.LoadSettingsFilesArgs(
     work_dir=".", files=["kcl.yaml"]
 )
 api_instance = api.API()
@@ -615,7 +615,7 @@ Python Code
 ```python
 import kcl_lib.api as api
 
-args = api.UpdateDependencies_Args(
+args = api.UpdateDependenciesArgs(
     manifest_path="module"
 )
 api_instance = api.API()
@@ -661,12 +661,12 @@ Python Code
 ```python
 import kcl_lib.api as api
 
-args = api.UpdateDependencies_Args(
+args = api.UpdateDependenciesArgs(
     manifest_path="module"
 )
 api_instance = api.API()
 result = api_instance.update_dependencies(args)
-exec_args = api.ExecProgram_Args(
+exec_args = api.ExecProgramArgs(
     k_filename_list=["module/main.k"],
     external_pkgs=result.external_pkgs,
 )

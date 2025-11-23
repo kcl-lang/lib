@@ -4,8 +4,8 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.kcl.api.API;
-import com.kcl.api.Spec.ValidateCode_Args;
-import com.kcl.api.Spec.ValidateCode_Result;
+import com.kcl.api.Spec.ValidateCodeArgs;
+import com.kcl.api.Spec.ValidateCodeResult;
 
 public class ValidateTest {
     @Test
@@ -15,9 +15,9 @@ public class ValidateTest {
 
         String data = "{\"name\": \"Alice\", \"age\": 10}";
 
-        ValidateCode_Args args = ValidateCode_Args.newBuilder().setCode(code).setData(data).setFormat("json").build();
+        ValidateCodeArgs args = ValidateCodeArgs.newBuilder().setCode(code).setData(data).setFormat("json").build();
         API apiInstance = new API();
-        ValidateCode_Result result = apiInstance.validateCode(args);
+        ValidateCodeResult result = apiInstance.validateCode(args);
 
         Assert.assertTrue(result.getSuccess());
         Assert.assertEquals("", result.getErrMessage());

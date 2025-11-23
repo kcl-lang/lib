@@ -1,9 +1,9 @@
 package com.kcl;
 
 import com.kcl.api.API;
-import com.kcl.api.Spec.ListVariables_Args;
-import com.kcl.api.Spec.ListVariables_Options;
-import com.kcl.api.Spec.ListVariables_Result;
+import com.kcl.api.Spec.ListVariablesArgs;
+import com.kcl.api.Spec.ListVariablesOptions;
+import com.kcl.api.Spec.ListVariablesResult;
 
 import java.nio.file.Paths;
 
@@ -34,7 +34,7 @@ public class ListVariablesTest {
             String expectedValue = testCase[1];
             String expectedName = testCase[2];
             String expectOpSym = testCase[3];
-            ListVariables_Result result = api.listVariables(ListVariables_Args.newBuilder()
+            ListVariablesResult result = api.listVariables(ListVariablesArgs.newBuilder()
                     .addFiles("./src/test_data/list_variables/main.k").addSpecs(spec).build());
 
             Assert.assertEquals(result.getVariablesCount(), 1);
@@ -52,8 +52,8 @@ public class ListVariablesTest {
 
         String filePath = Paths.get("./src/test_data/list_variables/invalid.k").toAbsolutePath().toString();
 
-        ListVariables_Result result = api
-                .listVariables(ListVariables_Args.newBuilder().addFiles(filePath).addSpecs("a").build());
+        ListVariablesResult result = api
+                .listVariables(ListVariablesArgs.newBuilder().addFiles(filePath).addSpecs("a").build());
 
         Assert.assertEquals(result.getParseErrorsCount(), 2);
         Assert.assertEquals(result.getParseErrors(0).getLevel(), "error");
@@ -72,8 +72,8 @@ public class ListVariablesTest {
 
         String filePath = Paths.get("./src/test_data/list_variables/list.k").toAbsolutePath().toString();
 
-        ListVariables_Result result = api
-                .listVariables(ListVariables_Args.newBuilder().addFiles(filePath).addSpecs("list0").build());
+        ListVariablesResult result = api
+                .listVariables(ListVariablesArgs.newBuilder().addFiles(filePath).addSpecs("list0").build());
         Assert.assertEquals(result.getVariablesCount(), 1);
         Assert.assertEquals(result.getVariablesMap().get("list0").getVariables(0).getValue(), "[1, 2, 3]");
         Assert.assertEquals(result.getVariablesMap().get("list0").getVariables(0).getTypeName(), "");
@@ -102,8 +102,8 @@ public class ListVariablesTest {
             String spec = data[2];
             String expectedValue = data[3];
 
-            ListVariables_Result result = api.listVariables(ListVariables_Args.newBuilder()
-                    .setOptions(ListVariables_Options.newBuilder().setMergeProgram(true).build()).addFiles(baseFilePath)
+            ListVariablesResult result = api.listVariables(ListVariablesArgs.newBuilder()
+                    .setOptions(ListVariablesOptions.newBuilder().setMergeProgram(true).build()).addFiles(baseFilePath)
                     .addFiles(mainFilePath).addSpecs(spec).build());
 
             Assert.assertEquals(result.getVariablesCount(), 1);

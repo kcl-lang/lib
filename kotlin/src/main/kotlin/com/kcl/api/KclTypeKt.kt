@@ -2,6 +2,7 @@
 // NO CHECKED-IN PROTOBUF GENCODE
 // source: spec.proto
 
+@file:com.google.protobuf.Generated
 // Generated files should ignore deprecation warnings
 @file:Suppress("DEPRECATION")
 package com.kcl.api;
@@ -40,10 +41,10 @@ public object KclTypeKt {
      * `string type = 1;`
      */
     public var type: kotlin.String
-      @JvmName("getType")
-      get() = _builder.type
-      @JvmName("setType")
-      set(value) {
+      @kotlin.jvm.JvmName("getType")
+        get() = _builder.type
+      @kotlin.jvm.JvmName("setType")
+        set(value) {
         _builder.type = value
       }
     /**
@@ -72,7 +73,7 @@ public object KclTypeKt {
      */
      public val unionTypes: com.google.protobuf.kotlin.DslList<com.kcl.api.Spec.KclType, UnionTypesProxy>
       @kotlin.jvm.JvmSynthetic
-      get() = com.google.protobuf.kotlin.DslList(
+  get() = com.google.protobuf.kotlin.DslList(
         _builder.unionTypesList
       )
     /**
@@ -84,7 +85,7 @@ public object KclTypeKt {
      * @param value The unionTypes to add.
      */
     @kotlin.jvm.JvmSynthetic
-    @kotlin.jvm.JvmName("addUnionTypes")
+@kotlin.jvm.JvmName("addUnionTypes")
     public fun com.google.protobuf.kotlin.DslList<com.kcl.api.Spec.KclType, UnionTypesProxy>.add(value: com.kcl.api.Spec.KclType) {
       _builder.addUnionTypes(value)
     }
@@ -97,7 +98,7 @@ public object KclTypeKt {
      * @param value The unionTypes to add.
      */
     @kotlin.jvm.JvmSynthetic
-    @kotlin.jvm.JvmName("plusAssignUnionTypes")
+@kotlin.jvm.JvmName("plusAssignUnionTypes")
     @Suppress("NOTHING_TO_INLINE")
     public inline operator fun com.google.protobuf.kotlin.DslList<com.kcl.api.Spec.KclType, UnionTypesProxy>.plusAssign(value: com.kcl.api.Spec.KclType) {
       add(value)
@@ -111,7 +112,7 @@ public object KclTypeKt {
      * @param values The unionTypes to add.
      */
     @kotlin.jvm.JvmSynthetic
-    @kotlin.jvm.JvmName("addAllUnionTypes")
+@kotlin.jvm.JvmName("addAllUnionTypes")
     public fun com.google.protobuf.kotlin.DslList<com.kcl.api.Spec.KclType, UnionTypesProxy>.addAll(values: kotlin.collections.Iterable<com.kcl.api.Spec.KclType>) {
       _builder.addAllUnionTypes(values)
     }
@@ -124,7 +125,7 @@ public object KclTypeKt {
      * @param values The unionTypes to add.
      */
     @kotlin.jvm.JvmSynthetic
-    @kotlin.jvm.JvmName("plusAssignAllUnionTypes")
+@kotlin.jvm.JvmName("plusAssignAllUnionTypes")
     @Suppress("NOTHING_TO_INLINE")
     public inline operator fun com.google.protobuf.kotlin.DslList<com.kcl.api.Spec.KclType, UnionTypesProxy>.plusAssign(values: kotlin.collections.Iterable<com.kcl.api.Spec.KclType>) {
       addAll(values)
@@ -139,7 +140,7 @@ public object KclTypeKt {
      * @param value The unionTypes to set.
      */
     @kotlin.jvm.JvmSynthetic
-    @kotlin.jvm.JvmName("setUnionTypes")
+@kotlin.jvm.JvmName("setUnionTypes")
     public operator fun com.google.protobuf.kotlin.DslList<com.kcl.api.Spec.KclType, UnionTypesProxy>.set(index: kotlin.Int, value: com.kcl.api.Spec.KclType) {
       _builder.setUnionTypes(index, value)
     }
@@ -151,11 +152,10 @@ public object KclTypeKt {
      * `repeated .com.kcl.api.KclType union_types = 2;`
      */
     @kotlin.jvm.JvmSynthetic
-    @kotlin.jvm.JvmName("clearUnionTypes")
+@kotlin.jvm.JvmName("clearUnionTypes")
     public fun com.google.protobuf.kotlin.DslList<com.kcl.api.Spec.KclType, UnionTypesProxy>.clear() {
       _builder.clearUnionTypes()
     }
-
 
     /**
      * ```
@@ -165,10 +165,10 @@ public object KclTypeKt {
      * `string default = 3;`
      */
     public var default: kotlin.String
-      @JvmName("getDefault")
-      get() = _builder.default
-      @JvmName("setDefault")
-      set(value) {
+      @kotlin.jvm.JvmName("getDefault")
+        get() = _builder.default
+      @kotlin.jvm.JvmName("setDefault")
+        set(value) {
         _builder.default = value
       }
     /**
@@ -190,10 +190,10 @@ public object KclTypeKt {
      * `string schema_name = 4;`
      */
     public var schemaName: kotlin.String
-      @JvmName("getSchemaName")
-      get() = _builder.schemaName
-      @JvmName("setSchemaName")
-      set(value) {
+      @kotlin.jvm.JvmName("getSchemaName")
+        get() = _builder.schemaName
+      @kotlin.jvm.JvmName("setSchemaName")
+        set(value) {
         _builder.schemaName = value
       }
     /**
@@ -215,10 +215,10 @@ public object KclTypeKt {
      * `string schema_doc = 5;`
      */
     public var schemaDoc: kotlin.String
-      @JvmName("getSchemaDoc")
-      get() = _builder.schemaDoc
-      @JvmName("setSchemaDoc")
-      set(value) {
+      @kotlin.jvm.JvmName("getSchemaDoc")
+        get() = _builder.schemaDoc
+      @kotlin.jvm.JvmName("setSchemaDoc")
+        set(value) {
         _builder.schemaDoc = value
       }
     /**
@@ -247,7 +247,7 @@ public object KclTypeKt {
      */
      public val properties: com.google.protobuf.kotlin.DslMap<kotlin.String, com.kcl.api.Spec.KclType, PropertiesProxy>
       @kotlin.jvm.JvmSynthetic
-      @JvmName("getPropertiesMap")
+@kotlin.jvm.JvmName("getPropertiesMap")
       get() = com.google.protobuf.kotlin.DslMap(
         _builder.propertiesMap
       )
@@ -258,7 +258,7 @@ public object KclTypeKt {
      *
      * `map<string, .com.kcl.api.KclType> properties = 6;`
      */
-    @JvmName("putProperties")
+    @kotlin.jvm.JvmName("putProperties")
     public fun com.google.protobuf.kotlin.DslMap<kotlin.String, com.kcl.api.Spec.KclType, PropertiesProxy>
       .put(key: kotlin.String, value: com.kcl.api.Spec.KclType) {
          _builder.putProperties(key, value)
@@ -271,7 +271,7 @@ public object KclTypeKt {
      * `map<string, .com.kcl.api.KclType> properties = 6;`
      */
     @kotlin.jvm.JvmSynthetic
-    @JvmName("setProperties")
+@kotlin.jvm.JvmName("setProperties")
     @Suppress("NOTHING_TO_INLINE")
     public inline operator fun com.google.protobuf.kotlin.DslMap<kotlin.String, com.kcl.api.Spec.KclType, PropertiesProxy>
       .set(key: kotlin.String, value: com.kcl.api.Spec.KclType) {
@@ -285,7 +285,7 @@ public object KclTypeKt {
      * `map<string, .com.kcl.api.KclType> properties = 6;`
      */
     @kotlin.jvm.JvmSynthetic
-    @JvmName("removeProperties")
+@kotlin.jvm.JvmName("removeProperties")
     public fun com.google.protobuf.kotlin.DslMap<kotlin.String, com.kcl.api.Spec.KclType, PropertiesProxy>
       .remove(key: kotlin.String) {
          _builder.removeProperties(key)
@@ -298,7 +298,7 @@ public object KclTypeKt {
      * `map<string, .com.kcl.api.KclType> properties = 6;`
      */
     @kotlin.jvm.JvmSynthetic
-    @JvmName("putAllProperties")
+@kotlin.jvm.JvmName("putAllProperties")
     public fun com.google.protobuf.kotlin.DslMap<kotlin.String, com.kcl.api.Spec.KclType, PropertiesProxy>
       .putAll(map: kotlin.collections.Map<kotlin.String, com.kcl.api.Spec.KclType>) {
          _builder.putAllProperties(map)
@@ -311,7 +311,7 @@ public object KclTypeKt {
      * `map<string, .com.kcl.api.KclType> properties = 6;`
      */
     @kotlin.jvm.JvmSynthetic
-    @JvmName("clearProperties")
+@kotlin.jvm.JvmName("clearProperties")
     public fun com.google.protobuf.kotlin.DslMap<kotlin.String, com.kcl.api.Spec.KclType, PropertiesProxy>
       .clear() {
          _builder.clearProperties()
@@ -332,7 +332,7 @@ public object KclTypeKt {
      * @return A list containing the required.
      */
     public val required: com.google.protobuf.kotlin.DslList<kotlin.String, RequiredProxy>
-      @kotlin.jvm.JvmSynthetic
+    @kotlin.OptIn(com.google.protobuf.kotlin.OnlyForUseByGeneratedProtoCode::class)
       get() = com.google.protobuf.kotlin.DslList(
         _builder.requiredList
       )
@@ -345,7 +345,7 @@ public object KclTypeKt {
      * @param value The required to add.
      */
     @kotlin.jvm.JvmSynthetic
-    @kotlin.jvm.JvmName("addRequired")
+@kotlin.jvm.JvmName("addRequired")
     public fun com.google.protobuf.kotlin.DslList<kotlin.String, RequiredProxy>.add(value: kotlin.String) {
       _builder.addRequired(value)
     }
@@ -358,7 +358,7 @@ public object KclTypeKt {
      * @param value The required to add.
      */
     @kotlin.jvm.JvmSynthetic
-    @kotlin.jvm.JvmName("plusAssignRequired")
+@kotlin.jvm.JvmName("plusAssignRequired")
     @Suppress("NOTHING_TO_INLINE")
     public inline operator fun com.google.protobuf.kotlin.DslList<kotlin.String, RequiredProxy>.plusAssign(value: kotlin.String) {
       add(value)
@@ -372,7 +372,7 @@ public object KclTypeKt {
      * @param values The required to add.
      */
     @kotlin.jvm.JvmSynthetic
-    @kotlin.jvm.JvmName("addAllRequired")
+@kotlin.jvm.JvmName("addAllRequired")
     public fun com.google.protobuf.kotlin.DslList<kotlin.String, RequiredProxy>.addAll(values: kotlin.collections.Iterable<kotlin.String>) {
       _builder.addAllRequired(values)
     }
@@ -385,7 +385,7 @@ public object KclTypeKt {
      * @param values The required to add.
      */
     @kotlin.jvm.JvmSynthetic
-    @kotlin.jvm.JvmName("plusAssignAllRequired")
+@kotlin.jvm.JvmName("plusAssignAllRequired")
     @Suppress("NOTHING_TO_INLINE")
     public inline operator fun com.google.protobuf.kotlin.DslList<kotlin.String, RequiredProxy>.plusAssign(values: kotlin.collections.Iterable<kotlin.String>) {
       addAll(values)
@@ -400,7 +400,7 @@ public object KclTypeKt {
      * @param value The required to set.
      */
     @kotlin.jvm.JvmSynthetic
-    @kotlin.jvm.JvmName("setRequired")
+@kotlin.jvm.JvmName("setRequired")
     public operator fun com.google.protobuf.kotlin.DslList<kotlin.String, RequiredProxy>.set(index: kotlin.Int, value: kotlin.String) {
       _builder.setRequired(index, value)
     }/**
@@ -411,7 +411,7 @@ public object KclTypeKt {
      * `repeated string required = 7;`
      */
     @kotlin.jvm.JvmSynthetic
-    @kotlin.jvm.JvmName("clearRequired")
+@kotlin.jvm.JvmName("setRequired")
     public fun com.google.protobuf.kotlin.DslList<kotlin.String, RequiredProxy>.clear() {
       _builder.clearRequired()
     }
@@ -423,10 +423,10 @@ public object KclTypeKt {
      * `.com.kcl.api.KclType key = 8;`
      */
     public var key: com.kcl.api.Spec.KclType
-      @JvmName("getKey")
-      get() = _builder.key
-      @JvmName("setKey")
-      set(value) {
+      @kotlin.jvm.JvmName("getKey")
+        get() = _builder.key
+      @kotlin.jvm.JvmName("setKey")
+        set(value) {
         _builder.key = value
       }
     /**
@@ -462,10 +462,10 @@ public object KclTypeKt {
      * `.com.kcl.api.KclType item = 9;`
      */
     public var item: com.kcl.api.Spec.KclType
-      @JvmName("getItem")
-      get() = _builder.item
-      @JvmName("setItem")
-      set(value) {
+      @kotlin.jvm.JvmName("getItem")
+        get() = _builder.item
+      @kotlin.jvm.JvmName("setItem")
+        set(value) {
         _builder.item = value
       }
     /**
@@ -501,10 +501,10 @@ public object KclTypeKt {
      * `int32 line = 10;`
      */
     public var line: kotlin.Int
-      @JvmName("getLine")
-      get() = _builder.line
-      @JvmName("setLine")
-      set(value) {
+      @kotlin.jvm.JvmName("getLine")
+        get() = _builder.line
+      @kotlin.jvm.JvmName("setLine")
+        set(value) {
         _builder.line = value
       }
     /**
@@ -533,7 +533,7 @@ public object KclTypeKt {
      */
      public val decorators: com.google.protobuf.kotlin.DslList<com.kcl.api.Spec.Decorator, DecoratorsProxy>
       @kotlin.jvm.JvmSynthetic
-      get() = com.google.protobuf.kotlin.DslList(
+  get() = com.google.protobuf.kotlin.DslList(
         _builder.decoratorsList
       )
     /**
@@ -545,7 +545,7 @@ public object KclTypeKt {
      * @param value The decorators to add.
      */
     @kotlin.jvm.JvmSynthetic
-    @kotlin.jvm.JvmName("addDecorators")
+@kotlin.jvm.JvmName("addDecorators")
     public fun com.google.protobuf.kotlin.DslList<com.kcl.api.Spec.Decorator, DecoratorsProxy>.add(value: com.kcl.api.Spec.Decorator) {
       _builder.addDecorators(value)
     }
@@ -558,7 +558,7 @@ public object KclTypeKt {
      * @param value The decorators to add.
      */
     @kotlin.jvm.JvmSynthetic
-    @kotlin.jvm.JvmName("plusAssignDecorators")
+@kotlin.jvm.JvmName("plusAssignDecorators")
     @Suppress("NOTHING_TO_INLINE")
     public inline operator fun com.google.protobuf.kotlin.DslList<com.kcl.api.Spec.Decorator, DecoratorsProxy>.plusAssign(value: com.kcl.api.Spec.Decorator) {
       add(value)
@@ -572,7 +572,7 @@ public object KclTypeKt {
      * @param values The decorators to add.
      */
     @kotlin.jvm.JvmSynthetic
-    @kotlin.jvm.JvmName("addAllDecorators")
+@kotlin.jvm.JvmName("addAllDecorators")
     public fun com.google.protobuf.kotlin.DslList<com.kcl.api.Spec.Decorator, DecoratorsProxy>.addAll(values: kotlin.collections.Iterable<com.kcl.api.Spec.Decorator>) {
       _builder.addAllDecorators(values)
     }
@@ -585,7 +585,7 @@ public object KclTypeKt {
      * @param values The decorators to add.
      */
     @kotlin.jvm.JvmSynthetic
-    @kotlin.jvm.JvmName("plusAssignAllDecorators")
+@kotlin.jvm.JvmName("plusAssignAllDecorators")
     @Suppress("NOTHING_TO_INLINE")
     public inline operator fun com.google.protobuf.kotlin.DslList<com.kcl.api.Spec.Decorator, DecoratorsProxy>.plusAssign(values: kotlin.collections.Iterable<com.kcl.api.Spec.Decorator>) {
       addAll(values)
@@ -600,7 +600,7 @@ public object KclTypeKt {
      * @param value The decorators to set.
      */
     @kotlin.jvm.JvmSynthetic
-    @kotlin.jvm.JvmName("setDecorators")
+@kotlin.jvm.JvmName("setDecorators")
     public operator fun com.google.protobuf.kotlin.DslList<com.kcl.api.Spec.Decorator, DecoratorsProxy>.set(index: kotlin.Int, value: com.kcl.api.Spec.Decorator) {
       _builder.setDecorators(index, value)
     }
@@ -612,11 +612,10 @@ public object KclTypeKt {
      * `repeated .com.kcl.api.Decorator decorators = 11;`
      */
     @kotlin.jvm.JvmSynthetic
-    @kotlin.jvm.JvmName("clearDecorators")
+@kotlin.jvm.JvmName("clearDecorators")
     public fun com.google.protobuf.kotlin.DslList<com.kcl.api.Spec.Decorator, DecoratorsProxy>.clear() {
       _builder.clearDecorators()
     }
-
 
     /**
      * ```
@@ -626,10 +625,10 @@ public object KclTypeKt {
      * `string filename = 12;`
      */
     public var filename: kotlin.String
-      @JvmName("getFilename")
-      get() = _builder.filename
-      @JvmName("setFilename")
-      set(value) {
+      @kotlin.jvm.JvmName("getFilename")
+        get() = _builder.filename
+      @kotlin.jvm.JvmName("setFilename")
+        set(value) {
         _builder.filename = value
       }
     /**
@@ -651,10 +650,10 @@ public object KclTypeKt {
      * `string pkg_path = 13;`
      */
     public var pkgPath: kotlin.String
-      @JvmName("getPkgPath")
-      get() = _builder.pkgPath
-      @JvmName("setPkgPath")
-      set(value) {
+      @kotlin.jvm.JvmName("getPkgPath")
+        get() = _builder.pkgPath
+      @kotlin.jvm.JvmName("setPkgPath")
+        set(value) {
         _builder.pkgPath = value
       }
     /**
@@ -676,10 +675,10 @@ public object KclTypeKt {
      * `string description = 14;`
      */
     public var description: kotlin.String
-      @JvmName("getDescription")
-      get() = _builder.description
-      @JvmName("setDescription")
-      set(value) {
+      @kotlin.jvm.JvmName("getDescription")
+        get() = _builder.description
+      @kotlin.jvm.JvmName("setDescription")
+        set(value) {
         _builder.description = value
       }
     /**
@@ -708,7 +707,7 @@ public object KclTypeKt {
      */
      public val examples: com.google.protobuf.kotlin.DslMap<kotlin.String, com.kcl.api.Spec.Example, ExamplesProxy>
       @kotlin.jvm.JvmSynthetic
-      @JvmName("getExamplesMap")
+@kotlin.jvm.JvmName("getExamplesMap")
       get() = com.google.protobuf.kotlin.DslMap(
         _builder.examplesMap
       )
@@ -719,7 +718,7 @@ public object KclTypeKt {
      *
      * `map<string, .com.kcl.api.Example> examples = 15;`
      */
-    @JvmName("putExamples")
+    @kotlin.jvm.JvmName("putExamples")
     public fun com.google.protobuf.kotlin.DslMap<kotlin.String, com.kcl.api.Spec.Example, ExamplesProxy>
       .put(key: kotlin.String, value: com.kcl.api.Spec.Example) {
          _builder.putExamples(key, value)
@@ -732,7 +731,7 @@ public object KclTypeKt {
      * `map<string, .com.kcl.api.Example> examples = 15;`
      */
     @kotlin.jvm.JvmSynthetic
-    @JvmName("setExamples")
+@kotlin.jvm.JvmName("setExamples")
     @Suppress("NOTHING_TO_INLINE")
     public inline operator fun com.google.protobuf.kotlin.DslMap<kotlin.String, com.kcl.api.Spec.Example, ExamplesProxy>
       .set(key: kotlin.String, value: com.kcl.api.Spec.Example) {
@@ -746,7 +745,7 @@ public object KclTypeKt {
      * `map<string, .com.kcl.api.Example> examples = 15;`
      */
     @kotlin.jvm.JvmSynthetic
-    @JvmName("removeExamples")
+@kotlin.jvm.JvmName("removeExamples")
     public fun com.google.protobuf.kotlin.DslMap<kotlin.String, com.kcl.api.Spec.Example, ExamplesProxy>
       .remove(key: kotlin.String) {
          _builder.removeExamples(key)
@@ -759,7 +758,7 @@ public object KclTypeKt {
      * `map<string, .com.kcl.api.Example> examples = 15;`
      */
     @kotlin.jvm.JvmSynthetic
-    @JvmName("putAllExamples")
+@kotlin.jvm.JvmName("putAllExamples")
     public fun com.google.protobuf.kotlin.DslMap<kotlin.String, com.kcl.api.Spec.Example, ExamplesProxy>
       .putAll(map: kotlin.collections.Map<kotlin.String, com.kcl.api.Spec.Example>) {
          _builder.putAllExamples(map)
@@ -772,7 +771,7 @@ public object KclTypeKt {
      * `map<string, .com.kcl.api.Example> examples = 15;`
      */
     @kotlin.jvm.JvmSynthetic
-    @JvmName("clearExamples")
+@kotlin.jvm.JvmName("clearExamples")
     public fun com.google.protobuf.kotlin.DslMap<kotlin.String, com.kcl.api.Spec.Example, ExamplesProxy>
       .clear() {
          _builder.clearExamples()
@@ -786,10 +785,10 @@ public object KclTypeKt {
      * `.com.kcl.api.KclType base_schema = 16;`
      */
     public var baseSchema: com.kcl.api.Spec.KclType
-      @JvmName("getBaseSchema")
-      get() = _builder.baseSchema
-      @JvmName("setBaseSchema")
-      set(value) {
+      @kotlin.jvm.JvmName("getBaseSchema")
+        get() = _builder.baseSchema
+      @kotlin.jvm.JvmName("setBaseSchema")
+        set(value) {
         _builder.baseSchema = value
       }
     /**

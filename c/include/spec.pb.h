@@ -39,24 +39,24 @@ typedef struct _Error {
 } Error;
 
 /* Message for ping request arguments. */
-typedef struct _Ping_Args {
+typedef struct _PingArgs {
     /* Value to be sent in the ping request. */
     pb_callback_t value;
-} Ping_Args;
+} PingArgs;
 
 /* Message for ping response. */
-typedef struct _Ping_Result {
+typedef struct _PingResult {
     /* Value received in the ping response. */
     pb_callback_t value;
-} Ping_Result;
+} PingResult;
 
 /* Message for version request arguments. Empty message. */
-typedef struct _GetVersion_Args { /* empty */
+typedef struct _GetVersionArgs { /* empty */
     char dummy_field;
-} GetVersion_Args;
+} GetVersionArgs;
 
 /* Message for version response. */
-typedef struct _GetVersion_Result {
+typedef struct _GetVersionResult {
     /* KCL version. */
     pb_callback_t version;
     /* Checksum of the KCL version. */
@@ -65,74 +65,74 @@ typedef struct _GetVersion_Result {
     pb_callback_t git_sha;
     /* Detailed version information as a string. */
     pb_callback_t version_info;
-} GetVersion_Result;
+} GetVersionResult;
 
 /* Message for list method request arguments. Empty message. */
-typedef struct _ListMethod_Args { /* empty */
+typedef struct _ListMethodArgs { /* empty */
     char dummy_field;
-} ListMethod_Args;
+} ListMethodArgs;
 
 /* Message for list method response. */
-typedef struct _ListMethod_Result {
+typedef struct _ListMethodResult {
     /* List of available method names. */
     pb_callback_t method_name_list;
-} ListMethod_Result;
+} ListMethodResult;
 
 /* Message for parse file request arguments. */
-typedef struct _ParseFile_Args {
+typedef struct _ParseFileArgs {
     /* Path of the file to be parsed. */
     pb_callback_t path;
     /* Source code to be parsed. */
     pb_callback_t source;
     /* External packages path. */
     pb_callback_t external_pkgs;
-} ParseFile_Args;
+} ParseFileArgs;
 
 /* Message for parse file response. */
-typedef struct _ParseFile_Result {
+typedef struct _ParseFileResult {
     /* Abstract Syntax Tree (AST) in JSON format. */
     pb_callback_t ast_json;
     /* File dependency paths. */
     pb_callback_t deps;
     /* List of parse errors. */
     pb_callback_t errors;
-} ParseFile_Result;
+} ParseFileResult;
 
 /* Message for parse program request arguments. */
-typedef struct _ParseProgram_Args {
+typedef struct _ParseProgramArgs {
     /* Paths of the program files to be parsed. */
     pb_callback_t paths;
     /* Source codes to be parsed. */
     pb_callback_t sources;
     /* External packages path. */
     pb_callback_t external_pkgs;
-} ParseProgram_Args;
+} ParseProgramArgs;
 
 /* Message for parse program response. */
-typedef struct _ParseProgram_Result {
+typedef struct _ParseProgramResult {
     /* Abstract Syntax Tree (AST) in JSON format. */
     pb_callback_t ast_json;
     /* Returns the files in the order they should be compiled. */
     pb_callback_t paths;
     /* List of parse errors. */
     pb_callback_t errors;
-} ParseProgram_Result;
+} ParseProgramResult;
 
 /* Message for load package request arguments. */
-typedef struct _LoadPackage_Args {
+typedef struct _LoadPackageArgs {
     /* Arguments for parsing the program. */
     bool has_parse_args;
-    ParseProgram_Args parse_args;
+    ParseProgramArgs parse_args;
     /* Flag indicating whether to resolve AST. */
     bool resolve_ast;
     /* Flag indicating whether to load built-in modules. */
     bool load_builtin;
     /* Flag indicating whether to include AST index. */
     bool with_ast_index;
-} LoadPackage_Args;
+} LoadPackageArgs;
 
 /* Message for load package response. */
-typedef struct _LoadPackage_Result {
+typedef struct _LoadPackageResult {
     /* Program Abstract Syntax Tree (AST) in JSON format. */
     pb_callback_t program;
     /* Returns the files in the order they should be compiled. */
@@ -153,18 +153,18 @@ typedef struct _LoadPackage_Result {
     pb_callback_t fully_qualified_name_map;
     /* Map of package scope with package path as key. */
     pb_callback_t pkg_scope_map;
-} LoadPackage_Result;
+} LoadPackageResult;
 
-typedef struct _LoadPackage_Result_SymbolNodeMapEntry {
+typedef struct _LoadPackageResult_SymbolNodeMapEntry {
     pb_callback_t key;
     pb_callback_t value;
-} LoadPackage_Result_SymbolNodeMapEntry;
+} LoadPackageResult_SymbolNodeMapEntry;
 
 /* Message for list options response. */
-typedef struct _ListOptions_Result {
+typedef struct _ListOptionsResult {
     /* List of available options. */
     pb_callback_t options;
-} ListOptions_Result;
+} ListOptionsResult;
 
 /* Message representing a help option. */
 typedef struct _OptionHelp {
@@ -190,17 +190,17 @@ typedef struct _SymbolIndex {
     pb_callback_t kind;
 } SymbolIndex;
 
-typedef struct _LoadPackage_Result_NodeSymbolMapEntry {
+typedef struct _LoadPackageResult_NodeSymbolMapEntry {
     pb_callback_t key;
     bool has_value;
     SymbolIndex value;
-} LoadPackage_Result_NodeSymbolMapEntry;
+} LoadPackageResult_NodeSymbolMapEntry;
 
-typedef struct _LoadPackage_Result_FullyQualifiedNameMapEntry {
+typedef struct _LoadPackageResult_FullyQualifiedNameMapEntry {
     pb_callback_t key;
     bool has_value;
     SymbolIndex value;
-} LoadPackage_Result_FullyQualifiedNameMapEntry;
+} LoadPackageResult_FullyQualifiedNameMapEntry;
 
 /* Message representing a scope index. */
 typedef struct _ScopeIndex {
@@ -212,11 +212,11 @@ typedef struct _ScopeIndex {
     pb_callback_t kind;
 } ScopeIndex;
 
-typedef struct _LoadPackage_Result_PkgScopeMapEntry {
+typedef struct _LoadPackageResult_PkgScopeMapEntry {
     pb_callback_t key;
     bool has_value;
     ScopeIndex value;
-} LoadPackage_Result_PkgScopeMapEntry;
+} LoadPackageResult_PkgScopeMapEntry;
 
 /* Message representing a scope in KCL. */
 typedef struct _Scope {
@@ -234,14 +234,14 @@ typedef struct _Scope {
     pb_callback_t defs;
 } Scope;
 
-typedef struct _LoadPackage_Result_ScopesEntry {
+typedef struct _LoadPackageResult_ScopesEntry {
     pb_callback_t key;
     bool has_value;
     Scope value;
-} LoadPackage_Result_ScopesEntry;
+} LoadPackageResult_ScopesEntry;
 
 /* Message for execute program request arguments. */
-typedef struct _ExecProgram_Args {
+typedef struct _ExecProgramArgs {
     /* Working directory. */
     pb_callback_t work_dir;
     /* List of KCL filenames. */
@@ -278,10 +278,10 @@ typedef struct _ExecProgram_Args {
     pb_callback_t path_selector;
     /* Flag for fast evaluation. */
     bool fast_eval;
-} ExecProgram_Args;
+} ExecProgramArgs;
 
 /* Message for execute program response. */
-typedef struct _ExecProgram_Result {
+typedef struct _ExecProgramResult {
     /* Result in JSON format. */
     pb_callback_t json_result;
     /* Result in YAML format. */
@@ -290,91 +290,91 @@ typedef struct _ExecProgram_Result {
     pb_callback_t log_message;
     /* Error message from execution. */
     pb_callback_t err_message;
-} ExecProgram_Result;
+} ExecProgramResult;
 
 /* Message for build program request arguments. */
-typedef struct _BuildProgram_Args {
+typedef struct _BuildProgramArgs {
     /* Arguments for executing the program. */
     bool has_exec_args;
-    ExecProgram_Args exec_args;
+    ExecProgramArgs exec_args;
     /* Output path. */
     pb_callback_t output;
-} BuildProgram_Args;
+} BuildProgramArgs;
 
 /* Message for build program response. */
-typedef struct _BuildProgram_Result {
+typedef struct _BuildProgramResult {
     /* Path of the built program. */
     pb_callback_t path;
-} BuildProgram_Result;
+} BuildProgramResult;
 
 /* Message for execute artifact request arguments. */
-typedef struct _ExecArtifact_Args {
+typedef struct _ExecArtifactArgs {
     /* Path of the artifact. */
     pb_callback_t path;
     /* Arguments for executing the program. */
     bool has_exec_args;
-    ExecProgram_Args exec_args;
-} ExecArtifact_Args;
+    ExecProgramArgs exec_args;
+} ExecArtifactArgs;
 
 /* Message for format code request arguments. */
-typedef struct _FormatCode_Args {
+typedef struct _FormatCodeArgs {
     /* Source code to be formatted. */
     pb_callback_t source;
-} FormatCode_Args;
+} FormatCodeArgs;
 
 /* Message for format code response. */
-typedef struct _FormatCode_Result {
+typedef struct _FormatCodeResult {
     /* Formatted code as bytes. */
     pb_callback_t formatted;
-} FormatCode_Result;
+} FormatCodeResult;
 
 /* Message for format file path request arguments. */
-typedef struct _FormatPath_Args {
+typedef struct _FormatPathArgs {
     /* Path of the file to format. */
     pb_callback_t path;
-} FormatPath_Args;
+} FormatPathArgs;
 
 /* Message for format file path response. */
-typedef struct _FormatPath_Result {
+typedef struct _FormatPathResult {
     /* List of changed file paths. */
     pb_callback_t changed_paths;
-} FormatPath_Result;
+} FormatPathResult;
 
 /* Message for lint file path request arguments. */
-typedef struct _LintPath_Args {
+typedef struct _LintPathArgs {
     /* Paths of the files to lint. */
     pb_callback_t paths;
-} LintPath_Args;
+} LintPathArgs;
 
 /* Message for lint file path response. */
-typedef struct _LintPath_Result {
+typedef struct _LintPathResult {
     /* List of lint results. */
     pb_callback_t results;
-} LintPath_Result;
+} LintPathResult;
 
 /* Message for override file request arguments. */
-typedef struct _OverrideFile_Args {
+typedef struct _OverrideFileArgs {
     /* Path of the file to override. */
     pb_callback_t file;
     /* List of override specifications. */
     pb_callback_t specs;
     /* List of import paths. */
     pb_callback_t import_paths;
-} OverrideFile_Args;
+} OverrideFileArgs;
 
 /* Message for override file response. */
-typedef struct _OverrideFile_Result {
+typedef struct _OverrideFileResult {
     /* Result of the override operation. */
     bool result;
     /* List of parse errors encountered. */
     pb_callback_t parse_errors;
-} OverrideFile_Result;
+} OverrideFileResult;
 
 /* Message for list variables options. */
-typedef struct _ListVariables_Options {
+typedef struct _ListVariablesOptions {
     /* Flag to merge program configuration. */
     bool merge_program;
-} ListVariables_Options;
+} ListVariablesOptions;
 
 /* Message representing a list of variables. */
 typedef struct _VariableList {
@@ -383,31 +383,31 @@ typedef struct _VariableList {
 } VariableList;
 
 /* Message for list variables request arguments. */
-typedef struct _ListVariables_Args {
+typedef struct _ListVariablesArgs {
     /* Files to be processed. */
     pb_callback_t files;
     /* Specifications for variables. */
     pb_callback_t specs;
     /* Options for listing variables. */
     bool has_options;
-    ListVariables_Options options;
-} ListVariables_Args;
+    ListVariablesOptions options;
+} ListVariablesArgs;
 
 /* Message for list variables response. */
-typedef struct _ListVariables_Result {
+typedef struct _ListVariablesResult {
     /* Map of variable lists by file. */
     pb_callback_t variables;
     /* List of unsupported codes. */
     pb_callback_t unsupported_codes;
     /* List of parse errors encountered. */
     pb_callback_t parse_errors;
-} ListVariables_Result;
+} ListVariablesResult;
 
-typedef struct _ListVariables_Result_VariablesEntry {
+typedef struct _ListVariablesResult_VariablesEntry {
     pb_callback_t key;
     bool has_value;
     VariableList value;
-} ListVariables_Result_VariablesEntry;
+} ListVariablesResult_VariablesEntry;
 
 /* Message representing a variable. */
 typedef struct _Variable {
@@ -433,22 +433,22 @@ typedef struct _MapEntry {
 } MapEntry;
 
 /* Message for get schema type mapping request arguments. */
-typedef struct _GetSchemaTypeMapping_Args {
+typedef struct _GetSchemaTypeMappingArgs {
     /* Arguments for executing the program. */
     bool has_exec_args;
-    ExecProgram_Args exec_args;
+    ExecProgramArgs exec_args;
     /* Name of the schema. */
     pb_callback_t schema_name;
-} GetSchemaTypeMapping_Args;
+} GetSchemaTypeMappingArgs;
 
 /* Message for get schema type mapping response. */
-typedef struct _GetSchemaTypeMapping_Result {
+typedef struct _GetSchemaTypeMappingResult {
     /* Map of schema type mappings. */
     pb_callback_t schema_type_mapping;
-} GetSchemaTypeMapping_Result;
+} GetSchemaTypeMappingResult;
 
 /* Message for validate code request arguments. */
-typedef struct _ValidateCode_Args {
+typedef struct _ValidateCodeArgs {
     /* Path to the data file. */
     pb_callback_t datafile;
     /* Data content. */
@@ -463,15 +463,15 @@ typedef struct _ValidateCode_Args {
     pb_callback_t attribute_name;
     /* Format of the validation (e.g., "json", "yaml"). */
     pb_callback_t format;
-} ValidateCode_Args;
+} ValidateCodeArgs;
 
 /* Message for validate code response. */
-typedef struct _ValidateCode_Result {
+typedef struct _ValidateCodeResult {
     /* Flag indicating if validation was successful. */
     bool success;
     /* Error message from validation. */
     pb_callback_t err_message;
-} ValidateCode_Result;
+} ValidateCodeResult;
 
 /* Message representing a position in the source code. */
 typedef struct _Position {
@@ -493,7 +493,7 @@ typedef struct _Message {
 } Message;
 
 /* Message for list dependency files request arguments. */
-typedef struct _ListDepFiles_Args {
+typedef struct _ListDepFilesArgs {
     /* Working directory. */
     pb_callback_t work_dir;
     /* Flag to use absolute paths. */
@@ -502,25 +502,25 @@ typedef struct _ListDepFiles_Args {
     bool include_all;
     /* Flag to use fast parser. */
     bool use_fast_parser;
-} ListDepFiles_Args;
+} ListDepFilesArgs;
 
 /* Message for list dependency files response. */
-typedef struct _ListDepFiles_Result {
+typedef struct _ListDepFilesResult {
     /* Root package path. */
     pb_callback_t pkgroot;
     /* Package path. */
     pb_callback_t pkgpath;
     /* List of file paths in the package. */
     pb_callback_t files;
-} ListDepFiles_Result;
+} ListDepFilesResult;
 
 /* Message for load settings files request arguments. */
-typedef struct _LoadSettingsFiles_Args {
+typedef struct _LoadSettingsFilesArgs {
     /* Working directory. */
     pb_callback_t work_dir;
     /* Setting files to load. */
     pb_callback_t files;
-} LoadSettingsFiles_Args;
+} LoadSettingsFilesArgs;
 
 /* Message representing KCL CLI configuration. */
 typedef struct _CliConfig {
@@ -551,13 +551,13 @@ typedef struct _CliConfig {
 } CliConfig;
 
 /* Message for load settings files response. */
-typedef struct _LoadSettingsFiles_Result {
+typedef struct _LoadSettingsFilesResult {
     /* KCL CLI configuration. */
     bool has_kcl_cli_configs;
     CliConfig kcl_cli_configs;
     /* List of KCL options as key-value pairs. */
     pb_callback_t kcl_options;
-} LoadSettingsFiles_Result;
+} LoadSettingsFilesResult;
 
 /* Message representing a key-value pair. */
 typedef struct _KeyValuePair {
@@ -568,7 +568,7 @@ typedef struct _KeyValuePair {
 } KeyValuePair;
 
 /* Message for rename request arguments. */
-typedef struct _Rename_Args {
+typedef struct _RenameArgs {
     /* File path to the package root. */
     pb_callback_t package_root;
     /* Path to the target symbol to be renamed. */
@@ -577,16 +577,16 @@ typedef struct _Rename_Args {
     pb_callback_t file_paths;
     /* New name of the symbol. */
     pb_callback_t new_name;
-} Rename_Args;
+} RenameArgs;
 
 /* Message for rename response. */
-typedef struct _Rename_Result {
+typedef struct _RenameResult {
     /* List of file paths that got changed. */
     pb_callback_t changed_files;
-} Rename_Result;
+} RenameResult;
 
 /* Message for rename code request arguments. */
-typedef struct _RenameCode_Args {
+typedef struct _RenameCodeArgs {
     /* File path to the package root. */
     pb_callback_t package_root;
     /* Path to the target symbol to be renamed. */
@@ -595,42 +595,42 @@ typedef struct _RenameCode_Args {
     pb_callback_t source_codes;
     /* New name of the symbol. */
     pb_callback_t new_name;
-} RenameCode_Args;
+} RenameCodeArgs;
 
-typedef struct _RenameCode_Args_SourceCodesEntry {
+typedef struct _RenameCodeArgs_SourceCodesEntry {
     pb_callback_t key;
     pb_callback_t value;
-} RenameCode_Args_SourceCodesEntry;
+} RenameCodeArgs_SourceCodesEntry;
 
 /* Message for rename code response. */
-typedef struct _RenameCode_Result {
+typedef struct _RenameCodeResult {
     /* Map of changed code with filename as key and modified code as value. */
     pb_callback_t changed_codes;
-} RenameCode_Result;
+} RenameCodeResult;
 
-typedef struct _RenameCode_Result_ChangedCodesEntry {
+typedef struct _RenameCodeResult_ChangedCodesEntry {
     pb_callback_t key;
     pb_callback_t value;
-} RenameCode_Result_ChangedCodesEntry;
+} RenameCodeResult_ChangedCodesEntry;
 
 /* Message for test request arguments. */
-typedef struct _Test_Args {
+typedef struct _TestArgs {
     /* Execution program arguments. */
     bool has_exec_args;
-    ExecProgram_Args exec_args;
+    ExecProgramArgs exec_args;
     /* List of KCL package paths to be tested. */
     pb_callback_t pkg_list;
     /* Regular expression for filtering tests to run. */
     pb_callback_t run_regexp;
     /* Flag to stop the test run on the first failure. */
     bool fail_fast;
-} Test_Args;
+} TestArgs;
 
 /* Message for test response. */
-typedef struct _Test_Result {
+typedef struct _TestResult {
     /* List of test case information. */
     pb_callback_t info;
-} Test_Result;
+} TestResult;
 
 /* Message representing information about a single test case. */
 typedef struct _TestCaseInfo {
@@ -645,18 +645,18 @@ typedef struct _TestCaseInfo {
 } TestCaseInfo;
 
 /* Message for update dependencies request arguments. */
-typedef struct _UpdateDependencies_Args {
+typedef struct _UpdateDependenciesArgs {
     /* Path to the manifest file. */
     pb_callback_t manifest_path;
     /* Flag to vendor dependencies locally. */
     bool vendor;
-} UpdateDependencies_Args;
+} UpdateDependenciesArgs;
 
 /* Message for update dependencies response. */
-typedef struct _UpdateDependencies_Result {
+typedef struct _UpdateDependenciesResult {
     /* List of external packages updated. */
     pb_callback_t external_pkgs;
-} UpdateDependencies_Result;
+} UpdateDependenciesResult;
 
 /* Message representing a KCL type. */
 typedef struct _KclType {
@@ -713,17 +713,17 @@ typedef struct _Symbol {
     bool is_global;
 } Symbol;
 
-typedef struct _LoadPackage_Result_SymbolsEntry {
+typedef struct _LoadPackageResult_SymbolsEntry {
     pb_callback_t key;
     bool has_value;
     Symbol value;
-} LoadPackage_Result_SymbolsEntry;
+} LoadPackageResult_SymbolsEntry;
 
-typedef struct _GetSchemaTypeMapping_Result_SchemaTypeMappingEntry {
+typedef struct _GetSchemaTypeMappingResult_SchemaTypeMappingEntry {
     pb_callback_t key;
     bool has_value;
     KclType value;
-} GetSchemaTypeMapping_Result_SchemaTypeMappingEntry;
+} GetSchemaTypeMappingResult_SchemaTypeMappingEntry;
 
 typedef struct _KclType_PropertiesEntry {
     pb_callback_t key;
@@ -772,73 +772,73 @@ extern "C" {
 #define Argument_init_default                    {{{NULL}, NULL}, {{NULL}, NULL}}
 #define Error_init_default                       {{{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}}
 #define Message_init_default                     {{{NULL}, NULL}, false, Position_init_default}
-#define Ping_Args_init_default                   {{{NULL}, NULL}}
-#define Ping_Result_init_default                 {{{NULL}, NULL}}
-#define GetVersion_Args_init_default             {0}
-#define GetVersion_Result_init_default           {{{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}}
-#define ListMethod_Args_init_default             {0}
-#define ListMethod_Result_init_default           {{{NULL}, NULL}}
-#define ParseFile_Args_init_default              {{{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}}
-#define ParseFile_Result_init_default            {{{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}}
-#define ParseProgram_Args_init_default           {{{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}}
-#define ParseProgram_Result_init_default         {{{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}}
-#define LoadPackage_Args_init_default            {false, ParseProgram_Args_init_default, 0, 0, 0}
-#define LoadPackage_Result_init_default          {{{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}}
-#define LoadPackage_Result_ScopesEntry_init_default {{{NULL}, NULL}, false, Scope_init_default}
-#define LoadPackage_Result_SymbolsEntry_init_default {{{NULL}, NULL}, false, Symbol_init_default}
-#define LoadPackage_Result_NodeSymbolMapEntry_init_default {{{NULL}, NULL}, false, SymbolIndex_init_default}
-#define LoadPackage_Result_SymbolNodeMapEntry_init_default {{{NULL}, NULL}, {{NULL}, NULL}}
-#define LoadPackage_Result_FullyQualifiedNameMapEntry_init_default {{{NULL}, NULL}, false, SymbolIndex_init_default}
-#define LoadPackage_Result_PkgScopeMapEntry_init_default {{{NULL}, NULL}, false, ScopeIndex_init_default}
-#define ListOptions_Result_init_default          {{{NULL}, NULL}}
+#define PingArgs_init_default                   {{{NULL}, NULL}}
+#define PingResult_init_default                 {{{NULL}, NULL}}
+#define GetVersionArgs_init_default             {0}
+#define GetVersionResult_init_default           {{{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}}
+#define ListMethodArgs_init_default             {0}
+#define ListMethodResult_init_default           {{{NULL}, NULL}}
+#define ParseFileArgs_init_default              {{{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}}
+#define ParseFileResult_init_default            {{{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}}
+#define ParseProgramArgs_init_default           {{{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}}
+#define ParseProgramResult_init_default         {{{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}}
+#define LoadPackageArgs_init_default            {false, ParseProgramArgs_init_default, 0, 0, 0}
+#define LoadPackageResult_init_default          {{{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}}
+#define LoadPackageResult_ScopesEntry_init_default {{{NULL}, NULL}, false, Scope_init_default}
+#define LoadPackageResult_SymbolsEntry_init_default {{{NULL}, NULL}, false, Symbol_init_default}
+#define LoadPackageResult_NodeSymbolMapEntry_init_default {{{NULL}, NULL}, false, SymbolIndex_init_default}
+#define LoadPackageResult_SymbolNodeMapEntry_init_default {{{NULL}, NULL}, {{NULL}, NULL}}
+#define LoadPackageResult_FullyQualifiedNameMapEntry_init_default {{{NULL}, NULL}, false, SymbolIndex_init_default}
+#define LoadPackageResult_PkgScopeMapEntry_init_default {{{NULL}, NULL}, false, ScopeIndex_init_default}
+#define ListOptionsResult_init_default          {{{NULL}, NULL}}
 #define OptionHelp_init_default                  {{{NULL}, NULL}, {{NULL}, NULL}, 0, {{NULL}, NULL}, {{NULL}, NULL}}
 #define Symbol_init_default                      {false, KclType_init_default, {{NULL}, NULL}, false, SymbolIndex_init_default, false, SymbolIndex_init_default, {{NULL}, NULL}, 0}
 #define Scope_init_default                       {{{NULL}, NULL}, false, ScopeIndex_init_default, false, SymbolIndex_init_default, {{NULL}, NULL}, {{NULL}, NULL}}
 #define SymbolIndex_init_default                 {0, 0, {{NULL}, NULL}}
 #define ScopeIndex_init_default                  {0, 0, {{NULL}, NULL}}
-#define ExecProgram_Args_init_default            {{{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, 0, 0, 0, 0, 0, 0, 0, {{NULL}, NULL}, 0, 0, 0, {{NULL}, NULL}, 0}
-#define ExecProgram_Result_init_default          {{{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}}
-#define BuildProgram_Args_init_default           {false, ExecProgram_Args_init_default, {{NULL}, NULL}}
-#define BuildProgram_Result_init_default         {{{NULL}, NULL}}
-#define ExecArtifact_Args_init_default           {{{NULL}, NULL}, false, ExecProgram_Args_init_default}
-#define FormatCode_Args_init_default             {{{NULL}, NULL}}
-#define FormatCode_Result_init_default           {{{NULL}, NULL}}
-#define FormatPath_Args_init_default             {{{NULL}, NULL}}
-#define FormatPath_Result_init_default           {{{NULL}, NULL}}
-#define LintPath_Args_init_default               {{{NULL}, NULL}}
-#define LintPath_Result_init_default             {{{NULL}, NULL}}
-#define OverrideFile_Args_init_default           {{{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}}
-#define OverrideFile_Result_init_default         {0, {{NULL}, NULL}}
-#define ListVariables_Options_init_default       {0}
+#define ExecProgramArgs_init_default            {{{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, 0, 0, 0, 0, 0, 0, 0, {{NULL}, NULL}, 0, 0, 0, {{NULL}, NULL}, 0}
+#define ExecProgramResult_init_default          {{{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}}
+#define BuildProgramArgs_init_default           {false, ExecProgramArgs_init_default, {{NULL}, NULL}}
+#define BuildProgramResult_init_default         {{{NULL}, NULL}}
+#define ExecArtifactArgs_init_default           {{{NULL}, NULL}, false, ExecProgramArgs_init_default}
+#define FormatCodeArgs_init_default             {{{NULL}, NULL}}
+#define FormatCodeResult_init_default           {{{NULL}, NULL}}
+#define FormatPathArgs_init_default             {{{NULL}, NULL}}
+#define FormatPathResult_init_default           {{{NULL}, NULL}}
+#define LintPathArgs_init_default               {{{NULL}, NULL}}
+#define LintPathResult_init_default             {{{NULL}, NULL}}
+#define OverrideFileArgs_init_default           {{{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}}
+#define OverrideFileResult_init_default         {0, {{NULL}, NULL}}
+#define ListVariablesOptions_init_default       {0}
 #define VariableList_init_default                {{{NULL}, NULL}}
-#define ListVariables_Args_init_default          {{{NULL}, NULL}, {{NULL}, NULL}, false, ListVariables_Options_init_default}
-#define ListVariables_Result_init_default        {{{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}}
-#define ListVariables_Result_VariablesEntry_init_default {{{NULL}, NULL}, false, VariableList_init_default}
+#define ListVariablesArgs_init_default          {{{NULL}, NULL}, {{NULL}, NULL}, false, ListVariablesOptions_init_default}
+#define ListVariablesResult_init_default        {{{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}}
+#define ListVariablesResult_VariablesEntry_init_default {{{NULL}, NULL}, false, VariableList_init_default}
 #define Variable_init_default                    {{{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}}
 #define MapEntry_init_default                    {{{NULL}, NULL}, false, Variable_init_default}
-#define GetSchemaTypeMapping_Args_init_default   {false, ExecProgram_Args_init_default, {{NULL}, NULL}}
-#define GetSchemaTypeMapping_Result_init_default {{{NULL}, NULL}}
-#define GetSchemaTypeMapping_Result_SchemaTypeMappingEntry_init_default {{{NULL}, NULL}, false, KclType_init_default}
-#define ValidateCode_Args_init_default           {{{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}}
-#define ValidateCode_Result_init_default         {0, {{NULL}, NULL}}
+#define GetSchemaTypeMappingArgs_init_default   {false, ExecProgramArgs_init_default, {{NULL}, NULL}}
+#define GetSchemaTypeMappingResult_init_default {{{NULL}, NULL}}
+#define GetSchemaTypeMappingResult_SchemaTypeMappingEntry_init_default {{{NULL}, NULL}, false, KclType_init_default}
+#define ValidateCodeArgs_init_default           {{{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}}
+#define ValidateCodeResult_init_default         {0, {{NULL}, NULL}}
 #define Position_init_default                    {0, 0, {{NULL}, NULL}}
-#define ListDepFiles_Args_init_default           {{{NULL}, NULL}, 0, 0, 0}
-#define ListDepFiles_Result_init_default         {{{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}}
-#define LoadSettingsFiles_Args_init_default      {{{NULL}, NULL}, {{NULL}, NULL}}
-#define LoadSettingsFiles_Result_init_default    {false, CliConfig_init_default, {{NULL}, NULL}}
+#define ListDepFilesArgs_init_default           {{{NULL}, NULL}, 0, 0, 0}
+#define ListDepFilesResult_init_default         {{{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}}
+#define LoadSettingsFilesArgs_init_default      {{{NULL}, NULL}, {{NULL}, NULL}}
+#define LoadSettingsFilesResult_init_default    {false, CliConfig_init_default, {{NULL}, NULL}}
 #define CliConfig_init_default                   {{{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, 0, 0, 0, 0, 0, 0, 0, 0}
 #define KeyValuePair_init_default                {{{NULL}, NULL}, {{NULL}, NULL}}
-#define Rename_Args_init_default                 {{{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}}
-#define Rename_Result_init_default               {{{NULL}, NULL}}
-#define RenameCode_Args_init_default             {{{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}}
-#define RenameCode_Args_SourceCodesEntry_init_default {{{NULL}, NULL}, {{NULL}, NULL}}
-#define RenameCode_Result_init_default           {{{NULL}, NULL}}
-#define RenameCode_Result_ChangedCodesEntry_init_default {{{NULL}, NULL}, {{NULL}, NULL}}
-#define Test_Args_init_default                   {false, ExecProgram_Args_init_default, {{NULL}, NULL}, {{NULL}, NULL}, 0}
-#define Test_Result_init_default                 {{{NULL}, NULL}}
+#define RenameArgs_init_default                 {{{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}}
+#define RenameResult_init_default               {{{NULL}, NULL}}
+#define RenameCodeArgs_init_default             {{{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}}
+#define RenameCodeArgs_SourceCodesEntry_init_default {{{NULL}, NULL}, {{NULL}, NULL}}
+#define RenameCodeResult_init_default           {{{NULL}, NULL}}
+#define RenameCodeResult_ChangedCodesEntry_init_default {{{NULL}, NULL}, {{NULL}, NULL}}
+#define TestArgs_init_default                   {false, ExecProgramArgs_init_default, {{NULL}, NULL}, {{NULL}, NULL}, 0}
+#define TestResult_init_default                 {{{NULL}, NULL}}
 #define TestCaseInfo_init_default                {{{NULL}, NULL}, {{NULL}, NULL}, 0, {{NULL}, NULL}}
-#define UpdateDependencies_Args_init_default     {{{NULL}, NULL}, 0}
-#define UpdateDependencies_Result_init_default   {{{NULL}, NULL}}
+#define UpdateDependenciesArgs_init_default     {{{NULL}, NULL}, 0}
+#define UpdateDependenciesResult_init_default   {{{NULL}, NULL}}
 #define KclType_init_default                     {{{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}}
 #define KclType_PropertiesEntry_init_default     {{{NULL}, NULL}, false, KclType_init_default}
 #define KclType_ExamplesEntry_init_default       {{{NULL}, NULL}, false, Example_init_default}
@@ -849,73 +849,73 @@ extern "C" {
 #define Argument_init_zero                       {{{NULL}, NULL}, {{NULL}, NULL}}
 #define Error_init_zero                          {{{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}}
 #define Message_init_zero                        {{{NULL}, NULL}, false, Position_init_zero}
-#define Ping_Args_init_zero                      {{{NULL}, NULL}}
-#define Ping_Result_init_zero                    {{{NULL}, NULL}}
-#define GetVersion_Args_init_zero                {0}
-#define GetVersion_Result_init_zero              {{{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}}
-#define ListMethod_Args_init_zero                {0}
-#define ListMethod_Result_init_zero              {{{NULL}, NULL}}
-#define ParseFile_Args_init_zero                 {{{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}}
-#define ParseFile_Result_init_zero               {{{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}}
-#define ParseProgram_Args_init_zero              {{{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}}
-#define ParseProgram_Result_init_zero            {{{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}}
-#define LoadPackage_Args_init_zero               {false, ParseProgram_Args_init_zero, 0, 0, 0}
-#define LoadPackage_Result_init_zero             {{{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}}
-#define LoadPackage_Result_ScopesEntry_init_zero {{{NULL}, NULL}, false, Scope_init_zero}
-#define LoadPackage_Result_SymbolsEntry_init_zero {{{NULL}, NULL}, false, Symbol_init_zero}
-#define LoadPackage_Result_NodeSymbolMapEntry_init_zero {{{NULL}, NULL}, false, SymbolIndex_init_zero}
-#define LoadPackage_Result_SymbolNodeMapEntry_init_zero {{{NULL}, NULL}, {{NULL}, NULL}}
-#define LoadPackage_Result_FullyQualifiedNameMapEntry_init_zero {{{NULL}, NULL}, false, SymbolIndex_init_zero}
-#define LoadPackage_Result_PkgScopeMapEntry_init_zero {{{NULL}, NULL}, false, ScopeIndex_init_zero}
-#define ListOptions_Result_init_zero             {{{NULL}, NULL}}
+#define PingArgs_init_zero                      {{{NULL}, NULL}}
+#define PingResult_init_zero                    {{{NULL}, NULL}}
+#define GetVersionArgs_init_zero                {0}
+#define GetVersionResult_init_zero              {{{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}}
+#define ListMethodArgs_init_zero                {0}
+#define ListMethodResult_init_zero              {{{NULL}, NULL}}
+#define ParseFileArgs_init_zero                 {{{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}}
+#define ParseFileResult_init_zero               {{{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}}
+#define ParseProgramArgs_init_zero              {{{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}}
+#define ParseProgramResult_init_zero            {{{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}}
+#define LoadPackageArgs_init_zero               {false, ParseProgramArgs_init_zero, 0, 0, 0}
+#define LoadPackageResult_init_zero             {{{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}}
+#define LoadPackageResult_ScopesEntry_init_zero {{{NULL}, NULL}, false, Scope_init_zero}
+#define LoadPackageResult_SymbolsEntry_init_zero {{{NULL}, NULL}, false, Symbol_init_zero}
+#define LoadPackageResult_NodeSymbolMapEntry_init_zero {{{NULL}, NULL}, false, SymbolIndex_init_zero}
+#define LoadPackageResult_SymbolNodeMapEntry_init_zero {{{NULL}, NULL}, {{NULL}, NULL}}
+#define LoadPackageResult_FullyQualifiedNameMapEntry_init_zero {{{NULL}, NULL}, false, SymbolIndex_init_zero}
+#define LoadPackageResult_PkgScopeMapEntry_init_zero {{{NULL}, NULL}, false, ScopeIndex_init_zero}
+#define ListOptionsResult_init_zero             {{{NULL}, NULL}}
 #define OptionHelp_init_zero                     {{{NULL}, NULL}, {{NULL}, NULL}, 0, {{NULL}, NULL}, {{NULL}, NULL}}
 #define Symbol_init_zero                         {false, KclType_init_zero, {{NULL}, NULL}, false, SymbolIndex_init_zero, false, SymbolIndex_init_zero, {{NULL}, NULL}, 0}
 #define Scope_init_zero                          {{{NULL}, NULL}, false, ScopeIndex_init_zero, false, SymbolIndex_init_zero, {{NULL}, NULL}, {{NULL}, NULL}}
 #define SymbolIndex_init_zero                    {0, 0, {{NULL}, NULL}}
 #define ScopeIndex_init_zero                     {0, 0, {{NULL}, NULL}}
-#define ExecProgram_Args_init_zero               {{{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, 0, 0, 0, 0, 0, 0, 0, {{NULL}, NULL}, 0, 0, 0, {{NULL}, NULL}, 0}
-#define ExecProgram_Result_init_zero             {{{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}}
-#define BuildProgram_Args_init_zero              {false, ExecProgram_Args_init_zero, {{NULL}, NULL}}
-#define BuildProgram_Result_init_zero            {{{NULL}, NULL}}
-#define ExecArtifact_Args_init_zero              {{{NULL}, NULL}, false, ExecProgram_Args_init_zero}
-#define FormatCode_Args_init_zero                {{{NULL}, NULL}}
-#define FormatCode_Result_init_zero              {{{NULL}, NULL}}
-#define FormatPath_Args_init_zero                {{{NULL}, NULL}}
-#define FormatPath_Result_init_zero              {{{NULL}, NULL}}
-#define LintPath_Args_init_zero                  {{{NULL}, NULL}}
-#define LintPath_Result_init_zero                {{{NULL}, NULL}}
-#define OverrideFile_Args_init_zero              {{{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}}
-#define OverrideFile_Result_init_zero            {0, {{NULL}, NULL}}
-#define ListVariables_Options_init_zero          {0}
+#define ExecProgramArgs_init_zero               {{{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, 0, 0, 0, 0, 0, 0, 0, {{NULL}, NULL}, 0, 0, 0, {{NULL}, NULL}, 0}
+#define ExecProgramResult_init_zero             {{{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}}
+#define BuildProgramArgs_init_zero              {false, ExecProgramArgs_init_zero, {{NULL}, NULL}}
+#define BuildProgramResult_init_zero            {{{NULL}, NULL}}
+#define ExecArtifactArgs_init_zero              {{{NULL}, NULL}, false, ExecProgramArgs_init_zero}
+#define FormatCodeArgs_init_zero                {{{NULL}, NULL}}
+#define FormatCodeResult_init_zero              {{{NULL}, NULL}}
+#define FormatPathArgs_init_zero                {{{NULL}, NULL}}
+#define FormatPathResult_init_zero              {{{NULL}, NULL}}
+#define LintPathArgs_init_zero                  {{{NULL}, NULL}}
+#define LintPathResult_init_zero                {{{NULL}, NULL}}
+#define OverrideFileArgs_init_zero              {{{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}}
+#define OverrideFileResult_init_zero            {0, {{NULL}, NULL}}
+#define ListVariablesOptions_init_zero          {0}
 #define VariableList_init_zero                   {{{NULL}, NULL}}
-#define ListVariables_Args_init_zero             {{{NULL}, NULL}, {{NULL}, NULL}, false, ListVariables_Options_init_zero}
-#define ListVariables_Result_init_zero           {{{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}}
-#define ListVariables_Result_VariablesEntry_init_zero {{{NULL}, NULL}, false, VariableList_init_zero}
+#define ListVariablesArgs_init_zero             {{{NULL}, NULL}, {{NULL}, NULL}, false, ListVariablesOptions_init_zero}
+#define ListVariablesResult_init_zero           {{{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}}
+#define ListVariablesResult_VariablesEntry_init_zero {{{NULL}, NULL}, false, VariableList_init_zero}
 #define Variable_init_zero                       {{{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}}
 #define MapEntry_init_zero                       {{{NULL}, NULL}, false, Variable_init_zero}
-#define GetSchemaTypeMapping_Args_init_zero      {false, ExecProgram_Args_init_zero, {{NULL}, NULL}}
-#define GetSchemaTypeMapping_Result_init_zero    {{{NULL}, NULL}}
-#define GetSchemaTypeMapping_Result_SchemaTypeMappingEntry_init_zero {{{NULL}, NULL}, false, KclType_init_zero}
-#define ValidateCode_Args_init_zero              {{{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}}
-#define ValidateCode_Result_init_zero            {0, {{NULL}, NULL}}
+#define GetSchemaTypeMappingArgs_init_zero      {false, ExecProgramArgs_init_zero, {{NULL}, NULL}}
+#define GetSchemaTypeMappingResult_init_zero    {{{NULL}, NULL}}
+#define GetSchemaTypeMappingResult_SchemaTypeMappingEntry_init_zero {{{NULL}, NULL}, false, KclType_init_zero}
+#define ValidateCodeArgs_init_zero              {{{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}}
+#define ValidateCodeResult_init_zero            {0, {{NULL}, NULL}}
 #define Position_init_zero                       {0, 0, {{NULL}, NULL}}
-#define ListDepFiles_Args_init_zero              {{{NULL}, NULL}, 0, 0, 0}
-#define ListDepFiles_Result_init_zero            {{{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}}
-#define LoadSettingsFiles_Args_init_zero         {{{NULL}, NULL}, {{NULL}, NULL}}
-#define LoadSettingsFiles_Result_init_zero       {false, CliConfig_init_zero, {{NULL}, NULL}}
+#define ListDepFilesArgs_init_zero              {{{NULL}, NULL}, 0, 0, 0}
+#define ListDepFilesResult_init_zero            {{{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}}
+#define LoadSettingsFilesArgs_init_zero         {{{NULL}, NULL}, {{NULL}, NULL}}
+#define LoadSettingsFilesResult_init_zero       {false, CliConfig_init_zero, {{NULL}, NULL}}
 #define CliConfig_init_zero                      {{{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, 0, 0, 0, 0, 0, 0, 0, 0}
 #define KeyValuePair_init_zero                   {{{NULL}, NULL}, {{NULL}, NULL}}
-#define Rename_Args_init_zero                    {{{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}}
-#define Rename_Result_init_zero                  {{{NULL}, NULL}}
-#define RenameCode_Args_init_zero                {{{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}}
-#define RenameCode_Args_SourceCodesEntry_init_zero {{{NULL}, NULL}, {{NULL}, NULL}}
-#define RenameCode_Result_init_zero              {{{NULL}, NULL}}
-#define RenameCode_Result_ChangedCodesEntry_init_zero {{{NULL}, NULL}, {{NULL}, NULL}}
-#define Test_Args_init_zero                      {false, ExecProgram_Args_init_zero, {{NULL}, NULL}, {{NULL}, NULL}, 0}
-#define Test_Result_init_zero                    {{{NULL}, NULL}}
+#define RenameArgs_init_zero                    {{{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}}
+#define RenameResult_init_zero                  {{{NULL}, NULL}}
+#define RenameCodeArgs_init_zero                {{{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}}
+#define RenameCodeArgs_SourceCodesEntry_init_zero {{{NULL}, NULL}, {{NULL}, NULL}}
+#define RenameCodeResult_init_zero              {{{NULL}, NULL}}
+#define RenameCodeResult_ChangedCodesEntry_init_zero {{{NULL}, NULL}, {{NULL}, NULL}}
+#define TestArgs_init_zero                      {false, ExecProgramArgs_init_zero, {{NULL}, NULL}, {{NULL}, NULL}, 0}
+#define TestResult_init_zero                    {{{NULL}, NULL}}
 #define TestCaseInfo_init_zero                   {{{NULL}, NULL}, {{NULL}, NULL}, 0, {{NULL}, NULL}}
-#define UpdateDependencies_Args_init_zero        {{{NULL}, NULL}, 0}
-#define UpdateDependencies_Result_init_zero      {{{NULL}, NULL}}
+#define UpdateDependenciesArgs_init_zero        {{{NULL}, NULL}, 0}
+#define UpdateDependenciesResult_init_zero      {{{NULL}, NULL}}
 #define KclType_init_zero                        {{{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}}
 #define KclType_PropertiesEntry_init_zero        {{{NULL}, NULL}, false, KclType_init_zero}
 #define KclType_ExamplesEntry_init_zero          {{{NULL}, NULL}, false, Example_init_zero}
@@ -931,42 +931,42 @@ extern "C" {
 #define Error_level_tag                          1
 #define Error_code_tag                           2
 #define Error_messages_tag                       3
-#define Ping_Args_value_tag                      1
-#define Ping_Result_value_tag                    1
-#define GetVersion_Result_version_tag            1
-#define GetVersion_Result_checksum_tag           2
-#define GetVersion_Result_git_sha_tag            3
-#define GetVersion_Result_version_info_tag       4
-#define ListMethod_Result_method_name_list_tag   1
-#define ParseFile_Args_path_tag                  1
-#define ParseFile_Args_source_tag                2
-#define ParseFile_Args_external_pkgs_tag         3
-#define ParseFile_Result_ast_json_tag            1
-#define ParseFile_Result_deps_tag                2
-#define ParseFile_Result_errors_tag              3
-#define ParseProgram_Args_paths_tag              1
-#define ParseProgram_Args_sources_tag            2
-#define ParseProgram_Args_external_pkgs_tag      3
-#define ParseProgram_Result_ast_json_tag         1
-#define ParseProgram_Result_paths_tag            2
-#define ParseProgram_Result_errors_tag           3
-#define LoadPackage_Args_parse_args_tag          1
-#define LoadPackage_Args_resolve_ast_tag         2
-#define LoadPackage_Args_load_builtin_tag        3
-#define LoadPackage_Args_with_ast_index_tag      4
-#define LoadPackage_Result_program_tag           1
-#define LoadPackage_Result_paths_tag             2
-#define LoadPackage_Result_parse_errors_tag      3
-#define LoadPackage_Result_type_errors_tag       4
-#define LoadPackage_Result_scopes_tag            5
-#define LoadPackage_Result_symbols_tag           6
-#define LoadPackage_Result_node_symbol_map_tag   7
-#define LoadPackage_Result_symbol_node_map_tag   8
-#define LoadPackage_Result_fully_qualified_name_map_tag 9
-#define LoadPackage_Result_pkg_scope_map_tag     10
-#define LoadPackage_Result_SymbolNodeMapEntry_key_tag 1
-#define LoadPackage_Result_SymbolNodeMapEntry_value_tag 2
-#define ListOptions_Result_options_tag           2
+#define PingArgs_value_tag                      1
+#define PingResult_value_tag                    1
+#define GetVersionResult_version_tag            1
+#define GetVersionResult_checksum_tag           2
+#define GetVersionResult_git_sha_tag            3
+#define GetVersionResult_version_info_tag       4
+#define ListMethodResult_method_name_list_tag   1
+#define ParseFileArgs_path_tag                  1
+#define ParseFileArgs_source_tag                2
+#define ParseFileArgs_external_pkgs_tag         3
+#define ParseFileResult_ast_json_tag            1
+#define ParseFileResult_deps_tag                2
+#define ParseFileResult_errors_tag              3
+#define ParseProgramArgs_paths_tag              1
+#define ParseProgramArgs_sources_tag            2
+#define ParseProgramArgs_external_pkgs_tag      3
+#define ParseProgramResult_ast_json_tag         1
+#define ParseProgramResult_paths_tag            2
+#define ParseProgramResult_errors_tag           3
+#define LoadPackageArgs_parse_args_tag          1
+#define LoadPackageArgs_resolve_ast_tag         2
+#define LoadPackageArgs_load_builtin_tag        3
+#define LoadPackageArgs_with_ast_index_tag      4
+#define LoadPackageResult_program_tag           1
+#define LoadPackageResult_paths_tag             2
+#define LoadPackageResult_parse_errors_tag      3
+#define LoadPackageResult_type_errors_tag       4
+#define LoadPackageResult_scopes_tag            5
+#define LoadPackageResult_symbols_tag           6
+#define LoadPackageResult_node_symbol_map_tag   7
+#define LoadPackageResult_symbol_node_map_tag   8
+#define LoadPackageResult_fully_qualified_name_map_tag 9
+#define LoadPackageResult_pkg_scope_map_tag     10
+#define LoadPackageResult_SymbolNodeMapEntry_key_tag 1
+#define LoadPackageResult_SymbolNodeMapEntry_value_tag 2
+#define ListOptionsResult_options_tag           2
 #define OptionHelp_name_tag                      1
 #define OptionHelp_type_tag                      2
 #define OptionHelp_required_tag                  3
@@ -975,70 +975,70 @@ extern "C" {
 #define SymbolIndex_i_tag                        1
 #define SymbolIndex_g_tag                        2
 #define SymbolIndex_kind_tag                     3
-#define LoadPackage_Result_NodeSymbolMapEntry_key_tag 1
-#define LoadPackage_Result_NodeSymbolMapEntry_value_tag 2
-#define LoadPackage_Result_FullyQualifiedNameMapEntry_key_tag 1
-#define LoadPackage_Result_FullyQualifiedNameMapEntry_value_tag 2
+#define LoadPackageResult_NodeSymbolMapEntry_key_tag 1
+#define LoadPackageResult_NodeSymbolMapEntry_value_tag 2
+#define LoadPackageResult_FullyQualifiedNameMapEntry_key_tag 1
+#define LoadPackageResult_FullyQualifiedNameMapEntry_value_tag 2
 #define ScopeIndex_i_tag                         1
 #define ScopeIndex_g_tag                         2
 #define ScopeIndex_kind_tag                      3
-#define LoadPackage_Result_PkgScopeMapEntry_key_tag 1
-#define LoadPackage_Result_PkgScopeMapEntry_value_tag 2
+#define LoadPackageResult_PkgScopeMapEntry_key_tag 1
+#define LoadPackageResult_PkgScopeMapEntry_value_tag 2
 #define Scope_kind_tag                           1
 #define Scope_parent_tag                         2
 #define Scope_owner_tag                          3
 #define Scope_children_tag                       4
 #define Scope_defs_tag                           5
-#define LoadPackage_Result_ScopesEntry_key_tag   1
-#define LoadPackage_Result_ScopesEntry_value_tag 2
-#define ExecProgram_Args_work_dir_tag            1
-#define ExecProgram_Args_k_filename_list_tag     2
-#define ExecProgram_Args_k_code_list_tag         3
-#define ExecProgram_Args_args_tag                4
-#define ExecProgram_Args_overrides_tag           5
-#define ExecProgram_Args_disable_yaml_result_tag 6
-#define ExecProgram_Args_print_override_ast_tag  7
-#define ExecProgram_Args_strict_range_check_tag  8
-#define ExecProgram_Args_disable_none_tag        9
-#define ExecProgram_Args_verbose_tag             10
-#define ExecProgram_Args_debug_tag               11
-#define ExecProgram_Args_sort_keys_tag           12
-#define ExecProgram_Args_external_pkgs_tag       13
-#define ExecProgram_Args_include_schema_type_path_tag 14
-#define ExecProgram_Args_compile_only_tag        15
-#define ExecProgram_Args_show_hidden_tag         16
-#define ExecProgram_Args_path_selector_tag       17
-#define ExecProgram_Args_fast_eval_tag           18
-#define ExecProgram_Result_json_result_tag       1
-#define ExecProgram_Result_yaml_result_tag       2
-#define ExecProgram_Result_log_message_tag       3
-#define ExecProgram_Result_err_message_tag       4
-#define BuildProgram_Args_exec_args_tag          1
-#define BuildProgram_Args_output_tag             2
-#define BuildProgram_Result_path_tag             1
-#define ExecArtifact_Args_path_tag               1
-#define ExecArtifact_Args_exec_args_tag          2
-#define FormatCode_Args_source_tag               1
-#define FormatCode_Result_formatted_tag          1
-#define FormatPath_Args_path_tag                 1
-#define FormatPath_Result_changed_paths_tag      1
-#define LintPath_Args_paths_tag                  1
-#define LintPath_Result_results_tag              1
-#define OverrideFile_Args_file_tag               1
-#define OverrideFile_Args_specs_tag              2
-#define OverrideFile_Args_import_paths_tag       3
-#define OverrideFile_Result_result_tag           1
-#define OverrideFile_Result_parse_errors_tag     2
-#define ListVariables_Options_merge_program_tag  1
+#define LoadPackageResult_ScopesEntry_key_tag   1
+#define LoadPackageResult_ScopesEntry_value_tag 2
+#define ExecProgramArgs_work_dir_tag            1
+#define ExecProgramArgs_k_filename_list_tag     2
+#define ExecProgramArgs_k_code_list_tag         3
+#define ExecProgramArgs_args_tag                4
+#define ExecProgramArgs_overrides_tag           5
+#define ExecProgramArgs_disable_yaml_result_tag 6
+#define ExecProgramArgs_print_override_ast_tag  7
+#define ExecProgramArgs_strict_range_check_tag  8
+#define ExecProgramArgs_disable_none_tag        9
+#define ExecProgramArgs_verbose_tag             10
+#define ExecProgramArgs_debug_tag               11
+#define ExecProgramArgs_sort_keys_tag           12
+#define ExecProgramArgs_external_pkgs_tag       13
+#define ExecProgramArgs_include_schema_type_path_tag 14
+#define ExecProgramArgs_compile_only_tag        15
+#define ExecProgramArgs_show_hidden_tag         16
+#define ExecProgramArgs_path_selector_tag       17
+#define ExecProgramArgs_fast_eval_tag           18
+#define ExecProgramResult_json_result_tag       1
+#define ExecProgramResult_yaml_result_tag       2
+#define ExecProgramResult_log_message_tag       3
+#define ExecProgramResult_err_message_tag       4
+#define BuildProgramArgs_exec_args_tag          1
+#define BuildProgramArgs_output_tag             2
+#define BuildProgramResult_path_tag             1
+#define ExecArtifactArgs_path_tag               1
+#define ExecArtifactArgs_exec_args_tag          2
+#define FormatCodeArgs_source_tag               1
+#define FormatCodeResult_formatted_tag          1
+#define FormatPathArgs_path_tag                 1
+#define FormatPathResult_changed_paths_tag      1
+#define LintPathArgs_paths_tag                  1
+#define LintPathResult_results_tag              1
+#define OverrideFileArgs_file_tag               1
+#define OverrideFileArgs_specs_tag              2
+#define OverrideFileArgs_import_paths_tag       3
+#define OverrideFileResult_result_tag           1
+#define OverrideFileResult_parse_errors_tag     2
+#define ListVariablesOptions_merge_program_tag  1
 #define VariableList_variables_tag               1
-#define ListVariables_Args_files_tag             1
-#define ListVariables_Args_specs_tag             2
-#define ListVariables_Args_options_tag           3
-#define ListVariables_Result_variables_tag       1
-#define ListVariables_Result_unsupported_codes_tag 2
-#define ListVariables_Result_parse_errors_tag    3
-#define ListVariables_Result_VariablesEntry_key_tag 1
-#define ListVariables_Result_VariablesEntry_value_tag 2
+#define ListVariablesArgs_files_tag             1
+#define ListVariablesArgs_specs_tag             2
+#define ListVariablesArgs_options_tag           3
+#define ListVariablesResult_variables_tag       1
+#define ListVariablesResult_unsupported_codes_tag 2
+#define ListVariablesResult_parse_errors_tag    3
+#define ListVariablesResult_VariablesEntry_key_tag 1
+#define ListVariablesResult_VariablesEntry_value_tag 2
 #define Variable_value_tag                       1
 #define Variable_type_name_tag                   2
 #define Variable_op_sym_tag                      3
@@ -1046,32 +1046,32 @@ extern "C" {
 #define Variable_dict_entries_tag                5
 #define MapEntry_key_tag                         1
 #define MapEntry_value_tag                       2
-#define GetSchemaTypeMapping_Args_exec_args_tag  1
-#define GetSchemaTypeMapping_Args_schema_name_tag 2
-#define GetSchemaTypeMapping_Result_schema_type_mapping_tag 1
-#define ValidateCode_Args_datafile_tag           1
-#define ValidateCode_Args_data_tag               2
-#define ValidateCode_Args_file_tag               3
-#define ValidateCode_Args_code_tag               4
-#define ValidateCode_Args_schema_tag             5
-#define ValidateCode_Args_attribute_name_tag     6
-#define ValidateCode_Args_format_tag             7
-#define ValidateCode_Result_success_tag          1
-#define ValidateCode_Result_err_message_tag      2
+#define GetSchemaTypeMappingArgs_exec_args_tag  1
+#define GetSchemaTypeMappingArgs_schema_name_tag 2
+#define GetSchemaTypeMappingResult_schema_type_mapping_tag 1
+#define ValidateCodeArgs_datafile_tag           1
+#define ValidateCodeArgs_data_tag               2
+#define ValidateCodeArgs_file_tag               3
+#define ValidateCodeArgs_code_tag               4
+#define ValidateCodeArgs_schema_tag             5
+#define ValidateCodeArgs_attribute_name_tag     6
+#define ValidateCodeArgs_format_tag             7
+#define ValidateCodeResult_success_tag          1
+#define ValidateCodeResult_err_message_tag      2
 #define Position_line_tag                        1
 #define Position_column_tag                      2
 #define Position_filename_tag                    3
 #define Message_msg_tag                          1
 #define Message_pos_tag                          2
-#define ListDepFiles_Args_work_dir_tag           1
-#define ListDepFiles_Args_use_abs_path_tag       2
-#define ListDepFiles_Args_include_all_tag        3
-#define ListDepFiles_Args_use_fast_parser_tag    4
-#define ListDepFiles_Result_pkgroot_tag          1
-#define ListDepFiles_Result_pkgpath_tag          2
-#define ListDepFiles_Result_files_tag            3
-#define LoadSettingsFiles_Args_work_dir_tag      1
-#define LoadSettingsFiles_Args_files_tag         2
+#define ListDepFilesArgs_work_dir_tag           1
+#define ListDepFilesArgs_use_abs_path_tag       2
+#define ListDepFilesArgs_include_all_tag        3
+#define ListDepFilesArgs_use_fast_parser_tag    4
+#define ListDepFilesResult_pkgroot_tag          1
+#define ListDepFilesResult_pkgpath_tag          2
+#define ListDepFilesResult_files_tag            3
+#define LoadSettingsFilesArgs_work_dir_tag      1
+#define LoadSettingsFilesArgs_files_tag         2
 #define CliConfig_files_tag                      1
 #define CliConfig_output_tag                     2
 #define CliConfig_overrides_tag                  3
@@ -1084,36 +1084,36 @@ extern "C" {
 #define CliConfig_show_hidden_tag                10
 #define CliConfig_include_schema_type_path_tag   11
 #define CliConfig_fast_eval_tag                  12
-#define LoadSettingsFiles_Result_kcl_cli_configs_tag 1
-#define LoadSettingsFiles_Result_kcl_options_tag 2
+#define LoadSettingsFilesResult_kcl_cli_configs_tag 1
+#define LoadSettingsFilesResult_kcl_options_tag 2
 #define KeyValuePair_key_tag                     1
 #define KeyValuePair_value_tag                   2
-#define Rename_Args_package_root_tag             1
-#define Rename_Args_symbol_path_tag              2
-#define Rename_Args_file_paths_tag               3
-#define Rename_Args_new_name_tag                 4
-#define Rename_Result_changed_files_tag          1
-#define RenameCode_Args_package_root_tag         1
-#define RenameCode_Args_symbol_path_tag          2
-#define RenameCode_Args_source_codes_tag         3
-#define RenameCode_Args_new_name_tag             4
-#define RenameCode_Args_SourceCodesEntry_key_tag 1
-#define RenameCode_Args_SourceCodesEntry_value_tag 2
-#define RenameCode_Result_changed_codes_tag      1
-#define RenameCode_Result_ChangedCodesEntry_key_tag 1
-#define RenameCode_Result_ChangedCodesEntry_value_tag 2
-#define Test_Args_exec_args_tag                  1
-#define Test_Args_pkg_list_tag                   2
-#define Test_Args_run_regexp_tag                 3
-#define Test_Args_fail_fast_tag                  4
-#define Test_Result_info_tag                     2
+#define RenameArgs_package_root_tag             1
+#define RenameArgs_symbol_path_tag              2
+#define RenameArgs_file_paths_tag               3
+#define RenameArgs_new_name_tag                 4
+#define RenameResult_changed_files_tag          1
+#define RenameCodeArgs_package_root_tag         1
+#define RenameCodeArgs_symbol_path_tag          2
+#define RenameCodeArgs_source_codes_tag         3
+#define RenameCodeArgs_new_name_tag             4
+#define RenameCodeArgs_SourceCodesEntry_key_tag 1
+#define RenameCodeArgs_SourceCodesEntry_value_tag 2
+#define RenameCodeResult_changed_codes_tag      1
+#define RenameCodeResult_ChangedCodesEntry_key_tag 1
+#define RenameCodeResult_ChangedCodesEntry_value_tag 2
+#define TestArgs_exec_args_tag                  1
+#define TestArgs_pkg_list_tag                   2
+#define TestArgs_run_regexp_tag                 3
+#define TestArgs_fail_fast_tag                  4
+#define TestResult_info_tag                     2
 #define TestCaseInfo_name_tag                    1
 #define TestCaseInfo_error_tag                   2
 #define TestCaseInfo_duration_tag                3
 #define TestCaseInfo_log_message_tag             4
-#define UpdateDependencies_Args_manifest_path_tag 1
-#define UpdateDependencies_Args_vendor_tag       2
-#define UpdateDependencies_Result_external_pkgs_tag 3
+#define UpdateDependenciesArgs_manifest_path_tag 1
+#define UpdateDependenciesArgs_vendor_tag       2
+#define UpdateDependenciesResult_external_pkgs_tag 3
 #define KclType_type_tag                         1
 #define KclType_union_types_tag                  2
 #define KclType_default_tag                      3
@@ -1136,10 +1136,10 @@ extern "C" {
 #define Symbol_def_tag                           4
 #define Symbol_attrs_tag                         5
 #define Symbol_is_global_tag                     6
-#define LoadPackage_Result_SymbolsEntry_key_tag  1
-#define LoadPackage_Result_SymbolsEntry_value_tag 2
-#define GetSchemaTypeMapping_Result_SchemaTypeMappingEntry_key_tag 1
-#define GetSchemaTypeMapping_Result_SchemaTypeMappingEntry_value_tag 2
+#define LoadPackageResult_SymbolsEntry_key_tag  1
+#define LoadPackageResult_SymbolsEntry_value_tag 2
+#define GetSchemaTypeMappingResult_SchemaTypeMappingEntry_key_tag 1
+#define GetSchemaTypeMappingResult_SchemaTypeMappingEntry_value_tag 2
 #define KclType_PropertiesEntry_key_tag          1
 #define KclType_PropertiesEntry_value_tag        2
 #define Decorator_name_tag                       1
@@ -1181,81 +1181,81 @@ X(a, STATIC,   OPTIONAL, MESSAGE,  pos,               2)
 #define Message_DEFAULT NULL
 #define Message_pos_MSGTYPE Position
 
-#define Ping_Args_FIELDLIST(X, a) \
+#define PingArgs_FIELDLIST(X, a) \
 X(a, CALLBACK, SINGULAR, STRING,   value,             1)
-#define Ping_Args_CALLBACK pb_default_field_callback
-#define Ping_Args_DEFAULT NULL
+#define PingArgs_CALLBACK pb_default_field_callback
+#define PingArgs_DEFAULT NULL
 
-#define Ping_Result_FIELDLIST(X, a) \
+#define PingResult_FIELDLIST(X, a) \
 X(a, CALLBACK, SINGULAR, STRING,   value,             1)
-#define Ping_Result_CALLBACK pb_default_field_callback
-#define Ping_Result_DEFAULT NULL
+#define PingResult_CALLBACK pb_default_field_callback
+#define PingResult_DEFAULT NULL
 
-#define GetVersion_Args_FIELDLIST(X, a) \
+#define GetVersionArgs_FIELDLIST(X, a) \
 
-#define GetVersion_Args_CALLBACK NULL
-#define GetVersion_Args_DEFAULT NULL
+#define GetVersionArgs_CALLBACK NULL
+#define GetVersionArgs_DEFAULT NULL
 
-#define GetVersion_Result_FIELDLIST(X, a) \
+#define GetVersionResult_FIELDLIST(X, a) \
 X(a, CALLBACK, SINGULAR, STRING,   version,           1) \
 X(a, CALLBACK, SINGULAR, STRING,   checksum,          2) \
 X(a, CALLBACK, SINGULAR, STRING,   git_sha,           3) \
 X(a, CALLBACK, SINGULAR, STRING,   version_info,      4)
-#define GetVersion_Result_CALLBACK pb_default_field_callback
-#define GetVersion_Result_DEFAULT NULL
+#define GetVersionResult_CALLBACK pb_default_field_callback
+#define GetVersionResult_DEFAULT NULL
 
-#define ListMethod_Args_FIELDLIST(X, a) \
+#define ListMethodArgs_FIELDLIST(X, a) \
 
-#define ListMethod_Args_CALLBACK NULL
-#define ListMethod_Args_DEFAULT NULL
+#define ListMethodArgs_CALLBACK NULL
+#define ListMethodArgs_DEFAULT NULL
 
-#define ListMethod_Result_FIELDLIST(X, a) \
+#define ListMethodResult_FIELDLIST(X, a) \
 X(a, CALLBACK, REPEATED, STRING,   method_name_list,   1)
-#define ListMethod_Result_CALLBACK pb_default_field_callback
-#define ListMethod_Result_DEFAULT NULL
+#define ListMethodResult_CALLBACK pb_default_field_callback
+#define ListMethodResult_DEFAULT NULL
 
-#define ParseFile_Args_FIELDLIST(X, a) \
+#define ParseFileArgs_FIELDLIST(X, a) \
 X(a, CALLBACK, SINGULAR, STRING,   path,              1) \
 X(a, CALLBACK, SINGULAR, STRING,   source,            2) \
 X(a, CALLBACK, REPEATED, MESSAGE,  external_pkgs,     3)
-#define ParseFile_Args_CALLBACK pb_default_field_callback
-#define ParseFile_Args_DEFAULT NULL
-#define ParseFile_Args_external_pkgs_MSGTYPE ExternalPkg
+#define ParseFileArgs_CALLBACK pb_default_field_callback
+#define ParseFileArgs_DEFAULT NULL
+#define ParseFileArgs_external_pkgs_MSGTYPE ExternalPkg
 
-#define ParseFile_Result_FIELDLIST(X, a) \
+#define ParseFileResult_FIELDLIST(X, a) \
 X(a, CALLBACK, SINGULAR, STRING,   ast_json,          1) \
 X(a, CALLBACK, REPEATED, STRING,   deps,              2) \
 X(a, CALLBACK, REPEATED, MESSAGE,  errors,            3)
-#define ParseFile_Result_CALLBACK pb_default_field_callback
-#define ParseFile_Result_DEFAULT NULL
-#define ParseFile_Result_errors_MSGTYPE Error
+#define ParseFileResult_CALLBACK pb_default_field_callback
+#define ParseFileResult_DEFAULT NULL
+#define ParseFileResult_errors_MSGTYPE Error
 
-#define ParseProgram_Args_FIELDLIST(X, a) \
+#define ParseProgramArgs_FIELDLIST(X, a) \
 X(a, CALLBACK, REPEATED, STRING,   paths,             1) \
 X(a, CALLBACK, REPEATED, STRING,   sources,           2) \
 X(a, CALLBACK, REPEATED, MESSAGE,  external_pkgs,     3)
-#define ParseProgram_Args_CALLBACK pb_default_field_callback
-#define ParseProgram_Args_DEFAULT NULL
-#define ParseProgram_Args_external_pkgs_MSGTYPE ExternalPkg
+#define ParseProgramArgs_CALLBACK pb_default_field_callback
+#define ParseProgramArgs_DEFAULT NULL
+#define ParseProgramArgs_external_pkgs_MSGTYPE ExternalPkg
 
-#define ParseProgram_Result_FIELDLIST(X, a) \
+#define ParseProgramResult_FIELDLIST(X, a) \
 X(a, CALLBACK, SINGULAR, STRING,   ast_json,          1) \
 X(a, CALLBACK, REPEATED, STRING,   paths,             2) \
 X(a, CALLBACK, REPEATED, MESSAGE,  errors,            3)
-#define ParseProgram_Result_CALLBACK pb_default_field_callback
-#define ParseProgram_Result_DEFAULT NULL
-#define ParseProgram_Result_errors_MSGTYPE Error
+#define ParseProgramResult_CALLBACK pb_default_field_callback
+#define ParseProgramResult_DEFAULT NULL
+#define ParseProgramResult_errors_MSGTYPE Error
 
-#define LoadPackage_Args_FIELDLIST(X, a) \
+#define LoadPackageArgs_FIELDLIST(X, a) \
 X(a, STATIC,   OPTIONAL, MESSAGE,  parse_args,        1) \
 X(a, STATIC,   SINGULAR, BOOL,     resolve_ast,       2) \
 X(a, STATIC,   SINGULAR, BOOL,     load_builtin,      3) \
 X(a, STATIC,   SINGULAR, BOOL,     with_ast_index,    4)
-#define LoadPackage_Args_CALLBACK NULL
-#define LoadPackage_Args_DEFAULT NULL
-#define LoadPackage_Args_parse_args_MSGTYPE ParseProgram_Args
+#define LoadPackageArgs_CALLBACK NULL
+#define LoadPackageArgs_DEFAULT NULL
+#define LoadPackageArgs_parse_args_MSGTYPE ParseProgramArgs
 
-#define LoadPackage_Result_FIELDLIST(X, a) \
+#define LoadPackageResult_FIELDLIST(X, a) \
 X(a, CALLBACK, SINGULAR, STRING,   program,           1) \
 X(a, CALLBACK, REPEATED, STRING,   paths,             2) \
 X(a, CALLBACK, REPEATED, MESSAGE,  parse_errors,      3) \
@@ -1266,63 +1266,63 @@ X(a, CALLBACK, REPEATED, MESSAGE,  node_symbol_map,   7) \
 X(a, CALLBACK, REPEATED, MESSAGE,  symbol_node_map,   8) \
 X(a, CALLBACK, REPEATED, MESSAGE,  fully_qualified_name_map,   9) \
 X(a, CALLBACK, REPEATED, MESSAGE,  pkg_scope_map,    10)
-#define LoadPackage_Result_CALLBACK pb_default_field_callback
-#define LoadPackage_Result_DEFAULT NULL
-#define LoadPackage_Result_parse_errors_MSGTYPE Error
-#define LoadPackage_Result_type_errors_MSGTYPE Error
-#define LoadPackage_Result_scopes_MSGTYPE LoadPackage_Result_ScopesEntry
-#define LoadPackage_Result_symbols_MSGTYPE LoadPackage_Result_SymbolsEntry
-#define LoadPackage_Result_node_symbol_map_MSGTYPE LoadPackage_Result_NodeSymbolMapEntry
-#define LoadPackage_Result_symbol_node_map_MSGTYPE LoadPackage_Result_SymbolNodeMapEntry
-#define LoadPackage_Result_fully_qualified_name_map_MSGTYPE LoadPackage_Result_FullyQualifiedNameMapEntry
-#define LoadPackage_Result_pkg_scope_map_MSGTYPE LoadPackage_Result_PkgScopeMapEntry
+#define LoadPackageResult_CALLBACK pb_default_field_callback
+#define LoadPackageResult_DEFAULT NULL
+#define LoadPackageResult_parse_errors_MSGTYPE Error
+#define LoadPackageResult_type_errors_MSGTYPE Error
+#define LoadPackageResult_scopes_MSGTYPE LoadPackageResult_ScopesEntry
+#define LoadPackageResult_symbols_MSGTYPE LoadPackageResult_SymbolsEntry
+#define LoadPackageResult_node_symbol_map_MSGTYPE LoadPackageResult_NodeSymbolMapEntry
+#define LoadPackageResult_symbol_node_map_MSGTYPE LoadPackageResult_SymbolNodeMapEntry
+#define LoadPackageResult_fully_qualified_name_map_MSGTYPE LoadPackageResult_FullyQualifiedNameMapEntry
+#define LoadPackageResult_pkg_scope_map_MSGTYPE LoadPackageResult_PkgScopeMapEntry
 
-#define LoadPackage_Result_ScopesEntry_FIELDLIST(X, a) \
+#define LoadPackageResult_ScopesEntry_FIELDLIST(X, a) \
 X(a, CALLBACK, SINGULAR, STRING,   key,               1) \
 X(a, STATIC,   OPTIONAL, MESSAGE,  value,             2)
-#define LoadPackage_Result_ScopesEntry_CALLBACK pb_default_field_callback
-#define LoadPackage_Result_ScopesEntry_DEFAULT NULL
-#define LoadPackage_Result_ScopesEntry_value_MSGTYPE Scope
+#define LoadPackageResult_ScopesEntry_CALLBACK pb_default_field_callback
+#define LoadPackageResult_ScopesEntry_DEFAULT NULL
+#define LoadPackageResult_ScopesEntry_value_MSGTYPE Scope
 
-#define LoadPackage_Result_SymbolsEntry_FIELDLIST(X, a) \
+#define LoadPackageResult_SymbolsEntry_FIELDLIST(X, a) \
 X(a, CALLBACK, SINGULAR, STRING,   key,               1) \
 X(a, STATIC,   OPTIONAL, MESSAGE,  value,             2)
-#define LoadPackage_Result_SymbolsEntry_CALLBACK pb_default_field_callback
-#define LoadPackage_Result_SymbolsEntry_DEFAULT NULL
-#define LoadPackage_Result_SymbolsEntry_value_MSGTYPE Symbol
+#define LoadPackageResult_SymbolsEntry_CALLBACK pb_default_field_callback
+#define LoadPackageResult_SymbolsEntry_DEFAULT NULL
+#define LoadPackageResult_SymbolsEntry_value_MSGTYPE Symbol
 
-#define LoadPackage_Result_NodeSymbolMapEntry_FIELDLIST(X, a) \
+#define LoadPackageResult_NodeSymbolMapEntry_FIELDLIST(X, a) \
 X(a, CALLBACK, SINGULAR, STRING,   key,               1) \
 X(a, STATIC,   OPTIONAL, MESSAGE,  value,             2)
-#define LoadPackage_Result_NodeSymbolMapEntry_CALLBACK pb_default_field_callback
-#define LoadPackage_Result_NodeSymbolMapEntry_DEFAULT NULL
-#define LoadPackage_Result_NodeSymbolMapEntry_value_MSGTYPE SymbolIndex
+#define LoadPackageResult_NodeSymbolMapEntry_CALLBACK pb_default_field_callback
+#define LoadPackageResult_NodeSymbolMapEntry_DEFAULT NULL
+#define LoadPackageResult_NodeSymbolMapEntry_value_MSGTYPE SymbolIndex
 
-#define LoadPackage_Result_SymbolNodeMapEntry_FIELDLIST(X, a) \
+#define LoadPackageResult_SymbolNodeMapEntry_FIELDLIST(X, a) \
 X(a, CALLBACK, SINGULAR, STRING,   key,               1) \
 X(a, CALLBACK, SINGULAR, STRING,   value,             2)
-#define LoadPackage_Result_SymbolNodeMapEntry_CALLBACK pb_default_field_callback
-#define LoadPackage_Result_SymbolNodeMapEntry_DEFAULT NULL
+#define LoadPackageResult_SymbolNodeMapEntry_CALLBACK pb_default_field_callback
+#define LoadPackageResult_SymbolNodeMapEntry_DEFAULT NULL
 
-#define LoadPackage_Result_FullyQualifiedNameMapEntry_FIELDLIST(X, a) \
+#define LoadPackageResult_FullyQualifiedNameMapEntry_FIELDLIST(X, a) \
 X(a, CALLBACK, SINGULAR, STRING,   key,               1) \
 X(a, STATIC,   OPTIONAL, MESSAGE,  value,             2)
-#define LoadPackage_Result_FullyQualifiedNameMapEntry_CALLBACK pb_default_field_callback
-#define LoadPackage_Result_FullyQualifiedNameMapEntry_DEFAULT NULL
-#define LoadPackage_Result_FullyQualifiedNameMapEntry_value_MSGTYPE SymbolIndex
+#define LoadPackageResult_FullyQualifiedNameMapEntry_CALLBACK pb_default_field_callback
+#define LoadPackageResult_FullyQualifiedNameMapEntry_DEFAULT NULL
+#define LoadPackageResult_FullyQualifiedNameMapEntry_value_MSGTYPE SymbolIndex
 
-#define LoadPackage_Result_PkgScopeMapEntry_FIELDLIST(X, a) \
+#define LoadPackageResult_PkgScopeMapEntry_FIELDLIST(X, a) \
 X(a, CALLBACK, SINGULAR, STRING,   key,               1) \
 X(a, STATIC,   OPTIONAL, MESSAGE,  value,             2)
-#define LoadPackage_Result_PkgScopeMapEntry_CALLBACK pb_default_field_callback
-#define LoadPackage_Result_PkgScopeMapEntry_DEFAULT NULL
-#define LoadPackage_Result_PkgScopeMapEntry_value_MSGTYPE ScopeIndex
+#define LoadPackageResult_PkgScopeMapEntry_CALLBACK pb_default_field_callback
+#define LoadPackageResult_PkgScopeMapEntry_DEFAULT NULL
+#define LoadPackageResult_PkgScopeMapEntry_value_MSGTYPE ScopeIndex
 
-#define ListOptions_Result_FIELDLIST(X, a) \
+#define ListOptionsResult_FIELDLIST(X, a) \
 X(a, CALLBACK, REPEATED, MESSAGE,  options,           2)
-#define ListOptions_Result_CALLBACK pb_default_field_callback
-#define ListOptions_Result_DEFAULT NULL
-#define ListOptions_Result_options_MSGTYPE OptionHelp
+#define ListOptionsResult_CALLBACK pb_default_field_callback
+#define ListOptionsResult_DEFAULT NULL
+#define ListOptionsResult_options_MSGTYPE OptionHelp
 
 #define OptionHelp_FIELDLIST(X, a) \
 X(a, CALLBACK, SINGULAR, STRING,   name,              1) \
@@ -1374,7 +1374,7 @@ X(a, CALLBACK, SINGULAR, STRING,   kind,              3)
 #define ScopeIndex_CALLBACK pb_default_field_callback
 #define ScopeIndex_DEFAULT NULL
 
-#define ExecProgram_Args_FIELDLIST(X, a) \
+#define ExecProgramArgs_FIELDLIST(X, a) \
 X(a, CALLBACK, SINGULAR, STRING,   work_dir,          1) \
 X(a, CALLBACK, REPEATED, STRING,   k_filename_list,   2) \
 X(a, CALLBACK, REPEATED, STRING,   k_code_list,       3) \
@@ -1393,86 +1393,86 @@ X(a, STATIC,   SINGULAR, BOOL,     compile_only,     15) \
 X(a, STATIC,   SINGULAR, BOOL,     show_hidden,      16) \
 X(a, CALLBACK, REPEATED, STRING,   path_selector,    17) \
 X(a, STATIC,   SINGULAR, BOOL,     fast_eval,        18)
-#define ExecProgram_Args_CALLBACK pb_default_field_callback
-#define ExecProgram_Args_DEFAULT NULL
-#define ExecProgram_Args_args_MSGTYPE Argument
-#define ExecProgram_Args_external_pkgs_MSGTYPE ExternalPkg
+#define ExecProgramArgs_CALLBACK pb_default_field_callback
+#define ExecProgramArgs_DEFAULT NULL
+#define ExecProgramArgs_args_MSGTYPE Argument
+#define ExecProgramArgs_external_pkgs_MSGTYPE ExternalPkg
 
-#define ExecProgram_Result_FIELDLIST(X, a) \
+#define ExecProgramResult_FIELDLIST(X, a) \
 X(a, CALLBACK, SINGULAR, STRING,   json_result,       1) \
 X(a, CALLBACK, SINGULAR, STRING,   yaml_result,       2) \
 X(a, CALLBACK, SINGULAR, STRING,   log_message,       3) \
 X(a, CALLBACK, SINGULAR, STRING,   err_message,       4)
-#define ExecProgram_Result_CALLBACK pb_default_field_callback
-#define ExecProgram_Result_DEFAULT NULL
+#define ExecProgramResult_CALLBACK pb_default_field_callback
+#define ExecProgramResult_DEFAULT NULL
 
-#define BuildProgram_Args_FIELDLIST(X, a) \
+#define BuildProgramArgs_FIELDLIST(X, a) \
 X(a, STATIC,   OPTIONAL, MESSAGE,  exec_args,         1) \
 X(a, CALLBACK, SINGULAR, STRING,   output,            2)
-#define BuildProgram_Args_CALLBACK pb_default_field_callback
-#define BuildProgram_Args_DEFAULT NULL
-#define BuildProgram_Args_exec_args_MSGTYPE ExecProgram_Args
+#define BuildProgramArgs_CALLBACK pb_default_field_callback
+#define BuildProgramArgs_DEFAULT NULL
+#define BuildProgramArgs_exec_args_MSGTYPE ExecProgramArgs
 
-#define BuildProgram_Result_FIELDLIST(X, a) \
+#define BuildProgramResult_FIELDLIST(X, a) \
 X(a, CALLBACK, SINGULAR, STRING,   path,              1)
-#define BuildProgram_Result_CALLBACK pb_default_field_callback
-#define BuildProgram_Result_DEFAULT NULL
+#define BuildProgramResult_CALLBACK pb_default_field_callback
+#define BuildProgramResult_DEFAULT NULL
 
-#define ExecArtifact_Args_FIELDLIST(X, a) \
+#define ExecArtifactArgs_FIELDLIST(X, a) \
 X(a, CALLBACK, SINGULAR, STRING,   path,              1) \
 X(a, STATIC,   OPTIONAL, MESSAGE,  exec_args,         2)
-#define ExecArtifact_Args_CALLBACK pb_default_field_callback
-#define ExecArtifact_Args_DEFAULT NULL
-#define ExecArtifact_Args_exec_args_MSGTYPE ExecProgram_Args
+#define ExecArtifactArgs_CALLBACK pb_default_field_callback
+#define ExecArtifactArgs_DEFAULT NULL
+#define ExecArtifactArgs_exec_args_MSGTYPE ExecProgramArgs
 
-#define FormatCode_Args_FIELDLIST(X, a) \
+#define FormatCodeArgs_FIELDLIST(X, a) \
 X(a, CALLBACK, SINGULAR, STRING,   source,            1)
-#define FormatCode_Args_CALLBACK pb_default_field_callback
-#define FormatCode_Args_DEFAULT NULL
+#define FormatCodeArgs_CALLBACK pb_default_field_callback
+#define FormatCodeArgs_DEFAULT NULL
 
-#define FormatCode_Result_FIELDLIST(X, a) \
+#define FormatCodeResult_FIELDLIST(X, a) \
 X(a, CALLBACK, SINGULAR, BYTES,    formatted,         1)
-#define FormatCode_Result_CALLBACK pb_default_field_callback
-#define FormatCode_Result_DEFAULT NULL
+#define FormatCodeResult_CALLBACK pb_default_field_callback
+#define FormatCodeResult_DEFAULT NULL
 
-#define FormatPath_Args_FIELDLIST(X, a) \
+#define FormatPathArgs_FIELDLIST(X, a) \
 X(a, CALLBACK, SINGULAR, STRING,   path,              1)
-#define FormatPath_Args_CALLBACK pb_default_field_callback
-#define FormatPath_Args_DEFAULT NULL
+#define FormatPathArgs_CALLBACK pb_default_field_callback
+#define FormatPathArgs_DEFAULT NULL
 
-#define FormatPath_Result_FIELDLIST(X, a) \
+#define FormatPathResult_FIELDLIST(X, a) \
 X(a, CALLBACK, REPEATED, STRING,   changed_paths,     1)
-#define FormatPath_Result_CALLBACK pb_default_field_callback
-#define FormatPath_Result_DEFAULT NULL
+#define FormatPathResult_CALLBACK pb_default_field_callback
+#define FormatPathResult_DEFAULT NULL
 
-#define LintPath_Args_FIELDLIST(X, a) \
+#define LintPathArgs_FIELDLIST(X, a) \
 X(a, CALLBACK, REPEATED, STRING,   paths,             1)
-#define LintPath_Args_CALLBACK pb_default_field_callback
-#define LintPath_Args_DEFAULT NULL
+#define LintPathArgs_CALLBACK pb_default_field_callback
+#define LintPathArgs_DEFAULT NULL
 
-#define LintPath_Result_FIELDLIST(X, a) \
+#define LintPathResult_FIELDLIST(X, a) \
 X(a, CALLBACK, REPEATED, STRING,   results,           1)
-#define LintPath_Result_CALLBACK pb_default_field_callback
-#define LintPath_Result_DEFAULT NULL
+#define LintPathResult_CALLBACK pb_default_field_callback
+#define LintPathResult_DEFAULT NULL
 
-#define OverrideFile_Args_FIELDLIST(X, a) \
+#define OverrideFileArgs_FIELDLIST(X, a) \
 X(a, CALLBACK, SINGULAR, STRING,   file,              1) \
 X(a, CALLBACK, REPEATED, STRING,   specs,             2) \
 X(a, CALLBACK, REPEATED, STRING,   import_paths,      3)
-#define OverrideFile_Args_CALLBACK pb_default_field_callback
-#define OverrideFile_Args_DEFAULT NULL
+#define OverrideFileArgs_CALLBACK pb_default_field_callback
+#define OverrideFileArgs_DEFAULT NULL
 
-#define OverrideFile_Result_FIELDLIST(X, a) \
+#define OverrideFileResult_FIELDLIST(X, a) \
 X(a, STATIC,   SINGULAR, BOOL,     result,            1) \
 X(a, CALLBACK, REPEATED, MESSAGE,  parse_errors,      2)
-#define OverrideFile_Result_CALLBACK pb_default_field_callback
-#define OverrideFile_Result_DEFAULT NULL
-#define OverrideFile_Result_parse_errors_MSGTYPE Error
+#define OverrideFileResult_CALLBACK pb_default_field_callback
+#define OverrideFileResult_DEFAULT NULL
+#define OverrideFileResult_parse_errors_MSGTYPE Error
 
-#define ListVariables_Options_FIELDLIST(X, a) \
+#define ListVariablesOptions_FIELDLIST(X, a) \
 X(a, STATIC,   SINGULAR, BOOL,     merge_program,     1)
-#define ListVariables_Options_CALLBACK NULL
-#define ListVariables_Options_DEFAULT NULL
+#define ListVariablesOptions_CALLBACK NULL
+#define ListVariablesOptions_DEFAULT NULL
 
 #define VariableList_FIELDLIST(X, a) \
 X(a, CALLBACK, REPEATED, MESSAGE,  variables,         1)
@@ -1480,29 +1480,29 @@ X(a, CALLBACK, REPEATED, MESSAGE,  variables,         1)
 #define VariableList_DEFAULT NULL
 #define VariableList_variables_MSGTYPE Variable
 
-#define ListVariables_Args_FIELDLIST(X, a) \
+#define ListVariablesArgs_FIELDLIST(X, a) \
 X(a, CALLBACK, REPEATED, STRING,   files,             1) \
 X(a, CALLBACK, REPEATED, STRING,   specs,             2) \
 X(a, STATIC,   OPTIONAL, MESSAGE,  options,           3)
-#define ListVariables_Args_CALLBACK pb_default_field_callback
-#define ListVariables_Args_DEFAULT NULL
-#define ListVariables_Args_options_MSGTYPE ListVariables_Options
+#define ListVariablesArgs_CALLBACK pb_default_field_callback
+#define ListVariablesArgs_DEFAULT NULL
+#define ListVariablesArgs_options_MSGTYPE ListVariablesOptions
 
-#define ListVariables_Result_FIELDLIST(X, a) \
+#define ListVariablesResult_FIELDLIST(X, a) \
 X(a, CALLBACK, REPEATED, MESSAGE,  variables,         1) \
 X(a, CALLBACK, REPEATED, STRING,   unsupported_codes,   2) \
 X(a, CALLBACK, REPEATED, MESSAGE,  parse_errors,      3)
-#define ListVariables_Result_CALLBACK pb_default_field_callback
-#define ListVariables_Result_DEFAULT NULL
-#define ListVariables_Result_variables_MSGTYPE ListVariables_Result_VariablesEntry
-#define ListVariables_Result_parse_errors_MSGTYPE Error
+#define ListVariablesResult_CALLBACK pb_default_field_callback
+#define ListVariablesResult_DEFAULT NULL
+#define ListVariablesResult_variables_MSGTYPE ListVariablesResult_VariablesEntry
+#define ListVariablesResult_parse_errors_MSGTYPE Error
 
-#define ListVariables_Result_VariablesEntry_FIELDLIST(X, a) \
+#define ListVariablesResult_VariablesEntry_FIELDLIST(X, a) \
 X(a, CALLBACK, SINGULAR, STRING,   key,               1) \
 X(a, STATIC,   OPTIONAL, MESSAGE,  value,             2)
-#define ListVariables_Result_VariablesEntry_CALLBACK pb_default_field_callback
-#define ListVariables_Result_VariablesEntry_DEFAULT NULL
-#define ListVariables_Result_VariablesEntry_value_MSGTYPE VariableList
+#define ListVariablesResult_VariablesEntry_CALLBACK pb_default_field_callback
+#define ListVariablesResult_VariablesEntry_DEFAULT NULL
+#define ListVariablesResult_VariablesEntry_value_MSGTYPE VariableList
 
 #define Variable_FIELDLIST(X, a) \
 X(a, CALLBACK, SINGULAR, STRING,   value,             1) \
@@ -1522,27 +1522,27 @@ X(a, STATIC,   OPTIONAL, MESSAGE,  value,             2)
 #define MapEntry_DEFAULT NULL
 #define MapEntry_value_MSGTYPE Variable
 
-#define GetSchemaTypeMapping_Args_FIELDLIST(X, a) \
+#define GetSchemaTypeMappingArgs_FIELDLIST(X, a) \
 X(a, STATIC,   OPTIONAL, MESSAGE,  exec_args,         1) \
 X(a, CALLBACK, SINGULAR, STRING,   schema_name,       2)
-#define GetSchemaTypeMapping_Args_CALLBACK pb_default_field_callback
-#define GetSchemaTypeMapping_Args_DEFAULT NULL
-#define GetSchemaTypeMapping_Args_exec_args_MSGTYPE ExecProgram_Args
+#define GetSchemaTypeMappingArgs_CALLBACK pb_default_field_callback
+#define GetSchemaTypeMappingArgs_DEFAULT NULL
+#define GetSchemaTypeMappingArgs_exec_args_MSGTYPE ExecProgramArgs
 
-#define GetSchemaTypeMapping_Result_FIELDLIST(X, a) \
+#define GetSchemaTypeMappingResult_FIELDLIST(X, a) \
 X(a, CALLBACK, REPEATED, MESSAGE,  schema_type_mapping,   1)
-#define GetSchemaTypeMapping_Result_CALLBACK pb_default_field_callback
-#define GetSchemaTypeMapping_Result_DEFAULT NULL
-#define GetSchemaTypeMapping_Result_schema_type_mapping_MSGTYPE GetSchemaTypeMapping_Result_SchemaTypeMappingEntry
+#define GetSchemaTypeMappingResult_CALLBACK pb_default_field_callback
+#define GetSchemaTypeMappingResult_DEFAULT NULL
+#define GetSchemaTypeMappingResult_schema_type_mapping_MSGTYPE GetSchemaTypeMappingResult_SchemaTypeMappingEntry
 
-#define GetSchemaTypeMapping_Result_SchemaTypeMappingEntry_FIELDLIST(X, a) \
+#define GetSchemaTypeMappingResult_SchemaTypeMappingEntry_FIELDLIST(X, a) \
 X(a, CALLBACK, SINGULAR, STRING,   key,               1) \
 X(a, STATIC,   OPTIONAL, MESSAGE,  value,             2)
-#define GetSchemaTypeMapping_Result_SchemaTypeMappingEntry_CALLBACK pb_default_field_callback
-#define GetSchemaTypeMapping_Result_SchemaTypeMappingEntry_DEFAULT NULL
-#define GetSchemaTypeMapping_Result_SchemaTypeMappingEntry_value_MSGTYPE KclType
+#define GetSchemaTypeMappingResult_SchemaTypeMappingEntry_CALLBACK pb_default_field_callback
+#define GetSchemaTypeMappingResult_SchemaTypeMappingEntry_DEFAULT NULL
+#define GetSchemaTypeMappingResult_SchemaTypeMappingEntry_value_MSGTYPE KclType
 
-#define ValidateCode_Args_FIELDLIST(X, a) \
+#define ValidateCodeArgs_FIELDLIST(X, a) \
 X(a, CALLBACK, SINGULAR, STRING,   datafile,          1) \
 X(a, CALLBACK, SINGULAR, STRING,   data,              2) \
 X(a, CALLBACK, SINGULAR, STRING,   file,              3) \
@@ -1550,14 +1550,14 @@ X(a, CALLBACK, SINGULAR, STRING,   code,              4) \
 X(a, CALLBACK, SINGULAR, STRING,   schema,            5) \
 X(a, CALLBACK, SINGULAR, STRING,   attribute_name,    6) \
 X(a, CALLBACK, SINGULAR, STRING,   format,            7)
-#define ValidateCode_Args_CALLBACK pb_default_field_callback
-#define ValidateCode_Args_DEFAULT NULL
+#define ValidateCodeArgs_CALLBACK pb_default_field_callback
+#define ValidateCodeArgs_DEFAULT NULL
 
-#define ValidateCode_Result_FIELDLIST(X, a) \
+#define ValidateCodeResult_FIELDLIST(X, a) \
 X(a, STATIC,   SINGULAR, BOOL,     success,           1) \
 X(a, CALLBACK, SINGULAR, STRING,   err_message,       2)
-#define ValidateCode_Result_CALLBACK pb_default_field_callback
-#define ValidateCode_Result_DEFAULT NULL
+#define ValidateCodeResult_CALLBACK pb_default_field_callback
+#define ValidateCodeResult_DEFAULT NULL
 
 #define Position_FIELDLIST(X, a) \
 X(a, STATIC,   SINGULAR, INT64,    line,              1) \
@@ -1566,34 +1566,34 @@ X(a, CALLBACK, SINGULAR, STRING,   filename,          3)
 #define Position_CALLBACK pb_default_field_callback
 #define Position_DEFAULT NULL
 
-#define ListDepFiles_Args_FIELDLIST(X, a) \
+#define ListDepFilesArgs_FIELDLIST(X, a) \
 X(a, CALLBACK, SINGULAR, STRING,   work_dir,          1) \
 X(a, STATIC,   SINGULAR, BOOL,     use_abs_path,      2) \
 X(a, STATIC,   SINGULAR, BOOL,     include_all,       3) \
 X(a, STATIC,   SINGULAR, BOOL,     use_fast_parser,   4)
-#define ListDepFiles_Args_CALLBACK pb_default_field_callback
-#define ListDepFiles_Args_DEFAULT NULL
+#define ListDepFilesArgs_CALLBACK pb_default_field_callback
+#define ListDepFilesArgs_DEFAULT NULL
 
-#define ListDepFiles_Result_FIELDLIST(X, a) \
+#define ListDepFilesResult_FIELDLIST(X, a) \
 X(a, CALLBACK, SINGULAR, STRING,   pkgroot,           1) \
 X(a, CALLBACK, SINGULAR, STRING,   pkgpath,           2) \
 X(a, CALLBACK, REPEATED, STRING,   files,             3)
-#define ListDepFiles_Result_CALLBACK pb_default_field_callback
-#define ListDepFiles_Result_DEFAULT NULL
+#define ListDepFilesResult_CALLBACK pb_default_field_callback
+#define ListDepFilesResult_DEFAULT NULL
 
-#define LoadSettingsFiles_Args_FIELDLIST(X, a) \
+#define LoadSettingsFilesArgs_FIELDLIST(X, a) \
 X(a, CALLBACK, SINGULAR, STRING,   work_dir,          1) \
 X(a, CALLBACK, REPEATED, STRING,   files,             2)
-#define LoadSettingsFiles_Args_CALLBACK pb_default_field_callback
-#define LoadSettingsFiles_Args_DEFAULT NULL
+#define LoadSettingsFilesArgs_CALLBACK pb_default_field_callback
+#define LoadSettingsFilesArgs_DEFAULT NULL
 
-#define LoadSettingsFiles_Result_FIELDLIST(X, a) \
+#define LoadSettingsFilesResult_FIELDLIST(X, a) \
 X(a, STATIC,   OPTIONAL, MESSAGE,  kcl_cli_configs,   1) \
 X(a, CALLBACK, REPEATED, MESSAGE,  kcl_options,       2)
-#define LoadSettingsFiles_Result_CALLBACK pb_default_field_callback
-#define LoadSettingsFiles_Result_DEFAULT NULL
-#define LoadSettingsFiles_Result_kcl_cli_configs_MSGTYPE CliConfig
-#define LoadSettingsFiles_Result_kcl_options_MSGTYPE KeyValuePair
+#define LoadSettingsFilesResult_CALLBACK pb_default_field_callback
+#define LoadSettingsFilesResult_DEFAULT NULL
+#define LoadSettingsFilesResult_kcl_cli_configs_MSGTYPE CliConfig
+#define LoadSettingsFilesResult_kcl_options_MSGTYPE KeyValuePair
 
 #define CliConfig_FIELDLIST(X, a) \
 X(a, CALLBACK, REPEATED, STRING,   files,             1) \
@@ -1617,60 +1617,60 @@ X(a, CALLBACK, SINGULAR, STRING,   value,             2)
 #define KeyValuePair_CALLBACK pb_default_field_callback
 #define KeyValuePair_DEFAULT NULL
 
-#define Rename_Args_FIELDLIST(X, a) \
+#define RenameArgs_FIELDLIST(X, a) \
 X(a, CALLBACK, SINGULAR, STRING,   package_root,      1) \
 X(a, CALLBACK, SINGULAR, STRING,   symbol_path,       2) \
 X(a, CALLBACK, REPEATED, STRING,   file_paths,        3) \
 X(a, CALLBACK, SINGULAR, STRING,   new_name,          4)
-#define Rename_Args_CALLBACK pb_default_field_callback
-#define Rename_Args_DEFAULT NULL
+#define RenameArgs_CALLBACK pb_default_field_callback
+#define RenameArgs_DEFAULT NULL
 
-#define Rename_Result_FIELDLIST(X, a) \
+#define RenameResult_FIELDLIST(X, a) \
 X(a, CALLBACK, REPEATED, STRING,   changed_files,     1)
-#define Rename_Result_CALLBACK pb_default_field_callback
-#define Rename_Result_DEFAULT NULL
+#define RenameResult_CALLBACK pb_default_field_callback
+#define RenameResult_DEFAULT NULL
 
-#define RenameCode_Args_FIELDLIST(X, a) \
+#define RenameCodeArgs_FIELDLIST(X, a) \
 X(a, CALLBACK, SINGULAR, STRING,   package_root,      1) \
 X(a, CALLBACK, SINGULAR, STRING,   symbol_path,       2) \
 X(a, CALLBACK, REPEATED, MESSAGE,  source_codes,      3) \
 X(a, CALLBACK, SINGULAR, STRING,   new_name,          4)
-#define RenameCode_Args_CALLBACK pb_default_field_callback
-#define RenameCode_Args_DEFAULT NULL
-#define RenameCode_Args_source_codes_MSGTYPE RenameCode_Args_SourceCodesEntry
+#define RenameCodeArgs_CALLBACK pb_default_field_callback
+#define RenameCodeArgs_DEFAULT NULL
+#define RenameCodeArgs_source_codes_MSGTYPE RenameCodeArgs_SourceCodesEntry
 
-#define RenameCode_Args_SourceCodesEntry_FIELDLIST(X, a) \
+#define RenameCodeArgs_SourceCodesEntry_FIELDLIST(X, a) \
 X(a, CALLBACK, SINGULAR, STRING,   key,               1) \
 X(a, CALLBACK, SINGULAR, STRING,   value,             2)
-#define RenameCode_Args_SourceCodesEntry_CALLBACK pb_default_field_callback
-#define RenameCode_Args_SourceCodesEntry_DEFAULT NULL
+#define RenameCodeArgs_SourceCodesEntry_CALLBACK pb_default_field_callback
+#define RenameCodeArgs_SourceCodesEntry_DEFAULT NULL
 
-#define RenameCode_Result_FIELDLIST(X, a) \
+#define RenameCodeResult_FIELDLIST(X, a) \
 X(a, CALLBACK, REPEATED, MESSAGE,  changed_codes,     1)
-#define RenameCode_Result_CALLBACK pb_default_field_callback
-#define RenameCode_Result_DEFAULT NULL
-#define RenameCode_Result_changed_codes_MSGTYPE RenameCode_Result_ChangedCodesEntry
+#define RenameCodeResult_CALLBACK pb_default_field_callback
+#define RenameCodeResult_DEFAULT NULL
+#define RenameCodeResult_changed_codes_MSGTYPE RenameCodeResult_ChangedCodesEntry
 
-#define RenameCode_Result_ChangedCodesEntry_FIELDLIST(X, a) \
+#define RenameCodeResult_ChangedCodesEntry_FIELDLIST(X, a) \
 X(a, CALLBACK, SINGULAR, STRING,   key,               1) \
 X(a, CALLBACK, SINGULAR, STRING,   value,             2)
-#define RenameCode_Result_ChangedCodesEntry_CALLBACK pb_default_field_callback
-#define RenameCode_Result_ChangedCodesEntry_DEFAULT NULL
+#define RenameCodeResult_ChangedCodesEntry_CALLBACK pb_default_field_callback
+#define RenameCodeResult_ChangedCodesEntry_DEFAULT NULL
 
-#define Test_Args_FIELDLIST(X, a) \
+#define TestArgs_FIELDLIST(X, a) \
 X(a, STATIC,   OPTIONAL, MESSAGE,  exec_args,         1) \
 X(a, CALLBACK, REPEATED, STRING,   pkg_list,          2) \
 X(a, CALLBACK, SINGULAR, STRING,   run_regexp,        3) \
 X(a, STATIC,   SINGULAR, BOOL,     fail_fast,         4)
-#define Test_Args_CALLBACK pb_default_field_callback
-#define Test_Args_DEFAULT NULL
-#define Test_Args_exec_args_MSGTYPE ExecProgram_Args
+#define TestArgs_CALLBACK pb_default_field_callback
+#define TestArgs_DEFAULT NULL
+#define TestArgs_exec_args_MSGTYPE ExecProgramArgs
 
-#define Test_Result_FIELDLIST(X, a) \
+#define TestResult_FIELDLIST(X, a) \
 X(a, CALLBACK, REPEATED, MESSAGE,  info,              2)
-#define Test_Result_CALLBACK pb_default_field_callback
-#define Test_Result_DEFAULT NULL
-#define Test_Result_info_MSGTYPE TestCaseInfo
+#define TestResult_CALLBACK pb_default_field_callback
+#define TestResult_DEFAULT NULL
+#define TestResult_info_MSGTYPE TestCaseInfo
 
 #define TestCaseInfo_FIELDLIST(X, a) \
 X(a, CALLBACK, SINGULAR, STRING,   name,              1) \
@@ -1680,17 +1680,17 @@ X(a, CALLBACK, SINGULAR, STRING,   log_message,       4)
 #define TestCaseInfo_CALLBACK pb_default_field_callback
 #define TestCaseInfo_DEFAULT NULL
 
-#define UpdateDependencies_Args_FIELDLIST(X, a) \
+#define UpdateDependenciesArgs_FIELDLIST(X, a) \
 X(a, CALLBACK, SINGULAR, STRING,   manifest_path,     1) \
 X(a, STATIC,   SINGULAR, BOOL,     vendor,            2)
-#define UpdateDependencies_Args_CALLBACK pb_default_field_callback
-#define UpdateDependencies_Args_DEFAULT NULL
+#define UpdateDependenciesArgs_CALLBACK pb_default_field_callback
+#define UpdateDependenciesArgs_DEFAULT NULL
 
-#define UpdateDependencies_Result_FIELDLIST(X, a) \
+#define UpdateDependenciesResult_FIELDLIST(X, a) \
 X(a, CALLBACK, REPEATED, MESSAGE,  external_pkgs,     3)
-#define UpdateDependencies_Result_CALLBACK pb_default_field_callback
-#define UpdateDependencies_Result_DEFAULT NULL
-#define UpdateDependencies_Result_external_pkgs_MSGTYPE ExternalPkg
+#define UpdateDependenciesResult_CALLBACK pb_default_field_callback
+#define UpdateDependenciesResult_DEFAULT NULL
+#define UpdateDependenciesResult_external_pkgs_MSGTYPE ExternalPkg
 
 #define KclType_FIELDLIST(X, a) \
 X(a, CALLBACK, SINGULAR, STRING,   type,              1) \
@@ -1758,73 +1758,73 @@ extern const pb_msgdesc_t ExternalPkg_msg;
 extern const pb_msgdesc_t Argument_msg;
 extern const pb_msgdesc_t Error_msg;
 extern const pb_msgdesc_t Message_msg;
-extern const pb_msgdesc_t Ping_Args_msg;
-extern const pb_msgdesc_t Ping_Result_msg;
-extern const pb_msgdesc_t GetVersion_Args_msg;
-extern const pb_msgdesc_t GetVersion_Result_msg;
-extern const pb_msgdesc_t ListMethod_Args_msg;
-extern const pb_msgdesc_t ListMethod_Result_msg;
-extern const pb_msgdesc_t ParseFile_Args_msg;
-extern const pb_msgdesc_t ParseFile_Result_msg;
-extern const pb_msgdesc_t ParseProgram_Args_msg;
-extern const pb_msgdesc_t ParseProgram_Result_msg;
-extern const pb_msgdesc_t LoadPackage_Args_msg;
-extern const pb_msgdesc_t LoadPackage_Result_msg;
-extern const pb_msgdesc_t LoadPackage_Result_ScopesEntry_msg;
-extern const pb_msgdesc_t LoadPackage_Result_SymbolsEntry_msg;
-extern const pb_msgdesc_t LoadPackage_Result_NodeSymbolMapEntry_msg;
-extern const pb_msgdesc_t LoadPackage_Result_SymbolNodeMapEntry_msg;
-extern const pb_msgdesc_t LoadPackage_Result_FullyQualifiedNameMapEntry_msg;
-extern const pb_msgdesc_t LoadPackage_Result_PkgScopeMapEntry_msg;
-extern const pb_msgdesc_t ListOptions_Result_msg;
+extern const pb_msgdesc_t PingArgs_msg;
+extern const pb_msgdesc_t PingResult_msg;
+extern const pb_msgdesc_t GetVersionArgs_msg;
+extern const pb_msgdesc_t GetVersionResult_msg;
+extern const pb_msgdesc_t ListMethodArgs_msg;
+extern const pb_msgdesc_t ListMethodResult_msg;
+extern const pb_msgdesc_t ParseFileArgs_msg;
+extern const pb_msgdesc_t ParseFileResult_msg;
+extern const pb_msgdesc_t ParseProgramArgs_msg;
+extern const pb_msgdesc_t ParseProgramResult_msg;
+extern const pb_msgdesc_t LoadPackageArgs_msg;
+extern const pb_msgdesc_t LoadPackageResult_msg;
+extern const pb_msgdesc_t LoadPackageResult_ScopesEntry_msg;
+extern const pb_msgdesc_t LoadPackageResult_SymbolsEntry_msg;
+extern const pb_msgdesc_t LoadPackageResult_NodeSymbolMapEntry_msg;
+extern const pb_msgdesc_t LoadPackageResult_SymbolNodeMapEntry_msg;
+extern const pb_msgdesc_t LoadPackageResult_FullyQualifiedNameMapEntry_msg;
+extern const pb_msgdesc_t LoadPackageResult_PkgScopeMapEntry_msg;
+extern const pb_msgdesc_t ListOptionsResult_msg;
 extern const pb_msgdesc_t OptionHelp_msg;
 extern const pb_msgdesc_t Symbol_msg;
 extern const pb_msgdesc_t Scope_msg;
 extern const pb_msgdesc_t SymbolIndex_msg;
 extern const pb_msgdesc_t ScopeIndex_msg;
-extern const pb_msgdesc_t ExecProgram_Args_msg;
-extern const pb_msgdesc_t ExecProgram_Result_msg;
-extern const pb_msgdesc_t BuildProgram_Args_msg;
-extern const pb_msgdesc_t BuildProgram_Result_msg;
-extern const pb_msgdesc_t ExecArtifact_Args_msg;
-extern const pb_msgdesc_t FormatCode_Args_msg;
-extern const pb_msgdesc_t FormatCode_Result_msg;
-extern const pb_msgdesc_t FormatPath_Args_msg;
-extern const pb_msgdesc_t FormatPath_Result_msg;
-extern const pb_msgdesc_t LintPath_Args_msg;
-extern const pb_msgdesc_t LintPath_Result_msg;
-extern const pb_msgdesc_t OverrideFile_Args_msg;
-extern const pb_msgdesc_t OverrideFile_Result_msg;
-extern const pb_msgdesc_t ListVariables_Options_msg;
+extern const pb_msgdesc_t ExecProgramArgs_msg;
+extern const pb_msgdesc_t ExecProgramResult_msg;
+extern const pb_msgdesc_t BuildProgramArgs_msg;
+extern const pb_msgdesc_t BuildProgramResult_msg;
+extern const pb_msgdesc_t ExecArtifactArgs_msg;
+extern const pb_msgdesc_t FormatCodeArgs_msg;
+extern const pb_msgdesc_t FormatCodeResult_msg;
+extern const pb_msgdesc_t FormatPathArgs_msg;
+extern const pb_msgdesc_t FormatPathResult_msg;
+extern const pb_msgdesc_t LintPathArgs_msg;
+extern const pb_msgdesc_t LintPathResult_msg;
+extern const pb_msgdesc_t OverrideFileArgs_msg;
+extern const pb_msgdesc_t OverrideFileResult_msg;
+extern const pb_msgdesc_t ListVariablesOptions_msg;
 extern const pb_msgdesc_t VariableList_msg;
-extern const pb_msgdesc_t ListVariables_Args_msg;
-extern const pb_msgdesc_t ListVariables_Result_msg;
-extern const pb_msgdesc_t ListVariables_Result_VariablesEntry_msg;
+extern const pb_msgdesc_t ListVariablesArgs_msg;
+extern const pb_msgdesc_t ListVariablesResult_msg;
+extern const pb_msgdesc_t ListVariablesResult_VariablesEntry_msg;
 extern const pb_msgdesc_t Variable_msg;
 extern const pb_msgdesc_t MapEntry_msg;
-extern const pb_msgdesc_t GetSchemaTypeMapping_Args_msg;
-extern const pb_msgdesc_t GetSchemaTypeMapping_Result_msg;
-extern const pb_msgdesc_t GetSchemaTypeMapping_Result_SchemaTypeMappingEntry_msg;
-extern const pb_msgdesc_t ValidateCode_Args_msg;
-extern const pb_msgdesc_t ValidateCode_Result_msg;
+extern const pb_msgdesc_t GetSchemaTypeMappingArgs_msg;
+extern const pb_msgdesc_t GetSchemaTypeMappingResult_msg;
+extern const pb_msgdesc_t GetSchemaTypeMappingResult_SchemaTypeMappingEntry_msg;
+extern const pb_msgdesc_t ValidateCodeArgs_msg;
+extern const pb_msgdesc_t ValidateCodeResult_msg;
 extern const pb_msgdesc_t Position_msg;
-extern const pb_msgdesc_t ListDepFiles_Args_msg;
-extern const pb_msgdesc_t ListDepFiles_Result_msg;
-extern const pb_msgdesc_t LoadSettingsFiles_Args_msg;
-extern const pb_msgdesc_t LoadSettingsFiles_Result_msg;
+extern const pb_msgdesc_t ListDepFilesArgs_msg;
+extern const pb_msgdesc_t ListDepFilesResult_msg;
+extern const pb_msgdesc_t LoadSettingsFilesArgs_msg;
+extern const pb_msgdesc_t LoadSettingsFilesResult_msg;
 extern const pb_msgdesc_t CliConfig_msg;
 extern const pb_msgdesc_t KeyValuePair_msg;
-extern const pb_msgdesc_t Rename_Args_msg;
-extern const pb_msgdesc_t Rename_Result_msg;
-extern const pb_msgdesc_t RenameCode_Args_msg;
-extern const pb_msgdesc_t RenameCode_Args_SourceCodesEntry_msg;
-extern const pb_msgdesc_t RenameCode_Result_msg;
-extern const pb_msgdesc_t RenameCode_Result_ChangedCodesEntry_msg;
-extern const pb_msgdesc_t Test_Args_msg;
-extern const pb_msgdesc_t Test_Result_msg;
+extern const pb_msgdesc_t RenameArgs_msg;
+extern const pb_msgdesc_t RenameResult_msg;
+extern const pb_msgdesc_t RenameCodeArgs_msg;
+extern const pb_msgdesc_t RenameCodeArgs_SourceCodesEntry_msg;
+extern const pb_msgdesc_t RenameCodeResult_msg;
+extern const pb_msgdesc_t RenameCodeResult_ChangedCodesEntry_msg;
+extern const pb_msgdesc_t TestArgs_msg;
+extern const pb_msgdesc_t TestResult_msg;
 extern const pb_msgdesc_t TestCaseInfo_msg;
-extern const pb_msgdesc_t UpdateDependencies_Args_msg;
-extern const pb_msgdesc_t UpdateDependencies_Result_msg;
+extern const pb_msgdesc_t UpdateDependenciesArgs_msg;
+extern const pb_msgdesc_t UpdateDependenciesResult_msg;
 extern const pb_msgdesc_t KclType_msg;
 extern const pb_msgdesc_t KclType_PropertiesEntry_msg;
 extern const pb_msgdesc_t KclType_ExamplesEntry_msg;
@@ -1837,73 +1837,73 @@ extern const pb_msgdesc_t Example_msg;
 #define Argument_fields &Argument_msg
 #define Error_fields &Error_msg
 #define Message_fields &Message_msg
-#define Ping_Args_fields &Ping_Args_msg
-#define Ping_Result_fields &Ping_Result_msg
-#define GetVersion_Args_fields &GetVersion_Args_msg
-#define GetVersion_Result_fields &GetVersion_Result_msg
-#define ListMethod_Args_fields &ListMethod_Args_msg
-#define ListMethod_Result_fields &ListMethod_Result_msg
-#define ParseFile_Args_fields &ParseFile_Args_msg
-#define ParseFile_Result_fields &ParseFile_Result_msg
-#define ParseProgram_Args_fields &ParseProgram_Args_msg
-#define ParseProgram_Result_fields &ParseProgram_Result_msg
-#define LoadPackage_Args_fields &LoadPackage_Args_msg
-#define LoadPackage_Result_fields &LoadPackage_Result_msg
-#define LoadPackage_Result_ScopesEntry_fields &LoadPackage_Result_ScopesEntry_msg
-#define LoadPackage_Result_SymbolsEntry_fields &LoadPackage_Result_SymbolsEntry_msg
-#define LoadPackage_Result_NodeSymbolMapEntry_fields &LoadPackage_Result_NodeSymbolMapEntry_msg
-#define LoadPackage_Result_SymbolNodeMapEntry_fields &LoadPackage_Result_SymbolNodeMapEntry_msg
-#define LoadPackage_Result_FullyQualifiedNameMapEntry_fields &LoadPackage_Result_FullyQualifiedNameMapEntry_msg
-#define LoadPackage_Result_PkgScopeMapEntry_fields &LoadPackage_Result_PkgScopeMapEntry_msg
-#define ListOptions_Result_fields &ListOptions_Result_msg
+#define PingArgs_fields &PingArgs_msg
+#define PingResult_fields &PingResult_msg
+#define GetVersionArgs_fields &GetVersionArgs_msg
+#define GetVersionResult_fields &GetVersionResult_msg
+#define ListMethodArgs_fields &ListMethodArgs_msg
+#define ListMethodResult_fields &ListMethodResult_msg
+#define ParseFileArgs_fields &ParseFileArgs_msg
+#define ParseFileResult_fields &ParseFileResult_msg
+#define ParseProgramArgs_fields &ParseProgramArgs_msg
+#define ParseProgramResult_fields &ParseProgramResult_msg
+#define LoadPackageArgs_fields &LoadPackageArgs_msg
+#define LoadPackageResult_fields &LoadPackageResult_msg
+#define LoadPackageResult_ScopesEntry_fields &LoadPackageResult_ScopesEntry_msg
+#define LoadPackageResult_SymbolsEntry_fields &LoadPackageResult_SymbolsEntry_msg
+#define LoadPackageResult_NodeSymbolMapEntry_fields &LoadPackageResult_NodeSymbolMapEntry_msg
+#define LoadPackageResult_SymbolNodeMapEntry_fields &LoadPackageResult_SymbolNodeMapEntry_msg
+#define LoadPackageResult_FullyQualifiedNameMapEntry_fields &LoadPackageResult_FullyQualifiedNameMapEntry_msg
+#define LoadPackageResult_PkgScopeMapEntry_fields &LoadPackageResult_PkgScopeMapEntry_msg
+#define ListOptionsResult_fields &ListOptionsResult_msg
 #define OptionHelp_fields &OptionHelp_msg
 #define Symbol_fields &Symbol_msg
 #define Scope_fields &Scope_msg
 #define SymbolIndex_fields &SymbolIndex_msg
 #define ScopeIndex_fields &ScopeIndex_msg
-#define ExecProgram_Args_fields &ExecProgram_Args_msg
-#define ExecProgram_Result_fields &ExecProgram_Result_msg
-#define BuildProgram_Args_fields &BuildProgram_Args_msg
-#define BuildProgram_Result_fields &BuildProgram_Result_msg
-#define ExecArtifact_Args_fields &ExecArtifact_Args_msg
-#define FormatCode_Args_fields &FormatCode_Args_msg
-#define FormatCode_Result_fields &FormatCode_Result_msg
-#define FormatPath_Args_fields &FormatPath_Args_msg
-#define FormatPath_Result_fields &FormatPath_Result_msg
-#define LintPath_Args_fields &LintPath_Args_msg
-#define LintPath_Result_fields &LintPath_Result_msg
-#define OverrideFile_Args_fields &OverrideFile_Args_msg
-#define OverrideFile_Result_fields &OverrideFile_Result_msg
-#define ListVariables_Options_fields &ListVariables_Options_msg
+#define ExecProgramArgs_fields &ExecProgramArgs_msg
+#define ExecProgramResult_fields &ExecProgramResult_msg
+#define BuildProgramArgs_fields &BuildProgramArgs_msg
+#define BuildProgramResult_fields &BuildProgramResult_msg
+#define ExecArtifactArgs_fields &ExecArtifactArgs_msg
+#define FormatCodeArgs_fields &FormatCodeArgs_msg
+#define FormatCodeResult_fields &FormatCodeResult_msg
+#define FormatPathArgs_fields &FormatPathArgs_msg
+#define FormatPathResult_fields &FormatPathResult_msg
+#define LintPathArgs_fields &LintPathArgs_msg
+#define LintPathResult_fields &LintPathResult_msg
+#define OverrideFileArgs_fields &OverrideFileArgs_msg
+#define OverrideFileResult_fields &OverrideFileResult_msg
+#define ListVariablesOptions_fields &ListVariablesOptions_msg
 #define VariableList_fields &VariableList_msg
-#define ListVariables_Args_fields &ListVariables_Args_msg
-#define ListVariables_Result_fields &ListVariables_Result_msg
-#define ListVariables_Result_VariablesEntry_fields &ListVariables_Result_VariablesEntry_msg
+#define ListVariablesArgs_fields &ListVariablesArgs_msg
+#define ListVariablesResult_fields &ListVariablesResult_msg
+#define ListVariablesResult_VariablesEntry_fields &ListVariablesResult_VariablesEntry_msg
 #define Variable_fields &Variable_msg
 #define MapEntry_fields &MapEntry_msg
-#define GetSchemaTypeMapping_Args_fields &GetSchemaTypeMapping_Args_msg
-#define GetSchemaTypeMapping_Result_fields &GetSchemaTypeMapping_Result_msg
-#define GetSchemaTypeMapping_Result_SchemaTypeMappingEntry_fields &GetSchemaTypeMapping_Result_SchemaTypeMappingEntry_msg
-#define ValidateCode_Args_fields &ValidateCode_Args_msg
-#define ValidateCode_Result_fields &ValidateCode_Result_msg
+#define GetSchemaTypeMappingArgs_fields &GetSchemaTypeMappingArgs_msg
+#define GetSchemaTypeMappingResult_fields &GetSchemaTypeMappingResult_msg
+#define GetSchemaTypeMappingResult_SchemaTypeMappingEntry_fields &GetSchemaTypeMappingResult_SchemaTypeMappingEntry_msg
+#define ValidateCodeArgs_fields &ValidateCodeArgs_msg
+#define ValidateCodeResult_fields &ValidateCodeResult_msg
 #define Position_fields &Position_msg
-#define ListDepFiles_Args_fields &ListDepFiles_Args_msg
-#define ListDepFiles_Result_fields &ListDepFiles_Result_msg
-#define LoadSettingsFiles_Args_fields &LoadSettingsFiles_Args_msg
-#define LoadSettingsFiles_Result_fields &LoadSettingsFiles_Result_msg
+#define ListDepFilesArgs_fields &ListDepFilesArgs_msg
+#define ListDepFilesResult_fields &ListDepFilesResult_msg
+#define LoadSettingsFilesArgs_fields &LoadSettingsFilesArgs_msg
+#define LoadSettingsFilesResult_fields &LoadSettingsFilesResult_msg
 #define CliConfig_fields &CliConfig_msg
 #define KeyValuePair_fields &KeyValuePair_msg
-#define Rename_Args_fields &Rename_Args_msg
-#define Rename_Result_fields &Rename_Result_msg
-#define RenameCode_Args_fields &RenameCode_Args_msg
-#define RenameCode_Args_SourceCodesEntry_fields &RenameCode_Args_SourceCodesEntry_msg
-#define RenameCode_Result_fields &RenameCode_Result_msg
-#define RenameCode_Result_ChangedCodesEntry_fields &RenameCode_Result_ChangedCodesEntry_msg
-#define Test_Args_fields &Test_Args_msg
-#define Test_Result_fields &Test_Result_msg
+#define RenameArgs_fields &RenameArgs_msg
+#define RenameResult_fields &RenameResult_msg
+#define RenameCodeArgs_fields &RenameCodeArgs_msg
+#define RenameCodeArgs_SourceCodesEntry_fields &RenameCodeArgs_SourceCodesEntry_msg
+#define RenameCodeResult_fields &RenameCodeResult_msg
+#define RenameCodeResult_ChangedCodesEntry_fields &RenameCodeResult_ChangedCodesEntry_msg
+#define TestArgs_fields &TestArgs_msg
+#define TestResult_fields &TestResult_msg
 #define TestCaseInfo_fields &TestCaseInfo_msg
-#define UpdateDependencies_Args_fields &UpdateDependencies_Args_msg
-#define UpdateDependencies_Result_fields &UpdateDependencies_Result_msg
+#define UpdateDependenciesArgs_fields &UpdateDependenciesArgs_msg
+#define UpdateDependenciesResult_fields &UpdateDependenciesResult_msg
 #define KclType_fields &KclType_msg
 #define KclType_PropertiesEntry_fields &KclType_PropertiesEntry_msg
 #define KclType_ExamplesEntry_fields &KclType_ExamplesEntry_msg
@@ -1916,80 +1916,80 @@ extern const pb_msgdesc_t Example_msg;
 /* Argument_size depends on runtime parameters */
 /* Error_size depends on runtime parameters */
 /* Message_size depends on runtime parameters */
-/* Ping_Args_size depends on runtime parameters */
-/* Ping_Result_size depends on runtime parameters */
-/* GetVersion_Result_size depends on runtime parameters */
-/* ListMethod_Result_size depends on runtime parameters */
-/* ParseFile_Args_size depends on runtime parameters */
-/* ParseFile_Result_size depends on runtime parameters */
-/* ParseProgram_Args_size depends on runtime parameters */
-/* ParseProgram_Result_size depends on runtime parameters */
-/* LoadPackage_Args_size depends on runtime parameters */
-/* LoadPackage_Result_size depends on runtime parameters */
-/* LoadPackage_Result_ScopesEntry_size depends on runtime parameters */
-/* LoadPackage_Result_SymbolsEntry_size depends on runtime parameters */
-/* LoadPackage_Result_NodeSymbolMapEntry_size depends on runtime parameters */
-/* LoadPackage_Result_SymbolNodeMapEntry_size depends on runtime parameters */
-/* LoadPackage_Result_FullyQualifiedNameMapEntry_size depends on runtime parameters */
-/* LoadPackage_Result_PkgScopeMapEntry_size depends on runtime parameters */
-/* ListOptions_Result_size depends on runtime parameters */
+/* PingArgs_size depends on runtime parameters */
+/* PingResult_size depends on runtime parameters */
+/* GetVersionResult_size depends on runtime parameters */
+/* ListMethodResult_size depends on runtime parameters */
+/* ParseFileArgs_size depends on runtime parameters */
+/* ParseFileResult_size depends on runtime parameters */
+/* ParseProgramArgs_size depends on runtime parameters */
+/* ParseProgramResult_size depends on runtime parameters */
+/* LoadPackageArgs_size depends on runtime parameters */
+/* LoadPackageResult_size depends on runtime parameters */
+/* LoadPackageResult_ScopesEntry_size depends on runtime parameters */
+/* LoadPackageResult_SymbolsEntry_size depends on runtime parameters */
+/* LoadPackageResult_NodeSymbolMapEntry_size depends on runtime parameters */
+/* LoadPackageResult_SymbolNodeMapEntry_size depends on runtime parameters */
+/* LoadPackageResult_FullyQualifiedNameMapEntry_size depends on runtime parameters */
+/* LoadPackageResult_PkgScopeMapEntry_size depends on runtime parameters */
+/* ListOptionsResult_size depends on runtime parameters */
 /* OptionHelp_size depends on runtime parameters */
 /* Symbol_size depends on runtime parameters */
 /* Scope_size depends on runtime parameters */
 /* SymbolIndex_size depends on runtime parameters */
 /* ScopeIndex_size depends on runtime parameters */
-/* ExecProgram_Args_size depends on runtime parameters */
-/* ExecProgram_Result_size depends on runtime parameters */
-/* BuildProgram_Args_size depends on runtime parameters */
-/* BuildProgram_Result_size depends on runtime parameters */
-/* ExecArtifact_Args_size depends on runtime parameters */
-/* FormatCode_Args_size depends on runtime parameters */
-/* FormatCode_Result_size depends on runtime parameters */
-/* FormatPath_Args_size depends on runtime parameters */
-/* FormatPath_Result_size depends on runtime parameters */
-/* LintPath_Args_size depends on runtime parameters */
-/* LintPath_Result_size depends on runtime parameters */
-/* OverrideFile_Args_size depends on runtime parameters */
-/* OverrideFile_Result_size depends on runtime parameters */
+/* ExecProgramArgs_size depends on runtime parameters */
+/* ExecProgramResult_size depends on runtime parameters */
+/* BuildProgramArgs_size depends on runtime parameters */
+/* BuildProgramResult_size depends on runtime parameters */
+/* ExecArtifactArgs_size depends on runtime parameters */
+/* FormatCodeArgs_size depends on runtime parameters */
+/* FormatCodeResult_size depends on runtime parameters */
+/* FormatPathArgs_size depends on runtime parameters */
+/* FormatPathResult_size depends on runtime parameters */
+/* LintPathArgs_size depends on runtime parameters */
+/* LintPathResult_size depends on runtime parameters */
+/* OverrideFileArgs_size depends on runtime parameters */
+/* OverrideFileResult_size depends on runtime parameters */
 /* VariableList_size depends on runtime parameters */
-/* ListVariables_Args_size depends on runtime parameters */
-/* ListVariables_Result_size depends on runtime parameters */
-/* ListVariables_Result_VariablesEntry_size depends on runtime parameters */
+/* ListVariablesArgs_size depends on runtime parameters */
+/* ListVariablesResult_size depends on runtime parameters */
+/* ListVariablesResult_VariablesEntry_size depends on runtime parameters */
 /* Variable_size depends on runtime parameters */
 /* MapEntry_size depends on runtime parameters */
-/* GetSchemaTypeMapping_Args_size depends on runtime parameters */
-/* GetSchemaTypeMapping_Result_size depends on runtime parameters */
-/* GetSchemaTypeMapping_Result_SchemaTypeMappingEntry_size depends on runtime parameters */
-/* ValidateCode_Args_size depends on runtime parameters */
-/* ValidateCode_Result_size depends on runtime parameters */
+/* GetSchemaTypeMappingArgs_size depends on runtime parameters */
+/* GetSchemaTypeMappingResult_size depends on runtime parameters */
+/* GetSchemaTypeMappingResult_SchemaTypeMappingEntry_size depends on runtime parameters */
+/* ValidateCodeArgs_size depends on runtime parameters */
+/* ValidateCodeResult_size depends on runtime parameters */
 /* Position_size depends on runtime parameters */
-/* ListDepFiles_Args_size depends on runtime parameters */
-/* ListDepFiles_Result_size depends on runtime parameters */
-/* LoadSettingsFiles_Args_size depends on runtime parameters */
-/* LoadSettingsFiles_Result_size depends on runtime parameters */
+/* ListDepFilesArgs_size depends on runtime parameters */
+/* ListDepFilesResult_size depends on runtime parameters */
+/* LoadSettingsFilesArgs_size depends on runtime parameters */
+/* LoadSettingsFilesResult_size depends on runtime parameters */
 /* CliConfig_size depends on runtime parameters */
 /* KeyValuePair_size depends on runtime parameters */
-/* Rename_Args_size depends on runtime parameters */
-/* Rename_Result_size depends on runtime parameters */
-/* RenameCode_Args_size depends on runtime parameters */
-/* RenameCode_Args_SourceCodesEntry_size depends on runtime parameters */
-/* RenameCode_Result_size depends on runtime parameters */
-/* RenameCode_Result_ChangedCodesEntry_size depends on runtime parameters */
-/* Test_Args_size depends on runtime parameters */
-/* Test_Result_size depends on runtime parameters */
+/* RenameArgs_size depends on runtime parameters */
+/* RenameResult_size depends on runtime parameters */
+/* RenameCodeArgs_size depends on runtime parameters */
+/* RenameCodeArgs_SourceCodesEntry_size depends on runtime parameters */
+/* RenameCodeResult_size depends on runtime parameters */
+/* RenameCodeResult_ChangedCodesEntry_size depends on runtime parameters */
+/* TestArgs_size depends on runtime parameters */
+/* TestResult_size depends on runtime parameters */
 /* TestCaseInfo_size depends on runtime parameters */
-/* UpdateDependencies_Args_size depends on runtime parameters */
-/* UpdateDependencies_Result_size depends on runtime parameters */
+/* UpdateDependenciesArgs_size depends on runtime parameters */
+/* UpdateDependenciesResult_size depends on runtime parameters */
 /* KclType_size depends on runtime parameters */
 /* KclType_PropertiesEntry_size depends on runtime parameters */
 /* KclType_ExamplesEntry_size depends on runtime parameters */
 /* Decorator_size depends on runtime parameters */
 /* Decorator_KeywordsEntry_size depends on runtime parameters */
 /* Example_size depends on runtime parameters */
-#define GetVersion_Args_size                     0
-#define ListMethod_Args_size                     0
-#define ListVariables_Options_size               2
-#define SPEC_PB_H_MAX_SIZE                       ListVariables_Options_size
+#define GetVersionArgs_size                     0
+#define ListMethodArgs_size                     0
+#define ListVariablesOptions_size               2
+#define SPEC_PB_H_MAX_SIZE                       ListVariablesOptions_size
 
 #ifdef __cplusplus
 } /* extern "C" */

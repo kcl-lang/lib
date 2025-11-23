@@ -1,15 +1,15 @@
-extern crate kclvm_api;
+extern crate kcl_api;
 
 use mlua::prelude::*;
 
 /// Execute KCL file with arguments and return the JSON/YAML result.
 fn exec_program<'a>(lua: &'a Lua, args: LuaTable<'a>) -> LuaResult<LuaTable<'a>> {
-    let api = kclvm_api::API::default();
+    let api = kcl_api::API::default();
     let work_dir: String = args.get("work_dir")?;
     let k_filename_list: Vec<String> = args.get("k_filename_list")?;
     let k_code_list: Vec<String> = args.get("k_code_list")?;
 
-    let result = match api.exec_program(&kclvm_api::ExecProgramArgs {
+    let result = match api.exec_program(&kcl_api::ExecProgramArgs {
         work_dir,
         k_filename_list,
         k_code_list,

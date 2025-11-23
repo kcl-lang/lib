@@ -2,6 +2,7 @@
 // NO CHECKED-IN PROTOBUF GENCODE
 // source: spec.proto
 
+@file:com.google.protobuf.Generated
 // Generated files should ignore deprecation warnings
 @file:Suppress("DEPRECATION")
 package com.kcl.api;
@@ -47,7 +48,7 @@ public object CliConfigKt {
      * @return A list containing the files.
      */
     public val files: com.google.protobuf.kotlin.DslList<kotlin.String, FilesProxy>
-      @kotlin.jvm.JvmSynthetic
+    @kotlin.OptIn(com.google.protobuf.kotlin.OnlyForUseByGeneratedProtoCode::class)
       get() = com.google.protobuf.kotlin.DslList(
         _builder.filesList
       )
@@ -60,7 +61,7 @@ public object CliConfigKt {
      * @param value The files to add.
      */
     @kotlin.jvm.JvmSynthetic
-    @kotlin.jvm.JvmName("addFiles")
+@kotlin.jvm.JvmName("addFiles")
     public fun com.google.protobuf.kotlin.DslList<kotlin.String, FilesProxy>.add(value: kotlin.String) {
       _builder.addFiles(value)
     }
@@ -73,7 +74,7 @@ public object CliConfigKt {
      * @param value The files to add.
      */
     @kotlin.jvm.JvmSynthetic
-    @kotlin.jvm.JvmName("plusAssignFiles")
+@kotlin.jvm.JvmName("plusAssignFiles")
     @Suppress("NOTHING_TO_INLINE")
     public inline operator fun com.google.protobuf.kotlin.DslList<kotlin.String, FilesProxy>.plusAssign(value: kotlin.String) {
       add(value)
@@ -87,7 +88,7 @@ public object CliConfigKt {
      * @param values The files to add.
      */
     @kotlin.jvm.JvmSynthetic
-    @kotlin.jvm.JvmName("addAllFiles")
+@kotlin.jvm.JvmName("addAllFiles")
     public fun com.google.protobuf.kotlin.DslList<kotlin.String, FilesProxy>.addAll(values: kotlin.collections.Iterable<kotlin.String>) {
       _builder.addAllFiles(values)
     }
@@ -100,7 +101,7 @@ public object CliConfigKt {
      * @param values The files to add.
      */
     @kotlin.jvm.JvmSynthetic
-    @kotlin.jvm.JvmName("plusAssignAllFiles")
+@kotlin.jvm.JvmName("plusAssignAllFiles")
     @Suppress("NOTHING_TO_INLINE")
     public inline operator fun com.google.protobuf.kotlin.DslList<kotlin.String, FilesProxy>.plusAssign(values: kotlin.collections.Iterable<kotlin.String>) {
       addAll(values)
@@ -115,7 +116,7 @@ public object CliConfigKt {
      * @param value The files to set.
      */
     @kotlin.jvm.JvmSynthetic
-    @kotlin.jvm.JvmName("setFiles")
+@kotlin.jvm.JvmName("setFiles")
     public operator fun com.google.protobuf.kotlin.DslList<kotlin.String, FilesProxy>.set(index: kotlin.Int, value: kotlin.String) {
       _builder.setFiles(index, value)
     }/**
@@ -126,7 +127,7 @@ public object CliConfigKt {
      * `repeated string files = 1;`
      */
     @kotlin.jvm.JvmSynthetic
-    @kotlin.jvm.JvmName("clearFiles")
+@kotlin.jvm.JvmName("setFiles")
     public fun com.google.protobuf.kotlin.DslList<kotlin.String, FilesProxy>.clear() {
       _builder.clearFiles()
     }
@@ -138,10 +139,10 @@ public object CliConfigKt {
      * `string output = 2;`
      */
     public var output: kotlin.String
-      @JvmName("getOutput")
-      get() = _builder.output
-      @JvmName("setOutput")
-      set(value) {
+      @kotlin.jvm.JvmName("getOutput")
+        get() = _builder.output
+      @kotlin.jvm.JvmName("setOutput")
+        set(value) {
         _builder.output = value
       }
     /**
@@ -170,7 +171,7 @@ public object CliConfigKt {
      * @return A list containing the overrides.
      */
     public val overrides: com.google.protobuf.kotlin.DslList<kotlin.String, OverridesProxy>
-      @kotlin.jvm.JvmSynthetic
+    @kotlin.OptIn(com.google.protobuf.kotlin.OnlyForUseByGeneratedProtoCode::class)
       get() = com.google.protobuf.kotlin.DslList(
         _builder.overridesList
       )
@@ -183,7 +184,7 @@ public object CliConfigKt {
      * @param value The overrides to add.
      */
     @kotlin.jvm.JvmSynthetic
-    @kotlin.jvm.JvmName("addOverrides")
+@kotlin.jvm.JvmName("addOverrides")
     public fun com.google.protobuf.kotlin.DslList<kotlin.String, OverridesProxy>.add(value: kotlin.String) {
       _builder.addOverrides(value)
     }
@@ -196,7 +197,7 @@ public object CliConfigKt {
      * @param value The overrides to add.
      */
     @kotlin.jvm.JvmSynthetic
-    @kotlin.jvm.JvmName("plusAssignOverrides")
+@kotlin.jvm.JvmName("plusAssignOverrides")
     @Suppress("NOTHING_TO_INLINE")
     public inline operator fun com.google.protobuf.kotlin.DslList<kotlin.String, OverridesProxy>.plusAssign(value: kotlin.String) {
       add(value)
@@ -210,7 +211,7 @@ public object CliConfigKt {
      * @param values The overrides to add.
      */
     @kotlin.jvm.JvmSynthetic
-    @kotlin.jvm.JvmName("addAllOverrides")
+@kotlin.jvm.JvmName("addAllOverrides")
     public fun com.google.protobuf.kotlin.DslList<kotlin.String, OverridesProxy>.addAll(values: kotlin.collections.Iterable<kotlin.String>) {
       _builder.addAllOverrides(values)
     }
@@ -223,7 +224,7 @@ public object CliConfigKt {
      * @param values The overrides to add.
      */
     @kotlin.jvm.JvmSynthetic
-    @kotlin.jvm.JvmName("plusAssignAllOverrides")
+@kotlin.jvm.JvmName("plusAssignAllOverrides")
     @Suppress("NOTHING_TO_INLINE")
     public inline operator fun com.google.protobuf.kotlin.DslList<kotlin.String, OverridesProxy>.plusAssign(values: kotlin.collections.Iterable<kotlin.String>) {
       addAll(values)
@@ -238,7 +239,7 @@ public object CliConfigKt {
      * @param value The overrides to set.
      */
     @kotlin.jvm.JvmSynthetic
-    @kotlin.jvm.JvmName("setOverrides")
+@kotlin.jvm.JvmName("setOverrides")
     public operator fun com.google.protobuf.kotlin.DslList<kotlin.String, OverridesProxy>.set(index: kotlin.Int, value: kotlin.String) {
       _builder.setOverrides(index, value)
     }/**
@@ -249,7 +250,7 @@ public object CliConfigKt {
      * `repeated string overrides = 3;`
      */
     @kotlin.jvm.JvmSynthetic
-    @kotlin.jvm.JvmName("clearOverrides")
+@kotlin.jvm.JvmName("setOverrides")
     public fun com.google.protobuf.kotlin.DslList<kotlin.String, OverridesProxy>.clear() {
       _builder.clearOverrides()
     }
@@ -268,7 +269,7 @@ public object CliConfigKt {
      * @return A list containing the pathSelector.
      */
     public val pathSelector: com.google.protobuf.kotlin.DslList<kotlin.String, PathSelectorProxy>
-      @kotlin.jvm.JvmSynthetic
+    @kotlin.OptIn(com.google.protobuf.kotlin.OnlyForUseByGeneratedProtoCode::class)
       get() = com.google.protobuf.kotlin.DslList(
         _builder.pathSelectorList
       )
@@ -281,7 +282,7 @@ public object CliConfigKt {
      * @param value The pathSelector to add.
      */
     @kotlin.jvm.JvmSynthetic
-    @kotlin.jvm.JvmName("addPathSelector")
+@kotlin.jvm.JvmName("addPathSelector")
     public fun com.google.protobuf.kotlin.DslList<kotlin.String, PathSelectorProxy>.add(value: kotlin.String) {
       _builder.addPathSelector(value)
     }
@@ -294,7 +295,7 @@ public object CliConfigKt {
      * @param value The pathSelector to add.
      */
     @kotlin.jvm.JvmSynthetic
-    @kotlin.jvm.JvmName("plusAssignPathSelector")
+@kotlin.jvm.JvmName("plusAssignPathSelector")
     @Suppress("NOTHING_TO_INLINE")
     public inline operator fun com.google.protobuf.kotlin.DslList<kotlin.String, PathSelectorProxy>.plusAssign(value: kotlin.String) {
       add(value)
@@ -308,7 +309,7 @@ public object CliConfigKt {
      * @param values The pathSelector to add.
      */
     @kotlin.jvm.JvmSynthetic
-    @kotlin.jvm.JvmName("addAllPathSelector")
+@kotlin.jvm.JvmName("addAllPathSelector")
     public fun com.google.protobuf.kotlin.DslList<kotlin.String, PathSelectorProxy>.addAll(values: kotlin.collections.Iterable<kotlin.String>) {
       _builder.addAllPathSelector(values)
     }
@@ -321,7 +322,7 @@ public object CliConfigKt {
      * @param values The pathSelector to add.
      */
     @kotlin.jvm.JvmSynthetic
-    @kotlin.jvm.JvmName("plusAssignAllPathSelector")
+@kotlin.jvm.JvmName("plusAssignAllPathSelector")
     @Suppress("NOTHING_TO_INLINE")
     public inline operator fun com.google.protobuf.kotlin.DslList<kotlin.String, PathSelectorProxy>.plusAssign(values: kotlin.collections.Iterable<kotlin.String>) {
       addAll(values)
@@ -336,7 +337,7 @@ public object CliConfigKt {
      * @param value The pathSelector to set.
      */
     @kotlin.jvm.JvmSynthetic
-    @kotlin.jvm.JvmName("setPathSelector")
+@kotlin.jvm.JvmName("setPathSelector")
     public operator fun com.google.protobuf.kotlin.DslList<kotlin.String, PathSelectorProxy>.set(index: kotlin.Int, value: kotlin.String) {
       _builder.setPathSelector(index, value)
     }/**
@@ -347,7 +348,7 @@ public object CliConfigKt {
      * `repeated string path_selector = 4;`
      */
     @kotlin.jvm.JvmSynthetic
-    @kotlin.jvm.JvmName("clearPathSelector")
+@kotlin.jvm.JvmName("setPathSelector")
     public fun com.google.protobuf.kotlin.DslList<kotlin.String, PathSelectorProxy>.clear() {
       _builder.clearPathSelector()
     }
@@ -359,10 +360,10 @@ public object CliConfigKt {
      * `bool strict_range_check = 5;`
      */
     public var strictRangeCheck: kotlin.Boolean
-      @JvmName("getStrictRangeCheck")
-      get() = _builder.strictRangeCheck
-      @JvmName("setStrictRangeCheck")
-      set(value) {
+      @kotlin.jvm.JvmName("getStrictRangeCheck")
+        get() = _builder.strictRangeCheck
+      @kotlin.jvm.JvmName("setStrictRangeCheck")
+        set(value) {
         _builder.strictRangeCheck = value
       }
     /**
@@ -384,10 +385,10 @@ public object CliConfigKt {
      * `bool disable_none = 6;`
      */
     public var disableNone: kotlin.Boolean
-      @JvmName("getDisableNone")
-      get() = _builder.disableNone
-      @JvmName("setDisableNone")
-      set(value) {
+      @kotlin.jvm.JvmName("getDisableNone")
+        get() = _builder.disableNone
+      @kotlin.jvm.JvmName("setDisableNone")
+        set(value) {
         _builder.disableNone = value
       }
     /**
@@ -409,10 +410,10 @@ public object CliConfigKt {
      * `int64 verbose = 7;`
      */
     public var verbose: kotlin.Long
-      @JvmName("getVerbose")
-      get() = _builder.verbose
-      @JvmName("setVerbose")
-      set(value) {
+      @kotlin.jvm.JvmName("getVerbose")
+        get() = _builder.verbose
+      @kotlin.jvm.JvmName("setVerbose")
+        set(value) {
         _builder.verbose = value
       }
     /**
@@ -434,10 +435,10 @@ public object CliConfigKt {
      * `bool debug = 8;`
      */
     public var debug: kotlin.Boolean
-      @JvmName("getDebug")
-      get() = _builder.debug
-      @JvmName("setDebug")
-      set(value) {
+      @kotlin.jvm.JvmName("getDebug")
+        get() = _builder.debug
+      @kotlin.jvm.JvmName("setDebug")
+        set(value) {
         _builder.debug = value
       }
     /**
@@ -459,10 +460,10 @@ public object CliConfigKt {
      * `bool sort_keys = 9;`
      */
     public var sortKeys: kotlin.Boolean
-      @JvmName("getSortKeys")
-      get() = _builder.sortKeys
-      @JvmName("setSortKeys")
-      set(value) {
+      @kotlin.jvm.JvmName("getSortKeys")
+        get() = _builder.sortKeys
+      @kotlin.jvm.JvmName("setSortKeys")
+        set(value) {
         _builder.sortKeys = value
       }
     /**
@@ -484,10 +485,10 @@ public object CliConfigKt {
      * `bool show_hidden = 10;`
      */
     public var showHidden: kotlin.Boolean
-      @JvmName("getShowHidden")
-      get() = _builder.showHidden
-      @JvmName("setShowHidden")
-      set(value) {
+      @kotlin.jvm.JvmName("getShowHidden")
+        get() = _builder.showHidden
+      @kotlin.jvm.JvmName("setShowHidden")
+        set(value) {
         _builder.showHidden = value
       }
     /**
@@ -509,10 +510,10 @@ public object CliConfigKt {
      * `bool include_schema_type_path = 11;`
      */
     public var includeSchemaTypePath: kotlin.Boolean
-      @JvmName("getIncludeSchemaTypePath")
-      get() = _builder.includeSchemaTypePath
-      @JvmName("setIncludeSchemaTypePath")
-      set(value) {
+      @kotlin.jvm.JvmName("getIncludeSchemaTypePath")
+        get() = _builder.includeSchemaTypePath
+      @kotlin.jvm.JvmName("setIncludeSchemaTypePath")
+        set(value) {
         _builder.includeSchemaTypePath = value
       }
     /**
@@ -534,10 +535,10 @@ public object CliConfigKt {
      * `bool fast_eval = 12;`
      */
     public var fastEval: kotlin.Boolean
-      @JvmName("getFastEval")
-      get() = _builder.fastEval
-      @JvmName("setFastEval")
-      set(value) {
+      @kotlin.jvm.JvmName("getFastEval")
+        get() = _builder.fastEval
+      @kotlin.jvm.JvmName("setFastEval")
+        set(value) {
         _builder.fastEval = value
       }
     /**
