@@ -51,13 +51,20 @@
         <buildnumber-maven-plugin.version>1.4</buildnumber-maven-plugin.version>
         <maven-jar-plugin.version>3.2.0</maven-jar-plugin.version>
         <formatter-maven-plugin.version>2.16.0</formatter-maven-plugin.version>
+        <protobuf-java.version>4.33.1</protobuf-java.version>
+        <protobuf-maven-plugin.version>0.6.1</protobuf-maven-plugin.version>
     </properties>
     <dependencies>
         <!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-api -->
         <dependency>
             <groupId>com.google.protobuf</groupId>
             <artifactId>protobuf-java</artifactId>
-            <version>4.33.1</version>
+            <version>${protobuf-java.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.protobuf</groupId>
+            <artifactId>protobuf-java-util</artifactId>
+            <version>${protobuf-java.version}</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>

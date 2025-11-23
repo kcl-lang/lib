@@ -88,6 +88,8 @@ jobs:
               bash -c "set -e &&
               rustup target add aarch64-unknown-linux-gnu && 
               corepack prepare pnpm@9.15.4 --activate && 
+              cargo clean && 
+              cargo update && 
               pnpm build --target aarch64-unknown-linux-gnu &&
               aarch64-unknown-linux-gnu-strip *.node"
               cd nodejs
