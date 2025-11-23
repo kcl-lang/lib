@@ -1,6 +1,6 @@
 extern crate kcl_api;
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn callNative(
     name_ptr: *const u8,
     name_len: usize,

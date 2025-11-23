@@ -93,7 +93,7 @@ export async function load(opts?: KCLWasmLoadOptions) {
 
   const imports = {
     env: {
-      kcl_plugin_invoke_json_wasm: (
+      kclvm_plugin_invoke_json_wasm: (
         _method: number,
         _args: number,
         _kwargs: number

@@ -19,10 +19,11 @@ pub fn build(b: *std.Build) void {
 
     const lib = b.addLibrary(.{
         .name = "kcl_lib_zig",
-        .root_source_file = b.path("src/root.zig"),
-        .target = target,
-        .optimize = optimize,
-        .kind = .static,
+        .root_module = b.createModule(.{
+            .root_source_file = b.path("src/root.zig"),
+            .target = b.graph.host,
+            .optimize = optimize,
+        }),
     });
 
     lib.linkLibC();
@@ -43,9 +44,11 @@ pub fn build(b: *std.Build) void {
     // Creates a step for unit testing. This only builds the test executable
     // but does not run it.
     const lib_unit_tests = b.addTest(.{
-        .root_source_file = b.path("src/root.zig"),
-        .target = target,
-        .optimize = optimize,
+        .root_module = b.createModule(.{
+            .root_source_file = b.path("src/root.zig"),
+            .target = b.graph.host,
+            .optimize = optimize,
+        }),
     });
 
     lib_unit_tests.linkLibC();
