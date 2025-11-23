@@ -5,7 +5,7 @@ go 1.23
 require (
 	github.com/ebitengine/purego v0.9.1
 	github.com/gofrs/flock v0.12.1
-	google.golang.org/protobuf v1.36.9
+	google.golang.org/protobuf v1.36.10
 )
 
 require golang.org/x/sys v0.25.0 // indirect
