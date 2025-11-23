@@ -17,13 +17,12 @@ pub fn build(b: *std.Build) void {
 
     const os = target.query.os_tag orelse builtin.os.tag;
 
-    const lib = b.addStaticLibrary(.{
+    const lib = b.addLibrary(.{
         .name = "kcl_lib_zig",
-        // In this case the main source file is merely a path, however, in more
-        // complicated build scripts, this could be a generated file.
         .root_source_file = b.path("src/root.zig"),
         .target = target,
         .optimize = optimize,
+        .kind = .static,
     });
 
     lib.linkLibC();
