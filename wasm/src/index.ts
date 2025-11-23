@@ -38,7 +38,7 @@ export interface KCLWasmLoadOptions {
    *
    * @default - The kcl.wasm bundled with this package is read from disk.
    */
-  data?: Uint8Array;
+  data?: BufferSource;
 
   readonly log?: (...args: any[]) => void;
 }
@@ -76,7 +76,7 @@ export async function load(opts?: KCLWasmLoadOptions) {
 
   let bytes: BufferSource;
   if (options.data) {
-    bytes = options.data;
+    bytes = options.data as BufferSource;
   } else {
     if (typeof window !== "undefined") {
       const response = await fetch("../kcl.wasm");
@@ -85,27 +85,26 @@ export async function load(opts?: KCLWasmLoadOptions) {
       const fs = require("fs");
       const path = require("path");
       const wasmPath = path.resolve(__dirname, "../kcl.wasm");
-      bytes = fs.readFileSync(wasmPath);
+      bytes = fs.readFileSync(wasmPath) as unknown as BufferSource;
     } else {
       throw new Error("Unsupported environment");
     }
   }
+
   const imports = {
     env: {
-    kcl_plugin_invoke_json_wasm: (
+      kcl_plugin_invoke_json_wasm: (
         _method: number,
         _args: number,
         _kwargs: number
       ) => {
-        // TODO: KCL WASM plugin impl
         return 0;
       },
     },
     ...(options.imports ?? {}),
-  } as object;
+  } as const;
 
   const module = await WebAssembly.compile(bytes);
-  // Instantiate the WASI module
   return w.instantiate(module, imports);
 }
 
@@ -116,7 +115,7 @@ export function invokeKCLRun(
   instance: WebAssembly.Instance,
   opts: RunOptions
 ): string {
-  const exports = instance.exports as any;
+  const exports = instance.exports as Record<string, any>;
   const [filenamePtr, filenamePtrLength] = copyStringToWasmMemory(
     instance,
     opts.filename
@@ -125,7 +124,8 @@ export function invokeKCLRun(
     instance,
     opts.source
   );
-  let result;
+  let result = "";
+
   try {
     const resultPtr = exports[RUN_FUNCTION_NAME](filenamePtr, sourcePtr);
     const [resultStr, resultPtrLength] = copyCStrFromWasmMemory(
@@ -135,16 +135,17 @@ export function invokeKCLRun(
     exports.kcl_free(resultPtr, resultPtrLength);
     result = resultStr;
   } catch (error) {
-    let runtimeErrPtrLength = 1024;
-    let runtimeErrPtr = exports.kcl_malloc(runtimeErrPtrLength);
+    const runtimeErrPtrLength = 1024;
+    const runtimeErrPtr = exports.kcl_malloc(runtimeErrPtrLength);
     exports[RUNTIME_ERR_FUNCTION_NAME](runtimeErrPtr, runtimeErrPtrLength);
-    const [runtimeErrStr, _] = copyCStrFromWasmMemory(instance, runtimeErrPtr);
+    const [runtimeErrStr] = copyCStrFromWasmMemory(instance, runtimeErrPtr);
     exports.kcl_free(runtimeErrPtr, runtimeErrPtrLength);
     result = "ERROR:" + runtimeErrStr;
   } finally {
     exports.kcl_free(filenamePtr, filenamePtrLength);
     exports.kcl_free(sourcePtr, sourcePtrLength);
   }
+
   return result;
 }
 
@@ -155,7 +156,7 @@ export function invokeKCLFmt(
   instance: WebAssembly.Instance,
   opts: FmtOptions
 ): string {
-  const exports = instance.exports as any;
+  const exports = instance.exports as Record<string, any>;
   const [sourcePtr, sourcePtrLength] = copyStringToWasmMemory(
     instance,
     opts.source
@@ -165,6 +166,7 @@ export function invokeKCLFmt(
     instance,
     resultPtr
   );
+
   exports.kcl_free(sourcePtr, sourcePtrLength);
   exports.kcl_free(resultPtr, resultPtrLength);
   return resultStr;
@@ -174,29 +176,28 @@ function copyStringToWasmMemory(
   instance: WebAssembly.Instance,
   str: string
 ): [number, number] {
-  const exports = instance.exports as any;
+  const exports = instance.exports as Record<string, any>;
   const encodedString = new TextEncoder().encode(str);
-  const pointer = exports.kcl_malloc(encodedString.length + 1); // Allocate memory and get pointer
-  const buffer = new Uint8Array(
-    exports.memory.buffer,
-    pointer,
-    encodedString.length + 1
-  );
+  const strLength = encodedString.length + 1;
+  const pointer = exports.kcl_malloc(strLength);
+  const memoryBuffer = exports.memory.buffer as ArrayBuffer;
+  const buffer = new Uint8Array(memoryBuffer, pointer, strLength);
+
   buffer.set(encodedString);
-  buffer[encodedString.length] = 0; // Null-terminate the string
-  return [pointer, encodedString.length + 1];
+  buffer[encodedString.length] = 0;
+  return [pointer, strLength];
 }
 
 function copyCStrFromWasmMemory(
   instance: WebAssembly.Instance,
   ptr: number
 ): [string, number] {
-  const exports = instance.exports as any;
-  const memory = new Uint8Array(exports.memory.buffer);
+  const exports = instance.exports as Record<string, any>;
+  const memoryBuffer = exports.memory.buffer as ArrayBuffer;
+  const memory = new Uint8Array(memoryBuffer);
+
   let end = ptr;
-  while (memory[end] !== 0) {
-    end++;
-  }
+  while (memory[end] !== 0) end++;
   const result = new TextDecoder().decode(memory.slice(ptr, end));
-  return [result, end + 1 - ptr];
+  return [result, end - ptr + 1];
 }

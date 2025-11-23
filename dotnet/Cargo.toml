@@ -2,6 +2,7 @@
 name = "kcl-lib-dotnet"
 publish = false
 version = "0.12.0"
+edition = "2024"
 
 [lib]
 crate-type = ["cdylib"]

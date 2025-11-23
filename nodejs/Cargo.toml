@@ -1,7 +1,7 @@
 [package]
-edition = "2021"
-name = "kcl-lib"
-version = "0.0.0"
+edition = "2024"
+name = "kcl-nodejs-lib"
+version = "0.12.0"
 
 [lib]
 crate-type = ["cdylib"]

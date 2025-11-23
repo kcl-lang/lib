@@ -31,7 +31,7 @@ lazy_static! {
     static ref SCOPE_CACHE: Mutex<OnceCell<KCLScopeCache>> = Mutex::new(OnceCell::new());
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "system" fn Java_com_kcl_api_API_callNative(
     mut env: JNIEnv,
     _: JClass,
@@ -44,7 +44,7 @@ pub extern "system" fn Java_com_kcl_api_API_callNative(
     })
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "system" fn Java_com_kcl_api_API_registerPluginContext(env: JNIEnv, obj: JObject) {
     let jvm = env.get_java_vm().unwrap();
     *JVM.lock().unwrap() = Some(jvm);
@@ -52,7 +52,7 @@ pub extern "system" fn Java_com_kcl_api_API_registerPluginContext(env: JNIEnv, o
     *CALLBACK_OBJ.lock().unwrap() = Some(global_ref);
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "system" fn Java_com_kcl_api_API_loadPackageWithCache(
     mut env: JNIEnv,
     _: JClass,
@@ -87,7 +87,7 @@ fn intern_load_package_with_cache(env: &mut JNIEnv, args: JByteArray) -> Result<
     let scope_cache = binding.get_or_init(|| KCLScopeCache::default());
     // Load package arguments from protobuf bytes.
     let args = env.convert_byte_array(args)?;
-    let args: LoadPackageArgs = <LoadPackageArgs as Message>::decode(args.as_ref())?;
+    let args: LoadPackageArgs = LoadPackageArgs::decode(args.as_ref())?;
     let svc = KclServiceImpl::default();
     // Call load package API and decode the result to protobuf bytes.
     let packages = svc.load_package_with_cache(&args, module_cache.clone(), scope_cache.clone())?;
@@ -95,7 +95,7 @@ fn intern_load_package_with_cache(env: &mut JNIEnv, args: JByteArray) -> Result<
     Ok(j_byte_array.into_raw())
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 extern "C" fn plugin_agent(
     method: *const c_char,
     args: *const c_char,

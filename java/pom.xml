@@ -39,7 +39,6 @@
         <maven.build.timestamp.format>yyyyMMddHHmmss</maven.build.timestamp.format>
         <maven.build.timestamp>${maven.build.timestamp}</maven.build.timestamp>
 
-        <protobuf-java.version>4.33.1</protobuf-java.version>
         <slf4j.version>1.7.30</slf4j.version>
         <jackson.version>2.13.2</jackson.version>
         <apache.commons-lang3.version>3.4</apache.commons-lang3.version>
@@ -58,7 +57,7 @@
         <dependency>
             <groupId>com.google.protobuf</groupId>
             <artifactId>protobuf-java</artifactId>
-            <version>4.29.3</version>
+            <version>4.33.1</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
