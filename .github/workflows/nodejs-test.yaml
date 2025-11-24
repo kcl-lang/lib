@@ -28,7 +28,7 @@ jobs:
         working-directory: "nodejs"
 
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - name: Install rust toolchain
         uses: actions-rs/toolchain@v1
         with:
@@ -111,7 +111,7 @@ jobs:
     name: linux - ${{ matrix.settings.target }}
 
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - uses: pnpm/action-setup@v4
         with:
           version: 10
@@ -151,7 +151,7 @@ jobs:
     name: windows - ${{ matrix.settings.target }}
 
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - uses: pnpm/action-setup@v4
         with:
           version: 10
@@ -200,7 +200,7 @@ jobs:
     name: macos - ${{ matrix.settings.target }}
 
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - uses: pnpm/action-setup@v4
         with:
           version: 10
@@ -232,7 +232,7 @@ jobs:
         working-directory: "nodejs"
 
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - uses: pnpm/action-setup@v4
         with:
           version: 10
