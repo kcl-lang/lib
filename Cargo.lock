@@ -1631,7 +1631,7 @@ dependencies = [
 [[package]]
 name = "kcl-api"
 version = "0.12.0"
-source = "git+https://github.com/kcl-lang/kcl#8a6d63783880e9d4ab079b69d2bfd795bb5e4b85"
+source = "git+https://github.com/kcl-lang/kcl#cf6bae809696df2efb8ed081a02fcc46a9fd7ab8"
 dependencies = [
  "anyhow",
  "futures",
@@ -1670,7 +1670,7 @@ dependencies = [
 [[package]]
 name = "kcl-ast"
 version = "0.12.0"
-source = "git+https://github.com/kcl-lang/kcl#8a6d63783880e9d4ab079b69d2bfd795bb5e4b85"
+source = "git+https://github.com/kcl-lang/kcl#cf6bae809696df2efb8ed081a02fcc46a9fd7ab8"
 dependencies = [
  "anyhow",
  "compiler_base_span",
@@ -1686,7 +1686,7 @@ dependencies = [
 [[package]]
 name = "kcl-ast-pretty"
 version = "0.12.0"
-source = "git+https://github.com/kcl-lang/kcl#8a6d63783880e9d4ab079b69d2bfd795bb5e4b85"
+source = "git+https://github.com/kcl-lang/kcl#cf6bae809696df2efb8ed081a02fcc46a9fd7ab8"
 dependencies = [
  "compiler_base_macros",
  "compiler_base_session",
@@ -1700,7 +1700,7 @@ dependencies = [
 [[package]]
 name = "kcl-config"
 version = "0.12.0"
-source = "git+https://github.com/kcl-lang/kcl#8a6d63783880e9d4ab079b69d2bfd795bb5e4b85"
+source = "git+https://github.com/kcl-lang/kcl#cf6bae809696df2efb8ed081a02fcc46a9fd7ab8"
 dependencies = [
  "anyhow",
  "chrono",
@@ -1723,7 +1723,7 @@ dependencies = [
 [[package]]
 name = "kcl-driver"
 version = "0.12.0"
-source = "git+https://github.com/kcl-lang/kcl#8a6d63783880e9d4ab079b69d2bfd795bb5e4b85"
+source = "git+https://github.com/kcl-lang/kcl#cf6bae809696df2efb8ed081a02fcc46a9fd7ab8"
 dependencies = [
  "anyhow",
  "flate2",
@@ -1746,7 +1746,7 @@ dependencies = [
 [[package]]
 name = "kcl-error"
 version = "0.12.0"
-source = "git+https://github.com/kcl-lang/kcl#8a6d63783880e9d4ab079b69d2bfd795bb5e4b85"
+source = "git+https://github.com/kcl-lang/kcl#cf6bae809696df2efb8ed081a02fcc46a9fd7ab8"
 dependencies = [
  "annotate-snippets",
  "anyhow",
@@ -1768,7 +1768,7 @@ dependencies = [
 [[package]]
 name = "kcl-evaluator"
 version = "0.12.0"
-source = "git+https://github.com/kcl-lang/kcl#8a6d63783880e9d4ab079b69d2bfd795bb5e4b85"
+source = "git+https://github.com/kcl-lang/kcl#cf6bae809696df2efb8ed081a02fcc46a9fd7ab8"
 dependencies = [
  "anyhow",
  "generational-arena",
@@ -1796,7 +1796,7 @@ dependencies = [
 [[package]]
 name = "kcl-language-server"
 version = "0.12.0"
-source = "git+https://github.com/kcl-lang/kcl#8a6d63783880e9d4ab079b69d2bfd795bb5e4b85"
+source = "git+https://github.com/kcl-lang/kcl#cf6bae809696df2efb8ed081a02fcc46a9fd7ab8"
 dependencies = [
  "anyhow",
  "chrono",
@@ -1841,7 +1841,7 @@ dependencies = [
 [[package]]
 name = "kcl-lexer"
 version = "0.12.0"
-source = "git+https://github.com/kcl-lang/kcl#8a6d63783880e9d4ab079b69d2bfd795bb5e4b85"
+source = "git+https://github.com/kcl-lang/kcl#cf6bae809696df2efb8ed081a02fcc46a9fd7ab8"
 dependencies = [
  "kcl-error",
  "rustc_lexer",
@@ -1851,7 +1851,7 @@ dependencies = [
 [[package]]
 name = "kcl-loader"
 version = "0.12.0"
-source = "git+https://github.com/kcl-lang/kcl#8a6d63783880e9d4ab079b69d2bfd795bb5e4b85"
+source = "git+https://github.com/kcl-lang/kcl#cf6bae809696df2efb8ed081a02fcc46a9fd7ab8"
 dependencies = [
  "anyhow",
  "kcl-ast",
@@ -1868,7 +1868,7 @@ dependencies = [
 [[package]]
 name = "kcl-macros"
 version = "0.12.0"
-source = "git+https://github.com/kcl-lang/kcl#8a6d63783880e9d4ab079b69d2bfd795bb5e4b85"
+source = "git+https://github.com/kcl-lang/kcl#cf6bae809696df2efb8ed081a02fcc46a9fd7ab8"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -1879,7 +1879,7 @@ dependencies = [
 [[package]]
 name = "kcl-parser"
 version = "0.12.0"
-source = "git+https://github.com/kcl-lang/kcl#8a6d63783880e9d4ab079b69d2bfd795bb5e4b85"
+source = "git+https://github.com/kcl-lang/kcl#cf6bae809696df2efb8ed081a02fcc46a9fd7ab8"
 dependencies = [
  "anyhow",
  "bstr",
@@ -1913,7 +1913,7 @@ dependencies = [
 [[package]]
 name = "kcl-primitives"
 version = "0.12.0"
-source = "git+https://github.com/kcl-lang/kcl#8a6d63783880e9d4ab079b69d2bfd795bb5e4b85"
+source = "git+https://github.com/kcl-lang/kcl#cf6bae809696df2efb8ed081a02fcc46a9fd7ab8"
 dependencies = [
  "indexmap 2.12.1",
  "rustc-hash 2.1.1",
@@ -1922,7 +1922,7 @@ dependencies = [
 [[package]]
 name = "kcl-query"
 version = "0.12.0"
-source = "git+https://github.com/kcl-lang/kcl#8a6d63783880e9d4ab079b69d2bfd795bb5e4b85"
+source = "git+https://github.com/kcl-lang/kcl#cf6bae809696df2efb8ed081a02fcc46a9fd7ab8"
 dependencies = [
  "anyhow",
  "compiler_base_macros",
@@ -1943,7 +1943,7 @@ dependencies = [
 [[package]]
 name = "kcl-runner"
 version = "0.12.0"
-source = "git+https://github.com/kcl-lang/kcl#8a6d63783880e9d4ab079b69d2bfd795bb5e4b85"
+source = "git+https://github.com/kcl-lang/kcl#cf6bae809696df2efb8ed081a02fcc46a9fd7ab8"
 dependencies = [
  "anyhow",
  "cc",
@@ -1977,7 +1977,7 @@ dependencies = [
 [[package]]
 name = "kcl-runtime"
 version = "0.12.0"
-source = "git+https://github.com/kcl-lang/kcl#8a6d63783880e9d4ab079b69d2bfd795bb5e4b85"
+source = "git+https://github.com/kcl-lang/kcl#cf6bae809696df2efb8ed081a02fcc46a9fd7ab8"
 dependencies = [
  "anyhow",
  "base32",
@@ -2017,7 +2017,7 @@ dependencies = [
 [[package]]
 name = "kcl-sema"
 version = "0.12.0"
-source = "git+https://github.com/kcl-lang/kcl#8a6d63783880e9d4ab079b69d2bfd795bb5e4b85"
+source = "git+https://github.com/kcl-lang/kcl#cf6bae809696df2efb8ed081a02fcc46a9fd7ab8"
 dependencies = [
  "anyhow",
  "bit-set",
@@ -2050,7 +2050,7 @@ dependencies = [
 [[package]]
 name = "kcl-span"
 version = "0.12.0"
-source = "git+https://github.com/kcl-lang/kcl#8a6d63783880e9d4ab079b69d2bfd795bb5e4b85"
+source = "git+https://github.com/kcl-lang/kcl#cf6bae809696df2efb8ed081a02fcc46a9fd7ab8"
 dependencies = [
  "compiler_base_span",
  "kcl-macros",
@@ -2061,7 +2061,7 @@ dependencies = [
 [[package]]
 name = "kcl-tools"
 version = "0.12.0"
-source = "git+https://github.com/kcl-lang/kcl#8a6d63783880e9d4ab079b69d2bfd795bb5e4b85"
+source = "git+https://github.com/kcl-lang/kcl#cf6bae809696df2efb8ed081a02fcc46a9fd7ab8"
 dependencies = [
  "anyhow",
  "compiler_base_session",
@@ -2092,7 +2092,7 @@ dependencies = [
 [[package]]
 name = "kcl-utils"
 version = "0.12.0"
-source = "git+https://github.com/kcl-lang/kcl#8a6d63783880e9d4ab079b69d2bfd795bb5e4b85"
+source = "git+https://github.com/kcl-lang/kcl#cf6bae809696df2efb8ed081a02fcc46a9fd7ab8"
 dependencies = [
  "anyhow",
  "fslock",
@@ -2102,7 +2102,7 @@ dependencies = [
 [[package]]
 name = "kcl-version"
 version = "0.12.0"
-source = "git+https://github.com/kcl-lang/kcl#8a6d63783880e9d4ab079b69d2bfd795bb5e4b85"
+source = "git+https://github.com/kcl-lang/kcl#cf6bae809696df2efb8ed081a02fcc46a9fd7ab8"
 dependencies = [
  "vergen-gitcl",
 ]
@@ -2110,7 +2110,7 @@ dependencies = [
 [[package]]
 name = "kcl_runtime_internal_macros"
 version = "0.12.0"
-source = "git+https://github.com/kcl-lang/kcl#8a6d63783880e9d4ab079b69d2bfd795bb5e4b85"
+source = "git+https://github.com/kcl-lang/kcl#cf6bae809696df2efb8ed081a02fcc46a9fd7ab8"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -2788,7 +2788,7 @@ dependencies = [
 [[package]]
 name = "proc_macro_crate"
 version = "0.1.0"
-source = "git+https://github.com/kcl-lang/kcl#8a6d63783880e9d4ab079b69d2bfd795bb5e4b85"
+source = "git+https://github.com/kcl-lang/kcl#cf6bae809696df2efb8ed081a02fcc46a9fd7ab8"
 dependencies = [
  "proc-macro2",
  "quote",
