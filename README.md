@@ -95,7 +95,7 @@ This way you'll be able to import the above dependency to use the SDK.
 <dependency>
     <groupId>com.kcl</groupId>
     <artifactId>kcl-lib</artifactId>
-    <version>0.12.0-SNAPSHOT</version>
+    <version>0.12.0</version>
 </dependency>
 ```
 
@@ -197,7 +197,7 @@ This way you'll be able to import the above dependency to use the SDK.
 <dependency>
     <groupId>com.kcl</groupId>
     <artifactId>kcl-lib</artifactId>
-    <version>0.12.0-SNAPSHOT</version>
+    <version>0.12.0</version>
 </dependency>
 ```
 
