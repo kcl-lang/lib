@@ -1,3 +1,5 @@
+#!/bin/bash
+
 cd build
 for file in ./*
 do

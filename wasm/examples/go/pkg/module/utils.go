@@ -1,6 +1,6 @@
 package module
 
-import "github.com/bytecodealliance/wasmtime-go/v22"
+import "github.com/bytecodealliance/wasmtime-go/v39"
 
 func copyStringToWasmMemory(
 	store *wasmtime.Store,
