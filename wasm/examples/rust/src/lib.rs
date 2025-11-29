@@ -40,7 +40,7 @@ impl KCLModule {
         let mut linker = Linker::new(&engine);
         linker.func_wrap(
             "env",
-            "kclvm_plugin_invoke_json_wasm",
+            "kcl_plugin_invoke_json_wasm",
             |_name: i32, _args: i32, _kwargs: i32| 0,
         )?;
         p1::add_to_linker_sync(&mut linker, |s| s)?;
