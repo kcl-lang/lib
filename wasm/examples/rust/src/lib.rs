@@ -4,22 +4,8 @@ mod tests;
 use anyhow::Result;
 use std::path::Path;
 use wasmtime::*;
-use wasmtime_wasi::{
-    preview1::{self, WasiP1Ctx},
-    WasiCtxBuilder,
-};
-
-struct State {
-    wasi: WasiP1Ctx,
-}
-
-impl State {
-    fn new() -> State {
-        State {
-            wasi: WasiCtxBuilder::new().build_p1(),
-        }
-    }
-}
+use wasmtime_wasi::p1::WasiP1Ctx;
+use wasmtime_wasi::{WasiCtx, p1};
 
 #[derive(Debug)]
 pub struct RunOptions {
@@ -34,7 +20,7 @@ pub struct FmtOptions {
 
 pub struct KCLModule {
     pub instance: Instance,
-    store: Store<State>,
+    store: Store<WasiP1Ctx>,
     memory: Memory,
     malloc: TypedFunc<i32, i32>,
     free: TypedFunc<(i32, i32), ()>,
@@ -47,16 +33,17 @@ impl KCLModule {
     /// Construct a KCL wasm module from the path.
     pub fn from_path<P: AsRef<Path>>(path: P) -> Result<KCLModule> {
         let engine = Engine::default();
-        let mut store = Store::new(&engine, State::new());
+        let wasi = WasiCtx::builder().inherit_stdio().inherit_args().build_p1();
+        let mut store = Store::new(&engine, wasi);
         let binary_data = std::fs::read(path)?;
         let module = Module::new(&engine, &binary_data)?;
-        let mut linker: Linker<State> = Linker::new(&engine);
+        let mut linker = Linker::new(&engine);
         linker.func_wrap(
             "env",
             "kclvm_plugin_invoke_json_wasm",
-            |_caller: Caller<'_, State>, _name: i32, _args: i32, _kwargs: i32| 0,
+            |_name: i32, _args: i32, _kwargs: i32| 0,
         )?;
-        preview1::add_to_linker_sync(&mut linker, |my_state| &mut my_state.wasi)?;
+        p1::add_to_linker_sync(&mut linker, |s| s)?;
         let instance = linker.instantiate(&mut store, &module)?;
         let memory = instance
             .get_memory(&mut store, "memory")

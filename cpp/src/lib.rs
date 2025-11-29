@@ -686,12 +686,6 @@ mod ffi {
     }
 
     #[derive(Debug, Default)]
-    struct HashMapValue {
-        key: String,
-        value: String,
-    }
-
-    #[derive(Debug, Default)]
     /// Message representing an example in KCL.
     pub struct Example {
         /// Short description for the example.

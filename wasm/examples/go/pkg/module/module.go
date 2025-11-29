@@ -6,7 +6,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/bytecodealliance/wasmtime-go/v22"
+	"github.com/bytecodealliance/wasmtime-go/v39"
 )
 
 type RunOptions struct {
@@ -35,7 +35,8 @@ func New(path string) (*KCLModule, error) {
 	}
 	defer os.RemoveAll(dir)
 	stdoutPath := filepath.Join(dir, "stdout")
-	engine := wasmtime.NewEngine()
+	config := wasmtime.NewConfig()
+	engine := wasmtime.NewEngineWithConfig(config)
 	module, err := wasmtime.NewModuleFromFile(engine, path)
 	if err != nil {
 		return nil, err

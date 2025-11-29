@@ -28,3 +28,4 @@ _a.out_*.*
 **/.vscode
 __pycache__
 build
+Cargo.lock
