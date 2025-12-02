@@ -4,7 +4,7 @@ build-backend = "maturin"
 
 [project]
 name = "kcl_lib"
-version = "0.12.0"
+version = "0.12.1"
 requires-python = ">=3.7"
 classifiers = [
     "Programming Language :: Rust",

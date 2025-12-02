@@ -1,7 +1,7 @@
 [package]
 name = "kcl-lib-dotnet"
 publish = false
-version = "0.12.0"
+version = "0.12.1"
 edition = "2024"
 
 [lib]
@@ -9,4 +9,4 @@ crate-type = ["cdylib"]
 doc = false
 
 [dependencies]
-kcl-api = { git = "https://github.com/kcl-lang/kcl", version = "0.12.0" }
+kcl-api = { git = "https://github.com/kcl-lang/kcl", version = "0.12.1" }
