@@ -1,13 +1,13 @@
 [package]
 edition = "2024"
 name = "kcl-nodejs-lib"
-version = "0.12.0"
+version = "0.12.1"
 
 [lib]
 crate-type = ["cdylib"]
 
 [dependencies]
-kcl-api = { git = "https://github.com/kcl-lang/kcl", version = "0.12.0" }
+kcl-api = { git = "https://github.com/kcl-lang/kcl", version = "0.12.1" }
 # Default enable napi4 feature, see https://nodejs.org/api/n-api.html#node-api-version-matrix
 napi = { version = "2.12.2", default-features = false, features = ["napi4"] }
 napi-derive = "2.12.2"
