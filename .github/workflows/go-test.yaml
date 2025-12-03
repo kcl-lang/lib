@@ -24,17 +24,99 @@ jobs:
   test:
     strategy:
       matrix:
-        os: [macos-13, macos-13, macos-13-xlarge, macos-14, macos-latest, ubuntu-22.04, ubuntu-latest, windows-latest]
-    runs-on: ${{ matrix.os }}
+        include:
+          # macOS Intel/ARM configurations
+          - os: macos-13
+            runner: macos-13
+            cgo_enabled: 1
+          - os: macos-13
+            runner: macos-13
+            cgo_enabled: 0
+          - os: macos-13-xlarge
+            runner: macos-13
+            cgo_enabled: 1
+          - os: macos-13-xlarge
+            runner: macos-13
+            cgo_enabled: 0
+          - os: macos-14
+            runner: macos-14
+            cgo_enabled: 1
+          - os: macos-14
+            runner: macos-14
+            cgo_enabled: 0
+          - os: macos-latest
+            runner: macos-latest
+            cgo_enabled: 1
+          - os: macos-latest
+            runner: macos-latest
+            cgo_enabled: 0
+          
+          # Ubuntu configurations
+          - os: ubuntu-22.04
+            runner: ubuntu-22.04
+            cgo_enabled: 1
+          - os: ubuntu-22.04
+            runner: ubuntu-22.04
+            cgo_enabled: 0
+          - os: ubuntu-latest
+            runner: ubuntu-latest
+            cgo_enabled: 1
+          - os: ubuntu-latest
+            runner: ubuntu-latest
+            cgo_enabled: 0
+          
+          # Windows configurations
+          - os: windows-latest
+            runner: windows-latest
+            cgo_enabled: 1
+          - os: windows-latest
+            runner: windows-latest
+            cgo_enabled: 0
+          
+          # Alpine Linux container configurations
+          - os: alpine-latest
+            runner: ubuntu-latest  # Host runner for the container
+            container: golang:1.23-alpine3.19
+            cgo_enabled: 1
+          - os: alpine-arm64
+            runner: ubuntu-22.04-arm64  # ARM64 host runner
+            container: golang:1.23-alpine3.19
+            cgo_enabled: 1
+            arch: arm64
+
+    runs-on: ${{ matrix.runner }}
+    container: ${{ matrix.container }}
     defaults:
       run:
         working-directory: "go"
+
     steps:
       - name: Git checkout
         uses: actions/checkout@v6
-      - name: Set up Go
+
+      - name: Set up Go (non-musl)
+        if: matrix.container == null
         uses: actions/setup-go@v6
         with:
           go-version: 1.23
-      - name: Go code test
-        run: go test ./...
+          cache: true
+
+      - name: Install musl dependencies (Alpine container)
+        if: matrix.container != null
+        run: |
+          apk add --no-cache \
+            musl-dev \
+            gcc \
+            git \
+            make
+
+      - name: Go mod tidy
+        run: go mod tidy
+
+      - name: Go code test (CGO_ENABLED=${{ matrix.cgo_enabled }})
+        run: |
+          CGO_ENABLED=${{ matrix.cgo_enabled }} go test ./... -v \
+            -coverprofile=coverage-${{ matrix.os }}-cgo-${{ matrix.cgo_enabled }}.out \
+            -covermode=atomic
+        env:
+          CGO_LDFLAGS: ${{ matrix.cgo_enabled == '1' && '-static' || '' }}

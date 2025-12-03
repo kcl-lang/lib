@@ -3,7 +3,6 @@ package install
 import (
 	"fmt"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"runtime"
 
@@ -11,13 +10,6 @@ import (
 )
 
 const KCL_VERSION = "v0.12.1"
-
-func findPath(name string) string {
-	if path, err := exec.LookPath(name); err == nil {
-		return path
-	}
-	return ""
-}
 
 func getVersion() string {
 	return fmt.Sprintf("%s-%s-%s", KCL_VERSION, runtime.GOOS, runtime.GOARCH)

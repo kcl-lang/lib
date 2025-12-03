@@ -3,69 +3,16 @@ package native
 import (
 	"bytes"
 	"errors"
-	"runtime"
 	"strings"
-	"sync"
 	"unsafe"
 
-	"github.com/ebitengine/purego"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoreflect"
 	"kcl-lang.io/lib/go/api"
-	"kcl-lang.io/lib/go/plugin"
-)
-
-var libInit sync.Once
-
-var (
-	client        *NativeServiceClient
-	lib           uintptr
-	serviceNew    func(uint64) uintptr
-	serviceDelete func(uintptr)
-	serviceCall   func(uintptr, string, string, uint, *uint) uintptr
-	free          func(uintptr, uint)
 )
 
 type validator interface {
 	Validate() error
-}
-
-type NativeServiceClient struct {
-	svc uintptr
-}
-
-func initClient(pluginAgent uint64) {
-	libInit.Do(func() {
-		lib, err := loadServiceNativeLib()
-		if err != nil {
-			panic(err)
-		}
-		purego.RegisterLibFunc(&serviceNew, lib, "kcl_service_new")
-		purego.RegisterLibFunc(&serviceDelete, lib, "kcl_service_delete")
-		purego.RegisterLibFunc(&serviceCall, lib, "kcl_service_call_with_length")
-		purego.RegisterLibFunc(&free, lib, "kcl_free")
-		client = new(NativeServiceClient)
-		client.svc = serviceNew(pluginAgent)
-		runtime.SetFinalizer(client, func(x *NativeServiceClient) {
-			if x != nil {
-				x.Close()
-			}
-		})
-	})
-}
-
-func NewNativeServiceClient() api.ServiceClient {
-	return NewNativeServiceClientWithPluginAgent(plugin.GetInvokeJsonProxyPtr())
-}
-
-func NewNativeServiceClientWithPluginAgent(pluginAgent uint64) *NativeServiceClient {
-	initClient(pluginAgent)
-	return client
-}
-
-func (x *NativeServiceClient) Close() {
-	serviceDelete(x.svc)
-	closeLibrary(lib)
 }
 
 func cApiCall[I interface {
@@ -129,16 +76,6 @@ func (c *NativeServiceClient) Ping(in *api.PingArgs) (*api.PingResult, error) {
 
 func (c *NativeServiceClient) ExecProgram(in *api.ExecProgramArgs) (*api.ExecProgramResult, error) {
 	return cApiCall[*api.ExecProgramArgs, *api.ExecProgramResult](c, "KclService.ExecProgram", in)
-}
-
-// Depreciated: Please use the env.EnableFastEvalMode() and c.ExecutProgram method and will be removed in v0.12.1.
-func (c *NativeServiceClient) BuildProgram(in *api.BuildProgramArgs) (*api.BuildProgramResult, error) {
-	return cApiCall[*api.BuildProgramArgs, *api.BuildProgramResult](c, "KclService.BuildProgram", in)
-}
-
-// Depreciated: Please use the env.EnableFastEvalMode() and c.ExecutProgram method and will be removed in v0.12.1.
-func (c *NativeServiceClient) ExecArtifact(in *api.ExecArtifactArgs) (*api.ExecProgramResult, error) {
-	return cApiCall[*api.ExecArtifactArgs, *api.ExecProgramResult](c, "KclService.ExecArtifact", in)
 }
 
 func (c *NativeServiceClient) ParseFile(in *api.ParseFileArgs) (*api.ParseFileResult, error) {
