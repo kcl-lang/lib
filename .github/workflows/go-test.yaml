@@ -102,7 +102,7 @@ jobs:
       - name: Setup build tags for Alpine
         if: matrix.container != null
         run: |
-          echo "GO_BUILD_TAGS=netgo static osusergo" >> $GITHUB_ENV
+          echo "GO_BUILD_TAGS=musl netgo static osusergo" >> $GITHUB_ENV
           echo "GO_LDFLAGS=-linkmode external -extldflags '-static'" >> $GITHUB_ENV
 
       - name: Go code test (CGO_ENABLED=${{ matrix.cgo_enabled }})
@@ -111,7 +111,7 @@ jobs:
             BUILD_TAGS="$GO_BUILD_TAGS"
             EXTRA_LDFLAGS="$GO_LDFLAGS"
           fi
-          
+
           CGO_ENABLED=${{ matrix.cgo_enabled }} \
           go test ./... -v \
             -tags="${BUILD_TAGS}" \
