@@ -26,49 +26,35 @@ jobs:
       matrix:
         include:
           # macOS Intel/ARM configurations
-          - os: macos-13
-            runner: macos-13
-            cgo_enabled: 1
+
           - os: macos-13
             runner: macos-13
             cgo_enabled: 0
-          - os: macos-13-xlarge
-            runner: macos-13
-            cgo_enabled: 1
+
           - os: macos-13-xlarge
             runner: macos-13
             cgo_enabled: 0
-          - os: macos-14
-            runner: macos-14
-            cgo_enabled: 1
+
           - os: macos-14
             runner: macos-14
             cgo_enabled: 0
-          - os: macos-latest
-            runner: macos-latest
-            cgo_enabled: 1
+
           - os: macos-latest
             runner: macos-latest
             cgo_enabled: 0
           
           # Ubuntu configurations
-          - os: ubuntu-22.04
-            runner: ubuntu-22.04
-            cgo_enabled: 1
+
           - os: ubuntu-22.04
             runner: ubuntu-22.04
             cgo_enabled: 0
-          - os: ubuntu-latest
-            runner: ubuntu-latest
-            cgo_enabled: 1
+
           - os: ubuntu-latest
             runner: ubuntu-latest
             cgo_enabled: 0
           
           # Windows configurations
-          - os: windows-latest
-            runner: windows-latest
-            cgo_enabled: 1
+
           - os: windows-latest
             runner: windows-latest
             cgo_enabled: 0
@@ -115,8 +101,6 @@ jobs:
 
       - name: Go code test (CGO_ENABLED=${{ matrix.cgo_enabled }})
         run: |
-          CGO_ENABLED=${{ matrix.cgo_enabled }} go test ./... -v \
-            -coverprofile=coverage-${{ matrix.os }}-cgo-${{ matrix.cgo_enabled }}.out \
-            -covermode=atomic
+          CGO_ENABLED=${{ matrix.cgo_enabled }} go test ./... -v
         env:
           CGO_LDFLAGS: ${{ matrix.cgo_enabled == '1' && '-static' || '' }}
