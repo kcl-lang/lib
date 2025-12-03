@@ -64,11 +64,6 @@ jobs:
             runner: ubuntu-latest  # Host runner for the container
             container: golang:1.23-alpine3.19
             cgo_enabled: 1
-          - os: alpine-arm64
-            runner: ubuntu-22.04-arm  # ARM64 host runner
-            container: golang:1.23-alpine3.19
-            cgo_enabled: 1
-            arch: arm64
 
     runs-on: ${{ matrix.runner }}
     container: ${{ matrix.container }}
