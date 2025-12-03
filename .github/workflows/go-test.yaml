@@ -65,7 +65,7 @@ jobs:
             container: golang:1.23-alpine3.19
             cgo_enabled: 1
           - os: alpine-arm64
-            runner: ubuntu-22.04-arm64  # ARM64 host runner
+            runner: ubuntu-22.04-arm  # ARM64 host runner
             container: golang:1.23-alpine3.19
             cgo_enabled: 1
             arch: arm64
@@ -120,7 +120,7 @@ jobs:
         env:
           CGO_LDFLAGS: ${{ matrix.cgo_enabled == '1' && '-static' || '' }}
 
-      - name: Go code test (CGO_ENABLED=${{ matrix.cgo_enabled }})
+      - name: Go code test (CGO_ENABLED=${{ matrix.cgo_enabled }}) on Windows
         if: matrix.os == 'windows-latest'
         run: |
-          CGO_ENABLED=${{ matrix.cgo_enabled }} go test ./... -v
+          go test ./... -v
