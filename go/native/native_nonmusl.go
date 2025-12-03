@@ -1,6 +1,6 @@
-//go:build !musl && (darwin || freebsd || linux)
+//go:build !musl && (darwin || freebsd || linux || windows)
 // +build !musl
-// +build darwin freebsd linux
+// +build darwin freebsd linux windows
 
 package native
 
