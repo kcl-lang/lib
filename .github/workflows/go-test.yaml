@@ -24,17 +24,76 @@ jobs:
   test:
     strategy:
       matrix:
-        os: [macos-13, macos-13, macos-13-xlarge, macos-14, macos-latest, ubuntu-22.04, ubuntu-latest, windows-latest]
-    runs-on: ${{ matrix.os }}
+        include:
+          - os: macos-13
+            cgo_enabled: 1
+          - os: macos-13
+            cgo_enabled: 0
+          - os: macos-13-xlarge
+            cgo_enabled: 1
+          - os: macos-13-xlarge
+            cgo_enabled: 0
+          - os: macos-14
+            cgo_enabled: 1
+          - os: macos-14
+            cgo_enabled: 0
+          - os: macos-latest
+            cgo_enabled: 1
+          - os: macos-latest
+            cgo_enabled: 0
+          - os: ubuntu-22.04
+            cgo_enabled: 1
+          - os: ubuntu-22.04
+            cgo_enabled: 0
+          - os: ubuntu-latest
+            cgo_enabled: 1
+          - os: ubuntu-latest
+            cgo_enabled: 0
+          - os: windows-latest
+            cgo_enabled: 1
+          - os: windows-latest
+            cgo_enabled: 0
+          - os: alpine-latest
+            cgo_enabled: 1
+            container: golang:1.23-alpine3.19
+          - os: alpine-arm64
+            cgo_enabled: 1
+            container: golang:1.23-alpine3.19
+            arch: arm64
+
+    runs-on: ${{ matrix.arch == 'arm64' ? 'ubuntu-latest-arm64' : matrix.os }}
+    container: ${{ (matrix.os == 'alpine-latest' || matrix.os == 'alpine-arm64') && matrix.container || null }}
     defaults:
       run:
         working-directory: "go"
+
     steps:
       - name: Git checkout
         uses: actions/checkout@v6
-      - name: Set up Go
+
+      - name: Set up Go (non-musl)
+        if: matrix.os != 'alpine-latest' && matrix.os != 'alpine-arm64'
         uses: actions/setup-go@v6
         with:
           go-version: 1.23
-      - name: Go code test
-        run: go test ./...
+          cache: true
+
+      - name: Install musl dependencies (Alpine)
+        if: matrix.os == 'alpine-latest' || matrix.os == 'alpine-arm64'
+        run: |
+          apk add --no-cache \
+            musl-dev \
+            gcc \
+            git \
+            make
+
+      - name: Go mod tidy
+        run: go mod tidy
+
+      - name: Go code test (CGO_ENABLED=${{ matrix.cgo_enabled }})
+        run: |
+          CGO_ENABLED=${{ matrix.cgo_enabled }} go test ./... -v \
+            -coverprofile=coverage-${{ matrix.os }}-cgo-${{ matrix.cgo_enabled }}.out \
+            -covermode=atomic
+        env:
+          CGO_LDFLAGS: ${{ matrix.cgo_enabled == 1 && "-static" || "" }}

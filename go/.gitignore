@@ -1,4 +1,3 @@
-
 !lib/**/*.dylib
 !lib/**/*.dll
 !lib/**/*.lib

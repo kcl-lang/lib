@@ -41,7 +41,7 @@ func GetInvokeJsonProxyPtr() uint64 {
 	return ptr
 }
 
-func Invoke(method string, args []interface{}, kwargs map[string]interface{}) (result_json string) {
+func Invoke(method string, args []any, kwargs map[string]any) (result_json string) {
 	var args_json, kwargs_json string
 
 	if len(args) > 0 {
