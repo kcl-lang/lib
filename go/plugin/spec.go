@@ -37,14 +37,14 @@ type MethodType struct {
 // MethodArgs represents the arguments passed to a KCL Plugin method.
 // It includes a list of positional arguments and a map of keyword arguments.
 type MethodArgs struct {
-	Args   []interface{}          // List of positional arguments
-	KwArgs map[string]interface{} // Map of keyword arguments
+	Args   []any          // List of positional arguments
+	KwArgs map[string]any // Map of keyword arguments
 }
 
 // MethodResult represents the result returned from a KCL Plugin method.
 // It holds the value of the result.
 type MethodResult struct {
-	V interface{} // Result value
+	V any // Result value
 }
 
 // ParseMethodArgs parses JSON strings for positional and keyword arguments
@@ -53,7 +53,7 @@ type MethodResult struct {
 // kwargs_json: JSON string of keyword arguments
 func ParseMethodArgs(args_json, kwargs_json string) (*MethodArgs, error) {
 	p := &MethodArgs{
-		KwArgs: make(map[string]interface{}),
+		KwArgs: make(map[string]any),
 	}
 	if args_json != "" {
 		if err := json.Unmarshal([]byte(args_json), &p.Args); err != nil {
@@ -82,12 +82,12 @@ func (p *MethodArgs) GetCallArg(index int, key string) any {
 }
 
 // Arg returns the positional argument at the specified index.
-func (p *MethodArgs) Arg(i int) interface{} {
+func (p *MethodArgs) Arg(i int) any {
 	return p.Args[i]
 }
 
 // KwArg returns the keyword argument with the given name.
-func (p *MethodArgs) KwArg(name string) interface{} {
+func (p *MethodArgs) KwArg(name string) any {
 	return p.KwArgs[name]
 }
 
