@@ -31,7 +31,7 @@ jobs:
       matrix:
         # https://github.com/swift-actions/setup-swift/issues/677
         # ubuntu-latest is not supported
-        os: [macos-13, macos-latest, ubuntu-22.04]
+        os: [macos-15-intel, macos-latest, ubuntu-22.04]
     runs-on: ${{ matrix.os }}
     steps:
     - uses: actions/checkout@v6
