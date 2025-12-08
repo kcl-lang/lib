@@ -1045,6 +1045,8 @@ class KclType(_message.Message):
     DESCRIPTION_FIELD_NUMBER: _ClassVar[int]
     EXAMPLES_FIELD_NUMBER: _ClassVar[int]
     BASE_SCHEMA_FIELD_NUMBER: _ClassVar[int]
+    FUNCTION_FIELD_NUMBER: _ClassVar[int]
+    INDEX_SIGNATURE_FIELD_NUMBER: _ClassVar[int]
     type: str
     union_types: _containers.RepeatedCompositeFieldContainer[KclType]
     default: str
@@ -1061,6 +1063,8 @@ class KclType(_message.Message):
     description: str
     examples: _containers.MessageMap[str, Example]
     base_schema: KclType
+    function: FunctionType
+    index_signature: IndexSignature
     def __init__(
         self,
         type: _Optional[str] = ...,
@@ -1079,6 +1083,48 @@ class KclType(_message.Message):
         description: _Optional[str] = ...,
         examples: _Optional[_Mapping[str, Example]] = ...,
         base_schema: _Optional[_Union[KclType, _Mapping]] = ...,
+        function: _Optional[_Union[FunctionType, _Mapping]] = ...,
+        index_signature: _Optional[_Union[IndexSignature, _Mapping]] = ...,
+    ) -> None: ...
+
+class FunctionType(_message.Message):
+    __slots__ = ()
+    PARAMS_FIELD_NUMBER: _ClassVar[int]
+    RETURN_TY_FIELD_NUMBER: _ClassVar[int]
+    params: _containers.RepeatedCompositeFieldContainer[Parameter]
+    return_ty: KclType
+    def __init__(
+        self,
+        params: _Optional[_Iterable[_Union[Parameter, _Mapping]]] = ...,
+        return_ty: _Optional[_Union[KclType, _Mapping]] = ...,
+    ) -> None: ...
+
+class Parameter(_message.Message):
+    __slots__ = ()
+    NAME_FIELD_NUMBER: _ClassVar[int]
+    TY_FIELD_NUMBER: _ClassVar[int]
+    name: str
+    ty: KclType
+    def __init__(
+        self, name: _Optional[str] = ..., ty: _Optional[_Union[KclType, _Mapping]] = ...
+    ) -> None: ...
+
+class IndexSignature(_message.Message):
+    __slots__ = ()
+    KEY_NAME_FIELD_NUMBER: _ClassVar[int]
+    KEY_FIELD_NUMBER: _ClassVar[int]
+    VAL_FIELD_NUMBER: _ClassVar[int]
+    ANY_OTHER_FIELD_NUMBER: _ClassVar[int]
+    key_name: str
+    key: KclType
+    val: KclType
+    any_other: bool
+    def __init__(
+        self,
+        key_name: _Optional[str] = ...,
+        key: _Optional[_Union[KclType, _Mapping]] = ...,
+        val: _Optional[_Union[KclType, _Mapping]] = ...,
+        any_other: _Optional[bool] = ...,
     ) -> None: ...
 
 class Decorator(_message.Message):

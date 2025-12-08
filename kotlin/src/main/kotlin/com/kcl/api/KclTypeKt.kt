@@ -35,7 +35,7 @@ public object KclTypeKt {
 
     /**
      * ```
-     * Type name (e.g., schema, dict, list, str, int, float, bool, any, union, number_multiplier).
+     * Type name (e.g., schema, dict, list, str, int, float, bool, any, union, function, number_multiplier).
      * ```
      *
      * `string type = 1;`
@@ -49,7 +49,7 @@ public object KclTypeKt {
       }
     /**
      * ```
-     * Type name (e.g., schema, dict, list, str, int, float, bool, any, union, number_multiplier).
+     * Type name (e.g., schema, dict, list, str, int, float, bool, any, union, function, number_multiplier).
      * ```
      *
      * `string type = 1;`
@@ -815,6 +815,84 @@ public object KclTypeKt {
 
     public val KclTypeKt.Dsl.baseSchemaOrNull: com.kcl.api.Spec.KclType?
       get() = _builder.baseSchemaOrNull
+
+    /**
+     * ```
+     * Function type if the KclType is a function.
+     * ```
+     *
+     * `optional .com.kcl.api.FunctionType function = 17;`
+     */
+    public var function: com.kcl.api.Spec.FunctionType
+      @kotlin.jvm.JvmName("getFunction")
+        get() = _builder.function
+      @kotlin.jvm.JvmName("setFunction")
+        set(value) {
+        _builder.function = value
+      }
+    /**
+     * ```
+     * Function type if the KclType is a function.
+     * ```
+     *
+     * `optional .com.kcl.api.FunctionType function = 17;`
+     */
+    public fun clearFunction() {
+      _builder.clearFunction()
+    }
+    /**
+     * ```
+     * Function type if the KclType is a function.
+     * ```
+     *
+     * `optional .com.kcl.api.FunctionType function = 17;`
+     * @return Whether the function field is set.
+     */
+    public fun hasFunction(): kotlin.Boolean {
+      return _builder.hasFunction()
+    }
+
+    public val KclTypeKt.Dsl.functionOrNull: com.kcl.api.Spec.FunctionType?
+      get() = _builder.functionOrNull
+
+    /**
+     * ```
+     * Optional schema index signature
+     * ```
+     *
+     * `optional .com.kcl.api.IndexSignature index_signature = 18;`
+     */
+    public var indexSignature: com.kcl.api.Spec.IndexSignature
+      @kotlin.jvm.JvmName("getIndexSignature")
+        get() = _builder.indexSignature
+      @kotlin.jvm.JvmName("setIndexSignature")
+        set(value) {
+        _builder.indexSignature = value
+      }
+    /**
+     * ```
+     * Optional schema index signature
+     * ```
+     *
+     * `optional .com.kcl.api.IndexSignature index_signature = 18;`
+     */
+    public fun clearIndexSignature() {
+      _builder.clearIndexSignature()
+    }
+    /**
+     * ```
+     * Optional schema index signature
+     * ```
+     *
+     * `optional .com.kcl.api.IndexSignature index_signature = 18;`
+     * @return Whether the indexSignature field is set.
+     */
+    public fun hasIndexSignature(): kotlin.Boolean {
+      return _builder.hasIndexSignature()
+    }
+
+    public val KclTypeKt.Dsl.indexSignatureOrNull: com.kcl.api.Spec.IndexSignature?
+      get() = _builder.indexSignatureOrNull
   }
 }
 @kotlin.jvm.JvmSynthetic
@@ -829,4 +907,10 @@ public val com.kcl.api.Spec.KclTypeOrBuilder.itemOrNull: com.kcl.api.Spec.KclTyp
 
 public val com.kcl.api.Spec.KclTypeOrBuilder.baseSchemaOrNull: com.kcl.api.Spec.KclType?
   get() = if (hasBaseSchema()) getBaseSchema() else null
+
+public val com.kcl.api.Spec.KclTypeOrBuilder.functionOrNull: com.kcl.api.Spec.FunctionType?
+  get() = if (hasFunction()) getFunction() else null
+
+public val com.kcl.api.Spec.KclTypeOrBuilder.indexSignatureOrNull: com.kcl.api.Spec.IndexSignature?
+  get() = if (hasIndexSignature()) getIndexSignature() else null
 

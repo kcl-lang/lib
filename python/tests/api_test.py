@@ -105,7 +105,12 @@ def test_get_schema_type_api():
     api = api.API()
     result = api.get_schema_type_mapping(args)
     assert result.schema_type_mapping["app"].properties["replicas"].type == "int"
-
+    assert result.schema_type_mapping["app"].properties["my_func"].type == "function"
+    assert result.schema_type_mapping["app"].properties["maps"].type == "schema"
+    assert result.schema_type_mapping["app"].properties["maps"].index_signature.key_name == "name"
+    assert result.schema_type_mapping["app"].properties["maps"].index_signature.key.type == "str"
+    assert result.schema_type_mapping["app"].properties["maps"].index_signature.val.type == "schema"
+    assert result.schema_type_mapping["app"].properties["maps"].index_signature.val.properties["name"].type == "str"
 
 def test_override_file_api():
     """Override KCL file with arguments. See https://www.kcl-lang.io/docs/user_docs/guides/automation

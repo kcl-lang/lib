@@ -4007,7 +4007,7 @@ func (x *UpdateDependenciesResult) GetExternalPkgs() []*ExternalPkg {
 // Message representing a KCL type.
 type KclType struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// Type name (e.g., schema, dict, list, str, int, float, bool, any, union, number_multiplier).
+	// Type name (e.g., schema, dict, list, str, int, float, bool, any, union, function, number_multiplier).
 	Type string `protobuf:"bytes,1,opt,name=type,proto3" json:"type,omitempty"`
 	// Union types if applicable.
 	UnionTypes []*KclType `protobuf:"bytes,2,rep,name=union_types,json=unionTypes,proto3" json:"union_types,omitempty"`
@@ -4038,9 +4038,13 @@ type KclType struct {
 	// Map of examples with example name as key.
 	Examples map[string]*Example `protobuf:"bytes,15,rep,name=examples,proto3" json:"examples,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
 	// Base schema if applicable.
-	BaseSchema    *KclType `protobuf:"bytes,16,opt,name=base_schema,json=baseSchema,proto3" json:"base_schema,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	BaseSchema *KclType `protobuf:"bytes,16,opt,name=base_schema,json=baseSchema,proto3" json:"base_schema,omitempty"`
+	// Function type if the KclType is a function.
+	Function *FunctionType `protobuf:"bytes,17,opt,name=function,proto3,oneof" json:"function,omitempty"`
+	// Optional schema index signature
+	IndexSignature *IndexSignature `protobuf:"bytes,18,opt,name=index_signature,json=indexSignature,proto3,oneof" json:"index_signature,omitempty"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
 }
 
 func (x *KclType) Reset() {
@@ -4185,6 +4189,196 @@ func (x *KclType) GetBaseSchema() *KclType {
 	return nil
 }
 
+func (x *KclType) GetFunction() *FunctionType {
+	if x != nil {
+		return x.Function
+	}
+	return nil
+}
+
+func (x *KclType) GetIndexSignature() *IndexSignature {
+	if x != nil {
+		return x.IndexSignature
+	}
+	return nil
+}
+
+type FunctionType struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Params        []*Parameter           `protobuf:"bytes,1,rep,name=params,proto3" json:"params,omitempty"`
+	ReturnTy      *KclType               `protobuf:"bytes,2,opt,name=return_ty,json=returnTy,proto3" json:"return_ty,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *FunctionType) Reset() {
+	*x = FunctionType{}
+	mi := &file_spec_proto_msgTypes[64]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *FunctionType) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*FunctionType) ProtoMessage() {}
+
+func (x *FunctionType) ProtoReflect() protoreflect.Message {
+	mi := &file_spec_proto_msgTypes[64]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use FunctionType.ProtoReflect.Descriptor instead.
+func (*FunctionType) Descriptor() ([]byte, []int) {
+	return file_spec_proto_rawDescGZIP(), []int{64}
+}
+
+func (x *FunctionType) GetParams() []*Parameter {
+	if x != nil {
+		return x.Params
+	}
+	return nil
+}
+
+func (x *FunctionType) GetReturnTy() *KclType {
+	if x != nil {
+		return x.ReturnTy
+	}
+	return nil
+}
+
+type Parameter struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Name          string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	Ty            *KclType               `protobuf:"bytes,2,opt,name=ty,proto3" json:"ty,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *Parameter) Reset() {
+	*x = Parameter{}
+	mi := &file_spec_proto_msgTypes[65]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *Parameter) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Parameter) ProtoMessage() {}
+
+func (x *Parameter) ProtoReflect() protoreflect.Message {
+	mi := &file_spec_proto_msgTypes[65]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Parameter.ProtoReflect.Descriptor instead.
+func (*Parameter) Descriptor() ([]byte, []int) {
+	return file_spec_proto_rawDescGZIP(), []int{65}
+}
+
+func (x *Parameter) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+func (x *Parameter) GetTy() *KclType {
+	if x != nil {
+		return x.Ty
+	}
+	return nil
+}
+
+// Message representing an index signature in KCL.
+type IndexSignature struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// The optional index signature key name
+	KeyName *string `protobuf:"bytes,1,opt,name=key_name,json=keyName,proto3,oneof" json:"key_name,omitempty"`
+	// Key type of the index signature.
+	Key *KclType `protobuf:"bytes,2,opt,name=key,proto3" json:"key,omitempty"`
+	// Value type of the index signature.
+	Val           *KclType `protobuf:"bytes,3,opt,name=val,proto3" json:"val,omitempty"`
+	AnyOther      bool     `protobuf:"varint,4,opt,name=any_other,json=anyOther,proto3" json:"any_other,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *IndexSignature) Reset() {
+	*x = IndexSignature{}
+	mi := &file_spec_proto_msgTypes[66]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *IndexSignature) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*IndexSignature) ProtoMessage() {}
+
+func (x *IndexSignature) ProtoReflect() protoreflect.Message {
+	mi := &file_spec_proto_msgTypes[66]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use IndexSignature.ProtoReflect.Descriptor instead.
+func (*IndexSignature) Descriptor() ([]byte, []int) {
+	return file_spec_proto_rawDescGZIP(), []int{66}
+}
+
+func (x *IndexSignature) GetKeyName() string {
+	if x != nil && x.KeyName != nil {
+		return *x.KeyName
+	}
+	return ""
+}
+
+func (x *IndexSignature) GetKey() *KclType {
+	if x != nil {
+		return x.Key
+	}
+	return nil
+}
+
+func (x *IndexSignature) GetVal() *KclType {
+	if x != nil {
+		return x.Val
+	}
+	return nil
+}
+
+func (x *IndexSignature) GetAnyOther() bool {
+	if x != nil {
+		return x.AnyOther
+	}
+	return false
+}
+
 // Message representing a decorator in KCL.
 type Decorator struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
@@ -4200,7 +4394,7 @@ type Decorator struct {
 
 func (x *Decorator) Reset() {
 	*x = Decorator{}
-	mi := &file_spec_proto_msgTypes[64]
+	mi := &file_spec_proto_msgTypes[67]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4212,7 +4406,7 @@ func (x *Decorator) String() string {
 func (*Decorator) ProtoMessage() {}
 
 func (x *Decorator) ProtoReflect() protoreflect.Message {
-	mi := &file_spec_proto_msgTypes[64]
+	mi := &file_spec_proto_msgTypes[67]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4225,7 +4419,7 @@ func (x *Decorator) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Decorator.ProtoReflect.Descriptor instead.
 func (*Decorator) Descriptor() ([]byte, []int) {
-	return file_spec_proto_rawDescGZIP(), []int{64}
+	return file_spec_proto_rawDescGZIP(), []int{67}
 }
 
 func (x *Decorator) GetName() string {
@@ -4264,7 +4458,7 @@ type Example struct {
 
 func (x *Example) Reset() {
 	*x = Example{}
-	mi := &file_spec_proto_msgTypes[65]
+	mi := &file_spec_proto_msgTypes[68]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4276,7 +4470,7 @@ func (x *Example) String() string {
 func (*Example) ProtoMessage() {}
 
 func (x *Example) ProtoReflect() protoreflect.Message {
-	mi := &file_spec_proto_msgTypes[65]
+	mi := &file_spec_proto_msgTypes[68]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4289,7 +4483,7 @@ func (x *Example) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Example.ProtoReflect.Descriptor instead.
 func (*Example) Descriptor() ([]byte, []int) {
-	return file_spec_proto_rawDescGZIP(), []int{65}
+	return file_spec_proto_rawDescGZIP(), []int{68}
 }
 
 func (x *Example) GetSummary() string {
@@ -4626,7 +4820,7 @@ const file_spec_proto_rawDesc = "" +
 	"\rmanifest_path\x18\x01 \x01(\tR\fmanifestPath\x12\x16\n" +
 	"\x06vendor\x18\x02 \x01(\bR\x06vendor\"Y\n" +
 	"\x18UpdateDependenciesResult\x12=\n" +
-	"\rexternal_pkgs\x18\x03 \x03(\v2\x18.com.kcl.api.ExternalPkgR\fexternalPkgs\"\xa6\x06\n" +
+	"\rexternal_pkgs\x18\x03 \x03(\v2\x18.com.kcl.api.ExternalPkgR\fexternalPkgs\"\xce\a\n" +
 	"\aKclType\x12\x12\n" +
 	"\x04type\x18\x01 \x01(\tR\x04type\x125\n" +
 	"\vunion_types\x18\x02 \x03(\v2\x14.com.kcl.api.KclTypeR\n" +
@@ -4652,13 +4846,29 @@ const file_spec_proto_rawDesc = "" +
 	"\vdescription\x18\x0e \x01(\tR\vdescription\x12>\n" +
 	"\bexamples\x18\x0f \x03(\v2\".com.kcl.api.KclType.ExamplesEntryR\bexamples\x125\n" +
 	"\vbase_schema\x18\x10 \x01(\v2\x14.com.kcl.api.KclTypeR\n" +
-	"baseSchema\x1aS\n" +
+	"baseSchema\x12:\n" +
+	"\bfunction\x18\x11 \x01(\v2\x19.com.kcl.api.FunctionTypeH\x00R\bfunction\x88\x01\x01\x12I\n" +
+	"\x0findex_signature\x18\x12 \x01(\v2\x1b.com.kcl.api.IndexSignatureH\x01R\x0eindexSignature\x88\x01\x01\x1aS\n" +
 	"\x0fPropertiesEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12*\n" +
 	"\x05value\x18\x02 \x01(\v2\x14.com.kcl.api.KclTypeR\x05value:\x028\x01\x1aQ\n" +
 	"\rExamplesEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12*\n" +
-	"\x05value\x18\x02 \x01(\v2\x14.com.kcl.api.ExampleR\x05value:\x028\x01\"\xbc\x01\n" +
+	"\x05value\x18\x02 \x01(\v2\x14.com.kcl.api.ExampleR\x05value:\x028\x01B\v\n" +
+	"\t_functionB\x12\n" +
+	"\x10_index_signature\"q\n" +
+	"\fFunctionType\x12.\n" +
+	"\x06params\x18\x01 \x03(\v2\x16.com.kcl.api.ParameterR\x06params\x121\n" +
+	"\treturn_ty\x18\x02 \x01(\v2\x14.com.kcl.api.KclTypeR\breturnTy\"E\n" +
+	"\tParameter\x12\x12\n" +
+	"\x04name\x18\x01 \x01(\tR\x04name\x12$\n" +
+	"\x02ty\x18\x02 \x01(\v2\x14.com.kcl.api.KclTypeR\x02ty\"\xaa\x01\n" +
+	"\x0eIndexSignature\x12\x1e\n" +
+	"\bkey_name\x18\x01 \x01(\tH\x00R\akeyName\x88\x01\x01\x12&\n" +
+	"\x03key\x18\x02 \x01(\v2\x14.com.kcl.api.KclTypeR\x03key\x12&\n" +
+	"\x03val\x18\x03 \x01(\v2\x14.com.kcl.api.KclTypeR\x03val\x12\x1b\n" +
+	"\tany_other\x18\x04 \x01(\bR\banyOtherB\v\n" +
+	"\t_key_name\"\xbc\x01\n" +
 	"\tDecorator\x12\x12\n" +
 	"\x04name\x18\x01 \x01(\tR\x04name\x12\x1c\n" +
 	"\targuments\x18\x02 \x03(\tR\targuments\x12@\n" +
@@ -4716,7 +4926,7 @@ func file_spec_proto_rawDescGZIP() []byte {
 	return file_spec_proto_rawDescData
 }
 
-var file_spec_proto_msgTypes = make([]protoimpl.MessageInfo, 80)
+var file_spec_proto_msgTypes = make([]protoimpl.MessageInfo, 83)
 var file_spec_proto_goTypes = []any{
 	(*ExternalPkg)(nil),                         // 0: com.kcl.api.ExternalPkg
 	(*Argument)(nil),                            // 1: com.kcl.api.Argument
@@ -4782,22 +4992,25 @@ var file_spec_proto_goTypes = []any{
 	(*UpdateDependenciesArgs)(nil),              // 61: com.kcl.api.UpdateDependenciesArgs
 	(*UpdateDependenciesResult)(nil),            // 62: com.kcl.api.UpdateDependenciesResult
 	(*KclType)(nil),                             // 63: com.kcl.api.KclType
-	(*Decorator)(nil),                           // 64: com.kcl.api.Decorator
-	(*Example)(nil),                             // 65: com.kcl.api.Example
-	nil,                                         // 66: com.kcl.api.LoadPackageResult.ScopesEntry
-	nil,                                         // 67: com.kcl.api.LoadPackageResult.SymbolsEntry
-	nil,                                         // 68: com.kcl.api.LoadPackageResult.NodeSymbolMapEntry
-	nil,                                         // 69: com.kcl.api.LoadPackageResult.SymbolNodeMapEntry
-	nil,                                         // 70: com.kcl.api.LoadPackageResult.FullyQualifiedNameMapEntry
-	nil,                                         // 71: com.kcl.api.LoadPackageResult.PkgScopeMapEntry
-	nil,                                         // 72: com.kcl.api.ListVariablesResult.VariablesEntry
-	nil,                                         // 73: com.kcl.api.GetSchemaTypeMappingResult.SchemaTypeMappingEntry
-	nil,                                         // 74: com.kcl.api.GetSchemaTypeMappingUnderPathResult.SchemaTypeMappingEntry
-	nil,                                         // 75: com.kcl.api.RenameCodeArgs.SourceCodesEntry
-	nil,                                         // 76: com.kcl.api.RenameCodeResult.ChangedCodesEntry
-	nil,                                         // 77: com.kcl.api.KclType.PropertiesEntry
-	nil,                                         // 78: com.kcl.api.KclType.ExamplesEntry
-	nil,                                         // 79: com.kcl.api.Decorator.KeywordsEntry
+	(*FunctionType)(nil),                        // 64: com.kcl.api.FunctionType
+	(*Parameter)(nil),                           // 65: com.kcl.api.Parameter
+	(*IndexSignature)(nil),                      // 66: com.kcl.api.IndexSignature
+	(*Decorator)(nil),                           // 67: com.kcl.api.Decorator
+	(*Example)(nil),                             // 68: com.kcl.api.Example
+	nil,                                         // 69: com.kcl.api.LoadPackageResult.ScopesEntry
+	nil,                                         // 70: com.kcl.api.LoadPackageResult.SymbolsEntry
+	nil,                                         // 71: com.kcl.api.LoadPackageResult.NodeSymbolMapEntry
+	nil,                                         // 72: com.kcl.api.LoadPackageResult.SymbolNodeMapEntry
+	nil,                                         // 73: com.kcl.api.LoadPackageResult.FullyQualifiedNameMapEntry
+	nil,                                         // 74: com.kcl.api.LoadPackageResult.PkgScopeMapEntry
+	nil,                                         // 75: com.kcl.api.ListVariablesResult.VariablesEntry
+	nil,                                         // 76: com.kcl.api.GetSchemaTypeMappingResult.SchemaTypeMappingEntry
+	nil,                                         // 77: com.kcl.api.GetSchemaTypeMappingUnderPathResult.SchemaTypeMappingEntry
+	nil,                                         // 78: com.kcl.api.RenameCodeArgs.SourceCodesEntry
+	nil,                                         // 79: com.kcl.api.RenameCodeResult.ChangedCodesEntry
+	nil,                                         // 80: com.kcl.api.KclType.PropertiesEntry
+	nil,                                         // 81: com.kcl.api.KclType.ExamplesEntry
+	nil,                                         // 82: com.kcl.api.Decorator.KeywordsEntry
 }
 var file_spec_proto_depIdxs = []int32{
 	3,  // 0: com.kcl.api.Error.messages:type_name -> com.kcl.api.Message
@@ -4809,12 +5022,12 @@ var file_spec_proto_depIdxs = []int32{
 	12, // 6: com.kcl.api.LoadPackageArgs.parse_args:type_name -> com.kcl.api.ParseProgramArgs
 	2,  // 7: com.kcl.api.LoadPackageResult.parse_errors:type_name -> com.kcl.api.Error
 	2,  // 8: com.kcl.api.LoadPackageResult.type_errors:type_name -> com.kcl.api.Error
-	66, // 9: com.kcl.api.LoadPackageResult.scopes:type_name -> com.kcl.api.LoadPackageResult.ScopesEntry
-	67, // 10: com.kcl.api.LoadPackageResult.symbols:type_name -> com.kcl.api.LoadPackageResult.SymbolsEntry
-	68, // 11: com.kcl.api.LoadPackageResult.node_symbol_map:type_name -> com.kcl.api.LoadPackageResult.NodeSymbolMapEntry
-	69, // 12: com.kcl.api.LoadPackageResult.symbol_node_map:type_name -> com.kcl.api.LoadPackageResult.SymbolNodeMapEntry
-	70, // 13: com.kcl.api.LoadPackageResult.fully_qualified_name_map:type_name -> com.kcl.api.LoadPackageResult.FullyQualifiedNameMapEntry
-	71, // 14: com.kcl.api.LoadPackageResult.pkg_scope_map:type_name -> com.kcl.api.LoadPackageResult.PkgScopeMapEntry
+	69, // 9: com.kcl.api.LoadPackageResult.scopes:type_name -> com.kcl.api.LoadPackageResult.ScopesEntry
+	70, // 10: com.kcl.api.LoadPackageResult.symbols:type_name -> com.kcl.api.LoadPackageResult.SymbolsEntry
+	71, // 11: com.kcl.api.LoadPackageResult.node_symbol_map:type_name -> com.kcl.api.LoadPackageResult.NodeSymbolMapEntry
+	72, // 12: com.kcl.api.LoadPackageResult.symbol_node_map:type_name -> com.kcl.api.LoadPackageResult.SymbolNodeMapEntry
+	73, // 13: com.kcl.api.LoadPackageResult.fully_qualified_name_map:type_name -> com.kcl.api.LoadPackageResult.FullyQualifiedNameMapEntry
+	74, // 14: com.kcl.api.LoadPackageResult.pkg_scope_map:type_name -> com.kcl.api.LoadPackageResult.PkgScopeMapEntry
 	17, // 15: com.kcl.api.ListOptionsResult.options:type_name -> com.kcl.api.OptionHelp
 	63, // 16: com.kcl.api.Symbol.ty:type_name -> com.kcl.api.KclType
 	20, // 17: com.kcl.api.Symbol.owner:type_name -> com.kcl.api.SymbolIndex
@@ -4831,94 +5044,101 @@ var file_spec_proto_depIdxs = []int32{
 	2,  // 28: com.kcl.api.OverrideFileResult.parse_errors:type_name -> com.kcl.api.Error
 	39, // 29: com.kcl.api.VariableList.variables:type_name -> com.kcl.api.Variable
 	35, // 30: com.kcl.api.ListVariablesArgs.options:type_name -> com.kcl.api.ListVariablesOptions
-	72, // 31: com.kcl.api.ListVariablesResult.variables:type_name -> com.kcl.api.ListVariablesResult.VariablesEntry
+	75, // 31: com.kcl.api.ListVariablesResult.variables:type_name -> com.kcl.api.ListVariablesResult.VariablesEntry
 	2,  // 32: com.kcl.api.ListVariablesResult.parse_errors:type_name -> com.kcl.api.Error
 	39, // 33: com.kcl.api.Variable.list_items:type_name -> com.kcl.api.Variable
 	40, // 34: com.kcl.api.Variable.dict_entries:type_name -> com.kcl.api.MapEntry
 	39, // 35: com.kcl.api.MapEntry.value:type_name -> com.kcl.api.Variable
 	22, // 36: com.kcl.api.GetSchemaTypeMappingArgs.exec_args:type_name -> com.kcl.api.ExecProgramArgs
-	73, // 37: com.kcl.api.GetSchemaTypeMappingResult.schema_type_mapping:type_name -> com.kcl.api.GetSchemaTypeMappingResult.SchemaTypeMappingEntry
-	74, // 38: com.kcl.api.GetSchemaTypeMappingUnderPathResult.schema_type_mapping:type_name -> com.kcl.api.GetSchemaTypeMappingUnderPathResult.SchemaTypeMappingEntry
+	76, // 37: com.kcl.api.GetSchemaTypeMappingResult.schema_type_mapping:type_name -> com.kcl.api.GetSchemaTypeMappingResult.SchemaTypeMappingEntry
+	77, // 38: com.kcl.api.GetSchemaTypeMappingUnderPathResult.schema_type_mapping:type_name -> com.kcl.api.GetSchemaTypeMappingUnderPathResult.SchemaTypeMappingEntry
 	63, // 39: com.kcl.api.SchemaTypes.schema_type:type_name -> com.kcl.api.KclType
 	0,  // 40: com.kcl.api.ValidateCodeArgs.external_pkgs:type_name -> com.kcl.api.ExternalPkg
 	52, // 41: com.kcl.api.LoadSettingsFilesResult.kcl_cli_configs:type_name -> com.kcl.api.CliConfig
 	53, // 42: com.kcl.api.LoadSettingsFilesResult.kcl_options:type_name -> com.kcl.api.KeyValuePair
-	75, // 43: com.kcl.api.RenameCodeArgs.source_codes:type_name -> com.kcl.api.RenameCodeArgs.SourceCodesEntry
-	76, // 44: com.kcl.api.RenameCodeResult.changed_codes:type_name -> com.kcl.api.RenameCodeResult.ChangedCodesEntry
+	78, // 43: com.kcl.api.RenameCodeArgs.source_codes:type_name -> com.kcl.api.RenameCodeArgs.SourceCodesEntry
+	79, // 44: com.kcl.api.RenameCodeResult.changed_codes:type_name -> com.kcl.api.RenameCodeResult.ChangedCodesEntry
 	22, // 45: com.kcl.api.TestArgs.exec_args:type_name -> com.kcl.api.ExecProgramArgs
 	60, // 46: com.kcl.api.TestResult.info:type_name -> com.kcl.api.TestCaseInfo
 	0,  // 47: com.kcl.api.UpdateDependenciesResult.external_pkgs:type_name -> com.kcl.api.ExternalPkg
 	63, // 48: com.kcl.api.KclType.union_types:type_name -> com.kcl.api.KclType
-	77, // 49: com.kcl.api.KclType.properties:type_name -> com.kcl.api.KclType.PropertiesEntry
+	80, // 49: com.kcl.api.KclType.properties:type_name -> com.kcl.api.KclType.PropertiesEntry
 	63, // 50: com.kcl.api.KclType.key:type_name -> com.kcl.api.KclType
 	63, // 51: com.kcl.api.KclType.item:type_name -> com.kcl.api.KclType
-	64, // 52: com.kcl.api.KclType.decorators:type_name -> com.kcl.api.Decorator
-	78, // 53: com.kcl.api.KclType.examples:type_name -> com.kcl.api.KclType.ExamplesEntry
+	67, // 52: com.kcl.api.KclType.decorators:type_name -> com.kcl.api.Decorator
+	81, // 53: com.kcl.api.KclType.examples:type_name -> com.kcl.api.KclType.ExamplesEntry
 	63, // 54: com.kcl.api.KclType.base_schema:type_name -> com.kcl.api.KclType
-	79, // 55: com.kcl.api.Decorator.keywords:type_name -> com.kcl.api.Decorator.KeywordsEntry
-	19, // 56: com.kcl.api.LoadPackageResult.ScopesEntry.value:type_name -> com.kcl.api.Scope
-	18, // 57: com.kcl.api.LoadPackageResult.SymbolsEntry.value:type_name -> com.kcl.api.Symbol
-	20, // 58: com.kcl.api.LoadPackageResult.NodeSymbolMapEntry.value:type_name -> com.kcl.api.SymbolIndex
-	20, // 59: com.kcl.api.LoadPackageResult.FullyQualifiedNameMapEntry.value:type_name -> com.kcl.api.SymbolIndex
-	21, // 60: com.kcl.api.LoadPackageResult.PkgScopeMapEntry.value:type_name -> com.kcl.api.ScopeIndex
-	36, // 61: com.kcl.api.ListVariablesResult.VariablesEntry.value:type_name -> com.kcl.api.VariableList
-	63, // 62: com.kcl.api.GetSchemaTypeMappingResult.SchemaTypeMappingEntry.value:type_name -> com.kcl.api.KclType
-	44, // 63: com.kcl.api.GetSchemaTypeMappingUnderPathResult.SchemaTypeMappingEntry.value:type_name -> com.kcl.api.SchemaTypes
-	63, // 64: com.kcl.api.KclType.PropertiesEntry.value:type_name -> com.kcl.api.KclType
-	65, // 65: com.kcl.api.KclType.ExamplesEntry.value:type_name -> com.kcl.api.Example
-	4,  // 66: com.kcl.api.BuiltinService.Ping:input_type -> com.kcl.api.PingArgs
-	8,  // 67: com.kcl.api.BuiltinService.ListMethod:input_type -> com.kcl.api.ListMethodArgs
-	4,  // 68: com.kcl.api.KclService.Ping:input_type -> com.kcl.api.PingArgs
-	6,  // 69: com.kcl.api.KclService.GetVersion:input_type -> com.kcl.api.GetVersionArgs
-	12, // 70: com.kcl.api.KclService.ParseProgram:input_type -> com.kcl.api.ParseProgramArgs
-	10, // 71: com.kcl.api.KclService.ParseFile:input_type -> com.kcl.api.ParseFileArgs
-	14, // 72: com.kcl.api.KclService.LoadPackage:input_type -> com.kcl.api.LoadPackageArgs
-	12, // 73: com.kcl.api.KclService.ListOptions:input_type -> com.kcl.api.ParseProgramArgs
-	37, // 74: com.kcl.api.KclService.ListVariables:input_type -> com.kcl.api.ListVariablesArgs
-	22, // 75: com.kcl.api.KclService.ExecProgram:input_type -> com.kcl.api.ExecProgramArgs
-	24, // 76: com.kcl.api.KclService.BuildProgram:input_type -> com.kcl.api.BuildProgramArgs
-	26, // 77: com.kcl.api.KclService.ExecArtifact:input_type -> com.kcl.api.ExecArtifactArgs
-	33, // 78: com.kcl.api.KclService.OverrideFile:input_type -> com.kcl.api.OverrideFileArgs
-	41, // 79: com.kcl.api.KclService.GetSchemaTypeMapping:input_type -> com.kcl.api.GetSchemaTypeMappingArgs
-	27, // 80: com.kcl.api.KclService.FormatCode:input_type -> com.kcl.api.FormatCodeArgs
-	29, // 81: com.kcl.api.KclService.FormatPath:input_type -> com.kcl.api.FormatPathArgs
-	31, // 82: com.kcl.api.KclService.LintPath:input_type -> com.kcl.api.LintPathArgs
-	45, // 83: com.kcl.api.KclService.ValidateCode:input_type -> com.kcl.api.ValidateCodeArgs
-	48, // 84: com.kcl.api.KclService.ListDepFiles:input_type -> com.kcl.api.ListDepFilesArgs
-	50, // 85: com.kcl.api.KclService.LoadSettingsFiles:input_type -> com.kcl.api.LoadSettingsFilesArgs
-	54, // 86: com.kcl.api.KclService.Rename:input_type -> com.kcl.api.RenameArgs
-	56, // 87: com.kcl.api.KclService.RenameCode:input_type -> com.kcl.api.RenameCodeArgs
-	58, // 88: com.kcl.api.KclService.Test:input_type -> com.kcl.api.TestArgs
-	61, // 89: com.kcl.api.KclService.UpdateDependencies:input_type -> com.kcl.api.UpdateDependenciesArgs
-	5,  // 90: com.kcl.api.BuiltinService.Ping:output_type -> com.kcl.api.PingResult
-	9,  // 91: com.kcl.api.BuiltinService.ListMethod:output_type -> com.kcl.api.ListMethodResult
-	5,  // 92: com.kcl.api.KclService.Ping:output_type -> com.kcl.api.PingResult
-	7,  // 93: com.kcl.api.KclService.GetVersion:output_type -> com.kcl.api.GetVersionResult
-	13, // 94: com.kcl.api.KclService.ParseProgram:output_type -> com.kcl.api.ParseProgramResult
-	11, // 95: com.kcl.api.KclService.ParseFile:output_type -> com.kcl.api.ParseFileResult
-	15, // 96: com.kcl.api.KclService.LoadPackage:output_type -> com.kcl.api.LoadPackageResult
-	16, // 97: com.kcl.api.KclService.ListOptions:output_type -> com.kcl.api.ListOptionsResult
-	38, // 98: com.kcl.api.KclService.ListVariables:output_type -> com.kcl.api.ListVariablesResult
-	23, // 99: com.kcl.api.KclService.ExecProgram:output_type -> com.kcl.api.ExecProgramResult
-	25, // 100: com.kcl.api.KclService.BuildProgram:output_type -> com.kcl.api.BuildProgramResult
-	23, // 101: com.kcl.api.KclService.ExecArtifact:output_type -> com.kcl.api.ExecProgramResult
-	34, // 102: com.kcl.api.KclService.OverrideFile:output_type -> com.kcl.api.OverrideFileResult
-	42, // 103: com.kcl.api.KclService.GetSchemaTypeMapping:output_type -> com.kcl.api.GetSchemaTypeMappingResult
-	28, // 104: com.kcl.api.KclService.FormatCode:output_type -> com.kcl.api.FormatCodeResult
-	30, // 105: com.kcl.api.KclService.FormatPath:output_type -> com.kcl.api.FormatPathResult
-	32, // 106: com.kcl.api.KclService.LintPath:output_type -> com.kcl.api.LintPathResult
-	46, // 107: com.kcl.api.KclService.ValidateCode:output_type -> com.kcl.api.ValidateCodeResult
-	49, // 108: com.kcl.api.KclService.ListDepFiles:output_type -> com.kcl.api.ListDepFilesResult
-	51, // 109: com.kcl.api.KclService.LoadSettingsFiles:output_type -> com.kcl.api.LoadSettingsFilesResult
-	55, // 110: com.kcl.api.KclService.Rename:output_type -> com.kcl.api.RenameResult
-	57, // 111: com.kcl.api.KclService.RenameCode:output_type -> com.kcl.api.RenameCodeResult
-	59, // 112: com.kcl.api.KclService.Test:output_type -> com.kcl.api.TestResult
-	62, // 113: com.kcl.api.KclService.UpdateDependencies:output_type -> com.kcl.api.UpdateDependenciesResult
-	90, // [90:114] is the sub-list for method output_type
-	66, // [66:90] is the sub-list for method input_type
-	66, // [66:66] is the sub-list for extension type_name
-	66, // [66:66] is the sub-list for extension extendee
-	0,  // [0:66] is the sub-list for field type_name
+	64, // 55: com.kcl.api.KclType.function:type_name -> com.kcl.api.FunctionType
+	66, // 56: com.kcl.api.KclType.index_signature:type_name -> com.kcl.api.IndexSignature
+	65, // 57: com.kcl.api.FunctionType.params:type_name -> com.kcl.api.Parameter
+	63, // 58: com.kcl.api.FunctionType.return_ty:type_name -> com.kcl.api.KclType
+	63, // 59: com.kcl.api.Parameter.ty:type_name -> com.kcl.api.KclType
+	63, // 60: com.kcl.api.IndexSignature.key:type_name -> com.kcl.api.KclType
+	63, // 61: com.kcl.api.IndexSignature.val:type_name -> com.kcl.api.KclType
+	82, // 62: com.kcl.api.Decorator.keywords:type_name -> com.kcl.api.Decorator.KeywordsEntry
+	19, // 63: com.kcl.api.LoadPackageResult.ScopesEntry.value:type_name -> com.kcl.api.Scope
+	18, // 64: com.kcl.api.LoadPackageResult.SymbolsEntry.value:type_name -> com.kcl.api.Symbol
+	20, // 65: com.kcl.api.LoadPackageResult.NodeSymbolMapEntry.value:type_name -> com.kcl.api.SymbolIndex
+	20, // 66: com.kcl.api.LoadPackageResult.FullyQualifiedNameMapEntry.value:type_name -> com.kcl.api.SymbolIndex
+	21, // 67: com.kcl.api.LoadPackageResult.PkgScopeMapEntry.value:type_name -> com.kcl.api.ScopeIndex
+	36, // 68: com.kcl.api.ListVariablesResult.VariablesEntry.value:type_name -> com.kcl.api.VariableList
+	63, // 69: com.kcl.api.GetSchemaTypeMappingResult.SchemaTypeMappingEntry.value:type_name -> com.kcl.api.KclType
+	44, // 70: com.kcl.api.GetSchemaTypeMappingUnderPathResult.SchemaTypeMappingEntry.value:type_name -> com.kcl.api.SchemaTypes
+	63, // 71: com.kcl.api.KclType.PropertiesEntry.value:type_name -> com.kcl.api.KclType
+	68, // 72: com.kcl.api.KclType.ExamplesEntry.value:type_name -> com.kcl.api.Example
+	4,  // 73: com.kcl.api.BuiltinService.Ping:input_type -> com.kcl.api.PingArgs
+	8,  // 74: com.kcl.api.BuiltinService.ListMethod:input_type -> com.kcl.api.ListMethodArgs
+	4,  // 75: com.kcl.api.KclService.Ping:input_type -> com.kcl.api.PingArgs
+	6,  // 76: com.kcl.api.KclService.GetVersion:input_type -> com.kcl.api.GetVersionArgs
+	12, // 77: com.kcl.api.KclService.ParseProgram:input_type -> com.kcl.api.ParseProgramArgs
+	10, // 78: com.kcl.api.KclService.ParseFile:input_type -> com.kcl.api.ParseFileArgs
+	14, // 79: com.kcl.api.KclService.LoadPackage:input_type -> com.kcl.api.LoadPackageArgs
+	12, // 80: com.kcl.api.KclService.ListOptions:input_type -> com.kcl.api.ParseProgramArgs
+	37, // 81: com.kcl.api.KclService.ListVariables:input_type -> com.kcl.api.ListVariablesArgs
+	22, // 82: com.kcl.api.KclService.ExecProgram:input_type -> com.kcl.api.ExecProgramArgs
+	24, // 83: com.kcl.api.KclService.BuildProgram:input_type -> com.kcl.api.BuildProgramArgs
+	26, // 84: com.kcl.api.KclService.ExecArtifact:input_type -> com.kcl.api.ExecArtifactArgs
+	33, // 85: com.kcl.api.KclService.OverrideFile:input_type -> com.kcl.api.OverrideFileArgs
+	41, // 86: com.kcl.api.KclService.GetSchemaTypeMapping:input_type -> com.kcl.api.GetSchemaTypeMappingArgs
+	27, // 87: com.kcl.api.KclService.FormatCode:input_type -> com.kcl.api.FormatCodeArgs
+	29, // 88: com.kcl.api.KclService.FormatPath:input_type -> com.kcl.api.FormatPathArgs
+	31, // 89: com.kcl.api.KclService.LintPath:input_type -> com.kcl.api.LintPathArgs
+	45, // 90: com.kcl.api.KclService.ValidateCode:input_type -> com.kcl.api.ValidateCodeArgs
+	48, // 91: com.kcl.api.KclService.ListDepFiles:input_type -> com.kcl.api.ListDepFilesArgs
+	50, // 92: com.kcl.api.KclService.LoadSettingsFiles:input_type -> com.kcl.api.LoadSettingsFilesArgs
+	54, // 93: com.kcl.api.KclService.Rename:input_type -> com.kcl.api.RenameArgs
+	56, // 94: com.kcl.api.KclService.RenameCode:input_type -> com.kcl.api.RenameCodeArgs
+	58, // 95: com.kcl.api.KclService.Test:input_type -> com.kcl.api.TestArgs
+	61, // 96: com.kcl.api.KclService.UpdateDependencies:input_type -> com.kcl.api.UpdateDependenciesArgs
+	5,  // 97: com.kcl.api.BuiltinService.Ping:output_type -> com.kcl.api.PingResult
+	9,  // 98: com.kcl.api.BuiltinService.ListMethod:output_type -> com.kcl.api.ListMethodResult
+	5,  // 99: com.kcl.api.KclService.Ping:output_type -> com.kcl.api.PingResult
+	7,  // 100: com.kcl.api.KclService.GetVersion:output_type -> com.kcl.api.GetVersionResult
+	13, // 101: com.kcl.api.KclService.ParseProgram:output_type -> com.kcl.api.ParseProgramResult
+	11, // 102: com.kcl.api.KclService.ParseFile:output_type -> com.kcl.api.ParseFileResult
+	15, // 103: com.kcl.api.KclService.LoadPackage:output_type -> com.kcl.api.LoadPackageResult
+	16, // 104: com.kcl.api.KclService.ListOptions:output_type -> com.kcl.api.ListOptionsResult
+	38, // 105: com.kcl.api.KclService.ListVariables:output_type -> com.kcl.api.ListVariablesResult
+	23, // 106: com.kcl.api.KclService.ExecProgram:output_type -> com.kcl.api.ExecProgramResult
+	25, // 107: com.kcl.api.KclService.BuildProgram:output_type -> com.kcl.api.BuildProgramResult
+	23, // 108: com.kcl.api.KclService.ExecArtifact:output_type -> com.kcl.api.ExecProgramResult
+	34, // 109: com.kcl.api.KclService.OverrideFile:output_type -> com.kcl.api.OverrideFileResult
+	42, // 110: com.kcl.api.KclService.GetSchemaTypeMapping:output_type -> com.kcl.api.GetSchemaTypeMappingResult
+	28, // 111: com.kcl.api.KclService.FormatCode:output_type -> com.kcl.api.FormatCodeResult
+	30, // 112: com.kcl.api.KclService.FormatPath:output_type -> com.kcl.api.FormatPathResult
+	32, // 113: com.kcl.api.KclService.LintPath:output_type -> com.kcl.api.LintPathResult
+	46, // 114: com.kcl.api.KclService.ValidateCode:output_type -> com.kcl.api.ValidateCodeResult
+	49, // 115: com.kcl.api.KclService.ListDepFiles:output_type -> com.kcl.api.ListDepFilesResult
+	51, // 116: com.kcl.api.KclService.LoadSettingsFiles:output_type -> com.kcl.api.LoadSettingsFilesResult
+	55, // 117: com.kcl.api.KclService.Rename:output_type -> com.kcl.api.RenameResult
+	57, // 118: com.kcl.api.KclService.RenameCode:output_type -> com.kcl.api.RenameCodeResult
+	59, // 119: com.kcl.api.KclService.Test:output_type -> com.kcl.api.TestResult
+	62, // 120: com.kcl.api.KclService.UpdateDependencies:output_type -> com.kcl.api.UpdateDependenciesResult
+	97, // [97:121] is the sub-list for method output_type
+	73, // [73:97] is the sub-list for method input_type
+	73, // [73:73] is the sub-list for extension type_name
+	73, // [73:73] is the sub-list for extension extendee
+	0,  // [0:73] is the sub-list for field type_name
 }
 
 func init() { file_spec_proto_init() }
@@ -4926,13 +5146,15 @@ func file_spec_proto_init() {
 	if File_spec_proto != nil {
 		return
 	}
+	file_spec_proto_msgTypes[63].OneofWrappers = []any{}
+	file_spec_proto_msgTypes[66].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_spec_proto_rawDesc), len(file_spec_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   80,
+			NumMessages:   83,
 			NumExtensions: 0,
 			NumServices:   2,
 		},

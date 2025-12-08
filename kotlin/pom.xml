@@ -5,7 +5,7 @@
 
     <groupId>com.kcl</groupId>
     <artifactId>kcl-lib-kotlin</artifactId>
-    <version>0.12.1</version>
+    <version>0.12.2</version>
     <name>KCL Arifact Library for Kotlin</name>
     <description>
         KCL is an open-source constraint-based record and functional language mainly
