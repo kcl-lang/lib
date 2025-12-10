@@ -660,6 +660,30 @@ mod ffi {
         pub examples: Vec<HashMapExampleValue>,
         /// Base schema if applicable.
         pub base_schema: OptionalKclType,
+        /// Function type if the KclType is a function.
+        pub function: OptionalFunctionType,
+        /// Optional schema index signature
+        pub index_signature: OptionalIndexSignature,
+    }
+
+    #[derive(Debug, Default)]
+    pub struct FunctionType {
+        pub params: Vec<Parameter>,
+        pub return_ty: OptionalKclType,
+    }
+
+    #[derive(Debug, Default)]
+    pub struct Parameter {
+        pub name: String,
+        pub ty: OptionalKclType,
+    }
+
+    #[derive(Debug, Default)]
+    pub struct IndexSignature {
+        pub key_name: String,
+        pub key: OptionalKclType,
+        pub val: OptionalKclType,
+        pub any_other: bool,
     }
 
     #[derive(Debug, Default)]
@@ -672,6 +696,18 @@ mod ffi {
     struct OptionalKclType {
         has_value: bool,
         value: String,
+    }
+
+    #[derive(Debug, Default)]
+    struct OptionalFunctionType {
+        has_value: bool,
+        value: FunctionType,
+    }
+
+    #[derive(Debug, Default)]
+    struct OptionalIndexSignature {
+        has_value: bool,
+        value: IndexSignature,
     }
 
     #[derive(Debug, Default)]
@@ -1340,6 +1376,8 @@ impl KclType {
             pkg_path: r.pkg_path.clone(),
             line: r.line,
             item: OptionalKclType::new_from_box(&r.item),
+            // TODO: function and index_signature fields
+            ..Default::default()
         }
     }
 }

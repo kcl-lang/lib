@@ -1023,6 +1023,33 @@ public struct GetSchemaTypeMappingResult: Sendable {
   public init() {}
 }
 
+/// Message for get schema type mapping response.
+public struct GetSchemaTypeMappingUnderPathResult: Sendable {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  /// Map of pkg and schema types mappings.
+  public var schemaTypeMapping: Dictionary<String,SchemaTypes> = [:]
+
+  public var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  public init() {}
+}
+
+public struct SchemaTypes: Sendable {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  /// List of schema type mappings.
+  public var schemaType: [KclType] = []
+
+  public var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  public init() {}
+}
+
 /// Message for validate code request arguments.
 public struct ValidateCodeArgs: Sendable {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
@@ -1049,6 +1076,9 @@ public struct ValidateCodeArgs: Sendable {
 
   /// Format of the validation (e.g., "json", "yaml").
   public var format: String = String()
+
+  /// List of external packages updated.
+  public var externalPkgs: [ExternalPkg] = []
 
   public var unknownFields = SwiftProtobuf.UnknownStorage()
 
@@ -1422,7 +1452,7 @@ public struct KclType: @unchecked Sendable {
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
 
-  /// Type name (e.g., schema, dict, list, str, int, float, bool, any, union, number_multiplier).
+  /// Type name (e.g., schema, dict, list, str, int, float, bool, any, union, function, number_multiplier).
   public var type: String {
     get {return _storage._type}
     set {_uniqueStorage()._type = newValue}
@@ -1530,6 +1560,123 @@ public struct KclType: @unchecked Sendable {
   /// Clears the value of `baseSchema`. Subsequent reads from it will return its default value.
   public mutating func clearBaseSchema() {_uniqueStorage()._baseSchema = nil}
 
+  /// Function type if the KclType is a function.
+  public var function: FunctionType {
+    get {return _storage._function ?? FunctionType()}
+    set {_uniqueStorage()._function = newValue}
+  }
+  /// Returns true if `function` has been explicitly set.
+  public var hasFunction: Bool {return _storage._function != nil}
+  /// Clears the value of `function`. Subsequent reads from it will return its default value.
+  public mutating func clearFunction() {_uniqueStorage()._function = nil}
+
+  /// Optional schema index signature
+  public var indexSignature: IndexSignature {
+    get {return _storage._indexSignature ?? IndexSignature()}
+    set {_uniqueStorage()._indexSignature = newValue}
+  }
+  /// Returns true if `indexSignature` has been explicitly set.
+  public var hasIndexSignature: Bool {return _storage._indexSignature != nil}
+  /// Clears the value of `indexSignature`. Subsequent reads from it will return its default value.
+  public mutating func clearIndexSignature() {_uniqueStorage()._indexSignature = nil}
+
+  public var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  public init() {}
+
+  fileprivate var _storage = _StorageClass.defaultInstance
+}
+
+public struct FunctionType: @unchecked Sendable {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  public var params: [Parameter] {
+    get {return _storage._params}
+    set {_uniqueStorage()._params = newValue}
+  }
+
+  public var returnTy: KclType {
+    get {return _storage._returnTy ?? KclType()}
+    set {_uniqueStorage()._returnTy = newValue}
+  }
+  /// Returns true if `returnTy` has been explicitly set.
+  public var hasReturnTy: Bool {return _storage._returnTy != nil}
+  /// Clears the value of `returnTy`. Subsequent reads from it will return its default value.
+  public mutating func clearReturnTy() {_uniqueStorage()._returnTy = nil}
+
+  public var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  public init() {}
+
+  fileprivate var _storage = _StorageClass.defaultInstance
+}
+
+public struct Parameter: Sendable {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  public var name: String = String()
+
+  public var ty: KclType {
+    get {return _ty ?? KclType()}
+    set {_ty = newValue}
+  }
+  /// Returns true if `ty` has been explicitly set.
+  public var hasTy: Bool {return self._ty != nil}
+  /// Clears the value of `ty`. Subsequent reads from it will return its default value.
+  public mutating func clearTy() {self._ty = nil}
+
+  public var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  public init() {}
+
+  fileprivate var _ty: KclType? = nil
+}
+
+/// Message representing an index signature in KCL.
+public struct IndexSignature: @unchecked Sendable {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  /// The optional index signature key name
+  public var keyName: String {
+    get {return _storage._keyName ?? String()}
+    set {_uniqueStorage()._keyName = newValue}
+  }
+  /// Returns true if `keyName` has been explicitly set.
+  public var hasKeyName: Bool {return _storage._keyName != nil}
+  /// Clears the value of `keyName`. Subsequent reads from it will return its default value.
+  public mutating func clearKeyName() {_uniqueStorage()._keyName = nil}
+
+  /// Key type of the index signature.
+  public var key: KclType {
+    get {return _storage._key ?? KclType()}
+    set {_uniqueStorage()._key = newValue}
+  }
+  /// Returns true if `key` has been explicitly set.
+  public var hasKey: Bool {return _storage._key != nil}
+  /// Clears the value of `key`. Subsequent reads from it will return its default value.
+  public mutating func clearKey() {_uniqueStorage()._key = nil}
+
+  /// Value type of the index signature.
+  public var val: KclType {
+    get {return _storage._val ?? KclType()}
+    set {_uniqueStorage()._val = newValue}
+  }
+  /// Returns true if `val` has been explicitly set.
+  public var hasVal: Bool {return _storage._val != nil}
+  /// Clears the value of `val`. Subsequent reads from it will return its default value.
+  public mutating func clearVal() {_uniqueStorage()._val = nil}
+
+  public var anyOther: Bool {
+    get {return _storage._anyOther}
+    set {_uniqueStorage()._anyOther = newValue}
+  }
+
   public var unknownFields = SwiftProtobuf.UnknownStorage()
 
   public init() {}
@@ -1579,8 +1726,10 @@ public struct Example: Sendable {
 
 // MARK: - Code below here is support for the SwiftProtobuf runtime.
 
+fileprivate let _protobuf_package = "com.kcl.api"
+
 extension ExternalPkg: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  public static let protoMessageName: String = "ExternalPkg"
+  public static let protoMessageName: String = _protobuf_package + ".ExternalPkg"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .standard(proto: "pkg_name"),
     2: .standard(proto: "pkg_path"),
@@ -1618,7 +1767,7 @@ extension ExternalPkg: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementati
 }
 
 extension Argument: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  public static let protoMessageName: String = "Argument"
+  public static let protoMessageName: String = _protobuf_package + ".Argument"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "name"),
     2: .same(proto: "value"),
@@ -1656,7 +1805,7 @@ extension Argument: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationB
 }
 
 extension Error: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  public static let protoMessageName: String = "Error"
+  public static let protoMessageName: String = _protobuf_package + ".Error"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "level"),
     2: .same(proto: "code"),
@@ -1700,7 +1849,7 @@ extension Error: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase
 }
 
 extension Message: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  public static let protoMessageName: String = "Message"
+  public static let protoMessageName: String = _protobuf_package + ".Message"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "msg"),
     2: .same(proto: "pos"),
@@ -1742,7 +1891,7 @@ extension Message: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBa
 }
 
 extension PingArgs: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  public static let protoMessageName: String = "PingArgs"
+  public static let protoMessageName: String = _protobuf_package + ".PingArgs"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "value"),
   ]
@@ -1774,7 +1923,7 @@ extension PingArgs: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationB
 }
 
 extension PingResult: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  public static let protoMessageName: String = "PingResult"
+  public static let protoMessageName: String = _protobuf_package + ".PingResult"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "value"),
   ]
@@ -1806,7 +1955,7 @@ extension PingResult: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementatio
 }
 
 extension GetVersionArgs: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  public static let protoMessageName: String = "GetVersionArgs"
+  public static let protoMessageName: String = _protobuf_package + ".GetVersionArgs"
   public static let _protobuf_nameMap = SwiftProtobuf._NameMap()
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -1825,7 +1974,7 @@ extension GetVersionArgs: SwiftProtobuf.Message, SwiftProtobuf._MessageImplement
 }
 
 extension GetVersionResult: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  public static let protoMessageName: String = "GetVersionResult"
+  public static let protoMessageName: String = _protobuf_package + ".GetVersionResult"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "version"),
     2: .same(proto: "checksum"),
@@ -1875,7 +2024,7 @@ extension GetVersionResult: SwiftProtobuf.Message, SwiftProtobuf._MessageImpleme
 }
 
 extension ListMethodArgs: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  public static let protoMessageName: String = "ListMethodArgs"
+  public static let protoMessageName: String = _protobuf_package + ".ListMethodArgs"
   public static let _protobuf_nameMap = SwiftProtobuf._NameMap()
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -1894,7 +2043,7 @@ extension ListMethodArgs: SwiftProtobuf.Message, SwiftProtobuf._MessageImplement
 }
 
 extension ListMethodResult: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  public static let protoMessageName: String = "ListMethodResult"
+  public static let protoMessageName: String = _protobuf_package + ".ListMethodResult"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .standard(proto: "method_name_list"),
   ]
@@ -1926,7 +2075,7 @@ extension ListMethodResult: SwiftProtobuf.Message, SwiftProtobuf._MessageImpleme
 }
 
 extension ParseFileArgs: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  public static let protoMessageName: String = "ParseFileArgs"
+  public static let protoMessageName: String = _protobuf_package + ".ParseFileArgs"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "path"),
     2: .same(proto: "source"),
@@ -1970,7 +2119,7 @@ extension ParseFileArgs: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementa
 }
 
 extension ParseFileResult: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  public static let protoMessageName: String = "ParseFileResult"
+  public static let protoMessageName: String = _protobuf_package + ".ParseFileResult"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .standard(proto: "ast_json"),
     2: .same(proto: "deps"),
@@ -2014,7 +2163,7 @@ extension ParseFileResult: SwiftProtobuf.Message, SwiftProtobuf._MessageImplemen
 }
 
 extension ParseProgramArgs: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  public static let protoMessageName: String = "ParseProgramArgs"
+  public static let protoMessageName: String = _protobuf_package + ".ParseProgramArgs"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "paths"),
     2: .same(proto: "sources"),
@@ -2058,7 +2207,7 @@ extension ParseProgramArgs: SwiftProtobuf.Message, SwiftProtobuf._MessageImpleme
 }
 
 extension ParseProgramResult: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  public static let protoMessageName: String = "ParseProgramResult"
+  public static let protoMessageName: String = _protobuf_package + ".ParseProgramResult"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .standard(proto: "ast_json"),
     2: .same(proto: "paths"),
@@ -2102,7 +2251,7 @@ extension ParseProgramResult: SwiftProtobuf.Message, SwiftProtobuf._MessageImple
 }
 
 extension LoadPackageArgs: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  public static let protoMessageName: String = "LoadPackageArgs"
+  public static let protoMessageName: String = _protobuf_package + ".LoadPackageArgs"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .standard(proto: "parse_args"),
     2: .standard(proto: "resolve_ast"),
@@ -2156,7 +2305,7 @@ extension LoadPackageArgs: SwiftProtobuf.Message, SwiftProtobuf._MessageImplemen
 }
 
 extension LoadPackageResult: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  public static let protoMessageName: String = "LoadPackageResult"
+  public static let protoMessageName: String = _protobuf_package + ".LoadPackageResult"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "program"),
     2: .same(proto: "paths"),
@@ -2242,7 +2391,7 @@ extension LoadPackageResult: SwiftProtobuf.Message, SwiftProtobuf._MessageImplem
 }
 
 extension ListOptionsResult: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  public static let protoMessageName: String = "ListOptionsResult"
+  public static let protoMessageName: String = _protobuf_package + ".ListOptionsResult"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     2: .same(proto: "options"),
   ]
@@ -2274,7 +2423,7 @@ extension ListOptionsResult: SwiftProtobuf.Message, SwiftProtobuf._MessageImplem
 }
 
 extension OptionHelp: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  public static let protoMessageName: String = "OptionHelp"
+  public static let protoMessageName: String = _protobuf_package + ".OptionHelp"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "name"),
     2: .same(proto: "type"),
@@ -2330,7 +2479,7 @@ extension OptionHelp: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementatio
 }
 
 extension Symbol: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  public static let protoMessageName: String = "Symbol"
+  public static let protoMessageName: String = _protobuf_package + ".Symbol"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "ty"),
     2: .same(proto: "name"),
@@ -2396,7 +2545,7 @@ extension Symbol: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBas
 }
 
 extension Scope: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  public static let protoMessageName: String = "Scope"
+  public static let protoMessageName: String = _protobuf_package + ".Scope"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "kind"),
     2: .same(proto: "parent"),
@@ -2456,7 +2605,7 @@ extension Scope: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase
 }
 
 extension SymbolIndex: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  public static let protoMessageName: String = "SymbolIndex"
+  public static let protoMessageName: String = _protobuf_package + ".SymbolIndex"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "i"),
     2: .same(proto: "g"),
@@ -2500,7 +2649,7 @@ extension SymbolIndex: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementati
 }
 
 extension ScopeIndex: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  public static let protoMessageName: String = "ScopeIndex"
+  public static let protoMessageName: String = _protobuf_package + ".ScopeIndex"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "i"),
     2: .same(proto: "g"),
@@ -2544,7 +2693,7 @@ extension ScopeIndex: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementatio
 }
 
 extension ExecProgramArgs: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  public static let protoMessageName: String = "ExecProgramArgs"
+  public static let protoMessageName: String = _protobuf_package + ".ExecProgramArgs"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .standard(proto: "work_dir"),
     2: .standard(proto: "k_filename_list"),
@@ -2752,7 +2901,7 @@ extension ExecProgramArgs: SwiftProtobuf.Message, SwiftProtobuf._MessageImplemen
 }
 
 extension ExecProgramResult: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  public static let protoMessageName: String = "ExecProgramResult"
+  public static let protoMessageName: String = _protobuf_package + ".ExecProgramResult"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .standard(proto: "json_result"),
     2: .standard(proto: "yaml_result"),
@@ -2802,7 +2951,7 @@ extension ExecProgramResult: SwiftProtobuf.Message, SwiftProtobuf._MessageImplem
 }
 
 extension BuildProgramArgs: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  public static let protoMessageName: String = "BuildProgramArgs"
+  public static let protoMessageName: String = _protobuf_package + ".BuildProgramArgs"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .standard(proto: "exec_args"),
     2: .same(proto: "output"),
@@ -2844,7 +2993,7 @@ extension BuildProgramArgs: SwiftProtobuf.Message, SwiftProtobuf._MessageImpleme
 }
 
 extension BuildProgramResult: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  public static let protoMessageName: String = "BuildProgramResult"
+  public static let protoMessageName: String = _protobuf_package + ".BuildProgramResult"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "path"),
   ]
@@ -2876,7 +3025,7 @@ extension BuildProgramResult: SwiftProtobuf.Message, SwiftProtobuf._MessageImple
 }
 
 extension ExecArtifactArgs: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  public static let protoMessageName: String = "ExecArtifactArgs"
+  public static let protoMessageName: String = _protobuf_package + ".ExecArtifactArgs"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "path"),
     2: .standard(proto: "exec_args"),
@@ -2918,7 +3067,7 @@ extension ExecArtifactArgs: SwiftProtobuf.Message, SwiftProtobuf._MessageImpleme
 }
 
 extension FormatCodeArgs: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  public static let protoMessageName: String = "FormatCodeArgs"
+  public static let protoMessageName: String = _protobuf_package + ".FormatCodeArgs"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "source"),
   ]
@@ -2950,7 +3099,7 @@ extension FormatCodeArgs: SwiftProtobuf.Message, SwiftProtobuf._MessageImplement
 }
 
 extension FormatCodeResult: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  public static let protoMessageName: String = "FormatCodeResult"
+  public static let protoMessageName: String = _protobuf_package + ".FormatCodeResult"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "formatted"),
   ]
@@ -2982,7 +3131,7 @@ extension FormatCodeResult: SwiftProtobuf.Message, SwiftProtobuf._MessageImpleme
 }
 
 extension FormatPathArgs: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  public static let protoMessageName: String = "FormatPathArgs"
+  public static let protoMessageName: String = _protobuf_package + ".FormatPathArgs"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "path"),
   ]
@@ -3014,7 +3163,7 @@ extension FormatPathArgs: SwiftProtobuf.Message, SwiftProtobuf._MessageImplement
 }
 
 extension FormatPathResult: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  public static let protoMessageName: String = "FormatPathResult"
+  public static let protoMessageName: String = _protobuf_package + ".FormatPathResult"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .standard(proto: "changed_paths"),
   ]
@@ -3046,7 +3195,7 @@ extension FormatPathResult: SwiftProtobuf.Message, SwiftProtobuf._MessageImpleme
 }
 
 extension LintPathArgs: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  public static let protoMessageName: String = "LintPathArgs"
+  public static let protoMessageName: String = _protobuf_package + ".LintPathArgs"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "paths"),
   ]
@@ -3078,7 +3227,7 @@ extension LintPathArgs: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementat
 }
 
 extension LintPathResult: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  public static let protoMessageName: String = "LintPathResult"
+  public static let protoMessageName: String = _protobuf_package + ".LintPathResult"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "results"),
   ]
@@ -3110,7 +3259,7 @@ extension LintPathResult: SwiftProtobuf.Message, SwiftProtobuf._MessageImplement
 }
 
 extension OverrideFileArgs: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  public static let protoMessageName: String = "OverrideFileArgs"
+  public static let protoMessageName: String = _protobuf_package + ".OverrideFileArgs"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "file"),
     2: .same(proto: "specs"),
@@ -3154,7 +3303,7 @@ extension OverrideFileArgs: SwiftProtobuf.Message, SwiftProtobuf._MessageImpleme
 }
 
 extension OverrideFileResult: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  public static let protoMessageName: String = "OverrideFileResult"
+  public static let protoMessageName: String = _protobuf_package + ".OverrideFileResult"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "result"),
     2: .standard(proto: "parse_errors"),
@@ -3192,7 +3341,7 @@ extension OverrideFileResult: SwiftProtobuf.Message, SwiftProtobuf._MessageImple
 }
 
 extension ListVariablesOptions: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  public static let protoMessageName: String = "ListVariablesOptions"
+  public static let protoMessageName: String = _protobuf_package + ".ListVariablesOptions"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .standard(proto: "merge_program"),
   ]
@@ -3224,7 +3373,7 @@ extension ListVariablesOptions: SwiftProtobuf.Message, SwiftProtobuf._MessageImp
 }
 
 extension VariableList: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  public static let protoMessageName: String = "VariableList"
+  public static let protoMessageName: String = _protobuf_package + ".VariableList"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "variables"),
   ]
@@ -3256,7 +3405,7 @@ extension VariableList: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementat
 }
 
 extension ListVariablesArgs: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  public static let protoMessageName: String = "ListVariablesArgs"
+  public static let protoMessageName: String = _protobuf_package + ".ListVariablesArgs"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "files"),
     2: .same(proto: "specs"),
@@ -3304,7 +3453,7 @@ extension ListVariablesArgs: SwiftProtobuf.Message, SwiftProtobuf._MessageImplem
 }
 
 extension ListVariablesResult: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  public static let protoMessageName: String = "ListVariablesResult"
+  public static let protoMessageName: String = _protobuf_package + ".ListVariablesResult"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "variables"),
     2: .standard(proto: "unsupported_codes"),
@@ -3348,7 +3497,7 @@ extension ListVariablesResult: SwiftProtobuf.Message, SwiftProtobuf._MessageImpl
 }
 
 extension Variable: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  public static let protoMessageName: String = "Variable"
+  public static let protoMessageName: String = _protobuf_package + ".Variable"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "value"),
     2: .standard(proto: "type_name"),
@@ -3404,7 +3553,7 @@ extension Variable: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationB
 }
 
 extension MapEntry: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  public static let protoMessageName: String = "MapEntry"
+  public static let protoMessageName: String = _protobuf_package + ".MapEntry"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "key"),
     2: .same(proto: "value"),
@@ -3446,7 +3595,7 @@ extension MapEntry: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationB
 }
 
 extension GetSchemaTypeMappingArgs: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  public static let protoMessageName: String = "GetSchemaTypeMappingArgs"
+  public static let protoMessageName: String = _protobuf_package + ".GetSchemaTypeMappingArgs"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .standard(proto: "exec_args"),
     2: .standard(proto: "schema_name"),
@@ -3488,7 +3637,7 @@ extension GetSchemaTypeMappingArgs: SwiftProtobuf.Message, SwiftProtobuf._Messag
 }
 
 extension GetSchemaTypeMappingResult: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  public static let protoMessageName: String = "GetSchemaTypeMappingResult"
+  public static let protoMessageName: String = _protobuf_package + ".GetSchemaTypeMappingResult"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .standard(proto: "schema_type_mapping"),
   ]
@@ -3519,8 +3668,72 @@ extension GetSchemaTypeMappingResult: SwiftProtobuf.Message, SwiftProtobuf._Mess
   }
 }
 
+extension GetSchemaTypeMappingUnderPathResult: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = _protobuf_package + ".GetSchemaTypeMappingUnderPathResult"
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .standard(proto: "schema_type_mapping"),
+  ]
+
+  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeMapField(fieldType: SwiftProtobuf._ProtobufMessageMap<SwiftProtobuf.ProtobufString,SchemaTypes>.self, value: &self.schemaTypeMapping) }()
+      default: break
+      }
+    }
+  }
+
+  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    if !self.schemaTypeMapping.isEmpty {
+      try visitor.visitMapField(fieldType: SwiftProtobuf._ProtobufMessageMap<SwiftProtobuf.ProtobufString,SchemaTypes>.self, value: self.schemaTypeMapping, fieldNumber: 1)
+    }
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  public static func ==(lhs: GetSchemaTypeMappingUnderPathResult, rhs: GetSchemaTypeMappingUnderPathResult) -> Bool {
+    if lhs.schemaTypeMapping != rhs.schemaTypeMapping {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+extension SchemaTypes: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = _protobuf_package + ".SchemaTypes"
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .standard(proto: "schema_type"),
+  ]
+
+  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeRepeatedMessageField(value: &self.schemaType) }()
+      default: break
+      }
+    }
+  }
+
+  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    if !self.schemaType.isEmpty {
+      try visitor.visitRepeatedMessageField(value: self.schemaType, fieldNumber: 1)
+    }
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  public static func ==(lhs: SchemaTypes, rhs: SchemaTypes) -> Bool {
+    if lhs.schemaType != rhs.schemaType {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
 extension ValidateCodeArgs: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  public static let protoMessageName: String = "ValidateCodeArgs"
+  public static let protoMessageName: String = _protobuf_package + ".ValidateCodeArgs"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "datafile"),
     2: .same(proto: "data"),
@@ -3529,6 +3742,7 @@ extension ValidateCodeArgs: SwiftProtobuf.Message, SwiftProtobuf._MessageImpleme
     5: .same(proto: "schema"),
     6: .standard(proto: "attribute_name"),
     7: .same(proto: "format"),
+    8: .standard(proto: "external_pkgs"),
   ]
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -3544,6 +3758,7 @@ extension ValidateCodeArgs: SwiftProtobuf.Message, SwiftProtobuf._MessageImpleme
       case 5: try { try decoder.decodeSingularStringField(value: &self.schema) }()
       case 6: try { try decoder.decodeSingularStringField(value: &self.attributeName) }()
       case 7: try { try decoder.decodeSingularStringField(value: &self.format) }()
+      case 8: try { try decoder.decodeRepeatedMessageField(value: &self.externalPkgs) }()
       default: break
       }
     }
@@ -3571,6 +3786,9 @@ extension ValidateCodeArgs: SwiftProtobuf.Message, SwiftProtobuf._MessageImpleme
     if !self.format.isEmpty {
       try visitor.visitSingularStringField(value: self.format, fieldNumber: 7)
     }
+    if !self.externalPkgs.isEmpty {
+      try visitor.visitRepeatedMessageField(value: self.externalPkgs, fieldNumber: 8)
+    }
     try unknownFields.traverse(visitor: &visitor)
   }
 
@@ -3582,13 +3800,14 @@ extension ValidateCodeArgs: SwiftProtobuf.Message, SwiftProtobuf._MessageImpleme
     if lhs.schema != rhs.schema {return false}
     if lhs.attributeName != rhs.attributeName {return false}
     if lhs.format != rhs.format {return false}
+    if lhs.externalPkgs != rhs.externalPkgs {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }
 }
 
 extension ValidateCodeResult: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  public static let protoMessageName: String = "ValidateCodeResult"
+  public static let protoMessageName: String = _protobuf_package + ".ValidateCodeResult"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "success"),
     2: .standard(proto: "err_message"),
@@ -3626,7 +3845,7 @@ extension ValidateCodeResult: SwiftProtobuf.Message, SwiftProtobuf._MessageImple
 }
 
 extension Position: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  public static let protoMessageName: String = "Position"
+  public static let protoMessageName: String = _protobuf_package + ".Position"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "line"),
     2: .same(proto: "column"),
@@ -3670,7 +3889,7 @@ extension Position: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationB
 }
 
 extension ListDepFilesArgs: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  public static let protoMessageName: String = "ListDepFilesArgs"
+  public static let protoMessageName: String = _protobuf_package + ".ListDepFilesArgs"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .standard(proto: "work_dir"),
     2: .standard(proto: "use_abs_path"),
@@ -3720,7 +3939,7 @@ extension ListDepFilesArgs: SwiftProtobuf.Message, SwiftProtobuf._MessageImpleme
 }
 
 extension ListDepFilesResult: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  public static let protoMessageName: String = "ListDepFilesResult"
+  public static let protoMessageName: String = _protobuf_package + ".ListDepFilesResult"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "pkgroot"),
     2: .same(proto: "pkgpath"),
@@ -3764,7 +3983,7 @@ extension ListDepFilesResult: SwiftProtobuf.Message, SwiftProtobuf._MessageImple
 }
 
 extension LoadSettingsFilesArgs: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  public static let protoMessageName: String = "LoadSettingsFilesArgs"
+  public static let protoMessageName: String = _protobuf_package + ".LoadSettingsFilesArgs"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .standard(proto: "work_dir"),
     2: .same(proto: "files"),
@@ -3802,7 +4021,7 @@ extension LoadSettingsFilesArgs: SwiftProtobuf.Message, SwiftProtobuf._MessageIm
 }
 
 extension LoadSettingsFilesResult: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  public static let protoMessageName: String = "LoadSettingsFilesResult"
+  public static let protoMessageName: String = _protobuf_package + ".LoadSettingsFilesResult"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .standard(proto: "kcl_cli_configs"),
     2: .standard(proto: "kcl_options"),
@@ -3844,7 +4063,7 @@ extension LoadSettingsFilesResult: SwiftProtobuf.Message, SwiftProtobuf._Message
 }
 
 extension CliConfig: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  public static let protoMessageName: String = "CliConfig"
+  public static let protoMessageName: String = _protobuf_package + ".CliConfig"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "files"),
     2: .same(proto: "output"),
@@ -3942,7 +4161,7 @@ extension CliConfig: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementation
 }
 
 extension KeyValuePair: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  public static let protoMessageName: String = "KeyValuePair"
+  public static let protoMessageName: String = _protobuf_package + ".KeyValuePair"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "key"),
     2: .same(proto: "value"),
@@ -3980,7 +4199,7 @@ extension KeyValuePair: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementat
 }
 
 extension RenameArgs: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  public static let protoMessageName: String = "RenameArgs"
+  public static let protoMessageName: String = _protobuf_package + ".RenameArgs"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .standard(proto: "package_root"),
     2: .standard(proto: "symbol_path"),
@@ -4030,7 +4249,7 @@ extension RenameArgs: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementatio
 }
 
 extension RenameResult: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  public static let protoMessageName: String = "RenameResult"
+  public static let protoMessageName: String = _protobuf_package + ".RenameResult"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .standard(proto: "changed_files"),
   ]
@@ -4062,7 +4281,7 @@ extension RenameResult: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementat
 }
 
 extension RenameCodeArgs: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  public static let protoMessageName: String = "RenameCodeArgs"
+  public static let protoMessageName: String = _protobuf_package + ".RenameCodeArgs"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .standard(proto: "package_root"),
     2: .standard(proto: "symbol_path"),
@@ -4112,7 +4331,7 @@ extension RenameCodeArgs: SwiftProtobuf.Message, SwiftProtobuf._MessageImplement
 }
 
 extension RenameCodeResult: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  public static let protoMessageName: String = "RenameCodeResult"
+  public static let protoMessageName: String = _protobuf_package + ".RenameCodeResult"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .standard(proto: "changed_codes"),
   ]
@@ -4144,7 +4363,7 @@ extension RenameCodeResult: SwiftProtobuf.Message, SwiftProtobuf._MessageImpleme
 }
 
 extension TestArgs: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  public static let protoMessageName: String = "TestArgs"
+  public static let protoMessageName: String = _protobuf_package + ".TestArgs"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .standard(proto: "exec_args"),
     2: .standard(proto: "pkg_list"),
@@ -4198,7 +4417,7 @@ extension TestArgs: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationB
 }
 
 extension TestResult: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  public static let protoMessageName: String = "TestResult"
+  public static let protoMessageName: String = _protobuf_package + ".TestResult"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     2: .same(proto: "info"),
   ]
@@ -4230,7 +4449,7 @@ extension TestResult: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementatio
 }
 
 extension TestCaseInfo: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  public static let protoMessageName: String = "TestCaseInfo"
+  public static let protoMessageName: String = _protobuf_package + ".TestCaseInfo"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "name"),
     2: .same(proto: "error"),
@@ -4280,7 +4499,7 @@ extension TestCaseInfo: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementat
 }
 
 extension UpdateDependenciesArgs: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  public static let protoMessageName: String = "UpdateDependenciesArgs"
+  public static let protoMessageName: String = _protobuf_package + ".UpdateDependenciesArgs"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .standard(proto: "manifest_path"),
     2: .same(proto: "vendor"),
@@ -4318,7 +4537,7 @@ extension UpdateDependenciesArgs: SwiftProtobuf.Message, SwiftProtobuf._MessageI
 }
 
 extension UpdateDependenciesResult: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  public static let protoMessageName: String = "UpdateDependenciesResult"
+  public static let protoMessageName: String = _protobuf_package + ".UpdateDependenciesResult"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     3: .standard(proto: "external_pkgs"),
   ]
@@ -4350,7 +4569,7 @@ extension UpdateDependenciesResult: SwiftProtobuf.Message, SwiftProtobuf._Messag
 }
 
 extension KclType: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  public static let protoMessageName: String = "KclType"
+  public static let protoMessageName: String = _protobuf_package + ".KclType"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "type"),
     2: .standard(proto: "union_types"),
@@ -4368,6 +4587,8 @@ extension KclType: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBa
     14: .same(proto: "description"),
     15: .same(proto: "examples"),
     16: .standard(proto: "base_schema"),
+    17: .same(proto: "function"),
+    18: .standard(proto: "index_signature"),
   ]
 
   fileprivate class _StorageClass {
@@ -4387,6 +4608,8 @@ extension KclType: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBa
     var _description_p: String = String()
     var _examples: Dictionary<String,Example> = [:]
     var _baseSchema: KclType? = nil
+    var _function: FunctionType? = nil
+    var _indexSignature: IndexSignature? = nil
 
     #if swift(>=5.10)
       // This property is used as the initial default value for new instances of the type.
@@ -4417,6 +4640,8 @@ extension KclType: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBa
       _description_p = source._description_p
       _examples = source._examples
       _baseSchema = source._baseSchema
+      _function = source._function
+      _indexSignature = source._indexSignature
     }
   }
 
@@ -4451,6 +4676,8 @@ extension KclType: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBa
         case 14: try { try decoder.decodeSingularStringField(value: &_storage._description_p) }()
         case 15: try { try decoder.decodeMapField(fieldType: SwiftProtobuf._ProtobufMessageMap<SwiftProtobuf.ProtobufString,Example>.self, value: &_storage._examples) }()
         case 16: try { try decoder.decodeSingularMessageField(value: &_storage._baseSchema) }()
+        case 17: try { try decoder.decodeSingularMessageField(value: &_storage._function) }()
+        case 18: try { try decoder.decodeSingularMessageField(value: &_storage._indexSignature) }()
         default: break
         }
       }
@@ -4511,6 +4738,12 @@ extension KclType: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBa
       try { if let v = _storage._baseSchema {
         try visitor.visitSingularMessageField(value: v, fieldNumber: 16)
       } }()
+      try { if let v = _storage._function {
+        try visitor.visitSingularMessageField(value: v, fieldNumber: 17)
+      } }()
+      try { if let v = _storage._indexSignature {
+        try visitor.visitSingularMessageField(value: v, fieldNumber: 18)
+      } }()
     }
     try unknownFields.traverse(visitor: &visitor)
   }
@@ -4536,6 +4769,234 @@ extension KclType: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBa
         if _storage._description_p != rhs_storage._description_p {return false}
         if _storage._examples != rhs_storage._examples {return false}
         if _storage._baseSchema != rhs_storage._baseSchema {return false}
+        if _storage._function != rhs_storage._function {return false}
+        if _storage._indexSignature != rhs_storage._indexSignature {return false}
+        return true
+      }
+      if !storagesAreEqual {return false}
+    }
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+extension FunctionType: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = _protobuf_package + ".FunctionType"
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .same(proto: "params"),
+    2: .standard(proto: "return_ty"),
+  ]
+
+  fileprivate class _StorageClass {
+    var _params: [Parameter] = []
+    var _returnTy: KclType? = nil
+
+    #if swift(>=5.10)
+      // This property is used as the initial default value for new instances of the type.
+      // The type itself is protecting the reference to its storage via CoW semantics.
+      // This will force a copy to be made of this reference when the first mutation occurs;
+      // hence, it is safe to mark this as `nonisolated(unsafe)`.
+      static nonisolated(unsafe) let defaultInstance = _StorageClass()
+    #else
+      static let defaultInstance = _StorageClass()
+    #endif
+
+    private init() {}
+
+    init(copying source: _StorageClass) {
+      _params = source._params
+      _returnTy = source._returnTy
+    }
+  }
+
+  fileprivate mutating func _uniqueStorage() -> _StorageClass {
+    if !isKnownUniquelyReferenced(&_storage) {
+      _storage = _StorageClass(copying: _storage)
+    }
+    return _storage
+  }
+
+  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    _ = _uniqueStorage()
+    try withExtendedLifetime(_storage) { (_storage: _StorageClass) in
+      while let fieldNumber = try decoder.nextFieldNumber() {
+        // The use of inline closures is to circumvent an issue where the compiler
+        // allocates stack space for every case branch when no optimizations are
+        // enabled. https://github.com/apple/swift-protobuf/issues/1034
+        switch fieldNumber {
+        case 1: try { try decoder.decodeRepeatedMessageField(value: &_storage._params) }()
+        case 2: try { try decoder.decodeSingularMessageField(value: &_storage._returnTy) }()
+        default: break
+        }
+      }
+    }
+  }
+
+  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    try withExtendedLifetime(_storage) { (_storage: _StorageClass) in
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every if/case branch local when no optimizations
+      // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+      // https://github.com/apple/swift-protobuf/issues/1182
+      if !_storage._params.isEmpty {
+        try visitor.visitRepeatedMessageField(value: _storage._params, fieldNumber: 1)
+      }
+      try { if let v = _storage._returnTy {
+        try visitor.visitSingularMessageField(value: v, fieldNumber: 2)
+      } }()
+    }
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  public static func ==(lhs: FunctionType, rhs: FunctionType) -> Bool {
+    if lhs._storage !== rhs._storage {
+      let storagesAreEqual: Bool = withExtendedLifetime((lhs._storage, rhs._storage)) { (_args: (_StorageClass, _StorageClass)) in
+        let _storage = _args.0
+        let rhs_storage = _args.1
+        if _storage._params != rhs_storage._params {return false}
+        if _storage._returnTy != rhs_storage._returnTy {return false}
+        return true
+      }
+      if !storagesAreEqual {return false}
+    }
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+extension Parameter: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = _protobuf_package + ".Parameter"
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .same(proto: "name"),
+    2: .same(proto: "ty"),
+  ]
+
+  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeSingularStringField(value: &self.name) }()
+      case 2: try { try decoder.decodeSingularMessageField(value: &self._ty) }()
+      default: break
+      }
+    }
+  }
+
+  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
+    if !self.name.isEmpty {
+      try visitor.visitSingularStringField(value: self.name, fieldNumber: 1)
+    }
+    try { if let v = self._ty {
+      try visitor.visitSingularMessageField(value: v, fieldNumber: 2)
+    } }()
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  public static func ==(lhs: Parameter, rhs: Parameter) -> Bool {
+    if lhs.name != rhs.name {return false}
+    if lhs._ty != rhs._ty {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+extension IndexSignature: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = _protobuf_package + ".IndexSignature"
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .standard(proto: "key_name"),
+    2: .same(proto: "key"),
+    3: .same(proto: "val"),
+    4: .standard(proto: "any_other"),
+  ]
+
+  fileprivate class _StorageClass {
+    var _keyName: String? = nil
+    var _key: KclType? = nil
+    var _val: KclType? = nil
+    var _anyOther: Bool = false
+
+    #if swift(>=5.10)
+      // This property is used as the initial default value for new instances of the type.
+      // The type itself is protecting the reference to its storage via CoW semantics.
+      // This will force a copy to be made of this reference when the first mutation occurs;
+      // hence, it is safe to mark this as `nonisolated(unsafe)`.
+      static nonisolated(unsafe) let defaultInstance = _StorageClass()
+    #else
+      static let defaultInstance = _StorageClass()
+    #endif
+
+    private init() {}
+
+    init(copying source: _StorageClass) {
+      _keyName = source._keyName
+      _key = source._key
+      _val = source._val
+      _anyOther = source._anyOther
+    }
+  }
+
+  fileprivate mutating func _uniqueStorage() -> _StorageClass {
+    if !isKnownUniquelyReferenced(&_storage) {
+      _storage = _StorageClass(copying: _storage)
+    }
+    return _storage
+  }
+
+  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    _ = _uniqueStorage()
+    try withExtendedLifetime(_storage) { (_storage: _StorageClass) in
+      while let fieldNumber = try decoder.nextFieldNumber() {
+        // The use of inline closures is to circumvent an issue where the compiler
+        // allocates stack space for every case branch when no optimizations are
+        // enabled. https://github.com/apple/swift-protobuf/issues/1034
+        switch fieldNumber {
+        case 1: try { try decoder.decodeSingularStringField(value: &_storage._keyName) }()
+        case 2: try { try decoder.decodeSingularMessageField(value: &_storage._key) }()
+        case 3: try { try decoder.decodeSingularMessageField(value: &_storage._val) }()
+        case 4: try { try decoder.decodeSingularBoolField(value: &_storage._anyOther) }()
+        default: break
+        }
+      }
+    }
+  }
+
+  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    try withExtendedLifetime(_storage) { (_storage: _StorageClass) in
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every if/case branch local when no optimizations
+      // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+      // https://github.com/apple/swift-protobuf/issues/1182
+      try { if let v = _storage._keyName {
+        try visitor.visitSingularStringField(value: v, fieldNumber: 1)
+      } }()
+      try { if let v = _storage._key {
+        try visitor.visitSingularMessageField(value: v, fieldNumber: 2)
+      } }()
+      try { if let v = _storage._val {
+        try visitor.visitSingularMessageField(value: v, fieldNumber: 3)
+      } }()
+      if _storage._anyOther != false {
+        try visitor.visitSingularBoolField(value: _storage._anyOther, fieldNumber: 4)
+      }
+    }
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  public static func ==(lhs: IndexSignature, rhs: IndexSignature) -> Bool {
+    if lhs._storage !== rhs._storage {
+      let storagesAreEqual: Bool = withExtendedLifetime((lhs._storage, rhs._storage)) { (_args: (_StorageClass, _StorageClass)) in
+        let _storage = _args.0
+        let rhs_storage = _args.1
+        if _storage._keyName != rhs_storage._keyName {return false}
+        if _storage._key != rhs_storage._key {return false}
+        if _storage._val != rhs_storage._val {return false}
+        if _storage._anyOther != rhs_storage._anyOther {return false}
         return true
       }
       if !storagesAreEqual {return false}
@@ -4546,7 +5007,7 @@ extension KclType: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBa
 }
 
 extension Decorator: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  public static let protoMessageName: String = "Decorator"
+  public static let protoMessageName: String = _protobuf_package + ".Decorator"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "name"),
     2: .same(proto: "arguments"),
@@ -4590,7 +5051,7 @@ extension Decorator: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementation
 }
 
 extension Example: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  public static let protoMessageName: String = "Example"
+  public static let protoMessageName: String = _protobuf_package + ".Example"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "summary"),
     2: .same(proto: "description"),
