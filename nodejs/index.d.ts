@@ -328,6 +328,26 @@ export interface KclType {
   description: string
   /** A map object to hold examples, the key is the example name. */
   examples: Record<string, Example>
+  /** Base schema if applicable. */
+  baseSchema: KclType
+  /** Function type if the KclType is a function. */
+  function: FunctionType
+  /** Optional schema index signature */
+  indexSignature?: IndexSignature
+}
+export interface FunctionType {
+  params: Array<Parameter>
+  returnTy: KclType
+}
+export interface Parameter {
+  name: string
+  ty: KclType
+}
+export interface IndexSignature {
+  keyName?: string
+  key: KclType
+  val: KclType
+  anyOther: boolean
 }
 /** Message representing a decorator in KCL. */
 export interface Decorator {
