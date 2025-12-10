@@ -171,7 +171,7 @@ jobs:
           path: nodejs/*.node
 
   macos:
-    runs-on: macos-13
+    runs-on: macos-15-intel
     strategy:
       matrix:
         settings:

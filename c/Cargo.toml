@@ -1,6 +1,6 @@
 [package]
 name = "kcl-lib-c"
-version = "0.12.1"
+version = "0.12.2"
 edition = "2024"
 publish = false
 
@@ -12,4 +12,4 @@ doc = false
 cbindgen = "0.26.0"
 
 [dependencies]
-kcl-api = { git = "https://github.com/kcl-lang/kcl", version = "0.12.1" }
+kcl-api = { git = "https://github.com/kcl-lang/kcl", version = "0.12.2" }

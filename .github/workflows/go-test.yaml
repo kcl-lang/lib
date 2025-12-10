@@ -27,12 +27,8 @@ jobs:
         include:
           # macOS Intel/ARM configurations
 
-          - os: macos-13
-            runner: macos-13
-            cgo_enabled: 0
-
-          - os: macos-13-xlarge
-            runner: macos-13
+          - os: macos-15-intel
+            runner: macos-15-intel
             cgo_enabled: 0
 
           - os: macos-14
