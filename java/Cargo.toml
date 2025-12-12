@@ -1,7 +1,7 @@
 [package]
 name = "kcl-lib-jni"
 publish = false
-version = "0.12.2"
+version = "0.12.3"
 edition = "2024"
 
 [lib]
@@ -19,6 +19,6 @@ lazy_static = "1.4.0"
 prost = "0.14.1"
 prost-types = "0.14.1"
 
-kcl-parser = { git = "https://github.com/kcl-lang/kcl", version = "0.12.2" }
-kcl-sema = { git = "https://github.com/kcl-lang/kcl", version = "0.12.2" }
-kcl-api = { git = "https://github.com/kcl-lang/kcl", version = "0.12.2" }
+kcl-parser = { git = "https://github.com/kcl-lang/kcl", version = "0.12.3" }
+kcl-sema = { git = "https://github.com/kcl-lang/kcl", version = "0.12.3" }
+kcl-api = { git = "https://github.com/kcl-lang/kcl", version = "0.12.3" }
