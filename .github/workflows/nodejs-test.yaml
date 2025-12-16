@@ -126,7 +126,7 @@ jobs:
         shell: bash
         working-directory: .
         run: ${{ matrix.settings.build }}
-      - uses: actions/upload-artifact@v5
+      - uses: actions/upload-artifact@v6
         with:
           name: bindings-linux-${{ matrix.settings.target }}
           path: nodejs/*.node
@@ -165,7 +165,7 @@ jobs:
       - name: Build
         shell: bash
         run: ${{ matrix.settings.build }}
-      - uses: actions/upload-artifact@v5
+      - uses: actions/upload-artifact@v6
         with:
           name: bindings-windows-${{ matrix.settings.target }}
           path: nodejs/*.node
@@ -214,7 +214,7 @@ jobs:
       - name: Build
         run: ${{ matrix.settings.build }}
         shell: bash
-      - uses: actions/upload-artifact@v5
+      - uses: actions/upload-artifact@v6
         with:
           name: bindings-macos-${{ matrix.settings.target }}
           path: nodejs/*.node
