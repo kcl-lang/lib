@@ -5,8 +5,12 @@ edition = "2024"
 publish = false
 
 [features]
-default = ["mlua/lua52"]
+lua51 = ["mlua", "mlua/lua51"]
 lua52 = ["mlua", "mlua/lua52"]
+lua53 = ["mlua", "mlua/lua53"]
+lua54 = ["mlua", "mlua/lua54"]
+luajit = ["mlua", "mlua/luajit"]
+luajit52 = ["mlua", "mlua/luajit52"]
 
 [lib]
 crate-type = ["cdylib"]
