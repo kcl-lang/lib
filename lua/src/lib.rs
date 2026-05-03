@@ -2,17 +2,23 @@ extern crate kcl_api;
 
 use mlua::prelude::*;
 
-/// Execute KCL file with arguments and return the JSON/YAML result.
-fn exec_program<'a>(lua: &'a Lua, args: LuaTable<'a>) -> LuaResult<LuaTable<'a>> {
+/// Execute KCL code and return the JSON/YAML result.
+fn run<'a>(lua: &'a Lua, path: LuaValue) -> LuaResult<LuaTable<'a>> {
     let api = kcl_api::API::default();
-    let work_dir: String = args.get("work_dir").unwrap_or_default();
-    let k_filename_list: Vec<String> = args.get("k_filename_list").unwrap_or_default();
-    let k_code_list: Vec<String> = args.get("k_code_list").unwrap_or_default();
+    let k_filename_list = match path {
+        LuaValue::String(s) => Ok(vec![s.to_str()?.to_owned()]),
+        LuaValue::Table(t) => t
+            .sequence_values::<String>()
+            .collect::<Result<Vec<String>, LuaError>>(),
+        _ => {
+            return Err(LuaError::runtime(
+                "invalid argument type for function `run`, expecting string or table",
+            ));
+        }
+    }?;
 
     let result = match api.exec_program(&kcl_api::ExecProgramArgs {
-        work_dir,
         k_filename_list,
-        k_code_list,
         ..Default::default()
     }) {
         Ok(r) => r,
@@ -27,9 +33,29 @@ fn exec_program<'a>(lua: &'a Lua, args: LuaTable<'a>) -> LuaResult<LuaTable<'a>>
     Ok(t)
 }
 
+/// Format KCL code from a file.
+fn format<'a>(lua: &'a Lua, path: String) -> LuaResult<LuaTable<'a>> {
+    let api = kcl_api::API::default();
+
+    let result = match api.format_path(&kcl_api::FormatPathArgs {
+        path,
+        ..Default::default()
+    }) {
+        Ok(r) => r,
+        Err(e) => return Err(LuaError::external(e)),
+    };
+
+    let t = lua.create_table()?;
+    for changed_path in result.changed_paths.iter() {
+        t.push(lua.create_string(changed_path)?)?;
+    }
+    Ok(t)
+}
+
 #[mlua::lua_module]
 fn kcl_lib(lua: &Lua) -> LuaResult<LuaTable<'_>> {
     let module = lua.create_table()?;
-    module.set("exec_program", lua.create_function(exec_program)?)?;
+    module.set("run", lua.create_function(run)?)?;
+    module.set("format", lua.create_function(format)?)?;
     Ok(module)
 }
