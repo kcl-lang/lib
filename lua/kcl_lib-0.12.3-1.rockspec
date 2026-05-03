@@ -1,28 +1,35 @@
+local package_version = "0.12.3"
+local rockspec_revision = "1"
+
+rockspec_format = "3.0"
 package = "kcl_lib"
-version = "0.12.3-1"
-
+version = package_version .. "-" .. rockspec_revision
 source = {
-    url = "git+https://github.com/kcl-lang/kcl",
+  url = "git+https://github.com/kcl-lang/lib",
+  -- tag = "lua/v" .. version,
 }
-
 description = {
-    summary = "KCL Lua Bindings",
-    detailed = [[
-        KCL Lua Bindings
+  summary = "KCL Lua Bindings",
+  detailed = [[
+      KCL Lua Bindings
     ]],
-    homepage = "https://kcl-lang.io/",
-    license = " Apache-2.0"
+  homepage = "https://kcl-lang.io/",
+  license = " Apache-2.0",
 }
-
 dependencies = {
-    "lua >= 5.1",
-    "luarocks-build-rust-mlua = 0.2.0",
+  "lua >= 5.1",
+  "luarocks-build-rust-mlua = 0.2.0",
 }
-
+test_dependencies = {
+  "busted >= 2.2",
+}
+test = {
+  type = "busted",
+}
 build = {
-    type = "rust-mlua",
-    modules = {
-        ["kcl_lib"] = "kcl_lib_lua",
-    },
-    target_path = "target",
+  type = "rust-mlua",
+  modules = {
+    ["kcl_lib"] = "kcl_lib_lua",
+  },
+  target_path = "target",
 }
