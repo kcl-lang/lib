@@ -19,6 +19,8 @@ description = {
 dependencies = {
   "lua >= 5.1",
   "luarocks-build-rust-mlua = 0.2.0",
+  "lua-protobuf >= 0.5",
+  "dkjson >= 2.9",
 }
 test_dependencies = {
   "busted >= 2.2",
@@ -32,4 +34,10 @@ build = {
     ["kcl_lib"] = "kcl_lib_lua",
   },
   target_path = "target",
+  include = {
+    "api.lua",
+    "raw_api.lua",
+    "types.lua",
+    "schema.lua",
+  },
 }
