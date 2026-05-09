@@ -43,6 +43,12 @@ Use `luarocks` to build the library and install it for your current Lua version:
 luarocks --local make
 ```
 
+If you need to re-generate the protobuf spec files, run:
+
+```bash
+luajit hack/generate_pb.lua
+```
+
 ## Usage
 
 ### Basic Usage
@@ -50,22 +56,27 @@ luarocks --local make
 The KCL Lua library provides two main functions for working with KCL configurations:
 
 ```lua
-local kcl = require("kcl_lib")
+local api = require("kcl_lib.api")
 
 -- Execute a single KCL file
-local result = assert(kcl.run("./config/schema.k"))
-print("Configuration result:", result.yaml_result)
+local result = api:run("./config/schema.k")
+print("Configuration result:", result:yaml())
 
 -- Execute multiple KCL files
-local result = assert(kcl.run({
+local result = api:run({
     "./config/schema.k",
     "./config/data.k"
-}))
-print("Combined configuration:", result.yaml_result)
+})
+print("Combined configuration:", result:json())
 
--- Format a KCL file
-local formatted_files = assert(kcl.format("./config/unordered.k"))
-print("Formatted files:", table.concat(formatted_files, ", "))
+-- Using the raw API to the native service
+local raw_api = require("kcl_lib.raw_api")
+
+-- Perform a call to a native service function
+local result = raw_api:exec_program({
+    k_filename_list = { "./config/schema.k" },
+})
+print("Configuration result", result.yaml_result)
 ```
 
 ## Development
