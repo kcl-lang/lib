@@ -24,6 +24,7 @@ dependencies = {
 }
 test_dependencies = {
   "busted >= 2.2",
+  "penlight >= 1.15",
 }
 test = {
   type = "busted",

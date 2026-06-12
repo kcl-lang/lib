@@ -44,10 +44,79 @@ local function add_method(name, arg_name, return_name)
   end
 end
 
+RawAPI.ping = add_method("KclService.Ping", "PingArgs", "PingResult")
+
+RawAPI.get_version =
+  add_method("KclService.GetVersion", "GetVersionArgs", "GetVersionResult")
+
+RawAPI.parse_program = add_method(
+  "KclService.ParseProgram",
+  "ParseProgramArgs",
+  "ParseProgramResult"
+)
+
+RawAPI.parse_file =
+  add_method("KclService.ParseFile", "ParseFileArgs", "ParseFileResult")
+
+RawAPI.load_package =
+  add_method("KclService.LoadPackage", "LoadPackageArgs", "LoadPackageResult")
+
+RawAPI.list_options =
+  add_method("KclService.ListOptions", "ParseProgramArgs", "ListOptionsResult")
+
+RawAPI.list_variables = add_method(
+  "KclService.ListVariables",
+  "ListVariablesArgs",
+  "ListVariablesResult"
+)
+
 RawAPI.exec_program =
   add_method("KclService.ExecProgram", "ExecProgramArgs", "ExecProgramResult")
 
+RawAPI.format_code =
+  add_method("KclService.FormatCode", "FormatCodeArgs", "FormatCodeResult")
+
 RawAPI.format_path =
   add_method("KclService.FormatPath", "FormatPathArgs", "FormatPathResult")
+
+RawAPI.lint_path =
+  add_method("KclService.LintPath", "LintPathArgs", "LintPathResult")
+
+RawAPI.override_file = add_method(
+  "KclService.OverrideFile",
+  "OverrideFileArgs",
+  "OverrideFileResult"
+)
+
+RawAPI.get_schema_type_mapping = add_method(
+  "KclService.GetSchemaTypeMapping",
+  "GetSchemaTypeMappingArgs",
+  "GetSchemaTypeMappingResult"
+)
+
+RawAPI.validate_code = add_method(
+  "KclService.ValidateCode",
+  "ValidateCodeArgs",
+  "ValidateCodeResult"
+)
+
+RawAPI.load_settings_files = add_method(
+  "KclService.LoadSettingsFiles",
+  "LoadSettingsFilesArgs",
+  "LoadSettingsFilesResult"
+)
+
+RawAPI.rename = add_method("KclService.Rename", "RenameArgs", "RenameResult")
+
+RawAPI.rename_code =
+  add_method("KclService.RenameCode", "RenameCodeArgs", "RenameCodeResult")
+
+RawAPI.test = add_method("KclService.Test", "TestArgs", "TestResult")
+
+RawAPI.update_dependencies = add_method(
+  "KclService.UpdateDependencies",
+  "UpdateDependenciesArgs",
+  "UpdateDependenciesResult"
+)
 
 return RawAPI:new()
