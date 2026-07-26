@@ -57,6 +57,31 @@ public object FormatPathArgsKt {
     public fun clearPath() {
       _builder.clearPath()
     }
+
+    /**
+     * ```
+     * Whether to dry run the formatting.
+     * ```
+     *
+     * `bool dry_run = 2;`
+     */
+    public var dryRun: kotlin.Boolean
+      @kotlin.jvm.JvmName("getDryRun")
+        get() = _builder.dryRun
+      @kotlin.jvm.JvmName("setDryRun")
+        set(value) {
+        _builder.dryRun = value
+      }
+    /**
+     * ```
+     * Whether to dry run the formatting.
+     * ```
+     *
+     * `bool dry_run = 2;`
+     */
+    public fun clearDryRun() {
+      _builder.clearDryRun()
+    }
   }
 }
 @kotlin.jvm.JvmSynthetic
