@@ -27,7 +27,7 @@ pub fn build(b: *std.Build) void {
     });
 
     lib.root_module.link_libc = true;
-    lib.linkLibCpp();
+    lib.root_module.link_libcpp = true;
     lib.addLibraryPath(kclLibPath(b, &target));
     lib.linkSystemLibrary(kclLibName());
     if (os == .windows) {
@@ -52,7 +52,7 @@ pub fn build(b: *std.Build) void {
     });
 
     lib_unit_tests.root_module.link_libc = true;
-    lib_unit_tests.linkLibCpp();
+    lib_unit_tests.root_module.link_libcpp = true;
     lib_unit_tests.addLibraryPath(kclLibPath(b, &target));
     lib_unit_tests.linkSystemLibrary(kclLibName());
     if (os == .windows) {
