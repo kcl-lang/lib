@@ -32,7 +32,7 @@ class FormatTest {
                 "    name: str\n" +
                 "    age: int\n\n" +
                 "    check:\n" +
-                "        0 < age < 120\n\n"
+                "        0 < age < 120\n"
         assertEquals(result.formatted.toStringUtf8(), expectedFormattedCode)
     }
 }

@@ -1950,7 +1950,9 @@ func (x *FormatCodeResult) GetFormatted() []byte {
 type FormatPathArgs struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// Path of the file to format.
-	Path          string `protobuf:"bytes,1,opt,name=path,proto3" json:"path,omitempty"`
+	Path string `protobuf:"bytes,1,opt,name=path,proto3" json:"path,omitempty"`
+	// Whether to dry run the formatting.
+	DryRun        bool `protobuf:"varint,2,opt,name=dry_run,json=dryRun,proto3" json:"dry_run,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1990,6 +1992,13 @@ func (x *FormatPathArgs) GetPath() string {
 		return x.Path
 	}
 	return ""
+}
+
+func (x *FormatPathArgs) GetDryRun() bool {
+	if x != nil {
+		return x.DryRun
+	}
+	return false
 }
 
 // Message for format file path response.
@@ -4666,9 +4675,10 @@ const file_spec_proto_rawDesc = "" +
 	"\x0eFormatCodeArgs\x12\x16\n" +
 	"\x06source\x18\x01 \x01(\tR\x06source\"0\n" +
 	"\x10FormatCodeResult\x12\x1c\n" +
-	"\tformatted\x18\x01 \x01(\fR\tformatted\"$\n" +
+	"\tformatted\x18\x01 \x01(\fR\tformatted\"=\n" +
 	"\x0eFormatPathArgs\x12\x12\n" +
-	"\x04path\x18\x01 \x01(\tR\x04path\"7\n" +
+	"\x04path\x18\x01 \x01(\tR\x04path\x12\x17\n" +
+	"\adry_run\x18\x02 \x01(\bR\x06dryRun\"7\n" +
 	"\x10FormatPathResult\x12#\n" +
 	"\rchanged_paths\x18\x01 \x03(\tR\fchangedPaths\"$\n" +
 	"\fLintPathArgs\x12\x14\n" +

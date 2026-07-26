@@ -9,239 +9,225 @@ from google.protobuf import descriptor_pool as _descriptor_pool
 from google.protobuf import runtime_version as _runtime_version
 from google.protobuf import symbol_database as _symbol_database
 from google.protobuf.internal import builder as _builder
-
 _runtime_version.ValidateProtobufRuntimeVersion(
-    _runtime_version.Domain.PUBLIC, 6, 33, 1, "", "spec.proto"
+    _runtime_version.Domain.PUBLIC,
+    6,
+    33,
+    1,
+    '',
+    'spec.proto'
 )
 # @@protoc_insertion_point(imports)
 
 _sym_db = _symbol_database.Default()
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(
-    b'\n\nspec.proto\x12\x0b\x63om.kcl.api"1\n\x0b\x45xternalPkg\x12\x10\n\x08pkg_name\x18\x01 \x01(\t\x12\x10\n\x08pkg_path\x18\x02 \x01(\t"\'\n\x08\x41rgument\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\t"L\n\x05\x45rror\x12\r\n\x05level\x18\x01 \x01(\t\x12\x0c\n\x04\x63ode\x18\x02 \x01(\t\x12&\n\x08messages\x18\x03 \x03(\x0b\x32\x14.com.kcl.api.Message":\n\x07Message\x12\x0b\n\x03msg\x18\x01 \x01(\t\x12"\n\x03pos\x18\x02 \x01(\x0b\x32\x15.com.kcl.api.Position"\x19\n\x08PingArgs\x12\r\n\x05value\x18\x01 \x01(\t"\x1b\n\nPingResult\x12\r\n\x05value\x18\x01 \x01(\t"\x10\n\x0eGetVersionArgs"\\\n\x10GetVersionResult\x12\x0f\n\x07version\x18\x01 \x01(\t\x12\x10\n\x08\x63hecksum\x18\x02 \x01(\t\x12\x0f\n\x07git_sha\x18\x03 \x01(\t\x12\x14\n\x0cversion_info\x18\x04 \x01(\t"\x10\n\x0eListMethodArgs",\n\x10ListMethodResult\x12\x18\n\x10method_name_list\x18\x01 \x03(\t"^\n\rParseFileArgs\x12\x0c\n\x04path\x18\x01 \x01(\t\x12\x0e\n\x06source\x18\x02 \x01(\t\x12/\n\rexternal_pkgs\x18\x03 \x03(\x0b\x32\x18.com.kcl.api.ExternalPkg"U\n\x0fParseFileResult\x12\x10\n\x08\x61st_json\x18\x01 \x01(\t\x12\x0c\n\x04\x64\x65ps\x18\x02 \x03(\t\x12"\n\x06\x65rrors\x18\x03 \x03(\x0b\x32\x12.com.kcl.api.Error"c\n\x10ParseProgramArgs\x12\r\n\x05paths\x18\x01 \x03(\t\x12\x0f\n\x07sources\x18\x02 \x03(\t\x12/\n\rexternal_pkgs\x18\x03 \x03(\x0b\x32\x18.com.kcl.api.ExternalPkg"Y\n\x12ParseProgramResult\x12\x10\n\x08\x61st_json\x18\x01 \x01(\t\x12\r\n\x05paths\x18\x02 \x03(\t\x12"\n\x06\x65rrors\x18\x03 \x03(\x0b\x32\x12.com.kcl.api.Error"\x87\x01\n\x0fLoadPackageArgs\x12\x31\n\nparse_args\x18\x01 \x01(\x0b\x32\x1d.com.kcl.api.ParseProgramArgs\x12\x13\n\x0bresolve_ast\x18\x02 \x01(\x08\x12\x14\n\x0cload_builtin\x18\x03 \x01(\x08\x12\x16\n\x0ewith_ast_index\x18\x04 \x01(\x08"\xf0\x07\n\x11LoadPackageResult\x12\x0f\n\x07program\x18\x01 \x01(\t\x12\r\n\x05paths\x18\x02 \x03(\t\x12(\n\x0cparse_errors\x18\x03 \x03(\x0b\x32\x12.com.kcl.api.Error\x12\'\n\x0btype_errors\x18\x04 \x03(\x0b\x32\x12.com.kcl.api.Error\x12:\n\x06scopes\x18\x05 \x03(\x0b\x32*.com.kcl.api.LoadPackageResult.ScopesEntry\x12<\n\x07symbols\x18\x06 \x03(\x0b\x32+.com.kcl.api.LoadPackageResult.SymbolsEntry\x12J\n\x0fnode_symbol_map\x18\x07 \x03(\x0b\x32\x31.com.kcl.api.LoadPackageResult.NodeSymbolMapEntry\x12J\n\x0fsymbol_node_map\x18\x08 \x03(\x0b\x32\x31.com.kcl.api.LoadPackageResult.SymbolNodeMapEntry\x12[\n\x18\x66ully_qualified_name_map\x18\t \x03(\x0b\x32\x39.com.kcl.api.LoadPackageResult.FullyQualifiedNameMapEntry\x12\x46\n\rpkg_scope_map\x18\n \x03(\x0b\x32/.com.kcl.api.LoadPackageResult.PkgScopeMapEntry\x1a\x41\n\x0bScopesEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12!\n\x05value\x18\x02 \x01(\x0b\x32\x12.com.kcl.api.Scope:\x02\x38\x01\x1a\x43\n\x0cSymbolsEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12"\n\x05value\x18\x02 \x01(\x0b\x32\x13.com.kcl.api.Symbol:\x02\x38\x01\x1aN\n\x12NodeSymbolMapEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\'\n\x05value\x18\x02 \x01(\x0b\x32\x18.com.kcl.api.SymbolIndex:\x02\x38\x01\x1a\x34\n\x12SymbolNodeMapEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\t:\x02\x38\x01\x1aV\n\x1a\x46ullyQualifiedNameMapEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\'\n\x05value\x18\x02 \x01(\x0b\x32\x18.com.kcl.api.SymbolIndex:\x02\x38\x01\x1aK\n\x10PkgScopeMapEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12&\n\x05value\x18\x02 \x01(\x0b\x32\x17.com.kcl.api.ScopeIndex:\x02\x38\x01"=\n\x11ListOptionsResult\x12(\n\x07options\x18\x02 \x03(\x0b\x32\x17.com.kcl.api.OptionHelp"_\n\nOptionHelp\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x0c\n\x04type\x18\x02 \x01(\t\x12\x10\n\x08required\x18\x03 \x01(\x08\x12\x15\n\rdefault_value\x18\x04 \x01(\t\x12\x0c\n\x04help\x18\x05 \x01(\t"\xc4\x01\n\x06Symbol\x12 \n\x02ty\x18\x01 \x01(\x0b\x32\x14.com.kcl.api.KclType\x12\x0c\n\x04name\x18\x02 \x01(\t\x12\'\n\x05owner\x18\x03 \x01(\x0b\x32\x18.com.kcl.api.SymbolIndex\x12%\n\x03\x64\x65\x66\x18\x04 \x01(\x0b\x32\x18.com.kcl.api.SymbolIndex\x12\'\n\x05\x61ttrs\x18\x05 \x03(\x0b\x32\x18.com.kcl.api.SymbolIndex\x12\x11\n\tis_global\x18\x06 \x01(\x08"\xba\x01\n\x05Scope\x12\x0c\n\x04kind\x18\x01 \x01(\t\x12\'\n\x06parent\x18\x02 \x01(\x0b\x32\x17.com.kcl.api.ScopeIndex\x12\'\n\x05owner\x18\x03 \x01(\x0b\x32\x18.com.kcl.api.SymbolIndex\x12)\n\x08\x63hildren\x18\x04 \x03(\x0b\x32\x17.com.kcl.api.ScopeIndex\x12&\n\x04\x64\x65\x66s\x18\x05 \x03(\x0b\x32\x18.com.kcl.api.SymbolIndex"1\n\x0bSymbolIndex\x12\t\n\x01i\x18\x01 \x01(\x04\x12\t\n\x01g\x18\x02 \x01(\x04\x12\x0c\n\x04kind\x18\x03 \x01(\t"0\n\nScopeIndex\x12\t\n\x01i\x18\x01 \x01(\x04\x12\t\n\x01g\x18\x02 \x01(\x04\x12\x0c\n\x04kind\x18\x03 \x01(\t"\xcf\x03\n\x0f\x45xecProgramArgs\x12\x10\n\x08work_dir\x18\x01 \x01(\t\x12\x17\n\x0fk_filename_list\x18\x02 \x03(\t\x12\x13\n\x0bk_code_list\x18\x03 \x03(\t\x12#\n\x04\x61rgs\x18\x04 \x03(\x0b\x32\x15.com.kcl.api.Argument\x12\x11\n\toverrides\x18\x05 \x03(\t\x12\x1b\n\x13\x64isable_yaml_result\x18\x06 \x01(\x08\x12\x1a\n\x12print_override_ast\x18\x07 \x01(\x08\x12\x1a\n\x12strict_range_check\x18\x08 \x01(\x08\x12\x14\n\x0c\x64isable_none\x18\t \x01(\x08\x12\x0f\n\x07verbose\x18\n \x01(\x05\x12\r\n\x05\x64\x65\x62ug\x18\x0b \x01(\x05\x12\x11\n\tsort_keys\x18\x0c \x01(\x08\x12/\n\rexternal_pkgs\x18\r \x03(\x0b\x32\x18.com.kcl.api.ExternalPkg\x12 \n\x18include_schema_type_path\x18\x0e \x01(\x08\x12\x14\n\x0c\x63ompile_only\x18\x0f \x01(\x08\x12\x13\n\x0bshow_hidden\x18\x10 \x01(\x08\x12\x15\n\rpath_selector\x18\x11 \x03(\t\x12\x11\n\tfast_eval\x18\x12 \x01(\x08"g\n\x11\x45xecProgramResult\x12\x13\n\x0bjson_result\x18\x01 \x01(\t\x12\x13\n\x0byaml_result\x18\x02 \x01(\t\x12\x13\n\x0blog_message\x18\x03 \x01(\t\x12\x13\n\x0b\x65rr_message\x18\x04 \x01(\t"S\n\x10\x42uildProgramArgs\x12/\n\texec_args\x18\x01 \x01(\x0b\x32\x1c.com.kcl.api.ExecProgramArgs\x12\x0e\n\x06output\x18\x02 \x01(\t""\n\x12\x42uildProgramResult\x12\x0c\n\x04path\x18\x01 \x01(\t"Q\n\x10\x45xecArtifactArgs\x12\x0c\n\x04path\x18\x01 \x01(\t\x12/\n\texec_args\x18\x02 \x01(\x0b\x32\x1c.com.kcl.api.ExecProgramArgs" \n\x0e\x46ormatCodeArgs\x12\x0e\n\x06source\x18\x01 \x01(\t"%\n\x10\x46ormatCodeResult\x12\x11\n\tformatted\x18\x01 \x01(\x0c"\x1e\n\x0e\x46ormatPathArgs\x12\x0c\n\x04path\x18\x01 \x01(\t")\n\x10\x46ormatPathResult\x12\x15\n\rchanged_paths\x18\x01 \x03(\t"\x1d\n\x0cLintPathArgs\x12\r\n\x05paths\x18\x01 \x03(\t"!\n\x0eLintPathResult\x12\x0f\n\x07results\x18\x01 \x03(\t"E\n\x10OverrideFileArgs\x12\x0c\n\x04\x66ile\x18\x01 \x01(\t\x12\r\n\x05specs\x18\x02 \x03(\t\x12\x14\n\x0cimport_paths\x18\x03 \x03(\t"N\n\x12OverrideFileResult\x12\x0e\n\x06result\x18\x01 \x01(\x08\x12(\n\x0cparse_errors\x18\x02 \x03(\x0b\x32\x12.com.kcl.api.Error"-\n\x14ListVariablesOptions\x12\x15\n\rmerge_program\x18\x01 \x01(\x08"8\n\x0cVariableList\x12(\n\tvariables\x18\x01 \x03(\x0b\x32\x15.com.kcl.api.Variable"e\n\x11ListVariablesArgs\x12\r\n\x05\x66iles\x18\x01 \x03(\t\x12\r\n\x05specs\x18\x02 \x03(\t\x12\x32\n\x07options\x18\x03 \x01(\x0b\x32!.com.kcl.api.ListVariablesOptions"\xeb\x01\n\x13ListVariablesResult\x12\x42\n\tvariables\x18\x01 \x03(\x0b\x32/.com.kcl.api.ListVariablesResult.VariablesEntry\x12\x19\n\x11unsupported_codes\x18\x02 \x03(\t\x12(\n\x0cparse_errors\x18\x03 \x03(\x0b\x32\x12.com.kcl.api.Error\x1aK\n\x0eVariablesEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12(\n\x05value\x18\x02 \x01(\x0b\x32\x19.com.kcl.api.VariableList:\x02\x38\x01"\x94\x01\n\x08Variable\x12\r\n\x05value\x18\x01 \x01(\t\x12\x11\n\ttype_name\x18\x02 \x01(\t\x12\x0e\n\x06op_sym\x18\x03 \x01(\t\x12)\n\nlist_items\x18\x04 \x03(\x0b\x32\x15.com.kcl.api.Variable\x12+\n\x0c\x64ict_entries\x18\x05 \x03(\x0b\x32\x15.com.kcl.api.MapEntry"=\n\x08MapEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12$\n\x05value\x18\x02 \x01(\x0b\x32\x15.com.kcl.api.Variable"`\n\x18GetSchemaTypeMappingArgs\x12/\n\texec_args\x18\x01 \x01(\x0b\x32\x1c.com.kcl.api.ExecProgramArgs\x12\x13\n\x0bschema_name\x18\x02 \x01(\t"\xc9\x01\n\x1aGetSchemaTypeMappingResult\x12[\n\x13schema_type_mapping\x18\x01 \x03(\x0b\x32>.com.kcl.api.GetSchemaTypeMappingResult.SchemaTypeMappingEntry\x1aN\n\x16SchemaTypeMappingEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12#\n\x05value\x18\x02 \x01(\x0b\x32\x14.com.kcl.api.KclType:\x02\x38\x01"\xdf\x01\n#GetSchemaTypeMappingUnderPathResult\x12\x64\n\x13schema_type_mapping\x18\x01 \x03(\x0b\x32G.com.kcl.api.GetSchemaTypeMappingUnderPathResult.SchemaTypeMappingEntry\x1aR\n\x16SchemaTypeMappingEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\'\n\x05value\x18\x02 \x01(\x0b\x32\x18.com.kcl.api.SchemaTypes:\x02\x38\x01"8\n\x0bSchemaTypes\x12)\n\x0bschema_type\x18\x01 \x03(\x0b\x32\x14.com.kcl.api.KclType"\xb7\x01\n\x10ValidateCodeArgs\x12\x10\n\x08\x64\x61tafile\x18\x01 \x01(\t\x12\x0c\n\x04\x64\x61ta\x18\x02 \x01(\t\x12\x0c\n\x04\x66ile\x18\x03 \x01(\t\x12\x0c\n\x04\x63ode\x18\x04 \x01(\t\x12\x0e\n\x06schema\x18\x05 \x01(\t\x12\x16\n\x0e\x61ttribute_name\x18\x06 \x01(\t\x12\x0e\n\x06\x66ormat\x18\x07 \x01(\t\x12/\n\rexternal_pkgs\x18\x08 \x03(\x0b\x32\x18.com.kcl.api.ExternalPkg":\n\x12ValidateCodeResult\x12\x0f\n\x07success\x18\x01 \x01(\x08\x12\x13\n\x0b\x65rr_message\x18\x02 \x01(\t":\n\x08Position\x12\x0c\n\x04line\x18\x01 \x01(\x03\x12\x0e\n\x06\x63olumn\x18\x02 \x01(\x03\x12\x10\n\x08\x66ilename\x18\x03 \x01(\t"h\n\x10ListDepFilesArgs\x12\x10\n\x08work_dir\x18\x01 \x01(\t\x12\x14\n\x0cuse_abs_path\x18\x02 \x01(\x08\x12\x13\n\x0binclude_all\x18\x03 \x01(\x08\x12\x17\n\x0fuse_fast_parser\x18\x04 \x01(\x08"E\n\x12ListDepFilesResult\x12\x0f\n\x07pkgroot\x18\x01 \x01(\t\x12\x0f\n\x07pkgpath\x18\x02 \x01(\t\x12\r\n\x05\x66iles\x18\x03 \x03(\t"8\n\x15LoadSettingsFilesArgs\x12\x10\n\x08work_dir\x18\x01 \x01(\t\x12\r\n\x05\x66iles\x18\x02 \x03(\t"z\n\x17LoadSettingsFilesResult\x12/\n\x0fkcl_cli_configs\x18\x01 \x01(\x0b\x32\x16.com.kcl.api.CliConfig\x12.\n\x0bkcl_options\x18\x02 \x03(\x0b\x32\x19.com.kcl.api.KeyValuePair"\x83\x02\n\tCliConfig\x12\r\n\x05\x66iles\x18\x01 \x03(\t\x12\x0e\n\x06output\x18\x02 \x01(\t\x12\x11\n\toverrides\x18\x03 \x03(\t\x12\x15\n\rpath_selector\x18\x04 \x03(\t\x12\x1a\n\x12strict_range_check\x18\x05 \x01(\x08\x12\x14\n\x0c\x64isable_none\x18\x06 \x01(\x08\x12\x0f\n\x07verbose\x18\x07 \x01(\x03\x12\r\n\x05\x64\x65\x62ug\x18\x08 \x01(\x08\x12\x11\n\tsort_keys\x18\t \x01(\x08\x12\x13\n\x0bshow_hidden\x18\n \x01(\x08\x12 \n\x18include_schema_type_path\x18\x0b \x01(\x08\x12\x11\n\tfast_eval\x18\x0c \x01(\x08"*\n\x0cKeyValuePair\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\t"]\n\nRenameArgs\x12\x14\n\x0cpackage_root\x18\x01 \x01(\t\x12\x13\n\x0bsymbol_path\x18\x02 \x01(\t\x12\x12\n\nfile_paths\x18\x03 \x03(\t\x12\x10\n\x08new_name\x18\x04 \x01(\t"%\n\x0cRenameResult\x12\x15\n\rchanged_files\x18\x01 \x03(\t"\xc5\x01\n\x0eRenameCodeArgs\x12\x14\n\x0cpackage_root\x18\x01 \x01(\t\x12\x13\n\x0bsymbol_path\x18\x02 \x01(\t\x12\x42\n\x0csource_codes\x18\x03 \x03(\x0b\x32,.com.kcl.api.RenameCodeArgs.SourceCodesEntry\x12\x10\n\x08new_name\x18\x04 \x01(\t\x1a\x32\n\x10SourceCodesEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\t:\x02\x38\x01"\x8f\x01\n\x10RenameCodeResult\x12\x46\n\rchanged_codes\x18\x01 \x03(\x0b\x32/.com.kcl.api.RenameCodeResult.ChangedCodesEntry\x1a\x33\n\x11\x43hangedCodesEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\t:\x02\x38\x01"t\n\x08TestArgs\x12/\n\texec_args\x18\x01 \x01(\x0b\x32\x1c.com.kcl.api.ExecProgramArgs\x12\x10\n\x08pkg_list\x18\x02 \x03(\t\x12\x12\n\nrun_regexp\x18\x03 \x01(\t\x12\x11\n\tfail_fast\x18\x04 \x01(\x08"5\n\nTestResult\x12\'\n\x04info\x18\x02 \x03(\x0b\x32\x19.com.kcl.api.TestCaseInfo"R\n\x0cTestCaseInfo\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\r\n\x05\x65rror\x18\x02 \x01(\t\x12\x10\n\x08\x64uration\x18\x03 \x01(\x04\x12\x13\n\x0blog_message\x18\x04 \x01(\t"?\n\x16UpdateDependenciesArgs\x12\x15\n\rmanifest_path\x18\x01 \x01(\t\x12\x0e\n\x06vendor\x18\x02 \x01(\x08"K\n\x18UpdateDependenciesResult\x12/\n\rexternal_pkgs\x18\x03 \x03(\x0b\x32\x18.com.kcl.api.ExternalPkg"\x81\x06\n\x07KclType\x12\x0c\n\x04type\x18\x01 \x01(\t\x12)\n\x0bunion_types\x18\x02 \x03(\x0b\x32\x14.com.kcl.api.KclType\x12\x0f\n\x07\x64\x65\x66\x61ult\x18\x03 \x01(\t\x12\x13\n\x0bschema_name\x18\x04 \x01(\t\x12\x12\n\nschema_doc\x18\x05 \x01(\t\x12\x38\n\nproperties\x18\x06 \x03(\x0b\x32$.com.kcl.api.KclType.PropertiesEntry\x12\x10\n\x08required\x18\x07 \x03(\t\x12!\n\x03key\x18\x08 \x01(\x0b\x32\x14.com.kcl.api.KclType\x12"\n\x04item\x18\t \x01(\x0b\x32\x14.com.kcl.api.KclType\x12\x0c\n\x04line\x18\n \x01(\x05\x12*\n\ndecorators\x18\x0b \x03(\x0b\x32\x16.com.kcl.api.Decorator\x12\x10\n\x08\x66ilename\x18\x0c \x01(\t\x12\x10\n\x08pkg_path\x18\r \x01(\t\x12\x13\n\x0b\x64\x65scription\x18\x0e \x01(\t\x12\x34\n\x08\x65xamples\x18\x0f \x03(\x0b\x32".com.kcl.api.KclType.ExamplesEntry\x12)\n\x0b\x62\x61se_schema\x18\x10 \x01(\x0b\x32\x14.com.kcl.api.KclType\x12\x30\n\x08\x66unction\x18\x11 \x01(\x0b\x32\x19.com.kcl.api.FunctionTypeH\x00\x88\x01\x01\x12\x39\n\x0findex_signature\x18\x12 \x01(\x0b\x32\x1b.com.kcl.api.IndexSignatureH\x01\x88\x01\x01\x1aG\n\x0fPropertiesEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12#\n\x05value\x18\x02 \x01(\x0b\x32\x14.com.kcl.api.KclType:\x02\x38\x01\x1a\x45\n\rExamplesEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12#\n\x05value\x18\x02 \x01(\x0b\x32\x14.com.kcl.api.Example:\x02\x38\x01\x42\x0b\n\t_functionB\x12\n\x10_index_signature"_\n\x0c\x46unctionType\x12&\n\x06params\x18\x01 \x03(\x0b\x32\x16.com.kcl.api.Parameter\x12\'\n\treturn_ty\x18\x02 \x01(\x0b\x32\x14.com.kcl.api.KclType";\n\tParameter\x12\x0c\n\x04name\x18\x01 \x01(\t\x12 \n\x02ty\x18\x02 \x01(\x0b\x32\x14.com.kcl.api.KclType"\x8d\x01\n\x0eIndexSignature\x12\x15\n\x08key_name\x18\x01 \x01(\tH\x00\x88\x01\x01\x12!\n\x03key\x18\x02 \x01(\x0b\x32\x14.com.kcl.api.KclType\x12!\n\x03val\x18\x03 \x01(\x0b\x32\x14.com.kcl.api.KclType\x12\x11\n\tany_other\x18\x04 \x01(\x08\x42\x0b\n\t_key_name"\x95\x01\n\tDecorator\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x11\n\targuments\x18\x02 \x03(\t\x12\x36\n\x08keywords\x18\x03 \x03(\x0b\x32$.com.kcl.api.Decorator.KeywordsEntry\x1a/\n\rKeywordsEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\t:\x02\x38\x01">\n\x07\x45xample\x12\x0f\n\x07summary\x18\x01 \x01(\t\x12\x13\n\x0b\x64\x65scription\x18\x02 \x01(\t\x12\r\n\x05value\x18\x03 \x01(\t2\x92\x01\n\x0e\x42uiltinService\x12\x36\n\x04Ping\x12\x15.com.kcl.api.PingArgs\x1a\x17.com.kcl.api.PingResult\x12H\n\nListMethod\x12\x1b.com.kcl.api.ListMethodArgs\x1a\x1d.com.kcl.api.ListMethodResult2\xb0\r\n\nKclService\x12\x36\n\x04Ping\x12\x15.com.kcl.api.PingArgs\x1a\x17.com.kcl.api.PingResult\x12H\n\nGetVersion\x12\x1b.com.kcl.api.GetVersionArgs\x1a\x1d.com.kcl.api.GetVersionResult\x12N\n\x0cParseProgram\x12\x1d.com.kcl.api.ParseProgramArgs\x1a\x1f.com.kcl.api.ParseProgramResult\x12\x45\n\tParseFile\x12\x1a.com.kcl.api.ParseFileArgs\x1a\x1c.com.kcl.api.ParseFileResult\x12K\n\x0bLoadPackage\x12\x1c.com.kcl.api.LoadPackageArgs\x1a\x1e.com.kcl.api.LoadPackageResult\x12L\n\x0bListOptions\x12\x1d.com.kcl.api.ParseProgramArgs\x1a\x1e.com.kcl.api.ListOptionsResult\x12Q\n\rListVariables\x12\x1e.com.kcl.api.ListVariablesArgs\x1a .com.kcl.api.ListVariablesResult\x12K\n\x0b\x45xecProgram\x12\x1c.com.kcl.api.ExecProgramArgs\x1a\x1e.com.kcl.api.ExecProgramResult\x12N\n\x0c\x42uildProgram\x12\x1d.com.kcl.api.BuildProgramArgs\x1a\x1f.com.kcl.api.BuildProgramResult\x12M\n\x0c\x45xecArtifact\x12\x1d.com.kcl.api.ExecArtifactArgs\x1a\x1e.com.kcl.api.ExecProgramResult\x12N\n\x0cOverrideFile\x12\x1d.com.kcl.api.OverrideFileArgs\x1a\x1f.com.kcl.api.OverrideFileResult\x12\x66\n\x14GetSchemaTypeMapping\x12%.com.kcl.api.GetSchemaTypeMappingArgs\x1a\'.com.kcl.api.GetSchemaTypeMappingResult\x12H\n\nFormatCode\x12\x1b.com.kcl.api.FormatCodeArgs\x1a\x1d.com.kcl.api.FormatCodeResult\x12H\n\nFormatPath\x12\x1b.com.kcl.api.FormatPathArgs\x1a\x1d.com.kcl.api.FormatPathResult\x12\x42\n\x08LintPath\x12\x19.com.kcl.api.LintPathArgs\x1a\x1b.com.kcl.api.LintPathResult\x12N\n\x0cValidateCode\x12\x1d.com.kcl.api.ValidateCodeArgs\x1a\x1f.com.kcl.api.ValidateCodeResult\x12N\n\x0cListDepFiles\x12\x1d.com.kcl.api.ListDepFilesArgs\x1a\x1f.com.kcl.api.ListDepFilesResult\x12]\n\x11LoadSettingsFiles\x12".com.kcl.api.LoadSettingsFilesArgs\x1a$.com.kcl.api.LoadSettingsFilesResult\x12<\n\x06Rename\x12\x17.com.kcl.api.RenameArgs\x1a\x19.com.kcl.api.RenameResult\x12H\n\nRenameCode\x12\x1b.com.kcl.api.RenameCodeArgs\x1a\x1d.com.kcl.api.RenameCodeResult\x12\x36\n\x04Test\x12\x15.com.kcl.api.TestArgs\x1a\x17.com.kcl.api.TestResult\x12`\n\x12UpdateDependencies\x12#.com.kcl.api.UpdateDependenciesArgs\x1a%.com.kcl.api.UpdateDependenciesResultB\x14Z\x05.;api\xaa\x02\nKclLib.APIb\x06proto3'
-)
+
+
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\nspec.proto\x12\x0b\x63om.kcl.api\"1\n\x0b\x45xternalPkg\x12\x10\n\x08pkg_name\x18\x01 \x01(\t\x12\x10\n\x08pkg_path\x18\x02 \x01(\t\"\'\n\x08\x41rgument\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\t\"L\n\x05\x45rror\x12\r\n\x05level\x18\x01 \x01(\t\x12\x0c\n\x04\x63ode\x18\x02 \x01(\t\x12&\n\x08messages\x18\x03 \x03(\x0b\x32\x14.com.kcl.api.Message\":\n\x07Message\x12\x0b\n\x03msg\x18\x01 \x01(\t\x12\"\n\x03pos\x18\x02 \x01(\x0b\x32\x15.com.kcl.api.Position\"\x19\n\x08PingArgs\x12\r\n\x05value\x18\x01 \x01(\t\"\x1b\n\nPingResult\x12\r\n\x05value\x18\x01 \x01(\t\"\x10\n\x0eGetVersionArgs\"\\\n\x10GetVersionResult\x12\x0f\n\x07version\x18\x01 \x01(\t\x12\x10\n\x08\x63hecksum\x18\x02 \x01(\t\x12\x0f\n\x07git_sha\x18\x03 \x01(\t\x12\x14\n\x0cversion_info\x18\x04 \x01(\t\"\x10\n\x0eListMethodArgs\",\n\x10ListMethodResult\x12\x18\n\x10method_name_list\x18\x01 \x03(\t\"^\n\rParseFileArgs\x12\x0c\n\x04path\x18\x01 \x01(\t\x12\x0e\n\x06source\x18\x02 \x01(\t\x12/\n\rexternal_pkgs\x18\x03 \x03(\x0b\x32\x18.com.kcl.api.ExternalPkg\"U\n\x0fParseFileResult\x12\x10\n\x08\x61st_json\x18\x01 \x01(\t\x12\x0c\n\x04\x64\x65ps\x18\x02 \x03(\t\x12\"\n\x06\x65rrors\x18\x03 \x03(\x0b\x32\x12.com.kcl.api.Error\"c\n\x10ParseProgramArgs\x12\r\n\x05paths\x18\x01 \x03(\t\x12\x0f\n\x07sources\x18\x02 \x03(\t\x12/\n\rexternal_pkgs\x18\x03 \x03(\x0b\x32\x18.com.kcl.api.ExternalPkg\"Y\n\x12ParseProgramResult\x12\x10\n\x08\x61st_json\x18\x01 \x01(\t\x12\r\n\x05paths\x18\x02 \x03(\t\x12\"\n\x06\x65rrors\x18\x03 \x03(\x0b\x32\x12.com.kcl.api.Error\"\x87\x01\n\x0fLoadPackageArgs\x12\x31\n\nparse_args\x18\x01 \x01(\x0b\x32\x1d.com.kcl.api.ParseProgramArgs\x12\x13\n\x0bresolve_ast\x18\x02 \x01(\x08\x12\x14\n\x0cload_builtin\x18\x03 \x01(\x08\x12\x16\n\x0ewith_ast_index\x18\x04 \x01(\x08\"\xf0\x07\n\x11LoadPackageResult\x12\x0f\n\x07program\x18\x01 \x01(\t\x12\r\n\x05paths\x18\x02 \x03(\t\x12(\n\x0cparse_errors\x18\x03 \x03(\x0b\x32\x12.com.kcl.api.Error\x12\'\n\x0btype_errors\x18\x04 \x03(\x0b\x32\x12.com.kcl.api.Error\x12:\n\x06scopes\x18\x05 \x03(\x0b\x32*.com.kcl.api.LoadPackageResult.ScopesEntry\x12<\n\x07symbols\x18\x06 \x03(\x0b\x32+.com.kcl.api.LoadPackageResult.SymbolsEntry\x12J\n\x0fnode_symbol_map\x18\x07 \x03(\x0b\x32\x31.com.kcl.api.LoadPackageResult.NodeSymbolMapEntry\x12J\n\x0fsymbol_node_map\x18\x08 \x03(\x0b\x32\x31.com.kcl.api.LoadPackageResult.SymbolNodeMapEntry\x12[\n\x18\x66ully_qualified_name_map\x18\t \x03(\x0b\x32\x39.com.kcl.api.LoadPackageResult.FullyQualifiedNameMapEntry\x12\x46\n\rpkg_scope_map\x18\n \x03(\x0b\x32/.com.kcl.api.LoadPackageResult.PkgScopeMapEntry\x1a\x41\n\x0bScopesEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12!\n\x05value\x18\x02 \x01(\x0b\x32\x12.com.kcl.api.Scope:\x02\x38\x01\x1a\x43\n\x0cSymbolsEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\"\n\x05value\x18\x02 \x01(\x0b\x32\x13.com.kcl.api.Symbol:\x02\x38\x01\x1aN\n\x12NodeSymbolMapEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\'\n\x05value\x18\x02 \x01(\x0b\x32\x18.com.kcl.api.SymbolIndex:\x02\x38\x01\x1a\x34\n\x12SymbolNodeMapEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\t:\x02\x38\x01\x1aV\n\x1a\x46ullyQualifiedNameMapEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\'\n\x05value\x18\x02 \x01(\x0b\x32\x18.com.kcl.api.SymbolIndex:\x02\x38\x01\x1aK\n\x10PkgScopeMapEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12&\n\x05value\x18\x02 \x01(\x0b\x32\x17.com.kcl.api.ScopeIndex:\x02\x38\x01\"=\n\x11ListOptionsResult\x12(\n\x07options\x18\x02 \x03(\x0b\x32\x17.com.kcl.api.OptionHelp\"_\n\nOptionHelp\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x0c\n\x04type\x18\x02 \x01(\t\x12\x10\n\x08required\x18\x03 \x01(\x08\x12\x15\n\rdefault_value\x18\x04 \x01(\t\x12\x0c\n\x04help\x18\x05 \x01(\t\"\xc4\x01\n\x06Symbol\x12 \n\x02ty\x18\x01 \x01(\x0b\x32\x14.com.kcl.api.KclType\x12\x0c\n\x04name\x18\x02 \x01(\t\x12\'\n\x05owner\x18\x03 \x01(\x0b\x32\x18.com.kcl.api.SymbolIndex\x12%\n\x03\x64\x65\x66\x18\x04 \x01(\x0b\x32\x18.com.kcl.api.SymbolIndex\x12\'\n\x05\x61ttrs\x18\x05 \x03(\x0b\x32\x18.com.kcl.api.SymbolIndex\x12\x11\n\tis_global\x18\x06 \x01(\x08\"\xba\x01\n\x05Scope\x12\x0c\n\x04kind\x18\x01 \x01(\t\x12\'\n\x06parent\x18\x02 \x01(\x0b\x32\x17.com.kcl.api.ScopeIndex\x12\'\n\x05owner\x18\x03 \x01(\x0b\x32\x18.com.kcl.api.SymbolIndex\x12)\n\x08\x63hildren\x18\x04 \x03(\x0b\x32\x17.com.kcl.api.ScopeIndex\x12&\n\x04\x64\x65\x66s\x18\x05 \x03(\x0b\x32\x18.com.kcl.api.SymbolIndex\"1\n\x0bSymbolIndex\x12\t\n\x01i\x18\x01 \x01(\x04\x12\t\n\x01g\x18\x02 \x01(\x04\x12\x0c\n\x04kind\x18\x03 \x01(\t\"0\n\nScopeIndex\x12\t\n\x01i\x18\x01 \x01(\x04\x12\t\n\x01g\x18\x02 \x01(\x04\x12\x0c\n\x04kind\x18\x03 \x01(\t\"\xcf\x03\n\x0f\x45xecProgramArgs\x12\x10\n\x08work_dir\x18\x01 \x01(\t\x12\x17\n\x0fk_filename_list\x18\x02 \x03(\t\x12\x13\n\x0bk_code_list\x18\x03 \x03(\t\x12#\n\x04\x61rgs\x18\x04 \x03(\x0b\x32\x15.com.kcl.api.Argument\x12\x11\n\toverrides\x18\x05 \x03(\t\x12\x1b\n\x13\x64isable_yaml_result\x18\x06 \x01(\x08\x12\x1a\n\x12print_override_ast\x18\x07 \x01(\x08\x12\x1a\n\x12strict_range_check\x18\x08 \x01(\x08\x12\x14\n\x0c\x64isable_none\x18\t \x01(\x08\x12\x0f\n\x07verbose\x18\n \x01(\x05\x12\r\n\x05\x64\x65\x62ug\x18\x0b \x01(\x05\x12\x11\n\tsort_keys\x18\x0c \x01(\x08\x12/\n\rexternal_pkgs\x18\r \x03(\x0b\x32\x18.com.kcl.api.ExternalPkg\x12 \n\x18include_schema_type_path\x18\x0e \x01(\x08\x12\x14\n\x0c\x63ompile_only\x18\x0f \x01(\x08\x12\x13\n\x0bshow_hidden\x18\x10 \x01(\x08\x12\x15\n\rpath_selector\x18\x11 \x03(\t\x12\x11\n\tfast_eval\x18\x12 \x01(\x08\"g\n\x11\x45xecProgramResult\x12\x13\n\x0bjson_result\x18\x01 \x01(\t\x12\x13\n\x0byaml_result\x18\x02 \x01(\t\x12\x13\n\x0blog_message\x18\x03 \x01(\t\x12\x13\n\x0b\x65rr_message\x18\x04 \x01(\t\"S\n\x10\x42uildProgramArgs\x12/\n\texec_args\x18\x01 \x01(\x0b\x32\x1c.com.kcl.api.ExecProgramArgs\x12\x0e\n\x06output\x18\x02 \x01(\t\"\"\n\x12\x42uildProgramResult\x12\x0c\n\x04path\x18\x01 \x01(\t\"Q\n\x10\x45xecArtifactArgs\x12\x0c\n\x04path\x18\x01 \x01(\t\x12/\n\texec_args\x18\x02 \x01(\x0b\x32\x1c.com.kcl.api.ExecProgramArgs\" \n\x0e\x46ormatCodeArgs\x12\x0e\n\x06source\x18\x01 \x01(\t\"%\n\x10\x46ormatCodeResult\x12\x11\n\tformatted\x18\x01 \x01(\x0c\"/\n\x0e\x46ormatPathArgs\x12\x0c\n\x04path\x18\x01 \x01(\t\x12\x0f\n\x07\x64ry_run\x18\x02 \x01(\x08\")\n\x10\x46ormatPathResult\x12\x15\n\rchanged_paths\x18\x01 \x03(\t\"\x1d\n\x0cLintPathArgs\x12\r\n\x05paths\x18\x01 \x03(\t\"!\n\x0eLintPathResult\x12\x0f\n\x07results\x18\x01 \x03(\t\"E\n\x10OverrideFileArgs\x12\x0c\n\x04\x66ile\x18\x01 \x01(\t\x12\r\n\x05specs\x18\x02 \x03(\t\x12\x14\n\x0cimport_paths\x18\x03 \x03(\t\"N\n\x12OverrideFileResult\x12\x0e\n\x06result\x18\x01 \x01(\x08\x12(\n\x0cparse_errors\x18\x02 \x03(\x0b\x32\x12.com.kcl.api.Error\"-\n\x14ListVariablesOptions\x12\x15\n\rmerge_program\x18\x01 \x01(\x08\"8\n\x0cVariableList\x12(\n\tvariables\x18\x01 \x03(\x0b\x32\x15.com.kcl.api.Variable\"e\n\x11ListVariablesArgs\x12\r\n\x05\x66iles\x18\x01 \x03(\t\x12\r\n\x05specs\x18\x02 \x03(\t\x12\x32\n\x07options\x18\x03 \x01(\x0b\x32!.com.kcl.api.ListVariablesOptions\"\xeb\x01\n\x13ListVariablesResult\x12\x42\n\tvariables\x18\x01 \x03(\x0b\x32/.com.kcl.api.ListVariablesResult.VariablesEntry\x12\x19\n\x11unsupported_codes\x18\x02 \x03(\t\x12(\n\x0cparse_errors\x18\x03 \x03(\x0b\x32\x12.com.kcl.api.Error\x1aK\n\x0eVariablesEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12(\n\x05value\x18\x02 \x01(\x0b\x32\x19.com.kcl.api.VariableList:\x02\x38\x01\"\x94\x01\n\x08Variable\x12\r\n\x05value\x18\x01 \x01(\t\x12\x11\n\ttype_name\x18\x02 \x01(\t\x12\x0e\n\x06op_sym\x18\x03 \x01(\t\x12)\n\nlist_items\x18\x04 \x03(\x0b\x32\x15.com.kcl.api.Variable\x12+\n\x0c\x64ict_entries\x18\x05 \x03(\x0b\x32\x15.com.kcl.api.MapEntry\"=\n\x08MapEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12$\n\x05value\x18\x02 \x01(\x0b\x32\x15.com.kcl.api.Variable\"`\n\x18GetSchemaTypeMappingArgs\x12/\n\texec_args\x18\x01 \x01(\x0b\x32\x1c.com.kcl.api.ExecProgramArgs\x12\x13\n\x0bschema_name\x18\x02 \x01(\t\"\xc9\x01\n\x1aGetSchemaTypeMappingResult\x12[\n\x13schema_type_mapping\x18\x01 \x03(\x0b\x32>.com.kcl.api.GetSchemaTypeMappingResult.SchemaTypeMappingEntry\x1aN\n\x16SchemaTypeMappingEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12#\n\x05value\x18\x02 \x01(\x0b\x32\x14.com.kcl.api.KclType:\x02\x38\x01\"\xdf\x01\n#GetSchemaTypeMappingUnderPathResult\x12\x64\n\x13schema_type_mapping\x18\x01 \x03(\x0b\x32G.com.kcl.api.GetSchemaTypeMappingUnderPathResult.SchemaTypeMappingEntry\x1aR\n\x16SchemaTypeMappingEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\'\n\x05value\x18\x02 \x01(\x0b\x32\x18.com.kcl.api.SchemaTypes:\x02\x38\x01\"8\n\x0bSchemaTypes\x12)\n\x0bschema_type\x18\x01 \x03(\x0b\x32\x14.com.kcl.api.KclType\"\xb7\x01\n\x10ValidateCodeArgs\x12\x10\n\x08\x64\x61tafile\x18\x01 \x01(\t\x12\x0c\n\x04\x64\x61ta\x18\x02 \x01(\t\x12\x0c\n\x04\x66ile\x18\x03 \x01(\t\x12\x0c\n\x04\x63ode\x18\x04 \x01(\t\x12\x0e\n\x06schema\x18\x05 \x01(\t\x12\x16\n\x0e\x61ttribute_name\x18\x06 \x01(\t\x12\x0e\n\x06\x66ormat\x18\x07 \x01(\t\x12/\n\rexternal_pkgs\x18\x08 \x03(\x0b\x32\x18.com.kcl.api.ExternalPkg\":\n\x12ValidateCodeResult\x12\x0f\n\x07success\x18\x01 \x01(\x08\x12\x13\n\x0b\x65rr_message\x18\x02 \x01(\t\":\n\x08Position\x12\x0c\n\x04line\x18\x01 \x01(\x03\x12\x0e\n\x06\x63olumn\x18\x02 \x01(\x03\x12\x10\n\x08\x66ilename\x18\x03 \x01(\t\"h\n\x10ListDepFilesArgs\x12\x10\n\x08work_dir\x18\x01 \x01(\t\x12\x14\n\x0cuse_abs_path\x18\x02 \x01(\x08\x12\x13\n\x0binclude_all\x18\x03 \x01(\x08\x12\x17\n\x0fuse_fast_parser\x18\x04 \x01(\x08\"E\n\x12ListDepFilesResult\x12\x0f\n\x07pkgroot\x18\x01 \x01(\t\x12\x0f\n\x07pkgpath\x18\x02 \x01(\t\x12\r\n\x05\x66iles\x18\x03 \x03(\t\"8\n\x15LoadSettingsFilesArgs\x12\x10\n\x08work_dir\x18\x01 \x01(\t\x12\r\n\x05\x66iles\x18\x02 \x03(\t\"z\n\x17LoadSettingsFilesResult\x12/\n\x0fkcl_cli_configs\x18\x01 \x01(\x0b\x32\x16.com.kcl.api.CliConfig\x12.\n\x0bkcl_options\x18\x02 \x03(\x0b\x32\x19.com.kcl.api.KeyValuePair\"\x83\x02\n\tCliConfig\x12\r\n\x05\x66iles\x18\x01 \x03(\t\x12\x0e\n\x06output\x18\x02 \x01(\t\x12\x11\n\toverrides\x18\x03 \x03(\t\x12\x15\n\rpath_selector\x18\x04 \x03(\t\x12\x1a\n\x12strict_range_check\x18\x05 \x01(\x08\x12\x14\n\x0c\x64isable_none\x18\x06 \x01(\x08\x12\x0f\n\x07verbose\x18\x07 \x01(\x03\x12\r\n\x05\x64\x65\x62ug\x18\x08 \x01(\x08\x12\x11\n\tsort_keys\x18\t \x01(\x08\x12\x13\n\x0bshow_hidden\x18\n \x01(\x08\x12 \n\x18include_schema_type_path\x18\x0b \x01(\x08\x12\x11\n\tfast_eval\x18\x0c \x01(\x08\"*\n\x0cKeyValuePair\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\t\"]\n\nRenameArgs\x12\x14\n\x0cpackage_root\x18\x01 \x01(\t\x12\x13\n\x0bsymbol_path\x18\x02 \x01(\t\x12\x12\n\nfile_paths\x18\x03 \x03(\t\x12\x10\n\x08new_name\x18\x04 \x01(\t\"%\n\x0cRenameResult\x12\x15\n\rchanged_files\x18\x01 \x03(\t\"\xc5\x01\n\x0eRenameCodeArgs\x12\x14\n\x0cpackage_root\x18\x01 \x01(\t\x12\x13\n\x0bsymbol_path\x18\x02 \x01(\t\x12\x42\n\x0csource_codes\x18\x03 \x03(\x0b\x32,.com.kcl.api.RenameCodeArgs.SourceCodesEntry\x12\x10\n\x08new_name\x18\x04 \x01(\t\x1a\x32\n\x10SourceCodesEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\t:\x02\x38\x01\"\x8f\x01\n\x10RenameCodeResult\x12\x46\n\rchanged_codes\x18\x01 \x03(\x0b\x32/.com.kcl.api.RenameCodeResult.ChangedCodesEntry\x1a\x33\n\x11\x43hangedCodesEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\t:\x02\x38\x01\"t\n\x08TestArgs\x12/\n\texec_args\x18\x01 \x01(\x0b\x32\x1c.com.kcl.api.ExecProgramArgs\x12\x10\n\x08pkg_list\x18\x02 \x03(\t\x12\x12\n\nrun_regexp\x18\x03 \x01(\t\x12\x11\n\tfail_fast\x18\x04 \x01(\x08\"5\n\nTestResult\x12\'\n\x04info\x18\x02 \x03(\x0b\x32\x19.com.kcl.api.TestCaseInfo\"R\n\x0cTestCaseInfo\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\r\n\x05\x65rror\x18\x02 \x01(\t\x12\x10\n\x08\x64uration\x18\x03 \x01(\x04\x12\x13\n\x0blog_message\x18\x04 \x01(\t\"?\n\x16UpdateDependenciesArgs\x12\x15\n\rmanifest_path\x18\x01 \x01(\t\x12\x0e\n\x06vendor\x18\x02 \x01(\x08\"K\n\x18UpdateDependenciesResult\x12/\n\rexternal_pkgs\x18\x03 \x03(\x0b\x32\x18.com.kcl.api.ExternalPkg\"\x81\x06\n\x07KclType\x12\x0c\n\x04type\x18\x01 \x01(\t\x12)\n\x0bunion_types\x18\x02 \x03(\x0b\x32\x14.com.kcl.api.KclType\x12\x0f\n\x07\x64\x65\x66\x61ult\x18\x03 \x01(\t\x12\x13\n\x0bschema_name\x18\x04 \x01(\t\x12\x12\n\nschema_doc\x18\x05 \x01(\t\x12\x38\n\nproperties\x18\x06 \x03(\x0b\x32$.com.kcl.api.KclType.PropertiesEntry\x12\x10\n\x08required\x18\x07 \x03(\t\x12!\n\x03key\x18\x08 \x01(\x0b\x32\x14.com.kcl.api.KclType\x12\"\n\x04item\x18\t \x01(\x0b\x32\x14.com.kcl.api.KclType\x12\x0c\n\x04line\x18\n \x01(\x05\x12*\n\ndecorators\x18\x0b \x03(\x0b\x32\x16.com.kcl.api.Decorator\x12\x10\n\x08\x66ilename\x18\x0c \x01(\t\x12\x10\n\x08pkg_path\x18\r \x01(\t\x12\x13\n\x0b\x64\x65scription\x18\x0e \x01(\t\x12\x34\n\x08\x65xamples\x18\x0f \x03(\x0b\x32\".com.kcl.api.KclType.ExamplesEntry\x12)\n\x0b\x62\x61se_schema\x18\x10 \x01(\x0b\x32\x14.com.kcl.api.KclType\x12\x30\n\x08\x66unction\x18\x11 \x01(\x0b\x32\x19.com.kcl.api.FunctionTypeH\x00\x88\x01\x01\x12\x39\n\x0findex_signature\x18\x12 \x01(\x0b\x32\x1b.com.kcl.api.IndexSignatureH\x01\x88\x01\x01\x1aG\n\x0fPropertiesEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12#\n\x05value\x18\x02 \x01(\x0b\x32\x14.com.kcl.api.KclType:\x02\x38\x01\x1a\x45\n\rExamplesEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12#\n\x05value\x18\x02 \x01(\x0b\x32\x14.com.kcl.api.Example:\x02\x38\x01\x42\x0b\n\t_functionB\x12\n\x10_index_signature\"_\n\x0c\x46unctionType\x12&\n\x06params\x18\x01 \x03(\x0b\x32\x16.com.kcl.api.Parameter\x12\'\n\treturn_ty\x18\x02 \x01(\x0b\x32\x14.com.kcl.api.KclType\";\n\tParameter\x12\x0c\n\x04name\x18\x01 \x01(\t\x12 \n\x02ty\x18\x02 \x01(\x0b\x32\x14.com.kcl.api.KclType\"\x8d\x01\n\x0eIndexSignature\x12\x15\n\x08key_name\x18\x01 \x01(\tH\x00\x88\x01\x01\x12!\n\x03key\x18\x02 \x01(\x0b\x32\x14.com.kcl.api.KclType\x12!\n\x03val\x18\x03 \x01(\x0b\x32\x14.com.kcl.api.KclType\x12\x11\n\tany_other\x18\x04 \x01(\x08\x42\x0b\n\t_key_name\"\x95\x01\n\tDecorator\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x11\n\targuments\x18\x02 \x03(\t\x12\x36\n\x08keywords\x18\x03 \x03(\x0b\x32$.com.kcl.api.Decorator.KeywordsEntry\x1a/\n\rKeywordsEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\t:\x02\x38\x01\">\n\x07\x45xample\x12\x0f\n\x07summary\x18\x01 \x01(\t\x12\x13\n\x0b\x64\x65scription\x18\x02 \x01(\t\x12\r\n\x05value\x18\x03 \x01(\t2\x92\x01\n\x0e\x42uiltinService\x12\x36\n\x04Ping\x12\x15.com.kcl.api.PingArgs\x1a\x17.com.kcl.api.PingResult\x12H\n\nListMethod\x12\x1b.com.kcl.api.ListMethodArgs\x1a\x1d.com.kcl.api.ListMethodResult2\xb0\r\n\nKclService\x12\x36\n\x04Ping\x12\x15.com.kcl.api.PingArgs\x1a\x17.com.kcl.api.PingResult\x12H\n\nGetVersion\x12\x1b.com.kcl.api.GetVersionArgs\x1a\x1d.com.kcl.api.GetVersionResult\x12N\n\x0cParseProgram\x12\x1d.com.kcl.api.ParseProgramArgs\x1a\x1f.com.kcl.api.ParseProgramResult\x12\x45\n\tParseFile\x12\x1a.com.kcl.api.ParseFileArgs\x1a\x1c.com.kcl.api.ParseFileResult\x12K\n\x0bLoadPackage\x12\x1c.com.kcl.api.LoadPackageArgs\x1a\x1e.com.kcl.api.LoadPackageResult\x12L\n\x0bListOptions\x12\x1d.com.kcl.api.ParseProgramArgs\x1a\x1e.com.kcl.api.ListOptionsResult\x12Q\n\rListVariables\x12\x1e.com.kcl.api.ListVariablesArgs\x1a .com.kcl.api.ListVariablesResult\x12K\n\x0b\x45xecProgram\x12\x1c.com.kcl.api.ExecProgramArgs\x1a\x1e.com.kcl.api.ExecProgramResult\x12N\n\x0c\x42uildProgram\x12\x1d.com.kcl.api.BuildProgramArgs\x1a\x1f.com.kcl.api.BuildProgramResult\x12M\n\x0c\x45xecArtifact\x12\x1d.com.kcl.api.ExecArtifactArgs\x1a\x1e.com.kcl.api.ExecProgramResult\x12N\n\x0cOverrideFile\x12\x1d.com.kcl.api.OverrideFileArgs\x1a\x1f.com.kcl.api.OverrideFileResult\x12\x66\n\x14GetSchemaTypeMapping\x12%.com.kcl.api.GetSchemaTypeMappingArgs\x1a\'.com.kcl.api.GetSchemaTypeMappingResult\x12H\n\nFormatCode\x12\x1b.com.kcl.api.FormatCodeArgs\x1a\x1d.com.kcl.api.FormatCodeResult\x12H\n\nFormatPath\x12\x1b.com.kcl.api.FormatPathArgs\x1a\x1d.com.kcl.api.FormatPathResult\x12\x42\n\x08LintPath\x12\x19.com.kcl.api.LintPathArgs\x1a\x1b.com.kcl.api.LintPathResult\x12N\n\x0cValidateCode\x12\x1d.com.kcl.api.ValidateCodeArgs\x1a\x1f.com.kcl.api.ValidateCodeResult\x12N\n\x0cListDepFiles\x12\x1d.com.kcl.api.ListDepFilesArgs\x1a\x1f.com.kcl.api.ListDepFilesResult\x12]\n\x11LoadSettingsFiles\x12\".com.kcl.api.LoadSettingsFilesArgs\x1a$.com.kcl.api.LoadSettingsFilesResult\x12<\n\x06Rename\x12\x17.com.kcl.api.RenameArgs\x1a\x19.com.kcl.api.RenameResult\x12H\n\nRenameCode\x12\x1b.com.kcl.api.RenameCodeArgs\x1a\x1d.com.kcl.api.RenameCodeResult\x12\x36\n\x04Test\x12\x15.com.kcl.api.TestArgs\x1a\x17.com.kcl.api.TestResult\x12`\n\x12UpdateDependencies\x12#.com.kcl.api.UpdateDependenciesArgs\x1a%.com.kcl.api.UpdateDependenciesResultB\x14Z\x05.;api\xaa\x02\nKclLib.APIb\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
-_builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, "spec_pb2", _globals)
+_builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'spec_pb2', _globals)
 if not _descriptor._USE_C_DESCRIPTORS:
-    _globals["DESCRIPTOR"]._loaded_options = None
-    _globals["DESCRIPTOR"]._serialized_options = b"Z\005.;api\252\002\nKclLib.API"
-    _globals["_LOADPACKAGERESULT_SCOPESENTRY"]._loaded_options = None
-    _globals["_LOADPACKAGERESULT_SCOPESENTRY"]._serialized_options = b"8\001"
-    _globals["_LOADPACKAGERESULT_SYMBOLSENTRY"]._loaded_options = None
-    _globals["_LOADPACKAGERESULT_SYMBOLSENTRY"]._serialized_options = b"8\001"
-    _globals["_LOADPACKAGERESULT_NODESYMBOLMAPENTRY"]._loaded_options = None
-    _globals["_LOADPACKAGERESULT_NODESYMBOLMAPENTRY"]._serialized_options = b"8\001"
-    _globals["_LOADPACKAGERESULT_SYMBOLNODEMAPENTRY"]._loaded_options = None
-    _globals["_LOADPACKAGERESULT_SYMBOLNODEMAPENTRY"]._serialized_options = b"8\001"
-    _globals["_LOADPACKAGERESULT_FULLYQUALIFIEDNAMEMAPENTRY"]._loaded_options = None
-    _globals["_LOADPACKAGERESULT_FULLYQUALIFIEDNAMEMAPENTRY"]._serialized_options = (
-        b"8\001"
-    )
-    _globals["_LOADPACKAGERESULT_PKGSCOPEMAPENTRY"]._loaded_options = None
-    _globals["_LOADPACKAGERESULT_PKGSCOPEMAPENTRY"]._serialized_options = b"8\001"
-    _globals["_LISTVARIABLESRESULT_VARIABLESENTRY"]._loaded_options = None
-    _globals["_LISTVARIABLESRESULT_VARIABLESENTRY"]._serialized_options = b"8\001"
-    _globals["_GETSCHEMATYPEMAPPINGRESULT_SCHEMATYPEMAPPINGENTRY"]._loaded_options = (
-        None
-    )
-    _globals[
-        "_GETSCHEMATYPEMAPPINGRESULT_SCHEMATYPEMAPPINGENTRY"
-    ]._serialized_options = b"8\001"
-    _globals[
-        "_GETSCHEMATYPEMAPPINGUNDERPATHRESULT_SCHEMATYPEMAPPINGENTRY"
-    ]._loaded_options = None
-    _globals[
-        "_GETSCHEMATYPEMAPPINGUNDERPATHRESULT_SCHEMATYPEMAPPINGENTRY"
-    ]._serialized_options = b"8\001"
-    _globals["_RENAMECODEARGS_SOURCECODESENTRY"]._loaded_options = None
-    _globals["_RENAMECODEARGS_SOURCECODESENTRY"]._serialized_options = b"8\001"
-    _globals["_RENAMECODERESULT_CHANGEDCODESENTRY"]._loaded_options = None
-    _globals["_RENAMECODERESULT_CHANGEDCODESENTRY"]._serialized_options = b"8\001"
-    _globals["_KCLTYPE_PROPERTIESENTRY"]._loaded_options = None
-    _globals["_KCLTYPE_PROPERTIESENTRY"]._serialized_options = b"8\001"
-    _globals["_KCLTYPE_EXAMPLESENTRY"]._loaded_options = None
-    _globals["_KCLTYPE_EXAMPLESENTRY"]._serialized_options = b"8\001"
-    _globals["_DECORATOR_KEYWORDSENTRY"]._loaded_options = None
-    _globals["_DECORATOR_KEYWORDSENTRY"]._serialized_options = b"8\001"
-    _globals["_EXTERNALPKG"]._serialized_start = 27
-    _globals["_EXTERNALPKG"]._serialized_end = 76
-    _globals["_ARGUMENT"]._serialized_start = 78
-    _globals["_ARGUMENT"]._serialized_end = 117
-    _globals["_ERROR"]._serialized_start = 119
-    _globals["_ERROR"]._serialized_end = 195
-    _globals["_MESSAGE"]._serialized_start = 197
-    _globals["_MESSAGE"]._serialized_end = 255
-    _globals["_PINGARGS"]._serialized_start = 257
-    _globals["_PINGARGS"]._serialized_end = 282
-    _globals["_PINGRESULT"]._serialized_start = 284
-    _globals["_PINGRESULT"]._serialized_end = 311
-    _globals["_GETVERSIONARGS"]._serialized_start = 313
-    _globals["_GETVERSIONARGS"]._serialized_end = 329
-    _globals["_GETVERSIONRESULT"]._serialized_start = 331
-    _globals["_GETVERSIONRESULT"]._serialized_end = 423
-    _globals["_LISTMETHODARGS"]._serialized_start = 425
-    _globals["_LISTMETHODARGS"]._serialized_end = 441
-    _globals["_LISTMETHODRESULT"]._serialized_start = 443
-    _globals["_LISTMETHODRESULT"]._serialized_end = 487
-    _globals["_PARSEFILEARGS"]._serialized_start = 489
-    _globals["_PARSEFILEARGS"]._serialized_end = 583
-    _globals["_PARSEFILERESULT"]._serialized_start = 585
-    _globals["_PARSEFILERESULT"]._serialized_end = 670
-    _globals["_PARSEPROGRAMARGS"]._serialized_start = 672
-    _globals["_PARSEPROGRAMARGS"]._serialized_end = 771
-    _globals["_PARSEPROGRAMRESULT"]._serialized_start = 773
-    _globals["_PARSEPROGRAMRESULT"]._serialized_end = 862
-    _globals["_LOADPACKAGEARGS"]._serialized_start = 865
-    _globals["_LOADPACKAGEARGS"]._serialized_end = 1000
-    _globals["_LOADPACKAGERESULT"]._serialized_start = 1003
-    _globals["_LOADPACKAGERESULT"]._serialized_end = 2011
-    _globals["_LOADPACKAGERESULT_SCOPESENTRY"]._serialized_start = 1578
-    _globals["_LOADPACKAGERESULT_SCOPESENTRY"]._serialized_end = 1643
-    _globals["_LOADPACKAGERESULT_SYMBOLSENTRY"]._serialized_start = 1645
-    _globals["_LOADPACKAGERESULT_SYMBOLSENTRY"]._serialized_end = 1712
-    _globals["_LOADPACKAGERESULT_NODESYMBOLMAPENTRY"]._serialized_start = 1714
-    _globals["_LOADPACKAGERESULT_NODESYMBOLMAPENTRY"]._serialized_end = 1792
-    _globals["_LOADPACKAGERESULT_SYMBOLNODEMAPENTRY"]._serialized_start = 1794
-    _globals["_LOADPACKAGERESULT_SYMBOLNODEMAPENTRY"]._serialized_end = 1846
-    _globals["_LOADPACKAGERESULT_FULLYQUALIFIEDNAMEMAPENTRY"]._serialized_start = 1848
-    _globals["_LOADPACKAGERESULT_FULLYQUALIFIEDNAMEMAPENTRY"]._serialized_end = 1934
-    _globals["_LOADPACKAGERESULT_PKGSCOPEMAPENTRY"]._serialized_start = 1936
-    _globals["_LOADPACKAGERESULT_PKGSCOPEMAPENTRY"]._serialized_end = 2011
-    _globals["_LISTOPTIONSRESULT"]._serialized_start = 2013
-    _globals["_LISTOPTIONSRESULT"]._serialized_end = 2074
-    _globals["_OPTIONHELP"]._serialized_start = 2076
-    _globals["_OPTIONHELP"]._serialized_end = 2171
-    _globals["_SYMBOL"]._serialized_start = 2174
-    _globals["_SYMBOL"]._serialized_end = 2370
-    _globals["_SCOPE"]._serialized_start = 2373
-    _globals["_SCOPE"]._serialized_end = 2559
-    _globals["_SYMBOLINDEX"]._serialized_start = 2561
-    _globals["_SYMBOLINDEX"]._serialized_end = 2610
-    _globals["_SCOPEINDEX"]._serialized_start = 2612
-    _globals["_SCOPEINDEX"]._serialized_end = 2660
-    _globals["_EXECPROGRAMARGS"]._serialized_start = 2663
-    _globals["_EXECPROGRAMARGS"]._serialized_end = 3126
-    _globals["_EXECPROGRAMRESULT"]._serialized_start = 3128
-    _globals["_EXECPROGRAMRESULT"]._serialized_end = 3231
-    _globals["_BUILDPROGRAMARGS"]._serialized_start = 3233
-    _globals["_BUILDPROGRAMARGS"]._serialized_end = 3316
-    _globals["_BUILDPROGRAMRESULT"]._serialized_start = 3318
-    _globals["_BUILDPROGRAMRESULT"]._serialized_end = 3352
-    _globals["_EXECARTIFACTARGS"]._serialized_start = 3354
-    _globals["_EXECARTIFACTARGS"]._serialized_end = 3435
-    _globals["_FORMATCODEARGS"]._serialized_start = 3437
-    _globals["_FORMATCODEARGS"]._serialized_end = 3469
-    _globals["_FORMATCODERESULT"]._serialized_start = 3471
-    _globals["_FORMATCODERESULT"]._serialized_end = 3508
-    _globals["_FORMATPATHARGS"]._serialized_start = 3510
-    _globals["_FORMATPATHARGS"]._serialized_end = 3540
-    _globals["_FORMATPATHRESULT"]._serialized_start = 3542
-    _globals["_FORMATPATHRESULT"]._serialized_end = 3583
-    _globals["_LINTPATHARGS"]._serialized_start = 3585
-    _globals["_LINTPATHARGS"]._serialized_end = 3614
-    _globals["_LINTPATHRESULT"]._serialized_start = 3616
-    _globals["_LINTPATHRESULT"]._serialized_end = 3649
-    _globals["_OVERRIDEFILEARGS"]._serialized_start = 3651
-    _globals["_OVERRIDEFILEARGS"]._serialized_end = 3720
-    _globals["_OVERRIDEFILERESULT"]._serialized_start = 3722
-    _globals["_OVERRIDEFILERESULT"]._serialized_end = 3800
-    _globals["_LISTVARIABLESOPTIONS"]._serialized_start = 3802
-    _globals["_LISTVARIABLESOPTIONS"]._serialized_end = 3847
-    _globals["_VARIABLELIST"]._serialized_start = 3849
-    _globals["_VARIABLELIST"]._serialized_end = 3905
-    _globals["_LISTVARIABLESARGS"]._serialized_start = 3907
-    _globals["_LISTVARIABLESARGS"]._serialized_end = 4008
-    _globals["_LISTVARIABLESRESULT"]._serialized_start = 4011
-    _globals["_LISTVARIABLESRESULT"]._serialized_end = 4246
-    _globals["_LISTVARIABLESRESULT_VARIABLESENTRY"]._serialized_start = 4171
-    _globals["_LISTVARIABLESRESULT_VARIABLESENTRY"]._serialized_end = 4246
-    _globals["_VARIABLE"]._serialized_start = 4249
-    _globals["_VARIABLE"]._serialized_end = 4397
-    _globals["_MAPENTRY"]._serialized_start = 4399
-    _globals["_MAPENTRY"]._serialized_end = 4460
-    _globals["_GETSCHEMATYPEMAPPINGARGS"]._serialized_start = 4462
-    _globals["_GETSCHEMATYPEMAPPINGARGS"]._serialized_end = 4558
-    _globals["_GETSCHEMATYPEMAPPINGRESULT"]._serialized_start = 4561
-    _globals["_GETSCHEMATYPEMAPPINGRESULT"]._serialized_end = 4762
-    _globals["_GETSCHEMATYPEMAPPINGRESULT_SCHEMATYPEMAPPINGENTRY"]._serialized_start = (
-        4684
-    )
-    _globals["_GETSCHEMATYPEMAPPINGRESULT_SCHEMATYPEMAPPINGENTRY"]._serialized_end = (
-        4762
-    )
-    _globals["_GETSCHEMATYPEMAPPINGUNDERPATHRESULT"]._serialized_start = 4765
-    _globals["_GETSCHEMATYPEMAPPINGUNDERPATHRESULT"]._serialized_end = 4988
-    _globals[
-        "_GETSCHEMATYPEMAPPINGUNDERPATHRESULT_SCHEMATYPEMAPPINGENTRY"
-    ]._serialized_start = 4906
-    _globals[
-        "_GETSCHEMATYPEMAPPINGUNDERPATHRESULT_SCHEMATYPEMAPPINGENTRY"
-    ]._serialized_end = 4988
-    _globals["_SCHEMATYPES"]._serialized_start = 4990
-    _globals["_SCHEMATYPES"]._serialized_end = 5046
-    _globals["_VALIDATECODEARGS"]._serialized_start = 5049
-    _globals["_VALIDATECODEARGS"]._serialized_end = 5232
-    _globals["_VALIDATECODERESULT"]._serialized_start = 5234
-    _globals["_VALIDATECODERESULT"]._serialized_end = 5292
-    _globals["_POSITION"]._serialized_start = 5294
-    _globals["_POSITION"]._serialized_end = 5352
-    _globals["_LISTDEPFILESARGS"]._serialized_start = 5354
-    _globals["_LISTDEPFILESARGS"]._serialized_end = 5458
-    _globals["_LISTDEPFILESRESULT"]._serialized_start = 5460
-    _globals["_LISTDEPFILESRESULT"]._serialized_end = 5529
-    _globals["_LOADSETTINGSFILESARGS"]._serialized_start = 5531
-    _globals["_LOADSETTINGSFILESARGS"]._serialized_end = 5587
-    _globals["_LOADSETTINGSFILESRESULT"]._serialized_start = 5589
-    _globals["_LOADSETTINGSFILESRESULT"]._serialized_end = 5711
-    _globals["_CLICONFIG"]._serialized_start = 5714
-    _globals["_CLICONFIG"]._serialized_end = 5973
-    _globals["_KEYVALUEPAIR"]._serialized_start = 5975
-    _globals["_KEYVALUEPAIR"]._serialized_end = 6017
-    _globals["_RENAMEARGS"]._serialized_start = 6019
-    _globals["_RENAMEARGS"]._serialized_end = 6112
-    _globals["_RENAMERESULT"]._serialized_start = 6114
-    _globals["_RENAMERESULT"]._serialized_end = 6151
-    _globals["_RENAMECODEARGS"]._serialized_start = 6154
-    _globals["_RENAMECODEARGS"]._serialized_end = 6351
-    _globals["_RENAMECODEARGS_SOURCECODESENTRY"]._serialized_start = 6301
-    _globals["_RENAMECODEARGS_SOURCECODESENTRY"]._serialized_end = 6351
-    _globals["_RENAMECODERESULT"]._serialized_start = 6354
-    _globals["_RENAMECODERESULT"]._serialized_end = 6497
-    _globals["_RENAMECODERESULT_CHANGEDCODESENTRY"]._serialized_start = 6446
-    _globals["_RENAMECODERESULT_CHANGEDCODESENTRY"]._serialized_end = 6497
-    _globals["_TESTARGS"]._serialized_start = 6499
-    _globals["_TESTARGS"]._serialized_end = 6615
-    _globals["_TESTRESULT"]._serialized_start = 6617
-    _globals["_TESTRESULT"]._serialized_end = 6670
-    _globals["_TESTCASEINFO"]._serialized_start = 6672
-    _globals["_TESTCASEINFO"]._serialized_end = 6754
-    _globals["_UPDATEDEPENDENCIESARGS"]._serialized_start = 6756
-    _globals["_UPDATEDEPENDENCIESARGS"]._serialized_end = 6819
-    _globals["_UPDATEDEPENDENCIESRESULT"]._serialized_start = 6821
-    _globals["_UPDATEDEPENDENCIESRESULT"]._serialized_end = 6896
-    _globals["_KCLTYPE"]._serialized_start = 6899
-    _globals["_KCLTYPE"]._serialized_end = 7668
-    _globals["_KCLTYPE_PROPERTIESENTRY"]._serialized_start = 7493
-    _globals["_KCLTYPE_PROPERTIESENTRY"]._serialized_end = 7564
-    _globals["_KCLTYPE_EXAMPLESENTRY"]._serialized_start = 7566
-    _globals["_KCLTYPE_EXAMPLESENTRY"]._serialized_end = 7635
-    _globals["_FUNCTIONTYPE"]._serialized_start = 7670
-    _globals["_FUNCTIONTYPE"]._serialized_end = 7765
-    _globals["_PARAMETER"]._serialized_start = 7767
-    _globals["_PARAMETER"]._serialized_end = 7826
-    _globals["_INDEXSIGNATURE"]._serialized_start = 7829
-    _globals["_INDEXSIGNATURE"]._serialized_end = 7970
-    _globals["_DECORATOR"]._serialized_start = 7973
-    _globals["_DECORATOR"]._serialized_end = 8122
-    _globals["_DECORATOR_KEYWORDSENTRY"]._serialized_start = 8075
-    _globals["_DECORATOR_KEYWORDSENTRY"]._serialized_end = 8122
-    _globals["_EXAMPLE"]._serialized_start = 8124
-    _globals["_EXAMPLE"]._serialized_end = 8186
-    _globals["_BUILTINSERVICE"]._serialized_start = 8189
-    _globals["_BUILTINSERVICE"]._serialized_end = 8335
-    _globals["_KCLSERVICE"]._serialized_start = 8338
-    _globals["_KCLSERVICE"]._serialized_end = 10050
+  _globals['DESCRIPTOR']._loaded_options = None
+  _globals['DESCRIPTOR']._serialized_options = b'Z\005.;api\252\002\nKclLib.API'
+  _globals['_LOADPACKAGERESULT_SCOPESENTRY']._loaded_options = None
+  _globals['_LOADPACKAGERESULT_SCOPESENTRY']._serialized_options = b'8\001'
+  _globals['_LOADPACKAGERESULT_SYMBOLSENTRY']._loaded_options = None
+  _globals['_LOADPACKAGERESULT_SYMBOLSENTRY']._serialized_options = b'8\001'
+  _globals['_LOADPACKAGERESULT_NODESYMBOLMAPENTRY']._loaded_options = None
+  _globals['_LOADPACKAGERESULT_NODESYMBOLMAPENTRY']._serialized_options = b'8\001'
+  _globals['_LOADPACKAGERESULT_SYMBOLNODEMAPENTRY']._loaded_options = None
+  _globals['_LOADPACKAGERESULT_SYMBOLNODEMAPENTRY']._serialized_options = b'8\001'
+  _globals['_LOADPACKAGERESULT_FULLYQUALIFIEDNAMEMAPENTRY']._loaded_options = None
+  _globals['_LOADPACKAGERESULT_FULLYQUALIFIEDNAMEMAPENTRY']._serialized_options = b'8\001'
+  _globals['_LOADPACKAGERESULT_PKGSCOPEMAPENTRY']._loaded_options = None
+  _globals['_LOADPACKAGERESULT_PKGSCOPEMAPENTRY']._serialized_options = b'8\001'
+  _globals['_LISTVARIABLESRESULT_VARIABLESENTRY']._loaded_options = None
+  _globals['_LISTVARIABLESRESULT_VARIABLESENTRY']._serialized_options = b'8\001'
+  _globals['_GETSCHEMATYPEMAPPINGRESULT_SCHEMATYPEMAPPINGENTRY']._loaded_options = None
+  _globals['_GETSCHEMATYPEMAPPINGRESULT_SCHEMATYPEMAPPINGENTRY']._serialized_options = b'8\001'
+  _globals['_GETSCHEMATYPEMAPPINGUNDERPATHRESULT_SCHEMATYPEMAPPINGENTRY']._loaded_options = None
+  _globals['_GETSCHEMATYPEMAPPINGUNDERPATHRESULT_SCHEMATYPEMAPPINGENTRY']._serialized_options = b'8\001'
+  _globals['_RENAMECODEARGS_SOURCECODESENTRY']._loaded_options = None
+  _globals['_RENAMECODEARGS_SOURCECODESENTRY']._serialized_options = b'8\001'
+  _globals['_RENAMECODERESULT_CHANGEDCODESENTRY']._loaded_options = None
+  _globals['_RENAMECODERESULT_CHANGEDCODESENTRY']._serialized_options = b'8\001'
+  _globals['_KCLTYPE_PROPERTIESENTRY']._loaded_options = None
+  _globals['_KCLTYPE_PROPERTIESENTRY']._serialized_options = b'8\001'
+  _globals['_KCLTYPE_EXAMPLESENTRY']._loaded_options = None
+  _globals['_KCLTYPE_EXAMPLESENTRY']._serialized_options = b'8\001'
+  _globals['_DECORATOR_KEYWORDSENTRY']._loaded_options = None
+  _globals['_DECORATOR_KEYWORDSENTRY']._serialized_options = b'8\001'
+  _globals['_EXTERNALPKG']._serialized_start=27
+  _globals['_EXTERNALPKG']._serialized_end=76
+  _globals['_ARGUMENT']._serialized_start=78
+  _globals['_ARGUMENT']._serialized_end=117
+  _globals['_ERROR']._serialized_start=119
+  _globals['_ERROR']._serialized_end=195
+  _globals['_MESSAGE']._serialized_start=197
+  _globals['_MESSAGE']._serialized_end=255
+  _globals['_PINGARGS']._serialized_start=257
+  _globals['_PINGARGS']._serialized_end=282
+  _globals['_PINGRESULT']._serialized_start=284
+  _globals['_PINGRESULT']._serialized_end=311
+  _globals['_GETVERSIONARGS']._serialized_start=313
+  _globals['_GETVERSIONARGS']._serialized_end=329
+  _globals['_GETVERSIONRESULT']._serialized_start=331
+  _globals['_GETVERSIONRESULT']._serialized_end=423
+  _globals['_LISTMETHODARGS']._serialized_start=425
+  _globals['_LISTMETHODARGS']._serialized_end=441
+  _globals['_LISTMETHODRESULT']._serialized_start=443
+  _globals['_LISTMETHODRESULT']._serialized_end=487
+  _globals['_PARSEFILEARGS']._serialized_start=489
+  _globals['_PARSEFILEARGS']._serialized_end=583
+  _globals['_PARSEFILERESULT']._serialized_start=585
+  _globals['_PARSEFILERESULT']._serialized_end=670
+  _globals['_PARSEPROGRAMARGS']._serialized_start=672
+  _globals['_PARSEPROGRAMARGS']._serialized_end=771
+  _globals['_PARSEPROGRAMRESULT']._serialized_start=773
+  _globals['_PARSEPROGRAMRESULT']._serialized_end=862
+  _globals['_LOADPACKAGEARGS']._serialized_start=865
+  _globals['_LOADPACKAGEARGS']._serialized_end=1000
+  _globals['_LOADPACKAGERESULT']._serialized_start=1003
+  _globals['_LOADPACKAGERESULT']._serialized_end=2011
+  _globals['_LOADPACKAGERESULT_SCOPESENTRY']._serialized_start=1578
+  _globals['_LOADPACKAGERESULT_SCOPESENTRY']._serialized_end=1643
+  _globals['_LOADPACKAGERESULT_SYMBOLSENTRY']._serialized_start=1645
+  _globals['_LOADPACKAGERESULT_SYMBOLSENTRY']._serialized_end=1712
+  _globals['_LOADPACKAGERESULT_NODESYMBOLMAPENTRY']._serialized_start=1714
+  _globals['_LOADPACKAGERESULT_NODESYMBOLMAPENTRY']._serialized_end=1792
+  _globals['_LOADPACKAGERESULT_SYMBOLNODEMAPENTRY']._serialized_start=1794
+  _globals['_LOADPACKAGERESULT_SYMBOLNODEMAPENTRY']._serialized_end=1846
+  _globals['_LOADPACKAGERESULT_FULLYQUALIFIEDNAMEMAPENTRY']._serialized_start=1848
+  _globals['_LOADPACKAGERESULT_FULLYQUALIFIEDNAMEMAPENTRY']._serialized_end=1934
+  _globals['_LOADPACKAGERESULT_PKGSCOPEMAPENTRY']._serialized_start=1936
+  _globals['_LOADPACKAGERESULT_PKGSCOPEMAPENTRY']._serialized_end=2011
+  _globals['_LISTOPTIONSRESULT']._serialized_start=2013
+  _globals['_LISTOPTIONSRESULT']._serialized_end=2074
+  _globals['_OPTIONHELP']._serialized_start=2076
+  _globals['_OPTIONHELP']._serialized_end=2171
+  _globals['_SYMBOL']._serialized_start=2174
+  _globals['_SYMBOL']._serialized_end=2370
+  _globals['_SCOPE']._serialized_start=2373
+  _globals['_SCOPE']._serialized_end=2559
+  _globals['_SYMBOLINDEX']._serialized_start=2561
+  _globals['_SYMBOLINDEX']._serialized_end=2610
+  _globals['_SCOPEINDEX']._serialized_start=2612
+  _globals['_SCOPEINDEX']._serialized_end=2660
+  _globals['_EXECPROGRAMARGS']._serialized_start=2663
+  _globals['_EXECPROGRAMARGS']._serialized_end=3126
+  _globals['_EXECPROGRAMRESULT']._serialized_start=3128
+  _globals['_EXECPROGRAMRESULT']._serialized_end=3231
+  _globals['_BUILDPROGRAMARGS']._serialized_start=3233
+  _globals['_BUILDPROGRAMARGS']._serialized_end=3316
+  _globals['_BUILDPROGRAMRESULT']._serialized_start=3318
+  _globals['_BUILDPROGRAMRESULT']._serialized_end=3352
+  _globals['_EXECARTIFACTARGS']._serialized_start=3354
+  _globals['_EXECARTIFACTARGS']._serialized_end=3435
+  _globals['_FORMATCODEARGS']._serialized_start=3437
+  _globals['_FORMATCODEARGS']._serialized_end=3469
+  _globals['_FORMATCODERESULT']._serialized_start=3471
+  _globals['_FORMATCODERESULT']._serialized_end=3508
+  _globals['_FORMATPATHARGS']._serialized_start=3510
+  _globals['_FORMATPATHARGS']._serialized_end=3557
+  _globals['_FORMATPATHRESULT']._serialized_start=3559
+  _globals['_FORMATPATHRESULT']._serialized_end=3600
+  _globals['_LINTPATHARGS']._serialized_start=3602
+  _globals['_LINTPATHARGS']._serialized_end=3631
+  _globals['_LINTPATHRESULT']._serialized_start=3633
+  _globals['_LINTPATHRESULT']._serialized_end=3666
+  _globals['_OVERRIDEFILEARGS']._serialized_start=3668
+  _globals['_OVERRIDEFILEARGS']._serialized_end=3737
+  _globals['_OVERRIDEFILERESULT']._serialized_start=3739
+  _globals['_OVERRIDEFILERESULT']._serialized_end=3817
+  _globals['_LISTVARIABLESOPTIONS']._serialized_start=3819
+  _globals['_LISTVARIABLESOPTIONS']._serialized_end=3864
+  _globals['_VARIABLELIST']._serialized_start=3866
+  _globals['_VARIABLELIST']._serialized_end=3922
+  _globals['_LISTVARIABLESARGS']._serialized_start=3924
+  _globals['_LISTVARIABLESARGS']._serialized_end=4025
+  _globals['_LISTVARIABLESRESULT']._serialized_start=4028
+  _globals['_LISTVARIABLESRESULT']._serialized_end=4263
+  _globals['_LISTVARIABLESRESULT_VARIABLESENTRY']._serialized_start=4188
+  _globals['_LISTVARIABLESRESULT_VARIABLESENTRY']._serialized_end=4263
+  _globals['_VARIABLE']._serialized_start=4266
+  _globals['_VARIABLE']._serialized_end=4414
+  _globals['_MAPENTRY']._serialized_start=4416
+  _globals['_MAPENTRY']._serialized_end=4477
+  _globals['_GETSCHEMATYPEMAPPINGARGS']._serialized_start=4479
+  _globals['_GETSCHEMATYPEMAPPINGARGS']._serialized_end=4575
+  _globals['_GETSCHEMATYPEMAPPINGRESULT']._serialized_start=4578
+  _globals['_GETSCHEMATYPEMAPPINGRESULT']._serialized_end=4779
+  _globals['_GETSCHEMATYPEMAPPINGRESULT_SCHEMATYPEMAPPINGENTRY']._serialized_start=4701
+  _globals['_GETSCHEMATYPEMAPPINGRESULT_SCHEMATYPEMAPPINGENTRY']._serialized_end=4779
+  _globals['_GETSCHEMATYPEMAPPINGUNDERPATHRESULT']._serialized_start=4782
+  _globals['_GETSCHEMATYPEMAPPINGUNDERPATHRESULT']._serialized_end=5005
+  _globals['_GETSCHEMATYPEMAPPINGUNDERPATHRESULT_SCHEMATYPEMAPPINGENTRY']._serialized_start=4923
+  _globals['_GETSCHEMATYPEMAPPINGUNDERPATHRESULT_SCHEMATYPEMAPPINGENTRY']._serialized_end=5005
+  _globals['_SCHEMATYPES']._serialized_start=5007
+  _globals['_SCHEMATYPES']._serialized_end=5063
+  _globals['_VALIDATECODEARGS']._serialized_start=5066
+  _globals['_VALIDATECODEARGS']._serialized_end=5249
+  _globals['_VALIDATECODERESULT']._serialized_start=5251
+  _globals['_VALIDATECODERESULT']._serialized_end=5309
+  _globals['_POSITION']._serialized_start=5311
+  _globals['_POSITION']._serialized_end=5369
+  _globals['_LISTDEPFILESARGS']._serialized_start=5371
+  _globals['_LISTDEPFILESARGS']._serialized_end=5475
+  _globals['_LISTDEPFILESRESULT']._serialized_start=5477
+  _globals['_LISTDEPFILESRESULT']._serialized_end=5546
+  _globals['_LOADSETTINGSFILESARGS']._serialized_start=5548
+  _globals['_LOADSETTINGSFILESARGS']._serialized_end=5604
+  _globals['_LOADSETTINGSFILESRESULT']._serialized_start=5606
+  _globals['_LOADSETTINGSFILESRESULT']._serialized_end=5728
+  _globals['_CLICONFIG']._serialized_start=5731
+  _globals['_CLICONFIG']._serialized_end=5990
+  _globals['_KEYVALUEPAIR']._serialized_start=5992
+  _globals['_KEYVALUEPAIR']._serialized_end=6034
+  _globals['_RENAMEARGS']._serialized_start=6036
+  _globals['_RENAMEARGS']._serialized_end=6129
+  _globals['_RENAMERESULT']._serialized_start=6131
+  _globals['_RENAMERESULT']._serialized_end=6168
+  _globals['_RENAMECODEARGS']._serialized_start=6171
+  _globals['_RENAMECODEARGS']._serialized_end=6368
+  _globals['_RENAMECODEARGS_SOURCECODESENTRY']._serialized_start=6318
+  _globals['_RENAMECODEARGS_SOURCECODESENTRY']._serialized_end=6368
+  _globals['_RENAMECODERESULT']._serialized_start=6371
+  _globals['_RENAMECODERESULT']._serialized_end=6514
+  _globals['_RENAMECODERESULT_CHANGEDCODESENTRY']._serialized_start=6463
+  _globals['_RENAMECODERESULT_CHANGEDCODESENTRY']._serialized_end=6514
+  _globals['_TESTARGS']._serialized_start=6516
+  _globals['_TESTARGS']._serialized_end=6632
+  _globals['_TESTRESULT']._serialized_start=6634
+  _globals['_TESTRESULT']._serialized_end=6687
+  _globals['_TESTCASEINFO']._serialized_start=6689
+  _globals['_TESTCASEINFO']._serialized_end=6771
+  _globals['_UPDATEDEPENDENCIESARGS']._serialized_start=6773
+  _globals['_UPDATEDEPENDENCIESARGS']._serialized_end=6836
+  _globals['_UPDATEDEPENDENCIESRESULT']._serialized_start=6838
+  _globals['_UPDATEDEPENDENCIESRESULT']._serialized_end=6913
+  _globals['_KCLTYPE']._serialized_start=6916
+  _globals['_KCLTYPE']._serialized_end=7685
+  _globals['_KCLTYPE_PROPERTIESENTRY']._serialized_start=7510
+  _globals['_KCLTYPE_PROPERTIESENTRY']._serialized_end=7581
+  _globals['_KCLTYPE_EXAMPLESENTRY']._serialized_start=7583
+  _globals['_KCLTYPE_EXAMPLESENTRY']._serialized_end=7652
+  _globals['_FUNCTIONTYPE']._serialized_start=7687
+  _globals['_FUNCTIONTYPE']._serialized_end=7782
+  _globals['_PARAMETER']._serialized_start=7784
+  _globals['_PARAMETER']._serialized_end=7843
+  _globals['_INDEXSIGNATURE']._serialized_start=7846
+  _globals['_INDEXSIGNATURE']._serialized_end=7987
+  _globals['_DECORATOR']._serialized_start=7990
+  _globals['_DECORATOR']._serialized_end=8139
+  _globals['_DECORATOR_KEYWORDSENTRY']._serialized_start=8092
+  _globals['_DECORATOR_KEYWORDSENTRY']._serialized_end=8139
+  _globals['_EXAMPLE']._serialized_start=8141
+  _globals['_EXAMPLE']._serialized_end=8203
+  _globals['_BUILTINSERVICE']._serialized_start=8206
+  _globals['_BUILTINSERVICE']._serialized_end=8352
+  _globals['_KCLSERVICE']._serialized_start=8355
+  _globals['_KCLSERVICE']._serialized_end=10067
 # @@protoc_insertion_point(module_scope)

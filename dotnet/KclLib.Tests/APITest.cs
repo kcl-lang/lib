@@ -106,7 +106,7 @@ public class APITest
         string sourceCode = "schema Person:\n" + "    name:   str\n" + "    age:    int\n" + "    check:\n"
                 + "        0 <   age <   120\n";
         string expectedFormattedCode = "schema Person:\n" + "    name: str\n" + "    age: int\n\n" + "    check:\n"
-                + "        0 < age < 120\n\n";
+                + "        0 < age < 120\n";
         var api = new API();
         var args = new FormatCodeArgs();
         args.Source = sourceCode;

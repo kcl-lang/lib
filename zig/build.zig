@@ -26,10 +26,10 @@ pub fn build(b: *std.Build) void {
         }),
     });
 
-    lib.linkLibC();
-    lib.linkLibCpp();
-    lib.addLibraryPath(kclLibPath(b, &target));
-    lib.linkSystemLibrary(kclLibName());
+    lib.root_module.link_libc = true;
+    lib.root_module.link_libcpp = true;
+    lib.root_module.addLibraryPath(kclLibPath(b, &target));
+    lib.root_module.linkSystemLibrary(kclLibName(), .{});
     if (os == .windows) {
         linkWindowsLibraries(lib);
     } else if (os == .macos) {
@@ -51,10 +51,10 @@ pub fn build(b: *std.Build) void {
         }),
     });
 
-    lib_unit_tests.linkLibC();
-    lib_unit_tests.linkLibCpp();
-    lib_unit_tests.addLibraryPath(kclLibPath(b, &target));
-    lib_unit_tests.linkSystemLibrary(kclLibName());
+    lib_unit_tests.root_module.link_libc = true;
+    lib_unit_tests.root_module.link_libcpp = true;
+    lib_unit_tests.root_module.addLibraryPath(kclLibPath(b, &target));
+    lib_unit_tests.root_module.linkSystemLibrary(kclLibName(), .{});
     if (os == .windows) {
         linkWindowsLibraries(lib_unit_tests);
     } else if (os == .macos) {
@@ -67,17 +67,17 @@ pub fn build(b: *std.Build) void {
 }
 
 fn linkWindowsLibraries(lib: *std.Build.Step.Compile) void {
-    lib.linkSystemLibrary("userenv");
-    lib.linkSystemLibrary("ole32");
-    lib.linkSystemLibrary("ntdll");
-    lib.linkSystemLibrary("kernel32");
-    lib.linkSystemLibrary("bcrypt");
-    lib.linkSystemLibrary("ws2_32");
+    lib.root_module.linkSystemLibrary("userenv", .{});
+    lib.root_module.linkSystemLibrary("ole32", .{});
+    lib.root_module.linkSystemLibrary("ntdll", .{});
+    lib.root_module.linkSystemLibrary("kernel32", .{});
+    lib.root_module.linkSystemLibrary("bcrypt", .{});
+    lib.root_module.linkSystemLibrary("ws2_32", .{});
 }
 
 fn linkMacOSLibraries(lib: *std.Build.Step.Compile) void {
-    lib.linkFramework("CoreFoundation");
-    lib.linkFramework("Security");
+    lib.root_module.linkFramework("CoreFoundation", .{});
+    lib.root_module.linkFramework("Security", .{});
 }
 
 fn kclLibName() []const u8 {

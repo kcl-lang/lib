@@ -1444,6 +1444,7 @@ fn format_code(args: &FormatCodeArgs) -> Result<FormatCodeResult> {
 fn build_format_path_args(args: &FormatPathArgs) -> kcl_api::FormatPathArgs {
     kcl_api::FormatPathArgs {
         path: args.path.clone(),
+        dry_run: false,
     }
 }
 
