@@ -27,7 +27,7 @@ public class FormatTest {
         FormatCodeResult result = apiInstance.formatCode(args);
 
         String expectedFormattedCode = "schema Person:\n" + "    name: str\n" + "    age: int\n\n" + "    check:\n"
-                + "        0 < age < 120\n\n";
+                + "        0 < age < 120\n";
 
         Assert.assertEquals(expectedFormattedCode, result.getFormatted().toStringUtf8());
     }

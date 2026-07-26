@@ -297,7 +297,6 @@ func TestFormatCodeAPI(t *testing.T) {
 
     check:
         0 < age < 120
-
 `
 	if string(result.Formatted) != expectedFormatted {
 		t.Errorf("Expected formatted code:\n%s\nGot:\n%s", expectedFormatted, string(result.Formatted))

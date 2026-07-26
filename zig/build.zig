@@ -26,7 +26,7 @@ pub fn build(b: *std.Build) void {
         }),
     });
 
-    lib.linkLibC();
+    lib.root_module.link_libc = true;
     lib.linkLibCpp();
     lib.addLibraryPath(kclLibPath(b, &target));
     lib.linkSystemLibrary(kclLibName());
@@ -51,7 +51,7 @@ pub fn build(b: *std.Build) void {
         }),
     });
 
-    lib_unit_tests.linkLibC();
+    lib_unit_tests.root_module.link_libc = true;
     lib_unit_tests.linkLibCpp();
     lib_unit_tests.addLibraryPath(kclLibPath(b, &target));
     lib_unit_tests.linkSystemLibrary(kclLibName());
