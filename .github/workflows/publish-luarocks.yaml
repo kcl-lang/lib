@@ -1,0 +1,74 @@
+name: Publish LuaRocks package
+on:
+  release:
+    types:
+      - published
+permissions:
+  contents: read
+concurrency:
+  group: luarocks-${{ github.event.release.tag_name }}
+  cancel-in-progress: false
+jobs:
+  publish:
+    name: Publish to LuaRocks
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Check out release tag
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ github.event.release.tag_name }}
+      - name: Setup lua toolchain
+        uses: leafo/gh-actions-lua@v13
+        with:
+          luaVersion: "5.4.8"
+      - name: Install LuaRocks
+        uses: leafo/gh-actions-luarocks@v6
+        with:
+          luarocksVersion: "3.13.0"
+      - name: Resolve and validate rockspec
+        shell: bash
+        env:
+          RELEASE_TAG: ${{ github.event.release.tag_name }}
+        run: |
+          set -euo pipefail
+
+          case "$RELEASE_TAG" in
+            v*)
+              package_version="${RELEASE_TAG#v}"
+              ;;
+            *)
+              echo "::error::Release tag must start with 'v', for example v0.12.4"
+              exit 1
+              ;;
+          esac
+
+          mapfile -t rockspecs < <(
+            compgen -G "lua/kcl_lib-${package_version}-*.rockspec" || true
+          )
+
+          if [[ "${#rockspecs[@]}" -ne 1 ]]; then
+            echo "::error::Expected exactly one rockspec matching lua/kcl_lib-${package_version}-*.rockspec"
+            printf 'Found: %s\n' "${rockspecs[@]:-none}"
+            exit 1
+          fi
+
+          rockspec="${rockspecs[0]}"
+
+          expected_version_line="local package_version = \"${package_version}\""
+          if ! grep -Fqx "$expected_version_line" "$rockspec"; then
+            echo "::error::The package_version in $rockspec does not match release tag $RELEASE_TAG"
+            exit 1
+          fi
+
+          echo "Publishing $rockspec"
+          echo "ROCKSPEC=$rockspec" >> "$GITHUB_ENV"
+      - name: Lint rockspec
+        run: luarocks lint "$ROCKSPEC"
+      - name: Publish rockspec and source rock
+        env:
+          LUAROCKS_API_KEY: ${{ secrets.LUAROCKS_API_KEY }}
+        run: |
+          set -euo pipefail
+          luarocks upload \
+            --temp-key "$LUAROCKS_API_KEY" \
+            "$ROCKSPEC"
