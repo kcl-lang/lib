@@ -8,13 +8,20 @@ enables you to work with KCL modules, configurations, and artifacts directly fro
 
 ## Installation
 
-### From Source
-
-#### Prerequisites
+You will need the following tooling regardless of which installation approach you choose. The rock
+is currently packaged as sources files rather than architecture dependent binaries.
 
 - **Rust** (with Cargo) - For building the library.
 - **Lua** - The target Lua version you want to use.
 - **LuaRocks** - The Lua package manager to manage the build and installation.
+
+### From LuaRocks
+
+```bash
+luarocks install kcl_lib
+```
+
+### From Source
 
 #### Supported Lua Versions
 
