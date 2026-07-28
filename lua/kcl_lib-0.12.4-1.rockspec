@@ -5,20 +5,23 @@ rockspec_format = "3.0"
 package = "kcl_lib"
 version = package_version .. "-" .. rockspec_revision
 source = {
-  url = "git+https://github.com/kcl-lang/lib",
-  -- tag = "lua/v" .. version,
+  url = "git+https://github.com/kcl-lang/lib.git",
+  tag = "v" .. package_version,
+  dir = "lib/lua",
 }
 description = {
   summary = "KCL Lua Bindings",
   detailed = [[
-      KCL Lua Bindings
+      KCL Lua bindings to interact with KCL files directly in Lua.
     ]],
   homepage = "https://kcl-lang.io/",
-  license = " Apache-2.0",
+  license = "Apache-2.0",
+}
+build_dependencies = {
+  "luarocks-build-rust-mlua = 0.2.0",
 }
 dependencies = {
-  "lua >= 5.1",
-  "luarocks-build-rust-mlua = 0.2.0",
+  "lua >= 5.1, < 5.5",
   "lua-protobuf >= 0.5",
   "dkjson >= 2.9",
 }
