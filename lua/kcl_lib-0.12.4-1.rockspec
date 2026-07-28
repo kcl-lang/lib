@@ -35,10 +35,12 @@ build = {
     ["kcl_lib"] = "kcl_lib_lua",
   },
   target_path = "target",
-  include = {
-    "api.lua",
-    "raw_api.lua",
-    "types.lua",
-    "schema.lua",
+  install = {
+    lua = {
+      ["kcl_lib.api"] = "kcl_lib/api.lua",
+      ["kcl_lib.raw_api"] = "kcl_lib/raw_api.lua",
+      ["kcl_lib.types"] = "kcl_lib/types.lua",
+      ["kcl_lib.schema"] = "kcl_lib/schema.lua",
+    },
   },
 }
