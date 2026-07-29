@@ -18,9 +18,10 @@ description = {
   license = "Apache-2.0",
 }
 build_dependencies = {
-  "luarocks-build-rust-mlua = 0.2.0",
+  -- "luarocks-build-rust-mlua = 0.2.0", see: https://github.com/luarocks/luarocks/issues/1880
 }
 dependencies = {
+  "luarocks-build-rust-mlua = 0.2.0", -- see: comment in `build_dependencies`
   "lua >= 5.1, < 5.5",
   "lua-protobuf >= 0.5",
   "dkjson >= 2.9",
