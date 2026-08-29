@@ -43,6 +43,8 @@ mod ffi {
         pub path_selector: Vec<String>,
         /// -K --fast_eval
         pub fast_eval: bool,
+        /// Diagnostic output format (pretty/short/arcanist/sarif).
+        pub error_format: String,
     }
 
     /// kcl main.k -E name=path
@@ -877,6 +879,7 @@ fn build_exec_program_args(args: &ExecProgramArgs) -> kcl_api::ExecProgramArgs {
         disable_yaml_result: args.disable_yaml_result,
         include_schema_type_path: args.include_schema_type_path,
         print_override_ast: args.print_override_ast,
+        error_format: args.error_format.clone(),
     }
 }
 
