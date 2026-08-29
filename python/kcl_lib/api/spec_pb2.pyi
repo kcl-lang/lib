@@ -285,6 +285,7 @@ class ExecProgramArgs(_message.Message):
     SHOW_HIDDEN_FIELD_NUMBER: _ClassVar[int]
     PATH_SELECTOR_FIELD_NUMBER: _ClassVar[int]
     FAST_EVAL_FIELD_NUMBER: _ClassVar[int]
+    ERROR_FORMAT_FIELD_NUMBER: _ClassVar[int]
     work_dir: str
     k_filename_list: _containers.RepeatedScalarFieldContainer[str]
     k_code_list: _containers.RepeatedScalarFieldContainer[str]
@@ -303,7 +304,8 @@ class ExecProgramArgs(_message.Message):
     show_hidden: bool
     path_selector: _containers.RepeatedScalarFieldContainer[str]
     fast_eval: bool
-    def __init__(self, work_dir: _Optional[str] = ..., k_filename_list: _Optional[_Iterable[str]] = ..., k_code_list: _Optional[_Iterable[str]] = ..., args: _Optional[_Iterable[_Union[Argument, _Mapping]]] = ..., overrides: _Optional[_Iterable[str]] = ..., disable_yaml_result: _Optional[bool] = ..., print_override_ast: _Optional[bool] = ..., strict_range_check: _Optional[bool] = ..., disable_none: _Optional[bool] = ..., verbose: _Optional[int] = ..., debug: _Optional[int] = ..., sort_keys: _Optional[bool] = ..., external_pkgs: _Optional[_Iterable[_Union[ExternalPkg, _Mapping]]] = ..., include_schema_type_path: _Optional[bool] = ..., compile_only: _Optional[bool] = ..., show_hidden: _Optional[bool] = ..., path_selector: _Optional[_Iterable[str]] = ..., fast_eval: _Optional[bool] = ...) -> None: ...
+    error_format: str
+    def __init__(self, work_dir: _Optional[str] = ..., k_filename_list: _Optional[_Iterable[str]] = ..., k_code_list: _Optional[_Iterable[str]] = ..., args: _Optional[_Iterable[_Union[Argument, _Mapping]]] = ..., overrides: _Optional[_Iterable[str]] = ..., disable_yaml_result: _Optional[bool] = ..., print_override_ast: _Optional[bool] = ..., strict_range_check: _Optional[bool] = ..., disable_none: _Optional[bool] = ..., verbose: _Optional[int] = ..., debug: _Optional[int] = ..., sort_keys: _Optional[bool] = ..., external_pkgs: _Optional[_Iterable[_Union[ExternalPkg, _Mapping]]] = ..., include_schema_type_path: _Optional[bool] = ..., compile_only: _Optional[bool] = ..., show_hidden: _Optional[bool] = ..., path_selector: _Optional[_Iterable[str]] = ..., fast_eval: _Optional[bool] = ..., error_format: _Optional[str] = ...) -> None: ...
 
 class ExecProgramResult(_message.Message):
     __slots__ = ()

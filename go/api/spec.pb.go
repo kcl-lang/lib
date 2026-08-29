@@ -1464,7 +1464,12 @@ type ExecProgramArgs struct {
 	// Path selectors for results.
 	PathSelector []string `protobuf:"bytes,17,rep,name=path_selector,json=pathSelector,proto3" json:"path_selector,omitempty"`
 	// Flag for fast evaluation.
-	FastEval      bool `protobuf:"varint,18,opt,name=fast_eval,json=fastEval,proto3" json:"fast_eval,omitempty"`
+	FastEval bool `protobuf:"varint,18,opt,name=fast_eval,json=fastEval,proto3" json:"fast_eval,omitempty"`
+	// Diagnostic output format. One of: pretty, short, arcanist, sarif.
+	// When set to anything other than "pretty", compile/eval errors are
+	// emitted to stderr in the chosen machine-readable format. Falls back
+	// to the `KCL_ERROR_FORMAT` environment variable when empty.
+	ErrorFormat   string `protobuf:"bytes,19,opt,name=error_format,json=errorFormat,proto3" json:"error_format,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1623,6 +1628,13 @@ func (x *ExecProgramArgs) GetFastEval() bool {
 		return x.FastEval
 	}
 	return false
+}
+
+func (x *ExecProgramArgs) GetErrorFormat() string {
+	if x != nil {
+		return x.ErrorFormat
+	}
+	return ""
 }
 
 // Message for execute program response.
@@ -4633,7 +4645,7 @@ const file_spec_proto_rawDesc = "" +
 	"ScopeIndex\x12\f\n" +
 	"\x01i\x18\x01 \x01(\x04R\x01i\x12\f\n" +
 	"\x01g\x18\x02 \x01(\x04R\x01g\x12\x12\n" +
-	"\x04kind\x18\x03 \x01(\tR\x04kind\"\xb7\x05\n" +
+	"\x04kind\x18\x03 \x01(\tR\x04kind\"\xda\x05\n" +
 	"\x0fExecProgramArgs\x12\x19\n" +
 	"\bwork_dir\x18\x01 \x01(\tR\aworkDir\x12&\n" +
 	"\x0fk_filename_list\x18\x02 \x03(\tR\rkFilenameList\x12\x1e\n" +
@@ -4654,7 +4666,8 @@ const file_spec_proto_rawDesc = "" +
 	"\vshow_hidden\x18\x10 \x01(\bR\n" +
 	"showHidden\x12#\n" +
 	"\rpath_selector\x18\x11 \x03(\tR\fpathSelector\x12\x1b\n" +
-	"\tfast_eval\x18\x12 \x01(\bR\bfastEval\"\x97\x01\n" +
+	"\tfast_eval\x18\x12 \x01(\bR\bfastEval\x12!\n" +
+	"\ferror_format\x18\x13 \x01(\tR\verrorFormat\"\x97\x01\n" +
 	"\x11ExecProgramResult\x12\x1f\n" +
 	"\vjson_result\x18\x01 \x01(\tR\n" +
 	"jsonResult\x12\x1f\n" +
