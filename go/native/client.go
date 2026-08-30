@@ -118,6 +118,15 @@ func (c *NativeServiceClient) GetSchemaTypeMapping(in *api.GetSchemaTypeMappingA
 	return cApiCall[*api.GetSchemaTypeMappingArgs, *api.GetSchemaTypeMappingResult](c, "KclService.GetSchemaTypeMapping", in)
 }
 
+// GetSchemaTypeMappingUnderPath returns the schema type mapping defined in the
+// program rooted at the input paths and all of their external dependency
+// packages. The returned map is keyed by package name (e.g. "__main__",
+// "bbb"), each value holding the schema list for that package with correct
+// pkgpath / base fields — fixes https://github.com/kcl-lang/kcl/issues/1546.
+func (c *NativeServiceClient) GetSchemaTypeMappingUnderPath(in *api.GetSchemaTypeMappingArgs) (*api.GetSchemaTypeMappingUnderPathResult, error) {
+	return cApiCall[*api.GetSchemaTypeMappingArgs, *api.GetSchemaTypeMappingUnderPathResult](c, "KclService.GetSchemaTypeMappingUnderPath", in)
+}
+
 func (c *NativeServiceClient) ValidateCode(in *api.ValidateCodeArgs) (*api.ValidateCodeResult, error) {
 	return cApiCall[*api.ValidateCodeArgs, *api.ValidateCodeResult](c, "KclService.ValidateCode", in)
 }
