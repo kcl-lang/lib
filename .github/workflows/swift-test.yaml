@@ -47,7 +47,7 @@ jobs:
         override: true
         components: clippy, rustfmt
     - name: Setup Swift toolchain
-      uses: swift-actions/setup-swift@v2
+      uses: swift-actions/setup-swift@v3
       with:
         swift-version: 6
     - name: Build and run tests
