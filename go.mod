@@ -1,9 +1,9 @@
 module kcl-lang.io/lib
 
-go 1.23
+go 1.25.0
 
 require (
-	github.com/ebitengine/purego v0.9.1
+	github.com/ebitengine/purego v0.11.0
 	github.com/gofrs/flock v0.12.1
 	google.golang.org/protobuf v1.36.11
 )
