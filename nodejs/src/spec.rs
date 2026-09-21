@@ -700,6 +700,32 @@ pub struct KclType {
     pub description: String,
     /// A map object to hold examples, the key is the example name.
     pub examples: HashMap<String, Example>,
+    /// Base schema if applicable.
+    pub base_schema: Reference<KclType>,
+    /// Function type if the KclType is a function.
+    pub function: FunctionType,
+    /// Optional schema index signature
+    pub index_signature: Option<IndexSignature>,
+}
+
+#[napi(object)]
+pub struct FunctionType {
+    pub params: Vec<Parameter>,
+    pub return_ty: Reference<KclType>,
+}
+
+#[napi(object)]
+pub struct Parameter {
+    pub name: String,
+    pub ty: Reference<KclType>,
+}
+
+#[napi(object)]
+pub struct IndexSignature {
+    pub key_name: Option<String>,
+    pub key: Reference<KclType>,
+    pub val: Reference<KclType>,
+    pub any_other: bool,
 }
 
 /// Message representing a decorator in KCL.

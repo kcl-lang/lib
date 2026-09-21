@@ -10,3 +10,4 @@ DerivedData/
 /KclLib/.swiftpm/xcode/package.xcworkspace/contents.xcworkspacedata
 /KclLib/.swiftpm/config/registries.json
 /KclLib/Sources/CKclLib/lib
+Cargo.lock

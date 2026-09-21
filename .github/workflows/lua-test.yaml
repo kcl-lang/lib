@@ -24,6 +24,9 @@ permissions:
 
 jobs:
   build-and-test:
+    strategy:
+      matrix:
+        lua_version: ["5.1", "5.2", "5.3", "5.4", "luajit-2.1"]
     defaults:
       run:
         working-directory: "lua"
@@ -31,9 +34,11 @@ jobs:
     steps:
     - uses: actions/checkout@v6
     - name: Setup lua toolchain
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y lua-busted luarocks liblua5.2-dev
+      uses: leafo/gh-actions-lua@v13
+      with:
+        luaVersion: "${{ matrix.lua_version }}"
+    - name: Setup luarocks
+      uses: leafo/gh-actions-luarocks@v6
     - name: Install Rust
       uses: actions-rs/toolchain@v1
       with:
@@ -41,4 +46,6 @@ jobs:
         override: true
         components: clippy, rustfmt
     - name: Build
-      run: make
+      run: luarocks make ./*.rockspec
+    - name: Test
+      run: luarocks test ./*.rockspec

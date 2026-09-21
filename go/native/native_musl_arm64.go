@@ -48,10 +48,15 @@ func initClient(pluginAgent uint64) {
 			defer C.free(unsafe.Pointer(cArgs))
 			cArgsLen := C.uint(argsLen)
 			cOutSize := (*C.uint)(unsafe.Pointer(outSize))
-			return uintptr(C.kcl_service_call_with_length(cSvc, cMethod, cArgs, cArgsLen, cOutSize))
+
+			var cResultPtr *C.uint8_t
+			cResultPtr = C.kcl_service_call_with_length(cSvc, cMethod, cArgs, cArgsLen, cOutSize)
+			return uintptr(unsafe.Pointer(cResultPtr))
 		}
 		free = func(ptr uintptr, len uint) {
-			C.kcl_free(C.uintptr_t(ptr), C.uint(len))
+			cPtr := (*C.uint8_t)(unsafe.Pointer(ptr))
+			cLen := C.uint32_t(len)
+			C.kcl_free(cPtr, cLen)
 		}
 		client = &NativeServiceClient{
 			svc: serviceNew(pluginAgent),
