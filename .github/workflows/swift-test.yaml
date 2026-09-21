@@ -47,14 +47,13 @@ jobs:
         override: true
         components: clippy, rustfmt
     - name: Setup Swift toolchain
+      # The v3 Swiftly-based installer cannot provision Linux runners: its
+      # post-install script runs apt-get without sudo and fails on the dpkg
+      # lock. The ubuntu-22.04 image already ships a suitable Swift 6.3.x
+      # toolchain, so only run the action where it works (macOS).
+      if: runner.os != 'Linux'
       uses: swift-actions/setup-swift@v3
       with:
-        # The v3 default ("latest") tracks the newest Swift release, which
-        # no longer publishes ubuntu22.04 builds; pin a 6.3.x release that
-        # has artifacts for all matrix platforms.
         swift-version: "6.3"
-        # The v3 Swiftly installer fails GPG verification on the stock
-        # ubuntu-22.04 image (signing key not in the runner keyring).
-        skip-verify-signature: true
     - name: Build and run tests
       run: make test
