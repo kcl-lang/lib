@@ -20,7 +20,6 @@ schema Person:
 
     check:
         0 < age < 120
-
 `,
   )
 })

@@ -323,11 +323,20 @@ impl GetSchemaTypeMappingArgs {
         paths: Vec<String>,
         work_dir: Option<String>,
         schema_name: Option<String>,
+        external_pkgs: Option<Vec<ExternalPkg>>,
     ) -> Result<Self> {
         Ok(Self(kcl_api::GetSchemaTypeMappingArgs {
             exec_args: Some(kcl_api::ExecProgramArgs {
                 work_dir: work_dir.unwrap_or_default(),
                 k_filename_list: paths,
+                external_pkgs: external_pkgs
+                    .unwrap_or_default()
+                    .into_iter()
+                    .map(|e| kcl_api::ExternalPkg {
+                        pkg_name: e.pkg_name,
+                        pkg_path: e.pkg_path,
+                    })
+                    .collect(),
                 ..Default::default()
             }),
             schema_name: schema_name.unwrap_or_default(),
@@ -344,6 +353,19 @@ pub fn get_schema_type_mapping(
     api.get_schema_type_mapping(&args.0)
         .map_err(|e| napi::bindgen_prelude::Error::from_reason(e.to_string()))
         .map(GetSchemaTypeMappingResult::new)
+}
+
+/// Get schema type mapping under the input paths, including all external
+/// dependency packages. The result is keyed by package name.
+/// See https://github.com/kcl-lang/kcl/issues/1546.
+#[napi]
+pub fn get_schema_type_mapping_under_path(
+    args: &GetSchemaTypeMappingArgs,
+) -> Result<GetSchemaTypeMappingUnderPathResult> {
+    let api = kcl_api::API::default();
+    api.get_schema_type_mapping_under_path(&args.0)
+        .map_err(|e| napi::bindgen_prelude::Error::from_reason(e.to_string()))
+        .map(GetSchemaTypeMappingUnderPathResult::new)
 }
 
 /*
@@ -583,6 +605,7 @@ impl TestArgs {
         run_regexp: Option<String>,
         work_dir: Option<String>,
         paths: Option<Vec<String>>,
+        coverage: Option<bool>,
     ) -> Result<Self> {
         Ok(Self(kcl_api::TestArgs {
             exec_args: Some(kcl_api::ExecProgramArgs {
@@ -593,7 +616,7 @@ impl TestArgs {
             pkg_list,
             fail_fast: fail_fast.unwrap_or_default(),
             run_regexp: run_regexp.unwrap_or_default(),
-            coverage: false,
+            coverage: coverage.unwrap_or_default(),
         }))
     }
 }

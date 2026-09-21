@@ -26,6 +26,10 @@ type ServiceClient interface {
 	OverrideFile(in *OverrideFileArgs) (out *OverrideFileResult, err error)
 	// Get schema type mapping defined in the program.
 	GetSchemaTypeMapping(in *GetSchemaTypeMappingArgs) (out *GetSchemaTypeMappingResult, err error)
+	// Get schema type mapping defined in the program rooted at the input paths
+	// and all of their external dependency packages — fixes
+	// https://github.com/kcl-lang/kcl/issues/1546.
+	GetSchemaTypeMappingUnderPath(in *GetSchemaTypeMappingArgs) (out *GetSchemaTypeMappingUnderPathResult, err error)
 	// Validate code using schema and JSON/YAML data strings.
 	ValidateCode(in *ValidateCodeArgs) (out *ValidateCodeResult, err error)
 	// List dependencies files of input paths.

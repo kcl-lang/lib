@@ -26,6 +26,13 @@ public protocol Service {
   // Retrieves the full schema type mapping for a KCL program.
   func getSchemaTypeMapping(_ args: GetSchemaTypeMappingArgs) throws -> GetSchemaTypeMappingResult
 
+  // Retrieves the schema type mapping of the program rooted at the input
+  // paths and all external dependency packages, keyed by package name, so
+  // schemas from kcl.mod dependencies keep their own pkgpath and base
+  // schema. See https://github.com/kcl-lang/kcl/issues/1546.
+  func getSchemaTypeMappingUnderPath(_ args: GetSchemaTypeMappingArgs) throws
+    -> GetSchemaTypeMappingUnderPathResult
+
   // Formats source code according to KCL style guidelines.
   func formatCode(_ args: FormatCodeArgs) throws -> FormatCodeResult
 

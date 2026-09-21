@@ -216,6 +216,10 @@ export interface GetSchemaTypeMappingResult {
   /** Map of schema type mappings. */
   schemaTypeMapping: Record<string, string>
 }
+export interface GetSchemaTypeMappingUnderPathResult {
+  /** Map of package name to the schema names defined in that package. */
+  schemaTypeMapping: Record<string, Array<string>>
+}
 /** Message for validate code response. */
 export interface ValidateCodeResult {
   /** Flag indicating if validation was successful. */
@@ -407,6 +411,14 @@ export declare function listVariables(args: ListVariablesArgs): ListVariablesRes
 export declare function overrideFile(args: OverrideFileArgs): OverrideFileResult
 /** Get schema type mapping. */
 export declare function getSchemaTypeMapping(args: GetSchemaTypeMappingArgs): GetSchemaTypeMappingResult
+/**
+ * Get schema type mapping under the input paths, including all external
+ * dependency packages. The result is keyed by package name.
+ * See https://github.com/kcl-lang/kcl/issues/1546.
+ */
+export declare function getSchemaTypeMappingUnderPath(
+  args: GetSchemaTypeMappingArgs,
+): GetSchemaTypeMappingUnderPathResult
 /** Format KCL file or directory path contains KCL files and returns the changed file paths. */
 export declare function formatCode(args: FormatCodeArgs): FormatCodeResult
 /** Format KCL file or directory path contains KCL files and returns the changed file paths. */
@@ -492,7 +504,12 @@ export declare class OverrideFileArgs {
   constructor(file: string, specs: Array<string>, importPaths: Array<string>)
 }
 export declare class GetSchemaTypeMappingArgs {
-  constructor(paths: Array<string>, workDir?: string | undefined | null, schemaName?: string | undefined | null)
+  constructor(
+    paths: Array<string>,
+    workDir?: string | undefined | null,
+    schemaName?: string | undefined | null,
+    externalPkgs?: Array<ExternalPkg> | undefined | null,
+  )
 }
 export declare class FormatCodeArgs {
   constructor(source: string)
@@ -531,6 +548,7 @@ export declare class TestArgs {
     runRegexp?: string | undefined | null,
     workDir?: string | undefined | null,
     paths?: Array<string> | undefined | null,
+    coverage?: boolean | undefined | null,
   )
 }
 export declare class UpdateDependenciesArgs {
