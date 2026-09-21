@@ -593,6 +593,7 @@ impl TestArgs {
             pkg_list,
             fail_fast: fail_fast.unwrap_or_default(),
             run_regexp: run_regexp.unwrap_or_default(),
+            coverage: false,
         }))
     }
 }
