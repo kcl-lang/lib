@@ -922,6 +922,37 @@ public object ExecProgramArgsKt {
     public fun clearFastEval() {
       _builder.clearFastEval()
     }
+
+    /**
+     * ```
+     * Diagnostic output format. One of: pretty, short, arcanist, sarif.
+     * When set to anything other than "pretty", compile/eval errors are
+     * emitted to stderr in the chosen machine-readable format. Falls back
+     * to the `KCL_ERROR_FORMAT` environment variable when empty.
+     * ```
+     *
+     * `string error_format = 19;`
+     */
+    public var errorFormat: kotlin.String
+      @kotlin.jvm.JvmName("getErrorFormat")
+        get() = _builder.errorFormat
+      @kotlin.jvm.JvmName("setErrorFormat")
+        set(value) {
+        _builder.errorFormat = value
+      }
+    /**
+     * ```
+     * Diagnostic output format. One of: pretty, short, arcanist, sarif.
+     * When set to anything other than "pretty", compile/eval errors are
+     * emitted to stderr in the chosen machine-readable format. Falls back
+     * to the `KCL_ERROR_FORMAT` environment variable when empty.
+     * ```
+     *
+     * `string error_format = 19;`
+     */
+    public fun clearErrorFormat() {
+      _builder.clearErrorFormat()
+    }
   }
 }
 @kotlin.jvm.JvmSynthetic

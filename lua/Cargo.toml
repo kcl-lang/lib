@@ -1,12 +1,16 @@
 [package]
 name = "kcl-lib-lua"
-version = "0.12.3"
+version = "0.12.5"
 edition = "2024"
 publish = false
 
 [features]
-default = ["mlua/lua52"]
+lua51 = ["mlua", "mlua/lua51"]
 lua52 = ["mlua", "mlua/lua52"]
+lua53 = ["mlua", "mlua/lua53"]
+lua54 = ["mlua", "mlua/lua54"]
+luajit = ["mlua", "mlua/luajit"]
+luajit52 = ["mlua", "mlua/luajit52"]
 
 [lib]
 crate-type = ["cdylib"]
@@ -16,4 +20,4 @@ mlua = { version = "0.9", features = [
   "module",
   "macros",
 ], default-features = false, optional = true }
-kcl-api = { git = "https://github.com/kcl-lang/kcl", version = "0.12.3" }
+kcl-api = { git = "https://github.com/kcl-lang/kcl", version = "0.12.5" }
