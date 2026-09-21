@@ -381,7 +381,10 @@ pub struct FormatPathArgs(kcl_api::FormatPathArgs);
 impl FormatPathArgs {
     #[napi(constructor)]
     pub fn new(path: String) -> Result<Self> {
-        Ok(Self(kcl_api::FormatPathArgs { path }))
+        Ok(Self(kcl_api::FormatPathArgs {
+            path,
+            dry_run: false,
+        }))
     }
 }
 

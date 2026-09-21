@@ -43,6 +43,14 @@ mod ffi {
         pub path_selector: Vec<String>,
         /// -K --fast_eval
         pub fast_eval: bool,
+        /// Diagnostic output format (pretty/short/arcanist/sarif).
+        pub error_format: String,
+        /// Output format selector. One of: yaml, json.
+        /// When empty the runtime generates both formats (legacy behaviour).
+        pub format: String,
+        /// Emit a side-channel marker in the planned YAML/JSON that names
+        /// schema attributes to be carried over to downstream emitters.
+        pub emit_attribute_metadata: bool,
     }
 
     /// kcl main.k -E name=path
@@ -607,6 +615,8 @@ mod ffi {
         pub run_regexp: String,
         /// Flag to stop the test run on the first failure.
         pub fail_fast: bool,
+        /// Flag to collect line-level coverage data while running tests.
+        pub coverage: bool,
     }
     /// Message for test response.
     pub struct TestResult {
@@ -877,6 +887,9 @@ fn build_exec_program_args(args: &ExecProgramArgs) -> kcl_api::ExecProgramArgs {
         disable_yaml_result: args.disable_yaml_result,
         include_schema_type_path: args.include_schema_type_path,
         print_override_ast: args.print_override_ast,
+        error_format: args.error_format.clone(),
+        format: args.format.clone(),
+        emit_attribute_metadata: args.emit_attribute_metadata,
     }
 }
 
@@ -1444,6 +1457,7 @@ fn format_code(args: &FormatCodeArgs) -> Result<FormatCodeResult> {
 fn build_format_path_args(args: &FormatPathArgs) -> kcl_api::FormatPathArgs {
     kcl_api::FormatPathArgs {
         path: args.path.clone(),
+        dry_run: false,
     }
 }
 
@@ -1611,6 +1625,7 @@ fn build_test_args(args: &TestArgs) -> kcl_api::TestArgs {
         pkg_list: args.pkg_list.clone(),
         run_regexp: args.run_regexp.clone(),
         fail_fast: args.fail_fast,
+        coverage: args.coverage,
     }
 }
 
