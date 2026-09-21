@@ -49,6 +49,10 @@ jobs:
     - name: Setup Swift toolchain
       uses: swift-actions/setup-swift@v3
       with:
+        # The v3 default ("latest") tracks the newest Swift release, which
+        # no longer publishes ubuntu22.04 builds; pin a 6.3.x release that
+        # has artifacts for all matrix platforms.
+        swift-version: "6.3"
         # The v3 Swiftly installer fails GPG verification on the stock
         # ubuntu-22.04 image (signing key not in the runner keyring).
         skip-verify-signature: true
