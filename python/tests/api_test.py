@@ -112,6 +112,41 @@ def test_get_schema_type_api():
     assert result.schema_type_mapping["app"].properties["maps"].index_signature.val.type == "schema"
     assert result.schema_type_mapping["app"].properties["maps"].index_signature.val.properties["name"].type == "str"
 
+def test_get_schema_type_under_path_api():
+    """Get schema type mapping across the program rooted at the input paths and
+    all external dependency packages — regression test for
+    https://github.com/kcl-lang/kcl/issues/1546: schemas from kcl.mod
+    dependencies keep their own pkgpath and base schema instead of being
+    misattributed to "__main__".
+    """
+    import pathlib
+
+    import kcl_lib.api as api
+
+    root = pathlib.Path("./tests/test_data/get_schema_ty_under_path").resolve()
+    exec_args = api.ExecProgramArgs(
+        k_filename_list=[str(root / "aaa")],
+        external_pkgs=[
+            api.ExternalPkg(pkg_name="bbb", pkg_path=str(root / "bbb")),
+        ],
+    )
+    args = api.GetSchemaTypeMappingArgs(exec_args=exec_args)
+    api = api.API()
+    result = api.get_schema_type_mapping_under_path(args)
+
+    assert "__main__" in result.schema_type_mapping
+    assert "bbb" in result.schema_type_mapping
+
+    bbb_schemas = {
+        s.schema_name: s for s in result.schema_type_mapping["bbb"].schema_type
+    }
+    assert "Base" in bbb_schemas and "B" in bbb_schemas
+    assert bbb_schemas["Base"].pkg_path == "bbb"
+    assert bbb_schemas["B"].pkg_path == "bbb"
+    assert bbb_schemas["B"].HasField("base_schema")
+    assert bbb_schemas["B"].base_schema.schema_name == "Base"
+    assert bbb_schemas["B"].base_schema.pkg_path == "bbb"
+
 def test_override_file_api():
     """Override KCL file with arguments. See https://www.kcl-lang.io/docs/user_docs/guides/automation
     for more override spec guide.

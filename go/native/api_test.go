@@ -6,6 +6,7 @@ package native
 
 import (
 	"os"
+	"path/filepath"
 	"strings"
 	"testing"
 
@@ -226,6 +227,92 @@ func TestGetSchemaTypeAPI(t *testing.T) {
 	if nameProp.Type != "str" {
 		t.Errorf("Expected 'name' type 'str', got '%s'", nameProp.Type)
 	}
+}
+
+// TestGetSchemaTypeAPIUnderPath is the regression test for
+// https://github.com/kcl-lang/kcl/issues/1546: schemas coming from external
+// dependency packages must keep their own PkgPath (instead of "__main__")
+// and their BaseSchema must resolve across the package boundary.
+func TestGetSchemaTypeAPIUnderPath(t *testing.T) {
+	client := NewNativeServiceClient()
+
+	abs := func(rel string) string {
+		t.Helper()
+		p, err := filepath.Abs("../test_data/get_schema_ty_under_path/" + rel)
+		if err != nil {
+			t.Fatalf("resolve %s: %v", rel, err)
+		}
+		return p
+	}
+
+	args := &api.GetSchemaTypeMappingArgs{
+		ExecArgs: &api.ExecProgramArgs{
+			KFilenameList: []string{abs("aaa")},
+			ExternalPkgs: []*api.ExternalPkg{
+				{PkgName: "bbb", PkgPath: abs("bbb")},
+			},
+		},
+	}
+
+	result, err := client.GetSchemaTypeMappingUnderPath(args)
+	if err != nil {
+		t.Fatalf("GetSchemaTypeMappingUnderPath failed: %v", err)
+	}
+
+	mainSchemas, ok := result.SchemaTypeMapping["__main__"]
+	if !ok {
+		t.Fatalf("Expected package '__main__' in mapping, got %v", pkgKeys(result.SchemaTypeMapping))
+	}
+	if len(mainSchemas.SchemaType) == 0 {
+		t.Fatal("Expected at least one schema in '__main__'")
+	}
+
+	bbbSchemas, ok := result.SchemaTypeMapping["bbb"]
+	if !ok {
+		t.Fatalf("Expected package 'bbb' in mapping, got %v", pkgKeys(result.SchemaTypeMapping))
+	}
+
+	var base, b *api.KclType
+	for _, s := range bbbSchemas.SchemaType {
+		switch s.SchemaName {
+		case "Base":
+			base = s
+		case "B":
+			b = s
+		}
+	}
+	if base == nil || b == nil {
+		t.Fatalf("Expected schemas Base and B in bbb, got %v", schemaNames(bbbSchemas))
+	}
+	if base.PkgPath != "bbb" {
+		t.Errorf("Base PkgPath: expected 'bbb', got '%s' (regression for #1546)", base.PkgPath)
+	}
+	if b.PkgPath != "bbb" {
+		t.Errorf("B PkgPath: expected 'bbb', got '%s' (regression for #1546)", b.PkgPath)
+	}
+	if b.BaseSchema == nil {
+		t.Fatal("B BaseSchema: expected non-nil base schema (regression for #1546)")
+	}
+	if b.BaseSchema.SchemaName != "Base" || b.BaseSchema.PkgPath != "bbb" {
+		t.Errorf("B BaseSchema: expected bbb.Base, got '%s' in '%s'",
+			b.BaseSchema.SchemaName, b.BaseSchema.PkgPath)
+	}
+}
+
+func pkgKeys(m map[string]*api.SchemaTypes) []string {
+	out := make([]string, 0, len(m))
+	for k := range m {
+		out = append(out, k)
+	}
+	return out
+}
+
+func schemaNames(st *api.SchemaTypes) []string {
+	out := make([]string, 0, len(st.SchemaType))
+	for _, s := range st.SchemaType {
+		out = append(out, s.SchemaName)
+	}
+	return out
 }
 
 func TestOverrideFileAPI(t *testing.T) {

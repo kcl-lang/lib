@@ -301,6 +301,7 @@ const {
   overrideFile,
   GetSchemaTypeMappingArgs,
   getSchemaTypeMapping,
+  getSchemaTypeMappingUnderPath,
   FormatCodeArgs,
   formatCode,
   FormatPathArgs,
@@ -338,6 +339,7 @@ module.exports.OverrideFileArgs = OverrideFileArgs
 module.exports.overrideFile = overrideFile
 module.exports.GetSchemaTypeMappingArgs = GetSchemaTypeMappingArgs
 module.exports.getSchemaTypeMapping = getSchemaTypeMapping
+module.exports.getSchemaTypeMappingUnderPath = getSchemaTypeMappingUnderPath
 module.exports.FormatCodeArgs = FormatCodeArgs
 module.exports.formatCode = formatCode
 module.exports.FormatPathArgs = FormatPathArgs

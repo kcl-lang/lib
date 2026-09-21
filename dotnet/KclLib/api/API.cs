@@ -62,6 +62,11 @@ public class API : IService
         return GetSchemaTypeMappingResult.Parser.ParseFrom(Call("KclService.GetSchemaTypeMapping", args.ToByteArray()));
     }
 
+    public GetSchemaTypeMappingUnderPathResult GetSchemaTypeMappingUnderPath(GetSchemaTypeMappingArgs args)
+    {
+        return GetSchemaTypeMappingUnderPathResult.Parser.ParseFrom(Call("KclService.GetSchemaTypeMappingUnderPath", args.ToByteArray()));
+    }
+
     public FormatCodeResult FormatCode(FormatCodeArgs args)
     {
         return FormatCodeResult.Parser.ParseFrom(Call("KclService.FormatCode", args.ToByteArray()));

@@ -360,6 +360,46 @@ public class API implements Service {
     }
 
     /**
+     * Gets the schema type mappings of the program rooted at the input paths
+     * and all of their external dependency packages.
+     *
+     * <p>
+     * Different from {@link #getSchemaTypeMapping}, the result is keyed by
+     * package name (e.g. {@code "__main__"}, {@code "mymod.v1"}) and each
+     * value holds that package's schema list, so schemas defined in kcl.mod
+     * {@code [dependencies]} keep their own pkgpath and base schema. See
+     * <a href="https://github.com/kcl-lang/kcl/issues/1546">kcl-lang/kcl#1546</a>.
+     *
+     * <pre>
+     * {@code
+     * import com.kcl.api.*;
+     *
+     * ExecProgramArgs execArgs = ExecProgramArgs.newBuilder().addKFilenameList(".").build();
+     * GetSchemaTypeMappingArgs args = GetSchemaTypeMappingArgs.newBuilder().setExecArgs(execArgs).build();
+     * API apiInstance = new API();
+     * GetSchemaTypeMappingUnderPathResult result = apiInstance.getSchemaTypeMappingUnderPath(args);
+     * for (java.util.Map.Entry<String, SchemaTypes> e : result.getSchemaTypeMappingMap().entrySet()) {
+     *     System.out.println(e.getKey() + ": " + e.getValue().getSchemaTypeList());
+     * }
+     * }
+     * </pre>
+     *
+     * @param args
+     *            the arguments specifying the program root and schema.
+     *
+     * @return the schema type mappings keyed by package name.
+     *
+     * @throws Exception
+     *             if an error occurs during the remote procedure call.
+     */
+    @Override
+    public GetSchemaTypeMappingUnderPathResult getSchemaTypeMappingUnderPath(GetSchemaTypeMappingArgs args)
+            throws Exception {
+        return GetSchemaTypeMappingUnderPathResult
+                .parseFrom(call("KclService.GetSchemaTypeMappingUnderPath", args.toByteArray()));
+    }
+
+    /**
      * Formats KCL code according to the language standards.
      *
      * <p>

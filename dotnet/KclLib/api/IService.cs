@@ -1,4 +1,4 @@
-﻿namespace KclLib.API;
+namespace KclLib.API;
 
 /// <summary>
 /// Defines the contract for services that handle various operations on KCL programs.
@@ -60,6 +60,16 @@ public interface IService
     /// <param name="args">Arguments for schema type mapping retrieval.</param>
     /// <returns>The schema type mapping result.</returns>
     GetSchemaTypeMappingResult GetSchemaTypeMapping(GetSchemaTypeMappingArgs args);
+
+    /// <summary>
+    /// Retrieves the schema type mapping of the program rooted at the input
+    /// paths and all external dependency packages, keyed by package name, so
+    /// schemas from kcl.mod dependencies keep their own pkgpath and base
+    /// schema. See https://github.com/kcl-lang/kcl/issues/1546.
+    /// </summary>
+    /// <param name="args">Arguments for schema type mapping retrieval.</param>
+    /// <returns>The schema type mapping keyed by package name.</returns>
+    GetSchemaTypeMappingUnderPathResult GetSchemaTypeMappingUnderPath(GetSchemaTypeMappingArgs args);
 
     /// <summary>
     /// Formats source code according to KCL style guidelines.

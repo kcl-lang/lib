@@ -29,6 +29,7 @@ from .spec_pb2 import (
     ListVariablesResult,
     GetSchemaTypeMappingArgs,
     GetSchemaTypeMappingResult,
+    GetSchemaTypeMappingUnderPathResult,
     ValidateCodeArgs,
     ValidateCodeResult,
     ListDepFilesArgs,
@@ -427,6 +428,35 @@ class API:
         """
         return self.call("KclService.GetSchemaTypeMapping", args)
 
+    def get_schema_type_mapping_under_path(
+        self,
+        args: GetSchemaTypeMappingArgs,
+    ) -> GetSchemaTypeMappingUnderPathResult:
+        """Get the schema type mapping of the program rooted at the input paths
+        and all of their external dependency packages.
+
+        Different from `get_schema_type_mapping`, the result is keyed by
+        package name (e.g. `"__main__"`, `"mymod.v1"`) and each value holds
+        that package's schema list, so schemas defined in kcl.mod
+        `[dependencies]` keep their own pkgpath and base schema. See
+        https://github.com/kcl-lang/kcl/issues/1546.
+
+        ## Example
+
+        ```python
+        import kcl_lib.api as api
+
+        exec_args = api.ExecProgramArgs(k_filename_list=["."])
+        args = api.GetSchemaTypeMappingArgs(exec_args=exec_args)
+        api = api.API()
+        result = api.get_schema_type_mapping_under_path(args)
+        for pkg, schemas in result.schema_type_mapping.items():
+            for s in schemas.schema_type:
+                print(pkg, s.schema_name)
+        ```
+        """
+        return self.call("KclService.GetSchemaTypeMappingUnderPath", args)
+
     def validate_code(self, args: ValidateCodeArgs) -> ValidateCodeResult:
         """Validate code using schema and JSON/YAML data strings.
 
@@ -698,6 +728,8 @@ class API:
             return OverrideFileArgs()
         elif method in ["GetSchemaTypeMapping", "KclService.GetSchemaTypeMapping"]:
             return GetSchemaTypeMappingArgs()
+        elif method in ["GetSchemaTypeMappingUnderPath", "KclService.GetSchemaTypeMappingUnderPath"]:
+            return GetSchemaTypeMappingArgs()
         elif method in ["ValidateCode", "KclService.ValidateCode"]:
             return ValidateCodeArgs()
         elif method in ["ListDepFiles", "KclService.ListDepFiles"]:
@@ -745,6 +777,8 @@ class API:
             return OverrideFileResult()
         elif method in ["GetSchemaTypeMapping", "KclService.GetSchemaTypeMapping"]:
             return GetSchemaTypeMappingResult()
+        elif method in ["GetSchemaTypeMappingUnderPath", "KclService.GetSchemaTypeMappingUnderPath"]:
+            return GetSchemaTypeMappingUnderPathResult()
         elif method in ["ValidateCode", "KclService.ValidateCode"]:
             return ValidateCodeResult()
         elif method in ["ListDepFiles", "KclService.ListDepFiles"]:

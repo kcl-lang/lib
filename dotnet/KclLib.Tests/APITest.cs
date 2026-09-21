@@ -126,6 +126,33 @@ public class APITest
         Assert.AreEqual("int", result.SchemaTypeMapping["app"].Properties["replicas"].Type, result.ToString());
     }
 
+    // Regression test for https://github.com/kcl-lang/kcl/issues/1546:
+    // schemas coming from external dependency packages must keep their own
+    // pkgpath and base schema instead of being misattributed to "__main__".
+    [TestMethod]
+    public void TestGetSchemaTypeUnderPathAPI()
+    {
+        var root = Path.Combine(parentDirectory, "test_data", "get_schema_ty_under_path");
+        var execArgs = new ExecProgramArgs();
+        execArgs.KFilenameList.Add(Path.Combine(root, "aaa"));
+        execArgs.ExternalPkgs.Add(new ExternalPkg { PkgName = "bbb", PkgPath = Path.Combine(root, "bbb") });
+        var args = new GetSchemaTypeMappingArgs();
+        args.ExecArgs = execArgs;
+        var result = new API().GetSchemaTypeMappingUnderPath(args);
+
+        Assert.IsTrue(result.SchemaTypeMapping.ContainsKey("__main__"));
+        Assert.IsTrue(result.SchemaTypeMapping.ContainsKey("bbb"));
+
+        var bbbSchemas = result.SchemaTypeMapping["bbb"].SchemaType.ToDictionary(s => s.SchemaName);
+        Assert.IsTrue(bbbSchemas.ContainsKey("Base"));
+        Assert.IsTrue(bbbSchemas.ContainsKey("B"));
+        Assert.AreEqual("bbb", bbbSchemas["Base"].PkgPath);
+        Assert.AreEqual("bbb", bbbSchemas["B"].PkgPath);
+        Assert.IsNotNull(bbbSchemas["B"].BaseSchema, "B.BaseSchema must be resolved across the package boundary");
+        Assert.AreEqual("Base", bbbSchemas["B"].BaseSchema.SchemaName);
+        Assert.AreEqual("bbb", bbbSchemas["B"].BaseSchema.PkgPath);
+    }
+
     [TestMethod]
     public void TestListOptionsAPI()
     {

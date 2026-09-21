@@ -64,6 +64,16 @@ public class API: Service {
         name: "KclService.GetSchemaTypeMapping", args: try args.serializedBytes()))
   }
 
+  // Retrieves the schema type mapping of the program rooted at the input
+  // paths and all external dependency packages, keyed by package name.
+  public func getSchemaTypeMappingUnderPath(_ args: GetSchemaTypeMappingArgs) throws
+    -> GetSchemaTypeMappingUnderPathResult
+  {
+    return try GetSchemaTypeMappingUnderPathResult(
+      serializedBytes: callNative(
+        name: "KclService.GetSchemaTypeMappingUnderPath", args: try args.serializedBytes()))
+  }
+
   // Formats source code according to KCL style guidelines.
   public func formatCode(_ args: FormatCodeArgs) throws -> FormatCodeResult {
     return try FormatCodeResult(

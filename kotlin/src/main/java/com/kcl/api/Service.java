@@ -30,6 +30,11 @@ public interface Service {
     // Service for getting the full schema type list
     GetSchemaTypeMappingResult getSchemaTypeMapping(GetSchemaTypeMappingArgs args) throws Exception;
 
+    // Service for getting the full schema type list of the program rooted at
+    // the input paths and all external dependency packages, keyed by package
+    // name — fixes https://github.com/kcl-lang/kcl/issues/1546
+    GetSchemaTypeMappingUnderPathResult getSchemaTypeMappingUnderPath(GetSchemaTypeMappingArgs args) throws Exception;
+
     // Service for formatting a code source
     FormatCodeResult formatCode(FormatCodeArgs args) throws Exception;
 

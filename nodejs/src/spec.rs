@@ -497,6 +497,34 @@ impl GetSchemaTypeMappingResult {
     }
 }
 
+// Message for get schema type mapping under path response. Different from
+// `GetSchemaTypeMappingResult`, the map is keyed by package name (e.g.
+// "__main__", "mymod.v1") and each value holds the schema names of that
+// package, so schemas from kcl.mod dependencies keep their own pkgpath.
+// See https://github.com/kcl-lang/kcl/issues/1546.
+#[napi(object)]
+pub struct GetSchemaTypeMappingUnderPathResult {
+    /// Map of package name to the schema names defined in that package.
+    pub schema_type_mapping: HashMap<String, Vec<String>>,
+}
+
+impl GetSchemaTypeMappingUnderPathResult {
+    pub fn new(r: kcl_api::GetSchemaTypeMappingUnderPathResult) -> Self {
+        Self {
+            schema_type_mapping: r
+                .schema_type_mapping
+                .iter()
+                .map(|(k, v)| {
+                    (
+                        k.to_string(),
+                        v.schema_type.iter().map(|s| s.schema_name.clone()).collect(),
+                    )
+                })
+                .collect(),
+        }
+    }
+}
+
 /// Message for validate code response.
 #[napi(object)]
 pub struct ValidateCodeResult {
