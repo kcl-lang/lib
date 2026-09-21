@@ -48,5 +48,9 @@ jobs:
         components: clippy, rustfmt
     - name: Setup Swift toolchain
       uses: swift-actions/setup-swift@v3
+      with:
+        # The v3 Swiftly installer fails GPG verification on the stock
+        # ubuntu-22.04 image (signing key not in the runner keyring).
+        skip-verify-signature: true
     - name: Build and run tests
       run: make test
