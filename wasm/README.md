@@ -27,6 +27,33 @@ p = Person {name = "Alice"}`,
 main();
 ```
 
+### Universal RPC entry point
+
+Beyond the convenience wrappers `invokeKCLRun` / `invokeKCLRunWithLogMessage`
+/ `invokeKCLFmt`, the underlying WASM module also exposes a `kcl_call` entry
+point that dispatches to **any** KCL service method (the full set declared
+in `spec/spec.proto`):
+
+```typescript
+import { load, invokeKCLCall, invokeKCLVersion } from "@kcl-lang/wasm-lib";
+
+const inst = await load();
+
+// Read the KCL version baked into the artifact.
+console.log(invokeKCLVersion(inst)); // -> "0.13.0"
+
+// Dispatch any KclService.* RPC by name. The `args` field must be the
+// protobuf-encoded `<Method>Args` message, and the returned string is
+// the protobuf-encoded `<Method>Result` message (or an "ERROR:..."
+// string on failure).
+const args = ""; // empty bytes encode a default PingArgs
+const pingResult = invokeKCLCall(inst, {
+  methodName: "KclService.Ping",
+  args,
+});
+console.log(pingResult);
+```
+
 ### Rust
 
 ```shell

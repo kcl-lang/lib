@@ -58,8 +58,17 @@ RawAPI.parse_program = add_method(
 RawAPI.parse_file =
   add_method("KclService.ParseFile", "ParseFileArgs", "ParseFileResult")
 
+RawAPI.list_dep_files = add_method(
+  "KclService.ListDepFiles",
+  "ListDepFilesArgs",
+  "ListDepFilesResult"
+)
+
 RawAPI.load_package =
   add_method("KclService.LoadPackage", "LoadPackageArgs", "LoadPackageResult")
+
+RawAPI.list_method =
+  add_method("KclService.ListMethod", "ListMethodArgs", "ListMethodResult")
 
 RawAPI.list_options =
   add_method("KclService.ListOptions", "ParseProgramArgs", "ListOptionsResult")
@@ -72,6 +81,15 @@ RawAPI.list_variables = add_method(
 
 RawAPI.exec_program =
   add_method("KclService.ExecProgram", "ExecProgramArgs", "ExecProgramResult")
+
+RawAPI.build_program =
+  add_method("KclService.BuildProgram", "BuildProgramArgs", "BuildProgramResult")
+
+RawAPI.exec_artifact = add_method(
+  "KclService.ExecArtifact",
+  "ExecArtifactArgs",
+  "ExecProgramResult"
+)
 
 RawAPI.format_code =
   add_method("KclService.FormatCode", "FormatCodeArgs", "FormatCodeResult")
@@ -92,6 +110,12 @@ RawAPI.get_schema_type_mapping = add_method(
   "KclService.GetSchemaTypeMapping",
   "GetSchemaTypeMappingArgs",
   "GetSchemaTypeMappingResult"
+)
+
+RawAPI.get_schema_type_mapping_under_path = add_method(
+  "KclService.GetSchemaTypeMappingUnderPath",
+  "GetSchemaTypeMappingArgs",
+  "GetSchemaTypeMappingUnderPathResult"
 )
 
 RawAPI.validate_code = add_method(
