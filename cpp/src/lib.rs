@@ -1780,5 +1780,3 @@ fn list_method() -> Result<ListMethodResult> {
         method_name_list: parsed.method_name_list,
     })
 }
-
-/// List all KCL dependency files reachable from `work_dir`.
