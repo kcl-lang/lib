@@ -27,3 +27,4 @@ _a.out_*.*
 __pycache__
 build
 Cargo.lock
+*.src.rock
