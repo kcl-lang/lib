@@ -670,3 +670,100 @@ pub fn get_version() -> Result<GetVersionResult> {
         .map_err(|e| napi::bindgen_prelude::Error::from_reason(e.to_string()))
         .map(GetVersionResult::new)
 }
+
+/*
+* Ping API
+*/
+
+/// Message for ping request arguments.
+#[napi]
+pub struct PingArgs(kcl_api::PingArgs);
+
+#[napi]
+impl PingArgs {
+    /// Create a new `PingArgs` with the value to send to the KCL service.
+    #[napi(constructor)]
+    pub fn new(value: String) -> Result<Self> {
+        Ok(Self(kcl_api::PingArgs { value }))
+    }
+}
+
+/// Ping the KCL service and echo back the value.
+#[napi]
+pub fn ping(args: &PingArgs) -> Result<PingResult> {
+    let api = kcl_api::API::default();
+    api.ping(&args.0)
+        .map_err(|e| napi::bindgen_prelude::Error::from_reason(e.to_string()))
+        .map(|r| PingResult { value: r.value })
+}
+
+/*
+* ListMethod API
+*
+* `KclServiceImpl` does not expose a typed `list_method` wrapper, so this
+* routes through the universal `kcl_api::call` dispatcher against the
+* `BuiltinService.ListMethod` RPC and decodes the protobuf result by hand.
+*/
+
+/// Return the list of method names supported by the KCL service.
+#[napi]
+pub fn list_method() -> Result<ListMethodResult> {
+    use ::prost::Message;
+    let args = kcl_api::ListMethodArgs {}.encode_to_vec();
+    let raw = kcl_api::call(b"BuiltinService.ListMethod", &args)
+        .map_err(|e| napi::bindgen_prelude::Error::from_reason(e.to_string()))?;
+    let parsed = kcl_api::ListMethodResult::decode(raw.as_slice()).map_err(|e| {
+        napi::bindgen_prelude::Error::from_reason(format!("decode ListMethodResult: {e}"))
+    })?;
+    Ok(ListMethodResult {
+        method_name_list: parsed.method_name_list,
+    })
+}
+
+/*
+* ListDepFiles API
+*
+* `KclServiceImpl` does not expose a typed `list_dep_files` wrapper, so this
+* routes through the universal `kcl_api::call` dispatcher against the
+* `KclService.ListDepFiles` RPC and decodes the protobuf result by hand.
+*/
+
+/// Message for list dependency files request arguments.
+#[napi]
+pub struct ListDepFilesArgs(kcl_api::ListDepFilesArgs);
+
+#[napi]
+impl ListDepFilesArgs {
+    /// Create a new `ListDepFilesArgs`.
+    #[napi(constructor)]
+    pub fn new(
+        work_dir: String,
+        use_abs_path: Option<bool>,
+        include_all: Option<bool>,
+        use_fast_parser: Option<bool>,
+    ) -> Result<Self> {
+        Ok(Self(kcl_api::ListDepFilesArgs {
+            work_dir,
+            use_abs_path: use_abs_path.unwrap_or_default(),
+            include_all: include_all.unwrap_or_default(),
+            use_fast_parser: use_fast_parser.unwrap_or_default(),
+        }))
+    }
+}
+
+/// List all KCL dependency files reachable from `work_dir`.
+#[napi]
+pub fn list_dep_files(args: &ListDepFilesArgs) -> Result<ListDepFilesResult> {
+    use ::prost::Message;
+    let bytes = args.0.encode_to_vec();
+    let raw = kcl_api::call(b"KclService.ListDepFiles", &bytes)
+        .map_err(|e| napi::bindgen_prelude::Error::from_reason(e.to_string()))?;
+    let parsed = kcl_api::ListDepFilesResult::decode(raw.as_slice()).map_err(|e| {
+        napi::bindgen_prelude::Error::from_reason(format!("decode ListDepFilesResult: {e}"))
+    })?;
+    Ok(ListDepFilesResult {
+        pkgroot: parsed.pkgroot,
+        pkgpath: parsed.pkgpath,
+        files: parsed.files,
+    })
+}

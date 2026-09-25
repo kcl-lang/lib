@@ -321,6 +321,11 @@ const {
   UpdateDependenciesArgs,
   updateDependencies,
   getVersion,
+  PingArgs,
+  ping,
+  listMethod,
+  ListDepFilesArgs,
+  listDepFiles,
 } = nativeBinding
 
 module.exports.LoadPackageArgs = LoadPackageArgs
@@ -359,3 +364,8 @@ module.exports.test = test
 module.exports.UpdateDependenciesArgs = UpdateDependenciesArgs
 module.exports.updateDependencies = updateDependencies
 module.exports.getVersion = getVersion
+module.exports.PingArgs = PingArgs
+module.exports.ping = ping
+module.exports.listMethod = listMethod
+module.exports.ListDepFilesArgs = ListDepFilesArgs
+module.exports.listDepFiles = listDepFiles

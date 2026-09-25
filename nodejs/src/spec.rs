@@ -55,6 +55,17 @@ pub struct ListMethodResult {
     pub method_name_list: Vec<String>,
 }
 
+/// Message for list dependency files response.
+#[napi(object)]
+pub struct ListDepFilesResult {
+    /// Root package path.
+    pub pkgroot: String,
+    /// Package path.
+    pub pkgpath: String,
+    /// List of file paths in the package.
+    pub files: Vec<String>,
+}
+
 /// Message for parse file response.
 #[napi(object)]
 pub struct ParseFileResult {
