@@ -153,11 +153,4 @@ public interface IService
     /// </summary>
     /// <returns>The list of method names.</returns>
     ListMethodResult ListMethod();
-
-    /// <summary>
-    /// Lists all KCL dependency files reachable from a working directory.
-    /// </summary>
-    /// <param name="args">Arguments specifying the working directory and traversal flags.</param>
-    /// <returns>The discovered files and package paths.</returns>
-    ListDepFilesResult ListDepFiles(ListDepFilesArgs args);
 }

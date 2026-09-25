@@ -350,21 +350,6 @@ schema Person:
         CollectionAssert.Contains(result.MethodNameList, "KclService.GetVersion");
     }
 
-    [TestMethod]
-    public void TestListDepFiles()
-    {
-        var args = new ListDepFilesArgs
-        {
-            WorkDir = parentDirectory,
-            UseAbsPath = false,
-            IncludeAll = true,
-            UseFastParser = false,
-        };
-        var result = new API().ListDepFiles(args);
-        Assert.IsNotNull(result.Files);
-        Assert.IsFalse(string.IsNullOrEmpty(result.Pkgpath));
-    }
-
     static string FindCsprojInParentDirectory(string directory)
     {
         string parentDirectory = Directory.GetParent(directory).FullName;

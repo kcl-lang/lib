@@ -130,11 +130,6 @@ public class API : IService
         return ListMethodResult.Parser.ParseFrom(Call("BuiltinService.ListMethod", emptyArgs.ToByteArray()));
     }
 
-    public ListDepFilesResult ListDepFiles(ListDepFilesArgs args)
-    {
-        return ListDepFilesResult.Parser.ParseFrom(Call("KclService.ListDepFiles", args.ToByteArray()));
-    }
-
     private byte[] Call(string name, byte[] args)
     {
         var nameBytes = System.Text.Encoding.UTF8.GetBytes(name);
