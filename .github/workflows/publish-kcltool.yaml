@@ -199,8 +199,12 @@ jobs:
       - name: Restage artifacts into per-RID package projects
         run: |
           set -euo pipefail
+          # actions/upload-artifact@v6 strips the path's leading directory
+          # when archiving, so each artifact's contents land at
+          # _artifacts/<rid>/{kcl,libkcl.*,*.csproj} (NOT under a
+          # dotnet/KclTool.runtime.<rid>/ wrapper).
           for rid in linux-x64 linux-arm64 osx-x64 osx-arm64 win-x64; do
-            src="_artifacts/${rid}/dotnet/KclTool.runtime.${rid}"
+            src="_artifacts/${rid}"
             if [[ ! -d "${src}" ]]; then
               echo "::error::missing artifact for ${rid} (looked for ${src})"
               exit 1
