@@ -160,13 +160,6 @@ public class API: Service {
     )
   }
 
-  /// List all KCL dependency files reachable from a working directory.
-  public func listDepFiles(_ args: ListDepFilesArgs) throws -> ListDepFilesResult {
-    return try ListDepFilesResult(
-      serializedBytes: callNative(name: "KclService.ListDepFiles", args: try args.serializedBytes())
-    )
-  }
-
   private func callNative(name: String, args: Data) -> Data {
     // Convert name to byte array
     let nameBytes = [UInt8](name.utf8)
