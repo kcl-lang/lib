@@ -80,6 +80,7 @@ jobs:
       - uses: actions/checkout@v6
 
       - name: Download kcl CLI release artifact
+        shell: bash
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
