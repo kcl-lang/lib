@@ -131,10 +131,6 @@ func (c *NativeServiceClient) ValidateCode(in *api.ValidateCodeArgs) (*api.Valid
 	return cApiCall[*api.ValidateCodeArgs, *api.ValidateCodeResult](c, "KclService.ValidateCode", in)
 }
 
-func (c *NativeServiceClient) ListDepFiles(in *api.ListDepFilesArgs) (*api.ListDepFilesResult, error) {
-	return cApiCall[*api.ListDepFilesArgs, *api.ListDepFilesResult](c, "KclService.ListDepFiles", in)
-}
-
 func (c *NativeServiceClient) LoadSettingsFiles(in *api.LoadSettingsFilesArgs) (*api.LoadSettingsFilesResult, error) {
 	return cApiCall[*api.LoadSettingsFilesArgs, *api.LoadSettingsFilesResult](c, "KclService.LoadSettingsFiles", in)
 }
