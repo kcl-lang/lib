@@ -11,6 +11,8 @@ on:
       - main
     paths:
       - "dotnet/KclTool/**"
+      - "dotnet/KclTool.runtime.*/**"
+      - "dotnet/Directory.Build.props"
       - ".github/workflows/publish-kcltool.yaml"
   workflow_dispatch:
 
@@ -27,6 +29,7 @@ on:
 env:
   KCL_CLI_VERSION: v0.12.10
   KCL_LIB_REF: v0.12.5
+  PACKAGE_VERSION: 0.12.10
 
 jobs:
   build:
@@ -108,7 +111,7 @@ jobs:
           ref: ${{ env.KCL_LIB_REF }}
           path: lib-src
 
-      - name: Stage artifacts into dotnet/KclTool
+      - name: Stage artifacts into per-RID package directory
         shell: bash
         run: |
           # Sanity-check the libkcl we are about to ship matches the SDK the
@@ -123,32 +126,28 @@ jobs:
             exit 1
           fi
 
-          dest="dotnet/KclTool/runtimes/${{ matrix.dotnet-rid }}/native"
-          mkdir -p "${dest}" "dotnet/KclTool/tools/${{ matrix.dotnet-rid }}"
+          # Binaries land directly in the per-RID package directory. The
+          # .csproj there uses <None Include="kcl" Pack="true" PackagePath=
+          # "runtimes/<rid>/native/"> so the layout inside the .nupkg stays
+          # standard runtimes/<rid>/native/ for the .NET runtime resolver.
+          dest="dotnet/KclTool.runtime.${{ matrix.dotnet-rid }}"
+          mkdir -p "${dest}"
 
-          # runtimes/<rid>/native/  — auto-copied next to the .NET assembly
           cp "cli-bin/${{ matrix.bin-name }}" "${dest}/"
           cp "lib-src/go/lib/${{ matrix.lib-platform-dir }}/${{ matrix.lib-name }}" "${dest}/"
 
-          # tools/<rid>/  — for manual PATH installs / future `dotnet tool` use
-          cp "cli-bin/${{ matrix.bin-name }}" "dotnet/KclTool/tools/${{ matrix.dotnet-rid }}/"
-          cp "lib-src/go/lib/${{ matrix.lib-platform-dir }}/${{ matrix.lib-name }}" "dotnet/KclTool/tools/${{ matrix.dotnet-rid }}/"
-
-          # Preserve +x on POSIX so consumers can run the binary directly from tools/.
+          # Preserve +x on POSIX so consumers can run the binary directly.
           if [[ "${{ matrix.os }}" != windows* ]]; then
-            chmod +x "${dest}/${{ matrix.bin-name }}" \
-                     "dotnet/KclTool/tools/${{ matrix.dotnet-rid }}/${{ matrix.bin-name }}"
+            chmod +x "${dest}/${{ matrix.bin-name }}"
           fi
 
-          ls -la "${dest}" "dotnet/KclTool/tools/${{ matrix.dotnet-rid }}"
+          ls -la "${dest}"
 
       - uses: actions/upload-artifact@v6
         with:
           name: kcltool-${{ matrix.classifier }}
           if-no-files-found: error
-          path: |
-            dotnet/KclTool/runtimes/${{ matrix.dotnet-rid }}/native/
-            dotnet/KclTool/tools/${{ matrix.dotnet-rid }}/
+          path: dotnet/KclTool.runtime.${{ matrix.dotnet-rid }}/
 
   deploy:
     name: Deploy KclTool to NuGet
@@ -164,10 +163,9 @@ jobs:
         with:
           dotnet-version: '8.0.x'
 
-      # Each per-RID artifact stores `runtimes/<rid>/native/...` and
-      # `tools/<rid>/...` at its root. Downloading each into a temp dir and
-      # then copying into dotnet/KclTool/ preserves the NuGet package layout
-      # so dotnet pack picks the binaries up.
+      # Each per-RID artifact stores dotnet/KclTool.runtime.<rid>/ at its root.
+      # Downloading each into its own sub-dir lets us copy the populated
+      # package directory back into the matching checkout path.
       - name: Download windows x64 artifact
         uses: actions/download-artifact@v7
         with:
@@ -198,37 +196,73 @@ jobs:
           name: kcltool-osx-arm64
           path: _artifacts/osx-arm64
 
-      - name: Restage artifacts into KclTool
+      - name: Restage artifacts into per-RID package projects
         run: |
           set -euo pipefail
           for rid in linux-x64 linux-arm64 osx-x64 osx-arm64 win-x64; do
-            src="_artifacts/${rid}"
+            src="_artifacts/${rid}/dotnet/KclTool.runtime.${rid}"
             if [[ ! -d "${src}" ]]; then
-              echo "::error::missing artifact for ${rid}"
+              echo "::error::missing artifact for ${rid} (looked for ${src})"
               exit 1
             fi
-            # Artifact root already contains runtimes/<rid>/native/ and tools/<rid>/.
-            mkdir -p "dotnet/KclTool/runtimes/${rid}/native" "dotnet/KclTool/tools/${rid}"
-            cp -R "${src}/runtimes/${rid}/native/." "dotnet/KclTool/runtimes/${rid}/native/"
-            cp -R "${src}/tools/${rid}/."          "dotnet/KclTool/tools/${rid}/"
+            dest="dotnet/KclTool.runtime.${rid}"
+            mkdir -p "${dest}"
+            cp -R "${src}/." "${dest}/"
           done
           echo "---- staged files ----"
-          find dotnet/KclTool/runtimes dotnet/KclTool/tools -type f | sort
+          find dotnet/KclTool.runtime.* -type f -not -name '.gitignore' | sort
 
-      - name: Pack KclTool
-        working-directory: dotnet/KclTool
+      # Pack the five per-RID runtime asset packages first into a local
+      # NuGet feed. They contain only native binaries and stay well below
+      # NuGet's per-package size limit, so each is small enough to push
+      # individually.
+      - name: Pack per-RID runtime asset packages
+        working-directory: dotnet
         run: |
-          dotnet pack -c Release
+          set -euo pipefail
+          mkdir -p local-feed
+          for csproj in KclTool.runtime.*/KclTool.runtime.*.csproj; do
+            echo "---- packing ${csproj} ----"
+            dotnet pack "${csproj}" -c Release -o local-feed -p:Version=${{ env.PACKAGE_VERSION }}
+          done
+          echo "---- local feed (per-RID) ----"
+          ls -la local-feed
+
+      # The main KclTool package declares <PackageReference>s to all five
+      # KclTool.runtime.* packages. To pack it before pushing them to
+      # NuGet.org, point NuGet at the local feed containing the just-built
+      # per-RID packages.
+      - name: Pack main KclTool
+        working-directory: dotnet
+        run: |
+          set -euo pipefail
+          cat > NuGet.Config <<'EOF'
+          <?xml version="1.0" encoding="utf-8"?>
+          <configuration>
+            <packageSources>
+              <clear />
+              <add key="local" value="./local-feed" />
+              <add key="nuget.org" value="https://api.nuget.org/v3/index.json" />
+            </packageSources>
+          </configuration>
+          EOF
+          dotnet pack KclTool/KclTool.csproj -c Release -o local-feed -p:Version=${{ env.PACKAGE_VERSION }}
+          echo "---- local feed (final) ----"
+          ls -la local-feed
 
       - uses: actions/upload-artifact@v6
         with:
-          name: KclTool NuGet Package
+          name: KclTool NuGet Packages
           path: |
-            dotnet/KclTool/bin/Release/*.nupkg
-            dotnet/KclTool/bin/Release/*.snupkg
+            dotnet/local-feed/*.nupkg
+            dotnet/local-feed/*.snupkg
 
       - name: Release to NuGet
         if: "startsWith(github.ref, 'refs/tags/')"
-        working-directory: dotnet/KclTool/bin/Release
+        working-directory: dotnet/local-feed
         run: |
-          dotnet nuget push KclTool.0.12.10.nupkg -k ${{ secrets.NUGET_API_KEY }} -s https://api.nuget.org/v3/index.json
+          set -euo pipefail
+          for pkg in *.nupkg; do
+            echo "---- pushing ${pkg} ----"
+            dotnet nuget push "${pkg}" -k ${{ secrets.NUGET_API_KEY }} -s https://api.nuget.org/v3/index.json
+          done

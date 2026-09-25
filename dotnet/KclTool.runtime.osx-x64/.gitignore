@@ -1,0 +1,8 @@
+# Populated by CI from kcl-lang/cli and kcl-lang/lib release artifacts.
+kcl
+libkcl.dylib
+
+# Build / pack artifacts.
+bin/
+obj/
+*.user

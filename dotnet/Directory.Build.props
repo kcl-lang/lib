@@ -1,0 +1,19 @@
+<Project>
+
+  <!--
+    Shared package metadata for every project under dotnet/. Each project may
+    still override individual fields (e.g. PackageId, Title) but anything
+    declared here is the default — keeping the 6 KclTool[.runtime.*] packages
+    in lockstep when a release is bumped.
+  -->
+
+  <PropertyGroup>
+    <Version>0.12.10</Version>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <RepositoryUrl>https://github.com/kcl-lang/lib</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <Authors>KCL Authors</Authors>
+  </PropertyGroup>
+
+</Project>

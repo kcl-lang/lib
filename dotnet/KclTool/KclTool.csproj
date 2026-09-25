@@ -12,17 +12,12 @@
   <PropertyGroup>
     <AssemblyName>KclTool</AssemblyName>
     <PackageId>KclTool</PackageId>
-    <Version>0.12.10</Version>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-    <RepositoryUrl>https://github.com/kcl-lang/lib</RepositoryUrl>
-    <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <Title>KclTool</Title>
     <PackageDescription>
-KCL CLI for .NET — bundles the cross-platform `kcl` (or `kcl.exe` on Windows) executable and its native dependency `libkcl`, so .NET applications can shell out to KCL without a separate install.
+KCL CLI for .NET — bundles the cross-platform `kcl` (or `kcl.exe` on Windows) executable and its native dependency `libkcl` via per-RID runtime asset packages (`KclTool.runtime.&lt;rid&gt;`), so .NET applications can shell out to KCL without a separate install. .NET's runtime asset resolver selects the matching RID at restore time.
     </PackageDescription>
-    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
-    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 
   <ItemGroup>
@@ -30,108 +25,18 @@ KCL CLI for .NET — bundles the cross-platform `kcl` (or `kcl.exe` on Windows) 
   </ItemGroup>
 
   <!--
-    Ship every binary in TWO layouts so consumers can pick whichever workflow
-    fits them best:
-
-      * runtimes/<rid>/native/ — .NET automatically copies these next to the
-        referencing assembly at build/run time. Use the bundled KclRunner
-        helper to locate and invoke them.
-
-      * tools/<rid>/           — present so the package can be consumed either
-        via `dotnet tool install` (when/if NuGet's tool resolution accepts it)
-        or by manually copying the binary onto PATH.
+    The native binaries live in per-RID runtime asset packages so each
+    .nupkg stays well below NuGet's per-package size limit. Listing all
+    five as unconditional <PackageReference>s keeps the .nuspec simple;
+    the .NET runtime asset resolver still only copies the matching RID's
+    `runtimes/<rid>/native/*` files into the consumer's output directory.
   -->
-
   <ItemGroup>
-    <!-- Windows x64 -->
-    <None Update="runtimes/win-x64/native/kcl.exe">
-      <Pack>true</Pack>
-      <PackagePath>runtimes/win-x64/native/</PackagePath>
-    </None>
-    <None Update="runtimes/win-x64/native/kcl.dll">
-      <Pack>true</Pack>
-      <PackagePath>runtimes/win-x64/native/</PackagePath>
-    </None>
-    <None Update="tools/win-x64/kcl.exe">
-      <Pack>true</Pack>
-      <PackagePath>tools/win-x64/</PackagePath>
-    </None>
-    <None Update="tools/win-x64/kcl.dll">
-      <Pack>true</Pack>
-      <PackagePath>tools/win-x64/</PackagePath>
-    </None>
-
-    <!-- macOS x64 -->
-    <None Update="runtimes/osx-x64/native/kcl">
-      <Pack>true</Pack>
-      <PackagePath>runtimes/osx-x64/native/</PackagePath>
-    </None>
-    <None Update="runtimes/osx-x64/native/libkcl.dylib">
-      <Pack>true</Pack>
-      <PackagePath>runtimes/osx-x64/native/</PackagePath>
-    </None>
-    <None Update="tools/osx-x64/kcl">
-      <Pack>true</Pack>
-      <PackagePath>tools/osx-x64/</PackagePath>
-    </None>
-    <None Update="tools/osx-x64/libkcl.dylib">
-      <Pack>true</Pack>
-      <PackagePath>tools/osx-x64/</PackagePath>
-    </None>
-
-    <!-- macOS arm64 (Apple Silicon) -->
-    <None Update="runtimes/osx-arm64/native/kcl">
-      <Pack>true</Pack>
-      <PackagePath>runtimes/osx-arm64/native/</PackagePath>
-    </None>
-    <None Update="runtimes/osx-arm64/native/libkcl.dylib">
-      <Pack>true</Pack>
-      <PackagePath>runtimes/osx-arm64/native/</PackagePath>
-    </None>
-    <None Update="tools/osx-arm64/kcl">
-      <Pack>true</Pack>
-      <PackagePath>tools/osx-arm64/</PackagePath>
-    </None>
-    <None Update="tools/osx-arm64/libkcl.dylib">
-      <Pack>true</Pack>
-      <PackagePath>tools/osx-arm64/</PackagePath>
-    </None>
-
-    <!-- Linux x64 -->
-    <None Update="runtimes/linux-x64/native/kcl">
-      <Pack>true</Pack>
-      <PackagePath>runtimes/linux-x64/native/</PackagePath>
-    </None>
-    <None Update="runtimes/linux-x64/native/libkcl.so">
-      <Pack>true</Pack>
-      <PackagePath>runtimes/linux-x64/native/</PackagePath>
-    </None>
-    <None Update="tools/linux-x64/kcl">
-      <Pack>true</Pack>
-      <PackagePath>tools/linux-x64/</PackagePath>
-    </None>
-    <None Update="tools/linux-x64/libkcl.so">
-      <Pack>true</Pack>
-      <PackagePath>tools/linux-x64/</PackagePath>
-    </None>
-
-    <!-- Linux arm64 -->
-    <None Update="runtimes/linux-arm64/native/kcl">
-      <Pack>true</Pack>
-      <PackagePath>runtimes/linux-arm64/native/</PackagePath>
-    </None>
-    <None Update="runtimes/linux-arm64/native/libkcl.so">
-      <Pack>true</Pack>
-      <PackagePath>runtimes/linux-arm64/native/</PackagePath>
-    </None>
-    <None Update="tools/linux-arm64/kcl">
-      <Pack>true</Pack>
-      <PackagePath>tools/linux-arm64/</PackagePath>
-    </None>
-    <None Update="tools/linux-arm64/libkcl.so">
-      <Pack>true</Pack>
-      <PackagePath>tools/linux-arm64/</PackagePath>
-    </None>
+    <PackageReference Include="KclTool.runtime.win-x64" Version="$(Version)" />
+    <PackageReference Include="KclTool.runtime.linux-x64" Version="$(Version)" />
+    <PackageReference Include="KclTool.runtime.linux-arm64" Version="$(Version)" />
+    <PackageReference Include="KclTool.runtime.osx-x64" Version="$(Version)" />
+    <PackageReference Include="KclTool.runtime.osx-arm64" Version="$(Version)" />
   </ItemGroup>
 
 </Project>
