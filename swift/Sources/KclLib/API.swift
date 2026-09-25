@@ -143,6 +143,30 @@ public class API: Service {
     )
   }
 
+  /// Ping the KCL service and echo back the sent value.
+  public func ping(_ args: PingArgs) throws -> PingResult {
+    return try PingResult(
+      serializedBytes: callNative(name: "KclService.Ping", args: try args.serializedBytes())
+    )
+  }
+
+  /// List the KCL service method names supported by the underlying runtime.
+  public func listMethod() throws -> ListMethodResult {
+    // `ListMethodArgs` is empty, but the runtime still expects the encoded
+    // (zero-byte) payload when going through the universal dispatcher.
+    let emptyBytes = Data()
+    return try ListMethodResult(
+      serializedBytes: callNative(name: "BuiltinService.ListMethod", args: emptyBytes)
+    )
+  }
+
+  /// List all KCL dependency files reachable from a working directory.
+  public func listDepFiles(_ args: ListDepFilesArgs) throws -> ListDepFilesResult {
+    return try ListDepFilesResult(
+      serializedBytes: callNative(name: "KclService.ListDepFiles", args: try args.serializedBytes())
+    )
+  }
+
   private func callNative(name: String, args: Data) -> Data {
     // Convert name to byte array
     let nameBytes = [UInt8](name.utf8)
