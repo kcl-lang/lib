@@ -3,6 +3,8 @@ import kcl_lib.plugin as plugin
 from .spec_pb2 import (
     PingArgs,
     PingResult,
+    ListMethodArgs,
+    ListMethodResult,
     GetVersionArgs,
     GetVersionResult,
     ParseFileArgs,
@@ -165,35 +167,6 @@ class API:
         ```
         """
         return self.call("KclService.ParseFile", args)
-
-    def parse_program(self, args: ParseProgramArgs) -> ParseProgramResult:
-        """Parse KCL program with entry files and return the AST JSON string.
-
-        ## Example
-
-        The content of `schema.k` is
-
-        ```python
-        schema AppConfig:
-            replicas: int
-        app: AppConfig {
-            replicas: 2
-        }
-        ```
-
-        Python Code
-
-        ```python
-        import kcl_lib.api as api
-
-        args = api.ParseProgramArgs(paths=["schema.k"])
-        api = api.API()
-        result = api.parse_program(args)
-        assert len(result.paths) == 1
-        assert len(result.errors) == 0
-        ```
-        """
-        return self.call("KclService.ParseProgram", args)
 
     def load_package(self, args: LoadPackageArgs) -> LoadPackageResult:
         """load_package provides users with the ability to parse KCL program and semantic model information including symbols, types, definitions, etc.
@@ -679,6 +652,39 @@ class API:
         """
         return self.call("KclService.GetVersion", GetVersionArgs())
 
+    def list_method(self) -> ListMethodResult:
+        """List the KCL service method names supported by the underlying runtime.
+
+        ## Example
+
+        ```python
+        import kcl_lib.api as api
+
+        api_instance = api.API()
+        result = api_instance.list_method()
+        print(result.method_name_list)
+        ```
+        """
+        # ListMethodArgs is an empty proto message; the runtime still expects
+        # the encoded (zero-byte) payload for the universal dispatcher.
+        return self.call("BuiltinService.ListMethod", ListMethodArgs())
+
+    def list_dep_files(self, args: ListDepFilesArgs) -> ListDepFilesResult:
+        """List all KCL dependency files reachable from `work_dir`.
+
+        ## Example
+
+        ```python
+        import kcl_lib.api as api
+
+        args = api.ListDepFilesArgs(work_dir=".", use_abs_path=False, include_all=True)
+        api_instance = api.API()
+        result = api_instance.list_dep_files(args)
+        print(result.files)
+        ```
+        """
+        return self.call("KclService.ListDepFiles", args)
+
     # Helper method to perform the call
     def call(self, name: str, args):
         """Call KCL API with the API name and argument protobuf bytes."""
@@ -784,4 +790,8 @@ class API:
             return UpdateDependenciesResult()
         elif method in ["GetVersion", "KclService.GetVersion"]:
             return GetVersionResult()
+        elif method in ["ListMethod", "BuiltinService.ListMethod"]:
+            return ListMethodResult()
+        elif method in ["ListDepFiles", "KclService.ListDepFiles"]:
+            return ListDepFilesResult()
         raise Exception(f"unknown method: {method}")
