@@ -158,3 +158,11 @@ func (c *NativeServiceClient) UpdateDependencies(in *api.UpdateDependenciesArgs)
 func (c *NativeServiceClient) GetVersion(in *api.GetVersionArgs) (*api.GetVersionResult, error) {
 	return cApiCall[*api.GetVersionArgs, *api.GetVersionResult](c, "KclService.GetVersion", in)
 }
+
+// ListMethod returns the list of KCL service method names available in the
+// underlying native runtime. It is dispatched against the BuiltinService so
+// callers can enumerate the supported RPC surface (e.g. for tooling and
+// documentation generators) without hard-coding names client-side.
+func (c *NativeServiceClient) ListMethod(in *api.ListMethodArgs) (*api.ListMethodResult, error) {
+	return cApiCall[*api.ListMethodArgs, *api.ListMethodResult](c, "BuiltinService.ListMethod", in)
+}
