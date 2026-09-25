@@ -443,6 +443,10 @@ export declare function test(args: TestArgs): TestResult
 export declare function updateDependencies(args: UpdateDependenciesArgs): UpdateDependenciesResult
 /** Return the KCL service version information. */
 export declare function getVersion(): GetVersionResult
+/** Ping the KCL service and echo back the value. */
+export declare function ping(args: PingArgs): PingResult
+/** Return the list of method names supported by the KCL service. */
+export declare function listMethod(): ListMethodResult
 /**
  * Message for load package request arguments.
  * - paths: List of KCL files.
@@ -549,8 +553,8 @@ export declare class TestArgs {
 export declare class UpdateDependenciesArgs {
   constructor(manifestPath: string, vendor: boolean)
 }
+/** Message for ping request arguments. */
 export declare class PingArgs {
+  /** Create a new `PingArgs` with the value to send to the KCL service. */
   constructor(value: string)
 }
-export declare function ping(args: PingArgs): PingResult
-export declare function listMethod(): ListMethodResult
