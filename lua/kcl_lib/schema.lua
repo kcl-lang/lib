@@ -1,9 +1,9 @@
 return "\
-◊N2í\1\0186\26\23.com.kcl.api.PingResult\
+ÏK2\146\1\0186\26\23.com.kcl.api.PingResult\
 \4Ping\18\21.com.kcl.api.PingArgs\18H\26\29.com.kcl.api.ListMethodResult\
 \
 ListMethod\18\27.com.kcl.api.ListMethodArgs\
-\14BuiltinService2∞\13\0186\26\23.com.kcl.api.PingResult\
+\14BuiltinService2\145\12\0186\26\23.com.kcl.api.PingResult\
 \4Ping\18\21.com.kcl.api.PingArgs\18H\26\29.com.kcl.api.GetVersionResult\
 \
 GetVersion\18\27.com.kcl.api.GetVersionArgs\18N\26\31.com.kcl.api.ParseProgramResult\
@@ -12,9 +12,7 @@ GetVersion\18\27.com.kcl.api.GetVersionArgs\18N\26\31.com.kcl.api.ParseProgramRe
 \11LoadPackage\18\28.com.kcl.api.LoadPackageArgs\18L\26\30.com.kcl.api.ListOptionsResult\
 \11ListOptions\18\29.com.kcl.api.ParseProgramArgs\18Q\26 .com.kcl.api.ListVariablesResult\
 \13ListVariables\18\30.com.kcl.api.ListVariablesArgs\18K\26\30.com.kcl.api.ExecProgramResult\
-\11ExecProgram\18\28.com.kcl.api.ExecProgramArgs\18N\26\31.com.kcl.api.BuildProgramResult\
-\12BuildProgram\18\29.com.kcl.api.BuildProgramArgs\18M\26\30.com.kcl.api.ExecProgramResult\
-\12ExecArtifact\18\29.com.kcl.api.ExecArtifactArgs\18N\26\31.com.kcl.api.OverrideFileResult\
+\11ExecProgram\18\28.com.kcl.api.ExecProgramArgs\18N\26\31.com.kcl.api.OverrideFileResult\
 \12OverrideFile\18\29.com.kcl.api.OverrideFileArgs\18f\26'.com.kcl.api.GetSchemaTypeMappingResult\
 \20GetSchemaTypeMapping\18%.com.kcl.api.GetSchemaTypeMappingArgs\18H\26\29.com.kcl.api.FormatCodeResult\
 \
@@ -77,7 +75,7 @@ PingResult\"\16\
 \8ast_json\18\13\24\2(\9 \3\
 \5paths\18\"\24\3(\11 \3\
 \6errors2\18.com.kcl.api.Error\
-\18ParseProgramResult\"á\1\0181\24\1(\11 \1\
+\18ParseProgramResult\"\135\1\0181\24\1(\11 \1\
 \
 parse_args2\29.com.kcl.api.ParseProgramArgs\18\19\24\2(\8 \1\
 \11resolve_ast\18\20\24\3(\8 \1\
@@ -169,15 +167,7 @@ ScopeIndex\"œ\3\18\16\24\1(\9 \1\
 \11yaml_result\18\19\24\3(\9 \1\
 \11log_message\18\19\24\4(\9 \1\
 \11err_message\
-\17ExecProgramResult\"S\18/\24\1(\11 \1\
-\9exec_args2\28.com.kcl.api.ExecProgramArgs\18\14\24\2(\9 \1\
-\6output\
-\16BuildProgramArgs\"\"\18\12\24\1(\9 \1\
-\4path\
-\18BuildProgramResult\"Q\18\12\24\1(\9 \1\
-\4path\18/\24\2(\11 \1\
-\9exec_args2\28.com.kcl.api.ExecProgramArgs\
-\16ExecArtifactArgs\" \18\14\24\1(\9 \1\
+\17ExecProgramResult\" \18\14\24\1(\9 \1\
 \6source\
 \14FormatCodeArgs\"%\18\17\24\1(\12 \1\
 \9formatted\
@@ -211,7 +201,7 @@ ScopeIndex\"œ\3\18\16\24\1(\9 \1\
 \19ListVariablesResult\18B\24\1(\11 \3\
 \9variables2/.com.kcl.api.ListVariablesResult.VariablesEntry\18\25\24\2(\9 \3\
 \17unsupported_codes\18(\24\3(\11 \3\
-\12parse_errors2\18.com.kcl.api.Error\"î\1\18\13\24\1(\9 \1\
+\12parse_errors2\18.com.kcl.api.Error\"\148\1\18\13\24\1(\9 \1\
 \5value\18\17\24\2(\9 \1\
 \9type_name\18\14\24\3(\9 \1\
 \6op_sym\18)\24\4(\11 \3\
@@ -267,7 +257,7 @@ list_items2\21.com.kcl.api.Variable\18+\24\5(\11 \3\
 \21LoadSettingsFilesArgs\"z\18/\24\1(\11 \1\
 \15kcl_cli_configs2\22.com.kcl.api.CliConfig\18.\24\2(\11 \3\
 \11kcl_options2\25.com.kcl.api.KeyValuePair\
-\23LoadSettingsFilesResult\"É\2\18\13\24\1(\9 \3\
+\23LoadSettingsFilesResult\"\131\2\18\13\24\1(\9 \3\
 \5files\18\14\24\2(\9 \1\
 \6output\18\17\24\3(\9 \3\
 \9overrides\18\21\24\4(\9 \3\
@@ -301,7 +291,7 @@ RenameArgs\"%\18\21\24\1(\9 \3\
 \12package_root\18\19\24\2(\9 \1\
 \11symbol_path\18B\24\3(\11 \3\
 \12source_codes2,.com.kcl.api.RenameCodeArgs.SourceCodesEntry\18\16\24\4(\9 \1\
-\8new_name\"è\1\0263\
+\8new_name\"\143\1\0263\
 \17ChangedCodesEntry\18\11\24\1(\9 \1\
 \3key\18\13\24\2(\9 \1\
 \5value:\0028\1\
@@ -362,13 +352,13 @@ decorators2\22.com.kcl.api.Decorator\18\16\24\12(\9 \1\
 \12FunctionType\";\18\12\24\1(\9 \1\
 \4name\18 \24\2(\11 \1\
 \2ty2\20.com.kcl.api.KclType\
-\9Parameter\"ä\1\
+\9Parameter\"\138\1\
 \14IndexSignature\18\18\24\1(\9 \1\
 \8key_nameH\0\18!\24\2(\11 \1\
 \3key2\20.com.kcl.api.KclType\18!\24\3(\11 \1\
 \3val2\20.com.kcl.api.KclType\18\17\24\4(\8 \1\
 \9any_otherB\11\
-\9_key_name\"ï\1\26/\
+\9_key_name\"\149\1\26/\
 \13KeywordsEntry\18\11\24\1(\9 \1\
 \3key\18\13\24\2(\9 \1\
 \5value:\0028\1\

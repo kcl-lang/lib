@@ -14,9 +14,6 @@ from .spec_pb2 import (
     ListOptionsResult,
     ExecProgramArgs,
     ExecProgramResult,
-    BuildProgramArgs,
-    BuildProgramResult,
-    ExecArtifactArgs,
     FormatCodeArgs,
     FormatCodeResult,
     FormatPathArgs,
@@ -704,10 +701,6 @@ class API:
             return PingArgs()
         elif method in ["ExecProgram", "KclService.ExecProgram"]:
             return ExecProgramArgs()
-        elif method in ["BuildProgram", "KclService.BuildProgram"]:
-            return BuildProgramArgs()
-        elif method in ["ExecArtifact", "KclService.ExecArtifact"]:
-            return ExecArtifactArgs()
         elif method in ["ParseFile", "KclService.ParseFile"]:
             return ParseFileArgs()
         elif method in ["ParseProgram", "KclService.ParseProgram"]:
@@ -752,10 +745,6 @@ class API:
         if method in ["Ping", "KclService.Ping"]:
             return PingResult()
         elif method in ["ExecProgram", "KclService.ExecProgram"]:
-            return ExecProgramResult()
-        elif method in ["BuildProgram", "KclService.BuildProgram"]:
-            return BuildProgramResult()
-        elif method in ["ExecArtifact", "KclService.ExecArtifact"]:
             return ExecProgramResult()
         elif method in ["ParseFile", "KclService.ParseFile"]:
             return ParseFileResult()

@@ -336,13 +336,6 @@ impl ExecProgramResult {
     }
 }
 
-/// Message for build program response.
-#[napi(object)]
-pub struct BuildProgramResult {
-    /// Path of the built program.
-    pub path: String,
-}
-
 /// Message for format code response.
 #[napi(object)]
 pub struct FormatCodeResult {

@@ -159,11 +159,6 @@ export interface ExecProgramResult {
   /** Error message from execution. */
   errMessage: string
 }
-/** Message for build program response. */
-export interface BuildProgramResult {
-  /** Path of the built program. */
-  path: string
-}
 /** Message for format code response. */
 export interface FormatCodeResult {
   /** Formatted code as bytes. */

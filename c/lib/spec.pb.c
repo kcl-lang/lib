@@ -66,12 +66,6 @@ PB_BIND(ExecProgramArgs, ExecProgramArgs, AUTO)
 
 PB_BIND(ExecProgramResult, ExecProgramResult, AUTO)
 
-PB_BIND(BuildProgramArgs, BuildProgramArgs, AUTO)
-
-PB_BIND(BuildProgramResult, BuildProgramResult, AUTO)
-
-PB_BIND(ExecArtifactArgs, ExecArtifactArgs, AUTO)
-
 PB_BIND(FormatCodeArgs, FormatCodeArgs, AUTO)
 
 PB_BIND(FormatCodeResult, FormatCodeResult, AUTO)
