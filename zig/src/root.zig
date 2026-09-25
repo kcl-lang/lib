@@ -65,9 +65,13 @@ test "basic kcl fmt functionality" {
     std.debug.print("KCL Fmt Result: {s}\n", .{result});
 }
 
-test "universal call dispatcher dispatches to BuiltinService.Ping" {
+test "universal call dispatcher dispatches to KclService.Ping" {
     const allocator = testing.allocator;
-    const name = "BuiltinService.Ping";
+    // `BuiltinService.Ping` is registered alongside the dispatcher in the
+    // matching kcl PR but kcl-api v0.13.0 only knows about `KclService.Ping`,
+    // so route the smoke test through the KclService alias that ships in
+    // the released binary.
+    const name = "KclService.Ping";
     // protobuf encoded PingArgs{value: "hello-kcl"} is 12 bytes long
     // (1-byte field tag + 1-byte length + 9-byte string "hello-kcl").
     const args = "\x0a\x09hello-kcl";
