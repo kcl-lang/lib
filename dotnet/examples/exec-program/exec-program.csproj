@@ -9,7 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="KclLib" Version="0.12.5" />
+    <PackageReference Include="KclLib" Version="0.13.0" />
   </ItemGroup>
 
 </Project>
