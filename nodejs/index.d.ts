@@ -49,15 +49,6 @@ export interface ListMethodResult {
   /** List of available method names. */
   methodNameList: Array<string>
 }
-/** Message for list dependency files response. */
-export interface ListDepFilesResult {
-  /** Root package path. */
-  pkgroot: string
-  /** Package path. */
-  pkgpath: string
-  /** List of file paths in the package. */
-  files: Array<string>
-}
 /** Message for parse file response. */
 export interface ParseFileResult {
   /** Abstract Syntax Tree (AST) in JSON format. */
@@ -563,12 +554,3 @@ export declare class PingArgs {
 }
 export declare function ping(args: PingArgs): PingResult
 export declare function listMethod(): ListMethodResult
-export declare class ListDepFilesArgs {
-  constructor(
-    workDir: string,
-    useAbsPath?: boolean | undefined | null,
-    includeAll?: boolean | undefined | null,
-    useFastParser?: boolean | undefined | null,
-  )
-}
-export declare function listDepFiles(args: ListDepFilesArgs): ListDepFilesResult
