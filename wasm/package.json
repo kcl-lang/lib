@@ -1,5 +1,5 @@
 {
-  "name": "@kcl-lang/wasm-lib",
+  "name": "@kcl-lib/wasm",
   "version": "0.13.0",
   "description": "KCL WASM module",
   "files": [
