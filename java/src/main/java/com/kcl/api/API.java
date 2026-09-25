@@ -716,18 +716,6 @@ public class API implements Service {
                 call("BuiltinService.ListMethod", ListMethodArgs.getDefaultInstance().toByteArray()));
     }
 
-    /**
-     * Lists all KCL dependency files reachable from a working directory.
-     *
-     * @param args arguments specifying the working directory and traversal flags.
-     * @return a {@link ListDepFilesResult} with the discovered files and package paths.
-     * @throws Exception if the underlying RPC fails.
-     */
-    @Override
-    public ListDepFilesResult listDepFiles(ListDepFilesArgs args) throws Exception {
-        return ListDepFilesResult.parseFrom(call("KclService.ListDepFiles", args.toByteArray()));
-    }
-
     private byte[] call(String name, byte[] args) throws Exception {
         byte[] result = callNative(name.getBytes(), args);
         if (result != null && startsWith(result, ERROR_PREFIX)) {

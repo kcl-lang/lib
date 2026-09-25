@@ -70,7 +70,4 @@ public interface Service {
 
     // List the KCL service method names supported by the underlying runtime.
     ListMethodResult listMethod() throws Exception;
-
-    // List all KCL dependency files reachable from a working directory.
-    ListDepFilesResult listDepFiles(ListDepFilesArgs args) throws Exception;
 }
