@@ -62,13 +62,34 @@ jobs:
 
           echo "Publishing $rockspec"
           echo "ROCKSPEC=$rockspec" >> "$GITHUB_ENV"
+          echo "SRC_ROCK=$(basename "$rockspec" .rockspec).src.rock" >> "$GITHUB_ENV"
       - name: Lint rockspec
         run: luarocks lint "$ROCKSPEC"
+      - name: Pack source rock
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          # `luarocks pack` ignores the rockspec's source.dir and archives the
+          # whole repository (hundreds of MB, including prebuilt binaries),
+          # which luarocks.org rejects. Pack just the lua/ subtree under the
+          # lib/lua prefix so it matches source.dir and installs standalone.
+          mkdir -p dist
+          git archive --prefix=lib/ HEAD lua/ | tar -x -C dist
+          cp "$ROCKSPEC" dist/
+          (cd dist && zip -q -r -X "$SRC_ROCK" "$(basename "$ROCKSPEC")" lib)
+
+          unzip -l "dist/$SRC_ROCK" > dist/listing.txt
+          grep -q 'lib/lua/Cargo.toml' dist/listing.txt
       - name: Publish rockspec and source rock
         env:
           LUAROCKS_API_KEY: ${{ secrets.LUAROCKS_API_KEY }}
         run: |
           set -euo pipefail
+          # --force makes re-runs idempotent after a partially failed upload
+          # (rockspec already on the server, rock missing).
           luarocks upload \
+            --force \
             --temp-key "$LUAROCKS_API_KEY" \
-            "$ROCKSPEC"
+            "$ROCKSPEC" \
+            "dist/$SRC_ROCK"
