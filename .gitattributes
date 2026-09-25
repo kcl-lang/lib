@@ -1,0 +1,5 @@
+# Ensure consistent LF line endings for KCL test data across platforms.
+# Without this, Windows' default `core.autocrlf=true` converts LF to CRLF
+# on checkout, which causes the KCL formatter to rewrite the file (seen
+# as a change in `test_format_path_api`).
+python/tests/test_data/** text eol=lf

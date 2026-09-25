@@ -206,7 +206,6 @@ schema Person:
 
     check:
         0 < age < 120
-
 """
     )
 
@@ -214,8 +213,15 @@ schema Person:
 def test_format_path_api():
     """Format KCL file or directory path contains KCL files and returns the changed file paths."""
     import kcl_lib.api as api
+    import pathlib
 
     TEST_PATH = "./tests/test_data/format_path/test.k"
+
+    # Rewrite the test fixture in binary mode so the on-disk content is
+    # byte-for-byte identical across platforms. Without this, git's autocrlf
+    # check-out on Windows would write CRLF endings and the formatter would
+    # then report the file as "changed" when normalising back to LF.
+    pathlib.Path(TEST_PATH).write_bytes(b"a = 1\n")
 
     args = api.FormatPathArgs(path=TEST_PATH)
 
@@ -283,7 +289,11 @@ def test_rename_api():
     api_instance = api.API()
     result = api_instance.rename(args)
 
-    assert "tests/test_data/rename/main.k" in result.changed_files[0]
+    # On Windows the returned absolute path includes a UNC prefix
+    # (e.g. ``\\\\?\\D:\\...``) and uses backslashes. Convert to a POSIX-style
+    # path so the substring check is platform-independent.
+    changed = pathlib.PurePath(result.changed_files[0]).as_posix()
+    assert "tests/test_data/rename/main.k" in changed
 
 
 def test_rename_code_api():
