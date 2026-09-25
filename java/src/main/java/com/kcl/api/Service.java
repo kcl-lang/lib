@@ -64,4 +64,13 @@ public interface Service {
 
     // Service for the KCL service version information.
     GetVersionResult getVersion(GetVersionArgs args) throws Exception;
+
+    // Ping the KCL service and echo back the sent value.
+    PingResult ping(PingArgs args) throws Exception;
+
+    // List the KCL service method names supported by the underlying runtime.
+    ListMethodResult listMethod() throws Exception;
+
+    // List all KCL dependency files reachable from a working directory.
+    ListDepFilesResult listDepFiles(ListDepFilesArgs args) throws Exception;
 }
