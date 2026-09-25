@@ -139,111 +139,105 @@ namespace KclLib.API {
             "CzIYLmNvbS5rY2wuYXBpLkV4dGVybmFsUGtnIjoKElZhbGlkYXRlQ29kZVJl",
             "c3VsdBIPCgdzdWNjZXNzGAEgASgIEhMKC2Vycl9tZXNzYWdlGAIgASgJIjoK",
             "CFBvc2l0aW9uEgwKBGxpbmUYASABKAMSDgoGY29sdW1uGAIgASgDEhAKCGZp",
-            "bGVuYW1lGAMgASgJImgKEExpc3REZXBGaWxlc0FyZ3MSEAoId29ya19kaXIY",
-            "ASABKAkSFAoMdXNlX2Fic19wYXRoGAIgASgIEhMKC2luY2x1ZGVfYWxsGAMg",
-            "ASgIEhcKD3VzZV9mYXN0X3BhcnNlchgEIAEoCCJFChJMaXN0RGVwRmlsZXNS",
-            "ZXN1bHQSDwoHcGtncm9vdBgBIAEoCRIPCgdwa2dwYXRoGAIgASgJEg0KBWZp",
-            "bGVzGAMgAygJIjgKFUxvYWRTZXR0aW5nc0ZpbGVzQXJncxIQCgh3b3JrX2Rp",
-            "chgBIAEoCRINCgVmaWxlcxgCIAMoCSJ6ChdMb2FkU2V0dGluZ3NGaWxlc1Jl",
-            "c3VsdBIvCg9rY2xfY2xpX2NvbmZpZ3MYASABKAsyFi5jb20ua2NsLmFwaS5D",
-            "bGlDb25maWcSLgoLa2NsX29wdGlvbnMYAiADKAsyGS5jb20ua2NsLmFwaS5L",
-            "ZXlWYWx1ZVBhaXIigwIKCUNsaUNvbmZpZxINCgVmaWxlcxgBIAMoCRIOCgZv",
-            "dXRwdXQYAiABKAkSEQoJb3ZlcnJpZGVzGAMgAygJEhUKDXBhdGhfc2VsZWN0",
-            "b3IYBCADKAkSGgoSc3RyaWN0X3JhbmdlX2NoZWNrGAUgASgIEhQKDGRpc2Fi",
-            "bGVfbm9uZRgGIAEoCBIPCgd2ZXJib3NlGAcgASgDEg0KBWRlYnVnGAggASgI",
-            "EhEKCXNvcnRfa2V5cxgJIAEoCBITCgtzaG93X2hpZGRlbhgKIAEoCBIgChhp",
-            "bmNsdWRlX3NjaGVtYV90eXBlX3BhdGgYCyABKAgSEQoJZmFzdF9ldmFsGAwg",
-            "ASgIIioKDEtleVZhbHVlUGFpchILCgNrZXkYASABKAkSDQoFdmFsdWUYAiAB",
-            "KAkiXQoKUmVuYW1lQXJncxIUCgxwYWNrYWdlX3Jvb3QYASABKAkSEwoLc3lt",
-            "Ym9sX3BhdGgYAiABKAkSEgoKZmlsZV9wYXRocxgDIAMoCRIQCghuZXdfbmFt",
-            "ZRgEIAEoCSIlCgxSZW5hbWVSZXN1bHQSFQoNY2hhbmdlZF9maWxlcxgBIAMo",
-            "CSLFAQoOUmVuYW1lQ29kZUFyZ3MSFAoMcGFja2FnZV9yb290GAEgASgJEhMK",
-            "C3N5bWJvbF9wYXRoGAIgASgJEkIKDHNvdXJjZV9jb2RlcxgDIAMoCzIsLmNv",
-            "bS5rY2wuYXBpLlJlbmFtZUNvZGVBcmdzLlNvdXJjZUNvZGVzRW50cnkSEAoI",
-            "bmV3X25hbWUYBCABKAkaMgoQU291cmNlQ29kZXNFbnRyeRILCgNrZXkYASAB",
-            "KAkSDQoFdmFsdWUYAiABKAk6AjgBIo8BChBSZW5hbWVDb2RlUmVzdWx0EkYK",
-            "DWNoYW5nZWRfY29kZXMYASADKAsyLy5jb20ua2NsLmFwaS5SZW5hbWVDb2Rl",
-            "UmVzdWx0LkNoYW5nZWRDb2Rlc0VudHJ5GjMKEUNoYW5nZWRDb2Rlc0VudHJ5",
-            "EgsKA2tleRgBIAEoCRINCgV2YWx1ZRgCIAEoCToCOAEidAoIVGVzdEFyZ3MS",
-            "LwoJZXhlY19hcmdzGAEgASgLMhwuY29tLmtjbC5hcGkuRXhlY1Byb2dyYW1B",
-            "cmdzEhAKCHBrZ19saXN0GAIgAygJEhIKCnJ1bl9yZWdleHAYAyABKAkSEQoJ",
-            "ZmFpbF9mYXN0GAQgASgIIjUKClRlc3RSZXN1bHQSJwoEaW5mbxgCIAMoCzIZ",
-            "LmNvbS5rY2wuYXBpLlRlc3RDYXNlSW5mbyJSCgxUZXN0Q2FzZUluZm8SDAoE",
-            "bmFtZRgBIAEoCRINCgVlcnJvchgCIAEoCRIQCghkdXJhdGlvbhgDIAEoBBIT",
-            "Cgtsb2dfbWVzc2FnZRgEIAEoCSI/ChZVcGRhdGVEZXBlbmRlbmNpZXNBcmdz",
-            "EhUKDW1hbmlmZXN0X3BhdGgYASABKAkSDgoGdmVuZG9yGAIgASgIIksKGFVw",
-            "ZGF0ZURlcGVuZGVuY2llc1Jlc3VsdBIvCg1leHRlcm5hbF9wa2dzGAMgAygL",
-            "MhguY29tLmtjbC5hcGkuRXh0ZXJuYWxQa2cigQYKB0tjbFR5cGUSDAoEdHlw",
-            "ZRgBIAEoCRIpCgt1bmlvbl90eXBlcxgCIAMoCzIULmNvbS5rY2wuYXBpLktj",
-            "bFR5cGUSDwoHZGVmYXVsdBgDIAEoCRITCgtzY2hlbWFfbmFtZRgEIAEoCRIS",
-            "CgpzY2hlbWFfZG9jGAUgASgJEjgKCnByb3BlcnRpZXMYBiADKAsyJC5jb20u",
-            "a2NsLmFwaS5LY2xUeXBlLlByb3BlcnRpZXNFbnRyeRIQCghyZXF1aXJlZBgH",
-            "IAMoCRIhCgNrZXkYCCABKAsyFC5jb20ua2NsLmFwaS5LY2xUeXBlEiIKBGl0",
-            "ZW0YCSABKAsyFC5jb20ua2NsLmFwaS5LY2xUeXBlEgwKBGxpbmUYCiABKAUS",
-            "KgoKZGVjb3JhdG9ycxgLIAMoCzIWLmNvbS5rY2wuYXBpLkRlY29yYXRvchIQ",
-            "CghmaWxlbmFtZRgMIAEoCRIQCghwa2dfcGF0aBgNIAEoCRITCgtkZXNjcmlw",
-            "dGlvbhgOIAEoCRI0CghleGFtcGxlcxgPIAMoCzIiLmNvbS5rY2wuYXBpLktj",
-            "bFR5cGUuRXhhbXBsZXNFbnRyeRIpCgtiYXNlX3NjaGVtYRgQIAEoCzIULmNv",
-            "bS5rY2wuYXBpLktjbFR5cGUSMAoIZnVuY3Rpb24YESABKAsyGS5jb20ua2Ns",
-            "LmFwaS5GdW5jdGlvblR5cGVIAIgBARI5Cg9pbmRleF9zaWduYXR1cmUYEiAB",
-            "KAsyGy5jb20ua2NsLmFwaS5JbmRleFNpZ25hdHVyZUgBiAEBGkcKD1Byb3Bl",
-            "cnRpZXNFbnRyeRILCgNrZXkYASABKAkSIwoFdmFsdWUYAiABKAsyFC5jb20u",
-            "a2NsLmFwaS5LY2xUeXBlOgI4ARpFCg1FeGFtcGxlc0VudHJ5EgsKA2tleRgB",
-            "IAEoCRIjCgV2YWx1ZRgCIAEoCzIULmNvbS5rY2wuYXBpLkV4YW1wbGU6AjgB",
-            "QgsKCV9mdW5jdGlvbkISChBfaW5kZXhfc2lnbmF0dXJlIl8KDEZ1bmN0aW9u",
-            "VHlwZRImCgZwYXJhbXMYASADKAsyFi5jb20ua2NsLmFwaS5QYXJhbWV0ZXIS",
-            "JwoJcmV0dXJuX3R5GAIgASgLMhQuY29tLmtjbC5hcGkuS2NsVHlwZSI7CglQ",
-            "YXJhbWV0ZXISDAoEbmFtZRgBIAEoCRIgCgJ0eRgCIAEoCzIULmNvbS5rY2wu",
-            "YXBpLktjbFR5cGUijQEKDkluZGV4U2lnbmF0dXJlEhUKCGtleV9uYW1lGAEg",
-            "ASgJSACIAQESIQoDa2V5GAIgASgLMhQuY29tLmtjbC5hcGkuS2NsVHlwZRIh",
-            "CgN2YWwYAyABKAsyFC5jb20ua2NsLmFwaS5LY2xUeXBlEhEKCWFueV9vdGhl",
-            "chgEIAEoCEILCglfa2V5X25hbWUilQEKCURlY29yYXRvchIMCgRuYW1lGAEg",
-            "ASgJEhEKCWFyZ3VtZW50cxgCIAMoCRI2CghrZXl3b3JkcxgDIAMoCzIkLmNv",
-            "bS5rY2wuYXBpLkRlY29yYXRvci5LZXl3b3Jkc0VudHJ5Gi8KDUtleXdvcmRz",
-            "RW50cnkSCwoDa2V5GAEgASgJEg0KBXZhbHVlGAIgASgJOgI4ASI+CgdFeGFt",
-            "cGxlEg8KB3N1bW1hcnkYASABKAkSEwoLZGVzY3JpcHRpb24YAiABKAkSDQoF",
-            "dmFsdWUYAyABKAkykgEKDkJ1aWx0aW5TZXJ2aWNlEjYKBFBpbmcSFS5jb20u",
-            "a2NsLmFwaS5QaW5nQXJncxoXLmNvbS5rY2wuYXBpLlBpbmdSZXN1bHQSSAoK",
-            "TGlzdE1ldGhvZBIbLmNvbS5rY2wuYXBpLkxpc3RNZXRob2RBcmdzGh0uY29t",
-            "LmtjbC5hcGkuTGlzdE1ldGhvZFJlc3VsdDKLDQoKS2NsU2VydmljZRI2CgRQ",
-            "aW5nEhUuY29tLmtjbC5hcGkuUGluZ0FyZ3MaFy5jb20ua2NsLmFwaS5QaW5n",
-            "UmVzdWx0EkgKCkdldFZlcnNpb24SGy5jb20ua2NsLmFwaS5HZXRWZXJzaW9u",
-            "QXJncxodLmNvbS5rY2wuYXBpLkdldFZlcnNpb25SZXN1bHQSTgoMUGFyc2VQ",
-            "cm9ncmFtEh0uY29tLmtjbC5hcGkuUGFyc2VQcm9ncmFtQXJncxofLmNvbS5r",
-            "Y2wuYXBpLlBhcnNlUHJvZ3JhbVJlc3VsdBJFCglQYXJzZUZpbGUSGi5jb20u",
-            "a2NsLmFwaS5QYXJzZUZpbGVBcmdzGhwuY29tLmtjbC5hcGkuUGFyc2VGaWxl",
-            "UmVzdWx0EksKC0xvYWRQYWNrYWdlEhwuY29tLmtjbC5hcGkuTG9hZFBhY2th",
-            "Z2VBcmdzGh4uY29tLmtjbC5hcGkuTG9hZFBhY2thZ2VSZXN1bHQSTAoLTGlz",
-            "dE9wdGlvbnMSHS5jb20ua2NsLmFwaS5QYXJzZVByb2dyYW1BcmdzGh4uY29t",
-            "LmtjbC5hcGkuTGlzdE9wdGlvbnNSZXN1bHQSUQoNTGlzdFZhcmlhYmxlcxIe",
-            "LmNvbS5rY2wuYXBpLkxpc3RWYXJpYWJsZXNBcmdzGiAuY29tLmtjbC5hcGku",
-            "TGlzdFZhcmlhYmxlc1Jlc3VsdBJLCgtFeGVjUHJvZ3JhbRIcLmNvbS5rY2wu",
-            "YXBpLkV4ZWNQcm9ncmFtQXJncxoeLmNvbS5rY2wuYXBpLkV4ZWNQcm9ncmFt",
-            "UmVzdWx0Ek4KDE92ZXJyaWRlRmlsZRIdLmNvbS5rY2wuYXBpLk92ZXJyaWRl",
-            "RmlsZUFyZ3MaHy5jb20ua2NsLmFwaS5PdmVycmlkZUZpbGVSZXN1bHQSZgoU",
-            "R2V0U2NoZW1hVHlwZU1hcHBpbmcSJS5jb20ua2NsLmFwaS5HZXRTY2hlbWFU",
-            "eXBlTWFwcGluZ0FyZ3MaJy5jb20ua2NsLmFwaS5HZXRTY2hlbWFUeXBlTWFw",
-            "cGluZ1Jlc3VsdBJ4Ch1HZXRTY2hlbWFUeXBlTWFwcGluZ1VuZGVyUGF0aBIl",
-            "LmNvbS5rY2wuYXBpLkdldFNjaGVtYVR5cGVNYXBwaW5nQXJncxowLmNvbS5r",
-            "Y2wuYXBpLkdldFNjaGVtYVR5cGVNYXBwaW5nVW5kZXJQYXRoUmVzdWx0EkgK",
-            "CkZvcm1hdENvZGUSGy5jb20ua2NsLmFwaS5Gb3JtYXRDb2RlQXJncxodLmNv",
-            "bS5rY2wuYXBpLkZvcm1hdENvZGVSZXN1bHQSSAoKRm9ybWF0UGF0aBIbLmNv",
-            "bS5rY2wuYXBpLkZvcm1hdFBhdGhBcmdzGh0uY29tLmtjbC5hcGkuRm9ybWF0",
-            "UGF0aFJlc3VsdBJCCghMaW50UGF0aBIZLmNvbS5rY2wuYXBpLkxpbnRQYXRo",
-            "QXJncxobLmNvbS5rY2wuYXBpLkxpbnRQYXRoUmVzdWx0Ek4KDFZhbGlkYXRl",
-            "Q29kZRIdLmNvbS5rY2wuYXBpLlZhbGlkYXRlQ29kZUFyZ3MaHy5jb20ua2Ns",
-            "LmFwaS5WYWxpZGF0ZUNvZGVSZXN1bHQSTgoMTGlzdERlcEZpbGVzEh0uY29t",
-            "LmtjbC5hcGkuTGlzdERlcEZpbGVzQXJncxofLmNvbS5rY2wuYXBpLkxpc3RE",
-            "ZXBGaWxlc1Jlc3VsdBJdChFMb2FkU2V0dGluZ3NGaWxlcxIiLmNvbS5rY2wu",
-            "YXBpLkxvYWRTZXR0aW5nc0ZpbGVzQXJncxokLmNvbS5rY2wuYXBpLkxvYWRT",
-            "ZXR0aW5nc0ZpbGVzUmVzdWx0EjwKBlJlbmFtZRIXLmNvbS5rY2wuYXBpLlJl",
-            "bmFtZUFyZ3MaGS5jb20ua2NsLmFwaS5SZW5hbWVSZXN1bHQSSAoKUmVuYW1l",
-            "Q29kZRIbLmNvbS5rY2wuYXBpLlJlbmFtZUNvZGVBcmdzGh0uY29tLmtjbC5h",
-            "cGkuUmVuYW1lQ29kZVJlc3VsdBI2CgRUZXN0EhUuY29tLmtjbC5hcGkuVGVz",
-            "dEFyZ3MaFy5jb20ua2NsLmFwaS5UZXN0UmVzdWx0EmAKElVwZGF0ZURlcGVu",
-            "ZGVuY2llcxIjLmNvbS5rY2wuYXBpLlVwZGF0ZURlcGVuZGVuY2llc0FyZ3Ma",
-            "JS5jb20ua2NsLmFwaS5VcGRhdGVEZXBlbmRlbmNpZXNSZXN1bHRCFFoFLjth",
-            "cGmqAgpLY2xMaWIuQVBJYgZwcm90bzM="));
+            "bGVuYW1lGAMgASgJIjgKFUxvYWRTZXR0aW5nc0ZpbGVzQXJncxIQCgh3b3Jr",
+            "X2RpchgBIAEoCRINCgVmaWxlcxgCIAMoCSJ6ChdMb2FkU2V0dGluZ3NGaWxl",
+            "c1Jlc3VsdBIvCg9rY2xfY2xpX2NvbmZpZ3MYASABKAsyFi5jb20ua2NsLmFw",
+            "aS5DbGlDb25maWcSLgoLa2NsX29wdGlvbnMYAiADKAsyGS5jb20ua2NsLmFw",
+            "aS5LZXlWYWx1ZVBhaXIigwIKCUNsaUNvbmZpZxINCgVmaWxlcxgBIAMoCRIO",
+            "CgZvdXRwdXQYAiABKAkSEQoJb3ZlcnJpZGVzGAMgAygJEhUKDXBhdGhfc2Vs",
+            "ZWN0b3IYBCADKAkSGgoSc3RyaWN0X3JhbmdlX2NoZWNrGAUgASgIEhQKDGRp",
+            "c2FibGVfbm9uZRgGIAEoCBIPCgd2ZXJib3NlGAcgASgDEg0KBWRlYnVnGAgg",
+            "ASgIEhEKCXNvcnRfa2V5cxgJIAEoCBITCgtzaG93X2hpZGRlbhgKIAEoCBIg",
+            "ChhpbmNsdWRlX3NjaGVtYV90eXBlX3BhdGgYCyABKAgSEQoJZmFzdF9ldmFs",
+            "GAwgASgIIioKDEtleVZhbHVlUGFpchILCgNrZXkYASABKAkSDQoFdmFsdWUY",
+            "AiABKAkiXQoKUmVuYW1lQXJncxIUCgxwYWNrYWdlX3Jvb3QYASABKAkSEwoL",
+            "c3ltYm9sX3BhdGgYAiABKAkSEgoKZmlsZV9wYXRocxgDIAMoCRIQCghuZXdf",
+            "bmFtZRgEIAEoCSIlCgxSZW5hbWVSZXN1bHQSFQoNY2hhbmdlZF9maWxlcxgB",
+            "IAMoCSLFAQoOUmVuYW1lQ29kZUFyZ3MSFAoMcGFja2FnZV9yb290GAEgASgJ",
+            "EhMKC3N5bWJvbF9wYXRoGAIgASgJEkIKDHNvdXJjZV9jb2RlcxgDIAMoCzIs",
+            "LmNvbS5rY2wuYXBpLlJlbmFtZUNvZGVBcmdzLlNvdXJjZUNvZGVzRW50cnkS",
+            "EAoIbmV3X25hbWUYBCABKAkaMgoQU291cmNlQ29kZXNFbnRyeRILCgNrZXkY",
+            "ASABKAkSDQoFdmFsdWUYAiABKAk6AjgBIo8BChBSZW5hbWVDb2RlUmVzdWx0",
+            "EkYKDWNoYW5nZWRfY29kZXMYASADKAsyLy5jb20ua2NsLmFwaS5SZW5hbWVD",
+            "b2RlUmVzdWx0LkNoYW5nZWRDb2Rlc0VudHJ5GjMKEUNoYW5nZWRDb2Rlc0Vu",
+            "dHJ5EgsKA2tleRgBIAEoCRINCgV2YWx1ZRgCIAEoCToCOAEidAoIVGVzdEFy",
+            "Z3MSLwoJZXhlY19hcmdzGAEgASgLMhwuY29tLmtjbC5hcGkuRXhlY1Byb2dy",
+            "YW1BcmdzEhAKCHBrZ19saXN0GAIgAygJEhIKCnJ1bl9yZWdleHAYAyABKAkS",
+            "EQoJZmFpbF9mYXN0GAQgASgIIjUKClRlc3RSZXN1bHQSJwoEaW5mbxgCIAMo",
+            "CzIZLmNvbS5rY2wuYXBpLlRlc3RDYXNlSW5mbyJSCgxUZXN0Q2FzZUluZm8S",
+            "DAoEbmFtZRgBIAEoCRINCgVlcnJvchgCIAEoCRIQCghkdXJhdGlvbhgDIAEo",
+            "BBITCgtsb2dfbWVzc2FnZRgEIAEoCSI/ChZVcGRhdGVEZXBlbmRlbmNpZXNB",
+            "cmdzEhUKDW1hbmlmZXN0X3BhdGgYASABKAkSDgoGdmVuZG9yGAIgASgIIksK",
+            "GFVwZGF0ZURlcGVuZGVuY2llc1Jlc3VsdBIvCg1leHRlcm5hbF9wa2dzGAMg",
+            "AygLMhguY29tLmtjbC5hcGkuRXh0ZXJuYWxQa2cigQYKB0tjbFR5cGUSDAoE",
+            "dHlwZRgBIAEoCRIpCgt1bmlvbl90eXBlcxgCIAMoCzIULmNvbS5rY2wuYXBp",
+            "LktjbFR5cGUSDwoHZGVmYXVsdBgDIAEoCRITCgtzY2hlbWFfbmFtZRgEIAEo",
+            "CRISCgpzY2hlbWFfZG9jGAUgASgJEjgKCnByb3BlcnRpZXMYBiADKAsyJC5j",
+            "b20ua2NsLmFwaS5LY2xUeXBlLlByb3BlcnRpZXNFbnRyeRIQCghyZXF1aXJl",
+            "ZBgHIAMoCRIhCgNrZXkYCCABKAsyFC5jb20ua2NsLmFwaS5LY2xUeXBlEiIK",
+            "BGl0ZW0YCSABKAsyFC5jb20ua2NsLmFwaS5LY2xUeXBlEgwKBGxpbmUYCiAB",
+            "KAUSKgoKZGVjb3JhdG9ycxgLIAMoCzIWLmNvbS5rY2wuYXBpLkRlY29yYXRv",
+            "chIQCghmaWxlbmFtZRgMIAEoCRIQCghwa2dfcGF0aBgNIAEoCRITCgtkZXNj",
+            "cmlwdGlvbhgOIAEoCRI0CghleGFtcGxlcxgPIAMoCzIiLmNvbS5rY2wuYXBp",
+            "LktjbFR5cGUuRXhhbXBsZXNFbnRyeRIpCgtiYXNlX3NjaGVtYRgQIAEoCzIU",
+            "LmNvbS5rY2wuYXBpLktjbFR5cGUSMAoIZnVuY3Rpb24YESABKAsyGS5jb20u",
+            "a2NsLmFwaS5GdW5jdGlvblR5cGVIAIgBARI5Cg9pbmRleF9zaWduYXR1cmUY",
+            "EiABKAsyGy5jb20ua2NsLmFwaS5JbmRleFNpZ25hdHVyZUgBiAEBGkcKD1By",
+            "b3BlcnRpZXNFbnRyeRILCgNrZXkYASABKAkSIwoFdmFsdWUYAiABKAsyFC5j",
+            "b20ua2NsLmFwaS5LY2xUeXBlOgI4ARpFCg1FeGFtcGxlc0VudHJ5EgsKA2tl",
+            "eRgBIAEoCRIjCgV2YWx1ZRgCIAEoCzIULmNvbS5rY2wuYXBpLkV4YW1wbGU6",
+            "AjgBQgsKCV9mdW5jdGlvbkISChBfaW5kZXhfc2lnbmF0dXJlIl8KDEZ1bmN0",
+            "aW9uVHlwZRImCgZwYXJhbXMYASADKAsyFi5jb20ua2NsLmFwaS5QYXJhbWV0",
+            "ZXISJwoJcmV0dXJuX3R5GAIgASgLMhQuY29tLmtjbC5hcGkuS2NsVHlwZSI7",
+            "CglQYXJhbWV0ZXISDAoEbmFtZRgBIAEoCRIgCgJ0eRgCIAEoCzIULmNvbS5r",
+            "Y2wuYXBpLktjbFR5cGUijQEKDkluZGV4U2lnbmF0dXJlEhUKCGtleV9uYW1l",
+            "GAEgASgJSACIAQESIQoDa2V5GAIgASgLMhQuY29tLmtjbC5hcGkuS2NsVHlw",
+            "ZRIhCgN2YWwYAyABKAsyFC5jb20ua2NsLmFwaS5LY2xUeXBlEhEKCWFueV9v",
+            "dGhlchgEIAEoCEILCglfa2V5X25hbWUilQEKCURlY29yYXRvchIMCgRuYW1l",
+            "GAEgASgJEhEKCWFyZ3VtZW50cxgCIAMoCRI2CghrZXl3b3JkcxgDIAMoCzIk",
+            "LmNvbS5rY2wuYXBpLkRlY29yYXRvci5LZXl3b3Jkc0VudHJ5Gi8KDUtleXdv",
+            "cmRzRW50cnkSCwoDa2V5GAEgASgJEg0KBXZhbHVlGAIgASgJOgI4ASI+CgdF",
+            "eGFtcGxlEg8KB3N1bW1hcnkYASABKAkSEwoLZGVzY3JpcHRpb24YAiABKAkS",
+            "DQoFdmFsdWUYAyABKAkykgEKDkJ1aWx0aW5TZXJ2aWNlEjYKBFBpbmcSFS5j",
+            "b20ua2NsLmFwaS5QaW5nQXJncxoXLmNvbS5rY2wuYXBpLlBpbmdSZXN1bHQS",
+            "SAoKTGlzdE1ldGhvZBIbLmNvbS5rY2wuYXBpLkxpc3RNZXRob2RBcmdzGh0u",
+            "Y29tLmtjbC5hcGkuTGlzdE1ldGhvZFJlc3VsdDK7DAoKS2NsU2VydmljZRI2",
+            "CgRQaW5nEhUuY29tLmtjbC5hcGkuUGluZ0FyZ3MaFy5jb20ua2NsLmFwaS5Q",
+            "aW5nUmVzdWx0EkgKCkdldFZlcnNpb24SGy5jb20ua2NsLmFwaS5HZXRWZXJz",
+            "aW9uQXJncxodLmNvbS5rY2wuYXBpLkdldFZlcnNpb25SZXN1bHQSTgoMUGFy",
+            "c2VQcm9ncmFtEh0uY29tLmtjbC5hcGkuUGFyc2VQcm9ncmFtQXJncxofLmNv",
+            "bS5rY2wuYXBpLlBhcnNlUHJvZ3JhbVJlc3VsdBJFCglQYXJzZUZpbGUSGi5j",
+            "b20ua2NsLmFwaS5QYXJzZUZpbGVBcmdzGhwuY29tLmtjbC5hcGkuUGFyc2VG",
+            "aWxlUmVzdWx0EksKC0xvYWRQYWNrYWdlEhwuY29tLmtjbC5hcGkuTG9hZFBh",
+            "Y2thZ2VBcmdzGh4uY29tLmtjbC5hcGkuTG9hZFBhY2thZ2VSZXN1bHQSTAoL",
+            "TGlzdE9wdGlvbnMSHS5jb20ua2NsLmFwaS5QYXJzZVByb2dyYW1BcmdzGh4u",
+            "Y29tLmtjbC5hcGkuTGlzdE9wdGlvbnNSZXN1bHQSUQoNTGlzdFZhcmlhYmxl",
+            "cxIeLmNvbS5rY2wuYXBpLkxpc3RWYXJpYWJsZXNBcmdzGiAuY29tLmtjbC5h",
+            "cGkuTGlzdFZhcmlhYmxlc1Jlc3VsdBJLCgtFeGVjUHJvZ3JhbRIcLmNvbS5r",
+            "Y2wuYXBpLkV4ZWNQcm9ncmFtQXJncxoeLmNvbS5rY2wuYXBpLkV4ZWNQcm9n",
+            "cmFtUmVzdWx0Ek4KDE92ZXJyaWRlRmlsZRIdLmNvbS5rY2wuYXBpLk92ZXJy",
+            "aWRlRmlsZUFyZ3MaHy5jb20ua2NsLmFwaS5PdmVycmlkZUZpbGVSZXN1bHQS",
+            "ZgoUR2V0U2NoZW1hVHlwZU1hcHBpbmcSJS5jb20ua2NsLmFwaS5HZXRTY2hl",
+            "bWFUeXBlTWFwcGluZ0FyZ3MaJy5jb20ua2NsLmFwaS5HZXRTY2hlbWFUeXBl",
+            "TWFwcGluZ1Jlc3VsdBJ4Ch1HZXRTY2hlbWFUeXBlTWFwcGluZ1VuZGVyUGF0",
+            "aBIlLmNvbS5rY2wuYXBpLkdldFNjaGVtYVR5cGVNYXBwaW5nQXJncxowLmNv",
+            "bS5rY2wuYXBpLkdldFNjaGVtYVR5cGVNYXBwaW5nVW5kZXJQYXRoUmVzdWx0",
+            "EkgKCkZvcm1hdENvZGUSGy5jb20ua2NsLmFwaS5Gb3JtYXRDb2RlQXJncxod",
+            "LmNvbS5rY2wuYXBpLkZvcm1hdENvZGVSZXN1bHQSSAoKRm9ybWF0UGF0aBIb",
+            "LmNvbS5rY2wuYXBpLkZvcm1hdFBhdGhBcmdzGh0uY29tLmtjbC5hcGkuRm9y",
+            "bWF0UGF0aFJlc3VsdBJCCghMaW50UGF0aBIZLmNvbS5rY2wuYXBpLkxpbnRQ",
+            "YXRoQXJncxobLmNvbS5rY2wuYXBpLkxpbnRQYXRoUmVzdWx0Ek4KDFZhbGlk",
+            "YXRlQ29kZRIdLmNvbS5rY2wuYXBpLlZhbGlkYXRlQ29kZUFyZ3MaHy5jb20u",
+            "a2NsLmFwaS5WYWxpZGF0ZUNvZGVSZXN1bHQSXQoRTG9hZFNldHRpbmdzRmls",
+            "ZXMSIi5jb20ua2NsLmFwaS5Mb2FkU2V0dGluZ3NGaWxlc0FyZ3MaJC5jb20u",
+            "a2NsLmFwaS5Mb2FkU2V0dGluZ3NGaWxlc1Jlc3VsdBI8CgZSZW5hbWUSFy5j",
+            "b20ua2NsLmFwaS5SZW5hbWVBcmdzGhkuY29tLmtjbC5hcGkuUmVuYW1lUmVz",
+            "dWx0EkgKClJlbmFtZUNvZGUSGy5jb20ua2NsLmFwaS5SZW5hbWVDb2RlQXJn",
+            "cxodLmNvbS5rY2wuYXBpLlJlbmFtZUNvZGVSZXN1bHQSNgoEVGVzdBIVLmNv",
+            "bS5rY2wuYXBpLlRlc3RBcmdzGhcuY29tLmtjbC5hcGkuVGVzdFJlc3VsdBJg",
+            "ChJVcGRhdGVEZXBlbmRlbmNpZXMSIy5jb20ua2NsLmFwaS5VcGRhdGVEZXBl",
+            "bmRlbmNpZXNBcmdzGiUuY29tLmtjbC5hcGkuVXBkYXRlRGVwZW5kZW5jaWVz",
+            "UmVzdWx0QhRaBS47YXBpqgIKS2NsTGliLkFQSWIGcHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
@@ -292,8 +286,6 @@ namespace KclLib.API {
             new pbr::GeneratedClrTypeInfo(typeof(global::KclLib.API.ValidateCodeArgs), global::KclLib.API.ValidateCodeArgs.Parser, new[]{ "Datafile", "Data", "File", "Code", "Schema", "AttributeName", "Format", "ExternalPkgs" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::KclLib.API.ValidateCodeResult), global::KclLib.API.ValidateCodeResult.Parser, new[]{ "Success", "ErrMessage" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::KclLib.API.Position), global::KclLib.API.Position.Parser, new[]{ "Line", "Column", "Filename" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::KclLib.API.ListDepFilesArgs), global::KclLib.API.ListDepFilesArgs.Parser, new[]{ "WorkDir", "UseAbsPath", "IncludeAll", "UseFastParser" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::KclLib.API.ListDepFilesResult), global::KclLib.API.ListDepFilesResult.Parser, new[]{ "Pkgroot", "Pkgpath", "Files" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::KclLib.API.LoadSettingsFilesArgs), global::KclLib.API.LoadSettingsFilesArgs.Parser, new[]{ "WorkDir", "Files" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::KclLib.API.LoadSettingsFilesResult), global::KclLib.API.LoadSettingsFilesResult.Parser, new[]{ "KclCliConfigs", "KclOptions" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::KclLib.API.CliConfig), global::KclLib.API.CliConfig.Parser, new[]{ "Files", "Output", "Overrides", "PathSelector", "StrictRangeCheck", "DisableNone", "Verbose", "Debug", "SortKeys", "ShowHidden", "IncludeSchemaTypePath", "FastEval" }, null, null, null, null),
@@ -12235,587 +12227,6 @@ namespace KclLib.API {
   }
 
   /// <summary>
-  /// Message for list dependency files request arguments.
-  /// </summary>
-  [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
-  public sealed partial class ListDepFilesArgs : pb::IMessage<ListDepFilesArgs>
-  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-      , pb::IBufferMessage
-  #endif
-  {
-    private static readonly pb::MessageParser<ListDepFilesArgs> _parser = new pb::MessageParser<ListDepFilesArgs>(() => new ListDepFilesArgs());
-    private pb::UnknownFieldSet _unknownFields;
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public static pb::MessageParser<ListDepFilesArgs> Parser { get { return _parser; } }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public static pbr::MessageDescriptor Descriptor {
-      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[45]; }
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    pbr::MessageDescriptor pb::IMessage.Descriptor {
-      get { return Descriptor; }
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public ListDepFilesArgs() {
-      OnConstruction();
-    }
-
-    partial void OnConstruction();
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public ListDepFilesArgs(ListDepFilesArgs other) : this() {
-      workDir_ = other.workDir_;
-      useAbsPath_ = other.useAbsPath_;
-      includeAll_ = other.includeAll_;
-      useFastParser_ = other.useFastParser_;
-      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public ListDepFilesArgs Clone() {
-      return new ListDepFilesArgs(this);
-    }
-
-    /// <summary>Field number for the "work_dir" field.</summary>
-    public const int WorkDirFieldNumber = 1;
-    private string workDir_ = "";
-    /// <summary>
-    /// Working directory.
-    /// </summary>
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public string WorkDir {
-      get { return workDir_; }
-      set {
-        workDir_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
-      }
-    }
-
-    /// <summary>Field number for the "use_abs_path" field.</summary>
-    public const int UseAbsPathFieldNumber = 2;
-    private bool useAbsPath_;
-    /// <summary>
-    /// Flag to use absolute paths.
-    /// </summary>
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public bool UseAbsPath {
-      get { return useAbsPath_; }
-      set {
-        useAbsPath_ = value;
-      }
-    }
-
-    /// <summary>Field number for the "include_all" field.</summary>
-    public const int IncludeAllFieldNumber = 3;
-    private bool includeAll_;
-    /// <summary>
-    /// Flag to include all files.
-    /// </summary>
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public bool IncludeAll {
-      get { return includeAll_; }
-      set {
-        includeAll_ = value;
-      }
-    }
-
-    /// <summary>Field number for the "use_fast_parser" field.</summary>
-    public const int UseFastParserFieldNumber = 4;
-    private bool useFastParser_;
-    /// <summary>
-    /// Flag to use fast parser.
-    /// </summary>
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public bool UseFastParser {
-      get { return useFastParser_; }
-      set {
-        useFastParser_ = value;
-      }
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public override bool Equals(object other) {
-      return Equals(other as ListDepFilesArgs);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public bool Equals(ListDepFilesArgs other) {
-      if (ReferenceEquals(other, null)) {
-        return false;
-      }
-      if (ReferenceEquals(other, this)) {
-        return true;
-      }
-      if (WorkDir != other.WorkDir) return false;
-      if (UseAbsPath != other.UseAbsPath) return false;
-      if (IncludeAll != other.IncludeAll) return false;
-      if (UseFastParser != other.UseFastParser) return false;
-      return Equals(_unknownFields, other._unknownFields);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public override int GetHashCode() {
-      int hash = 1;
-      if (WorkDir.Length != 0) hash ^= WorkDir.GetHashCode();
-      if (UseAbsPath != false) hash ^= UseAbsPath.GetHashCode();
-      if (IncludeAll != false) hash ^= IncludeAll.GetHashCode();
-      if (UseFastParser != false) hash ^= UseFastParser.GetHashCode();
-      if (_unknownFields != null) {
-        hash ^= _unknownFields.GetHashCode();
-      }
-      return hash;
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public override string ToString() {
-      return pb::JsonFormatter.ToDiagnosticString(this);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public void WriteTo(pb::CodedOutputStream output) {
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-      output.WriteRawMessage(this);
-    #else
-      if (WorkDir.Length != 0) {
-        output.WriteRawTag(10);
-        output.WriteString(WorkDir);
-      }
-      if (UseAbsPath != false) {
-        output.WriteRawTag(16);
-        output.WriteBool(UseAbsPath);
-      }
-      if (IncludeAll != false) {
-        output.WriteRawTag(24);
-        output.WriteBool(IncludeAll);
-      }
-      if (UseFastParser != false) {
-        output.WriteRawTag(32);
-        output.WriteBool(UseFastParser);
-      }
-      if (_unknownFields != null) {
-        _unknownFields.WriteTo(output);
-      }
-    #endif
-    }
-
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
-      if (WorkDir.Length != 0) {
-        output.WriteRawTag(10);
-        output.WriteString(WorkDir);
-      }
-      if (UseAbsPath != false) {
-        output.WriteRawTag(16);
-        output.WriteBool(UseAbsPath);
-      }
-      if (IncludeAll != false) {
-        output.WriteRawTag(24);
-        output.WriteBool(IncludeAll);
-      }
-      if (UseFastParser != false) {
-        output.WriteRawTag(32);
-        output.WriteBool(UseFastParser);
-      }
-      if (_unknownFields != null) {
-        _unknownFields.WriteTo(ref output);
-      }
-    }
-    #endif
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public int CalculateSize() {
-      int size = 0;
-      if (WorkDir.Length != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeStringSize(WorkDir);
-      }
-      if (UseAbsPath != false) {
-        size += 1 + 1;
-      }
-      if (IncludeAll != false) {
-        size += 1 + 1;
-      }
-      if (UseFastParser != false) {
-        size += 1 + 1;
-      }
-      if (_unknownFields != null) {
-        size += _unknownFields.CalculateSize();
-      }
-      return size;
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public void MergeFrom(ListDepFilesArgs other) {
-      if (other == null) {
-        return;
-      }
-      if (other.WorkDir.Length != 0) {
-        WorkDir = other.WorkDir;
-      }
-      if (other.UseAbsPath != false) {
-        UseAbsPath = other.UseAbsPath;
-      }
-      if (other.IncludeAll != false) {
-        IncludeAll = other.IncludeAll;
-      }
-      if (other.UseFastParser != false) {
-        UseFastParser = other.UseFastParser;
-      }
-      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public void MergeFrom(pb::CodedInputStream input) {
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-      input.ReadRawMessage(this);
-    #else
-      uint tag;
-      while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
-          default:
-            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
-            break;
-          case 10: {
-            WorkDir = input.ReadString();
-            break;
-          }
-          case 16: {
-            UseAbsPath = input.ReadBool();
-            break;
-          }
-          case 24: {
-            IncludeAll = input.ReadBool();
-            break;
-          }
-          case 32: {
-            UseFastParser = input.ReadBool();
-            break;
-          }
-        }
-      }
-    #endif
-    }
-
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
-      uint tag;
-      while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
-          default:
-            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
-            break;
-          case 10: {
-            WorkDir = input.ReadString();
-            break;
-          }
-          case 16: {
-            UseAbsPath = input.ReadBool();
-            break;
-          }
-          case 24: {
-            IncludeAll = input.ReadBool();
-            break;
-          }
-          case 32: {
-            UseFastParser = input.ReadBool();
-            break;
-          }
-        }
-      }
-    }
-    #endif
-
-  }
-
-  /// <summary>
-  /// Message for list dependency files response.
-  /// </summary>
-  [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
-  public sealed partial class ListDepFilesResult : pb::IMessage<ListDepFilesResult>
-  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-      , pb::IBufferMessage
-  #endif
-  {
-    private static readonly pb::MessageParser<ListDepFilesResult> _parser = new pb::MessageParser<ListDepFilesResult>(() => new ListDepFilesResult());
-    private pb::UnknownFieldSet _unknownFields;
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public static pb::MessageParser<ListDepFilesResult> Parser { get { return _parser; } }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public static pbr::MessageDescriptor Descriptor {
-      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[46]; }
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    pbr::MessageDescriptor pb::IMessage.Descriptor {
-      get { return Descriptor; }
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public ListDepFilesResult() {
-      OnConstruction();
-    }
-
-    partial void OnConstruction();
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public ListDepFilesResult(ListDepFilesResult other) : this() {
-      pkgroot_ = other.pkgroot_;
-      pkgpath_ = other.pkgpath_;
-      files_ = other.files_.Clone();
-      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public ListDepFilesResult Clone() {
-      return new ListDepFilesResult(this);
-    }
-
-    /// <summary>Field number for the "pkgroot" field.</summary>
-    public const int PkgrootFieldNumber = 1;
-    private string pkgroot_ = "";
-    /// <summary>
-    /// Root package path.
-    /// </summary>
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public string Pkgroot {
-      get { return pkgroot_; }
-      set {
-        pkgroot_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
-      }
-    }
-
-    /// <summary>Field number for the "pkgpath" field.</summary>
-    public const int PkgpathFieldNumber = 2;
-    private string pkgpath_ = "";
-    /// <summary>
-    /// Package path.
-    /// </summary>
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public string Pkgpath {
-      get { return pkgpath_; }
-      set {
-        pkgpath_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
-      }
-    }
-
-    /// <summary>Field number for the "files" field.</summary>
-    public const int FilesFieldNumber = 3;
-    private static readonly pb::FieldCodec<string> _repeated_files_codec
-        = pb::FieldCodec.ForString(26);
-    private readonly pbc::RepeatedField<string> files_ = new pbc::RepeatedField<string>();
-    /// <summary>
-    /// List of file paths in the package.
-    /// </summary>
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public pbc::RepeatedField<string> Files {
-      get { return files_; }
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public override bool Equals(object other) {
-      return Equals(other as ListDepFilesResult);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public bool Equals(ListDepFilesResult other) {
-      if (ReferenceEquals(other, null)) {
-        return false;
-      }
-      if (ReferenceEquals(other, this)) {
-        return true;
-      }
-      if (Pkgroot != other.Pkgroot) return false;
-      if (Pkgpath != other.Pkgpath) return false;
-      if(!files_.Equals(other.files_)) return false;
-      return Equals(_unknownFields, other._unknownFields);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public override int GetHashCode() {
-      int hash = 1;
-      if (Pkgroot.Length != 0) hash ^= Pkgroot.GetHashCode();
-      if (Pkgpath.Length != 0) hash ^= Pkgpath.GetHashCode();
-      hash ^= files_.GetHashCode();
-      if (_unknownFields != null) {
-        hash ^= _unknownFields.GetHashCode();
-      }
-      return hash;
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public override string ToString() {
-      return pb::JsonFormatter.ToDiagnosticString(this);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public void WriteTo(pb::CodedOutputStream output) {
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-      output.WriteRawMessage(this);
-    #else
-      if (Pkgroot.Length != 0) {
-        output.WriteRawTag(10);
-        output.WriteString(Pkgroot);
-      }
-      if (Pkgpath.Length != 0) {
-        output.WriteRawTag(18);
-        output.WriteString(Pkgpath);
-      }
-      files_.WriteTo(output, _repeated_files_codec);
-      if (_unknownFields != null) {
-        _unknownFields.WriteTo(output);
-      }
-    #endif
-    }
-
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
-      if (Pkgroot.Length != 0) {
-        output.WriteRawTag(10);
-        output.WriteString(Pkgroot);
-      }
-      if (Pkgpath.Length != 0) {
-        output.WriteRawTag(18);
-        output.WriteString(Pkgpath);
-      }
-      files_.WriteTo(ref output, _repeated_files_codec);
-      if (_unknownFields != null) {
-        _unknownFields.WriteTo(ref output);
-      }
-    }
-    #endif
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public int CalculateSize() {
-      int size = 0;
-      if (Pkgroot.Length != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeStringSize(Pkgroot);
-      }
-      if (Pkgpath.Length != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeStringSize(Pkgpath);
-      }
-      size += files_.CalculateSize(_repeated_files_codec);
-      if (_unknownFields != null) {
-        size += _unknownFields.CalculateSize();
-      }
-      return size;
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public void MergeFrom(ListDepFilesResult other) {
-      if (other == null) {
-        return;
-      }
-      if (other.Pkgroot.Length != 0) {
-        Pkgroot = other.Pkgroot;
-      }
-      if (other.Pkgpath.Length != 0) {
-        Pkgpath = other.Pkgpath;
-      }
-      files_.Add(other.files_);
-      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public void MergeFrom(pb::CodedInputStream input) {
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-      input.ReadRawMessage(this);
-    #else
-      uint tag;
-      while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
-          default:
-            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
-            break;
-          case 10: {
-            Pkgroot = input.ReadString();
-            break;
-          }
-          case 18: {
-            Pkgpath = input.ReadString();
-            break;
-          }
-          case 26: {
-            files_.AddEntriesFrom(input, _repeated_files_codec);
-            break;
-          }
-        }
-      }
-    #endif
-    }
-
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
-      uint tag;
-      while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
-          default:
-            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
-            break;
-          case 10: {
-            Pkgroot = input.ReadString();
-            break;
-          }
-          case 18: {
-            Pkgpath = input.ReadString();
-            break;
-          }
-          case 26: {
-            files_.AddEntriesFrom(ref input, _repeated_files_codec);
-            break;
-          }
-        }
-      }
-    }
-    #endif
-
-  }
-
-  /// <summary>
   /// Message for load settings files request arguments.
   /// </summary>
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
@@ -12833,7 +12244,7 @@ namespace KclLib.API {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[47]; }
+      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[45]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -13058,7 +12469,7 @@ namespace KclLib.API {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[48]; }
+      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[46]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -13292,7 +12703,7 @@ namespace KclLib.API {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[49]; }
+      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[47]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -13895,7 +13306,7 @@ namespace KclLib.API {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[50]; }
+      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[48]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -14131,7 +13542,7 @@ namespace KclLib.API {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[51]; }
+      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[49]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -14436,7 +13847,7 @@ namespace KclLib.API {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[52]; }
+      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[50]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -14621,7 +14032,7 @@ namespace KclLib.API {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[53]; }
+      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[51]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -14926,7 +14337,7 @@ namespace KclLib.API {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[54]; }
+      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[52]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -15111,7 +14522,7 @@ namespace KclLib.API {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[55]; }
+      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[53]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -15425,7 +14836,7 @@ namespace KclLib.API {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[56]; }
+      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[54]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -15610,7 +15021,7 @@ namespace KclLib.API {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[57]; }
+      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[55]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -15926,7 +15337,7 @@ namespace KclLib.API {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[58]; }
+      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[56]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -16162,7 +15573,7 @@ namespace KclLib.API {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[59]; }
+      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[57]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -16347,7 +15758,7 @@ namespace KclLib.API {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[60]; }
+      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[58]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -17210,7 +16621,7 @@ namespace KclLib.API {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[61]; }
+      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[59]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -17435,7 +16846,7 @@ namespace KclLib.API {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[62]; }
+      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[60]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -17674,7 +17085,7 @@ namespace KclLib.API {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[63]; }
+      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[61]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -18019,7 +17430,7 @@ namespace KclLib.API {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[64]; }
+      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[62]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -18273,7 +17684,7 @@ namespace KclLib.API {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[65]; }
+      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[63]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
