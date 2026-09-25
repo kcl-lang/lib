@@ -1,0 +1,234 @@
+name: publish-kcltool
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - 'v*'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "dotnet/KclTool/**"
+      - ".github/workflows/publish-kcltool.yaml"
+  workflow_dispatch:
+
+# The kcl executable is shipped as a pre-built artifact from the
+# https://github.com/kcl-lang/cli release page. The CLI binary embeds
+# (via the Go SDK) a specific kcl-lang.io/lib version — here v0.12.5 — and
+# dynamically loads the matching `libkcl.{so,dylib,dll}` from `KCL_LIB_HOME`
+# at runtime. We pin both versions and ship the matching libkcl alongside the
+# binary so .NET consumers do not need a separate download or first-run
+# auto-install step.
+#
+# When kcl-lang/cli publishes a v0.13.x release, bump KCL_CLI_VERSION and the
+# matching KCL_LIB_REF below.
+env:
+  KCL_CLI_VERSION: v0.12.10
+  KCL_LIB_REF: v0.12.5
+
+jobs:
+  build:
+    name: Bundle kcl CLI for ${{ matrix.classifier }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - classifier: linux-x64
+            os: ubuntu-latest
+            dotnet-rid: linux-x64
+            archive: kcl-v0.12.10-linux-amd64.tar.gz
+            archive-format: targz
+            bin-name: kcl
+            lib-name: libkcl.so
+            lib-platform-dir: linux-amd64
+          - classifier: linux-arm64
+            os: ubuntu-24.04-arm
+            dotnet-rid: linux-arm64
+            archive: kcl-v0.12.10-linux-arm64.tar.gz
+            archive-format: targz
+            bin-name: kcl
+            lib-name: libkcl.so
+            lib-platform-dir: linux-arm64
+          - classifier: osx-x64
+            os: macos-14
+            dotnet-rid: osx-x64
+            archive: kcl-v0.12.10-darwin-amd64.tar.gz
+            archive-format: targz
+            bin-name: kcl
+            lib-name: libkcl.dylib
+            lib-platform-dir: darwin-amd64
+          - classifier: osx-arm64
+            os: macos-latest
+            dotnet-rid: osx-arm64
+            archive: kcl-v0.12.10-darwin-arm64.tar.gz
+            archive-format: targz
+            bin-name: kcl
+            lib-name: libkcl.dylib
+            lib-platform-dir: darwin-arm64
+          - classifier: win-x64
+            os: windows-latest
+            dotnet-rid: win-x64
+            archive: kcl-v0.12.10-windows-amd64.zip
+            archive-format: zip
+            bin-name: kcl.exe
+            lib-name: kcl.dll
+            lib-platform-dir: windows-amd64
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Download kcl CLI release artifact
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          mkdir -p cli-dl
+          gh release download "${{ env.KCL_CLI_VERSION }}" \
+            --repo kcl-lang/cli \
+            --pattern '${{ matrix.archive }}' \
+            --dir cli-dl
+          ls -la cli-dl/
+
+      - name: Extract kcl binary
+        shell: bash
+        run: |
+          mkdir -p cli-bin
+          case "${{ matrix.archive-format }}" in
+            targz) tar -xzf "cli-dl/${{ matrix.archive }}" -C cli-bin ;;
+            zip)   unzip -q  "cli-dl/${{ matrix.archive }}" -d cli-bin ;;
+          esac
+          ls -la cli-bin/
+
+      - name: Check out matching kcl-lang/lib for libkcl binary
+        uses: actions/checkout@v6
+        with:
+          repository: kcl-lang/lib
+          ref: ${{ env.KCL_LIB_REF }}
+          path: lib-src
+
+      - name: Stage artifacts into dotnet/KclTool
+        shell: bash
+        run: |
+          # Sanity-check the libkcl we are about to ship matches the SDK the
+          # CLI was built against. The CLI auto-installs to a directory named
+          # after KCL_VERSION; if that string doesn't match KCL_LIB_REF here
+          # we are about to ship a mismatched pair — fail loudly.
+          cli_version_in_lib="$(grep -E '^const KCL_VERSION' lib-src/go/install/install.go | head -n1 | sed -E 's/.*"([^"]+)".*/\1/')"
+          echo "lib kcl version: ${cli_version_in_lib}"
+          echo "KCL_LIB_REF:     ${{ env.KCL_LIB_REF }}"
+          if [[ "${cli_version_in_lib}" != "${{ env.KCL_LIB_REF }}" ]]; then
+            echo "::error::libkcl version (${cli_version_in_lib}) does not match KCL_LIB_REF (${{ env.KCL_LIB_REF }}). Bump one of them."
+            exit 1
+          fi
+
+          dest="dotnet/KclTool/runtimes/${{ matrix.dotnet-rid }}/native"
+          mkdir -p "${dest}" "dotnet/KclTool/tools/${{ matrix.dotnet-rid }}"
+
+          # runtimes/<rid>/native/  — auto-copied next to the .NET assembly
+          cp "cli-bin/${{ matrix.bin-name }}" "${dest}/"
+          cp "lib-src/go/lib/${{ matrix.lib-platform-dir }}/${{ matrix.lib-name }}" "${dest}/"
+
+          # tools/<rid>/  — for manual PATH installs / future `dotnet tool` use
+          cp "cli-bin/${{ matrix.bin-name }}" "dotnet/KclTool/tools/${{ matrix.dotnet-rid }}/"
+          cp "lib-src/go/lib/${{ matrix.lib-platform-dir }}/${{ matrix.lib-name }}" "dotnet/KclTool/tools/${{ matrix.dotnet-rid }}/"
+
+          # Preserve +x on POSIX so consumers can run the binary directly from tools/.
+          if [[ "${{ matrix.os }}" != windows* ]]; then
+            chmod +x "${dest}/${{ matrix.bin-name }}" \
+                     "dotnet/KclTool/tools/${{ matrix.dotnet-rid }}/${{ matrix.bin-name }}"
+          fi
+
+          ls -la "${dest}" "dotnet/KclTool/tools/${{ matrix.dotnet-rid }}"
+
+      - uses: actions/upload-artifact@v6
+        with:
+          name: kcltool-${{ matrix.classifier }}
+          if-no-files-found: error
+          path: |
+            dotnet/KclTool/runtimes/${{ matrix.dotnet-rid }}/native/
+            dotnet/KclTool/tools/${{ matrix.dotnet-rid }}/
+
+  deploy:
+    name: Deploy KclTool to NuGet
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    needs: [ build ]
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: '8.0.x'
+
+      # Each per-RID artifact stores `runtimes/<rid>/native/...` and
+      # `tools/<rid>/...` at its root. Downloading each into a temp dir and
+      # then copying into dotnet/KclTool/ preserves the NuGet package layout
+      # so dotnet pack picks the binaries up.
+      - name: Download windows x64 artifact
+        uses: actions/download-artifact@v7
+        with:
+          name: kcltool-win-x64
+          path: _artifacts/win-x64
+
+      - name: Download linux arm64 artifact
+        uses: actions/download-artifact@v7
+        with:
+          name: kcltool-linux-arm64
+          path: _artifacts/linux-arm64
+
+      - name: Download linux x64 artifact
+        uses: actions/download-artifact@v7
+        with:
+          name: kcltool-linux-x64
+          path: _artifacts/linux-x64
+
+      - name: Download darwin x64 artifact
+        uses: actions/download-artifact@v7
+        with:
+          name: kcltool-osx-x64
+          path: _artifacts/osx-x64
+
+      - name: Download darwin arm64 artifact
+        uses: actions/download-artifact@v7
+        with:
+          name: kcltool-osx-arm64
+          path: _artifacts/osx-arm64
+
+      - name: Restage artifacts into KclTool
+        run: |
+          set -euo pipefail
+          for rid in linux-x64 linux-arm64 osx-x64 osx-arm64 win-x64; do
+            src="_artifacts/${rid}"
+            if [[ ! -d "${src}" ]]; then
+              echo "::error::missing artifact for ${rid}"
+              exit 1
+            fi
+            # Artifact root already contains runtimes/<rid>/native/ and tools/<rid>/.
+            mkdir -p "dotnet/KclTool/runtimes/${rid}/native" "dotnet/KclTool/tools/${rid}"
+            cp -R "${src}/runtimes/${rid}/native/." "dotnet/KclTool/runtimes/${rid}/native/"
+            cp -R "${src}/tools/${rid}/."          "dotnet/KclTool/tools/${rid}/"
+          done
+          echo "---- staged files ----"
+          find dotnet/KclTool/runtimes dotnet/KclTool/tools -type f | sort
+
+      - name: Pack KclTool
+        working-directory: dotnet/KclTool
+        run: |
+          dotnet pack -c Release
+
+      - uses: actions/upload-artifact@v6
+        with:
+          name: KclTool NuGet Package
+          path: |
+            dotnet/KclTool/bin/Release/*.nupkg
+            dotnet/KclTool/bin/Release/*.snupkg
+
+      - name: Release to NuGet
+        if: "startsWith(github.ref, 'refs/tags/')"
+        working-directory: dotnet/KclTool/bin/Release
+        run: |
+          dotnet nuget push KclTool.0.12.10.nupkg -k ${{ secrets.NUGET_API_KEY }} -s https://api.nuget.org/v3/index.json

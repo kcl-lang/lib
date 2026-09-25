@@ -135,6 +135,17 @@ var result = api.ExecProgram(execArgs);
 Console.WriteLine(result.YamlResult);
 ```
 
+The [`KclTool`](dotnet/KclTool/README.md) package ships the cross-platform
+`kcl` (or `kcl.exe` on Windows) executable under `runtimes/<rid>/native/` (and
+`tools/<rid>/`) for every supported RID, together with a `KclTool.KclRunner`
+helper for invoking it from C#:
+
+```cs
+using KclTool;
+
+string yaml = KclRunner.Run(new[] { "run", "schema.k", "--format", "yaml" }, capture: true);
+```
+
 ### Python
 
 ```shell
