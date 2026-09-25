@@ -552,30 +552,6 @@ mod ffi {
         pub method_name_list: Vec<String>,
     }
 
-    /// Message for list dependency files request arguments.
-    #[derive(Debug, Default)]
-    pub struct ListDepFilesArgs {
-        /// Working directory.
-        pub work_dir: String,
-        /// Flag to use absolute paths.
-        pub use_abs_path: bool,
-        /// Flag to include all files.
-        pub include_all: bool,
-        /// Flag to use fast parser.
-        pub use_fast_parser: bool,
-    }
-
-    /// Message for list dependency files response.
-    #[derive(Debug, Default)]
-    pub struct ListDepFilesResult {
-        /// Root package path.
-        pub pkgroot: String,
-        /// Package path.
-        pub pkgpath: String,
-        /// List of file paths in the package.
-        pub files: Vec<String>,
-    }
-
     #[derive(Debug, Default)]
     /// Message for load settings files request arguments.
     pub struct LoadSettingsFilesArgs {
@@ -882,8 +858,6 @@ mod ffi {
         fn ping(args: &PingArgs) -> Result<PingResult>;
         /// List the KCL service method names supported by the underlying runtime.
         fn list_method() -> Result<ListMethodResult>;
-        /// List all KCL dependency files reachable from `work_dir`.
-        fn list_dep_files(args: &ListDepFilesArgs) -> Result<ListDepFilesResult>;
     }
 }
 
@@ -1808,24 +1782,3 @@ fn list_method() -> Result<ListMethodResult> {
 }
 
 /// List all KCL dependency files reachable from `work_dir`.
-///
-/// `KclServiceImpl` does not expose a typed `list_dep_files` wrapper, so this
-/// routes through the universal `kcl_api::call` dispatcher against the
-/// `KclService.ListDepFiles` RPC and decodes the protobuf result by hand.
-fn list_dep_files(args: &ListDepFilesArgs) -> Result<ListDepFilesResult> {
-    use ::prost::Message;
-    let wire_args = kcl_api::ListDepFilesArgs {
-        work_dir: args.work_dir.clone(),
-        use_abs_path: args.use_abs_path,
-        include_all: args.include_all,
-        use_fast_parser: args.use_fast_parser,
-    };
-    let bytes = wire_args.encode_to_vec();
-    let raw = kcl_api::call(b"KclService.ListDepFiles", &bytes)?;
-    let parsed = kcl_api::ListDepFilesResult::decode(raw.as_slice())?;
-    Ok(ListDepFilesResult {
-        pkgroot: parsed.pkgroot,
-        pkgpath: parsed.pkgpath,
-        files: parsed.files,
-    })
-}
