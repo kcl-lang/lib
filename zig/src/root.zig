@@ -22,7 +22,7 @@ extern "c" fn call_native(
 
 /// Call any KCL service RPC by name. The `name` is the fully-qualified RPC
 /// name (e.g. `"KclService.ExecProgram"`, `"BuiltinService.Ping"`,
-/// `"KclService.ListDepFiles"`). The `args` slice must be a protobuf-encoded
+/// `"BuiltinService.ListMethod"`). The `args` slice must be a protobuf-encoded
 /// request message matching the RPC; the response is returned as raw
 /// protobuf bytes.
 ///
