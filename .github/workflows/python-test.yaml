@@ -96,6 +96,54 @@ jobs:
           name: wheels-macos-${{ github.run_id }}
           path: python/dist
 
+  test:
+    name: Test on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v6
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.x"
+      # Build the extension in-place via maturin develop so that the compiled
+      # `_kcl_lib.<abi>.so` is placed inside `python/kcl_lib/` alongside its
+      # Python source. This matters because the tests run with `working-directory:
+      # python`, and `python/kcl_lib/__init__.py` (which does `from ._kcl_lib
+      # import *`) would otherwise shadow the wheel's site-packages copy and
+      # fail with `ModuleNotFoundError: No module named 'kcl_lib._kcl_lib'`.
+      - name: Create virtualenv and install maturin + pytest
+        working-directory: "python"
+        shell: bash
+        run: |
+          python -m venv .venv
+          if [ "$RUNNER_OS" = "Windows" ]; then
+            .venv/Scripts/pip install maturin pytest
+          else
+            .venv/bin/pip install maturin pytest
+          fi
+      - name: Build extension in-place with maturin
+        working-directory: "python"
+        shell: bash
+        run: |
+          if [ "$RUNNER_OS" = "Windows" ]; then
+            .venv/Scripts/maturin develop --release
+          else
+            .venv/bin/maturin develop --release
+          fi
+      - name: Run pytest
+        working-directory: "python"
+        shell: bash
+        run: |
+          if [ "$RUNNER_OS" = "Windows" ]; then
+            .venv/Scripts/python -m pytest -v
+          else
+            .venv/bin/python -m pytest -v
+          fi
+
   release:
     name: Release
     runs-on: ubuntu-latest
