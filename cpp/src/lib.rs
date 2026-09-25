@@ -503,9 +503,77 @@ mod ffi {
     }
 
     #[derive(Debug, Default)]
+    /// Message for get schema type mapping under path response. Different from
+    /// `GetSchemaTypeMappingResult`, the map is keyed by package name (e.g.
+    /// "__main__", "mymod.v1") so schemas from kcl.mod dependencies keep
+    /// their own pkgpath. See https://github.com/kcl-lang/kcl/issues/1546.
+    pub struct GetSchemaTypeMappingUnderPathResult {
+        /// Map of package name to the list of schema types defined there.
+        pub schema_type_mapping: Vec<HashMapSchemaTypesValue>,
+    }
+
+    #[derive(Debug, Default)]
     struct HashMapKclTypeValue {
         key: String,
         value: KclType,
+    }
+
+    #[derive(Debug, Default)]
+    struct HashMapSchemaTypesValue {
+        key: String,
+        value: SchemaTypes,
+    }
+
+    /// A package's list of schema types — paired with `GetSchemaTypeMappingUnderPathResult`.
+    #[derive(Debug, Default)]
+    pub struct SchemaTypes {
+        /// Schema types defined in this package.
+        pub schema_type: Vec<KclType>,
+    }
+
+    /// Message for ping request arguments.
+    #[derive(Debug, Default)]
+    pub struct PingArgs {
+        /// Value sent in the ping request.
+        pub value: String,
+    }
+
+    /// Message for ping response.
+    #[derive(Debug, Default)]
+    pub struct PingResult {
+        /// Value received in the ping response.
+        pub value: String,
+    }
+
+    /// Message for list method response.
+    #[derive(Debug, Default)]
+    pub struct ListMethodResult {
+        /// List of available method names.
+        pub method_name_list: Vec<String>,
+    }
+
+    /// Message for list dependency files request arguments.
+    #[derive(Debug, Default)]
+    pub struct ListDepFilesArgs {
+        /// Working directory.
+        pub work_dir: String,
+        /// Flag to use absolute paths.
+        pub use_abs_path: bool,
+        /// Flag to include all files.
+        pub include_all: bool,
+        /// Flag to use fast parser.
+        pub use_fast_parser: bool,
+    }
+
+    /// Message for list dependency files response.
+    #[derive(Debug, Default)]
+    pub struct ListDepFilesResult {
+        /// Root package path.
+        pub pkgroot: String,
+        /// Package path.
+        pub pkgpath: String,
+        /// List of file paths in the package.
+        pub files: Vec<String>,
     }
 
     #[derive(Debug, Default)]
@@ -787,6 +855,11 @@ mod ffi {
         fn get_schema_type_mapping(
             args: &GetSchemaTypeMappingArgs,
         ) -> Result<GetSchemaTypeMappingResult>;
+        /// Get schema type mapping under path. See
+        /// https://github.com/kcl-lang/kcl/issues/1546.
+        fn get_schema_type_mapping_under_path(
+            args: &GetSchemaTypeMappingArgs,
+        ) -> Result<GetSchemaTypeMappingUnderPathResult>;
         /// Format KCL file or directory path contains KCL files and returns the changed file paths.
         fn format_code(args: &FormatCodeArgs) -> Result<FormatCodeResult>;
         /// Format KCL file or directory path contains KCL files and returns the changed file paths.
@@ -805,6 +878,12 @@ mod ffi {
         fn test(args: &TestArgs) -> Result<TestResult>;
         /// Return the KCL service version information.
         fn get_version() -> Result<GetVersionResult>;
+        /// Ping the KCL service and echo back the sent value.
+        fn ping(args: &PingArgs) -> Result<PingResult>;
+        /// List the KCL service method names supported by the underlying runtime.
+        fn list_method() -> Result<ListMethodResult>;
+        /// List all KCL dependency files reachable from `work_dir`.
+        fn list_dep_files(args: &ListDepFilesArgs) -> Result<ListDepFilesResult>;
     }
 }
 
@@ -1432,6 +1511,44 @@ fn get_schema_type_mapping(args: &GetSchemaTypeMappingArgs) -> Result<GetSchemaT
     Ok(GetSchemaTypeMappingResult::new(result))
 }
 
+impl SchemaTypes {
+    #[inline]
+    fn new(r: &kcl_api::SchemaTypes) -> Self {
+        Self {
+            schema_type: r
+                .schema_type
+                .iter()
+                .map(crate::ffi::KclType::new)
+                .collect(),
+        }
+    }
+}
+
+impl GetSchemaTypeMappingUnderPathResult {
+    #[inline]
+    fn new(r: kcl_api::GetSchemaTypeMappingUnderPathResult) -> Self {
+        Self {
+            schema_type_mapping: r
+                .schema_type_mapping
+                .iter()
+                .map(|(k, v)| HashMapSchemaTypesValue {
+                    key: k.to_string(),
+                    value: SchemaTypes::new(v),
+                })
+                .collect(),
+        }
+    }
+}
+
+/// Get schema type mapping under path. See https://github.com/kcl-lang/kcl/issues/1546.
+fn get_schema_type_mapping_under_path(
+    args: &GetSchemaTypeMappingArgs,
+) -> Result<GetSchemaTypeMappingUnderPathResult> {
+    let api = kcl_api::API::default();
+    let result = api.get_schema_type_mapping_under_path(&build_get_schema_type_mapping_args(args))?;
+    Ok(GetSchemaTypeMappingUnderPathResult::new(result))
+}
+
 fn build_format_code_args(args: &FormatCodeArgs) -> kcl_api::FormatCodeArgs {
     kcl_api::FormatCodeArgs {
         source: args.source.clone(),
@@ -1663,5 +1780,52 @@ fn get_version() -> Result<GetVersionResult> {
         checksum: result.checksum,
         git_sha: result.git_sha,
         version_info: result.version_info,
+    })
+}
+
+/// Ping the KCL service and echo back the sent value.
+fn ping(args: &PingArgs) -> Result<PingResult> {
+    let api = kcl_api::API::default();
+    let result = api.ping(&kcl_api::PingArgs {
+        value: args.value.clone(),
+    })?;
+    Ok(PingResult { value: result.value })
+}
+
+/// List the KCL service method names supported by the underlying runtime.
+///
+/// `KclServiceImpl` does not expose a typed `list_method` wrapper, so this
+/// routes through the universal `kcl_api::call` dispatcher against the
+/// `BuiltinService.ListMethod` RPC and decodes the protobuf result by hand.
+fn list_method() -> Result<ListMethodResult> {
+    use ::prost::Message;
+    let args = kcl_api::ListMethodArgs {}.encode_to_vec();
+    let raw = kcl_api::call(b"BuiltinService.ListMethod", &args)?;
+    let parsed = kcl_api::ListMethodResult::decode(raw.as_slice())?;
+    Ok(ListMethodResult {
+        method_name_list: parsed.method_name_list,
+    })
+}
+
+/// List all KCL dependency files reachable from `work_dir`.
+///
+/// `KclServiceImpl` does not expose a typed `list_dep_files` wrapper, so this
+/// routes through the universal `kcl_api::call` dispatcher against the
+/// `KclService.ListDepFiles` RPC and decodes the protobuf result by hand.
+fn list_dep_files(args: &ListDepFilesArgs) -> Result<ListDepFilesResult> {
+    use ::prost::Message;
+    let wire_args = kcl_api::ListDepFilesArgs {
+        work_dir: args.work_dir.clone(),
+        use_abs_path: args.use_abs_path,
+        include_all: args.include_all,
+        use_fast_parser: args.use_fast_parser,
+    };
+    let bytes = wire_args.encode_to_vec();
+    let raw = kcl_api::call(b"KclService.ListDepFiles", &bytes)?;
+    let parsed = kcl_api::ListDepFilesResult::decode(raw.as_slice())?;
+    Ok(ListDepFilesResult {
+        pkgroot: parsed.pkgroot,
+        pkgpath: parsed.pkgpath,
+        files: parsed.files,
     })
 }

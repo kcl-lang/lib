@@ -11,6 +11,10 @@ crate-type = ["staticlib"]
 anyhow = "1.0"
 cxx = "1.0"
 kcl-api = { git = "https://github.com/kcl-lang/kcl", version = "0.13.0" }
+# Used to encode/decode ListMethod/ListDepFiles arguments and decode their
+# results through the universal `kcl_api::call` dispatcher since
+# `KclServiceImpl` does not expose typed wrappers for those RPCs.
+prost = "0.14"
 
 [build-dependencies]
 cxx-build = "1.0"
