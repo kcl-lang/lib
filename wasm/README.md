@@ -5,11 +5,11 @@
 ### Node.js
 
 ```shell
-npm install @kcl-lang/wasm-lib
+npm install @kcl-lib/wasm
 ```
 
 ```typescript
-import { load, invokeKCLRun } from "@kcl-lang/wasm-lib";
+import { load, invokeKCLRun } from "@kcl-lib/wasm";
 
 async function main() {
   const inst = await load();
@@ -35,7 +35,7 @@ point that dispatches to **any** KCL service method (the full set declared
 in `spec/spec.proto`):
 
 ```typescript
-import { load, invokeKCLCall, invokeKCLVersion } from "@kcl-lang/wasm-lib";
+import { load, invokeKCLCall, invokeKCLVersion } from "@kcl-lib/wasm";
 
 const inst = await load();
 

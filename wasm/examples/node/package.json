@@ -13,7 +13,7 @@
     "dist/"
   ],
   "dependencies": {
-    "@kcl-lang/wasm-lib": "file:../.."
+    "@kcl-lib/wasm": "file:../.."
   },
   "devDependencies": {
     "prettier": "^2.8.4",

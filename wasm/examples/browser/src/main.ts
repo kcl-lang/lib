@@ -1,4 +1,4 @@
-import { load, invokeKCLRun, invokeKCLFmt } from "@kcl-lang/wasm-lib";
+import { load, invokeKCLRun, invokeKCLFmt } from "@kcl-lib/wasm";
 
 const inst = await load();
 
