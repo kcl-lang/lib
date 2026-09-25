@@ -333,6 +333,38 @@ schema Person:
         Assert.AreEqual(true, result.VersionInfo.Contains("GitCommit"), result.ToString());
     }
 
+    [TestMethod]
+    public void TestPing()
+    {
+        var result = new API().Ping(new PingArgs { Value = "hello-kcl" });
+        Assert.AreEqual("hello-kcl", result.Value);
+    }
+
+    [TestMethod]
+    public void TestListMethod()
+    {
+        var result = new API().ListMethod();
+        Assert.IsNotNull(result.MethodNameList);
+        Assert.IsTrue(result.MethodNameList.Count > 0);
+        CollectionAssert.Contains(result.MethodNameList, "KclService.ExecProgram");
+        CollectionAssert.Contains(result.MethodNameList, "KclService.GetVersion");
+    }
+
+    [TestMethod]
+    public void TestListDepFiles()
+    {
+        var args = new ListDepFilesArgs
+        {
+            WorkDir = parentDirectory,
+            UseAbsPath = false,
+            IncludeAll = true,
+            UseFastParser = false,
+        };
+        var result = new API().ListDepFiles(args);
+        Assert.IsNotNull(result.Files);
+        Assert.IsFalse(string.IsNullOrEmpty(result.Pkgpath));
+    }
+
     static string FindCsprojInParentDirectory(string directory)
     {
         string parentDirectory = Directory.GetParent(directory).FullName;
