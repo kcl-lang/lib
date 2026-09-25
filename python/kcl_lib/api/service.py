@@ -31,8 +31,6 @@ from .spec_pb2 import (
     GetSchemaTypeMappingUnderPathResult,
     ValidateCodeArgs,
     ValidateCodeResult,
-    ListDepFilesArgs,
-    ListDepFilesResult,
     LoadSettingsFilesArgs,
     LoadSettingsFilesResult,
     RenameArgs,
@@ -669,22 +667,6 @@ class API:
         # the encoded (zero-byte) payload for the universal dispatcher.
         return self.call("BuiltinService.ListMethod", ListMethodArgs())
 
-    def list_dep_files(self, args: ListDepFilesArgs) -> ListDepFilesResult:
-        """List all KCL dependency files reachable from `work_dir`.
-
-        ## Example
-
-        ```python
-        import kcl_lib.api as api
-
-        args = api.ListDepFilesArgs(work_dir=".", use_abs_path=False, include_all=True)
-        api_instance = api.API()
-        result = api_instance.list_dep_files(args)
-        print(result.files)
-        ```
-        """
-        return self.call("KclService.ListDepFiles", args)
-
     # Helper method to perform the call
     def call(self, name: str, args):
         """Call KCL API with the API name and argument protobuf bytes."""
@@ -731,8 +713,6 @@ class API:
             return GetSchemaTypeMappingArgs()
         elif method in ["ValidateCode", "KclService.ValidateCode"]:
             return ValidateCodeArgs()
-        elif method in ["ListDepFiles", "KclService.ListDepFiles"]:
-            return ListDepFilesArgs()
         elif method in ["LoadSettingsFiles", "KclService.LoadSettingsFiles"]:
             return LoadSettingsFilesArgs()
         elif method in ["Rename", "KclService.Rename"]:
@@ -776,8 +756,6 @@ class API:
             return GetSchemaTypeMappingUnderPathResult()
         elif method in ["ValidateCode", "KclService.ValidateCode"]:
             return ValidateCodeResult()
-        elif method in ["ListDepFiles", "KclService.ListDepFiles"]:
-            return ListDepFilesResult()
         elif method in ["LoadSettingsFiles", "KclService.LoadSettingsFiles"]:
             return LoadSettingsFilesResult()
         elif method in ["Rename", "KclService.Rename"]:
@@ -792,6 +770,4 @@ class API:
             return GetVersionResult()
         elif method in ["ListMethod", "BuiltinService.ListMethod"]:
             return ListMethodResult()
-        elif method in ["ListDepFiles", "KclService.ListDepFiles"]:
-            return ListDepFilesResult()
         raise Exception(f"unknown method: {method}")
