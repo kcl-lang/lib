@@ -108,10 +108,6 @@ PB_BIND(ValidateCodeResult, ValidateCodeResult, AUTO)
 
 PB_BIND(Position, Position, AUTO)
 
-PB_BIND(ListDepFilesArgs, ListDepFilesArgs, AUTO)
-
-PB_BIND(ListDepFilesResult, ListDepFilesResult, AUTO)
-
 PB_BIND(LoadSettingsFilesArgs, LoadSettingsFilesArgs, AUTO)
 
 PB_BIND(LoadSettingsFilesResult, LoadSettingsFilesResult, AUTO)

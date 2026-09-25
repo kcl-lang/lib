@@ -468,28 +468,6 @@ typedef struct _Message {
     Position pos;
 } Message;
 
-/* Message for list dependency files request arguments. */
-typedef struct _ListDepFilesArgs {
-    /* Working directory. */
-    pb_callback_t work_dir;
-    /* Flag to use absolute paths. */
-    bool use_abs_path;
-    /* Flag to include all files. */
-    bool include_all;
-    /* Flag to use fast parser. */
-    bool use_fast_parser;
-} ListDepFilesArgs;
-
-/* Message for list dependency files response. */
-typedef struct _ListDepFilesResult {
-    /* Root package path. */
-    pb_callback_t pkgroot;
-    /* Package path. */
-    pb_callback_t pkgpath;
-    /* List of file paths in the package. */
-    pb_callback_t files;
-} ListDepFilesResult;
-
 /* Message for load settings files request arguments. */
 typedef struct _LoadSettingsFilesArgs {
     /* Working directory. */
@@ -795,8 +773,6 @@ extern "C" {
 #define ValidateCodeArgs_init_default           {{{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}}
 #define ValidateCodeResult_init_default         {0, {{NULL}, NULL}}
 #define Position_init_default                    {0, 0, {{NULL}, NULL}}
-#define ListDepFilesArgs_init_default           {{{NULL}, NULL}, 0, 0, 0}
-#define ListDepFilesResult_init_default         {{{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}}
 #define LoadSettingsFilesArgs_init_default      {{{NULL}, NULL}, {{NULL}, NULL}}
 #define LoadSettingsFilesResult_init_default    {false, CliConfig_init_default, {{NULL}, NULL}}
 #define CliConfig_init_default                   {{{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, 0, 0, 0, 0, 0, 0, 0, 0}
@@ -869,8 +845,6 @@ extern "C" {
 #define ValidateCodeArgs_init_zero              {{{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}}
 #define ValidateCodeResult_init_zero            {0, {{NULL}, NULL}}
 #define Position_init_zero                       {0, 0, {{NULL}, NULL}}
-#define ListDepFilesArgs_init_zero              {{{NULL}, NULL}, 0, 0, 0}
-#define ListDepFilesResult_init_zero            {{{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}}
 #define LoadSettingsFilesArgs_init_zero         {{{NULL}, NULL}, {{NULL}, NULL}}
 #define LoadSettingsFilesResult_init_zero       {false, CliConfig_init_zero, {{NULL}, NULL}}
 #define CliConfig_init_zero                      {{{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, 0, 0, 0, 0, 0, 0, 0, 0}
@@ -1028,13 +1002,6 @@ extern "C" {
 #define Position_filename_tag                    3
 #define Message_msg_tag                          1
 #define Message_pos_tag                          2
-#define ListDepFilesArgs_work_dir_tag           1
-#define ListDepFilesArgs_use_abs_path_tag       2
-#define ListDepFilesArgs_include_all_tag        3
-#define ListDepFilesArgs_use_fast_parser_tag    4
-#define ListDepFilesResult_pkgroot_tag          1
-#define ListDepFilesResult_pkgpath_tag          2
-#define ListDepFilesResult_files_tag            3
 #define LoadSettingsFilesArgs_work_dir_tag      1
 #define LoadSettingsFilesArgs_files_tag         2
 #define CliConfig_files_tag                      1
@@ -1512,21 +1479,6 @@ X(a, CALLBACK, SINGULAR, STRING,   filename,          3)
 #define Position_CALLBACK pb_default_field_callback
 #define Position_DEFAULT NULL
 
-#define ListDepFilesArgs_FIELDLIST(X, a) \
-X(a, CALLBACK, SINGULAR, STRING,   work_dir,          1) \
-X(a, STATIC,   SINGULAR, BOOL,     use_abs_path,      2) \
-X(a, STATIC,   SINGULAR, BOOL,     include_all,       3) \
-X(a, STATIC,   SINGULAR, BOOL,     use_fast_parser,   4)
-#define ListDepFilesArgs_CALLBACK pb_default_field_callback
-#define ListDepFilesArgs_DEFAULT NULL
-
-#define ListDepFilesResult_FIELDLIST(X, a) \
-X(a, CALLBACK, SINGULAR, STRING,   pkgroot,           1) \
-X(a, CALLBACK, SINGULAR, STRING,   pkgpath,           2) \
-X(a, CALLBACK, REPEATED, STRING,   files,             3)
-#define ListDepFilesResult_CALLBACK pb_default_field_callback
-#define ListDepFilesResult_DEFAULT NULL
-
 #define LoadSettingsFilesArgs_FIELDLIST(X, a) \
 X(a, CALLBACK, SINGULAR, STRING,   work_dir,          1) \
 X(a, CALLBACK, REPEATED, STRING,   files,             2)
@@ -1751,8 +1703,6 @@ extern const pb_msgdesc_t GetSchemaTypeMappingResult_SchemaTypeMappingEntry_msg;
 extern const pb_msgdesc_t ValidateCodeArgs_msg;
 extern const pb_msgdesc_t ValidateCodeResult_msg;
 extern const pb_msgdesc_t Position_msg;
-extern const pb_msgdesc_t ListDepFilesArgs_msg;
-extern const pb_msgdesc_t ListDepFilesResult_msg;
 extern const pb_msgdesc_t LoadSettingsFilesArgs_msg;
 extern const pb_msgdesc_t LoadSettingsFilesResult_msg;
 extern const pb_msgdesc_t CliConfig_msg;
@@ -1827,8 +1777,6 @@ extern const pb_msgdesc_t Example_msg;
 #define ValidateCodeArgs_fields &ValidateCodeArgs_msg
 #define ValidateCodeResult_fields &ValidateCodeResult_msg
 #define Position_fields &Position_msg
-#define ListDepFilesArgs_fields &ListDepFilesArgs_msg
-#define ListDepFilesResult_fields &ListDepFilesResult_msg
 #define LoadSettingsFilesArgs_fields &LoadSettingsFilesArgs_msg
 #define LoadSettingsFilesResult_fields &LoadSettingsFilesResult_msg
 #define CliConfig_fields &CliConfig_msg
@@ -1900,8 +1848,6 @@ extern const pb_msgdesc_t Example_msg;
 /* ValidateCodeArgs_size depends on runtime parameters */
 /* ValidateCodeResult_size depends on runtime parameters */
 /* Position_size depends on runtime parameters */
-/* ListDepFilesArgs_size depends on runtime parameters */
-/* ListDepFilesResult_size depends on runtime parameters */
 /* LoadSettingsFilesArgs_size depends on runtime parameters */
 /* LoadSettingsFilesResult_size depends on runtime parameters */
 /* CliConfig_size depends on runtime parameters */
