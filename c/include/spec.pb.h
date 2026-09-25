@@ -292,30 +292,6 @@ typedef struct _ExecProgramResult {
     pb_callback_t err_message;
 } ExecProgramResult;
 
-/* Message for build program request arguments. */
-typedef struct _BuildProgramArgs {
-    /* Arguments for executing the program. */
-    bool has_exec_args;
-    ExecProgramArgs exec_args;
-    /* Output path. */
-    pb_callback_t output;
-} BuildProgramArgs;
-
-/* Message for build program response. */
-typedef struct _BuildProgramResult {
-    /* Path of the built program. */
-    pb_callback_t path;
-} BuildProgramResult;
-
-/* Message for execute artifact request arguments. */
-typedef struct _ExecArtifactArgs {
-    /* Path of the artifact. */
-    pb_callback_t path;
-    /* Arguments for executing the program. */
-    bool has_exec_args;
-    ExecProgramArgs exec_args;
-} ExecArtifactArgs;
-
 /* Message for format code request arguments. */
 typedef struct _FormatCodeArgs {
     /* Source code to be formatted. */
@@ -798,9 +774,6 @@ extern "C" {
 #define ScopeIndex_init_default                  {0, 0, {{NULL}, NULL}}
 #define ExecProgramArgs_init_default            {{{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, 0, 0, 0, 0, 0, 0, 0, {{NULL}, NULL}, 0, 0, 0, {{NULL}, NULL}, 0}
 #define ExecProgramResult_init_default          {{{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}}
-#define BuildProgramArgs_init_default           {false, ExecProgramArgs_init_default, {{NULL}, NULL}}
-#define BuildProgramResult_init_default         {{{NULL}, NULL}}
-#define ExecArtifactArgs_init_default           {{{NULL}, NULL}, false, ExecProgramArgs_init_default}
 #define FormatCodeArgs_init_default             {{{NULL}, NULL}}
 #define FormatCodeResult_init_default           {{{NULL}, NULL}}
 #define FormatPathArgs_init_default             {{{NULL}, NULL}}
@@ -875,9 +848,6 @@ extern "C" {
 #define ScopeIndex_init_zero                     {0, 0, {{NULL}, NULL}}
 #define ExecProgramArgs_init_zero               {{{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, 0, 0, 0, 0, 0, 0, 0, {{NULL}, NULL}, 0, 0, 0, {{NULL}, NULL}, 0}
 #define ExecProgramResult_init_zero             {{{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}}
-#define BuildProgramArgs_init_zero              {false, ExecProgramArgs_init_zero, {{NULL}, NULL}}
-#define BuildProgramResult_init_zero            {{{NULL}, NULL}}
-#define ExecArtifactArgs_init_zero              {{{NULL}, NULL}, false, ExecProgramArgs_init_zero}
 #define FormatCodeArgs_init_zero                {{{NULL}, NULL}}
 #define FormatCodeResult_init_zero              {{{NULL}, NULL}}
 #define FormatPathArgs_init_zero                {{{NULL}, NULL}}
@@ -1013,11 +983,6 @@ extern "C" {
 #define ExecProgramResult_yaml_result_tag       2
 #define ExecProgramResult_log_message_tag       3
 #define ExecProgramResult_err_message_tag       4
-#define BuildProgramArgs_exec_args_tag          1
-#define BuildProgramArgs_output_tag             2
-#define BuildProgramResult_path_tag             1
-#define ExecArtifactArgs_path_tag               1
-#define ExecArtifactArgs_exec_args_tag          2
 #define FormatCodeArgs_source_tag               1
 #define FormatCodeResult_formatted_tag          1
 #define FormatPathArgs_path_tag                 1
@@ -1406,25 +1371,6 @@ X(a, CALLBACK, SINGULAR, STRING,   err_message,       4)
 #define ExecProgramResult_CALLBACK pb_default_field_callback
 #define ExecProgramResult_DEFAULT NULL
 
-#define BuildProgramArgs_FIELDLIST(X, a) \
-X(a, STATIC,   OPTIONAL, MESSAGE,  exec_args,         1) \
-X(a, CALLBACK, SINGULAR, STRING,   output,            2)
-#define BuildProgramArgs_CALLBACK pb_default_field_callback
-#define BuildProgramArgs_DEFAULT NULL
-#define BuildProgramArgs_exec_args_MSGTYPE ExecProgramArgs
-
-#define BuildProgramResult_FIELDLIST(X, a) \
-X(a, CALLBACK, SINGULAR, STRING,   path,              1)
-#define BuildProgramResult_CALLBACK pb_default_field_callback
-#define BuildProgramResult_DEFAULT NULL
-
-#define ExecArtifactArgs_FIELDLIST(X, a) \
-X(a, CALLBACK, SINGULAR, STRING,   path,              1) \
-X(a, STATIC,   OPTIONAL, MESSAGE,  exec_args,         2)
-#define ExecArtifactArgs_CALLBACK pb_default_field_callback
-#define ExecArtifactArgs_DEFAULT NULL
-#define ExecArtifactArgs_exec_args_MSGTYPE ExecProgramArgs
-
 #define FormatCodeArgs_FIELDLIST(X, a) \
 X(a, CALLBACK, SINGULAR, STRING,   source,            1)
 #define FormatCodeArgs_CALLBACK pb_default_field_callback
@@ -1784,9 +1730,6 @@ extern const pb_msgdesc_t SymbolIndex_msg;
 extern const pb_msgdesc_t ScopeIndex_msg;
 extern const pb_msgdesc_t ExecProgramArgs_msg;
 extern const pb_msgdesc_t ExecProgramResult_msg;
-extern const pb_msgdesc_t BuildProgramArgs_msg;
-extern const pb_msgdesc_t BuildProgramResult_msg;
-extern const pb_msgdesc_t ExecArtifactArgs_msg;
 extern const pb_msgdesc_t FormatCodeArgs_msg;
 extern const pb_msgdesc_t FormatCodeResult_msg;
 extern const pb_msgdesc_t FormatPathArgs_msg;
@@ -1863,9 +1806,6 @@ extern const pb_msgdesc_t Example_msg;
 #define ScopeIndex_fields &ScopeIndex_msg
 #define ExecProgramArgs_fields &ExecProgramArgs_msg
 #define ExecProgramResult_fields &ExecProgramResult_msg
-#define BuildProgramArgs_fields &BuildProgramArgs_msg
-#define BuildProgramResult_fields &BuildProgramResult_msg
-#define ExecArtifactArgs_fields &ExecArtifactArgs_msg
 #define FormatCodeArgs_fields &FormatCodeArgs_msg
 #define FormatCodeResult_fields &FormatCodeResult_msg
 #define FormatPathArgs_fields &FormatPathArgs_msg
@@ -1940,9 +1880,6 @@ extern const pb_msgdesc_t Example_msg;
 /* ScopeIndex_size depends on runtime parameters */
 /* ExecProgramArgs_size depends on runtime parameters */
 /* ExecProgramResult_size depends on runtime parameters */
-/* BuildProgramArgs_size depends on runtime parameters */
-/* BuildProgramResult_size depends on runtime parameters */
-/* ExecArtifactArgs_size depends on runtime parameters */
 /* FormatCodeArgs_size depends on runtime parameters */
 /* FormatCodeResult_size depends on runtime parameters */
 /* FormatPathArgs_size depends on runtime parameters */

@@ -370,69 +370,6 @@ service KclService {
 	/// ```
 	rpc ExecProgram(ExecProgramArgs) returns (ExecProgramResult);
 
-	/// Build the KCL program to an artifact.
-	///
-	/// # Examples
-	///
-	/// ```jsonrpc
-	/// // Request
-	/// {
-	///     "jsonrpc": "2.0",
-	///     "method": "BuildProgram",
-	///     "params": {
-	///         "exec_args": {
-	///             "work_dir": "./src/testdata",
-	///             "k_filename_list": ["test.k"]
-	///         },
-	///         "output": "./build"
-	///     },
-	///     "id": 1
-	/// }
-	///
-	/// // Response
-	/// {
-	///     "jsonrpc": "2.0",
-	///     "result": {
-	///         "path": "./build/test.k"
-	///     },
-	///     "id": 1
-	/// }
-	/// ```
-	rpc BuildProgram(BuildProgramArgs) returns (BuildProgramResult);
-
-	/// Execute the KCL artifact with args. **Note that it is not thread safe.**
-	///
-	/// # Examples
-	///
-	/// ```jsonrpc
-	/// // Request
-	/// {
-	///     "jsonrpc": "2.0",
-	///     "method": "ExecArtifact",
-	///     "params": {
-	///         "path": "./artifact_path",
-	///         "exec_args": {
-	///             "work_dir": "./src/testdata",
-	///             "k_filename_list": ["test.k"]
-	///         }
-	///     },
-	///     "id": 1
-	/// }
-	///
-	/// // Response
-	/// {
-	///     "jsonrpc": "2.0",
-	///     "result": {
-	///         "json_result": "{\"alice\": {\"age\": 18}}",
-	///         "yaml_result": "alice:\n  age: 18",
-	///         "log_message": "",
-	///         "err_message": ""
-	///     },
-	///     "id": 1
-	/// }
-	/// ```
-	rpc ExecArtifact(ExecArtifactArgs) returns (ExecProgramResult);
-
 	/// Override KCL file with args.
 	///
 	/// # Examples
@@ -1094,28 +1031,6 @@ message ExecProgramResult {
 	string log_message = 3;
 	// Error message from execution.
 	string err_message = 4;
-}
-
-// Message for build program request arguments.
-message BuildProgramArgs {
-	// Arguments for executing the program.
-	ExecProgramArgs exec_args = 1;
-	// Output path.
-	string output = 2;
-}
-
-// Message for build program response.
-message BuildProgramResult {
-	// Path of the built program.
-	string path = 1;
-}
-
-// Message for execute artifact request arguments.
-message ExecArtifactArgs {
-	// Path of the artifact.
-	string path = 1;
-	// Arguments for executing the program.
-	ExecProgramArgs exec_args = 2;
 }
 
 // Message for format code request arguments.
