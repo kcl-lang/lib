@@ -21,6 +21,7 @@ namespace KclTool;
 public static class KclRunner
 {
     private static readonly Lazy<string> BinaryPathLazy = new(ResolveBinaryPath, isThreadSafe: true);
+    private static readonly Lazy<string> NativeDirectoryLazy = new(ResolveNativeDirectory, isThreadSafe: true);
 
     /// <summary>
     /// Absolute path to the bundled <c>kcl</c> (or <c>kcl.exe</c> on Windows)
@@ -30,6 +31,14 @@ public static class KclRunner
     /// Thrown if the package does not include binaries for the current RID.
     /// </exception>
     public static string BinaryPath => BinaryPathLazy.Value;
+
+    /// <summary>
+    /// Absolute path to the <c>runtimes/&lt;rid&gt;/native/</c> directory that
+    /// ships with this package. The <c>kcl</c> binary looks in this directory
+    /// (via <c>KCL_LIB_HOME</c>) for its native <c>libkcl</c> dependency, so
+    /// no first-run download is required.
+    /// </summary>
+    public static string NativeDirectory => NativeDirectoryLazy.Value;
 
     /// <summary>
     /// Invokes <c>kcl</c> with the given arguments and waits for it to exit.
@@ -56,6 +65,7 @@ public static class KclRunner
         };
         if (workingDirectory != null) psi.WorkingDirectory = workingDirectory;
         foreach (var arg in args) psi.ArgumentList.Add(arg);
+        psi.Environment["KCL_LIB_HOME"] = NativeDirectory;
 
         using var process = Process.Start(psi)
             ?? throw new InvalidOperationException($"Failed to start '{BinaryPath}'.");
@@ -97,6 +107,7 @@ public static class KclRunner
         };
         if (workingDirectory != null) psi.WorkingDirectory = workingDirectory;
         foreach (var arg in args) psi.ArgumentList.Add(arg);
+        psi.Environment["KCL_LIB_HOME"] = NativeDirectory;
 
         using var process = Process.Start(psi)
             ?? throw new InvalidOperationException($"Failed to start '{BinaryPath}'.");
@@ -116,6 +127,20 @@ public static class KclRunner
 
     private static string ResolveBinaryPath()
     {
+        var ext = RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? ".exe" : string.Empty;
+        var path = Path.Combine(ResolveNativeDirectory(), "kcl" + ext);
+        if (!File.Exists(path))
+        {
+            throw new FileNotFoundException(
+                $"The bundled kcl binary was not found at '{path}'. " +
+                "Make sure the package supports the current runtime identifier.",
+                path);
+        }
+        return path;
+    }
+
+    private static string ResolveNativeDirectory()
+    {
         var assemblyLocation = typeof(KclRunner).Assembly.Location;
         var assemblyDir = string.IsNullOrEmpty(assemblyLocation)
             ? AppContext.BaseDirectory
@@ -126,16 +151,14 @@ public static class KclRunner
         }
 
         var rid = RuntimeInformation.RuntimeIdentifier;
-        var ext = RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? ".exe" : string.Empty;
-        var path = Path.Combine(assemblyDir, "runtimes", rid, "native", "kcl" + ext);
+        var dir = Path.Combine(assemblyDir, "runtimes", rid, "native");
 
-        if (!File.Exists(path))
+        if (!Directory.Exists(dir))
         {
-            throw new FileNotFoundException(
-                $"The bundled kcl binary was not found at '{path}'. " +
-                $"Make sure the package supports RID '{rid}'.",
-                path);
+            throw new DirectoryNotFoundException(
+                $"The bundled native directory was not found at '{dir}'. " +
+                $"Make sure the package supports RID '{rid}'.");
         }
-        return path;
+        return dir;
     }
 }

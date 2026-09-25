@@ -46,8 +46,8 @@ int exitCode = KclRunner.Run(new[] { "run", "schema.k", "--format", "yaml" });
 ```
 
 The helper resolves the binary for the current RID once and caches it; `libkcl`
-is placed next to the executable, so no extra `PATH` / `LD_LIBRARY_PATH` setup
-is required.
+is placed next to the executable and `KCL_LIB_HOME` is set so no extra `PATH` /
+`LD_LIBRARY_PATH` setup and no first-run auto-install is required.
 
 ### Option B — invoke directly (tool-style)
 
@@ -70,12 +70,23 @@ using KclTool;
 string yaml = await KclRunner.RunAsync(new[] { "run", "schema.k", "--format", "yaml" });
 ```
 
+## Bundled versions
+
+The package ships the pre-built `kcl` binary from
+[kcl-lang/cli](https://github.com/kcl-lang/cli) alongside the matching
+`libkcl.{so,dylib,dll}` from [kcl-lang/lib](https://github.com/kcl-lang/lib).
+The two are pinned together by the CI workflow (see
+`.github/workflows/publish-kcltool.yaml`); when bumping `KCL_CLI_VERSION`,
+bump `KCL_LIB_REF` to the `kcl-lang.io/lib` version the new CLI was built
+against (check `kcl-lang/cli` `go.mod`).
+
 ## Developing and Testing
 
-- Install `cargo`
 - Install `dotnet 8.0+`
 
-The `kcl` CLI binary and `libkcl` are built from
-[kcl-lang/kcl](https://github.com/kcl-lang/kcl) by the CI; locally you can
-populate `dotnet/KclTool/runtimes/<rid>/native/` and `dotnet/KclTool/tools/<rid>/`
-from a local build of the upstream project.
+The binaries are downloaded by the CI from
+[kcl-lang/cli](https://github.com/kcl-lang/cli) releases and
+[kcl-lang/lib](https://github.com/kcl-lang/lib) at the pinned tag, so local
+builds don't need a Rust toolchain. To smoke-test locally, populate
+`dotnet/KclTool/runtimes/<rid>/native/` and `dotnet/KclTool/tools/<rid>/`
+from matching upstream artifacts.
