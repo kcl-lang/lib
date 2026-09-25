@@ -84,12 +84,18 @@ jobs:
         cargo build --release
     - name: Clear package cache
       run: dotnet clean KclLib.sln && dotnet nuget locals all --clear
+    # KclTool is intentionally excluded here: it PackageReferences the
+    # KclTool.runtime.* packages, which only exist on NuGet.org after a
+    # publish-kcltool release, so restoring the full solution fails on PRs.
+    # KclLib.Tests references KclLib, so restoring/building it covers the lib.
     - name: Restore packages
-      run: dotnet restore KclLib.sln
+      run: |
+        dotnet restore KclLib/KclLib.csproj
+        dotnet restore KclLib.Tests/KclLib.Tests.csproj
     - name: Build
-      run: dotnet build KclLib.sln -c ${{ matrix.config }} --no-restore
+      run: dotnet build KclLib.Tests/KclLib.Tests.csproj -c ${{ matrix.config }} --no-restore
     - name: Test
-      run: dotnet test KclLib.sln -c ${{ matrix.config }}
+      run: dotnet test KclLib.Tests/KclLib.Tests.csproj -c ${{ matrix.config }} --no-restore
     - name: Create package
       run: |
         cd KclLib
