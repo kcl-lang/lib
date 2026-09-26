@@ -346,6 +346,8 @@ mod ffi {
     pub struct FormatPathArgs {
         /// Path of the file to format.
         pub path: String,
+        /// Whether to return the files that would be formatted without formatting them.
+        pub dry_run: bool,
     }
 
     /// Message for format file path response.
@@ -1442,8 +1444,55 @@ impl KclType {
             pkg_path: r.pkg_path.clone(),
             line: r.line,
             item: OptionalKclType::new_from_box(&r.item),
-            // TODO: function and index_signature fields
-            ..Default::default()
+            function: OptionalFunctionType::new_from_box(&r.function),
+            index_signature: OptionalIndexSignature::new_from_box(&r.index_signature),
+        }
+    }
+}
+
+impl OptionalFunctionType {
+    #[inline]
+    fn new_from_box(r: &Option<Box<kcl_api::FunctionType>>) -> Self {
+        match r.as_ref() {
+            None => Self {
+                has_value: false,
+                value: Default::default(),
+            },
+            Some(r) => Self {
+                has_value: true,
+                value: FunctionType {
+                    params: r
+                        .params
+                        .iter()
+                        .map(|p| Parameter {
+                            name: p.name.clone(),
+                            ty: OptionalKclType::new(&p.ty),
+                        })
+                        .collect(),
+                    return_ty: OptionalKclType::new_from_box(&r.return_ty),
+                },
+            },
+        }
+    }
+}
+
+impl OptionalIndexSignature {
+    #[inline]
+    fn new_from_box(r: &Option<Box<kcl_api::IndexSignature>>) -> Self {
+        match r.as_ref() {
+            None => Self {
+                has_value: false,
+                value: Default::default(),
+            },
+            Some(r) => Self {
+                has_value: true,
+                value: IndexSignature {
+                    key_name: r.key_name.clone().unwrap_or_default(),
+                    key: OptionalKclType::new_from_box(&r.key),
+                    val: OptionalKclType::new_from_box(&r.val),
+                    any_other: r.any_other,
+                },
+            },
         }
     }
 }
@@ -1548,7 +1597,7 @@ fn format_code(args: &FormatCodeArgs) -> Result<FormatCodeResult> {
 fn build_format_path_args(args: &FormatPathArgs) -> kcl_api::FormatPathArgs {
     kcl_api::FormatPathArgs {
         path: args.path.clone(),
-        dry_run: false,
+        dry_run: args.dry_run,
     }
 }
 
