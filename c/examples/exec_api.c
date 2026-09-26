@@ -2,8 +2,8 @@
 
 int exec_file(const char* file_str)
 {
-    uint8_t buffer[BUFFER_SIZE];
-    uint8_t result_buffer[BUFFER_SIZE];
+    static uint8_t buffer[BUFFER_SIZE];
+    static uint8_t result_buffer[BUFFER_SIZE];
     size_t message_length;
     bool status;
     struct Buffer file = {
@@ -35,19 +35,19 @@ int exec_file(const char* file_str)
 
     ExecProgramResult result = ExecProgramResult_init_default;
 
-    uint8_t yaml_value_buffer[BUFFER_SIZE] = { 0 };
+    static uint8_t yaml_value_buffer[BUFFER_SIZE] = { 0 };
     result.yaml_result.arg = yaml_value_buffer;
     result.yaml_result.funcs.decode = decode_string;
 
-    uint8_t json_value_buffer[BUFFER_SIZE] = { 0 };
+    static uint8_t json_value_buffer[BUFFER_SIZE] = { 0 };
     result.json_result.arg = json_value_buffer;
     result.json_result.funcs.decode = decode_string;
 
-    uint8_t err_value_buffer[BUFFER_SIZE] = { 0 };
+    static uint8_t err_value_buffer[BUFFER_SIZE] = { 0 };
     result.err_message.arg = err_value_buffer;
     result.err_message.funcs.decode = decode_string;
 
-    uint8_t log_value_buffer[BUFFER_SIZE] = { 0 };
+    static uint8_t log_value_buffer[BUFFER_SIZE] = { 0 };
     result.log_message.arg = log_value_buffer;
     result.log_message.funcs.decode = decode_string;
 
