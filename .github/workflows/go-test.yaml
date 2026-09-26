@@ -58,7 +58,7 @@ jobs:
           # Alpine Linux container configurations
           - os: alpine-latest
             runner: ubuntu-latest  # Host runner for the container
-            container: golang:1.23-alpine3.19
+            container: golang:1.25-alpine3.21
             cgo_enabled: 1
 
     runs-on: ${{ matrix.runner }}
