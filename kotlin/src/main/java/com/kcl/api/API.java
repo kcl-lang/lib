@@ -688,6 +688,22 @@ public class API implements Service {
         return GetVersionResult.parseFrom(call("KclService.GetVersion", args.toByteArray()));
     }
 
+    /**
+     * Pings the KCL service to verify connectivity and echoes back the sent value.
+     *
+     * @param args
+     *            arguments carrying the value to echo.
+     * 
+     * @return the ping result containing the echoed value.
+     * 
+     * @throws Exception
+     *             if an error occurs during the remote procedure call.
+     */
+    @Override
+    public PingResult ping(PingArgs args) throws Exception {
+        return PingResult.parseFrom(call("KclService.Ping", args.toByteArray()));
+    }
+
     private byte[] call(String name, byte[] args) throws Exception {
         byte[] result = callNative(name.getBytes(), args);
         if (result != null && startsWith(result, ERROR_PREFIX)) {
