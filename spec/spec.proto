@@ -1018,6 +1018,12 @@ message ExecProgramArgs {
 	// emitted to stderr in the chosen machine-readable format. Falls back
 	// to the `KCL_ERROR_FORMAT` environment variable when empty.
 	string error_format = 19;
+	// Optional path of the Source Map v3 (tc39.es/source-map) document to
+	// emit for the generated YAML. When non-empty, the runtime records the
+	// mapping between generated YAML lines and the originating KCL source
+	// locations, returns it in `ExecProgramResult.sourcemap` and writes it
+	// to the given path. Empty disables source map generation.
+	optional string sourcemap_output = 22;
 }
 
 // Message for execute program response.
@@ -1030,6 +1036,10 @@ message ExecProgramResult {
 	string log_message = 3;
 	// Error message from execution.
 	string err_message = 4;
+	// Source Map v3 (tc39.es/source-map) JSON mapping the generated YAML
+	// back to the originating KCL source. Populated only when the caller
+	// requests a source map; empty otherwise.
+	optional string sourcemap = 5;
 }
 
 // Message for format code request arguments.

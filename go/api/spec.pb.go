@@ -1469,9 +1469,15 @@ type ExecProgramArgs struct {
 	// When set to anything other than "pretty", compile/eval errors are
 	// emitted to stderr in the chosen machine-readable format. Falls back
 	// to the `KCL_ERROR_FORMAT` environment variable when empty.
-	ErrorFormat   string `protobuf:"bytes,19,opt,name=error_format,json=errorFormat,proto3" json:"error_format,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	ErrorFormat string `protobuf:"bytes,19,opt,name=error_format,json=errorFormat,proto3" json:"error_format,omitempty"`
+	// Optional path of the Source Map v3 (tc39.es/source-map) document to
+	// emit for the generated YAML. When non-empty, the runtime records the
+	// mapping between generated YAML lines and the originating KCL source
+	// locations, returns it in `ExecProgramResult.sourcemap` and writes it
+	// to the given path. Empty disables source map generation.
+	SourcemapOutput *string `protobuf:"bytes,22,opt,name=sourcemap_output,json=sourcemapOutput,proto3,oneof" json:"sourcemap_output,omitempty"`
+	unknownFields   protoimpl.UnknownFields
+	sizeCache       protoimpl.SizeCache
 }
 
 func (x *ExecProgramArgs) Reset() {
@@ -1637,6 +1643,13 @@ func (x *ExecProgramArgs) GetErrorFormat() string {
 	return ""
 }
 
+func (x *ExecProgramArgs) GetSourcemapOutput() string {
+	if x != nil && x.SourcemapOutput != nil {
+		return *x.SourcemapOutput
+	}
+	return ""
+}
+
 // Message for execute program response.
 type ExecProgramResult struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
@@ -1647,7 +1660,11 @@ type ExecProgramResult struct {
 	// Log message from execution.
 	LogMessage string `protobuf:"bytes,3,opt,name=log_message,json=logMessage,proto3" json:"log_message,omitempty"`
 	// Error message from execution.
-	ErrMessage    string `protobuf:"bytes,4,opt,name=err_message,json=errMessage,proto3" json:"err_message,omitempty"`
+	ErrMessage string `protobuf:"bytes,4,opt,name=err_message,json=errMessage,proto3" json:"err_message,omitempty"`
+	// Source Map v3 (tc39.es/source-map) JSON mapping the generated YAML
+	// back to the originating KCL source. Populated only when the caller
+	// requests a source map; empty otherwise.
+	Sourcemap     *string `protobuf:"bytes,5,opt,name=sourcemap,proto3,oneof" json:"sourcemap,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1706,6 +1723,13 @@ func (x *ExecProgramResult) GetLogMessage() string {
 func (x *ExecProgramResult) GetErrMessage() string {
 	if x != nil {
 		return x.ErrMessage
+	}
+	return ""
+}
+
+func (x *ExecProgramResult) GetSourcemap() string {
+	if x != nil && x.Sourcemap != nil {
+		return *x.Sourcemap
 	}
 	return ""
 }
@@ -4352,7 +4376,7 @@ const file_spec_proto_rawDesc = "" +
 	"ScopeIndex\x12\f\n" +
 	"\x01i\x18\x01 \x01(\x04R\x01i\x12\f\n" +
 	"\x01g\x18\x02 \x01(\x04R\x01g\x12\x12\n" +
-	"\x04kind\x18\x03 \x01(\tR\x04kind\"\xda\x05\n" +
+	"\x04kind\x18\x03 \x01(\tR\x04kind\"\x9f\x06\n" +
 	"\x0fExecProgramArgs\x12\x19\n" +
 	"\bwork_dir\x18\x01 \x01(\tR\aworkDir\x12&\n" +
 	"\x0fk_filename_list\x18\x02 \x03(\tR\rkFilenameList\x12\x1e\n" +
@@ -4374,7 +4398,9 @@ const file_spec_proto_rawDesc = "" +
 	"showHidden\x12#\n" +
 	"\rpath_selector\x18\x11 \x03(\tR\fpathSelector\x12\x1b\n" +
 	"\tfast_eval\x18\x12 \x01(\bR\bfastEval\x12!\n" +
-	"\ferror_format\x18\x13 \x01(\tR\verrorFormat\"\x97\x01\n" +
+	"\ferror_format\x18\x13 \x01(\tR\verrorFormat\x12.\n" +
+	"\x10sourcemap_output\x18\x16 \x01(\tH\x00R\x0fsourcemapOutput\x88\x01\x01B\x13\n" +
+	"\x11_sourcemap_output\"\xc8\x01\n" +
 	"\x11ExecProgramResult\x12\x1f\n" +
 	"\vjson_result\x18\x01 \x01(\tR\n" +
 	"jsonResult\x12\x1f\n" +
@@ -4383,7 +4409,10 @@ const file_spec_proto_rawDesc = "" +
 	"\vlog_message\x18\x03 \x01(\tR\n" +
 	"logMessage\x12\x1f\n" +
 	"\verr_message\x18\x04 \x01(\tR\n" +
-	"errMessage\"(\n" +
+	"errMessage\x12!\n" +
+	"\tsourcemap\x18\x05 \x01(\tH\x00R\tsourcemap\x88\x01\x01B\f\n" +
+	"\n" +
+	"_sourcemap\"(\n" +
 	"\x0eFormatCodeArgs\x12\x16\n" +
 	"\x06source\x18\x01 \x01(\tR\x06source\"0\n" +
 	"\x10FormatCodeResult\x12\x1c\n" +
@@ -4844,6 +4873,8 @@ func file_spec_proto_init() {
 	if File_spec_proto != nil {
 		return
 	}
+	file_spec_proto_msgTypes[22].OneofWrappers = []any{}
+	file_spec_proto_msgTypes[23].OneofWrappers = []any{}
 	file_spec_proto_msgTypes[58].OneofWrappers = []any{}
 	file_spec_proto_msgTypes[61].OneofWrappers = []any{}
 	type x struct{}
