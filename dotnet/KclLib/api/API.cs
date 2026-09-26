@@ -16,6 +16,52 @@ public class API : IService
     [DllImport(LIB_NAME, CallingConvention = CallingConvention.Cdecl)]
     private static extern int callNative([In] byte[] name, int nameLength, [In] byte[] args, int argsLength, IntPtr buffer);
 
+    [DllImport(LIB_NAME, CallingConvention = CallingConvention.Cdecl, EntryPoint = "call_native_with_plugin_agent")]
+    private static extern int callNativeWithPluginAgent([In] byte[] name, int nameLength, [In] byte[] args, int argsLength, IntPtr buffer, long pluginAgent);
+
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    private delegate IntPtr PluginAgentDelegate(IntPtr method, IntPtr argsJson, IntPtr kwargsJson);
+
+    private static PluginContext? pluginContext;
+    private static PluginAgentDelegate? pluginAgent;
+    private static IntPtr pluginAgentPtr;
+    private static IntPtr pluginAgentBuffer = IntPtr.Zero;
+    private static int pluginAgentBufferSize;
+    private static readonly object pluginAgentLock = new object();
+
+    public static void AttachPluginContext(PluginContext context)
+    {
+        pluginContext = context ?? throw new ArgumentNullException(nameof(context));
+        if (pluginAgentPtr == IntPtr.Zero)
+        {
+            pluginAgent = PluginAgentCallback;
+            pluginAgentPtr = Marshal.GetFunctionPointerForDelegate(pluginAgent);
+        }
+    }
+
+    private static IntPtr PluginAgentCallback(IntPtr methodPtr, IntPtr argsJsonPtr, IntPtr kwargsJsonPtr)
+    {
+        string method = Marshal.PtrToStringUTF8(methodPtr) ?? string.Empty;
+        string argsJson = Marshal.PtrToStringUTF8(argsJsonPtr) ?? string.Empty;
+        string kwargsJson = Marshal.PtrToStringUTF8(kwargsJsonPtr) ?? string.Empty;
+        string resultJson = pluginContext?.CallMethod(method, argsJson, kwargsJson) ?? string.Empty;
+        byte[] resultBytes = System.Text.Encoding.UTF8.GetBytes(resultJson + "\0");
+        lock (pluginAgentLock)
+        {
+            if (resultBytes.Length > pluginAgentBufferSize)
+            {
+                if (pluginAgentBuffer != IntPtr.Zero)
+                {
+                    Marshal.FreeHGlobal(pluginAgentBuffer);
+                }
+                pluginAgentBuffer = Marshal.AllocHGlobal(resultBytes.Length);
+                pluginAgentBufferSize = resultBytes.Length;
+            }
+            Marshal.Copy(resultBytes, 0, pluginAgentBuffer, resultBytes.Length);
+            return pluginAgentBuffer;
+        }
+    }
+
     public API()
     {
 
@@ -134,7 +180,18 @@ public class API : IService
     {
         var nameBytes = System.Text.Encoding.UTF8.GetBytes(name);
         IntPtr resultBuf = Marshal.AllocHGlobal(2048 * 2048);
-        int resultLength = callNative(nameBytes, nameBytes.Length, args, args.Length, resultBuf);
+        int resultLength;
+        if (pluginContext != null)
+        {
+            lock (pluginAgentLock)
+            {
+                resultLength = callNativeWithPluginAgent(nameBytes, nameBytes.Length, args, args.Length, resultBuf, pluginAgentPtr.ToInt64());
+            }
+        }
+        else
+        {
+            resultLength = callNative(nameBytes, nameBytes.Length, args, args.Length, resultBuf);
+        }
         var result = new byte[resultLength];
         Marshal.Copy(resultBuf, result, 0, resultLength);
         Marshal.FreeHGlobal(resultBuf);
