@@ -32,8 +32,6 @@ type ServiceClient interface {
 	GetSchemaTypeMappingUnderPath(in *GetSchemaTypeMappingArgs) (out *GetSchemaTypeMappingUnderPathResult, err error)
 	// Validate code using schema and JSON/YAML data strings.
 	ValidateCode(in *ValidateCodeArgs) (out *ValidateCodeResult, err error)
-	// List dependencies files of input paths.
-	ListDepFiles(in *ListDepFilesArgs) (out *ListDepFilesResult, err error)
 	// Load the setting file config defined in `kcl.yaml`.
 	LoadSettingsFiles(in *LoadSettingsFilesArgs) (out *LoadSettingsFilesResult, err error)
 	// Rename all the occurrences of the target symbol in the files. This API will rewrite files if they contain symbols to be renamed. Return the file paths that got changed.

@@ -117,6 +117,19 @@ public class API : IService
         return GetVersionResult.Parser.ParseFrom(Call("KclService.GetVersion", args.ToByteArray()));
     }
 
+    public PingResult Ping(PingArgs args)
+    {
+        return PingResult.Parser.ParseFrom(Call("KclService.Ping", args.ToByteArray()));
+    }
+
+    public ListMethodResult ListMethod()
+    {
+        // `ListMethodArgs` is an empty proto message but the runtime still
+        // expects the encoded zero-byte payload for the dispatcher.
+        var emptyArgs = new ListMethodArgs();
+        return ListMethodResult.Parser.ParseFrom(Call("BuiltinService.ListMethod", emptyArgs.ToByteArray()));
+    }
+
     private byte[] Call(string name, byte[] args)
     {
         var nameBytes = System.Text.Encoding.UTF8.GetBytes(name);

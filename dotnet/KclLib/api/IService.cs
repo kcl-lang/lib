@@ -140,4 +140,17 @@ public interface IService
     /// <param name="args">Arguments for version retrieval.</param>
     /// <returns>The version information result.</returns>
     GetVersionResult GetVersion(GetVersionArgs args);
+
+    /// <summary>
+    /// Pings the KCL service to verify connectivity and echoes back the sent value.
+    /// </summary>
+    /// <param name="args">Arguments carrying the value to echo.</param>
+    /// <returns>The echo result.</returns>
+    PingResult Ping(PingArgs args);
+
+    /// <summary>
+    /// Lists the KCL service method names supported by the underlying runtime.
+    /// </summary>
+    /// <returns>The list of method names.</returns>
+    ListMethodResult ListMethod();
 }

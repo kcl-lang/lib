@@ -1,5 +1,5 @@
 {
-  "name": "kcl-lib",
+  "name": "@kcl-lib/native",
   "version": "0.13.0",
   "repository": "https://github.com/kcl-lang/lib",
   "license": "Apache-2.0",
@@ -8,7 +8,7 @@
   "napi": {
     "name": "kcl-lib",
     "package": {
-      "name": "@kcl-lang/lib"
+      "name": "@kcl-lib/native"
     },
     "triples": {
       "additional": [
@@ -68,5 +68,15 @@
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",
     "access": "public"
+  },
+  "optionalDependencies": {
+    "@kcl-lib/native-win32-x64-msvc": "0.13.0",
+    "@kcl-lib/native-darwin-x64": "0.13.0",
+    "@kcl-lib/native-linux-x64-gnu": "0.13.0",
+    "@kcl-lib/native-darwin-arm64": "0.13.0",
+    "@kcl-lib/native-linux-arm64-gnu": "0.13.0",
+    "@kcl-lib/native-linux-arm64-musl": "0.13.0",
+    "@kcl-lib/native-linux-x64-musl": "0.13.0",
+    "@kcl-lib/native-win32-arm64-msvc": "0.13.0"
   }
 }

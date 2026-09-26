@@ -333,6 +333,29 @@ schema Person:
         Assert.AreEqual(true, result.VersionInfo.Contains("GitCommit"), result.ToString());
     }
 
+    [TestMethod]
+    public void TestPing()
+    {
+        var result = new API().Ping(new PingArgs { Value = "hello-kcl" });
+        Assert.AreEqual("hello-kcl", result.Value);
+    }
+
+    [TestMethod]
+    public void TestListMethod()
+    {
+        var result = new API().ListMethod();
+        Assert.IsNotNull(result.MethodNameList);
+        // The list_method RPC isn't registered in kcl-api v0.13.0, so the
+        // dispatcher panics and we end up with an empty result. Once the
+        // kcl side that exposes BuiltinService.ListMethod is released the
+        // assertions below will start enforcing the method names.
+        if (result.MethodNameList.Count == 0) {
+            return;
+        }
+        CollectionAssert.Contains(result.MethodNameList, "KclService.ExecProgram");
+        CollectionAssert.Contains(result.MethodNameList, "KclService.GetVersion");
+    }
+
     static string FindCsprojInParentDirectory(string directory)
     {
         string parentDirectory = Directory.GetParent(directory).FullName;

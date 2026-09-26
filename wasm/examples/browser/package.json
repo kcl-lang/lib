@@ -14,7 +14,7 @@
     "dist/"
   ],
   "dependencies": {
-    "@kcl-lang/wasm-lib": "file:../..",
+    "@kcl-lib/wasm": "file:../..",
     "@wasmer/wasi": "^1.2.2",
     "buffer": "^6.0.3"
   },

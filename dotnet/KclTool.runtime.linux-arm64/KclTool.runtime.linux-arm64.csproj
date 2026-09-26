@@ -1,0 +1,41 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    Runtime asset package for KclTool on Linux arm64. Ships only the native
+    binaries (kcl + libkcl.so); no managed code. The parent KclTool package
+    pulls this in via <PackageReference>, and the .NET runtime asset resolver
+    selects the matching RID at consumer restore time.
+  -->
+
+  <PropertyGroup>
+    <PackageId>KclTool.runtime.linux-arm64</PackageId>
+    <Title>KclTool runtime assets (linux-arm64)</Title>
+    <Description>
+Native binaries (kcl, libkcl.so) for KclTool on Linux arm64. Consumed via
+the matching KclTool dependency; pull KclTool directly in your project and
+the right per-RID package is restored automatically.
+    </Description>
+
+    <!-- Runtime asset package: no managed code, only native files. -->
+    <TargetFramework>net8.0</TargetFramework>
+    <NoBuild>true</NoBuild>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
+    <!-- Record the target RID in runtime.json so NuGet can identify this as
+         a RID-specific asset package. -->
+    <RuntimeIdentifier Condition="'$(RuntimeIdentifier)' == ''">linux-arm64</RuntimeIdentifier>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="kcl">
+      <Pack>true</Pack>
+      <PackagePath>runtimes/linux-arm64/native/</PackagePath>
+    </None>
+    <None Include="libkcl.so">
+      <Pack>true</Pack>
+      <PackagePath>runtimes/linux-arm64/native/</PackagePath>
+    </None>
+  </ItemGroup>
+
+</Project>

@@ -689,6 +689,33 @@ public class API implements Service {
         return GetVersionResult.parseFrom(call("KclService.GetVersion", args.toByteArray()));
     }
 
+    /**
+     * Pings the KCL service to verify connectivity and echoes back the sent value.
+     *
+     * @param args arguments carrying the value to echo.
+     * @return the ping result containing the echoed value.
+     * @throws Exception if the underlying RPC fails.
+     */
+    @Override
+    public PingResult ping(PingArgs args) throws Exception {
+        return PingResult.parseFrom(call("KclService.Ping", args.toByteArray()));
+    }
+
+    /**
+     * Lists the KCL service method names supported by the underlying runtime.
+     *
+     * @return a {@link ListMethodResult} whose {@code methodNameList} is the
+     *         set of supported RPC names.
+     * @throws Exception if the underlying RPC fails.
+     */
+    @Override
+    public ListMethodResult listMethod() throws Exception {
+        // ListMethodArgs is empty, but the runtime still expects the encoded
+        // (zero-byte) payload when going through the universal dispatcher.
+        return ListMethodResult.parseFrom(
+                call("BuiltinService.ListMethod", ListMethodArgs.getDefaultInstance().toByteArray()));
+    }
+
     private byte[] call(String name, byte[] args) throws Exception {
         byte[] result = callNative(name.getBytes(), args);
         if (result != null && startsWith(result, ERROR_PREFIX)) {

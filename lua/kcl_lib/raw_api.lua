@@ -58,12 +58,6 @@ RawAPI.parse_program = add_method(
 RawAPI.parse_file =
   add_method("KclService.ParseFile", "ParseFileArgs", "ParseFileResult")
 
-RawAPI.list_dep_files = add_method(
-  "KclService.ListDepFiles",
-  "ListDepFilesArgs",
-  "ListDepFilesResult"
-)
-
 RawAPI.load_package =
   add_method("KclService.LoadPackage", "LoadPackageArgs", "LoadPackageResult")
 

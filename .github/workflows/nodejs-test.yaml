@@ -264,7 +264,7 @@ jobs:
         run: npm publish --access public --provenance --dry-run
         env:
           # Inject auth so npm reports a clear E404 instead of an auth failure
-          # during dry-run validation against the @kcl-lang scope.
+          # during dry-run validation against the @kcl-lib scope.
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 

@@ -11,6 +11,10 @@ kcl-api = { git = "https://github.com/kcl-lang/kcl", version = "0.13.0" }
 # Default enable napi4 feature, see https://nodejs.org/api/n-api.html#node-api-version-matrix
 napi = { version = "2.12.2", default-features = false, features = ["napi4"] }
 napi-derive = "2.12.2"
+# Used to encode/decode ListMethod arguments through the
+# universal `kcl_api::call` dispatcher since `KclServiceImpl` does not
+# expose a typed wrapper for that RPC.
+prost = "0.14"
 
 [build-dependencies]
 napi-build = "2.0.1"
