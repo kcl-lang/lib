@@ -92,13 +92,25 @@ restrictions that differ from the native KCL libraries:
 
 - **Filesystem access is limited to WASI preopens.** File-based methods —
   `FormatPath`, `LintPath`, `LoadPackage`, `LoadSettingsFiles`, `Rename`,
-  `UpdateDependencies`, as well as `ParseProgram` / `ParseFile` (and
+  as well as `ParseProgram` / `ParseFile` (and
   `ExecProgram`) when they are given file paths instead of inline sources —
   can only reach paths that are mapped into the sandbox. With the default
   in-memory `MemFS` filesystem, paths outside the preopened directories do
   not exist; the wasm module can never access the host filesystem directly.
   Pass `preopens` (guest path -> filesystem path) and/or an `fs: new
 MemFS()` instance to `load()` to set up the sandbox filesystem.
+- **`KclService.UpdateDependencies` is not supported.** Resolving module
+  dependencies requires network access and git subprocesses, which the
+  WASI sandbox does not provide. The call returns a graceful
+  `"ERROR:updating dependencies is not supported in the WASM build: ..."`
+  string (the typed API turns it into a thrown `Error`) instead of
+  downloading anything.
+- **`KclService.ValidateCode`** validates inline `data` by writing a
+  temporary file into the sandbox working directory (WASI has no temp
+  directory); the file is removed automatically after the call.
+- **`KclService.Rename`** works on sandbox files, but paths are normalized
+  lexically: WASI preview1 has no `canonicalize`, so `.`/`..` segments are
+  resolved without symlink resolution.
 - **Errors are returned, not thrown, at the ABI level.** The low-level
   entry points report failures as strings starting with an `"ERROR:"`
   prefix (e.g. `invokeKCLRun`, `invokeKCLCall`); the typed API layer turns
@@ -106,11 +118,11 @@ MemFS()` instance to `load()` to set up the sandbox filesystem.
 - **`panic = abort` destroys the whole instance.** The module is built
   single-threaded with `panic=abort`, so a Rust panic aborts the instance
   instead of unwinding: every subsequent call traps with
-  `unreachable`. Some methods panic in this build where the native
-  libraries return an error — notably `ValidateCode` and
-  `UpdateDependencies` (no network/subprocess support in WASI) and any
-  unknown method name. The typed API surfaces the trap as a thrown
-  `Error`; discard the instance and create a fresh one with `load()`.
+  `unreachable`. Panics can still occur where the native libraries return
+  an error — notably unknown method names and KCL runtime errors raised as
+  panics in the evaluator (e.g. a failing `check` block during
+  `ExecProgram`). The typed API surfaces the trap as a thrown `Error`;
+  discard the instance and create a fresh one with `load()`.
 - **No plugin agent.** `kcl_plugin_invoke_json_wasm` is a stub that always
   returns `0`, so KCL plugins and the plugin-agent entry point
   (`call_with_plugin_agent`) are not supported by the WASM binding.
