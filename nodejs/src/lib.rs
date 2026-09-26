@@ -3,6 +3,7 @@
 #[macro_use]
 extern crate napi_derive;
 
+mod plugin;
 mod spec;
 
 use crate::spec::*;
@@ -125,10 +126,28 @@ impl ExecProgramArgs {
 /// Execute KCL file with arguments and return the JSON/YAML result.
 #[napi]
 pub fn exec_program(args: &ExecProgramArgs) -> Result<ExecProgramResult> {
+    let plugin_agent = plugin::plugin_agent_ptr();
+    if plugin_agent > 0 {
+        return exec_program_with_plugin_agent(&args.0, plugin_agent);
+    }
     let api = kcl_api::API::default();
     api.exec_program(&args.0)
         .map_err(|e| napi::bindgen_prelude::Error::from_reason(e.to_string()))
         .map(ExecProgramResult::new)
+}
+
+fn exec_program_with_plugin_agent(
+    args: &kcl_api::ExecProgramArgs,
+    plugin_agent: u64,
+) -> Result<ExecProgramResult> {
+    use ::prost::Message;
+    let encoded = args.encode_to_vec();
+    let raw = kcl_api::call_with_plugin_agent(b"KclService.ExecProgram", &encoded, plugin_agent)
+        .map_err(|e| napi::bindgen_prelude::Error::from_reason(e.to_string()))?;
+    let parsed = kcl_api::ExecProgramResult::decode(raw.as_slice()).map_err(|e| {
+        napi::bindgen_prelude::Error::from_reason(format!("decode ExecProgramResult: {e}"))
+    })?;
+    Ok(ExecProgramResult::new(parsed))
 }
 
 /*

@@ -285,6 +285,7 @@ if (!nativeBinding) {
 }
 
 const {
+  registerPlugin,
   LoadPackageArgs,
   loadPackage,
   ExecProgramArgs,
@@ -326,6 +327,7 @@ const {
   listMethod,
 } = nativeBinding
 
+module.exports.registerPlugin = registerPlugin
 module.exports.LoadPackageArgs = LoadPackageArgs
 module.exports.loadPackage = loadPackage
 module.exports.ExecProgramArgs = ExecProgramArgs
