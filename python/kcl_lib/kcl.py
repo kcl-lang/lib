@@ -8,7 +8,8 @@ provides the same ergonomic surface as the Go SDK:
 * top-level entry points :func:`run`, :func:`run_files`, :func:`must_run`
 * functional options via ``with_*`` factories
 * convenience wrappers (:func:`format_code`, :func:`format_path`,
-  :func:`validate`, :func:`validate_code`, :func:`test`, ...)
+  :func:`lint_path`, :func:`validate`, :func:`validate_code`,
+  :func:`test`, :func:`get_full_schema_type_mapping_under_path`, ...)
 * :class:`KCLResult` / :class:`KCLResultList` helpers that parse YAML,
   support dotted-key ``get`` access and ``to_dict`` conversion.
 
@@ -22,10 +23,11 @@ from __future__ import annotations
 import json as _json
 import pathlib
 from dataclasses import dataclass, field
-from typing import Any, List, Optional, Sequence, Tuple, Union
+from typing import Any, Dict, List, Optional, Sequence, Tuple, Union
 
 from .api.service import API
 from .api.spec_pb2 import (
+    Argument,
     ExecProgramArgs,
     ExecProgramResult,
     ExternalPkg,
@@ -34,6 +36,8 @@ from .api.spec_pb2 import (
     GetSchemaTypeMappingArgs,
     GetVersionArgs,
     GetVersionResult,
+    KclType,
+    LintPathArgs,
     ListVariablesArgs,
     LoadPackageArgs,
     LoadPackageResult,
@@ -48,6 +52,7 @@ from .api.spec_pb2 import (
     RenameCodeArgs,
     RenameCodeResult,
     RenameResult,
+    SchemaTypes,
     TestArgs,
     TestResult,
     UpdateDependenciesArgs,
@@ -61,8 +66,10 @@ __all__ = [
     "KCLResult",
     "KCLResultList",
     "Option",
+    "TestOptions",
     "with_code",
     "with_k_filenames",
+    "with_options",
     "with_overrides",
     "with_selectors",
     "with_settings",
@@ -73,6 +80,7 @@ __all__ = [
     "with_output_format",
     "with_include_schema_type_path",
     "with_show_hidden",
+    "with_error_format",
     "with_logger",
     "with_plugin_agent",
     "run",
@@ -80,11 +88,15 @@ __all__ = [
     "must_run",
     "format_code",
     "format_path",
+    "lint_path",
     "override_file",
     "validate_code",
     "validate",
     "test",
     "get_schema_type",
+    "get_full_schema_type",
+    "get_full_schema_type_mapping",
+    "get_full_schema_type_mapping_under_path",
     "list_dep_files",
     "list_upstream_files",
     "list_downstream_files",
@@ -118,6 +130,9 @@ class ExecProgramOptions:
     work_dir: Optional[str] = None
     k_filename_list: List[str] = field(default_factory=list)
     k_code_list: List[str] = field(default_factory=list)
+    # kcl -D key=value options (mirrors kcl-go's ``WithOptions``); each entry
+    # is an ``Argument{name, value}`` pair materialised from "key=value".
+    args: List[Argument] = field(default_factory=list)
     overrides: List[str] = field(default_factory=list)
     selectors: List[str] = field(default_factory=list)
     external_pkgs: List[ExternalPkg] = field(default_factory=list)
@@ -125,6 +140,9 @@ class ExecProgramOptions:
     sort_keys: Optional[bool] = None
     show_hidden: Optional[bool] = None
     include_schema_type_path: Optional[bool] = None
+    # Diagnostic output format (``--error_format``): one of "pretty"
+    # (default), "short", "arcanist" or "sarif".
+    error_format: Optional[str] = None
     # Output format selector ("json", "yaml"). Not a real proto field in
     # the Python ``ExecProgramArgs``; stored here so result helpers can
     # pick the right representation. When ``output_format == "json"`` we
@@ -293,6 +311,9 @@ def _to_args(opts: ExecProgramOptions) -> Tuple[ExecProgramArgs, str]:
     if opts.k_code_list:
         del args.k_code_list[:]
         args.k_code_list.extend(opts.k_code_list)
+    if opts.args:
+        del args.args[:]
+        args.args.extend(opts.args)
     if opts.overrides:
         del args.overrides[:]
         args.overrides.extend(opts.overrides)
@@ -310,6 +331,8 @@ def _to_args(opts: ExecProgramOptions) -> Tuple[ExecProgramArgs, str]:
         args.show_hidden = opts.show_hidden
     if opts.include_schema_type_path is not None:
         args.include_schema_type_path = opts.include_schema_type_path
+    if opts.error_format:
+        args.error_format = opts.error_format
 
     output_format = opts.output_format or "yaml"
     if opts.output_format:
@@ -365,6 +388,35 @@ class _Overrides(Option):
 def with_overrides(specs: Sequence[str]) -> Option:
     """Set override specs (``-O`` equivalent)."""
     return _Overrides(specs)
+
+
+class _Options(Option):
+    """kcl -D key=value options, parsed into ``Argument`` entries.
+
+    Mirrors kcl-go's ``WithOptions``: each ``"key=value"`` string becomes
+    one ``Argument{name, value}`` appended to ``ExecProgramArgs.args``.
+    Entries without an ``=`` separator (or with an empty key) are skipped,
+    matching the Go implementation's ``strings.Index(kv, "=") > 0`` guard.
+    """
+
+    def __init__(self, specs: Sequence[str]) -> None:
+        self.args: List[Argument] = []
+        for kv in specs:
+            name, sep, value = str(kv).partition("=")
+            if sep and name:
+                self.args.append(Argument(name=name, value=value))
+
+    def __call__(self, opts: ExecProgramOptions) -> None:
+        opts.args.extend(self.args)
+
+
+def with_options(specs: Sequence[str]) -> Option:
+    """Set CLI-style ``option("key")`` values (``-D key=value`` equivalent).
+
+    Accepts a list of ``"key=value"`` strings, e.g.
+    ``with_options(["env=prod", "replicas=3"])``.
+    """
+    return _Options(specs)
 
 
 class _Selectors(Option):
@@ -475,6 +527,25 @@ class _OutputFormat(Option):
 def with_output_format(fmt: str) -> Option:
     """Request a specific output format (``"json"`` or ``"yaml"``)."""
     return _OutputFormat(fmt)
+
+
+class _ErrorFormat(Option):
+    def __init__(self, fmt: str) -> None:
+        self.fmt = fmt
+
+    def __call__(self, opts: ExecProgramOptions) -> None:
+        opts.error_format = self.fmt
+
+
+def with_error_format(fmt: str) -> Option:
+    """Set the diagnostic output format (``--error_format``).
+
+    One of ``"pretty"`` (default), ``"short"``, ``"arcanist"`` or
+    ``"sarif"``. When set to anything other than ``"pretty"``, the runtime
+    mirrors compile/eval errors to stderr in the chosen machine-readable
+    format (mirrors kcl-go's ``WithErrorFormat``).
+    """
+    return _ErrorFormat(fmt)
 
 
 class _Logger(Option):
@@ -884,11 +955,26 @@ def format_code(code: Union[bytes, bytearray, str]) -> bytes:
     return bytes(resp.formatted)
 
 
-def format_path(path: str) -> List[str]:
-    """Format KCL file(s) under ``path``. Returns the list of changed paths."""
+def format_path(path: str, dry_run: bool = False) -> List[str]:
+    """Format KCL file(s) under ``path``. Returns the list of changed paths.
+
+    With ``dry_run=True`` the files that *would* be reformatted are reported
+    without being rewritten (kcl-go's ``format.FormatPathWithOptions``).
+    """
     api = API(plugin_agent=_plugin.plugin_agent_addr)
-    resp = api.format_path(FormatPathArgs(path=path))
+    resp = api.format_path(FormatPathArgs(path=path, dry_run=dry_run))
     return list(resp.changed_paths)
+
+
+def lint_path(paths: Sequence[str]) -> List[str]:
+    """Lint KCL file(s) and return the list of error/warning messages.
+
+    An empty list means the files passed every lint rule (mirrors kcl-go's
+    ``lint.LintPath``).
+    """
+    api = API(plugin_agent=_plugin.plugin_agent_addr)
+    resp = api.lint_path(LintPathArgs(paths=[str(p) for p in paths]))
+    return list(resp.results)
 
 
 def override_file(
@@ -927,10 +1013,48 @@ def validate(data_file: str, code_file: str) -> bool:
     return validate_code(data, code)
 
 
-def test(test_opts: TestArgs) -> TestResult:
-    """Run KCL unit tests."""
+@dataclass
+class TestOptions:
+    """Options for :func:`test` (mirrors kcl-go's ``testing.TestOptions``)."""
+
+    pkg_list: List[str] = field(default_factory=list)
+    run_regexp: str = ""
+    fail_fast: bool = False
+
+
+def test(
+    test_opts: Optional[Union[TestOptions, TestArgs]] = None,
+    *opts: Option,
+) -> TestResult:
+    """Run KCL unit tests and return the populated ``TestResult``.
+
+    Mirrors kcl-go's ``testing.Test``: ``pkg_list`` selects the packages to
+    test (``["path/to/pkg/..."]`` scans recursively), ``run_regexp`` filters
+    test cases by name and ``fail_fast`` stops at the first failure. The
+    usual ``with_*`` run options configure the underlying program.
+
+    For convenience a raw ``TestArgs`` proto is accepted as well (the
+    original facade behaviour); in that mode ``opts`` is ignored. Each
+    ``result.info[i].error`` is empty exactly when that case passed
+    (``TestCaseInfo.Pass()`` in kcl-go).
+    """
     api = API(plugin_agent=_plugin.plugin_agent_addr)
-    return api.test(test_opts)
+    if isinstance(test_opts, TestArgs):
+        # Raw-proto passthrough — backwards compatible with the original
+        # facade signature.
+        return api.test(test_opts)
+    options = ExecProgramOptions()
+    _apply(options, opts)
+    exec_args, _ = _to_args(options)
+    if test_opts is None:
+        test_opts = TestOptions()
+    args = TestArgs(
+        exec_args=exec_args,
+        pkg_list=list(test_opts.pkg_list),
+        run_regexp=test_opts.run_regexp,
+        fail_fast=test_opts.fail_fast,
+    )
+    return api.test(args)
 
 
 def get_schema_type(filename: str, src: Union[bytes, bytearray, str], schema_name: str):
@@ -947,6 +1071,64 @@ def get_schema_type(filename: str, src: Union[bytes, bytearray, str], schema_nam
         return list(resp.schema_type_mapping.values())
     target = resp.schema_type_mapping.get(schema_name)
     return [target] if target is not None else []
+
+
+def get_full_schema_type_mapping(
+    path_list: Sequence[str],
+    schema_name: str = "",
+    *opts: Option,
+) -> Dict[str, KclType]:
+    """Return the full schema type mapping for the program built from ``path_list``.
+
+    Mirrors kcl-go's ``kcl.GetFullSchemaTypeMapping``: the usual ``with_*``
+    run options (``with_external_pkgs``, ``with_work_dir``, ...) apply.
+    Pass ``schema_name=""`` to return every schema in the program.
+    """
+    options = ExecProgramOptions(k_filename_list=[str(p) for p in path_list])
+    _apply(options, opts)
+    exec_args, _ = _to_args(options)
+    api = API(plugin_agent=_plugin.plugin_agent_addr)
+    resp = api.get_schema_type_mapping(
+        GetSchemaTypeMappingArgs(exec_args=exec_args, schema_name=schema_name)
+    )
+    return dict(resp.schema_type_mapping)
+
+
+def get_full_schema_type(
+    path_list: Sequence[str],
+    schema_name: str = "",
+    *opts: Option,
+) -> List[KclType]:
+    """Return the full schema types for the program built from ``path_list``.
+
+    Mirrors kcl-go's ``kcl.GetFullSchemaType`` — the values of
+    :func:`get_full_schema_type_mapping`, in mapping order.
+    """
+    mapping = get_full_schema_type_mapping(path_list, schema_name, *opts)
+    return list(mapping.values())
+
+
+def get_full_schema_type_mapping_under_path(
+    path_list: Sequence[str],
+    schema_name: str = "",
+    *opts: Option,
+) -> Dict[str, SchemaTypes]:
+    """Return the schema type mapping across the program rooted at ``path_list``
+    and all of its (external) dependency packages.
+
+    Mirrors kcl-go's ``kcl.GetFullSchemaTypeMappingUnderPath`` (the fix for
+    https://github.com/kcl-lang/kcl/issues/1546): the result is keyed by
+    package name (e.g. ``"__main__"``, ``"bbb"``) and each value holds that
+    package's schema list with correct ``pkg_path`` / ``base_schema`` fields.
+    """
+    options = ExecProgramOptions(k_filename_list=[str(p) for p in path_list])
+    _apply(options, opts)
+    exec_args, _ = _to_args(options)
+    api = API(plugin_agent=_plugin.plugin_agent_addr)
+    resp = api.get_schema_type_mapping_under_path(
+        GetSchemaTypeMappingArgs(exec_args=exec_args, schema_name=schema_name)
+    )
+    return dict(resp.schema_type_mapping)
 
 
 def list_dep_files(path: str) -> List[str]:
