@@ -206,6 +206,7 @@ end
 
 local function parse_schema_attr(d)
   return {
+    type = "SchemaAttr",
     doc = as_string(d.doc, ""),
     name = parse_node_ref(d.name, parse_string_node),
     op = parse_aug_op(d.op),
