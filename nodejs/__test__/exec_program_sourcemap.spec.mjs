@@ -29,6 +29,12 @@ test('ExecProgramArgs accepts sourcemapOutput', (t) => {
     null,
     null,
     null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
     '/tmp/out.js.map',
   )
   // ExecProgramArgs is an input-only bag: the binding exposes no field
@@ -41,6 +47,12 @@ test('execProgram returns a result with the sourcemap field wired up', (t) => {
   const result = execProgram(
     new ExecProgramArgs(
       ['__test__/test_data/schema.k'],
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
       null,
       null,
       null,
