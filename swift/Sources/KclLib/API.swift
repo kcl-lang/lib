@@ -2,6 +2,21 @@ import CKclLib
 import Foundation
 import SwiftProtobuf
 
+public enum KclError: Swift.Error, CustomStringConvertible {
+  case runtime(String)
+
+  public var message: String {
+    switch self {
+    case .runtime(let message):
+      return message
+    }
+  }
+
+  public var description: String {
+    return message
+  }
+}
+
 public class API: Service {
   private static let ERROR_PREFIX = "ERROR:"
 
@@ -160,7 +175,7 @@ public class API: Service {
     )
   }
 
-  private func callNative(name: String, args: Data) -> Data {
+  private func callNative(name: String, args: Data) throws -> Data {
     // Convert name to byte array
     let nameBytes = [UInt8](name.utf8)
     var resultBuf = [UInt8](repeating: 0, count: 2048 * 2048)
@@ -171,6 +186,6 @@ public class API: Service {
     if resultString.isEmpty || !resultString.hasPrefix(API.ERROR_PREFIX) {
       return result
     }
-    fatalError(String(resultString.dropFirst(API.ERROR_PREFIX.count)))
+    throw KclError.runtime(String(resultString.dropFirst(API.ERROR_PREFIX.count)))
   }
 }

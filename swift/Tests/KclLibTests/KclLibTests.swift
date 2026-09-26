@@ -53,4 +53,115 @@ final class KClLibTests: XCTestCase {
         XCTAssertEqual("bbb", b.baseSchema.pkgPath)
         XCTAssertNotNil(result.schemaTypeMapping["__main__"])
     }
+
+    func testPing() throws {
+        var args = PingArgs()
+        args.value = "hello"
+        let result = try API().ping(args)
+        XCTAssertEqual("hello", result.value)
+    }
+
+    func testGetVersion() throws {
+        let result = try API().getVersion(GetVersionArgs())
+        XCTAssertFalse(result.version.isEmpty)
+        XCTAssertFalse(result.versionInfo.isEmpty)
+    }
+
+    func testFormatCode() throws {
+        let source = """
+            schema Person:
+                name:   str
+                age:    int
+
+                check:
+                    0 <   age <   120
+
+            """
+        var args = FormatCodeArgs()
+        args.source = source
+        let result = try API().formatCode(args)
+        let formatted = String(data: result.formatted, encoding: .utf8) ?? ""
+        XCTAssertEqual(
+            """
+            schema Person:
+                name: str
+                age: int
+
+                check:
+                    0 < age < 120
+
+            """, formatted)
+    }
+
+    func testLintPath() throws {
+        var args = LintPathArgs()
+        args.paths.append("test_data/lint_path/test-lint.k")
+        let result = try API().lintPath(args)
+        XCTAssertTrue(
+            result.results.contains { $0.contains("Module 'math' imported but unused") },
+            "expected unused-import warning, got \(result.results)")
+    }
+
+    func testValidateCode() throws {
+        var args = ValidateCodeArgs()
+        args.code = """
+            schema Person:
+                name: str
+                age: int
+
+                check:
+                    0 < age < 120
+
+            """
+        args.data = #"{"name": "Alice", "age": 10}"#
+        args.format = "json"
+        let result = try API().validateCode(args)
+        XCTAssertTrue(result.success)
+        XCTAssertEqual("", result.errMessage)
+    }
+
+    func testParseProgram() throws {
+        var args = ParseProgramArgs()
+        args.paths.append("test_data/schema.k")
+        let result = try API().parseProgram(args)
+        XCTAssertEqual(1, result.paths.count)
+        XCTAssertTrue(result.errors.isEmpty)
+        XCTAssertFalse(result.astJson.isEmpty)
+    }
+
+    func testListOptions() throws {
+        var args = ParseProgramArgs()
+        args.paths.append("test_data/option/main.k")
+        let result = try API().listOptions(args)
+        XCTAssertEqual(3, result.options.count)
+        XCTAssertEqual("key1", result.options[0].name)
+        XCTAssertEqual("key2", result.options[1].name)
+        XCTAssertEqual("metadata-key", result.options[2].name)
+    }
+
+    func testRenameCode() throws {
+        var args = RenameCodeArgs()
+        args.packageRoot = "/mock/path"
+        args.symbolPath = "a"
+        args.sourceCodes = ["/mock/path/main.k": "a = 1\nb = a"]
+        args.newName = "a2"
+        let result = try API().renameCode(args)
+        XCTAssertEqual("a2 = 1\nb = a2", result.changedCodes["/mock/path/main.k"])
+    }
+
+    // Native errors must surface as catchable Swift errors, not crashes:
+    // https://github.com/kcl-lang/lib regression — `callNative` used to
+    // `fatalError` on the ERROR: prefix, killing the process mid-test.
+    func testExecProgramErrorThrows() throws {
+        var args = ExecProgramArgs()
+        args.kFilenameList.append("file_not_found")
+        do {
+            _ = try API().execProgram(args)
+            XCTFail("expected KclError for a missing kcl file")
+        } catch let error as KclError {
+            XCTAssertTrue(
+                error.message.contains("Cannot find the kcl file"),
+                "unexpected error message: \(error.message)")
+        }
+    }
 }

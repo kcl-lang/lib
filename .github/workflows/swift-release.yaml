@@ -1,0 +1,76 @@
+name: swift-release
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+env:
+  # Matches the macOS deployment target pinned by the nodejs workflow; the
+  # README calls this out as required to avoid link errors on macOS.
+  MACOSX_DEPLOYMENT_TARGET: "10.13"
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: macos-15-intel
+            arch: x86_64
+          - os: macos-latest
+            arch: arm64
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v6
+      - name: Install Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: 1.91
+          override: true
+      - name: Setup Swift toolchain
+        uses: swift-actions/setup-swift@v3
+        with:
+          swift-version: "6.3"
+      - name: Build release library
+        working-directory: swift
+        run: make build
+      - name: Upload artifact
+        uses: actions/upload-artifact@v6
+        with:
+          name: libkcl_lib_c-darwin-${{ matrix.arch }}
+          if-no-files-found: error
+          path: swift/Sources/CKclLib/lib/libkcl_lib_c.a
+
+  release:
+    if: startsWith(github.ref, 'refs/tags/')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    needs: [build]
+    steps:
+      - uses: actions/checkout@v6
+      - name: Download artifacts
+        uses: actions/download-artifact@v7
+        with:
+          path: release-assets
+      - name: Publish GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ github.ref_name }}
+        run: |
+          mv release-assets/libkcl_lib_c-darwin-x86_64/libkcl_lib_c.a release-assets/libkcl_lib_c-darwin-x86_64.a
+          mv release-assets/libkcl_lib_c-darwin-arm64/libkcl_lib_c.a release-assets/libkcl_lib_c-darwin-arm64.a
+          gh release create "$TAG" \
+            --title "$TAG" \
+            --generate-notes \
+            release-assets/libkcl_lib_c-darwin-x86_64.a \
+            release-assets/libkcl_lib_c-darwin-arm64.a
