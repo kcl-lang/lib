@@ -945,6 +945,10 @@ fn build_exec_program_args(args: &ExecProgramArgs) -> kcl_api::ExecProgramArgs {
         error_format: args.error_format.clone(),
         format: args.format.clone(),
         emit_attribute_metadata: args.emit_attribute_metadata,
+        // kcl-lang/kcl#2204 added `sourcemap_output` to ExecProgramArgs so
+        // callers can request a Source Map v3 alongside the eval result.
+        // The C++ binding does not surface that knob yet, so leave it None.
+        sourcemap_output: None,
     }
 }
 
