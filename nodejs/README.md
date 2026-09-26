@@ -3,13 +3,13 @@
 ## Installation
 
 ```shell
-npm install kcl-lib
+npm install @kcl-lib/native
 ```
 
 ## Quick Start
 
 ```typescript
-import { execProgram, ExecProgramArgs } from "kcl-lib";
+import { execProgram, ExecProgramArgs } from "@kcl-lib/native";
 
 function main() {
   const result = execProgram(new ExecProgramArgs(["schema.k"]));
@@ -70,7 +70,7 @@ app: AppConfig {
 Node.js Code
 
 ```ts
-import { execProgram, ExecProgramArgs } from "kcl-lib";
+import { execProgram, ExecProgramArgs } from "@kcl-lib/native";
 
 const result = execProgram(new ExecProgramArgs(["schema.k"]));
 ```
@@ -84,7 +84,7 @@ A case with the file not found error
 <p>
 
 ```ts
-import { execProgram, ExecProgramArgs } from "kcl-lib";
+import { execProgram, ExecProgramArgs } from "@kcl-lib/native";
 
 try {
   const result = execProgram(new ExecProgramArgs(["file_not_found.k"]));
@@ -117,7 +117,7 @@ app: AppConfig {
 Node.js Code
 
 ```ts
-import { parseFile, ParseFileArgs } from "kcl-lib";
+import { parseFile, ParseFileArgs } from "@kcl-lib/native";
 
 const result = parseFile(new ParseFileArgs("schema.k"));
 ```
@@ -146,7 +146,7 @@ app: AppConfig {
 Node.js Code
 
 ```ts
-import { parseProgram, ParseProgramArgs } from "kcl-lib";
+import { parseProgram, ParseProgramArgs } from "@kcl-lib/native";
 
 const result = parseProgram(new ParseProgramArgs(["schema.k"]));
 ```
@@ -175,7 +175,7 @@ app: AppConfig {
 Node.js Code
 
 ```ts
-import { loadPackage, LoadPackageArgs } from "kcl-lib";
+import { loadPackage, LoadPackageArgs } from "@kcl-lib/native";
 
 const result = loadPackage(new LoadPackageArgs(["schema.k"], [], true));
 ```
@@ -204,7 +204,7 @@ app: AppConfig {
 Node.js Code
 
 ```ts
-import { listVariables, ListVariablesArgs } from "kcl-lib";
+import { listVariables, ListVariablesArgs } from "@kcl-lib/native";
 
 const result = listVariables(new ListVariablesArgs(["schema.k"], []));
 ```
@@ -232,7 +232,7 @@ c = {
 Node.js Code
 
 ```ts
-import { listOptions, ListOptionsArgs } from "kcl-lib";
+import { listOptions, ListOptionsArgs } from "@kcl-lib/native";
 
 const result = listOptions(new ListOptionsArgs(["options.k"]));
 ```
@@ -261,7 +261,10 @@ app: AppConfig {
 Node.js Code
 
 ```ts
-import { getSchemaTypeMapping, GetSchemaTypeMappingArgs } from "kcl-lib";
+import {
+  getSchemaTypeMapping,
+  GetSchemaTypeMappingArgs,
+} from "@kcl-lib/native";
 
 const result = getSchemaTypeMapping(new GetSchemaTypeMappingArgs(["schema.k"]));
 ```
@@ -288,7 +291,7 @@ app: AppConfig {replicas: 4}
 Node.js Code
 
 ```ts
-import { overrideFile, OverrideFileArgs } from "kcl-lib";
+import { overrideFile, OverrideFileArgs } from "@kcl-lib/native";
 
 const result = overrideFile(
   new OverrideFileArgs("main.k", ["app.replicas=4"], [])
@@ -308,7 +311,7 @@ Format the code source.
 Node.js Code
 
 ```ts
-import { formatCode, FormatCodeArgs } from "kcl-lib";
+import { formatCode, FormatCodeArgs } from "@kcl-lib/native";
 
 const schemaCode = `
 schema Person:
@@ -346,7 +349,7 @@ schema Person:
 Node.js Code
 
 ```ts
-import { formatPath, FormatPathArgs } from "kcl-lib";
+import { formatPath, FormatPathArgs } from "@kcl-lib/native";
 
 const result = formatPath(new FormatPathArgs("format_path.k"));
 ```
@@ -372,7 +375,7 @@ a = 1
 Node.js Code
 
 ```ts
-import { lintPath, LintPathArgs } from "kcl-lib";
+import { lintPath, LintPathArgs } from "@kcl-lib/native";
 
 const result = lintPath(new LintPathArgs(["lint_path.k"]));
 ```
@@ -390,7 +393,7 @@ Validate code using schema and JSON/YAML data strings.
 Node.js Code
 
 ```ts
-import { validateCode, ValidateCodeArgs } from "kcl-lib";
+import { validateCode, ValidateCodeArgs } from "@kcl-lib/native";
 
 const code = `
 schema Person:
@@ -426,7 +429,7 @@ b = a
 Node.js Code
 
 ```ts
-import { rename, RenameArgs } from "kcl-lib";
+import { rename, RenameArgs } from "@kcl-lib/native";
 
 const args = new RenameArgs(".", "a", ["main.k"], "a2");
 const result = rename(args);
@@ -445,7 +448,7 @@ Rename all the occurrences of the target symbol and return the modified code if 
 Node.js Code
 
 ```ts
-import { renameCode, RenameCodeArgs } from "kcl-lib";
+import { renameCode, RenameCodeArgs } from "@kcl-lib/native";
 
 const args = RenameCodeArgs(
   "/mock/path",
@@ -469,7 +472,7 @@ Test KCL packages with test arguments.
 Node.js Code
 
 ```ts
-import { test as kclTest, TestArgs } from "kcl-lib";
+import { test as kclTest, TestArgs } from "@kcl-lib/native";
 
 const result = kclTest(new TestArgs(["/path/to/test/module/..."]));
 ```
@@ -497,7 +500,7 @@ kcl_options:
 Node.js Code
 
 ```ts
-import { loadSettingsFiles, LoadSettingsFilesArgs } from "kcl-lib";
+import { loadSettingsFiles, LoadSettingsFilesArgs } from "@kcl-lib/native";
 
 const result = loadSettingsFiles(new LoadSettingsFilesArgs(".", ["kcl.yaml"]));
 ```
@@ -528,7 +531,7 @@ flask = { git = "https://github.com/kcl-lang/flask-demo-kcl-manifests", commit =
 Node.js Code
 
 ```ts
-import { updateDependencies, UpdateDependenciesArgs } from "kcl-lib";
+import { updateDependencies, UpdateDependenciesArgs } from "@kcl-lib/native";
 
 const result = updateDependencies(new UpdateDependenciesArgs("module", false));
 ```
@@ -589,6 +592,35 @@ const execResult = execProgram(
     result.externalPkgs
   )
 );
+```
+
+</p>
+</details>
+
+### registerPlugin
+
+Register a KCL plugin so KCL code can call JavaScript functions through `kcl_plugin.<name>` while `execProgram` runs. Each method is called as `method(args, kwargs)` with the JSON arguments from KCL, and its return value is serialized back to JSON. If a method throws, the error is reported in the `errMessage` of the exec result.
+
+<details><summary>Example</summary>
+<p>
+
+The content of `plugin.k` is
+
+```python
+import kcl_plugin.my_plugin
+
+result = my_plugin.add(1, 1)
+```
+
+Node.js Code
+
+```ts
+import { execProgram, ExecProgramArgs, registerPlugin } from "@kcl-lib/native";
+
+registerPlugin("my_plugin", {
+  add: (args, _kwargs) => args[0] + args[1],
+});
+const result = execProgram(new ExecProgramArgs(["plugin.k"]));
 ```
 
 </p>
