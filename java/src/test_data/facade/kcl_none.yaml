@@ -1,0 +1,7 @@
+kcl_cli_configs:
+  files:
+    - main.k
+  disable_none: true
+kcl_options:
+  - key: env
+    value: dev

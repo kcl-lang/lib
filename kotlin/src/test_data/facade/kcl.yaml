@@ -1,0 +1,20 @@
+kcl_cli_configs:
+  files:
+    - main.k
+  overrides:
+    - app.replicas=4
+  path_selector:
+    - app
+  disable_none: true
+  sort_keys: true
+  strict_range_check: true
+  show_hidden: true
+  verbose: 2
+  debug: true
+kcl_options:
+  - key: env
+    value: prod
+  - key: tags
+    value:
+      b: 2
+      a: 1
