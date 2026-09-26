@@ -129,7 +129,9 @@ internal class KclSettingsFile private constructor(
             resolved = resolved.replace("\${KCL_MOD}", pkgRoot)
         }
         return if (resolved.startsWith(".") || (!resolved.startsWith("\${") && !Paths.get(resolved).isAbsolute)) {
-            Paths.get(workDir).resolve(resolved).normalize().toString()
+            // KCL input paths are canonically forward-slash; normalize so
+            // behavior is identical across host platforms.
+            Paths.get(workDir).resolve(resolved).normalize().toString().replace('\\', '/')
         } else {
             resolved
         }

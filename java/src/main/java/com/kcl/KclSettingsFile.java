@@ -176,7 +176,9 @@ final class KclSettingsFile {
             s = s.replace("${KCL_MOD}", pkgRoot);
         }
         if (s.startsWith(".") || (!s.startsWith("${") && !Paths.get(s).isAbsolute())) {
-            return Paths.get(workDir).resolve(s).normalize().toString();
+            // KCL input paths are canonically forward-slash; normalize so
+            // behavior is identical across host platforms.
+            return Paths.get(workDir).resolve(s).normalize().toString().replace('\\', '/');
         }
         return s;
     }
