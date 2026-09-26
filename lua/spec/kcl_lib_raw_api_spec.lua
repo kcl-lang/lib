@@ -22,6 +22,22 @@ app2:
       local result = assert(api:exec_program(args))
       assert.are.equal(expected, result.yaml_result)
     end)
+
+    it("accepts format and sourcemap_output fields", function()
+      local args = {
+        k_filename_list = {
+          "./spec/test_data/schema.k",
+          "./spec/test_data/data.k",
+        },
+        format = "json",
+        sourcemap_output = os.tmpname() .. ".map",
+      }
+      local result = assert(api:exec_program(args))
+      assert.are.equal("", result.yaml_result)
+      local parsed = assert(json.decode(result.json_result))
+      assert.are.equal(2, parsed.app.replicas)
+      assert.are.equal(4, parsed.app2.replicas)
+    end)
   end)
 
   describe("format_path", function()

@@ -16,6 +16,8 @@ test('execWithUpdateDependencies', (t) => {
       undefined,
       undefined,
       undefined,
+      undefined,
+      undefined,
       result.externalPkgs,
     ),
   )
