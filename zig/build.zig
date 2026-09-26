@@ -1,5 +1,6 @@
 const std = @import("std");
 const builtin = @import("builtin");
+const protobuf = @import("protobuf");
 
 // Although this function looks imperative, note that its job is to
 // declaratively construct a build graph that will be executed by an external
@@ -17,6 +18,20 @@ pub fn build(b: *std.Build) void {
 
     const os = target.query.os_tag orelse builtin.os.tag;
 
+    const protobuf_dep = b.dependency("protobuf", .{
+        .target = target,
+        .optimize = optimize,
+    });
+
+    const gen_spec_step = addSpecProtoCodegen(b, protobuf_dep);
+
+    const spec_module = b.createModule(.{
+        .root_source_file = b.path("src/proto/com/kcl/api.pb.zig"),
+        .target = b.graph.host,
+        .optimize = optimize,
+    });
+    spec_module.addImport("protobuf", protobuf_dep.module("protobuf"));
+
     const lib = b.addLibrary(.{
         .name = "kcl_lib_zig",
         .root_module = b.createModule(.{
@@ -30,6 +45,8 @@ pub fn build(b: *std.Build) void {
     lib.root_module.link_libcpp = true;
     lib.root_module.addLibraryPath(kclLibPath(b, &target));
     lib.root_module.linkSystemLibrary(kclLibName(), .{});
+    lib.root_module.addImport("spec", spec_module);
+    lib.step.dependOn(gen_spec_step);
     if (os == .windows) {
         linkWindowsLibraries(lib);
     } else if (os == .macos) {
@@ -55,6 +72,8 @@ pub fn build(b: *std.Build) void {
     lib_unit_tests.root_module.link_libcpp = true;
     lib_unit_tests.root_module.addLibraryPath(kclLibPath(b, &target));
     lib_unit_tests.root_module.linkSystemLibrary(kclLibName(), .{});
+    lib_unit_tests.root_module.addImport("spec", spec_module);
+    lib_unit_tests.step.dependOn(gen_spec_step);
     if (os == .windows) {
         linkWindowsLibraries(lib_unit_tests);
     } else if (os == .macos) {
@@ -64,6 +83,42 @@ pub fn build(b: *std.Build) void {
     const run_lib_unit_tests = b.addRunArtifact(lib_unit_tests);
     const test_step = b.step("test", "Run unit tests");
     test_step.dependOn(&run_lib_unit_tests.step);
+}
+
+// Generates the typed protobuf bindings in `src/proto` from
+// `../spec/spec.proto` using zig-protobuf's `protoc-gen-zig` plugin and the
+// system `protoc`. Regenerated on every build; `zig build gen-proto` runs
+// only this step.
+fn addSpecProtoCodegen(b: *std.Build, protobuf_dep: *std.Build.Dependency) *std.Build.Step {
+    const protoc_gen_zig = b.addExecutable(.{
+        .name = "protoc-gen-zig",
+        .root_module = b.createModule(.{
+            .root_source_file = protobuf_dep.path("bootstrapped-generator/main.zig"),
+            .target = b.graph.host,
+            .optimize = .Debug,
+        }),
+    });
+    protoc_gen_zig.root_module.addImport("protobuf", protobuf_dep.module("protobuf"));
+
+    const destination_directory = b.pathResolve(&.{ b.build_root.path orelse ".", "src", "proto" });
+    // protoc does not create a missing --zig_out directory itself.
+    std.Io.Dir.cwd().createDirPath(b.graph.io, destination_directory) catch {};
+
+    const protoc = b.addSystemCommand(&.{"protoc"});
+    protoc.addPrefixedFileArg("--plugin=protoc-gen-zig=", protoc_gen_zig.getEmittedBin());
+    protoc.addArg("--zig_out");
+    protoc.addArg(destination_directory);
+    protoc.addArg("-I");
+    protoc.addDirectoryArg(b.path("../spec"));
+    protoc.addFileArg(b.path("../spec/spec.proto"));
+
+    const fmt = b.addSystemCommand(&.{ b.graph.zig_exe, "fmt", destination_directory });
+    fmt.step.dependOn(&protoc.step);
+
+    const gen_proto = b.step("gen-proto", "generates zig protobuf bindings from ../spec/spec.proto");
+    gen_proto.dependOn(&fmt.step);
+
+    return &fmt.step;
 }
 
 fn linkWindowsLibraries(lib: *std.Build.Step.Compile) void {
