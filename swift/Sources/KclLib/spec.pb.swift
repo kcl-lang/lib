@@ -529,6 +529,22 @@ public struct ExecProgramArgs: @unchecked Sendable {
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
 
+  /// Diagnostic output format. One of: pretty, short, arcanist, sarif.
+  /// When set to anything other than "pretty", compile/eval errors are
+  /// emitted to stderr in the chosen machine-readable format. Falls back
+  /// to the `KCL_ERROR_FORMAT` environment variable when empty.
+  public var errorFormat: String {
+    get {return _storage._errorFormat}
+    set {_uniqueStorage()._errorFormat = newValue}
+  }
+
+  /// Output format selector. One of: yaml, json.
+  /// When empty the runtime generates both formats (legacy behaviour).
+  public var format: String {
+    get {return _storage._format}
+    set {_uniqueStorage()._format = newValue}
+  }
+
   /// Working directory.
   public var workDir: String {
     get {return _storage._workDir}
@@ -637,6 +653,20 @@ public struct ExecProgramArgs: @unchecked Sendable {
     set {_uniqueStorage()._fastEval = newValue}
   }
 
+  /// Optional path of the Source Map v3 (tc39.es/source-map) document to
+  /// emit for the generated YAML. When non-empty, the runtime records the
+  /// mapping between generated YAML lines and the originating KCL source
+  /// locations, returns it in `ExecProgramResult.sourcemap` and writes it
+  /// to the given path. Empty disables source map generation.
+  public var sourcemapOutput: String {
+    get {return _storage._sourcemapOutput ?? String()}
+    set {_uniqueStorage()._sourcemapOutput = newValue}
+  }
+  /// Returns true if `sourcemapOutput` has been explicitly set.
+  public var hasSourcemapOutput: Bool {return _storage._sourcemapOutput != nil}
+  /// Clears the value of `sourcemapOutput`. Subsequent reads from it will return its default value.
+  public mutating func clearSourcemapOutput() {_uniqueStorage()._sourcemapOutput = nil}
+
   public var unknownFields = SwiftProtobuf.UnknownStorage()
 
   public init() {}
@@ -662,9 +692,23 @@ public struct ExecProgramResult: Sendable {
   /// Error message from execution.
   public var errMessage: String = String()
 
+  /// Source Map v3 (tc39.es/source-map) JSON mapping the generated YAML
+  /// back to the originating KCL source. Populated only when the caller
+  /// requests a source map; empty otherwise.
+  public var sourcemap: String {
+    get {return _sourcemap ?? String()}
+    set {_sourcemap = newValue}
+  }
+  /// Returns true if `sourcemap` has been explicitly set.
+  public var hasSourcemap: Bool {return self._sourcemap != nil}
+  /// Clears the value of `sourcemap`. Subsequent reads from it will return its default value.
+  public mutating func clearSourcemap() {self._sourcemap = nil}
+
   public var unknownFields = SwiftProtobuf.UnknownStorage()
 
   public init() {}
+
+  fileprivate var _sourcemap: String? = nil
 }
 
 /// Message for format code request arguments.
@@ -2604,6 +2648,9 @@ extension ExecProgramArgs: SwiftProtobuf.Message, SwiftProtobuf._MessageImplemen
     16: .standard(proto: "show_hidden"),
     17: .standard(proto: "path_selector"),
     18: .standard(proto: "fast_eval"),
+    19: .standard(proto: "error_format"),
+    20: .same(proto: "format"),
+    22: .standard(proto: "sourcemap_output"),
   ]
 
   fileprivate class _StorageClass {
@@ -2625,6 +2672,9 @@ extension ExecProgramArgs: SwiftProtobuf.Message, SwiftProtobuf._MessageImplemen
     var _showHidden: Bool = false
     var _pathSelector: [String] = []
     var _fastEval: Bool = false
+    var _errorFormat: String = String()
+    var _format: String = String()
+    var _sourcemapOutput: String? = nil
 
     #if swift(>=5.10)
       // This property is used as the initial default value for new instances of the type.
@@ -2657,6 +2707,9 @@ extension ExecProgramArgs: SwiftProtobuf.Message, SwiftProtobuf._MessageImplemen
       _showHidden = source._showHidden
       _pathSelector = source._pathSelector
       _fastEval = source._fastEval
+      _errorFormat = source._errorFormat
+      _format = source._format
+      _sourcemapOutput = source._sourcemapOutput
     }
   }
 
@@ -2693,6 +2746,9 @@ extension ExecProgramArgs: SwiftProtobuf.Message, SwiftProtobuf._MessageImplemen
         case 16: try { try decoder.decodeSingularBoolField(value: &_storage._showHidden) }()
         case 17: try { try decoder.decodeRepeatedStringField(value: &_storage._pathSelector) }()
         case 18: try { try decoder.decodeSingularBoolField(value: &_storage._fastEval) }()
+        case 19: try { try decoder.decodeSingularStringField(value: &_storage._errorFormat) }()
+        case 20: try { try decoder.decodeSingularStringField(value: &_storage._format) }()
+        case 22: try { try decoder.decodeSingularStringField(value: &_storage._sourcemapOutput) }()
         default: break
         }
       }
@@ -2755,6 +2811,19 @@ extension ExecProgramArgs: SwiftProtobuf.Message, SwiftProtobuf._MessageImplemen
       if _storage._fastEval != false {
         try visitor.visitSingularBoolField(value: _storage._fastEval, fieldNumber: 18)
       }
+      if !_storage._errorFormat.isEmpty {
+        try visitor.visitSingularStringField(value: _storage._errorFormat, fieldNumber: 19)
+      }
+      if !_storage._format.isEmpty {
+        try visitor.visitSingularStringField(value: _storage._format, fieldNumber: 20)
+      }
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every if/case branch local when no optimizations
+      // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+      // https://github.com/apple/swift-protobuf/issues/1182
+      try { if let v = _storage._sourcemapOutput {
+        try visitor.visitSingularStringField(value: v, fieldNumber: 22)
+      } }()
     }
     try unknownFields.traverse(visitor: &visitor)
   }
@@ -2782,6 +2851,9 @@ extension ExecProgramArgs: SwiftProtobuf.Message, SwiftProtobuf._MessageImplemen
         if _storage._showHidden != rhs_storage._showHidden {return false}
         if _storage._pathSelector != rhs_storage._pathSelector {return false}
         if _storage._fastEval != rhs_storage._fastEval {return false}
+        if _storage._errorFormat != rhs_storage._errorFormat {return false}
+        if _storage._format != rhs_storage._format {return false}
+        if _storage._sourcemapOutput != rhs_storage._sourcemapOutput {return false}
         return true
       }
       if !storagesAreEqual {return false}
@@ -2798,6 +2870,7 @@ extension ExecProgramResult: SwiftProtobuf.Message, SwiftProtobuf._MessageImplem
     2: .standard(proto: "yaml_result"),
     3: .standard(proto: "log_message"),
     4: .standard(proto: "err_message"),
+    5: .same(proto: "sourcemap"),
   ]
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -2810,6 +2883,7 @@ extension ExecProgramResult: SwiftProtobuf.Message, SwiftProtobuf._MessageImplem
       case 2: try { try decoder.decodeSingularStringField(value: &self.yamlResult) }()
       case 3: try { try decoder.decodeSingularStringField(value: &self.logMessage) }()
       case 4: try { try decoder.decodeSingularStringField(value: &self.errMessage) }()
+      case 5: try { try decoder.decodeSingularStringField(value: &self._sourcemap) }()
       default: break
       }
     }
@@ -2828,6 +2902,13 @@ extension ExecProgramResult: SwiftProtobuf.Message, SwiftProtobuf._MessageImplem
     if !self.errMessage.isEmpty {
       try visitor.visitSingularStringField(value: self.errMessage, fieldNumber: 4)
     }
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
+    try { if let v = self._sourcemap {
+      try visitor.visitSingularStringField(value: v, fieldNumber: 5)
+    } }()
     try unknownFields.traverse(visitor: &visitor)
   }
 
@@ -2836,6 +2917,7 @@ extension ExecProgramResult: SwiftProtobuf.Message, SwiftProtobuf._MessageImplem
     if lhs.yamlResult != rhs.yamlResult {return false}
     if lhs.logMessage != rhs.logMessage {return false}
     if lhs.errMessage != rhs.errMessage {return false}
+    if lhs._sourcemap != rhs._sourcemap {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }

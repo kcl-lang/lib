@@ -283,6 +283,15 @@ typedef struct _ExecProgramArgs {
  emitted to stderr in the chosen machine-readable format. Falls back
  to the `KCL_ERROR_FORMAT` environment variable when empty. */
     pb_callback_t error_format;
+    /* Output format selector. One of: yaml, json.
+ When empty the runtime generates both formats (legacy behaviour). */
+    pb_callback_t format;
+    /* Optional path of the Source Map v3 (tc39.es/source-map) document to
+ emit for the generated YAML. When non-empty, the runtime records the
+ mapping between generated YAML lines and the originating KCL source
+ locations, returns it in `ExecProgramResult.sourcemap` and writes it
+ to the given path. Empty disables source map generation. */
+    pb_callback_t sourcemap_output;
 } ExecProgramArgs;
 
 /* Message for execute program response. */
@@ -295,6 +304,10 @@ typedef struct _ExecProgramResult {
     pb_callback_t log_message;
     /* Error message from execution. */
     pb_callback_t err_message;
+    /* Source Map v3 (tc39.es/source-map) JSON mapping the generated YAML
+ back to the originating KCL source. Populated only when the caller
+ requests a source map; empty otherwise. */
+    pb_callback_t sourcemap;
 } ExecProgramResult;
 
 /* Message for format code request arguments. */
@@ -805,8 +818,8 @@ extern "C" {
 #define Scope_init_default                       {{{NULL}, NULL}, false, ScopeIndex_init_default, false, SymbolIndex_init_default, {{NULL}, NULL}, {{NULL}, NULL}}
 #define SymbolIndex_init_default                 {0, 0, {{NULL}, NULL}}
 #define ScopeIndex_init_default                  {0, 0, {{NULL}, NULL}}
-#define ExecProgramArgs_init_default             {{{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, 0, 0, 0, 0, 0, 0, 0, {{NULL}, NULL}, 0, 0, 0, {{NULL}, NULL}, 0, {{NULL}, NULL}}
-#define ExecProgramResult_init_default           {{{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}}
+#define ExecProgramArgs_init_default             {{{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, 0, 0, 0, 0, 0, 0, 0, {{NULL}, NULL}, 0, 0, 0, {{NULL}, NULL}, 0, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}}
+#define ExecProgramResult_init_default           {{{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}}
 #define FormatCodeArgs_init_default              {{{NULL}, NULL}}
 #define FormatCodeResult_init_default            {{{NULL}, NULL}}
 #define FormatPathArgs_init_default              {{{NULL}, NULL}, 0}
@@ -883,8 +896,8 @@ extern "C" {
 #define Scope_init_zero                          {{{NULL}, NULL}, false, ScopeIndex_init_zero, false, SymbolIndex_init_zero, {{NULL}, NULL}, {{NULL}, NULL}}
 #define SymbolIndex_init_zero                    {0, 0, {{NULL}, NULL}}
 #define ScopeIndex_init_zero                     {0, 0, {{NULL}, NULL}}
-#define ExecProgramArgs_init_zero                {{{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, 0, 0, 0, 0, 0, 0, 0, {{NULL}, NULL}, 0, 0, 0, {{NULL}, NULL}, 0, {{NULL}, NULL}}
-#define ExecProgramResult_init_zero              {{{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}}
+#define ExecProgramArgs_init_zero                {{{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, 0, 0, 0, 0, 0, 0, 0, {{NULL}, NULL}, 0, 0, 0, {{NULL}, NULL}, 0, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}}
+#define ExecProgramResult_init_zero              {{{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}}
 #define FormatCodeArgs_init_zero                 {{{NULL}, NULL}}
 #define FormatCodeResult_init_zero               {{{NULL}, NULL}}
 #define FormatPathArgs_init_zero                 {{{NULL}, NULL}, 0}
@@ -1021,10 +1034,13 @@ extern "C" {
 #define ExecProgramArgs_path_selector_tag        17
 #define ExecProgramArgs_fast_eval_tag            18
 #define ExecProgramArgs_error_format_tag         19
+#define ExecProgramArgs_format_tag               20
+#define ExecProgramArgs_sourcemap_output_tag     22
 #define ExecProgramResult_json_result_tag        1
 #define ExecProgramResult_yaml_result_tag        2
 #define ExecProgramResult_log_message_tag        3
 #define ExecProgramResult_err_message_tag        4
+#define ExecProgramResult_sourcemap_tag          5
 #define FormatCodeArgs_source_tag                1
 #define FormatCodeResult_formatted_tag           1
 #define FormatPathArgs_path_tag                  1
@@ -1409,7 +1425,9 @@ X(a, STATIC,   SINGULAR, BOOL,     compile_only,     15) \
 X(a, STATIC,   SINGULAR, BOOL,     show_hidden,      16) \
 X(a, CALLBACK, REPEATED, STRING,   path_selector,    17) \
 X(a, STATIC,   SINGULAR, BOOL,     fast_eval,        18) \
-X(a, CALLBACK, SINGULAR, STRING,   error_format,     19)
+X(a, CALLBACK, SINGULAR, STRING,   error_format,     19) \
+X(a, CALLBACK, SINGULAR, STRING,   format,           20) \
+X(a, CALLBACK, OPTIONAL, STRING,   sourcemap_output,  22)
 #define ExecProgramArgs_CALLBACK pb_default_field_callback
 #define ExecProgramArgs_DEFAULT NULL
 #define ExecProgramArgs_args_MSGTYPE Argument
@@ -1419,7 +1437,8 @@ X(a, CALLBACK, SINGULAR, STRING,   error_format,     19)
 X(a, CALLBACK, SINGULAR, STRING,   json_result,       1) \
 X(a, CALLBACK, SINGULAR, STRING,   yaml_result,       2) \
 X(a, CALLBACK, SINGULAR, STRING,   log_message,       3) \
-X(a, CALLBACK, SINGULAR, STRING,   err_message,       4)
+X(a, CALLBACK, SINGULAR, STRING,   err_message,       4) \
+X(a, CALLBACK, OPTIONAL, STRING,   sourcemap,         5)
 #define ExecProgramResult_CALLBACK pb_default_field_callback
 #define ExecProgramResult_DEFAULT NULL
 

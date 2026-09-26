@@ -1992,6 +1992,8 @@ pub const ExecProgramArgs = struct {
     path_selector: std.ArrayList([]const u8) = .empty,
     fast_eval: bool = false,
     error_format: []const u8 = &.{},
+    format: []const u8 = &.{},
+    sourcemap_output: ?[]const u8 = null,
 
     pub const _desc_table = .{
         .work_dir = fd(1, .{ .scalar = .string }),
@@ -2013,6 +2015,8 @@ pub const ExecProgramArgs = struct {
         .path_selector = fd(17, .{ .repeated = .{ .scalar = .string } }),
         .fast_eval = fd(18, .{ .scalar = .bool }),
         .error_format = fd(19, .{ .scalar = .string }),
+        .format = fd(20, .{ .scalar = .string }),
+        .sourcemap_output = fd(22, .{ .scalar = .string }),
     };
 
     /// Encodes the message to the writer
@@ -2080,12 +2084,14 @@ pub const ExecProgramResult = struct {
     yaml_result: []const u8 = &.{},
     log_message: []const u8 = &.{},
     err_message: []const u8 = &.{},
+    sourcemap: ?[]const u8 = null,
 
     pub const _desc_table = .{
         .json_result = fd(1, .{ .scalar = .string }),
         .yaml_result = fd(2, .{ .scalar = .string }),
         .log_message = fd(3, .{ .scalar = .string }),
         .err_message = fd(4, .{ .scalar = .string }),
+        .sourcemap = fd(5, .{ .scalar = .string }),
     };
 
     /// Encodes the message to the writer

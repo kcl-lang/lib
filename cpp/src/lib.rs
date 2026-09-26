@@ -51,6 +51,13 @@ mod ffi {
         /// Emit a side-channel marker in the planned YAML/JSON that names
         /// schema attributes to be carried over to downstream emitters.
         pub emit_attribute_metadata: bool,
+        /// Path of the Source Map v3 (tc39.es/source-map) document to emit
+        /// for the generated YAML. When non-empty, the runtime records the
+        /// mapping between generated YAML lines and the originating KCL
+        /// source locations, returns it in `ExecProgramResult.sourcemap`
+        /// and writes it to the given path. Empty disables source map
+        /// generation.
+        pub sourcemap_output: String,
     }
 
     /// kcl main.k -E name=path
@@ -111,6 +118,10 @@ mod ffi {
         log_message: String,
         /// Error message from execution.
         err_message: String,
+        /// Source Map v3 (tc39.es/source-map) JSON mapping the generated
+        /// YAML back to the originating KCL source. Empty when the caller
+        /// did not request a source map.
+        sourcemap: String,
     }
 
     /// Message for version response.
@@ -945,10 +956,11 @@ fn build_exec_program_args(args: &ExecProgramArgs) -> kcl_api::ExecProgramArgs {
         error_format: args.error_format.clone(),
         format: args.format.clone(),
         emit_attribute_metadata: args.emit_attribute_metadata,
-        // kcl-lang/kcl#2204 added `sourcemap_output` to ExecProgramArgs so
-        // callers can request a Source Map v3 alongside the eval result.
-        // The C++ binding does not surface that knob yet, so leave it None.
-        sourcemap_output: None,
+        sourcemap_output: if args.sourcemap_output.is_empty() {
+            None
+        } else {
+            Some(args.sourcemap_output.clone())
+        },
     }
 }
 
@@ -972,6 +984,7 @@ fn exec_program(args: &ExecProgramArgs) -> Result<ExecProgramResult> {
         json_result: result.json_result,
         log_message: result.log_message,
         err_message: result.err_message,
+        sourcemap: result.sourcemap.unwrap_or_default(),
     })
 }
 
