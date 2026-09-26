@@ -1,6 +1,6 @@
 package com.kcl.ast;
 
-import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Optional;
 
 /**
@@ -15,10 +15,16 @@ import java.util.Optional;
  * 1Mi
  * }
  * </pre>
+ *
+ * The polymorphic discriminator {@code "NumberLit"} is registered on the
+ * {@link Expr} base class via {@code @JsonSubTypes}; do NOT add a
+ * {@code @JsonTypeName} here or it will conflict.
  */
-@JsonTypeName("Number")
 public class NumberLit extends Expr {
+    @JsonProperty("binary_suffix")
     private Optional<NumberBinarySuffix> binarySuffix;
+
+    @JsonProperty("value")
     private NumberLitValue value;
 
     public Optional<NumberBinarySuffix> getBinarySuffix() {
