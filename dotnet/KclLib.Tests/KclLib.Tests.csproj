@@ -18,6 +18,7 @@
 
   <ItemGroup>
     <ProjectReference Include="../KclLib/KclLib.csproj" />
+    <ProjectReference Include="../KclLib.AST/KclLib.AST.csproj" />
   </ItemGroup>
 
   <ItemGroup>
