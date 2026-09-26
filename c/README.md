@@ -35,8 +35,8 @@ make examples
 #include <kcl_lib.h>
 
 int exec_file(const char* file_str) {
-    uint8_t buffer[BUFFER_SIZE];
-    uint8_t result_buffer[BUFFER_SIZE];
+    static uint8_t buffer[BUFFER_SIZE];
+    static uint8_t result_buffer[BUFFER_SIZE];
     size_t message_length;
     bool status;
     struct Buffer file = {
@@ -68,19 +68,19 @@ int exec_file(const char* file_str) {
 
     ExecProgramResult result = ExecProgramResult_init_default;
 
-    uint8_t yaml_value_buffer[BUFFER_SIZE] = { 0 };
+    static uint8_t yaml_value_buffer[BUFFER_SIZE] = { 0 };
     result.yaml_result.arg = yaml_value_buffer;
     result.yaml_result.funcs.decode = decode_string;
 
-    uint8_t json_value_buffer[BUFFER_SIZE] = { 0 };
+    static uint8_t json_value_buffer[BUFFER_SIZE] = { 0 };
     result.json_result.arg = json_value_buffer;
     result.json_result.funcs.decode = decode_string;
 
-    uint8_t err_value_buffer[BUFFER_SIZE] = { 0 };
+    static uint8_t err_value_buffer[BUFFER_SIZE] = { 0 };
     result.err_message.arg = err_value_buffer;
     result.err_message.funcs.decode = decode_string;
 
-    uint8_t log_value_buffer[BUFFER_SIZE] = { 0 };
+    static uint8_t log_value_buffer[BUFFER_SIZE] = { 0 };
     result.log_message.arg = log_value_buffer;
     result.log_message.funcs.decode = decode_string;
 
@@ -118,8 +118,8 @@ Run the ExecProgram example.
 
 int validate(const char* code_str, const char* data_str)
 {
-    uint8_t buffer[BUFFER_SIZE];
-    uint8_t result_buffer[BUFFER_SIZE];
+    static uint8_t buffer[BUFFER_SIZE];
+    static uint8_t result_buffer[BUFFER_SIZE];
     size_t message_length;
     bool status;
 
@@ -144,7 +144,7 @@ int validate(const char* code_str, const char* data_str)
     ValidateCodeResult result = ValidateCodeResult_init_default;
 
     result.err_message.funcs.decode = decode_string;
-    uint8_t value_buffer[BUFFER_SIZE] = { 0 };
+    static uint8_t value_buffer[BUFFER_SIZE] = { 0 };
     result.err_message.arg = value_buffer;
 
     status = pb_decode(&istream, ValidateCodeResult_fields, &result);
@@ -179,5 +179,62 @@ int main()
 Run the ValidateCode example.
 
 ```shell
-./examples/exec_api
+./examples/validate_api
+```
+
+## Typed API
+
+`kcl_lib.h` provides typed wrappers around the raw protobuf encode/decode
+helpers for the commonly used methods. All wrappers return `true` on success
+and `false` on failure (on failure the error message is copied into the
+provided output buffer when one is available).
+
+```c
+#include <kcl_lib.h>
+
+int main()
+{
+    // Ping
+    char ping_value[128] = { 0 };
+    if (kcl_ping("hello", ping_value, sizeof(ping_value))) {
+        printf("%s\n", ping_value);
+    }
+
+    // GetVersion
+    struct KclVersion version = { 0 };
+    if (kcl_get_version(&version)) {
+        printf("%s\n", version.version);
+    }
+
+    // ExecProgram
+    static char yaml[BUFFER_SIZE];
+    static char exec_err[BUFFER_SIZE];
+    const char* files[] = { "./test_data/schema.k" };
+    if (kcl_exec_program(files, 1, yaml, sizeof(yaml), exec_err, sizeof(exec_err))) {
+        printf("%s\n", yaml);
+    }
+
+    // ValidateCode
+    bool success = false;
+    char validate_err[BUFFER_SIZE] = { 0 };
+    const char* code = "schema Person:\n    name: str\n    age: int\n    check:\n        0 < age < 120\n";
+    if (kcl_validate_code(code, "{\"name\": \"Alice\", \"age\": 10}", &success, validate_err, sizeof(validate_err))) {
+        printf("Validate Status: %d\n", success);
+    }
+
+    // FormatCode
+    static char formatted[BUFFER_SIZE];
+    if (kcl_format_code("a = 1", formatted, sizeof(formatted))) {
+        printf("%s\n", formatted);
+    }
+
+    // LintPath
+    static char lint_results[BUFFER_SIZE];
+    const char* lint_paths[] = { "./test_data/schema.k" };
+    if (kcl_lint_path(lint_paths, 1, lint_results, sizeof(lint_results))) {
+        printf("%s\n", lint_results);
+    }
+
+    return 0;
+}
 ```

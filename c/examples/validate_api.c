@@ -2,8 +2,8 @@
 
 int validate(const char* code_str, const char* data_str)
 {
-    uint8_t buffer[BUFFER_SIZE];
-    uint8_t result_buffer[BUFFER_SIZE];
+    static uint8_t buffer[BUFFER_SIZE];
+    static uint8_t result_buffer[BUFFER_SIZE];
     size_t message_length;
     bool status;
 
@@ -28,7 +28,7 @@ int validate(const char* code_str, const char* data_str)
     ValidateCodeResult result = ValidateCodeResult_init_default;
 
     result.err_message.funcs.decode = decode_string;
-    uint8_t value_buffer[BUFFER_SIZE] = { 0 };
+    static uint8_t value_buffer[BUFFER_SIZE] = { 0 };
     result.err_message.arg = value_buffer;
 
     status = pb_decode(&istream, ValidateCodeResult_fields, &result);

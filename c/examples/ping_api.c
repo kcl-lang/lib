@@ -2,8 +2,8 @@
 
 int ping(const char* msg)
 {
-    uint8_t buffer[BUFFER_SIZE];
-    uint8_t result_buffer[BUFFER_SIZE];
+    static uint8_t buffer[BUFFER_SIZE];
+    static uint8_t result_buffer[BUFFER_SIZE];
     size_t message_length;
     bool status;
 
@@ -26,7 +26,7 @@ int ping(const char* msg)
     pb_istream_t istream = pb_istream_from_buffer(result_buffer, result_length);
     PingResult decoded_ping_args = PingResult_init_default;
     decoded_ping_args.value.funcs.decode = decode_string;
-    uint8_t value_buffer[BUFFER_SIZE] = { 0 };
+    static uint8_t value_buffer[BUFFER_SIZE] = { 0 };
     decoded_ping_args.value.arg = value_buffer;
 
     status = pb_decode(&istream, PingResult_fields, &decoded_ping_args);
