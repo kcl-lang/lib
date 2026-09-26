@@ -1,0 +1,33 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <AssemblyName>KclLib.AST</AssemblyName>
+    <PackageId>KclLib.AST</PackageId>
+    <Title>KclLib AST</Title>
+    <PackageDescription>
+Typed AST package for the KCL language — deserializes the ast_json string
+emitted by KclLib.API.ParseFile / ParseProgram into typed C# classes mirroring
+Rust's `ast` crate. Mirrors the design of the Java, Go, Python, and Node.js
+bindings.
+    </PackageDescription>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <RepositoryUrl>https://github.com/kcl-lang</RepositoryUrl>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!--
+      System.Text.Json is the built-in .NET JSON library (no extra dep
+      needed — it's part of the BCL since .NET Core 3.0). The KclLib
+      itself uses Newtonsoft.Json because of its protobuf integration,
+      but for this package, which only deserializes the `astJson` string
+      into typed records, System.Text.Json is the idiomatic choice.
+    -->
+  </ItemGroup>
+
+</Project>

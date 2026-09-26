@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.10)
-project(kcl-lib VERSION 0.13.0 LANGUAGES CXX)
+project(kcl-lib VERSION 0.13.0 LANGUAGES C CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -22,6 +22,18 @@ file(GLOB_RECURSE CPP_SOURCE_FILE src/*.cpp)
 file(GLOB_RECURSE CPP_HEADER_FILE include/*.hpp)
 file(GLOB_RECURSE EXAMPLE_SOURCE_FILE examples/*.cpp)
 
+# Optional C typed-AST module. The C binding ships a self-contained
+# `kcl_lib_ast.h` + `kcl_lib_ast.c` pair (no nanopb dependency) that
+# parses the AST JSON emitted by `kcl_lib::parse_file`. The C++
+# wrapper `kcl_lib_ast.hpp` is a thin RAII layer over those C types.
+set(KCL_AST_C_DIR ${PROJECT_SOURCE_DIR}/../c)
+set(KCL_AST_INCLUDE_DIR ${KCL_AST_C_DIR}/include)
+set(KCL_AST_SOURCE ${KCL_AST_C_DIR}/lib/kcl_lib_ast.c)
+
+add_library(kcl-lib-ast STATIC ${KCL_AST_SOURCE})
+target_include_directories(kcl-lib-ast PUBLIC ${KCL_AST_INCLUDE_DIR})
+set_target_properties(kcl-lib-ast PROPERTIES C_STANDARD 99)
+
 add_custom_command(
     OUTPUT ${RUST_BRIDGE_CPP} ${RUST_LIB} ${RUST_HEADER_FILE}
     COMMAND cargo build --manifest-path ${CARGO_MANIFEST} --release
@@ -39,11 +51,18 @@ set_target_properties(kcl-lib-cpp
         PROPERTIES ADDITIONAL_CLEAN_FILES ${CARGO_TARGET_DIR}
 )
 
-set(EXECUTABLES exec_api exec_with_deps_api override_api update_deps_api validate_api list_options_api get_version_api load_settings_files_api testing_api rename_code_api rename_api lint_path_api format_path_api format_path_dry_run_api format_code_api get_schema_type_api schema_function_type_api list_variables_api load_package_api parse_file_api parse_program_api get_schema_type_under_path_api list_method_api ping_api)
+set(EXECUTABLES exec_api exec_with_deps_api override_api update_deps_api validate_api list_options_api get_version_api load_settings_files_api testing_api rename_code_api rename_api lint_path_api format_path_api format_path_dry_run_api format_code_api get_schema_type_api schema_function_type_api list_variables_api load_package_api parse_file_api parse_program_api get_schema_type_under_path_api list_method_api ping_api ast_alignment)
 foreach(EXE IN LISTS EXECUTABLES)
     add_executable(${EXE} examples/${EXE}.cpp)
     target_include_directories(${EXE} PUBLIC ${CPP_INCLUDE_DIR})
     target_link_libraries(${EXE} PUBLIC kcl-lib-cpp)
+    # The ast_alignment example exercises the typed AST module —
+    # link against `kcl-lib-ast` (compiled from the C binding's
+    # `kcl_lib_ast.c`) so the example can call `kcl_ast_parse_module`.
+    if(EXE STREQUAL "ast_alignment")
+        target_include_directories(${EXE} PUBLIC ${KCL_AST_INCLUDE_DIR})
+        target_link_libraries(${EXE} PUBLIC kcl-lib-ast)
+    endif()
     if(WIN32)
         target_link_libraries(${EXE} PRIVATE userenv ws2_32 bcrypt)
     endif()

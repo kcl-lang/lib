@@ -413,6 +413,103 @@ done:
     return status;
 }
 
+// Parse a single KCL file and copy the resulting AST JSON into
+// ast_out. Returns false and copies the error message into ast_out on
+// failure. ast_out must point to at least ast_out_size bytes.
+static inline bool kcl_parse_file(const char* filename, char* ast_out, size_t ast_out_size)
+{
+    uint8_t* buffer = (uint8_t*)malloc(BUFFER_SIZE);
+    uint8_t* result_buffer = (uint8_t*)malloc(BUFFER_SIZE);
+    uint8_t* ast_buffer = (uint8_t*)calloc(1, BUFFER_SIZE);
+    bool status = false;
+    if (buffer == NULL || result_buffer == NULL || ast_buffer == NULL)
+        goto done;
+
+    ParseFileArgs args = ParseFileArgs_init_zero;
+    args.path.funcs.encode = encode_string;
+    args.path.arg = (void*)filename;
+
+    pb_ostream_t stream = pb_ostream_from_buffer(buffer, BUFFER_SIZE);
+    if (!pb_encode(&stream, ParseFileArgs_fields, &args))
+        goto done;
+
+    size_t result_length = kcl_call("KclService.ParseFile", buffer, stream.bytes_written, result_buffer);
+    if (check_error_prefix(result_buffer)) {
+        kcl_copy_string(ast_out, ast_out_size, result_buffer);
+        goto done;
+    }
+
+    pb_istream_t istream = pb_istream_from_buffer(result_buffer, result_length);
+    ParseFileResult result = ParseFileResult_init_default;
+    result.ast_json.funcs.decode = decode_string;
+    result.ast_json.arg = ast_buffer;
+    if (!pb_decode(&istream, ParseFileResult_fields, &result))
+        goto done;
+
+    kcl_copy_string(ast_out, ast_out_size, ast_buffer);
+    status = true;
+
+done:
+    free(buffer);
+    free(result_buffer);
+    free(ast_buffer);
+    return status;
+}
+
+// Parse a list of KCL files and copy the resulting program AST JSON
+// envelope into ast_out. Returns false and copies the error message
+// into ast_out on failure. ast_out must point to at least
+// ast_out_size bytes.
+static inline bool kcl_parse_program(const char* const* filenames, size_t filename_count, char* ast_out, size_t ast_out_size)
+{
+    uint8_t* buffer = (uint8_t*)malloc(BUFFER_SIZE);
+    uint8_t* result_buffer = (uint8_t*)malloc(BUFFER_SIZE);
+    uint8_t* ast_buffer = (uint8_t*)calloc(1, BUFFER_SIZE);
+    struct Buffer* files = (struct Buffer*)malloc(filename_count * sizeof(struct Buffer));
+    struct Buffer** file_ptrs = (struct Buffer**)malloc(filename_count * sizeof(struct Buffer*));
+    bool status = false;
+    if (buffer == NULL || result_buffer == NULL || ast_buffer == NULL || files == NULL || file_ptrs == NULL)
+        goto done;
+
+    for (size_t i = 0; i < filename_count; ++i) {
+        files[i].buffer = filenames[i];
+        files[i].len = strlen(filenames[i]);
+        file_ptrs[i] = &files[i];
+    }
+    struct RepeatedString strs = { .repeated = file_ptrs, .index = 0, .max_size = filename_count };
+    ParseProgramArgs args = ParseProgramArgs_init_zero;
+    args.paths.funcs.encode = encode_str_list;
+    args.paths.arg = &strs;
+
+    pb_ostream_t stream = pb_ostream_from_buffer(buffer, BUFFER_SIZE);
+    if (!pb_encode(&stream, ParseProgramArgs_fields, &args))
+        goto done;
+
+    size_t result_length = kcl_call("KclService.ParseProgram", buffer, stream.bytes_written, result_buffer);
+    if (check_error_prefix(result_buffer)) {
+        kcl_copy_string(ast_out, ast_out_size, result_buffer);
+        goto done;
+    }
+
+    pb_istream_t istream = pb_istream_from_buffer(result_buffer, result_length);
+    ParseProgramResult result = ParseProgramResult_init_default;
+    result.ast_json.funcs.decode = decode_string;
+    result.ast_json.arg = ast_buffer;
+    if (!pb_decode(&istream, ParseProgramResult_fields, &result))
+        goto done;
+
+    kcl_copy_string(ast_out, ast_out_size, ast_buffer);
+    status = true;
+
+done:
+    free(buffer);
+    free(result_buffer);
+    free(ast_buffer);
+    free(files);
+    free(file_ptrs);
+    return status;
+}
+
 #ifdef __cplusplus
 } /* extern "C" */
 #endif

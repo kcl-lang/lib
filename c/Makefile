@@ -12,7 +12,7 @@ EXAMPLE_OBJECTS=$(EXAMPLES:.c=.o)
 EXAMPLE_TARGETS=$(EXAMPLES:.c=)
 
 # Source Files
-LIB_SOURCES = $(LIB_DIR)/pb_common.c $(LIB_DIR)/pb_decode.c $(LIB_DIR)/pb_encode.c $(LIB_DIR)/spec.pb.c
+LIB_SOURCES = $(LIB_DIR)/pb_common.c $(LIB_DIR)/pb_decode.c $(LIB_DIR)/pb_encode.c $(LIB_DIR)/spec.pb.c $(LIB_DIR)/kcl_lib_ast.c
 LIB_OBJECTS = $(addprefix $(BUILD_DIR)/, $(notdir $(LIB_SOURCES:.c=.o)))
 
 # Static lib output
