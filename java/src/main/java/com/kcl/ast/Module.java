@@ -9,9 +9,6 @@ public class Module {
     @JsonProperty("filename")
     private String filename;
 
-    @JsonProperty("pkg")
-    private String pkg;
-
     @JsonProperty("doc")
     private NodeRef<String> doc;
 
@@ -45,14 +42,6 @@ public class Module {
 
     public void setFilename(String filename) {
         this.filename = filename;
-    }
-
-    public String getPkg() {
-        return pkg;
-    }
-
-    public void setPkg(String pkg) {
-        this.pkg = pkg;
     }
 
     public NodeRef<String> getDoc() {
