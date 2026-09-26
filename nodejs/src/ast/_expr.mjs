@@ -16,7 +16,7 @@ function targetFromWire(w) {
 /** @param {Record<string,any>} w */
 function identifierFromWire(w) {
   return {
-    names: (w.names || []).map((n) => nodeFromWire(n, (x) => /** @type {string} */ (x))),
+    names: (w.names || []).map((n) => nodeFromWire(n, (x) => /** @type {string} */ x)),
     pkgpath: w.pkgpath || '',
     ctx: w.ctx,
   }

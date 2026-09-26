@@ -23,7 +23,7 @@ import { stmtFromWire } from './_stmt.mjs'
 export function moduleFromWire(w) {
   return {
     filename: w.filename || '',
-    doc: nodeFromWire(w.doc, (x) => /** @type {string} */ (x)),
+    doc: nodeFromWire(w.doc, (x) => /** @type {string} */ x),
     body: (w.body || []).map((b) => nodeFromWire(b, stmtFromWire)),
     comments: (w.comments || []).map(commentFromWire),
   }

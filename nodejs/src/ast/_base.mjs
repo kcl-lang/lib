@@ -74,7 +74,7 @@ export function nodeFromWire(w, load) {
   if (!w) return undefined
   const inner = w.node !== undefined ? load(w.node) : undefined
   return {
-    node: /** @type {T} */ (inner),
+    node: /** @type {T} */ inner,
     filename: w.filename,
     line: w.line,
     column: w.column,
@@ -88,5 +88,5 @@ export function nodeFromWire(w, load) {
  * @returns {Comment|undefined}
  */
 export function commentFromWire(w) {
-  return /** @type {Comment|undefined} */ (nodeFromWire(w, (x) => /** @type {string} */ (x)))
+  return /** @type {Comment|undefined} */ nodeFromWire(w, (x) => /** @type {string} */ x)
 }

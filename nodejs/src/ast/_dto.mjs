@@ -112,7 +112,7 @@ export function argumentsFromWire(w) {
 /** @param {Record<string,any>|undefined|null} w */
 export function memberOrIndexFromWire(w) {
   if (!w) return undefined
-  if (w.type === 'Member') return { member: nodeFromWire(w.value, (x) => /** @type {string} */ (x)) }
+  if (w.type === 'Member') return { member: nodeFromWire(w.value, (x) => /** @type {string} */ x) }
   if (w.type === 'Index') return { index: nodeFromWire(w.value, _expr.exprFromWire) }
   return {}
 }
@@ -129,7 +129,7 @@ export function memberOrIndexFromWire(w) {
 export function targetFromWire(w) {
   if (!w) return undefined
   return {
-    name: nodeFromWire(w.name, (x) => /** @type {string} */ (x)),
+    name: nodeFromWire(w.name, (x) => /** @type {string} */ x),
     paths: (w.paths || []).map(memberOrIndexFromWire),
     pkgpath: w.pkgpath || '',
   }

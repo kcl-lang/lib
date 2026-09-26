@@ -5,11 +5,7 @@
 // JavaScript objects matching Rust's AST in ``crates/ast/src/ast.rs``.
 
 export { parseModule, parseProgram, moduleFromWire } from './_module.mjs'
-export {
-  posFromWire,
-  nodeFromWire,
-  commentFromWire,
-} from './_base.mjs'
+export { posFromWire, nodeFromWire, commentFromWire } from './_base.mjs'
 
 // Flat DTOs (positions where the wire shape lacks the polymorphic `type` tag).
 export {
