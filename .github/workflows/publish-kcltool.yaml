@@ -29,7 +29,7 @@ on:
 env:
   KCL_CLI_VERSION: v0.12.10
   KCL_LIB_REF: v0.12.5
-  PACKAGE_VERSION: 0.12.10
+  PACKAGE_VERSION: 0.13.0
 
 jobs:
   build:
