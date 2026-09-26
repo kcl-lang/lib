@@ -32,7 +32,7 @@ jobs:
         working-directory: "lua"
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
     - name: Setup lua toolchain
       uses: leafo/gh-actions-lua@v13
       with:
