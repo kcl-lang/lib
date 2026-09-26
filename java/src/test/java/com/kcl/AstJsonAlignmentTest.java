@@ -62,8 +62,12 @@ public class AstJsonAlignmentTest {
         Module m = MAPPER.readValue(json, Module.class);
         // parseFile resolves relative paths to absolute ones before handing
         // them to the parser, so `m.getFilename()` carries the absolute form.
+        // The Rust parser preserves the host OS's path separator, so compare
+        // at the Path-component level (Path.endsWith) instead of the raw
+        // String.endsWith — otherwise Windows runners (using "\") never match
+        // the forward-slash-form fixture path.
         assertTrue("expected filename to end with the relative fixture path",
-                m.getFilename().endsWith(FIXTURE));
+                Paths.get(m.getFilename()).endsWith(Paths.get(FIXTURE)));
         assertNotNull(m.getBody());
 
         // Rust Module has no `pkg` field — the serialized JSON must not contain
