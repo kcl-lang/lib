@@ -73,6 +73,12 @@
             <artifactId>jackson-databind</artifactId>
             <version>2.13.2</version>
         </dependency>
+        <!-- SnakeYAML backend for the high-level Kcl facade (kcl.yaml settings files) -->
+        <dependency>
+            <groupId>org.yaml</groupId>
+            <artifactId>snakeyaml</artifactId>
+            <version>1.30</version>
+        </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-engine</artifactId>
