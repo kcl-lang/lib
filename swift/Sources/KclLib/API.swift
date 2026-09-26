@@ -18,7 +18,12 @@ public enum KclError: Swift.Error, CustomStringConvertible {
 }
 
 public class API: Service {
+  // Single source of truth for the error prefix the Rust dispatcher
+  // prepends to every error reply. Must stay in lockstep with the
+  // `format!("ERROR:{}", ...)` literals in `crates/api/src/service/capi.rs`.
+  // See `/Users/timi/codes/lib/docs/abi.md` §4 for the full convention.
   private static let ERROR_PREFIX = "ERROR:"
+  private static let ERROR_PREFIX_LENGTH = ERROR_PREFIX.utf8.count
 
   public init() {}
 
@@ -186,6 +191,6 @@ public class API: Service {
     if resultString.isEmpty || !resultString.hasPrefix(API.ERROR_PREFIX) {
       return result
     }
-    throw KclError.runtime(String(resultString.dropFirst(API.ERROR_PREFIX.count)))
+    throw KclError.runtime(String(resultString.dropFirst(API.ERROR_PREFIX_LENGTH)))
   }
 }

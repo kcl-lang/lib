@@ -7,6 +7,12 @@ const spec = @import("spec");
 
 const call_buffer_size = 4 * 1024 * 1024;
 
+/// Error prefix prepended to every error reply by the Rust dispatcher. Must
+/// stay in lockstep with the `format!("ERROR:{}", ...)` literals in
+/// `crates/api/src/service/capi.rs`. See `/Users/timi/codes/lib/docs/abi.md`
+/// §4 for the full convention.
+const ERROR_PREFIX: []const u8 = "ERROR:";
+
 /// Universal KCL RPC dispatcher that mirrors the C ABI in
 /// `c/include/kcl_ffi.h`. The first two arguments encode the RPC name (e.g.
 /// `"KclService.ExecProgram"`), the middle two encode the protobuf-encoded
@@ -68,7 +74,7 @@ fn rpc(
     try request.encode(&writer.writer, allocator);
     const response_bytes = try call(allocator, name, writer.written());
     defer allocator.free(response_bytes);
-    if (std.mem.startsWith(u8, response_bytes, "ERROR:")) {
+    if (std.mem.startsWith(u8, response_bytes, ERROR_PREFIX)) {
         return error.KclRpc;
     }
     var reader: std.Io.Reader = .fixed(response_bytes);
