@@ -54,6 +54,67 @@ const pingResult = invokeKCLCall(inst, {
 console.log(pingResult);
 ```
 
+### Typed API
+
+For all KCL service methods except `ExecProgram` and `FormatCode` (already
+covered by `invokeKCLRun` / `invokeKCLFmt`), the package ships typed
+TypeScript wrappers that handle the protobuf encoding/decoding for you:
+
+`ping`, `getVersion`, `parseProgram`, `parseFile`, `loadPackage`,
+`listOptions`, `listVariables`, `overrideFile`, `getSchemaTypeMapping`,
+`getSchemaTypeMappingUnderPath`, `formatPath`, `lintPath`, `validateCode`,
+`loadSettingsFiles`, `rename`, `renameCode`, `test` and
+`updateDependencies`.
+
+```typescript
+import { load, ping, lintPath, getVersion } from "@kcl-lib/wasm";
+
+const inst = await load();
+
+console.log(ping(inst, { value: "hello" }).value); // -> "hello"
+console.log(getVersion(inst).version); // -> "0.13.0"
+
+// File-based methods operate on the WASI sandbox filesystem.
+const result = lintPath(inst, { paths: ["/test.k"] });
+console.log(result.results);
+```
+
+These wrappers call the byte-oriented `call_native` WASM export through
+`invokeKCLCallNative` (also exported), because the string-based `kcl_call`
+round-trip corrupts protobuf messages larger than ~127 bytes. On success
+they return the decoded `<Method>Result` object; on failure they throw an
+`Error` whose message is the KCL error text.
+
+## WASI sandbox limitations
+
+The WASM artifact runs as a sandboxed WASI command, which imposes
+restrictions that differ from the native KCL libraries:
+
+- **Filesystem access is limited to WASI preopens.** File-based methods —
+  `FormatPath`, `LintPath`, `LoadPackage`, `LoadSettingsFiles`, `Rename`,
+  `UpdateDependencies`, as well as `ParseProgram` / `ParseFile` (and
+  `ExecProgram`) when they are given file paths instead of inline sources —
+  can only reach paths that are mapped into the sandbox. With the default
+  in-memory `MemFS` filesystem, paths outside the preopened directories do
+  not exist; the wasm module can never access the host filesystem directly.
+  Pass `preopens` (guest path -> filesystem path) and/or an `fs: new
+MemFS()` instance to `load()` to set up the sandbox filesystem.
+- **Errors are returned, not thrown, at the ABI level.** The low-level
+  entry points report failures as strings starting with an `"ERROR:"`
+  prefix (e.g. `invokeKCLRun`, `invokeKCLCall`); the typed API layer turns
+  them into thrown `Error`s.
+- **`panic = abort` destroys the whole instance.** The module is built
+  single-threaded with `panic=abort`, so a Rust panic aborts the instance
+  instead of unwinding: every subsequent call traps with
+  `unreachable`. Some methods panic in this build where the native
+  libraries return an error — notably `ValidateCode` and
+  `UpdateDependencies` (no network/subprocess support in WASI) and any
+  unknown method name. The typed API surfaces the trap as a thrown
+  `Error`; discard the instance and create a fresh one with `load()`.
+- **No plugin agent.** `kcl_plugin_invoke_json_wasm` is a stub that always
+  returns `0`, so KCL plugins and the plugin-agent entry point
+  (`call_with_plugin_agent`) are not supported by the WASM binding.
+
 ### Rust
 
 ```shell

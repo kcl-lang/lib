@@ -1,10 +1,13 @@
 import { init, WASI, MemFS } from "@wasmer/wasi";
+export * from "./api";
 const RUN_FUNCTION_NAME = "kcl_run";
 const RUN_WITH_LOG_MESSAGE_FUNCTION_NAME = "kcl_run_with_log_message";
 const FMT_FUNCTION_NAME = "kcl_fmt";
 const VERSION_FUNCTION_NAME = "kcl_version";
 const CALL_FUNCTION_NAME = "kcl_call";
+const CALL_NATIVE_FUNCTION_NAME = "call_native";
 const RUNTIME_ERR_FUNCTION_NAME = "kcl_runtime_err";
+const DEFAULT_CALL_NATIVE_RESULT_BUFFER_SIZE = 16 * 1024 * 1024;
 
 export interface KCLWasmLoadOptions {
   /**
@@ -17,8 +20,12 @@ export interface KCLWasmLoadOptions {
   /**
    * Preopen directories for the WASI instance.
    * These are directories that the sandboxed WASI instance can access.
-   * The also represent mappings from the WASI instance's filesystem to the host filesystem. (map key -> value)
-   * @default - No additional preopens are added other than the above
+   * Each entry maps a guest path (visible to the WASM instance) to a path
+   * in the instance filesystem (`fs`, an in-memory `MemFS` by default), e.g.
+   * `{ "/sandbox": "/work" }` exposes the filesystem path `/work` as
+   * `/sandbox` inside the instance. Note that with the default in-memory
+   * filesystem this does not grant access to the host filesystem.
+   * @default - The filesystem root `.` is preopened as `/`
    */
   preopens?: Record<string, string>;
 
@@ -101,6 +108,7 @@ export async function load(opts?: KCLWasmLoadOptions) {
   const w = new WASI({
     env: options.env ?? {},
     fs: options.fs,
+    preopens: options.preopens,
   });
 
   let bytes: BufferSource;
@@ -265,13 +273,17 @@ export function invokeKCLVersion(instance: WebAssembly.Instance): string {
 /**
  * Exported function to invoke any KCL service method by name through
  * the universal dispatcher. Returns the protobuf-encoded result bytes
- * as a UTF-8 string (suitable for `protobufjs` or similar decoders),
- * or an "ERROR:<message>" string on failure.
+ * as a UTF-8 string, or an "ERROR:<message>" string on failure.
  *
  * The caller is responsible for encoding the `args` field according to
  * the corresponding `<Method>Args` message defined in `spec.proto`,
  * and for decoding the returned string as the corresponding
  * `<Method>Result` message.
+ *
+ * Note: `args` and the returned string travel through JS strings, so
+ * bytes that are not valid UTF-8 (e.g. multi-byte protobuf length
+ * prefixes) are corrupted by the round-trip. For byte-exact transport
+ * of arbitrary protobuf messages use `invokeKCLCallNative` instead.
  */
 export function invokeKCLCall(
   instance: WebAssembly.Instance,
@@ -327,6 +339,95 @@ export function invokeKCLCall(
   return result;
 }
 
+export interface CallNativeOptions {
+  /**
+   * Fully-qualified RPC name, e.g. `"KclService.Ping"`.
+   * Must match one of the services declared in `spec/spec.proto`.
+   */
+  methodName: string;
+  /**
+   * Protobuf-encoded argument bytes for the RPC, exactly as defined by the
+   * corresponding `<Method>Args` message in `spec.proto`.
+   */
+  args: Uint8Array;
+  /**
+   * Size in bytes of the result buffer allocated in WASM memory for the
+   * call. The buffer must be large enough to hold the protobuf-encoded
+   * `<Method>Result`; raise it for methods that return large payloads
+   * (e.g. `LoadPackage` with the full AST index).
+   *
+   * @default 16 MiB
+   */
+  resultBufferSize?: number;
+}
+
+/**
+ * Exported function to invoke any KCL service method by name through the
+ * byte-oriented `call_native` dispatcher. Unlike `invokeKCLCall`, both the
+ * `args` and the returned protobuf bytes are transported as raw
+ * `Uint8Array`s, so messages of any size round-trip exactly (the string
+ * based `kcl_call` entry point corrupts non-ASCII bytes).
+ *
+ * On success the returned bytes are the protobuf-encoded `<Method>Result`
+ * message. On failure they are the UTF-8 bytes of an `"ERROR:<message>"`
+ * string. WASM traps (e.g. a Rust panic, since the module is built with
+ * `panic=abort`) are re-thrown as `Error` and render the instance
+ * unusable; create a fresh one with `load()`.
+ */
+export function invokeKCLCallNative(
+  instance: WebAssembly.Instance,
+  opts: CallNativeOptions
+): Uint8Array {
+  const exports = instance.exports as Record<string, any>;
+  const resultBufferSize =
+    opts.resultBufferSize ?? DEFAULT_CALL_NATIVE_RESULT_BUFFER_SIZE;
+  const [namePtr, nameContentLength, nameAllocLength] =
+    copyRawBytesToWasmMemory(
+      instance,
+      new TextEncoder().encode(opts.methodName)
+    );
+  const [argsPtr, argsContentLength, argsAllocLength] =
+    copyRawBytesToWasmMemory(instance, opts.args);
+  const resultBufPtr = exports.kcl_malloc(resultBufferSize);
+  let result = new Uint8Array(0);
+
+  try {
+    // `call_native` writes the protobuf-encoded result into the
+    // caller-provided buffer and returns its length in bytes. The name
+    // length must exclude the trailing NUL we wrote: the Rust side builds
+    // a byte slice of exactly this length to dispatch the method.
+    const resultLength = exports[CALL_NATIVE_FUNCTION_NAME](
+      namePtr,
+      nameContentLength,
+      argsPtr,
+      argsContentLength,
+      resultBufPtr
+    ) as number;
+    if (resultLength > resultBufferSize) {
+      throw new Error(
+        `call_native result (${resultLength} bytes) exceeds the result buffer (${resultBufferSize} bytes)`
+      );
+    }
+    // The wasm memory may have grown during the call, so this view must be
+    // created only after it returns.
+    const memoryBuffer = exports.memory.buffer as ArrayBuffer;
+    result = new Uint8Array(memoryBuffer, resultBufPtr, resultLength).slice();
+  } catch (error) {
+    if (error instanceof Error && error.name === "RuntimeError") {
+      throw new Error(
+        `KCL WASM trap: ${error.message}. The WASM instance is built with panic=abort and is no longer usable after a trap; call load() to create a new one.`
+      );
+    }
+    throw error;
+  } finally {
+    exports.kcl_free(namePtr, nameAllocLength);
+    exports.kcl_free(argsPtr, argsAllocLength);
+    exports.kcl_free(resultBufPtr, resultBufferSize);
+  }
+
+  return result;
+}
+
 function copyStringToWasmMemory(
   instance: WebAssembly.Instance,
   str: string
@@ -366,6 +467,30 @@ function copyBytesToWasmMemory(
   buffer.set(encodedString);
   buffer[encodedString.length] = 0;
   return [pointer, encodedString.length, allocationLength];
+}
+
+/**
+ * Copies raw bytes into wasm linear memory with a trailing NUL terminator,
+ * returning the pointer, the content length (no NUL) and the allocation
+ * length (content length + 1 for the NUL terminator).
+ *
+ * The caller uses `contentLength` as the logical length passed to wasm
+ * functions that take a `*const u8, usize` pair so any trailing NUL we
+ * wrote is never seen by the Rust side, and uses `allocationLength` when
+ * freeing with `kcl_free`.
+ */
+function copyRawBytesToWasmMemory(
+  instance: WebAssembly.Instance,
+  bytes: Uint8Array
+): [number, number, number] {
+  const exports = instance.exports as Record<string, any>;
+  const allocationLength = bytes.length + 1;
+  const pointer = exports.kcl_malloc(allocationLength);
+  const memoryBuffer = exports.memory.buffer as ArrayBuffer;
+  const buffer = new Uint8Array(memoryBuffer, pointer, allocationLength);
+  buffer.set(bytes);
+  buffer[bytes.length] = 0;
+  return [pointer, bytes.length, allocationLength];
 }
 
 function copyCStrFromWasmMemory(
