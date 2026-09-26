@@ -10,10 +10,7 @@ import { fileURLToPath } from 'url'
 import { dirname, join } from 'path'
 
 import { parseFile, ParseFileArgs, parseProgram, ParseProgramArgs } from '../index.js'
-import {
-  parseModule,
-  parseProgram as parseProgramAst,
-} from '../src/ast/index.mjs'
+import { parseModule, parseProgram as parseProgramAst } from '../src/ast/index.mjs'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const FIXTURE = join(__dirname, 'ast_alignment', 'main.k')
@@ -52,18 +49,14 @@ test('configEntry.isShorthand round-trips', (t) => {
 
 test('schema expr value in assign stmt', (t) => {
   const m = _parseFixture()
-  const assign = (m.body || []).find(
-    (s) => s.node && s.node.targets && _isAssignTargetNamed(s.node, 'x'),
-  )
+  const assign = (m.body || []).find((s) => s.node && s.node.targets && _isAssignTargetNamed(s.node, 'x'))
   t.truthy(assign, 'expected an AssignStmt targeting `x`')
   t.is(assign.node.value.node.type, 'Schema')
 })
 
 test('schema stmt decorators are flat Decorator DTO', (t) => {
   const m = _parseFixture()
-  const article = (m.body || []).find(
-    (s) => s.node && s.node.name && s.node.name.node === 'Article',
-  )
+  const article = (m.body || []).find((s) => s.node && s.node.name && s.node.name.node === 'Article')
   t.truthy(article, 'Article schema not found')
   t.truthy(article.node.decorators && article.node.decorators.length > 0)
   for (const deco of article.node.decorators) {
@@ -75,13 +68,10 @@ test('schema stmt decorators are flat Decorator DTO', (t) => {
 
 test('schema attr has decorators field', (t) => {
   const m = _parseFixture()
-  const person = (m.body || []).find(
-    (s) => s.node && s.node.name && s.node.name.node === 'Person',
-  )
+  const person = (m.body || []).find((s) => s.node && s.node.name && s.node.name.node === 'Person')
   t.truthy(person)
   const nameAttr = (person.node.body || []).find(
-    (wrapped) =>
-      wrapped.node.name && wrapped.node.name.node === 'name' && wrapped.node.decorators,
+    (wrapped) => wrapped.node.name && wrapped.node.name.node === 'name' && wrapped.node.decorators,
   )
   t.truthy(nameAttr, 'expected `name` SchemaAttr with decorators')
   t.is(nameAttr.node.decorators.length, 1)
@@ -89,9 +79,7 @@ test('schema attr has decorators field', (t) => {
 
 test('lambda expr with arguments', (t) => {
   const m = _parseFixture()
-  const adder = (m.body || []).find(
-    (s) => s.node && s.node.targets && _isAssignTargetNamed(s.node, 'adder'),
-  )
+  const adder = (m.body || []).find((s) => s.node && s.node.targets && _isAssignTargetNamed(s.node, 'adder'))
   t.truthy(adder)
   const val = adder.node.value.node
   t.is(val.type, 'Lambda')
@@ -135,7 +123,18 @@ function _walkLiterals(node, found) {
       return
     }
   }
-  for (const attr of ['body', 'value', 'items', 'exprs', 'args', 'kwargs', 'decorators', 'checks', 'mixins', 'comparators']) {
+  for (const attr of [
+    'body',
+    'value',
+    'items',
+    'exprs',
+    'args',
+    'kwargs',
+    'decorators',
+    'checks',
+    'mixins',
+    'comparators',
+  ]) {
     const children = node[attr]
     if (children == null) continue
     if (Array.isArray(children)) {

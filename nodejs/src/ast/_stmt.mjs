@@ -35,8 +35,8 @@ function assignStmtFromWire(w) {
 /** @param {Record<string,any>} w */
 function schemaStmtFromWire(w) {
   return {
-    doc: nodeFromWire(w.doc, (x) => /** @type {string} */ (x)),
-    name: nodeFromWire(w.name, (x) => /** @type {string} */ (x)),
+    doc: nodeFromWire(w.doc, (x) => /** @type {string} */ x),
+    name: nodeFromWire(w.name, (x) => /** @type {string} */ x),
     parentName: nodeFromWire(w.parent_name, (x) => x),
     forHostName: nodeFromWire(w.for_host_name, (x) => x),
     isMixin: w.is_mixin === true,
@@ -54,7 +54,7 @@ function schemaStmtFromWire(w) {
 function schemaAttrFromWire(w) {
   return {
     doc: w.doc || '',
-    name: nodeFromWire(w.name, (x) => /** @type {string} */ (x)),
+    name: nodeFromWire(w.name, (x) => /** @type {string} */ x),
     op: w.op,
     value: nodeFromWire(w.value, _expr.exprFromWire),
     isOptional: w.is_optional === true,
@@ -66,8 +66,8 @@ function schemaAttrFromWire(w) {
 /** @param {Record<string,any>} w */
 function ruleStmtFromWire(w) {
   return {
-    doc: nodeFromWire(w.doc, (x) => /** @type {string} */ (x)),
-    name: nodeFromWire(w.name, (x) => /** @type {string} */ (x)),
+    doc: nodeFromWire(w.doc, (x) => /** @type {string} */ x),
+    name: nodeFromWire(w.name, (x) => /** @type {string} */ x),
     parentRules: (w.parent_rules || []).map((p) => nodeFromWire(p, (x) => x)),
     decorators: (w.decorators || []).map((deco) => nodeFromWire(deco, _dto.decoratorFromWire)),
     checks: (w.checks || []).map((c) => nodeFromWire(c, _expr.exprFromWire)),
