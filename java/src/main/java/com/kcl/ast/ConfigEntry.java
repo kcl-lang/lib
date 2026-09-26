@@ -25,6 +25,15 @@ public class ConfigEntry {
     @JsonProperty("operation")
     private ConfigEntryOperation operation;
 
+    /**
+     * `true` for the ES6-style `{name}` shorthand form, equivalent to
+     * `key = value` where both sides resolve to the same identifier.
+     * Mirrors `#[serde(default, skip_serializing_if = "is_false")]` on the
+     * Rust `ConfigEntry::is_shorthand` field.
+     */
+    @JsonProperty("is_shorthand")
+    private boolean isShorthand;
+
     public NodeRef<Expr> getKey() {
         return key;
     }
@@ -47,5 +56,13 @@ public class ConfigEntry {
 
     public void setOperation(ConfigEntryOperation operation) {
         this.operation = operation;
+    }
+
+    public boolean isShorthand() {
+        return isShorthand;
+    }
+
+    public void setShorthand(boolean isShorthand) {
+        this.isShorthand = isShorthand;
     }
 }

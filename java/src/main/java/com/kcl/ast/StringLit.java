@@ -1,6 +1,6 @@
 package com.kcl.ast;
 
-import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * StringLit, e.g.
@@ -11,11 +11,19 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
  * """long string literal"""
  * }
  * </pre>
+ *
+ * The polymorphic discriminator {@code "StringLit"} is registered on the
+ * {@link Expr} base class via {@code @JsonSubTypes}; do NOT add a
+ * {@code @JsonTypeName} here or it will conflict.
  */
-@JsonTypeName("String")
 public class StringLit extends Expr {
+    @JsonProperty("is_long_string")
     private boolean isLongString;
+
+    @JsonProperty("raw_value")
     private String rawValue;
+
+    @JsonProperty("value")
     private String value;
 
     public StringLit() {
