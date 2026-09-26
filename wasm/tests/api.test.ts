@@ -136,16 +136,15 @@ test("loadSettingsFiles loads settings from the sandbox filesystem", async () =>
   expect(result.kclOptions).toEqual([{ key: "app-name", value: '"kcl"' }]);
 });
 
-test("rename reports the unsupported canonicalize operation in WASI", async () => {
+test("rename rewrites symbols in sandbox files", async () => {
   const { inst } = await loadWithMemFS({ "/main.k": "a = 1\nb = a\n" });
-  expect(() =>
-    kcl.rename(inst, {
-      packageRoot: "/",
-      symbolPath: "a",
-      filePaths: ["/main.k"],
-      newName: "a2",
-    })
-  ).toThrow(/operation not supported/);
+  const result = kcl.rename(inst, {
+    packageRoot: "/",
+    symbolPath: "a",
+    filePaths: ["/main.k"],
+    newName: "a2",
+  });
+  expect(result.changedFiles).toEqual(["/main.k"]);
 });
 
 test("loadPackage loads the semantic model", async () => {
@@ -173,21 +172,30 @@ test("listVariables lists variables from the sandbox filesystem", async () => {
   expect(result.variables["b"][0].opSym).toBe("=");
 });
 
-test("validateCode surfaces the wasm trap of the current build", async () => {
+test("validateCode validates data against a schema", async () => {
   const inst = await kcl.load();
-  expect(() =>
-    kcl.validateCode(inst, {
-      code: "schema Person:\n  name: str\n  age: int\n  check: 0 < age < 120",
-      data: '{"name": "Alice", "age": 10}',
-    })
-  ).toThrow(/KCL WASM trap/);
+  const result = kcl.validateCode(inst, {
+    code: "schema Person:\n  name: str\n  age: int\n  check:\n    0 < age < 120",
+    data: '{"name": "Alice", "age": 10}',
+  });
+  expect(result.success).toBe(true);
 });
 
-test("updateDependencies surfaces the wasm trap without network access", async () => {
+test("validateCode reports invalid KCL as a graceful result", async () => {
+  const inst = await kcl.load();
+  const result = kcl.validateCode(inst, {
+    code: "schema Person:\n  name: str\n  age: int\n  check: 0 < age < 120",
+    data: '{"name": "Alice", "age": 10}',
+  });
+  expect(result.success).toBe(false);
+  expect(result.errMessage).toMatch(/missing expression/);
+});
+
+test("updateDependencies reports it is not supported in the WASM build", async () => {
   const { inst } = await loadWithMemFS({
     "/proj/kcl.mod": '[package]\nname = "proj"\nversion = "0.1.0"\n',
   });
   expect(() => kcl.updateDependencies(inst, { manifestPath: "/proj" })).toThrow(
-    /KCL WASM trap/
+    /not supported in the WASM build/
   );
 });
