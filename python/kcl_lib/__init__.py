@@ -19,7 +19,6 @@ from .kcl import (
     load_settings_files,
     must_run,
     override_file,
-    parse_program,
     ping,
     rename,
     rename_code,
@@ -47,3 +46,8 @@ from .kcl import (
 
 # ``Position`` is the PascalCase alias matching kcl-go/Java/Node.js exports.
 Position = Pos
+
+# Re-bind ``parse_program`` to the typed AST package. ``kcl.parse_program``
+# (the raw-proto wrapper) is still reachable as ``kcl_lib.kcl.parse_program``
+# for callers who explicitly want it.
+parse_program = ast.parse_program

@@ -882,7 +882,10 @@ def parse_program(
     """Parse a KCL program into an AST JSON string."""
     api = API(plugin_agent=_plugin.plugin_agent_addr)
     source = bytes(src).decode("utf-8") if isinstance(src, (bytes, bytearray)) else src
-    args = ParseProgramArgs(paths=[path] if path else [], source=source)
+    # ``ParseProgramArgs`` carries an in-memory source list (``sources``,
+    # repeated) rather than a singular ``source`` field — the latter
+    # would be silently rejected by the proto descriptor.
+    args = ParseProgramArgs(paths=[path] if path else [], sources=[source])
     return api.parse_program(args)
 
 
