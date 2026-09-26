@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UncheckedIOException;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
@@ -704,10 +705,26 @@ public class API implements Service {
         return PingResult.parseFrom(call("KclService.Ping", args.toByteArray()));
     }
 
+    /**
+     * Lists the KCL service method names supported by the underlying runtime.
+     *
+     * @return a {@link ListMethodResult} whose {@code methodNameList} is the
+     *         set of supported RPC names.
+     * @throws Exception if the underlying RPC fails.
+     */
+    @Override
+    public ListMethodResult listMethod() throws Exception {
+        // ListMethodArgs is empty, but the runtime still expects the encoded
+        // (zero-byte) payload when going through the universal dispatcher.
+        return ListMethodResult.parseFrom(
+                call("BuiltinService.ListMethod", ListMethodArgs.getDefaultInstance().toByteArray()));
+    }
+
     private byte[] call(String name, byte[] args) throws Exception {
         byte[] result = callNative(name.getBytes(), args);
         if (result != null && startsWith(result, ERROR_PREFIX)) {
-            throw new java.lang.Error(result.toString().substring(ERROR_PREFIX.length()).trim());
+            String resultString = new String(result, StandardCharsets.UTF_8);
+            throw new Exception(resultString.substring(ERROR_PREFIX.length()).trim());
         }
         return result;
     }
@@ -715,7 +732,8 @@ public class API implements Service {
     private byte[] callLoadPackageWithCache(byte[] args) throws Exception {
         byte[] result = loadPackageWithCache(args);
         if (result != null && startsWith(result, ERROR_PREFIX)) {
-            throw new java.lang.Error(result.toString().substring(ERROR_PREFIX.length()).trim());
+            String resultString = new String(result, StandardCharsets.UTF_8);
+            throw new Exception(resultString.substring(ERROR_PREFIX.length()).trim());
         }
         return result;
     }

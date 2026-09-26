@@ -67,4 +67,7 @@ public interface Service {
 
     // Ping the KCL service and echo back the sent value.
     PingResult ping(PingArgs args) throws Exception;
+
+    // List the KCL service method names supported by the underlying runtime.
+    ListMethodResult listMethod() throws Exception;
 }
