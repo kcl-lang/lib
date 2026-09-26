@@ -82,6 +82,7 @@ impl ExecProgramArgs {
         compile_only: Option<bool>,
         path_selector: Option<Vec<String>>,
         fast_eval: Option<bool>,
+        sourcemap_output: Option<String>,
     ) -> Result<Self> {
         Ok(Self(kcl_api::ExecProgramArgs {
             k_filename_list: paths,
@@ -118,6 +119,7 @@ impl ExecProgramArgs {
             compile_only: compile_only.unwrap_or_default(),
             path_selector: path_selector.unwrap_or_default(),
             fast_eval: fast_eval.unwrap_or_default(),
+            sourcemap_output,
             ..Default::default()
         }))
     }

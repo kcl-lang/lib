@@ -6,6 +6,11 @@
 .vscode
 
 build/
-examples/ping_api
-examples/exec_api
-examples/validate_api
+
+# Ignore every build artifact inside examples/ (executables, .o files,
+# dependency files, etc.). Source files are explicitly re-included so
+# new examples/*.c are picked up automatically without touching this
+# list again. `.o` files are already covered by the root `*.o` rule.
+examples/*
+!examples/*.c
+!examples/*.cpp

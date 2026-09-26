@@ -26307,6 +26307,69 @@ com.kcl.api.Spec.ScopeIndex defaultValue) {
      */
     com.google.protobuf.ByteString
         getErrorFormatBytes();
+
+    /**
+     * <pre>
+     * Output format selector. One of: yaml, json.
+     * When empty the runtime generates both formats (legacy behaviour).
+     * </pre>
+     *
+     * <code>string format = 20;</code>
+     * @return The format.
+     */
+    java.lang.String getFormat();
+    /**
+     * <pre>
+     * Output format selector. One of: yaml, json.
+     * When empty the runtime generates both formats (legacy behaviour).
+     * </pre>
+     *
+     * <code>string format = 20;</code>
+     * @return The bytes for format.
+     */
+    com.google.protobuf.ByteString
+        getFormatBytes();
+
+    /**
+     * <pre>
+     * Optional path of the Source Map v3 (tc39.es/source-map) document to
+     * emit for the generated YAML. When non-empty, the runtime records the
+     * mapping between generated YAML lines and the originating KCL source
+     * locations, returns it in `ExecProgramResult.sourcemap` and writes it
+     * to the given path. Empty disables source map generation.
+     * </pre>
+     *
+     * <code>optional string sourcemap_output = 22;</code>
+     * @return Whether the sourcemapOutput field is set.
+     */
+    boolean hasSourcemapOutput();
+    /**
+     * <pre>
+     * Optional path of the Source Map v3 (tc39.es/source-map) document to
+     * emit for the generated YAML. When non-empty, the runtime records the
+     * mapping between generated YAML lines and the originating KCL source
+     * locations, returns it in `ExecProgramResult.sourcemap` and writes it
+     * to the given path. Empty disables source map generation.
+     * </pre>
+     *
+     * <code>optional string sourcemap_output = 22;</code>
+     * @return The sourcemapOutput.
+     */
+    java.lang.String getSourcemapOutput();
+    /**
+     * <pre>
+     * Optional path of the Source Map v3 (tc39.es/source-map) document to
+     * emit for the generated YAML. When non-empty, the runtime records the
+     * mapping between generated YAML lines and the originating KCL source
+     * locations, returns it in `ExecProgramResult.sourcemap` and writes it
+     * to the given path. Empty disables source map generation.
+     * </pre>
+     *
+     * <code>optional string sourcemap_output = 22;</code>
+     * @return The bytes for sourcemapOutput.
+     */
+    com.google.protobuf.ByteString
+        getSourcemapOutputBytes();
   }
   /**
    * <pre>
@@ -26337,6 +26400,8 @@ com.kcl.api.Spec.ScopeIndex defaultValue) {
       pathSelector_ =
           com.google.protobuf.LazyStringArrayList.emptyList();
       errorFormat_ = "";
+      format_ = "";
+      sourcemapOutput_ = "";
     }
 
     @java.lang.Override
@@ -26359,6 +26424,7 @@ com.kcl.api.Spec.ScopeIndex defaultValue) {
               com.kcl.api.Spec.ExecProgramArgs.class, com.kcl.api.Spec.ExecProgramArgs.Builder.class);
     }
 
+    private int bitField0_;
     public static final int WORK_DIR_FIELD_NUMBER = 1;
     @SuppressWarnings("serial")
     private volatile java.lang.Object workDir_ = "";
@@ -26958,6 +27024,126 @@ com.kcl.api.Spec.ScopeIndex defaultValue) {
       }
     }
 
+    public static final int FORMAT_FIELD_NUMBER = 20;
+    @SuppressWarnings("serial")
+    private volatile java.lang.Object format_ = "";
+    /**
+     * <pre>
+     * Output format selector. One of: yaml, json.
+     * When empty the runtime generates both formats (legacy behaviour).
+     * </pre>
+     *
+     * <code>string format = 20;</code>
+     * @return The format.
+     */
+    @java.lang.Override
+    public java.lang.String getFormat() {
+      java.lang.Object ref = format_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs =
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        format_ = s;
+        return s;
+      }
+    }
+    /**
+     * <pre>
+     * Output format selector. One of: yaml, json.
+     * When empty the runtime generates both formats (legacy behaviour).
+     * </pre>
+     *
+     * <code>string format = 20;</code>
+     * @return The bytes for format.
+     */
+    @java.lang.Override
+    public com.google.protobuf.ByteString
+        getFormatBytes() {
+      java.lang.Object ref = format_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b =
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        format_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int SOURCEMAP_OUTPUT_FIELD_NUMBER = 22;
+    @SuppressWarnings("serial")
+    private volatile java.lang.Object sourcemapOutput_ = "";
+    /**
+     * <pre>
+     * Optional path of the Source Map v3 (tc39.es/source-map) document to
+     * emit for the generated YAML. When non-empty, the runtime records the
+     * mapping between generated YAML lines and the originating KCL source
+     * locations, returns it in `ExecProgramResult.sourcemap` and writes it
+     * to the given path. Empty disables source map generation.
+     * </pre>
+     *
+     * <code>optional string sourcemap_output = 22;</code>
+     * @return Whether the sourcemapOutput field is set.
+     */
+    @java.lang.Override
+    public boolean hasSourcemapOutput() {
+      return ((bitField0_ & 0x00000001) != 0);
+    }
+    /**
+     * <pre>
+     * Optional path of the Source Map v3 (tc39.es/source-map) document to
+     * emit for the generated YAML. When non-empty, the runtime records the
+     * mapping between generated YAML lines and the originating KCL source
+     * locations, returns it in `ExecProgramResult.sourcemap` and writes it
+     * to the given path. Empty disables source map generation.
+     * </pre>
+     *
+     * <code>optional string sourcemap_output = 22;</code>
+     * @return The sourcemapOutput.
+     */
+    @java.lang.Override
+    public java.lang.String getSourcemapOutput() {
+      java.lang.Object ref = sourcemapOutput_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs =
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        sourcemapOutput_ = s;
+        return s;
+      }
+    }
+    /**
+     * <pre>
+     * Optional path of the Source Map v3 (tc39.es/source-map) document to
+     * emit for the generated YAML. When non-empty, the runtime records the
+     * mapping between generated YAML lines and the originating KCL source
+     * locations, returns it in `ExecProgramResult.sourcemap` and writes it
+     * to the given path. Empty disables source map generation.
+     * </pre>
+     *
+     * <code>optional string sourcemap_output = 22;</code>
+     * @return The bytes for sourcemapOutput.
+     */
+    @java.lang.Override
+    public com.google.protobuf.ByteString
+        getSourcemapOutputBytes() {
+      java.lang.Object ref = sourcemapOutput_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b =
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        sourcemapOutput_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
     private byte memoizedIsInitialized = -1;
     @java.lang.Override
     public final boolean isInitialized() {
@@ -27028,6 +27214,12 @@ com.kcl.api.Spec.ScopeIndex defaultValue) {
       }
       if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(errorFormat_)) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 19, errorFormat_);
+      }
+      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(format_)) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 20, format_);
+      }
+      if (((bitField0_ & 0x00000001) != 0)) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 22, sourcemapOutput_);
       }
       getUnknownFields().writeTo(output);
     }
@@ -27128,6 +27320,12 @@ com.kcl.api.Spec.ScopeIndex defaultValue) {
       if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(errorFormat_)) {
         size += com.google.protobuf.GeneratedMessageV3.computeStringSize(19, errorFormat_);
       }
+      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(format_)) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(20, format_);
+      }
+      if (((bitField0_ & 0x00000001) != 0)) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(22, sourcemapOutput_);
+      }
       size += getUnknownFields().getSerializedSize();
       memoizedSize = size;
       return size;
@@ -27181,6 +27379,13 @@ com.kcl.api.Spec.ScopeIndex defaultValue) {
           != other.getFastEval()) return false;
       if (!getErrorFormat()
           .equals(other.getErrorFormat())) return false;
+      if (!getFormat()
+          .equals(other.getFormat())) return false;
+      if (hasSourcemapOutput() != other.hasSourcemapOutput()) return false;
+      if (hasSourcemapOutput()) {
+        if (!getSourcemapOutput()
+            .equals(other.getSourcemapOutput())) return false;
+      }
       if (!getUnknownFields().equals(other.getUnknownFields())) return false;
       return true;
     }
@@ -27251,6 +27456,12 @@ com.kcl.api.Spec.ScopeIndex defaultValue) {
           getFastEval());
       hash = (37 * hash) + ERROR_FORMAT_FIELD_NUMBER;
       hash = (53 * hash) + getErrorFormat().hashCode();
+      hash = (37 * hash) + FORMAT_FIELD_NUMBER;
+      hash = (53 * hash) + getFormat().hashCode();
+      if (hasSourcemapOutput()) {
+        hash = (37 * hash) + SOURCEMAP_OUTPUT_FIELD_NUMBER;
+        hash = (53 * hash) + getSourcemapOutput().hashCode();
+      }
       hash = (29 * hash) + getUnknownFields().hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -27421,6 +27632,8 @@ com.kcl.api.Spec.ScopeIndex defaultValue) {
             com.google.protobuf.LazyStringArrayList.emptyList();
         fastEval_ = false;
         errorFormat_ = "";
+        format_ = "";
+        sourcemapOutput_ = "";
         return this;
       }
 
@@ -27531,6 +27744,15 @@ com.kcl.api.Spec.ScopeIndex defaultValue) {
         if (((from_bitField0_ & 0x00040000) != 0)) {
           result.errorFormat_ = errorFormat_;
         }
+        if (((from_bitField0_ & 0x00080000) != 0)) {
+          result.format_ = format_;
+        }
+        int to_bitField0_ = 0;
+        if (((from_bitField0_ & 0x00100000) != 0)) {
+          result.sourcemapOutput_ = sourcemapOutput_;
+          to_bitField0_ |= 0x00000001;
+        }
+        result.bitField0_ |= to_bitField0_;
       }
 
       @java.lang.Override
@@ -27712,6 +27934,16 @@ com.kcl.api.Spec.ScopeIndex defaultValue) {
           bitField0_ |= 0x00040000;
           onChanged();
         }
+        if (!other.getFormat().isEmpty()) {
+          format_ = other.format_;
+          bitField0_ |= 0x00080000;
+          onChanged();
+        }
+        if (other.hasSourcemapOutput()) {
+          sourcemapOutput_ = other.sourcemapOutput_;
+          bitField0_ |= 0x00100000;
+          onChanged();
+        }
         this.mergeUnknownFields(other.getUnknownFields());
         onChanged();
         return this;
@@ -27853,6 +28085,16 @@ com.kcl.api.Spec.ScopeIndex defaultValue) {
                 bitField0_ |= 0x00040000;
                 break;
               } // case 154
+              case 162: {
+                format_ = input.readStringRequireUtf8();
+                bitField0_ |= 0x00080000;
+                break;
+              } // case 162
+              case 178: {
+                sourcemapOutput_ = input.readStringRequireUtf8();
+                bitField0_ |= 0x00100000;
+                break;
+              } // case 178
               default: {
                 if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                   done = true; // was an endgroup tag
@@ -29764,6 +30006,229 @@ com.kcl.api.Spec.ScopeIndex defaultValue) {
         onChanged();
         return this;
       }
+      private java.lang.Object format_ = "";
+    /**
+     * <pre>
+     * Output format selector. One of: yaml, json.
+     * When empty the runtime generates both formats (legacy behaviour).
+     * </pre>
+     *
+     * <code>string format = 20;</code>
+     * @return The format.
+     */
+      public java.lang.String getFormat() {
+        java.lang.Object ref = format_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          format_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+    /**
+     * <pre>
+     * Output format selector. One of: yaml, json.
+     * When empty the runtime generates both formats (legacy behaviour).
+     * </pre>
+     *
+     * <code>string format = 20;</code>
+     * @return The bytes for format.
+     */
+      public com.google.protobuf.ByteString
+          getFormatBytes() {
+        java.lang.Object ref = format_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b =
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          format_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <pre>
+       * Output format selector. One of: yaml, json.
+       * When empty the runtime generates both formats (legacy behaviour).
+       * </pre>
+       *
+       * <code>string format = 20;</code>
+       * @param value The format to set.
+       * @return This builder for chaining.
+       */
+      public Builder setFormat(
+          java.lang.String value) {
+        if (value == null) { throw new NullPointerException(); }
+        format_ = value;
+        bitField0_ |= 0x00080000;
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * Output format selector. One of: yaml, json.
+       * When empty the runtime generates both formats (legacy behaviour).
+       * </pre>
+       *
+       * <code>string format = 20;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearFormat() {
+        format_ = getDefaultInstance().getFormat();
+        bitField0_ = (bitField0_ & ~0x00080000);
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * Output format selector. One of: yaml, json.
+       * When empty the runtime generates both formats (legacy behaviour).
+       * </pre>
+       *
+       * <code>string format = 20;</code>
+       * @param value The bytes for format to set.
+       * @return This builder for chaining.
+       */
+      public Builder setFormatBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) { throw new NullPointerException(); }
+        checkByteStringIsUtf8(value);
+        format_ = value;
+        bitField0_ |= 0x00080000;
+        onChanged();
+        return this;
+      }
+      private java.lang.Object sourcemapOutput_ = "";
+      /**
+       * <pre>
+       * Optional path of the Source Map v3 (tc39.es/source-map) document to
+     * emit for the generated YAML. When non-empty, the runtime records the
+     * mapping between generated YAML lines and the originating KCL source
+     * locations, returns it in `ExecProgramResult.sourcemap` and writes it
+     * to the given path. Empty disables source map generation.
+       * </pre>
+       *
+       * <code>optional string sourcemap_output = 22;</code>
+       * @return Whether the sourcemapOutput field is set.
+       */
+      public boolean hasSourcemapOutput() {
+        return ((bitField0_ & 0x00100000) != 0);
+      }
+      /**
+       * <pre>
+       * Optional path of the Source Map v3 (tc39.es/source-map) document to
+     * emit for the generated YAML. When non-empty, the runtime records the
+     * mapping between generated YAML lines and the originating KCL source
+     * locations, returns it in `ExecProgramResult.sourcemap` and writes it
+     * to the given path. Empty disables source map generation.
+       * </pre>
+       *
+       * <code>optional string sourcemap_output = 22;</code>
+       * @return The sourcemapOutput.
+       */
+      public java.lang.String getSourcemapOutput() {
+        java.lang.Object ref = sourcemapOutput_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          sourcemapOutput_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <pre>
+       * Optional path of the Source Map v3 (tc39.es/source-map) document to
+     * emit for the generated YAML. When non-empty, the runtime records the
+     * mapping between generated YAML lines and the originating KCL source
+     * locations, returns it in `ExecProgramResult.sourcemap` and writes it
+     * to the given path. Empty disables source map generation.
+       * </pre>
+       *
+       * <code>optional string sourcemap_output = 22;</code>
+       * @return The bytes for sourcemapOutput.
+       */
+      public com.google.protobuf.ByteString
+          getSourcemapOutputBytes() {
+        java.lang.Object ref = sourcemapOutput_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b =
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          sourcemapOutput_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <pre>
+       * Optional path of the Source Map v3 (tc39.es/source-map) document to
+     * emit for the generated YAML. When non-empty, the runtime records the
+     * mapping between generated YAML lines and the originating KCL source
+     * locations, returns it in `ExecProgramResult.sourcemap` and writes it
+     * to the given path. Empty disables source map generation.
+       * </pre>
+       *
+       * <code>optional string sourcemap_output = 22;</code>
+       * @param value The sourcemapOutput to set.
+       * @return This builder for chaining.
+       */
+      public Builder setSourcemapOutput(
+          java.lang.String value) {
+        if (value == null) { throw new NullPointerException(); }
+        sourcemapOutput_ = value;
+        bitField0_ |= 0x00100000;
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * Optional path of the Source Map v3 (tc39.es/source-map) document to
+     * emit for the generated YAML. When non-empty, the runtime records the
+     * mapping between generated YAML lines and the originating KCL source
+     * locations, returns it in `ExecProgramResult.sourcemap` and writes it
+     * to the given path. Empty disables source map generation.
+     * </pre>
+       *
+       * <code>optional string sourcemap_output = 22;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearSourcemapOutput() {
+        sourcemapOutput_ = getDefaultInstance().getSourcemapOutput();
+        bitField0_ = (bitField0_ & ~0x00100000);
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * Optional path of the Source Map v3 (tc39.es/source-map) document to
+     * emit for the generated YAML. When non-empty, the runtime records the
+     * mapping between generated YAML lines and the originating KCL source
+     * locations, returns it in `ExecProgramResult.sourcemap` and writes it
+     * to the given path. Empty disables source map generation.
+       * </pre>
+       *
+       * <code>optional string sourcemap_output = 22;</code>
+       * @param value The bytes for sourcemapOutput to set.
+       * @return This builder for chaining.
+       */
+      public Builder setSourcemapOutputBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) { throw new NullPointerException(); }
+        checkByteStringIsUtf8(value);
+        sourcemapOutput_ = value;
+        bitField0_ |= 0x00100000;
+        onChanged();
+        return this;
+      }
+
       @java.lang.Override
       public final Builder setUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
@@ -29911,6 +30376,41 @@ com.kcl.api.Spec.ScopeIndex defaultValue) {
      */
     com.google.protobuf.ByteString
         getErrMessageBytes();
+
+    /**
+     * <pre>
+     * Source Map v3 (tc39.es/source-map) JSON mapping the generated YAML
+     * back to the originating KCL source. Populated only when the caller
+     * requests a source map; empty otherwise.
+     * </pre>
+     *
+     * <code>optional string sourcemap = 5;</code>
+     * @return Whether the sourcemap field is set.
+     */
+    boolean hasSourcemap();
+    /**
+     * <pre>
+     * Source Map v3 (tc39.es/source-map) JSON mapping the generated YAML
+     * back to the originating KCL source. Populated only when the caller
+     * requests a source map; empty otherwise.
+     * </pre>
+     *
+     * <code>optional string sourcemap = 5;</code>
+     * @return The sourcemap.
+     */
+    java.lang.String getSourcemap();
+    /**
+     * <pre>
+     * Source Map v3 (tc39.es/source-map) JSON mapping the generated YAML
+     * back to the originating KCL source. Populated only when the caller
+     * requests a source map; empty otherwise.
+     * </pre>
+     *
+     * <code>optional string sourcemap = 5;</code>
+     * @return The bytes for sourcemap.
+     */
+    com.google.protobuf.ByteString
+        getSourcemapBytes();
   }
   /**
    * <pre>
@@ -29933,6 +30433,7 @@ com.kcl.api.Spec.ScopeIndex defaultValue) {
       yamlResult_ = "";
       logMessage_ = "";
       errMessage_ = "";
+      sourcemap_ = "";
     }
 
     @java.lang.Override
@@ -29955,6 +30456,7 @@ com.kcl.api.Spec.ScopeIndex defaultValue) {
               com.kcl.api.Spec.ExecProgramResult.class, com.kcl.api.Spec.ExecProgramResult.Builder.class);
     }
 
+    private int bitField0_;
     public static final int JSON_RESULT_FIELD_NUMBER = 1;
     @SuppressWarnings("serial")
     private volatile java.lang.Object jsonResult_ = "";
@@ -30143,6 +30645,71 @@ com.kcl.api.Spec.ScopeIndex defaultValue) {
       }
     }
 
+    public static final int SOURCEMAP_FIELD_NUMBER = 5;
+    @SuppressWarnings("serial")
+    private volatile java.lang.Object sourcemap_ = "";
+    /**
+     * <pre>
+     * Source Map v3 (tc39.es/source-map) JSON mapping the generated YAML
+     * back to the originating KCL source. Populated only when the caller
+     * requests a source map; empty otherwise.
+     * </pre>
+     *
+     * <code>optional string sourcemap = 5;</code>
+     * @return Whether the sourcemap field is set.
+     */
+    @java.lang.Override
+    public boolean hasSourcemap() {
+      return ((bitField0_ & 0x00000001) != 0);
+    }
+    /**
+     * <pre>
+     * Source Map v3 (tc39.es/source-map) JSON mapping the generated YAML
+     * back to the originating KCL source. Populated only when the caller
+     * requests a source map; empty otherwise.
+     * </pre>
+     *
+     * <code>optional string sourcemap = 5;</code>
+     * @return The sourcemap.
+     */
+    @java.lang.Override
+    public java.lang.String getSourcemap() {
+      java.lang.Object ref = sourcemap_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs =
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        sourcemap_ = s;
+        return s;
+      }
+    }
+    /**
+     * <pre>
+     * Source Map v3 (tc39.es/source-map) JSON mapping the generated YAML
+     * back to the originating KCL source. Populated only when the caller
+     * requests a source map; empty otherwise.
+     * </pre>
+     *
+     * <code>optional string sourcemap = 5;</code>
+     * @return The bytes for sourcemap.
+     */
+    @java.lang.Override
+    public com.google.protobuf.ByteString
+        getSourcemapBytes() {
+      java.lang.Object ref = sourcemap_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b =
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        sourcemap_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
     private byte memoizedIsInitialized = -1;
     @java.lang.Override
     public final boolean isInitialized() {
@@ -30169,6 +30736,9 @@ com.kcl.api.Spec.ScopeIndex defaultValue) {
       if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(errMessage_)) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 4, errMessage_);
       }
+      if (((bitField0_ & 0x00000001) != 0)) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 5, sourcemap_);
+      }
       getUnknownFields().writeTo(output);
     }
 
@@ -30189,6 +30759,9 @@ com.kcl.api.Spec.ScopeIndex defaultValue) {
       }
       if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(errMessage_)) {
         size += com.google.protobuf.GeneratedMessageV3.computeStringSize(4, errMessage_);
+      }
+      if (((bitField0_ & 0x00000001) != 0)) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(5, sourcemap_);
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSize = size;
@@ -30213,6 +30786,11 @@ com.kcl.api.Spec.ScopeIndex defaultValue) {
           .equals(other.getLogMessage())) return false;
       if (!getErrMessage()
           .equals(other.getErrMessage())) return false;
+      if (hasSourcemap() != other.hasSourcemap()) return false;
+      if (hasSourcemap()) {
+        if (!getSourcemap()
+            .equals(other.getSourcemap())) return false;
+      }
       if (!getUnknownFields().equals(other.getUnknownFields())) return false;
       return true;
     }
@@ -30232,6 +30810,10 @@ com.kcl.api.Spec.ScopeIndex defaultValue) {
       hash = (53 * hash) + getLogMessage().hashCode();
       hash = (37 * hash) + ERR_MESSAGE_FIELD_NUMBER;
       hash = (53 * hash) + getErrMessage().hashCode();
+      if (hasSourcemap()) {
+        hash = (37 * hash) + SOURCEMAP_FIELD_NUMBER;
+        hash = (53 * hash) + getSourcemap().hashCode();
+      }
       hash = (29 * hash) + getUnknownFields().hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -30371,6 +30953,7 @@ com.kcl.api.Spec.ScopeIndex defaultValue) {
         yamlResult_ = "";
         logMessage_ = "";
         errMessage_ = "";
+        sourcemap_ = "";
         return this;
       }
 
@@ -30416,6 +30999,12 @@ com.kcl.api.Spec.ScopeIndex defaultValue) {
         if (((from_bitField0_ & 0x00000008) != 0)) {
           result.errMessage_ = errMessage_;
         }
+        int to_bitField0_ = 0;
+        if (((from_bitField0_ & 0x00000010) != 0)) {
+          result.sourcemap_ = sourcemap_;
+          to_bitField0_ |= 0x00000001;
+        }
+        result.bitField0_ |= to_bitField0_;
       }
 
       @java.lang.Override
@@ -30482,6 +31071,11 @@ com.kcl.api.Spec.ScopeIndex defaultValue) {
           bitField0_ |= 0x00000008;
           onChanged();
         }
+        if (other.hasSourcemap()) {
+          sourcemap_ = other.sourcemap_;
+          bitField0_ |= 0x00000010;
+          onChanged();
+        }
         this.mergeUnknownFields(other.getUnknownFields());
         onChanged();
         return this;
@@ -30528,6 +31122,11 @@ com.kcl.api.Spec.ScopeIndex defaultValue) {
                 bitField0_ |= 0x00000008;
                 break;
               } // case 34
+              case 42: {
+                sourcemap_ = input.readStringRequireUtf8();
+                bitField0_ |= 0x00000010;
+                break;
+              } // case 42
               default: {
                 if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                   done = true; // was an endgroup tag
@@ -30912,6 +31511,121 @@ com.kcl.api.Spec.ScopeIndex defaultValue) {
         onChanged();
         return this;
       }
+      private java.lang.Object sourcemap_ = "";
+      /**
+       * <pre>
+       * Source Map v3 (tc39.es/source-map) JSON mapping the generated YAML
+     * back to the originating KCL source. Populated only when the caller
+     * requests a source map; empty otherwise.
+       * </pre>
+       *
+       * <code>optional string sourcemap = 5;</code>
+       * @return Whether the sourcemap field is set.
+       */
+      public boolean hasSourcemap() {
+        return ((bitField0_ & 0x00000010) != 0);
+      }
+      /**
+       * <pre>
+       * Source Map v3 (tc39.es/source-map) JSON mapping the generated YAML
+     * back to the originating KCL source. Populated only when the caller
+     * requests a source map; empty otherwise.
+       * </pre>
+       *
+       * <code>optional string sourcemap = 5;</code>
+       * @return The sourcemap.
+       */
+      public java.lang.String getSourcemap() {
+        java.lang.Object ref = sourcemap_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          sourcemap_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <pre>
+       * Source Map v3 (tc39.es/source-map) JSON mapping the generated YAML
+     * back to the originating KCL source. Populated only when the caller
+     * requests a source map; empty otherwise.
+       * </pre>
+       *
+       * <code>optional string sourcemap = 5;</code>
+       * @return The bytes for sourcemap.
+       */
+      public com.google.protobuf.ByteString
+          getSourcemapBytes() {
+        java.lang.Object ref = sourcemap_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b =
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          sourcemap_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <pre>
+       * Source Map v3 (tc39.es/source-map) JSON mapping the generated YAML
+     * back to the originating KCL source. Populated only when the caller
+     * requests a source map; empty otherwise.
+       * </pre>
+       *
+       * <code>optional string sourcemap = 5;</code>
+       * @param value The sourcemap to set.
+       * @return This builder for chaining.
+       */
+      public Builder setSourcemap(
+          java.lang.String value) {
+        if (value == null) { throw new NullPointerException(); }
+        sourcemap_ = value;
+        bitField0_ |= 0x00000010;
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * Source Map v3 (tc39.es/source-map) JSON mapping the generated YAML
+     * back to the originating KCL source. Populated only when the caller
+     * requests a source map; empty otherwise.
+       * </pre>
+       *
+       * <code>optional string sourcemap = 5;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearSourcemap() {
+        sourcemap_ = getDefaultInstance().getSourcemap();
+        bitField0_ = (bitField0_ & ~0x00000010);
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * Source Map v3 (tc39.es/source-map) JSON mapping the generated YAML
+     * back to the originating KCL source. Populated only when the caller
+     * requests a source map; empty otherwise.
+       * </pre>
+       *
+       * <code>optional string sourcemap = 5;</code>
+       * @param value The bytes for sourcemap to set.
+       * @return This builder for chaining.
+       */
+      public Builder setSourcemapBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) { throw new NullPointerException(); }
+        checkByteStringIsUtf8(value);
+        sourcemap_ = value;
+        bitField0_ |= 0x00000010;
+        onChanged();
+        return this;
+      }
+
       @java.lang.Override
       public final Builder setUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
@@ -75735,247 +76449,169 @@ java.lang.String defaultValue) {
       descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n\nspec.proto\022\013com.kcl.api\"1\n\013ExternalPkg" +
-      "\022\020\n\010pkg_name\030\001 \001(\t\022\020\n\010pkg_path\030\002 \001(\t\"\'\n\010" +
-      "Argument\022\014\n\004name\030\001 \001(\t\022\r\n\005value\030\002 \001(\t\"L\n" +
-      "\005Error\022\r\n\005level\030\001 \001(\t\022\014\n\004code\030\002 \001(\t\022&\n\010m" +
-      "essages\030\003 \003(\0132\024.com.kcl.api.Message\":\n\007M" +
-      "essage\022\013\n\003msg\030\001 \001(\t\022\"\n\003pos\030\002 \001(\0132\025.com.k" +
-      "cl.api.Position\"\031\n\010PingArgs\022\r\n\005value\030\001 \001" +
-      "(\t\"\033\n\nPingResult\022\r\n\005value\030\001 \001(\t\"\020\n\016GetVe" +
-      "rsionArgs\"\\\n\020GetVersionResult\022\017\n\007version" +
-      "\030\001 \001(\t\022\020\n\010checksum\030\002 \001(\t\022\017\n\007git_sha\030\003 \001(" +
-      "\t\022\024\n\014version_info\030\004 \001(\t\"\020\n\016ListMethodArg" +
-      "s\",\n\020ListMethodResult\022\030\n\020method_name_lis" +
-      "t\030\001 \003(\t\"^\n\rParseFileArgs\022\014\n\004path\030\001 \001(\t\022\016" +
-      "\n\006source\030\002 \001(\t\022/\n\rexternal_pkgs\030\003 \003(\0132\030." +
-      "com.kcl.api.ExternalPkg\"U\n\017ParseFileResu" +
-      "lt\022\020\n\010ast_json\030\001 \001(\t\022\014\n\004deps\030\002 \003(\t\022\"\n\006er" +
-      "rors\030\003 \003(\0132\022.com.kcl.api.Error\"c\n\020ParseP" +
-      "rogramArgs\022\r\n\005paths\030\001 \003(\t\022\017\n\007sources\030\002 \003" +
-      "(\t\022/\n\rexternal_pkgs\030\003 \003(\0132\030.com.kcl.api." +
-      "ExternalPkg\"Y\n\022ParseProgramResult\022\020\n\010ast" +
-      "_json\030\001 \001(\t\022\r\n\005paths\030\002 \003(\t\022\"\n\006errors\030\003 \003" +
-      "(\0132\022.com.kcl.api.Error\"\207\001\n\017LoadPackageAr" +
-      "gs\0221\n\nparse_args\030\001 \001(\0132\035.com.kcl.api.Par" +
-      "seProgramArgs\022\023\n\013resolve_ast\030\002 \001(\010\022\024\n\014lo" +
-      "ad_builtin\030\003 \001(\010\022\026\n\016with_ast_index\030\004 \001(\010" +
-      "\"\360\007\n\021LoadPackageResult\022\017\n\007program\030\001 \001(\t\022" +
-      "\r\n\005paths\030\002 \003(\t\022(\n\014parse_errors\030\003 \003(\0132\022.c" +
-      "om.kcl.api.Error\022\'\n\013type_errors\030\004 \003(\0132\022." +
-      "com.kcl.api.Error\022:\n\006scopes\030\005 \003(\0132*.com." +
-      "kcl.api.LoadPackageResult.ScopesEntry\022<\n" +
-      "\007symbols\030\006 \003(\0132+.com.kcl.api.LoadPackage" +
-      "Result.SymbolsEntry\022J\n\017node_symbol_map\030\007" +
-      " \003(\01321.com.kcl.api.LoadPackageResult.Nod" +
-      "eSymbolMapEntry\022J\n\017symbol_node_map\030\010 \003(\013" +
-      "21.com.kcl.api.LoadPackageResult.SymbolN" +
-      "odeMapEntry\022[\n\030fully_qualified_name_map\030" +
-      "\t \003(\01329.com.kcl.api.LoadPackageResult.Fu" +
-      "llyQualifiedNameMapEntry\022F\n\rpkg_scope_ma" +
-      "p\030\n \003(\0132/.com.kcl.api.LoadPackageResult." +
-      "PkgScopeMapEntry\032A\n\013ScopesEntry\022\013\n\003key\030\001" +
-      " \001(\t\022!\n\005value\030\002 \001(\0132\022.com.kcl.api.Scope:" +
-      "\0028\001\032C\n\014SymbolsEntry\022\013\n\003key\030\001 \001(\t\022\"\n\005valu" +
-      "e\030\002 \001(\0132\023.com.kcl.api.Symbol:\0028\001\032N\n\022Node" +
-      "SymbolMapEntry\022\013\n\003key\030\001 \001(\t\022\'\n\005value\030\002 \001" +
-      "(\0132\030.com.kcl.api.SymbolIndex:\0028\001\0324\n\022Symb" +
-      "olNodeMapEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001" +
-      "(\t:\0028\001\032V\n\032FullyQualifiedNameMapEntry\022\013\n\003" +
-      "key\030\001 \001(\t\022\'\n\005value\030\002 \001(\0132\030.com.kcl.api.S" +
-      "ymbolIndex:\0028\001\032K\n\020PkgScopeMapEntry\022\013\n\003ke" +
-      "y\030\001 \001(\t\022&\n\005value\030\002 \001(\0132\027.com.kcl.api.Sco" +
-      "peIndex:\0028\001\"=\n\021ListOptionsResult\022(\n\007opti" +
-      "ons\030\002 \003(\0132\027.com.kcl.api.OptionHelp\"_\n\nOp" +
-      "tionHelp\022\014\n\004name\030\001 \001(\t\022\014\n\004type\030\002 \001(\t\022\020\n\010" +
-      "required\030\003 \001(\010\022\025\n\rdefault_value\030\004 \001(\t\022\014\n" +
-      "\004help\030\005 \001(\t\"\304\001\n\006Symbol\022 \n\002ty\030\001 \001(\0132\024.com" +
-      ".kcl.api.KclType\022\014\n\004name\030\002 \001(\t\022\'\n\005owner\030" +
-      "\003 \001(\0132\030.com.kcl.api.SymbolIndex\022%\n\003def\030\004" +
-      " \001(\0132\030.com.kcl.api.SymbolIndex\022\'\n\005attrs\030" +
-      "\005 \003(\0132\030.com.kcl.api.SymbolIndex\022\021\n\tis_gl" +
-      "obal\030\006 \001(\010\"\272\001\n\005Scope\022\014\n\004kind\030\001 \001(\t\022\'\n\006pa" +
-      "rent\030\002 \001(\0132\027.com.kcl.api.ScopeIndex\022\'\n\005o" +
-      "wner\030\003 \001(\0132\030.com.kcl.api.SymbolIndex\022)\n\010" +
-      "children\030\004 \003(\0132\027.com.kcl.api.ScopeIndex\022" +
-      "&\n\004defs\030\005 \003(\0132\030.com.kcl.api.SymbolIndex\"" +
-      "1\n\013SymbolIndex\022\t\n\001i\030\001 \001(\004\022\t\n\001g\030\002 \001(\004\022\014\n\004" +
-      "kind\030\003 \001(\t\"0\n\nScopeIndex\022\t\n\001i\030\001 \001(\004\022\t\n\001g" +
-      "\030\002 \001(\004\022\014\n\004kind\030\003 \001(\t\"\345\003\n\017ExecProgramArgs" +
-      "\022\020\n\010work_dir\030\001 \001(\t\022\027\n\017k_filename_list\030\002 " +
-      "\003(\t\022\023\n\013k_code_list\030\003 \003(\t\022#\n\004args\030\004 \003(\0132\025" +
-      ".com.kcl.api.Argument\022\021\n\toverrides\030\005 \003(\t" +
-      "\022\033\n\023disable_yaml_result\030\006 \001(\010\022\032\n\022print_o" +
-      "verride_ast\030\007 \001(\010\022\032\n\022strict_range_check\030" +
-      "\010 \001(\010\022\024\n\014disable_none\030\t \001(\010\022\017\n\007verbose\030\n" +
-      " \001(\005\022\r\n\005debug\030\013 \001(\005\022\021\n\tsort_keys\030\014 \001(\010\022/" +
-      "\n\rexternal_pkgs\030\r \003(\0132\030.com.kcl.api.Exte" +
-      "rnalPkg\022 \n\030include_schema_type_path\030\016 \001(" +
-      "\010\022\024\n\014compile_only\030\017 \001(\010\022\023\n\013show_hidden\030\020" +
-      " \001(\010\022\025\n\rpath_selector\030\021 \003(\t\022\021\n\tfast_eval" +
-      "\030\022 \001(\010\022\024\n\014error_format\030\023 \001(\t\"g\n\021ExecProg" +
-      "ramResult\022\023\n\013json_result\030\001 \001(\t\022\023\n\013yaml_r" +
-      "esult\030\002 \001(\t\022\023\n\013log_message\030\003 \001(\t\022\023\n\013err_" +
-      "message\030\004 \001(\t\" \n\016FormatCodeArgs\022\016\n\006sourc" +
-      "e\030\001 \001(\t\"%\n\020FormatCodeResult\022\021\n\tformatted" +
-      "\030\001 \001(\014\"/\n\016FormatPathArgs\022\014\n\004path\030\001 \001(\t\022\017" +
-      "\n\007dry_run\030\002 \001(\010\")\n\020FormatPathResult\022\025\n\rc" +
-      "hanged_paths\030\001 \003(\t\"\035\n\014LintPathArgs\022\r\n\005pa" +
-      "ths\030\001 \003(\t\"!\n\016LintPathResult\022\017\n\007results\030\001" +
-      " \003(\t\"E\n\020OverrideFileArgs\022\014\n\004file\030\001 \001(\t\022\r" +
-      "\n\005specs\030\002 \003(\t\022\024\n\014import_paths\030\003 \003(\t\"N\n\022O" +
-      "verrideFileResult\022\016\n\006result\030\001 \001(\010\022(\n\014par" +
-      "se_errors\030\002 \003(\0132\022.com.kcl.api.Error\"-\n\024L" +
-      "istVariablesOptions\022\025\n\rmerge_program\030\001 \001" +
-      "(\010\"8\n\014VariableList\022(\n\tvariables\030\001 \003(\0132\025." +
-      "com.kcl.api.Variable\"e\n\021ListVariablesArg" +
-      "s\022\r\n\005files\030\001 \003(\t\022\r\n\005specs\030\002 \003(\t\0222\n\007optio" +
-      "ns\030\003 \001(\0132!.com.kcl.api.ListVariablesOpti" +
-      "ons\"\353\001\n\023ListVariablesResult\022B\n\tvariables" +
-      "\030\001 \003(\0132/.com.kcl.api.ListVariablesResult" +
-      ".VariablesEntry\022\031\n\021unsupported_codes\030\002 \003" +
-      "(\t\022(\n\014parse_errors\030\003 \003(\0132\022.com.kcl.api.E" +
-      "rror\032K\n\016VariablesEntry\022\013\n\003key\030\001 \001(\t\022(\n\005v" +
-      "alue\030\002 \001(\0132\031.com.kcl.api.VariableList:\0028" +
-      "\001\"\224\001\n\010Variable\022\r\n\005value\030\001 \001(\t\022\021\n\ttype_na" +
-      "me\030\002 \001(\t\022\016\n\006op_sym\030\003 \001(\t\022)\n\nlist_items\030\004" +
-      " \003(\0132\025.com.kcl.api.Variable\022+\n\014dict_entr" +
-      "ies\030\005 \003(\0132\025.com.kcl.api.MapEntry\"=\n\010MapE" +
-      "ntry\022\013\n\003key\030\001 \001(\t\022$\n\005value\030\002 \001(\0132\025.com.k" +
-      "cl.api.Variable\"`\n\030GetSchemaTypeMappingA" +
-      "rgs\022/\n\texec_args\030\001 \001(\0132\034.com.kcl.api.Exe" +
-      "cProgramArgs\022\023\n\013schema_name\030\002 \001(\t\"\311\001\n\032Ge" +
-      "tSchemaTypeMappingResult\022[\n\023schema_type_" +
-      "mapping\030\001 \003(\0132>.com.kcl.api.GetSchemaTyp" +
-      "eMappingResult.SchemaTypeMappingEntry\032N\n" +
-      "\026SchemaTypeMappingEntry\022\013\n\003key\030\001 \001(\t\022#\n\005" +
-      "value\030\002 \001(\0132\024.com.kcl.api.KclType:\0028\001\"\337\001" +
-      "\n#GetSchemaTypeMappingUnderPathResult\022d\n" +
-      "\023schema_type_mapping\030\001 \003(\0132G.com.kcl.api" +
-      ".GetSchemaTypeMappingUnderPathResult.Sch" +
-      "emaTypeMappingEntry\032R\n\026SchemaTypeMapping" +
-      "Entry\022\013\n\003key\030\001 \001(\t\022\'\n\005value\030\002 \001(\0132\030.com." +
-      "kcl.api.SchemaTypes:\0028\001\"8\n\013SchemaTypes\022)" +
-      "\n\013schema_type\030\001 \003(\0132\024.com.kcl.api.KclTyp" +
-      "e\"\267\001\n\020ValidateCodeArgs\022\020\n\010datafile\030\001 \001(\t" +
-      "\022\014\n\004data\030\002 \001(\t\022\014\n\004file\030\003 \001(\t\022\014\n\004code\030\004 \001" +
-      "(\t\022\016\n\006schema\030\005 \001(\t\022\026\n\016attribute_name\030\006 \001" +
-      "(\t\022\016\n\006format\030\007 \001(\t\022/\n\rexternal_pkgs\030\010 \003(" +
-      "\0132\030.com.kcl.api.ExternalPkg\":\n\022ValidateC" +
-      "odeResult\022\017\n\007success\030\001 \001(\010\022\023\n\013err_messag" +
-      "e\030\002 \001(\t\":\n\010Position\022\014\n\004line\030\001 \001(\003\022\016\n\006col" +
-      "umn\030\002 \001(\003\022\020\n\010filename\030\003 \001(\t\"8\n\025LoadSetti" +
-      "ngsFilesArgs\022\020\n\010work_dir\030\001 \001(\t\022\r\n\005files\030" +
-      "\002 \003(\t\"z\n\027LoadSettingsFilesResult\022/\n\017kcl_" +
-      "cli_configs\030\001 \001(\0132\026.com.kcl.api.CliConfi" +
-      "g\022.\n\013kcl_options\030\002 \003(\0132\031.com.kcl.api.Key" +
-      "ValuePair\"\203\002\n\tCliConfig\022\r\n\005files\030\001 \003(\t\022\016" +
-      "\n\006output\030\002 \001(\t\022\021\n\toverrides\030\003 \003(\t\022\025\n\rpat" +
-      "h_selector\030\004 \003(\t\022\032\n\022strict_range_check\030\005" +
-      " \001(\010\022\024\n\014disable_none\030\006 \001(\010\022\017\n\007verbose\030\007 " +
-      "\001(\003\022\r\n\005debug\030\010 \001(\010\022\021\n\tsort_keys\030\t \001(\010\022\023\n" +
-      "\013show_hidden\030\n \001(\010\022 \n\030include_schema_typ" +
-      "e_path\030\013 \001(\010\022\021\n\tfast_eval\030\014 \001(\010\"*\n\014KeyVa" +
-      "luePair\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t\"]\n\nR" +
-      "enameArgs\022\024\n\014package_root\030\001 \001(\t\022\023\n\013symbo" +
-      "l_path\030\002 \001(\t\022\022\n\nfile_paths\030\003 \003(\t\022\020\n\010new_" +
-      "name\030\004 \001(\t\"%\n\014RenameResult\022\025\n\rchanged_fi" +
-      "les\030\001 \003(\t\"\305\001\n\016RenameCodeArgs\022\024\n\014package_" +
-      "root\030\001 \001(\t\022\023\n\013symbol_path\030\002 \001(\t\022B\n\014sourc" +
-      "e_codes\030\003 \003(\0132,.com.kcl.api.RenameCodeAr" +
-      "gs.SourceCodesEntry\022\020\n\010new_name\030\004 \001(\t\0322\n" +
-      "\020SourceCodesEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030" +
-      "\002 \001(\t:\0028\001\"\217\001\n\020RenameCodeResult\022F\n\rchange" +
-      "d_codes\030\001 \003(\0132/.com.kcl.api.RenameCodeRe" +
-      "sult.ChangedCodesEntry\0323\n\021ChangedCodesEn" +
-      "try\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\"t\n\010T" +
-      "estArgs\022/\n\texec_args\030\001 \001(\0132\034.com.kcl.api" +
-      ".ExecProgramArgs\022\020\n\010pkg_list\030\002 \003(\t\022\022\n\nru" +
-      "n_regexp\030\003 \001(\t\022\021\n\tfail_fast\030\004 \001(\010\"5\n\nTes" +
-      "tResult\022\'\n\004info\030\002 \003(\0132\031.com.kcl.api.Test" +
-      "CaseInfo\"R\n\014TestCaseInfo\022\014\n\004name\030\001 \001(\t\022\r" +
-      "\n\005error\030\002 \001(\t\022\020\n\010duration\030\003 \001(\004\022\023\n\013log_m" +
-      "essage\030\004 \001(\t\"?\n\026UpdateDependenciesArgs\022\025" +
-      "\n\rmanifest_path\030\001 \001(\t\022\016\n\006vendor\030\002 \001(\010\"K\n" +
-      "\030UpdateDependenciesResult\022/\n\rexternal_pk" +
-      "gs\030\003 \003(\0132\030.com.kcl.api.ExternalPkg\"\201\006\n\007K" +
-      "clType\022\014\n\004type\030\001 \001(\t\022)\n\013union_types\030\002 \003(" +
-      "\0132\024.com.kcl.api.KclType\022\017\n\007default\030\003 \001(\t" +
-      "\022\023\n\013schema_name\030\004 \001(\t\022\022\n\nschema_doc\030\005 \001(" +
-      "\t\0228\n\nproperties\030\006 \003(\0132$.com.kcl.api.KclT" +
-      "ype.PropertiesEntry\022\020\n\010required\030\007 \003(\t\022!\n" +
-      "\003key\030\010 \001(\0132\024.com.kcl.api.KclType\022\"\n\004item" +
-      "\030\t \001(\0132\024.com.kcl.api.KclType\022\014\n\004line\030\n \001" +
-      "(\005\022*\n\ndecorators\030\013 \003(\0132\026.com.kcl.api.Dec" +
-      "orator\022\020\n\010filename\030\014 \001(\t\022\020\n\010pkg_path\030\r \001" +
-      "(\t\022\023\n\013description\030\016 \001(\t\0224\n\010examples\030\017 \003(" +
-      "\0132\".com.kcl.api.KclType.ExamplesEntry\022)\n" +
-      "\013base_schema\030\020 \001(\0132\024.com.kcl.api.KclType" +
-      "\0220\n\010function\030\021 \001(\0132\031.com.kcl.api.Functio" +
-      "nTypeH\000\210\001\001\0229\n\017index_signature\030\022 \001(\0132\033.co" +
-      "m.kcl.api.IndexSignatureH\001\210\001\001\032G\n\017Propert" +
-      "iesEntry\022\013\n\003key\030\001 \001(\t\022#\n\005value\030\002 \001(\0132\024.c" +
-      "om.kcl.api.KclType:\0028\001\032E\n\rExamplesEntry\022" +
-      "\013\n\003key\030\001 \001(\t\022#\n\005value\030\002 \001(\0132\024.com.kcl.ap" +
-      "i.Example:\0028\001B\013\n\t_functionB\022\n\020_index_sig" +
-      "nature\"_\n\014FunctionType\022&\n\006params\030\001 \003(\0132\026" +
-      ".com.kcl.api.Parameter\022\'\n\treturn_ty\030\002 \001(" +
-      "\0132\024.com.kcl.api.KclType\";\n\tParameter\022\014\n\004" +
-      "name\030\001 \001(\t\022 \n\002ty\030\002 \001(\0132\024.com.kcl.api.Kcl" +
-      "Type\"\215\001\n\016IndexSignature\022\025\n\010key_name\030\001 \001(" +
-      "\tH\000\210\001\001\022!\n\003key\030\002 \001(\0132\024.com.kcl.api.KclTyp" +
-      "e\022!\n\003val\030\003 \001(\0132\024.com.kcl.api.KclType\022\021\n\t" +
-      "any_other\030\004 \001(\010B\013\n\t_key_name\"\225\001\n\tDecorat" +
-      "or\022\014\n\004name\030\001 \001(\t\022\021\n\targuments\030\002 \003(\t\0226\n\010k" +
-      "eywords\030\003 \003(\0132$.com.kcl.api.Decorator.Ke" +
-      "ywordsEntry\032/\n\rKeywordsEntry\022\013\n\003key\030\001 \001(" +
-      "\t\022\r\n\005value\030\002 \001(\t:\0028\001\">\n\007Example\022\017\n\007summa" +
-      "ry\030\001 \001(\t\022\023\n\013description\030\002 \001(\t\022\r\n\005value\030\003" +
-      " \001(\t2\222\001\n\016BuiltinService\0226\n\004Ping\022\025.com.kc" +
-      "l.api.PingArgs\032\027.com.kcl.api.PingResult\022" +
-      "H\n\nListMethod\022\033.com.kcl.api.ListMethodAr" +
-      "gs\032\035.com.kcl.api.ListMethodResult2\273\014\n\nKc" +
-      "lService\0226\n\004Ping\022\025.com.kcl.api.PingArgs\032" +
-      "\027.com.kcl.api.PingResult\022H\n\nGetVersion\022\033" +
-      ".com.kcl.api.GetVersionArgs\032\035.com.kcl.ap" +
-      "i.GetVersionResult\022N\n\014ParseProgram\022\035.com" +
-      ".kcl.api.ParseProgramArgs\032\037.com.kcl.api." +
-      "ParseProgramResult\022E\n\tParseFile\022\032.com.kc" +
-      "l.api.ParseFileArgs\032\034.com.kcl.api.ParseF" +
-      "ileResult\022K\n\013LoadPackage\022\034.com.kcl.api.L" +
-      "oadPackageArgs\032\036.com.kcl.api.LoadPackage" +
-      "Result\022L\n\013ListOptions\022\035.com.kcl.api.Pars" +
-      "eProgramArgs\032\036.com.kcl.api.ListOptionsRe" +
-      "sult\022Q\n\rListVariables\022\036.com.kcl.api.List" +
-      "VariablesArgs\032 .com.kcl.api.ListVariable" +
-      "sResult\022K\n\013ExecProgram\022\034.com.kcl.api.Exe" +
-      "cProgramArgs\032\036.com.kcl.api.ExecProgramRe" +
-      "sult\022N\n\014OverrideFile\022\035.com.kcl.api.Overr" +
-      "ideFileArgs\032\037.com.kcl.api.OverrideFileRe" +
-      "sult\022f\n\024GetSchemaTypeMapping\022%.com.kcl.a" +
-      "pi.GetSchemaTypeMappingArgs\032\'.com.kcl.ap" +
-      "i.GetSchemaTypeMappingResult\022x\n\035GetSchem" +
-      "aTypeMappingUnderPath\022%.com.kcl.api.GetS" +
-      "chemaTypeMappingArgs\0320.com.kcl.api.GetSc" +
-      "hemaTypeMappingUnderPathResult\022H\n\nFormat" +
-      "Code\022\033.com.kcl.api.FormatCodeArgs\032\035.com." +
-      "kcl.api.FormatCodeResult\022H\n\nFormatPath\022\033" +
-      ".com.kcl.api.FormatPathArgs\032\035.com.kcl.ap" +
-      "i.FormatPathResult\022B\n\010LintPath\022\031.com.kcl" +
-      ".api.LintPathArgs\032\033.com.kcl.api.LintPath" +
-      "Result\022N\n\014ValidateCode\022\035.com.kcl.api.Val" +
-      "idateCodeArgs\032\037.com.kcl.api.ValidateCode" +
-      "Result\022]\n\021LoadSettingsFiles\022\".com.kcl.ap" +
-      "i.LoadSettingsFilesArgs\032$.com.kcl.api.Lo" +
-      "adSettingsFilesResult\022<\n\006Rename\022\027.com.kc" +
-      "l.api.RenameArgs\032\031.com.kcl.api.RenameRes" +
-      "ult\022H\n\nRenameCode\022\033.com.kcl.api.RenameCo" +
-      "deArgs\032\035.com.kcl.api.RenameCodeResult\0226\n" +
-      "\004Test\022\025.com.kcl.api.TestArgs\032\027.com.kcl.a" +
-      "pi.TestResult\022`\n\022UpdateDependencies\022#.co" +
-      "m.kcl.api.UpdateDependenciesArgs\032%.com.k" +
-      "cl.api.UpdateDependenciesResultB\024Z\005.;api" +
-      "\252\002\nKclLib.APIb\006proto3"
+      "\n\nspec.proto\022\013com.kcl.api\"1\n\013ExternalPkg\022\020\n\010pkg_name\030\001 \001(\t\022\020" +
+      "\n\010pkg_path\030\002 \001(\t\"'\n\010Argument\022\014\n\004name\030\001 \001(\t\022\r\n\005value\030\002 \001(\t\"L\n" +
+      "\005Error\022\r\n\005level\030\001 \001(\t\022\014\n\004code\030\002 \001(\t\022&\n\010messages\030\003 \003(\0132\024.com." +
+      "kcl.api.Message\":\n\007Message\022\013\n\003msg\030\001 \001(\t\022\"\n\003pos\030\002 \001(\0132\025.com.k" +
+      "cl.api.Position\"\031\n\010PingArgs\022\r\n\005value\030\001 \001(\t\"\033\n\nPingResult\022\r\n\005" +
+      "value\030\001 \001(\t\"\020\n\016GetVersionArgs\"\\\n\020GetVersionResult\022\017\n\007version" +
+      "\030\001 \001(\t\022\020\n\010checksum\030\002 \001(\t\022\017\n\007git_sha\030\003 \001(\t\022\024\n\014version_info\030\004 " +
+      "\001(\t\"\020\n\016ListMethodArgs\",\n\020ListMethodResult\022\030\n\020method_name_lis" +
+      "t\030\001 \003(\t\"^\n\rParseFileArgs\022\014\n\004path\030\001 \001(\t\022\016\n\006source\030\002 \001(\t\022/\n\rex" +
+      "ternal_pkgs\030\003 \003(\0132\030.com.kcl.api.ExternalPkg\"U\n\017ParseFileResu" +
+      "lt\022\020\n\010ast_json\030\001 \001(\t\022\014\n\004deps\030\002 \003(\t\022\"\n\006errors\030\003 \003(\0132\022.com.kcl" +
+      ".api.Error\"c\n\020ParseProgramArgs\022\r\n\005paths\030\001 \003(\t\022\017\n\007sources\030\002 \003" +
+      "(\t\022/\n\rexternal_pkgs\030\003 \003(\0132\030.com.kcl.api.ExternalPkg\"Y\n\022Parse" +
+      "ProgramResult\022\020\n\010ast_json\030\001 \001(\t\022\r\n\005paths\030\002 \003(\t\022\"\n\006errors\030\003 \003" +
+      "(\0132\022.com.kcl.api.Error\"\207\001\n\017LoadPackageArgs\0221\n\nparse_args\030\001 \001" +
+      "(\0132\035.com.kcl.api.ParseProgramArgs\022\023\n\013resolve_ast\030\002 \001(\010\022\024\n\014lo" +
+      "ad_builtin\030\003 \001(\010\022\026\n\016with_ast_index\030\004 \001(\010\"\360\007\n\021LoadPackageResu" +
+      "lt\022\017\n\007program\030\001 \001(\t\022\r\n\005paths\030\002 \003(\t\022(\n\014parse_errors\030\003 \003(\0132\022.c" +
+      "om.kcl.api.Error\022'\n\013type_errors\030\004 \003(\0132\022.com.kcl.api.Error\022:\n" +
+      "\006scopes\030\005 \003(\0132*.com.kcl.api.LoadPackageResult.ScopesEntry\022<\n" +
+      "\007symbols\030\006 \003(\0132+.com.kcl.api.LoadPackageResult.SymbolsEntry\022" +
+      "J\n\017node_symbol_map\030\007 \003(\01321.com.kcl.api.LoadPackageResult.Nod" +
+      "eSymbolMapEntry\022J\n\017symbol_node_map\030\010 \003(\01321.com.kcl.api.LoadP" +
+      "ackageResult.SymbolNodeMapEntry\022[\n\030fully_qualified_name_map\030" +
+      "\t \003(\01329.com.kcl.api.LoadPackageResult.FullyQualifiedNameMapE" +
+      "ntry\022F\n\rpkg_scope_map\030\n \003(\0132/.com.kcl.api.LoadPackageResult." +
+      "PkgScopeMapEntry\032A\n\013ScopesEntry\022\013\n\003key\030\001 \001(\t\022!\n\005value\030\002 \001(\0132" +
+      "\022.com.kcl.api.Scope:\0028\001\032C\n\014SymbolsEntry\022\013\n\003key\030\001 \001(\t\022\"\n\005valu" +
+      "e\030\002 \001(\0132\023.com.kcl.api.Symbol:\0028\001\032N\n\022NodeSymbolMapEntry\022\013\n\003ke" +
+      "y\030\001 \001(\t\022'\n\005value\030\002 \001(\0132\030.com.kcl.api.SymbolIndex:\0028\001\0324\n\022Symb" +
+      "olNodeMapEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\032V\n\032FullyQuali" +
+      "fiedNameMapEntry\022\013\n\003key\030\001 \001(\t\022'\n\005value\030\002 \001(\0132\030.com.kcl.api.S" +
+      "ymbolIndex:\0028\001\032K\n\020PkgScopeMapEntry\022\013\n\003key\030\001 \001(\t\022&\n\005value\030\002 \001" +
+      "(\0132\027.com.kcl.api.ScopeIndex:\0028\001\"=\n\021ListOptionsResult\022(\n\007opti" +
+      "ons\030\002 \003(\0132\027.com.kcl.api.OptionHelp\"_\n\nOptionHelp\022\014\n\004name\030\001 \001" +
+      "(\t\022\014\n\004type\030\002 \001(\t\022\020\n\010required\030\003 \001(\010\022\025\n\rdefault_value\030\004 \001(\t\022\014\n" +
+      "\004help\030\005 \001(\t\"\304\001\n\006Symbol\022 \n\002ty\030\001 \001(\0132\024.com.kcl.api.KclType\022\014\n\004" +
+      "name\030\002 \001(\t\022'\n\005owner\030\003 \001(\0132\030.com.kcl.api.SymbolIndex\022%\n\003def\030\004" +
+      " \001(\0132\030.com.kcl.api.SymbolIndex\022'\n\005attrs\030\005 \003(\0132\030.com.kcl.api." +
+      "SymbolIndex\022\021\n\tis_global\030\006 \001(\010\"\272\001\n\005Scope\022\014\n\004kind\030\001 \001(\t\022'\n\006pa" +
+      "rent\030\002 \001(\0132\027.com.kcl.api.ScopeIndex\022'\n\005owner\030\003 \001(\0132\030.com.kcl" +
+      ".api.SymbolIndex\022)\n\010children\030\004 \003(\0132\027.com.kcl.api.ScopeIndex\022" +
+      "&\n\004defs\030\005 \003(\0132\030.com.kcl.api.SymbolIndex\"1\n\013SymbolIndex\022\t\n\001i\030" +
+      "\001 \001(\004\022\t\n\001g\030\002 \001(\004\022\014\n\004kind\030\003 \001(\t\"0\n\nScopeIndex\022\t\n\001i\030\001 \001(\004\022\t\n\001g" +
+      "\030\002 \001(\004\022\014\n\004kind\030\003 \001(\t\"\251\004\n\017ExecProgramArgs\022\020\n\010work_dir\030\001 \001(\t\022\027" +
+      "\n\017k_filename_list\030\002 \003(\t\022\023\n\013k_code_list\030\003 \003(\t\022#\n\004args\030\004 \003(\0132\025" +
+      ".com.kcl.api.Argument\022\021\n\toverrides\030\005 \003(\t\022\033\n\023disable_yaml_res" +
+      "ult\030\006 \001(\010\022\032\n\022print_override_ast\030\007 \001(\010\022\032\n\022strict_range_check\030" +
+      "\010 \001(\010\022\024\n\014disable_none\030\t \001(\010\022\017\n\007verbose\030\n \001(\005\022\r\n\005debug\030\013 \001(\005\022" +
+      "\021\n\tsort_keys\030\014 \001(\010\022/\n\rexternal_pkgs\030\r \003(\0132\030.com.kcl.api.Exte" +
+      "rnalPkg\022 \n\030include_schema_type_path\030\016 \001(\010\022\024\n\014compile_only\030\017 " +
+      "\001(\010\022\023\n\013show_hidden\030\020 \001(\010\022\025\n\rpath_selector\030\021 \003(\t\022\021\n\tfast_eval" +
+      "\030\022 \001(\010\022\024\n\014error_format\030\023 \001(\t\022\016\n\006format\030\024 \001(\t\022\035\n\020sourcemap_ou" +
+      "tput\030\026 \001(\tH\000\210\001\001B\023\n\021_sourcemap_output\"\215\001\n\021ExecProgramResult\022\023" +
+      "\n\013json_result\030\001 \001(\t\022\023\n\013yaml_result\030\002 \001(\t\022\023\n\013log_message\030\003 \001(" +
+      "\t\022\023\n\013err_message\030\004 \001(\t\022\026\n\tsourcemap\030\005 \001(\tH\000\210\001\001B\014\n\n_sourcemap" +
+      "\" \n\016FormatCodeArgs\022\016\n\006source\030\001 \001(\t\"%\n\020FormatCodeResult\022\021\n\tfo" +
+      "rmatted\030\001 \001(\014\"/\n\016FormatPathArgs\022\014\n\004path\030\001 \001(\t\022\017\n\007dry_run\030\002 \001" +
+      "(\010\")\n\020FormatPathResult\022\025\n\rchanged_paths\030\001 \003(\t\"\035\n\014LintPathArg" +
+      "s\022\r\n\005paths\030\001 \003(\t\"!\n\016LintPathResult\022\017\n\007results\030\001 \003(\t\"E\n\020Overr" +
+      "ideFileArgs\022\014\n\004file\030\001 \001(\t\022\r\n\005specs\030\002 \003(\t\022\024\n\014import_paths\030\003 \003" +
+      "(\t\"N\n\022OverrideFileResult\022\016\n\006result\030\001 \001(\010\022(\n\014parse_errors\030\002 \003" +
+      "(\0132\022.com.kcl.api.Error\"-\n\024ListVariablesOptions\022\025\n\rmerge_prog" +
+      "ram\030\001 \001(\010\"8\n\014VariableList\022(\n\tvariables\030\001 \003(\0132\025.com.kcl.api.V" +
+      "ariable\"e\n\021ListVariablesArgs\022\r\n\005files\030\001 \003(\t\022\r\n\005specs\030\002 \003(\t\0222" +
+      "\n\007options\030\003 \001(\0132!.com.kcl.api.ListVariablesOptions\"\353\001\n\023ListV" +
+      "ariablesResult\022B\n\tvariables\030\001 \003(\0132/.com.kcl.api.ListVariable" +
+      "sResult.VariablesEntry\022\031\n\021unsupported_codes\030\002 \003(\t\022(\n\014parse_e" +
+      "rrors\030\003 \003(\0132\022.com.kcl.api.Error\032K\n\016VariablesEntry\022\013\n\003key\030\001 \001" +
+      "(\t\022(\n\005value\030\002 \001(\0132\031.com.kcl.api.VariableList:\0028\001\"\224\001\n\010Variabl" +
+      "e\022\r\n\005value\030\001 \001(\t\022\021\n\ttype_name\030\002 \001(\t\022\016\n\006op_sym\030\003 \001(\t\022)\n\nlist_" +
+      "items\030\004 \003(\0132\025.com.kcl.api.Variable\022+\n\014dict_entries\030\005 \003(\0132\025.c" +
+      "om.kcl.api.MapEntry\"=\n\010MapEntry\022\013\n\003key\030\001 \001(\t\022$\n\005value\030\002 \001(\0132" +
+      "\025.com.kcl.api.Variable\"`\n\030GetSchemaTypeMappingArgs\022/\n\texec_a" +
+      "rgs\030\001 \001(\0132\034.com.kcl.api.ExecProgramArgs\022\023\n\013schema_name\030\002 \001(\t" +
+      "\"\311\001\n\032GetSchemaTypeMappingResult\022[\n\023schema_type_mapping\030\001 \003(\013" +
+      "2>.com.kcl.api.GetSchemaTypeMappingResult.SchemaTypeMappingE" +
+      "ntry\032N\n\026SchemaTypeMappingEntry\022\013\n\003key\030\001 \001(\t\022#\n\005value\030\002 \001(\0132\024" +
+      ".com.kcl.api.KclType:\0028\001\"\337\001\n#GetSchemaTypeMappingUnderPathRe" +
+      "sult\022d\n\023schema_type_mapping\030\001 \003(\0132G.com.kcl.api.GetSchemaTyp" +
+      "eMappingUnderPathResult.SchemaTypeMappingEntry\032R\n\026SchemaType" +
+      "MappingEntry\022\013\n\003key\030\001 \001(\t\022'\n\005value\030\002 \001(\0132\030.com.kcl.api.Schem" +
+      "aTypes:\0028\001\"8\n\013SchemaTypes\022)\n\013schema_type\030\001 \003(\0132\024.com.kcl.api" +
+      ".KclType\"\267\001\n\020ValidateCodeArgs\022\020\n\010datafile\030\001 \001(\t\022\014\n\004data\030\002 \001(" +
+      "\t\022\014\n\004file\030\003 \001(\t\022\014\n\004code\030\004 \001(\t\022\016\n\006schema\030\005 \001(\t\022\026\n\016attribute_n" +
+      "ame\030\006 \001(\t\022\016\n\006format\030\007 \001(\t\022/\n\rexternal_pkgs\030\010 \003(\0132\030.com.kcl.a" +
+      "pi.ExternalPkg\":\n\022ValidateCodeResult\022\017\n\007success\030\001 \001(\010\022\023\n\013err" +
+      "_message\030\002 \001(\t\":\n\010Position\022\014\n\004line\030\001 \001(\003\022\016\n\006column\030\002 \001(\003\022\020\n\010" +
+      "filename\030\003 \001(\t\"8\n\025LoadSettingsFilesArgs\022\020\n\010work_dir\030\001 \001(\t\022\r\n" +
+      "\005files\030\002 \003(\t\"z\n\027LoadSettingsFilesResult\022/\n\017kcl_cli_configs\030\001" +
+      " \001(\0132\026.com.kcl.api.CliConfig\022.\n\013kcl_options\030\002 \003(\0132\031.com.kcl." +
+      "api.KeyValuePair\"\203\002\n\tCliConfig\022\r\n\005files\030\001 \003(\t\022\016\n\006output\030\002 \001(" +
+      "\t\022\021\n\toverrides\030\003 \003(\t\022\025\n\rpath_selector\030\004 \003(\t\022\032\n\022strict_range_" +
+      "check\030\005 \001(\010\022\024\n\014disable_none\030\006 \001(\010\022\017\n\007verbose\030\007 \001(\003\022\r\n\005debug\030" +
+      "\010 \001(\010\022\021\n\tsort_keys\030\t \001(\010\022\023\n\013show_hidden\030\n \001(\010\022 \n\030include_sch" +
+      "ema_type_path\030\013 \001(\010\022\021\n\tfast_eval\030\014 \001(\010\"*\n\014KeyValuePair\022\013\n\003ke" +
+      "y\030\001 \001(\t\022\r\n\005value\030\002 \001(\t\"]\n\nRenameArgs\022\024\n\014package_root\030\001 \001(\t\022\023" +
+      "\n\013symbol_path\030\002 \001(\t\022\022\n\nfile_paths\030\003 \003(\t\022\020\n\010new_name\030\004 \001(\t\"%\n" +
+      "\014RenameResult\022\025\n\rchanged_files\030\001 \003(\t\"\305\001\n\016RenameCodeArgs\022\024\n\014p" +
+      "ackage_root\030\001 \001(\t\022\023\n\013symbol_path\030\002 \001(\t\022B\n\014source_codes\030\003 \003(\013" +
+      "2,.com.kcl.api.RenameCodeArgs.SourceCodesEntry\022\020\n\010new_name\030\004" +
+      " \001(\t\0322\n\020SourceCodesEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\"\217\001\n" +
+      "\020RenameCodeResult\022F\n\rchanged_codes\030\001 \003(\0132/.com.kcl.api.Renam" +
+      "eCodeResult.ChangedCodesEntry\0323\n\021ChangedCodesEntry\022\013\n\003key\030\001 " +
+      "\001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\"t\n\010TestArgs\022/\n\texec_args\030\001 \001(\0132\034.com." +
+      "kcl.api.ExecProgramArgs\022\020\n\010pkg_list\030\002 \003(\t\022\022\n\nrun_regexp\030\003 \001(" +
+      "\t\022\021\n\tfail_fast\030\004 \001(\010\"5\n\nTestResult\022'\n\004info\030\002 \003(\0132\031.com.kcl.a" +
+      "pi.TestCaseInfo\"R\n\014TestCaseInfo\022\014\n\004name\030\001 \001(\t\022\r\n\005error\030\002 \001(\t" +
+      "\022\020\n\010duration\030\003 \001(\004\022\023\n\013log_message\030\004 \001(\t\"?\n\026UpdateDependencie" +
+      "sArgs\022\025\n\rmanifest_path\030\001 \001(\t\022\016\n\006vendor\030\002 \001(\010\"K\n\030UpdateDepend" +
+      "enciesResult\022/\n\rexternal_pkgs\030\003 \003(\0132\030.com.kcl.api.ExternalPk" +
+      "g\"\201\006\n\007KclType\022\014\n\004type\030\001 \001(\t\022)\n\013union_types\030\002 \003(\0132\024.com.kcl.a" +
+      "pi.KclType\022\017\n\007default\030\003 \001(\t\022\023\n\013schema_name\030\004 \001(\t\022\022\n\nschema_d" +
+      "oc\030\005 \001(\t\0228\n\nproperties\030\006 \003(\0132$.com.kcl.api.KclType.Propertie" +
+      "sEntry\022\020\n\010required\030\007 \003(\t\022!\n\003key\030\010 \001(\0132\024.com.kcl.api.KclType\022" +
+      "\"\n\004item\030\t \001(\0132\024.com.kcl.api.KclType\022\014\n\004line\030\n \001(\005\022*\n\ndecorat" +
+      "ors\030\013 \003(\0132\026.com.kcl.api.Decorator\022\020\n\010filename\030\014 \001(\t\022\020\n\010pkg_p" +
+      "ath\030\r \001(\t\022\023\n\013description\030\016 \001(\t\0224\n\010examples\030\017 \003(\0132\".com.kcl.a" +
+      "pi.KclType.ExamplesEntry\022)\n\013base_schema\030\020 \001(\0132\024.com.kcl.api." +
+      "KclType\0220\n\010function\030\021 \001(\0132\031.com.kcl.api.FunctionTypeH\000\210\001\001\0229\n" +
+      "\017index_signature\030\022 \001(\0132\033.com.kcl.api.IndexSignatureH\001\210\001\001\032G\n\017" +
+      "PropertiesEntry\022\013\n\003key\030\001 \001(\t\022#\n\005value\030\002 \001(\0132\024.com.kcl.api.Kc" +
+      "lType:\0028\001\032E\n\rExamplesEntry\022\013\n\003key\030\001 \001(\t\022#\n\005value\030\002 \001(\0132\024.com" +
+      ".kcl.api.Example:\0028\001B\013\n\t_functionB\022\n\020_index_signature\"_\n\014Fun" +
+      "ctionType\022&\n\006params\030\001 \003(\0132\026.com.kcl.api.Parameter\022'\n\treturn_" +
+      "ty\030\002 \001(\0132\024.com.kcl.api.KclType\";\n\tParameter\022\014\n\004name\030\001 \001(\t\022 \n" +
+      "\002ty\030\002 \001(\0132\024.com.kcl.api.KclType\"\215\001\n\016IndexSignature\022\025\n\010key_na" +
+      "me\030\001 \001(\tH\000\210\001\001\022!\n\003key\030\002 \001(\0132\024.com.kcl.api.KclType\022!\n\003val\030\003 \001(" +
+      "\0132\024.com.kcl.api.KclType\022\021\n\tany_other\030\004 \001(\010B\013\n\t_key_name\"\225\001\n\t" +
+      "Decorator\022\014\n\004name\030\001 \001(\t\022\021\n\targuments\030\002 \003(\t\0226\n\010keywords\030\003 \003(\013" +
+      "2$.com.kcl.api.Decorator.KeywordsEntry\032/\n\rKeywordsEntry\022\013\n\003k" +
+      "ey\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\">\n\007Example\022\017\n\007summary\030\001 \001(\t\022\023\n\013d" +
+      "escription\030\002 \001(\t\022\r\n\005value\030\003 \001(\t2\222\001\n\016BuiltinService\0226\n\004Ping\022\025" +
+      ".com.kcl.api.PingArgs\032\027.com.kcl.api.PingResult\022H\n\nListMethod" +
+      "\022\033.com.kcl.api.ListMethodArgs\032\035.com.kcl.api.ListMethodResult" +
+      "2\273\014\n\nKclService\0226\n\004Ping\022\025.com.kcl.api.PingArgs\032\027.com.kcl.api" +
+      ".PingResult\022H\n\nGetVersion\022\033.com.kcl.api.GetVersionArgs\032\035.com" +
+      ".kcl.api.GetVersionResult\022N\n\014ParseProgram\022\035.com.kcl.api.Pars" +
+      "eProgramArgs\032\037.com.kcl.api.ParseProgramResult\022E\n\tParseFile\022\032" +
+      ".com.kcl.api.ParseFileArgs\032\034.com.kcl.api.ParseFileResult\022K\n\013" +
+      "LoadPackage\022\034.com.kcl.api.LoadPackageArgs\032\036.com.kcl.api.Load" +
+      "PackageResult\022L\n\013ListOptions\022\035.com.kcl.api.ParseProgramArgs\032" +
+      "\036.com.kcl.api.ListOptionsResult\022Q\n\rListVariables\022\036.com.kcl.a" +
+      "pi.ListVariablesArgs\032 .com.kcl.api.ListVariablesResult\022K\n\013Ex" +
+      "ecProgram\022\034.com.kcl.api.ExecProgramArgs\032\036.com.kcl.api.ExecPr" +
+      "ogramResult\022N\n\014OverrideFile\022\035.com.kcl.api.OverrideFileArgs\032\037" +
+      ".com.kcl.api.OverrideFileResult\022f\n\024GetSchemaTypeMapping\022%.co" +
+      "m.kcl.api.GetSchemaTypeMappingArgs\032'.com.kcl.api.GetSchemaTy" +
+      "peMappingResult\022x\n\035GetSchemaTypeMappingUnderPath\022%.com.kcl.a" +
+      "pi.GetSchemaTypeMappingArgs\0320.com.kcl.api.GetSchemaTypeMappi" +
+      "ngUnderPathResult\022H\n\nFormatCode\022\033.com.kcl.api.FormatCodeArgs" +
+      "\032\035.com.kcl.api.FormatCodeResult\022H\n\nFormatPath\022\033.com.kcl.api." +
+      "FormatPathArgs\032\035.com.kcl.api.FormatPathResult\022B\n\010LintPath\022\031." +
+      "com.kcl.api.LintPathArgs\032\033.com.kcl.api.LintPathResult\022N\n\014Val" +
+      "idateCode\022\035.com.kcl.api.ValidateCodeArgs\032\037.com.kcl.api.Valid" +
+      "ateCodeResult\022]\n\021LoadSettingsFiles\022\".com.kcl.api.LoadSetting" +
+      "sFilesArgs\032$.com.kcl.api.LoadSettingsFilesResult\022<\n\006Rename\022\027" +
+      ".com.kcl.api.RenameArgs\032\031.com.kcl.api.RenameResult\022H\n\nRename" +
+      "Code\022\033.com.kcl.api.RenameCodeArgs\032\035.com.kcl.api.RenameCodeRe" +
+      "sult\0226\n\004Test\022\025.com.kcl.api.TestArgs\032\027.com.kcl.api.TestResult" +
+      "\022`\n\022UpdateDependencies\022#.com.kcl.api.UpdateDependenciesArgs\032" +
+      "%.com.kcl.api.UpdateDependenciesResultB\024Z\005.;api\252\002\nKclLib.API" +
+      "b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -76154,13 +76790,13 @@ java.lang.String defaultValue) {
     internal_static_com_kcl_api_ExecProgramArgs_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_kcl_api_ExecProgramArgs_descriptor,
-        new java.lang.String[] { "WorkDir", "KFilenameList", "KCodeList", "Args", "Overrides", "DisableYamlResult", "PrintOverrideAst", "StrictRangeCheck", "DisableNone", "Verbose", "Debug", "SortKeys", "ExternalPkgs", "IncludeSchemaTypePath", "CompileOnly", "ShowHidden", "PathSelector", "FastEval", "ErrorFormat", });
+        new java.lang.String[] { "WorkDir", "KFilenameList", "KCodeList", "Args", "Overrides", "DisableYamlResult", "PrintOverrideAst", "StrictRangeCheck", "DisableNone", "Verbose", "Debug", "SortKeys", "ExternalPkgs", "IncludeSchemaTypePath", "CompileOnly", "ShowHidden", "PathSelector", "FastEval", "ErrorFormat", "Format", "SourcemapOutput", });
     internal_static_com_kcl_api_ExecProgramResult_descriptor =
       getDescriptor().getMessageTypes().get(23);
     internal_static_com_kcl_api_ExecProgramResult_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_kcl_api_ExecProgramResult_descriptor,
-        new java.lang.String[] { "JsonResult", "YamlResult", "LogMessage", "ErrMessage", });
+        new java.lang.String[] { "JsonResult", "YamlResult", "LogMessage", "ErrMessage", "Sourcemap", });
     internal_static_com_kcl_api_FormatCodeArgs_descriptor =
       getDescriptor().getMessageTypes().get(24);
     internal_static_com_kcl_api_FormatCodeArgs_fieldAccessorTable = new

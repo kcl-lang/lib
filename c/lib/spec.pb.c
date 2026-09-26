@@ -90,7 +90,7 @@ PB_BIND(SymbolIndex, SymbolIndex, AUTO)
 PB_BIND(ScopeIndex, ScopeIndex, AUTO)
 
 
-PB_BIND(ExecProgramArgs, ExecProgramArgs, AUTO)
+PB_BIND(ExecProgramArgs, ExecProgramArgs, 2)
 
 
 PB_BIND(ExecProgramResult, ExecProgramResult, AUTO)
@@ -141,7 +141,7 @@ PB_BIND(Variable, Variable, AUTO)
 PB_BIND(MapEntry, MapEntry, AUTO)
 
 
-PB_BIND(GetSchemaTypeMappingArgs, GetSchemaTypeMappingArgs, AUTO)
+PB_BIND(GetSchemaTypeMappingArgs, GetSchemaTypeMappingArgs, 2)
 
 
 PB_BIND(GetSchemaTypeMappingResult, GetSchemaTypeMappingResult, AUTO)

@@ -165,6 +165,11 @@ export interface ExecProgramResult {
   logMessage: string
   /** Error message from execution. */
   errMessage: string
+  /**
+   * Source Map v3 JSON mapping the generated YAML back to the originating
+   * KCL source. Populated only when a source map is requested.
+   */
+  sourcemap?: string
 }
 /** Message for format code response. */
 export interface FormatCodeResult {
@@ -488,6 +493,7 @@ export declare class ExecProgramArgs {
     compileOnly?: boolean | undefined | null,
     pathSelector?: Array<string> | undefined | null,
     fastEval?: boolean | undefined | null,
+    sourcemapOutput?: string | undefined | null,
   )
 }
 export declare class ParseProgramArgs {

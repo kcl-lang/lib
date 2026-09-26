@@ -166,6 +166,7 @@ export interface ExecProgramArgs {
   pathSelector?: string[];
   fastEval?: boolean;
   errorFormat?: string;
+  sourcemapOutput?: string;
 }
 
 export interface GetSchemaTypeMappingArgs {
@@ -426,7 +427,8 @@ function encodeExecProgramArgs(args: ExecProgramArgs): Uint8Array {
     boolField(16, args.showHidden ?? false),
     encodeStringList(17, args.pathSelector),
     boolField(18, args.fastEval ?? false),
-    stringField(19, args.errorFormat)
+    stringField(19, args.errorFormat),
+    stringField(22, args.sourcemapOutput)
   );
 }
 

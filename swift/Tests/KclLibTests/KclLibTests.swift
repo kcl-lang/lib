@@ -164,4 +164,35 @@ final class KClLibTests: XCTestCase {
                 "unexpected error message: \(error.message)")
         }
     }
+
+    // Pure protobuf round-trip — does not require the native FFI to be running.
+    // Covers the new `format` (20), `error_format` (19) and `sourcemap_output`
+    // (22) fields on ExecProgramArgs plus `sourcemap` (5) on ExecProgramResult.
+    func testExecProgramArgsFormatRoundTrip() throws {
+        var args = ExecProgramArgs()
+        args.format = "json"
+        args.errorFormat = "sarif"
+        args.sourcemapOutput = "/tmp/out.js.map"
+
+        let wire = try args.serializedData()
+        let roundTripped = try ExecProgramArgs(serializedData: wire)
+
+        XCTAssertEqual("json", roundTripped.format)
+        XCTAssertEqual("sarif", roundTripped.errorFormat)
+        XCTAssertTrue(roundTripped.hasSourcemapOutput)
+        XCTAssertEqual("/tmp/out.js.map", roundTripped.sourcemapOutput)
+    }
+
+    func testExecProgramResultSourcemapRoundTrip() throws {
+        var result = ExecProgramResult()
+        result.jsonResult = "{\"a\": 1}"
+        result.yamlResult = "a: 1"
+        result.sourcemap = "{\"version\":3,\"sources\":[]}"
+
+        let wire = try result.serializedData()
+        let roundTripped = try ExecProgramResult(serializedData: wire)
+
+        XCTAssertTrue(roundTripped.hasSourcemap)
+        XCTAssertEqual("{\"version\":3,\"sources\":[]}", roundTripped.sourcemap)
+    }
 }

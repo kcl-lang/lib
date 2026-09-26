@@ -323,6 +323,9 @@ pub struct ExecProgramResult {
     pub log_message: String,
     /// Error message from execution.
     pub err_message: String,
+    /// Source Map v3 JSON mapping the generated YAML back to the originating
+    /// KCL source. Populated only when a source map is requested.
+    pub sourcemap: Option<String>,
 }
 
 impl ExecProgramResult {
@@ -332,6 +335,7 @@ impl ExecProgramResult {
             yaml_result: r.yaml_result,
             log_message: r.log_message,
             err_message: r.err_message,
+            sourcemap: r.sourcemap,
         }
     }
 }

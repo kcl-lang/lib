@@ -1470,6 +1470,9 @@ type ExecProgramArgs struct {
 	// emitted to stderr in the chosen machine-readable format. Falls back
 	// to the `KCL_ERROR_FORMAT` environment variable when empty.
 	ErrorFormat string `protobuf:"bytes,19,opt,name=error_format,json=errorFormat,proto3" json:"error_format,omitempty"`
+	// Output format selector. One of: yaml, json.
+	// When empty the runtime generates both formats (legacy behaviour).
+	Format string `protobuf:"bytes,20,opt,name=format,proto3" json:"format,omitempty"`
 	// Optional path of the Source Map v3 (tc39.es/source-map) document to
 	// emit for the generated YAML. When non-empty, the runtime records the
 	// mapping between generated YAML lines and the originating KCL source
@@ -1639,6 +1642,13 @@ func (x *ExecProgramArgs) GetFastEval() bool {
 func (x *ExecProgramArgs) GetErrorFormat() string {
 	if x != nil {
 		return x.ErrorFormat
+	}
+	return ""
+}
+
+func (x *ExecProgramArgs) GetFormat() string {
+	if x != nil {
+		return x.Format
 	}
 	return ""
 }
@@ -4376,7 +4386,7 @@ const file_spec_proto_rawDesc = "" +
 	"ScopeIndex\x12\f\n" +
 	"\x01i\x18\x01 \x01(\x04R\x01i\x12\f\n" +
 	"\x01g\x18\x02 \x01(\x04R\x01g\x12\x12\n" +
-	"\x04kind\x18\x03 \x01(\tR\x04kind\"\x9f\x06\n" +
+	"\x04kind\x18\x03 \x01(\tR\x04kind\"\xb7\x06\n" +
 	"\x0fExecProgramArgs\x12\x19\n" +
 	"\bwork_dir\x18\x01 \x01(\tR\aworkDir\x12&\n" +
 	"\x0fk_filename_list\x18\x02 \x03(\tR\rkFilenameList\x12\x1e\n" +
@@ -4398,7 +4408,8 @@ const file_spec_proto_rawDesc = "" +
 	"showHidden\x12#\n" +
 	"\rpath_selector\x18\x11 \x03(\tR\fpathSelector\x12\x1b\n" +
 	"\tfast_eval\x18\x12 \x01(\bR\bfastEval\x12!\n" +
-	"\ferror_format\x18\x13 \x01(\tR\verrorFormat\x12.\n" +
+	"\ferror_format\x18\x13 \x01(\tR\verrorFormat\x12\x16\n" +
+	"\x06format\x18\x14 \x01(\tR\x06format\x12.\n" +
 	"\x10sourcemap_output\x18\x16 \x01(\tH\x00R\x0fsourcemapOutput\x88\x01\x01B\x13\n" +
 	"\x11_sourcemap_output\"\xc8\x01\n" +
 	"\x11ExecProgramResult\x12\x1f\n" +

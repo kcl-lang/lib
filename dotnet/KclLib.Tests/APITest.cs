@@ -1,5 +1,6 @@
 namespace KclLib.Tests;
 
+using Google.Protobuf;
 using KclLib.API;
 
 [TestClass]
@@ -354,6 +355,38 @@ schema Person:
         }
         CollectionAssert.Contains(result.MethodNameList, "KclService.ExecProgram");
         CollectionAssert.Contains(result.MethodNameList, "KclService.GetVersion");
+    }
+
+    // Pure protobuf round-trip — does not require the native runtime.
+    // Covers ExecProgramArgs.sourcemap_output (field 22, optional string).
+    [TestMethod]
+    public void TestExecProgramArgsSourcemapOutputRoundTrip()
+    {
+        var args = new ExecProgramArgs { SourcemapOutput = "/tmp/out.js.map" };
+        Assert.AreEqual(true, args.HasSourcemapOutput);
+
+        var decoded = ExecProgramArgs.Parser.ParseFrom(args.ToByteArray());
+        Assert.AreEqual(true, decoded.HasSourcemapOutput);
+        Assert.AreEqual("/tmp/out.js.map", decoded.SourcemapOutput);
+
+        var unset = new ExecProgramArgs();
+        Assert.AreEqual(false, unset.HasSourcemapOutput);
+    }
+
+    // Pure protobuf round-trip — covers ExecProgramResult.sourcemap
+    // (field 5, optional string).
+    [TestMethod]
+    public void TestExecProgramResultSourcemapRoundTrip()
+    {
+        var result = new ExecProgramResult { Sourcemap = "{\"version\":3}" };
+        Assert.AreEqual(true, result.HasSourcemap);
+
+        var decoded = ExecProgramResult.Parser.ParseFrom(result.ToByteArray());
+        Assert.AreEqual(true, decoded.HasSourcemap);
+        Assert.AreEqual("{\"version\":3}", decoded.Sourcemap);
+
+        var unset = new ExecProgramResult();
+        Assert.AreEqual(false, unset.HasSourcemap);
     }
 
     static string FindCsprojInParentDirectory(string directory)

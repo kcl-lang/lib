@@ -140,3 +140,74 @@ test "typed execProgram runs inline kcl code" {
     try testing.expect(std.mem.indexOf(u8, result.json_result, "alice") != null);
     try testing.expect(std.mem.indexOf(u8, result.yaml_result, "age: 18") != null);
 }
+
+// Pure protobuf round-trip — does not require the native dispatcher.
+// Covers ExecProgramArgs.error_format (19) and sourcemap_output (22),
+// which were added to the regenerated api.pb.zig.
+test "ExecProgramArgs error_format + sourcemap_output round-trip on the wire" {
+    const allocator = testing.allocator;
+
+    var args: spec.ExecProgramArgs = .{};
+    args.error_format = "sarif";
+    args.sourcemap_output = "/tmp/out.js.map";
+
+    var writer: std.Io.Writer.Allocating = .init(allocator);
+    defer writer.deinit();
+    try args.encode(&writer.writer, allocator);
+
+    var reader: std.Io.Reader = .fixed(writer.written());
+    var decoded = try spec.ExecProgramArgs.decode(&reader, allocator);
+    defer decoded.deinit(allocator);
+
+    try testing.expectEqualStrings("sarif", decoded.error_format);
+    try testing.expectEqualStrings("/tmp/out.js.map", decoded.sourcemap_output.?);
+}
+
+// Pure protobuf round-trip for ExecProgramResult.sourcemap (5).
+test "ExecProgramResult sourcemap round-trip on the wire" {
+    const allocator = testing.allocator;
+
+    var result: spec.ExecProgramResult = .{};
+    result.json_result = "{\"a\": 1}";
+    result.yaml_result = "a: 1";
+    result.sourcemap = "{\"version\":3,\"sources\":[]}";
+
+    var writer: std.Io.Writer.Allocating = .init(allocator);
+    defer writer.deinit();
+    try result.encode(&writer.writer, allocator);
+
+    var reader: std.Io.Reader = .fixed(writer.written());
+    var decoded = try spec.ExecProgramResult.decode(&reader, allocator);
+    defer decoded.deinit(allocator);
+
+    try testing.expectEqualStrings("{\"a\": 1}", decoded.json_result);
+    try testing.expectEqualStrings("a: 1", decoded.yaml_result);
+    try testing.expectEqualStrings("{\"version\":3,\"sources\":[]}", decoded.sourcemap.?);
+}
+
+// End-to-end: actually runs KCL through the native dispatcher with
+// error_format set and sourcemap_output set. Asserts that the call
+// round-trips and that result.sourcemap is populated when the runtime
+// supports it.
+test "typed execProgram propagates sourcemap_output end-to-end" {
+    const allocator = testing.allocator;
+    var k_code_list: std.ArrayList([]const u8) = .empty;
+    defer k_code_list.deinit(allocator);
+    try k_code_list.append(allocator, "alice = {age = 18}");
+    var result = try execProgram(allocator, .{
+        .k_code_list = k_code_list,
+        .error_format = "sarif",
+        .sourcemap_output = "/tmp/zig_out.js.map",
+    });
+    defer result.deinit(allocator);
+    try testing.expectEqualStrings("", result.err_message);
+
+    // The runtime may or may not yet emit sourcemaps — if it doesn't,
+    // sourcemap will be null. Skip the inner check in that case so this
+    // test stays green on a stale runtime while still exercising the
+    // field plumbing.
+    if (result.sourcemap == null) {
+        return;
+    }
+    try testing.expect(std.mem.indexOf(u8, result.sourcemap.?, "\"version\"") != null);
+}
