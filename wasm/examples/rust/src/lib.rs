@@ -115,7 +115,7 @@ impl KCLModule {
             copy_string_to_wasm_memory(&mut self.store, &self.malloc, self.memory, filename)?;
         let (source_ptr, source_len) =
             copy_string_to_wasm_memory(&mut self.store, &self.malloc, self.memory, source)?;
-        let runtime_err_len = 1024;
+        let runtime_err_len = 4096;
         let (runtime_err_ptr, _) =
             malloc_bytes_from_wasm_memory(&mut self.store, &self.malloc, runtime_err_len)?;
         let result_str = match f.call(&mut self.store, (filename_ptr, source_ptr)) {
@@ -191,7 +191,7 @@ impl KCLModule {
             self.memory,
             &opts.args,
         )?;
-        let runtime_err_len = 1024;
+        let runtime_err_len = 4096;
         let (runtime_err_ptr, _) =
             malloc_bytes_from_wasm_memory(&mut self.store, &self.malloc, runtime_err_len)?;
         let result = match self.call.call(

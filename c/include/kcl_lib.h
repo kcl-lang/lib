@@ -19,6 +19,14 @@ extern "C" {
 
 #define BUFFER_SIZE (4 * 1024 * 1024)
 
+// Single source of truth for the error prefix the Rust dispatcher prepends
+// to every error reply. MUST stay in lockstep with the `"ERROR:..."`
+// literals in `crates/api/src/service/capi.rs` (both the `call!` macro and
+// the panic branch of `kcl_service_call_with_length`). See
+// `/Users/timi/codes/lib/docs/abi.md` §4 for the full convention.
+#define ERROR_PREFIX "ERROR:"
+#define ERROR_PREFIX_LEN 6
+
 struct Buffer {
     const char* buffer;
     size_t len;
@@ -74,10 +82,9 @@ bool decode_string(pb_istream_t* stream, const pb_field_t* field, void** arg)
 
 bool check_error_prefix(uint8_t result_buffer[])
 {
-    if (result_buffer[0] == 'E' && result_buffer[1] == 'R' && result_buffer[2] == 'R' && result_buffer[3] == 'O' && result_buffer[4] == 'R') {
-        return true;
-    }
-    return false;
+    // Use memcmp against the named constant so the check cannot drift away
+    // from ERROR_PREFIX. See docs/abi.md §4.
+    return memcmp(result_buffer, ERROR_PREFIX, ERROR_PREFIX_LEN) == 0;
 }
 
 struct KclVersion {

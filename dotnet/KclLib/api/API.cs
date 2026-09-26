@@ -10,6 +10,10 @@ using KclLib.Plugin;
 public class API : IService
 {
     private const string LIB_NAME = "kcl_lib_dotnet";
+    // Single source of truth for the error prefix the Rust dispatcher
+    // prepends to every error reply. Must stay in lockstep with the
+    // `format!("ERROR:{}", ...)` literals in `crates/api/src/service/capi.rs`.
+    // See `/Users/timi/codes/lib/docs/abi.md` §4 for the full convention.
     private const string ERROR_PREFIX = "ERROR:";
 
     // Native methods declarations
@@ -25,9 +29,23 @@ public class API : IService
     private static PluginContext? pluginContext;
     private static PluginAgentDelegate? pluginAgent;
     private static IntPtr pluginAgentPtr;
-    private static IntPtr pluginAgentBuffer = IntPtr.Zero;
-    private static int pluginAgentBufferSize;
-    private static readonly object pluginAgentLock = new object();
+
+    // Buffers handed to the Rust plugin agent are tracked here so they
+    // remain valid for the entire duration of the surrounding
+    // `callNativeWithPluginAgent` invocation, and so we can free them in
+    // one batch once Rust no longer holds any of the pointers.
+    //
+    // Plugin-agent callbacks return `IntPtr`s that the Rust dispatcher reads
+    // synchronously and then returns to the caller. Each callback's pointer
+    // must outlive the dispatcher call, but can be freed once the dispatcher
+    // returns. We use a `ThreadLocal<List<IntPtr>>` so that concurrent Call()
+    // invocations from different threads free only their own buffers — a
+    // shared list would race: thread A's `Call()` finally block would free
+    // thread B's still-in-use buffer.
+    //
+    // See `/Users/timi/codes/lib/docs/abi.md` §3 for the full discussion.
+    private static readonly ThreadLocal<List<IntPtr>> pluginAgentBuffers =
+        new ThreadLocal<List<IntPtr>>(() => new List<IntPtr>());
 
     public static void AttachPluginContext(PluginContext context)
     {
@@ -46,20 +64,26 @@ public class API : IService
         string kwargsJson = Marshal.PtrToStringUTF8(kwargsJsonPtr) ?? string.Empty;
         string resultJson = pluginContext?.CallMethod(method, argsJson, kwargsJson) ?? string.Empty;
         byte[] resultBytes = System.Text.Encoding.UTF8.GetBytes(resultJson + "\0");
-        lock (pluginAgentLock)
+
+        // Allocate a fresh buffer per invocation and record it for later
+        // cleanup. Rust may keep the returned pointer alive across multiple
+        // plugin calls within the same `callNativeWithPluginAgent` run,
+        // so we cannot free it here; `FreePluginAgentBuffers` runs once
+        // the dispatcher returns.
+        IntPtr buffer = Marshal.AllocHGlobal(resultBytes.Length);
+        Marshal.Copy(resultBytes, 0, buffer, resultBytes.Length);
+        pluginAgentBuffers.Value.Add(buffer);
+        return buffer;
+    }
+
+    private static void FreePluginAgentBuffers()
+    {
+        List<IntPtr> buffers = pluginAgentBuffers.Value;
+        foreach (var ptr in buffers)
         {
-            if (resultBytes.Length > pluginAgentBufferSize)
-            {
-                if (pluginAgentBuffer != IntPtr.Zero)
-                {
-                    Marshal.FreeHGlobal(pluginAgentBuffer);
-                }
-                pluginAgentBuffer = Marshal.AllocHGlobal(resultBytes.Length);
-                pluginAgentBufferSize = resultBytes.Length;
-            }
-            Marshal.Copy(resultBytes, 0, pluginAgentBuffer, resultBytes.Length);
-            return pluginAgentBuffer;
+            Marshal.FreeHGlobal(ptr);
         }
+        buffers.Clear();
     }
 
     public API()
@@ -181,16 +205,23 @@ public class API : IService
         var nameBytes = System.Text.Encoding.UTF8.GetBytes(name);
         IntPtr resultBuf = Marshal.AllocHGlobal(2048 * 2048);
         int resultLength;
-        if (pluginContext != null)
+        try
         {
-            lock (pluginAgentLock)
+            if (pluginContext != null)
             {
                 resultLength = callNativeWithPluginAgent(nameBytes, nameBytes.Length, args, args.Length, resultBuf, pluginAgentPtr.ToInt64());
             }
+            else
+            {
+                resultLength = callNative(nameBytes, nameBytes.Length, args, args.Length, resultBuf);
+            }
         }
-        else
+        finally
         {
-            resultLength = callNative(nameBytes, nameBytes.Length, args, args.Length, resultBuf);
+            // The Rust dispatcher is no longer running and no longer holds
+            // any of the plugin-agent buffers; free them all together. This
+            // must run even if the dispatcher threw, hence the try/finally.
+            FreePluginAgentBuffers();
         }
         var result = new byte[resultLength];
         Marshal.Copy(resultBuf, result, 0, resultLength);

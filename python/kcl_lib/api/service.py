@@ -44,6 +44,13 @@ from .spec_pb2 import (
 )
 from google.protobuf import message as _message
 
+# Error prefix prepended to every error reply by the Rust dispatcher. The
+# Rust source of truth lives in `crates/api/src/service/capi.rs` (both the
+# `call!` macro and the panic branch of `kcl_service_call_with_length`).
+# See `/Users/timi/codes/lib/docs/abi.md` §4 for the full convention.
+_ERROR_PREFIX = b"ERROR:"
+_ERROR_PREFIX_LEN = len(_ERROR_PREFIX)
+
 
 class API:
     """KCL APIs
@@ -678,8 +685,12 @@ class API:
                 name.encode("utf-8"), args_serialized, self.plugin_agent
             )
         )
-        if result.startswith(b"ERROR:"):
-            raise Exception(result.decode(encoding="utf-8").removeprefix("ERROR:"))
+        # _ERROR_PREFIX must stay in sync with the Rust source of truth in
+        # crates/api/src/service/capi.rs (see docs/abi.md §4).
+        if result.startswith(_ERROR_PREFIX):
+            raise Exception(
+                result.decode(encoding="utf-8")[_ERROR_PREFIX_LEN:]
+            )
         msg = self.create_method_resp_message(name)
         msg.ParseFromString(result)
         return msg

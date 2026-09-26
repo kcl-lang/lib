@@ -8,6 +8,13 @@ const CALL_FUNCTION_NAME = "kcl_call";
 const CALL_NATIVE_FUNCTION_NAME = "call_native";
 const RUNTIME_ERR_FUNCTION_NAME = "kcl_runtime_err";
 const DEFAULT_CALL_NATIVE_RESULT_BUFFER_SIZE = 16 * 1024 * 1024;
+// Size of the buffer the JS wrapper allocates when the WASM module traps so
+// it can ask the wasm guest to write the panic message into it via the
+// `kcl_runtime_err` export. The previous value of 1024 silently truncated
+// any KCL runtime error whose rendered message exceeded 1 KiB; raised to
+// 4 KiB to match every other binding. See
+// `/Users/timi/codes/lib/docs/abi.md` §5.
+const RUNTIME_ERR_BUFFER_SIZE = 4 * 1024;
 
 export interface KCLWasmLoadOptions {
   /**
@@ -172,11 +179,10 @@ export function invokeKCLRun(
     exports.kcl_free(resultPtr, resultPtrLength);
     result = resultStr;
   } catch (error) {
-    const runtimeErrPtrLength = 1024;
-    const runtimeErrPtr = exports.kcl_malloc(runtimeErrPtrLength);
-    exports[RUNTIME_ERR_FUNCTION_NAME](runtimeErrPtr, runtimeErrPtrLength);
+    const runtimeErrPtr = exports.kcl_malloc(RUNTIME_ERR_BUFFER_SIZE);
+    exports[RUNTIME_ERR_FUNCTION_NAME](runtimeErrPtr, RUNTIME_ERR_BUFFER_SIZE);
     const [runtimeErrStr] = copyCStrFromWasmMemory(instance, runtimeErrPtr);
-    exports.kcl_free(runtimeErrPtr, runtimeErrPtrLength);
+    exports.kcl_free(runtimeErrPtr, RUNTIME_ERR_BUFFER_SIZE);
     result = "ERROR:" + runtimeErrStr;
   } finally {
     exports.kcl_free(filenamePtr, filenamePtrLength);
@@ -242,11 +248,10 @@ export function invokeKCLRunWithLogMessage(
     exports.kcl_free(resultPtr, resultPtrLength);
     result = resultStr;
   } catch (error) {
-    const runtimeErrPtrLength = 1024;
-    const runtimeErrPtr = exports.kcl_malloc(runtimeErrPtrLength);
-    exports[RUNTIME_ERR_FUNCTION_NAME](runtimeErrPtr, runtimeErrPtrLength);
+    const runtimeErrPtr = exports.kcl_malloc(RUNTIME_ERR_BUFFER_SIZE);
+    exports[RUNTIME_ERR_FUNCTION_NAME](runtimeErrPtr, RUNTIME_ERR_BUFFER_SIZE);
     const [runtimeErrStr] = copyCStrFromWasmMemory(instance, runtimeErrPtr);
-    exports.kcl_free(runtimeErrPtr, runtimeErrPtrLength);
+    exports.kcl_free(runtimeErrPtr, RUNTIME_ERR_BUFFER_SIZE);
     result = "ERROR:" + runtimeErrStr;
   } finally {
     exports.kcl_free(filenamePtr, filenamePtrLength);
@@ -325,11 +330,10 @@ export function invokeKCLCall(
       result = resultStr;
     }
   } catch (error) {
-    const runtimeErrPtrLength = 1024;
-    const runtimeErrPtr = exports.kcl_malloc(runtimeErrPtrLength);
-    exports[RUNTIME_ERR_FUNCTION_NAME](runtimeErrPtr, runtimeErrPtrLength);
+    const runtimeErrPtr = exports.kcl_malloc(RUNTIME_ERR_BUFFER_SIZE);
+    exports[RUNTIME_ERR_FUNCTION_NAME](runtimeErrPtr, RUNTIME_ERR_BUFFER_SIZE);
     const [runtimeErrStr] = copyCStrFromWasmMemory(instance, runtimeErrPtr);
-    exports.kcl_free(runtimeErrPtr, runtimeErrPtrLength);
+    exports.kcl_free(runtimeErrPtr, RUNTIME_ERR_BUFFER_SIZE);
     result = "ERROR:" + runtimeErrStr;
   } finally {
     exports.kcl_free(namePtr, namePtrLength);
