@@ -266,7 +266,7 @@ class ScopeIndex(_message.Message):
     def __init__(self, i: _Optional[int] = ..., g: _Optional[int] = ..., kind: _Optional[str] = ...) -> None: ...
 
 class ExecProgramArgs(_message.Message):
-    __slots__ = ("work_dir", "k_filename_list", "k_code_list", "args", "overrides", "disable_yaml_result", "print_override_ast", "strict_range_check", "disable_none", "verbose", "debug", "sort_keys", "external_pkgs", "include_schema_type_path", "compile_only", "show_hidden", "path_selector", "fast_eval", "error_format")
+    __slots__ = ("work_dir", "k_filename_list", "k_code_list", "args", "overrides", "disable_yaml_result", "print_override_ast", "strict_range_check", "disable_none", "verbose", "debug", "sort_keys", "external_pkgs", "include_schema_type_path", "compile_only", "show_hidden", "path_selector", "fast_eval", "error_format", "format", "sourcemap_output")
     WORK_DIR_FIELD_NUMBER: _ClassVar[int]
     K_FILENAME_LIST_FIELD_NUMBER: _ClassVar[int]
     K_CODE_LIST_FIELD_NUMBER: _ClassVar[int]
@@ -286,6 +286,8 @@ class ExecProgramArgs(_message.Message):
     PATH_SELECTOR_FIELD_NUMBER: _ClassVar[int]
     FAST_EVAL_FIELD_NUMBER: _ClassVar[int]
     ERROR_FORMAT_FIELD_NUMBER: _ClassVar[int]
+    FORMAT_FIELD_NUMBER: _ClassVar[int]
+    SOURCEMAP_OUTPUT_FIELD_NUMBER: _ClassVar[int]
     work_dir: str
     k_filename_list: _containers.RepeatedScalarFieldContainer[str]
     k_code_list: _containers.RepeatedScalarFieldContainer[str]
@@ -305,19 +307,23 @@ class ExecProgramArgs(_message.Message):
     path_selector: _containers.RepeatedScalarFieldContainer[str]
     fast_eval: bool
     error_format: str
-    def __init__(self, work_dir: _Optional[str] = ..., k_filename_list: _Optional[_Iterable[str]] = ..., k_code_list: _Optional[_Iterable[str]] = ..., args: _Optional[_Iterable[_Union[Argument, _Mapping]]] = ..., overrides: _Optional[_Iterable[str]] = ..., disable_yaml_result: _Optional[bool] = ..., print_override_ast: _Optional[bool] = ..., strict_range_check: _Optional[bool] = ..., disable_none: _Optional[bool] = ..., verbose: _Optional[int] = ..., debug: _Optional[int] = ..., sort_keys: _Optional[bool] = ..., external_pkgs: _Optional[_Iterable[_Union[ExternalPkg, _Mapping]]] = ..., include_schema_type_path: _Optional[bool] = ..., compile_only: _Optional[bool] = ..., show_hidden: _Optional[bool] = ..., path_selector: _Optional[_Iterable[str]] = ..., fast_eval: _Optional[bool] = ..., error_format: _Optional[str] = ...) -> None: ...
+    format: str
+    sourcemap_output: str
+    def __init__(self, work_dir: _Optional[str] = ..., k_filename_list: _Optional[_Iterable[str]] = ..., k_code_list: _Optional[_Iterable[str]] = ..., args: _Optional[_Iterable[_Union[Argument, _Mapping]]] = ..., overrides: _Optional[_Iterable[str]] = ..., disable_yaml_result: _Optional[bool] = ..., print_override_ast: _Optional[bool] = ..., strict_range_check: _Optional[bool] = ..., disable_none: _Optional[bool] = ..., verbose: _Optional[int] = ..., debug: _Optional[int] = ..., sort_keys: _Optional[bool] = ..., external_pkgs: _Optional[_Iterable[_Union[ExternalPkg, _Mapping]]] = ..., include_schema_type_path: _Optional[bool] = ..., compile_only: _Optional[bool] = ..., show_hidden: _Optional[bool] = ..., path_selector: _Optional[_Iterable[str]] = ..., fast_eval: _Optional[bool] = ..., error_format: _Optional[str] = ..., format: _Optional[str] = ..., sourcemap_output: _Optional[str] = ...) -> None: ...
 
 class ExecProgramResult(_message.Message):
-    __slots__ = ("json_result", "yaml_result", "log_message", "err_message")
+    __slots__ = ("json_result", "yaml_result", "log_message", "err_message", "sourcemap")
     JSON_RESULT_FIELD_NUMBER: _ClassVar[int]
     YAML_RESULT_FIELD_NUMBER: _ClassVar[int]
     LOG_MESSAGE_FIELD_NUMBER: _ClassVar[int]
     ERR_MESSAGE_FIELD_NUMBER: _ClassVar[int]
+    SOURCEMAP_FIELD_NUMBER: _ClassVar[int]
     json_result: str
     yaml_result: str
     log_message: str
     err_message: str
-    def __init__(self, json_result: _Optional[str] = ..., yaml_result: _Optional[str] = ..., log_message: _Optional[str] = ..., err_message: _Optional[str] = ...) -> None: ...
+    sourcemap: str
+    def __init__(self, json_result: _Optional[str] = ..., yaml_result: _Optional[str] = ..., log_message: _Optional[str] = ..., err_message: _Optional[str] = ..., sourcemap: _Optional[str] = ...) -> None: ...
 
 class FormatCodeArgs(_message.Message):
     __slots__ = ("source",)

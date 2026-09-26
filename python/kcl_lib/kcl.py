@@ -164,20 +164,143 @@ def _apply(opts: ExecProgramOptions, options: Sequence[Option]) -> None:
         opt(opts)
 
 
-def _to_args(opts: ExecProgramOptions) -> ExecProgramArgs:
-    """Materialise an :class:`ExecProgramOptions` into an ``ExecProgramArgs`` proto."""
+def _apply_settings(args: ExecProgramArgs, settings_file: str) -> None:
+    """Populate ``args`` from a ``kcl.yaml`` settings file.
+
+    Mirrors kcl-go's :func:`settings.SettingsFile.To_ExecProgramArgs`. Only
+    fields that the caller has not already set are populated, so user
+    ``with_*`` options naturally take precedence over file defaults.
+    """
+    try:
+        text = pathlib.Path(settings_file).read_text(encoding="utf-8")
+    except OSError:
+        return
+    parsed = _load_yaml(text)
+    if not isinstance(parsed, dict):
+        return
+    config = parsed.get("kcl_cli_configs") or {}
+    if not isinstance(config, dict):
+        config = {}
+
+    work_dir = args.work_dir or "."
+
+    # ``file`` / ``files`` → k_filename_list (with ${PWD} substitution).
+    files: List[str] = []
+    for key in ("file", "files"):
+        vals = config.get(key) or []
+        if isinstance(vals, list):
+            files.extend(str(v) for v in vals if v)
+    for s in files:
+        s = s.replace("${PWD}", work_dir)
+        if s.startswith("."):
+            args.k_filename_list.append(str(pathlib.Path(work_dir) / s))
+        elif not s.startswith("${") and not pathlib.PurePath(s).is_absolute():
+            args.k_filename_list.append(str(pathlib.Path(work_dir) / s))
+        else:
+            args.k_filename_list.append(s)
+
+    # ``output`` → ``format`` (yaml / json).
+    output = config.get("output")
+    if output:
+        args.format = str(output)
+
+    # ``overrides`` and ``path_selector``.
+    overrides = config.get("overrides")
+    if isinstance(overrides, list):
+        for o in overrides:
+            if o:
+                args.overrides.append(str(o))
+    selector = config.get("path_selector")
+    if isinstance(selector, list):
+        for p in selector:
+            if p:
+                args.path_selector.append(str(p))
+
+    # Booleans.
+    if config.get("strict_range_check"):
+        args.strict_range_check = True
+    if config.get("disable_none"):
+        args.disable_none = True
+    if config.get("sort_keys"):
+        args.sort_keys = True
+    if config.get("show_hidden"):
+        args.show_hidden = True
+    if config.get("include_schema_type_path"):
+        args.include_schema_type_path = True
+
+    # ``verbose`` (int) and ``debug`` (bool → 0/1).
+    verbose = config.get("verbose")
+    if verbose is not None:
+        try:
+            args.verbose = int(verbose)
+        except (TypeError, ValueError):
+            pass
+    if config.get("debug"):
+        args.debug = 1
+
+    # ``package_maps`` → ``external_pkgs``.
+    pkg_maps = config.get("package_maps") or {}
+    if isinstance(pkg_maps, dict):
+        for name, path in pkg_maps.items():
+            pkg = args.external_pkgs.add()
+            pkg.pkg_name = str(name)
+            pkg.pkg_path = str(path)
+
+    # ``kcl_options`` is a list of ``{key, value}`` → ``args`` (Argument list).
+    options = parsed.get("kcl_options")
+    if isinstance(options, list):
+        for opt in options:
+            if not isinstance(opt, dict):
+                continue
+            key = opt.get("key")
+            if key is None:
+                continue
+            value = opt.get("value")
+            arg = args.args.add()
+            arg.name = str(key)
+            if value is None:
+                arg.value = ""
+            elif isinstance(value, (dict, list)):
+                arg.value = _json.dumps(value)
+            else:
+                arg.value = str(value)
+
+
+def _to_args(opts: ExecProgramOptions) -> Tuple[ExecProgramArgs, str]:
+    """Materialise :class:`ExecProgramOptions` into an ``ExecProgramArgs`` proto.
+
+    Returns the ``(args, output_format)`` tuple so the caller can pick the
+    right document representation in :func:`_wrap_response` without having
+    to smuggle state through the proto.
+
+    When ``opts.settings_file`` is set, the file is parsed and used as the
+    base set of fields. Anything the caller explicitly populated via the
+    ``with_*`` options overrides the file defaults — matching kcl-go's
+    layered ``Option``/``SettingsFile`` semantics.
+    """
     args = ExecProgramArgs()
-    if opts.work_dir is not None:
+
+    # 1. Pull defaults from the settings file (if any).
+    if opts.settings_file:
+        _apply_settings(args, opts.settings_file)
+
+    # 2. Overlay fields the caller explicitly provided.
+    if opts.work_dir:
         args.work_dir = opts.work_dir
     if opts.k_filename_list:
+        del args.k_filename_list[:]
         args.k_filename_list.extend(opts.k_filename_list)
     if opts.k_code_list:
+        del args.k_code_list[:]
         args.k_code_list.extend(opts.k_code_list)
     if opts.overrides:
+        del args.overrides[:]
         args.overrides.extend(opts.overrides)
     if opts.selectors:
+        del args.path_selector[:]
         args.path_selector.extend(opts.selectors)
     if opts.external_pkgs:
+        del args.external_pkgs[:]
         args.external_pkgs.extend(opts.external_pkgs)
     if opts.disable_none is not None:
         args.disable_none = opts.disable_none
@@ -187,17 +310,14 @@ def _to_args(opts: ExecProgramOptions) -> ExecProgramArgs:
         args.show_hidden = opts.show_hidden
     if opts.include_schema_type_path is not None:
         args.include_schema_type_path = opts.include_schema_type_path
-    if opts.output_format == "json":
-        # The runtime emits ``json_result`` only when YAML emission is
-        # disabled. Toggle the proto flag so callers actually get JSON.
-        args.disable_yaml_result = True
-    # Stash the requested format on the proto so :func:`_wrap_response`
-    # can find it after the round-trip.
-    try:
-        args._output_format = opts.output_format or "yaml"  # type: ignore[attr-defined]
-    except Exception:
-        pass
-    return args
+
+    output_format = opts.output_format or "yaml"
+    if opts.output_format:
+        # Forward the user's requested format directly via the proto; the
+        # runtime uses ``format`` to decide whether to populate ``yaml_result``,
+        # ``json_result``, or both. No more ``disable_yaml_result`` proxy.
+        args.format = opts.output_format
+    return args, output_format
 
 
 # ---------------------------------------------------------------------------
@@ -679,7 +799,9 @@ def _coerce(value: Any, target: Any) -> Any:
 # ---------------------------------------------------------------------------
 
 
-def _exec(args: ExecProgramArgs, plugin_agent: int) -> Tuple[KCLResultList, Optional[Exception]]:
+def _exec(
+    args: ExecProgramArgs, plugin_agent: int, output_format: str
+) -> Tuple[KCLResultList, Optional[Exception]]:
     """Call :meth:`API.exec_program` and package the response.
 
     Returns ``(KCLResultList, None)`` on success or
@@ -691,7 +813,6 @@ def _exec(args: ExecProgramArgs, plugin_agent: int) -> Tuple[KCLResultList, Opti
         resp = api.exec_program(args)
     except Exception as err:  # propagate as the second tuple item
         return KCLResultList([], raw=None), err
-    output_format = getattr(args, "_output_format", "yaml")
     return _wrap_response(resp, output_format=output_format), None
 
 
@@ -725,18 +846,18 @@ def run(path: str, *opts: Option) -> Tuple[KCLResultList, Optional[Exception]]:
     """
     options = ExecProgramOptions(k_filename_list=[path])
     _apply(options, opts)
-    args = _to_args(options)
+    args, output_format = _to_args(options)
     agent = options.plugin_agent if options.plugin_agent is not None else _plugin.plugin_agent_addr
-    return _exec(args, agent)
+    return _exec(args, agent, output_format)
 
 
 def run_files(paths: Sequence[str], *opts: Option) -> Tuple[KCLResultList, Optional[Exception]]:
     """Multi-file variant of :func:`run`. Mirrors ``kcl.RunFiles``."""
     options = ExecProgramOptions(k_filename_list=list(paths))
     _apply(options, opts)
-    args = _to_args(options)
+    args, output_format = _to_args(options)
     agent = options.plugin_agent if options.plugin_agent is not None else _plugin.plugin_agent_addr
-    return _exec(args, agent)
+    return _exec(args, agent, output_format)
 
 
 def must_run(path: str, *opts: Option) -> KCLResultList:
