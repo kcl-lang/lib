@@ -26,17 +26,17 @@ provides an ergonomic wrapper around the raw RPC bindings — the same facade
 surface as the Python/Java/Kotlin/.NET bindings of this repo:
 
 ```javascript
-const { Kcl, KclError } = require('@kcl-lib/native/facade')
+const { Kcl, KclError } = require("@kcl-lib/native/facade");
 
 // Inline code
-const results = Kcl.run('a = {replicas = 2}', { selectors: ['a'] })
-console.log(results.first().get('replicas')) // 2
+const results = Kcl.run("a = {replicas = 2}", { selectors: ["a"] });
+console.log(results.first().get("replicas")); // 2
 
 // Files, with kcl.yaml settings as the base and explicit options winning
-const fromFiles = Kcl.runFiles(['main.k'], {
-  settings: 'kcl.yaml',
-  overrides: ['replicas = 3'],
-})
+const fromFiles = Kcl.runFiles(["main.k"], {
+  settings: "kcl.yaml",
+  overrides: ["replicas = 3"],
+});
 ```
 
 `Kcl.run` / `Kcl.runFiles` are synchronous and throw `KclError` on failure
