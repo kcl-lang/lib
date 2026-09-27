@@ -5,12 +5,13 @@ import { stringField } from "../src/protobuf";
 
 // Tests for the source-map fields introduced alongside kcl-lang/kcl#1546.
 //
-// The WASM binding exposes the `ExecProgramArgs` interface but no typed
-// `execProgram()` helper — KCL execution in WASM goes through
-// `invokeKCLRun` (single file, no source-map options). The pure
-// protobuf test below verifies the regenerated encoding wires up the
-// new `errorFormat` (19) and `sourcemapOutput` (22) fields with the
-// correct wire tags; the smoke test exercises the full WASM runtime
+// The WASM binding gained a typed `execProgram()` helper (used by the
+// high-level facade in `src/facade.ts`) alongside the regenerated
+// `ExecProgramArgs` encoding; the legacy string-based `invokeKCLRun`
+// entry point remains available for single-file runs with no options.
+// The pure protobuf test below verifies the regenerated encoding wires
+// up the new `errorFormat` (19) and `sourcemapOutput` (22) fields with
+// the correct wire tags; the smoke test exercises the full WASM runtime
 // to make sure end-to-end execution still works alongside the new
 // field plumbing.
 

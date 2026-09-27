@@ -1,5 +1,6 @@
 import { init, WASI, MemFS } from "@wasmer/wasi";
 export * from "./api";
+export * from "./facade";
 const RUN_FUNCTION_NAME = "kcl_run";
 const RUN_WITH_LOG_MESSAGE_FUNCTION_NAME = "kcl_run_with_log_message";
 const FMT_FUNCTION_NAME = "kcl_fmt";
@@ -60,7 +61,7 @@ export interface KCLWasmLoadOptions {
   readonly log?: (...args: any[]) => void;
 }
 
-export interface RunOptions {
+export interface InvokeKCLRunOptions {
   /**
    * KCL code source
    */
@@ -157,7 +158,7 @@ export async function load(opts?: KCLWasmLoadOptions) {
  */
 export function invokeKCLRun(
   instance: WebAssembly.Instance,
-  opts: RunOptions
+  opts: InvokeKCLRunOptions
 ): string {
   const exports = instance.exports as Record<string, any>;
   const [filenamePtr, filenamePtrLength] = copyStringToWasmMemory(
