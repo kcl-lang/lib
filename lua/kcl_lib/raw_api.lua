@@ -36,6 +36,12 @@ local function add_method(name, arg_name, return_name)
       self.client:call(name, args),
       "failed to perform native call for method " .. name
     )
+    -- The native FFI service reports failures as plain-text responses
+    -- prefixed with "ERROR:" rather than a protobuf message; surface them
+    -- as a Lua error here (mirrors the Go native client's protocol check).
+    if res:sub(1, 6) == "ERROR:" then
+      error(res:sub(7), 0)
+    end
     local return_type = ".com.kcl.api." .. return_name
     return assert(
       self.pb.decode(return_type, res),
