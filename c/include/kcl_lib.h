@@ -33,9 +33,16 @@ struct Buffer {
     size_t len;
 };
 
+// Repeated string carrier for the encode callback. `saved_index` is the
+// start position the callback rewinds `index` to before every emit so the
+// handler can be driven multiple times safely (nanopb's
+// `kcl_encode_tagged_submsg` workaround wraps the same field in a sizing
+// pass and a write pass, and some encoders invoke the callback once more
+// for diagnostics during replay).
 struct RepeatedString {
     struct Buffer** repeated;
     size_t index;
+    size_t saved_index;
     size_t max_size;
 };
 
@@ -50,6 +57,10 @@ bool encode_string(pb_ostream_t* stream, const pb_field_t* field, void* const* a
 bool encode_str_list(pb_ostream_t* stream, const pb_field_t* field, void* const* arg)
 {
     struct RepeatedString* req = *arg;
+    // Rewind to the saved start position so subsequent invocations
+    // re-emit the same payload (e.g. nanopb's two-pass submessage
+    // encoding inside `kcl_encode_tagged_submsg`).
+    req->index = req->saved_index;
     while (req->index < req->max_size) {
         struct Buffer* sreq = req->repeated[req->index];
         ++req->index;
@@ -135,30 +146,39 @@ static inline bool kcl_decode_string_list(pb_istream_t* stream, const pb_field_t
     return true;
 }
 
-// Encode a nested submessage field in a single pass: nanopb's own
-// submessage encoder runs a sizing pass followed by a write pass, which
-// breaks stateful encode callbacks (encode_str_list advances its index
-// on the first pass). Encoding into a scratch buffer first keeps each
-// callback invocation single-pass.
+// Encode a nested submessage field by hand. nanopb's
+// `pb_encode_submessage` would do this for us, but only when the field
+// is stored statically. Our callback-driven submessage fields need
+// the same two-pass treatment (sizing, then write into a substream)
+// so the length prefix and the payload stay in sync. The stateful
+// `encode_str_list` callback rewinds `index -> saved_index` on every
+// invocation, so it can be driven twice safely.
 static inline bool kcl_encode_tagged_submsg(pb_ostream_t* stream, uint32_t field_tag, const pb_msgdesc_t* fields, const void* msg)
 {
-    uint8_t* inner = (uint8_t*)malloc(BUFFER_SIZE);
-    bool status = false;
-    if (inner == NULL)
+    pb_ostream_t sizing = PB_OSTREAM_SIZING;
+    if (!pb_encode(&sizing, fields, msg))
         return false;
-    pb_ostream_t inner_stream = pb_ostream_from_buffer(inner, BUFFER_SIZE);
-    if (!pb_encode(&inner_stream, fields, msg))
-        goto done;
+    size_t size = sizing.bytes_written;
+
     if (!pb_encode_tag(stream, PB_WT_STRING, field_tag))
-        goto done;
-    if (!pb_encode_varint(stream, inner_stream.bytes_written))
-        goto done;
-    if (!pb_write(stream, inner, inner_stream.bytes_written))
-        goto done;
-    status = true;
-done:
-    free(inner);
-    return status;
+        return false;
+    if (!pb_encode_varint(stream, size))
+        return false;
+
+    if (stream->callback == NULL)
+        return pb_write(stream, NULL, size);
+    if (stream->bytes_written + size > stream->max_size)
+        return false;
+
+    pb_ostream_t substream = *stream;
+    substream.max_size = size;
+    substream.bytes_written = 0;
+    if (!pb_encode(&substream, fields, msg))
+        return false;
+
+    stream->bytes_written += substream.bytes_written;
+    stream->state = substream.state;
+    return true;
 }
 
 // Encode a singular string field manually (used alongside
@@ -291,7 +311,7 @@ static inline bool kcl_exec_program(const char* const* filenames, size_t filenam
         files[i].len = strlen(filenames[i]);
         file_ptrs[i] = &files[i];
     }
-    struct RepeatedString strs = { .repeated = file_ptrs, .index = 0, .max_size = filename_count };
+    struct RepeatedString strs = { .repeated = file_ptrs, .index = 0, .saved_index = 0, .max_size = filename_count };
     ExecProgramArgs args = ExecProgramArgs_init_zero;
     args.k_filename_list.funcs.encode = encode_str_list;
     args.k_filename_list.arg = &strs;
@@ -434,7 +454,7 @@ static inline bool kcl_lint_path(const char* const* paths, size_t path_count, ch
         lint_paths[i].len = strlen(paths[i]);
         lint_path_ptrs[i] = &lint_paths[i];
     }
-    struct RepeatedString strs = { .repeated = lint_path_ptrs, .index = 0, .max_size = path_count };
+    struct RepeatedString strs = { .repeated = lint_path_ptrs, .index = 0, .saved_index = 0, .max_size = path_count };
     LintPathArgs lint_args = LintPathArgs_init_zero;
     lint_args.paths.funcs.encode = encode_str_list;
     lint_args.paths.arg = &strs;
@@ -530,7 +550,7 @@ static inline bool kcl_parse_program(const char* const* filenames, size_t filena
         files[i].len = strlen(filenames[i]);
         file_ptrs[i] = &files[i];
     }
-    struct RepeatedString strs = { .repeated = file_ptrs, .index = 0, .max_size = filename_count };
+    struct RepeatedString strs = { .repeated = file_ptrs, .index = 0, .saved_index = 0, .max_size = filename_count };
     ParseProgramArgs args = ParseProgramArgs_init_zero;
     args.paths.funcs.encode = encode_str_list;
     args.paths.arg = &strs;
@@ -633,7 +653,7 @@ static inline bool kcl_load_package(const char* const* paths, size_t path_count,
             files[i].len = strlen(paths[i]);
             file_ptrs[i] = &files[i];
         }
-        struct RepeatedString strs = { .repeated = file_ptrs, .index = 0, .max_size = path_count };
+        struct RepeatedString strs = { .repeated = file_ptrs, .index = 0, .saved_index = 0, .max_size = path_count };
         args.has_parse_args = true;
         args.parse_args.paths.funcs.encode = encode_str_list;
         args.parse_args.paths.arg = &strs;
@@ -760,7 +780,7 @@ static inline bool kcl_list_options(const char* const* paths, size_t path_count,
             files[i].len = strlen(paths[i]);
             file_ptrs[i] = &files[i];
         }
-        struct RepeatedString strs = { .repeated = file_ptrs, .index = 0, .max_size = path_count };
+        struct RepeatedString strs = { .repeated = file_ptrs, .index = 0, .saved_index = 0, .max_size = path_count };
         args.paths.funcs.encode = encode_str_list;
         args.paths.arg = &strs;
     }
@@ -824,7 +844,7 @@ static inline bool kcl_list_variables(const char* const* files, size_t file_coun
             file_bufs[i].len = strlen(files[i]);
             file_ptrs[i] = &file_bufs[i];
         }
-        struct RepeatedString file_strs = { .repeated = file_ptrs, .index = 0, .max_size = file_count };
+        struct RepeatedString file_strs = { .repeated = file_ptrs, .index = 0, .saved_index = 0, .max_size = file_count };
         args.files.funcs.encode = encode_str_list;
         args.files.arg = &file_strs;
     }
@@ -838,7 +858,7 @@ static inline bool kcl_list_variables(const char* const* files, size_t file_coun
             spec_bufs[i].len = strlen(specs[i]);
             spec_ptrs[i] = &spec_bufs[i];
         }
-        struct RepeatedString spec_strs = { .repeated = spec_ptrs, .index = 0, .max_size = spec_count };
+        struct RepeatedString spec_strs = { .repeated = spec_ptrs, .index = 0, .saved_index = 0, .max_size = spec_count };
         args.specs.funcs.encode = encode_str_list;
         args.specs.arg = &spec_strs;
     }
@@ -922,7 +942,7 @@ static inline bool kcl_override_file(const char* file,
             spec_bufs[i].len = strlen(specs[i]);
             spec_ptrs[i] = &spec_bufs[i];
         }
-        struct RepeatedString spec_strs = { .repeated = spec_ptrs, .index = 0, .max_size = spec_count };
+        struct RepeatedString spec_strs = { .repeated = spec_ptrs, .index = 0, .saved_index = 0, .max_size = spec_count };
         args.specs.funcs.encode = encode_str_list;
         args.specs.arg = &spec_strs;
     }
@@ -936,7 +956,7 @@ static inline bool kcl_override_file(const char* file,
             import_bufs[i].len = strlen(import_paths[i]);
             import_ptrs[i] = &import_bufs[i];
         }
-        struct RepeatedString import_strs = { .repeated = import_ptrs, .index = 0, .max_size = import_path_count };
+        struct RepeatedString import_strs = { .repeated = import_ptrs, .index = 0, .saved_index = 0, .max_size = import_path_count };
         args.import_paths.funcs.encode = encode_str_list;
         args.import_paths.arg = &import_strs;
     }
@@ -1012,7 +1032,7 @@ static inline bool kcl_get_schema_type_mapping(const char* work_dir,
             files[i].len = strlen(filenames[i]);
             file_ptrs[i] = &files[i];
         }
-        struct RepeatedString strs = { .repeated = file_ptrs, .index = 0, .max_size = filename_count };
+        struct RepeatedString strs = { .repeated = file_ptrs, .index = 0, .saved_index = 0, .max_size = filename_count };
         args.exec_args.k_filename_list.funcs.encode = encode_str_list;
         args.exec_args.k_filename_list.arg = &strs;
     }
@@ -1095,7 +1115,7 @@ static inline bool kcl_get_schema_type_mapping_under_path(const char* work_dir,
             files[i].len = strlen(filenames[i]);
             file_ptrs[i] = &files[i];
         }
-        struct RepeatedString strs = { .repeated = file_ptrs, .index = 0, .max_size = filename_count };
+        struct RepeatedString strs = { .repeated = file_ptrs, .index = 0, .saved_index = 0, .max_size = filename_count };
         args.exec_args.k_filename_list.funcs.encode = encode_str_list;
         args.exec_args.k_filename_list.arg = &strs;
     }
@@ -1222,7 +1242,7 @@ static inline bool kcl_load_settings_files(const char* work_dir,
             file_bufs[i].len = strlen(files[i]);
             file_ptrs[i] = &file_bufs[i];
         }
-        struct RepeatedString strs = { .repeated = file_ptrs, .index = 0, .max_size = file_count };
+        struct RepeatedString strs = { .repeated = file_ptrs, .index = 0, .saved_index = 0, .max_size = file_count };
         args.files.funcs.encode = encode_str_list;
         args.files.arg = &strs;
     }
@@ -1312,7 +1332,7 @@ static inline bool kcl_rename(const char* package_root, const char* symbol_path,
             path_bufs[i].len = strlen(file_paths[i]);
             path_ptrs[i] = &path_bufs[i];
         }
-        struct RepeatedString strs = { .repeated = path_ptrs, .index = 0, .max_size = file_path_count };
+        struct RepeatedString strs = { .repeated = path_ptrs, .index = 0, .saved_index = 0, .max_size = file_path_count };
         args.file_paths.funcs.encode = encode_str_list;
         args.file_paths.arg = &strs;
     }
@@ -1443,7 +1463,7 @@ static inline bool kcl_test(const char* work_dir,
             files[i].len = strlen(filenames[i]);
             file_ptrs[i] = &files[i];
         }
-        struct RepeatedString strs = { .repeated = file_ptrs, .index = 0, .max_size = filename_count };
+        struct RepeatedString strs = { .repeated = file_ptrs, .index = 0, .saved_index = 0, .max_size = filename_count };
         args.exec_args.k_filename_list.funcs.encode = encode_str_list;
         args.exec_args.k_filename_list.arg = &strs;
     }
@@ -1457,7 +1477,7 @@ static inline bool kcl_test(const char* work_dir,
             pkgs[i].len = strlen(pkg_list[i]);
             pkg_ptrs[i] = &pkgs[i];
         }
-        struct RepeatedString pkg_strs = { .repeated = pkg_ptrs, .index = 0, .max_size = pkg_count };
+        struct RepeatedString pkg_strs = { .repeated = pkg_ptrs, .index = 0, .saved_index = 0, .max_size = pkg_count };
         args.pkg_list.funcs.encode = encode_str_list;
         args.pkg_list.arg = &pkg_strs;
     }
