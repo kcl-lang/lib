@@ -19,6 +19,33 @@ function main() {
 main();
 ```
 
+## Facade (high-level API)
+
+For the common "run some KCL and read the result" flow, `@kcl-lib/native/facade`
+provides an ergonomic wrapper around the raw RPC bindings — the same facade
+surface as the Python/Java/Kotlin/.NET bindings of this repo:
+
+```javascript
+const { Kcl, KclError } = require("@kcl-lib/native/facade");
+
+// Inline code
+const results = Kcl.run("a = {replicas = 2}", { selectors: ["a"] });
+console.log(results.first().get("replicas")); // 2
+
+// Files, with kcl.yaml settings as the base and explicit options winning
+const fromFiles = Kcl.runFiles(["main.k"], {
+  settings: "kcl.yaml",
+  overrides: ["replicas = 3"],
+});
+```
+
+`Kcl.run` / `Kcl.runFiles` are synchronous and throw `KclError` on failure
+(`error.code` carries the runtime diagnostic code, e.g. `"E1001"`).
+`KclResult` supports dotted-path `get()`, `toMap()`, and raw `yamlString` /
+`jsonString`; `KclResultList` is array-like with `first()` / `last()`.
+Settings files are resolved by the native `loadSettingsFiles` RPC — no YAML
+parser is bundled.
+
 ## Developing
 
 - Install `node.js` and `pnpm`
