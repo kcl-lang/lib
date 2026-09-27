@@ -1,5 +1,5 @@
 local package_version = "0.13.0"
-local rockspec_revision = "2"
+local rockspec_revision = "3"
 
 rockspec_format = "3.0"
 package = "kcl_lib"
@@ -42,6 +42,7 @@ build = {
   install = {
     lua = {
       ["kcl_lib.api"] = "kcl_lib/api.lua",
+      ["kcl_lib.ast"] = "kcl_lib/ast.lua",
       ["kcl_lib.raw_api"] = "kcl_lib/raw_api.lua",
       ["kcl_lib.types"] = "kcl_lib/types.lua",
       ["kcl_lib.schema"] = "kcl_lib/schema.lua",
