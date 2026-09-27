@@ -87,8 +87,9 @@ pub fn build(b: *std.Build) void {
 
 // Generates the typed protobuf bindings in `src/proto` from
 // `../spec/spec.proto` using zig-protobuf's `protoc-gen-zig` plugin and the
-// system `protoc`. Regenerated on every build; `zig build gen-proto` runs
-// only this step.
+// system `protoc`, then patches the mutually-recursive `KclType` fields that
+// protoc-gen-zig cannot represent (see `tools/fix_pb_mutual_recursion.zig`).
+// Regenerated on every build; `zig build gen-proto` runs only these steps.
 fn addSpecProtoCodegen(b: *std.Build, protobuf_dep: *std.Build.Dependency) *std.Build.Step {
     const protoc_gen_zig = b.addExecutable(.{
         .name = "protoc-gen-zig",
@@ -115,10 +116,22 @@ fn addSpecProtoCodegen(b: *std.Build, protobuf_dep: *std.Build.Dependency) *std.
     const fmt = b.addSystemCommand(&.{ b.graph.zig_exe, "fmt", destination_directory });
     fmt.step.dependOn(&protoc.step);
 
-    const gen_proto = b.step("gen-proto", "generates zig protobuf bindings from ../spec/spec.proto");
-    gen_proto.dependOn(&fmt.step);
+    const fix_pb_mutual_recursion = b.addExecutable(.{
+        .name = "fix_pb_mutual_recursion",
+        .root_module = b.createModule(.{
+            .root_source_file = b.path("tools/fix_pb_mutual_recursion.zig"),
+            .target = b.graph.host,
+            .optimize = .Debug,
+        }),
+    });
+    const run_fix = b.addRunArtifact(fix_pb_mutual_recursion);
+    run_fix.setCwd(.{ .cwd_relative = b.build_root.path orelse "." });
+    run_fix.step.dependOn(&fmt.step);
 
-    return &fmt.step;
+    const gen_proto = b.step("gen-proto", "generates zig protobuf bindings from ../spec/spec.proto");
+    gen_proto.dependOn(&run_fix.step);
+
+    return &run_fix.step;
 }
 
 fn linkWindowsLibraries(lib: *std.Build.Step.Compile) void {
