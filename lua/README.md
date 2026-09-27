@@ -60,7 +60,10 @@ luajit hack/generate_pb.lua
 
 ### Basic Usage
 
-The KCL Lua library provides two main functions for working with KCL configurations:
+The high-level `kcl_lib.api` facade mirrors the Go SDK's `kcl` package:
+`run` accepts a KCL source string, a file path, or a list of file paths,
+plus an options table (the equivalent of kcl-go's functional options), and
+`validate` checks data against a schema.
 
 ```lua
 local api = require("kcl_lib.api")
@@ -71,17 +74,74 @@ print("Configuration result:", result:yaml())
 
 -- Execute multiple KCL files
 local result = api:run({
-    "./config/schema.k",
-    "./config/data.k"
+  "./config/schema.k",
+  "./config/data.k",
 })
 print("Combined configuration:", result:json())
 
--- Using the raw API to the native service
+-- Execute an in-memory KCL program
+local result = api:run("a = 1\nb = 2")
+print(result:yaml())
+
+-- Read values back with a dotted path
+print(result:get("a")) -- 1
+```
+
+### Run Options
+
+The second argument of `run` is an options table; settings files are
+parsed and merged via the LoadSettingsFiles RPC, and explicit options take
+precedence over settings file values.
+
+```lua
+local api = require("kcl_lib.api")
+
+local result = api:run("./config/schema.k", {
+  work_dir = "./config",
+  args = { "env=prod" },          -- -D name=value option(...) values
+  overrides = { "app.replicas=3" }, -- -O override specs
+  selectors = { "app" },          -- -S path selectors
+  settings = { "kcl.yaml" },      -- kcl.yaml settings file(s)
+  format = "json",                -- "json" or "yaml" output
+  disable_none = true,            -- omit none values
+  sort_keys = true,               -- sort result keys
+  show_hidden = true,             -- include hidden attributes
+  include_schema_type_path = true, -- emit _type attributes (short form)
+  full_schema_type_path = true,   -- keep full schema type paths
+  strict_range_check = true,
+  error_format = "json",          -- "pretty", "short", "arcanist", "sarif"
+  external_pkgs = { "pkg=./path" }, -- -E name=path external packages
+})
+
+-- A failed run raises the runtime error message (kcl-go's MustRun
+-- semantics); pass strict = false to inspect :err_message() instead.
+local ok, result = pcall(api.run, api, "./config/missing.k")
+```
+
+### Validate
+
+Validate YAML or JSON data against a schema.
+
+```lua
+local api = require("kcl_lib.api")
+
+local result = api:validate({
+  code = "schema Person:\n  name: str",
+  data = '{"name": "Alice"}',
+  format = "json", -- "yaml" (default) or "json"
+})
+assert(result.success)
+```
+
+### Raw API
+
+The raw protobuf-shaped API remains available for direct service calls.
+
+```lua
 local raw_api = require("kcl_lib.raw_api")
 
--- Perform a call to a native service function
 local result = raw_api:exec_program({
-    k_filename_list = { "./config/schema.k" },
+  k_filename_list = { "./config/schema.k" },
 })
 print("Configuration result", result.yaml_result)
 ```
