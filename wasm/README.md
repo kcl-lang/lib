@@ -56,15 +56,15 @@ console.log(pingResult);
 
 ### Typed API
 
-For all KCL service methods except `ExecProgram` and `FormatCode` (already
-covered by `invokeKCLRun` / `invokeKCLFmt`), the package ships typed
-TypeScript wrappers that handle the protobuf encoding/decoding for you:
+For all KCL service methods except `FormatCode` (already covered by
+`invokeKCLFmt`), the package ships typed TypeScript wrappers that handle the
+protobuf encoding/decoding for you:
 
 `ping`, `getVersion`, `parseProgram`, `parseFile`, `loadPackage`,
-`listOptions`, `listVariables`, `overrideFile`, `getSchemaTypeMapping`,
-`getSchemaTypeMappingUnderPath`, `formatPath`, `lintPath`, `validateCode`,
-`loadSettingsFiles`, `rename`, `renameCode`, `test` and
-`updateDependencies`.
+`listOptions`, `listVariables`, `overrideFile`, `execProgram`,
+`getSchemaTypeMapping`, `getSchemaTypeMappingUnderPath`, `formatPath`,
+`lintPath`, `validateCode`, `loadSettingsFiles`, `rename`, `renameCode`,
+`test` and `updateDependencies`.
 
 ```typescript
 import { load, ping, lintPath, getVersion } from "@kcl-lib/wasm";
@@ -84,6 +84,63 @@ These wrappers call the byte-oriented `call_native` WASM export through
 round-trip corrupts protobuf messages larger than ~127 bytes. On success
 they return the decoded `<Method>Result` object; on failure they throw an
 `Error` whose message is the KCL error text.
+
+### Facade (high-level API)
+
+For the common "run some KCL and read the result" flow, the package ships a
+kcl-go-style facade — the same surface as the Python/.NET/Node.js bindings
+of this repo — on top of the typed wrappers:
+
+```typescript
+import { load, run, runFiles, validate, Kcl, KclError } from "@kcl-lib/wasm";
+
+const inst = await load();
+
+// Inline code; options are a single plain object.
+const result = run(inst, "a = {replicas = 2}", { selectors: ["a"] });
+console.log(result.get("a.replicas")); // 2
+console.log(result.yamlResult); // raw runtime output, untouched
+
+// Files from the WASI sandbox filesystem, with kcl.yaml settings as the
+// base and explicit options winning.
+const fromFiles = runFiles(inst, ["/work/main.k"], {
+  settings: "/work/kcl.yaml",
+  overrides: ["replicas = 3"],
+});
+
+// Validate data against a schema (mirrors the Python facade's validate_code).
+validate(inst, "schema Person:\n  name: str", '{"name": "Alice"}', "json"); // -> true
+
+// Instance-scoped variant of the same entry points.
+const kcl = new Kcl(inst);
+kcl.run("a = 1");
+```
+
+`run` / `runFiles` are synchronous and throw `KclError` on any failure
+(`error.code` carries the runtime diagnostic code, e.g. `"E1001"`).
+`KclResult` exposes the raw `yamlResult` / `jsonResult` / `logMessage` /
+`errMessage` strings plus `get("a.b.c")` dotted-path access (integer
+segments index into lists, e.g. `"a.0.b"`) and `toObject()`. Settings files
+are resolved by the `LoadSettingsFiles` RPC against the sandbox filesystem —
+no YAML parser is bundled.
+
+Differences from the Node.js facade, imposed by the WASM sandbox:
+
+- Every facade entry point takes the WASM instance first: the WASM binding
+  is not a process-wide singleton, and each instance carries its own WASI
+  sandbox. `new Kcl(instance)` binds it once for all method calls.
+- Execution goes through the typed `ExecProgram` RPC (the method is
+  registered in the WASM artifact), which is what makes `format`,
+  selectors and settings merging work end to end. `invokeKCLRun` remains
+  the leanest path for a single file with no options.
+- File paths in `runFiles` / `settings` must live inside the sandbox
+  (preopened directories or the `MemFS` passed to `load()`). Prefer
+  sandbox-absolute paths: relative paths resolve against the sandbox root,
+  not against `workDir`.
+- `get` / `toObject` navigate the JSON result, so `format: "yaml"` (JSON
+  suppressed) leaves value access unavailable — read `yamlResult` instead.
+- Subpackage imports (`import pkg` of a sibling directory, or paths given
+  via `externalPkgs`) are not resolved inside the WASM sandbox.
 
 ## WASI sandbox limitations
 

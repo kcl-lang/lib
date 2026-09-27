@@ -29,7 +29,7 @@ export interface KclErrorMessage {
   pos?: Position;
 }
 
-export interface KclError {
+export interface KclRpcError {
   level: string;
   code: string;
   messages: KclErrorMessage[];
@@ -59,7 +59,7 @@ export interface ParseProgramArgs {
 export interface ParseProgramResult {
   astJson: string;
   paths: string[];
-  errors: KclError[];
+  errors: KclRpcError[];
 }
 
 export interface ParseFileArgs {
@@ -71,7 +71,7 @@ export interface ParseFileArgs {
 export interface ParseFileResult {
   astJson: string;
   deps: string[];
-  errors: KclError[];
+  errors: KclRpcError[];
 }
 
 export interface LoadPackageArgs {
@@ -84,8 +84,8 @@ export interface LoadPackageArgs {
 export interface LoadPackageResult {
   program: string;
   paths: string[];
-  parseErrors: KclError[];
-  typeErrors: KclError[];
+  parseErrors: KclRpcError[];
+  typeErrors: KclRpcError[];
   scopes: Record<string, Scope>;
   symbols: Record<string, Symbol>;
   nodeSymbolMap: Record<string, SymbolIndex>;
@@ -132,7 +132,7 @@ export interface MapEntry {
 export interface ListVariablesResult {
   variables: Record<string, Variable[]>;
   unsupportedCodes: string[];
-  parseErrors: KclError[];
+  parseErrors: KclRpcError[];
 }
 
 export interface OverrideFileArgs {
@@ -143,7 +143,7 @@ export interface OverrideFileArgs {
 
 export interface OverrideFileResult {
   result: boolean;
-  parseErrors: KclError[];
+  parseErrors: KclRpcError[];
 }
 
 export interface ExecProgramArgs {
@@ -166,7 +166,15 @@ export interface ExecProgramArgs {
   pathSelector?: string[];
   fastEval?: boolean;
   errorFormat?: string;
+  format?: string;
   sourcemapOutput?: string;
+}
+
+export interface ExecProgramResult {
+  jsonResult: string;
+  yamlResult: string;
+  logMessage: string;
+  errMessage: string;
 }
 
 export interface GetSchemaTypeMappingArgs {
@@ -428,6 +436,7 @@ function encodeExecProgramArgs(args: ExecProgramArgs): Uint8Array {
     encodeStringList(17, args.pathSelector),
     boolField(18, args.fastEval ?? false),
     stringField(19, args.errorFormat),
+    stringField(20, args.format),
     stringField(22, args.sourcemapOutput)
   );
 }
@@ -471,8 +480,8 @@ function decodeErrorMessage(r: ProtoReader): KclErrorMessage {
   return msg;
 }
 
-function decodeError(r: ProtoReader): KclError {
-  const err: KclError = { level: "", code: "", messages: [] };
+function decodeError(r: ProtoReader): KclRpcError {
+  const err: KclRpcError = { level: "", code: "", messages: [] };
   while (!r.eof) {
     const tag = r.readTag();
     switch (tag >>> 3) {
@@ -1340,6 +1349,44 @@ export function overrideFile(
         break;
       case 2:
         out.parseErrors.push(decodeError(r.readMessage()));
+        break;
+      default:
+        r.skip(tag & 7);
+    }
+  }
+  return out;
+}
+
+export function execProgram(
+  instance: WebAssembly.Instance,
+  args: ExecProgramArgs
+): ExecProgramResult {
+  const result = callService(
+    instance,
+    "ExecProgram",
+    encodeExecProgramArgs(args)
+  );
+  const r = new ProtoReader(result);
+  const out: ExecProgramResult = {
+    jsonResult: "",
+    yamlResult: "",
+    logMessage: "",
+    errMessage: "",
+  };
+  while (!r.eof) {
+    const tag = r.readTag();
+    switch (tag >>> 3) {
+      case 1:
+        out.jsonResult = r.readString();
+        break;
+      case 2:
+        out.yamlResult = r.readString();
+        break;
+      case 3:
+        out.logMessage = r.readString();
+        break;
+      case 4:
+        out.errMessage = r.readString();
         break;
       default:
         r.skip(tag & 7);
