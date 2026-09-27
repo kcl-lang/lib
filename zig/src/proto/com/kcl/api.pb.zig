@@ -4890,8 +4890,8 @@ pub const KclType = struct {
     description: []const u8 = &.{},
     examples: std.ArrayList(KclType.ExamplesEntry) = .empty,
     base_schema: ?*KclType = null,
-    function: ?FunctionType = null,
-    index_signature: ?IndexSignature = null,
+    function: ?*FunctionType = null,
+    index_signature: ?*IndexSignature = null,
 
     pub const _desc_table = .{
         .type = fd(1, .{ .scalar = .string }),
@@ -5111,7 +5111,7 @@ pub const KclType = struct {
 
 pub const FunctionType = struct {
     params: std.ArrayList(Parameter) = .empty,
-    return_ty: ?KclType = null,
+    return_ty: ?*KclType = null,
 
     pub const _desc_table = .{
         .params = fd(1, .{ .repeated = .submessage }),
@@ -5248,8 +5248,8 @@ pub const Parameter = struct {
 /// Message representing an index signature in KCL.
 pub const IndexSignature = struct {
     key_name: ?[]const u8 = null,
-    key: ?KclType = null,
-    val: ?KclType = null,
+    key: ?*KclType = null,
+    val: ?*KclType = null,
     any_other: bool = false,
 
     pub const _desc_table = .{
