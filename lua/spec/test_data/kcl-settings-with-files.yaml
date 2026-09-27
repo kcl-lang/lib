@@ -1,0 +1,4 @@
+kcl_cli_configs:
+  files:
+    - schema.k
+  disable_none: true

@@ -34,7 +34,34 @@ end
 ---Return the program execution output as a Lua object.
 ---@return table
 function RunResponse:object()
-  return json.decode(self.inner.json_result)
+  if self._object_cache == nil then
+    self._object_cache = json.decode(self.inner.json_result) or {}
+  end
+  return self._object_cache
+end
+
+---Return the error message from the program execution, or an empty string.
+---@return string
+function RunResponse:err_message()
+  return self.inner.err_message
+end
+
+---Look up a value in the decoded output using a dotted path
+---(e.g. `"app.replicas"`). Returns nil when any segment is missing.
+---@param path string
+---@return any
+function RunResponse:get(path)
+  local value = self:object()
+  for part in string.gmatch(path, "[^%.]+") do
+    if type(value) ~= "table" then
+      return nil
+    end
+    value = value[part]
+    if value == nil then
+      return nil
+    end
+  end
+  return value
 end
 
 M.RunResponse = RunResponse
