@@ -61,6 +61,63 @@ make -j8
 
 ## Examples
 
+### facade
+
+High-level facade (`kcl_facade.hpp`) mirroring kcl-go's `pkg/kcl`: `Kcl::run` /
+`Kcl::run_files` take code/files plus an `Options` bag, throw `kcl_lib::KclError`
+on failures, and return a `KclResult` with raw `yaml_result`/`json_result` access
+plus dotted-path `get("a.b.c")` navigation. Options include overrides, selectors,
+external packages, settings files, `-D` args and the `_type` rewriting hook
+(`include_schema_type_path` shortens `_type` to the schema name unless
+`full_type_path` is set). The header is self-contained (a minimal built-in JSON
+parser, no protobuf or third-party dependency).
+
+<details><summary>Example</summary>
+<p>
+
+```cpp
+#include "kcl_facade.hpp"
+#include <iostream>
+
+int main()
+{
+    // In-memory code + dotted-path access.
+    auto result = kcl_lib::Kcl::run(
+        "name = \"kcl\"\n"
+        "server = {host = \"localhost\", port = 8080}\n");
+    std::cout << result.get("server.port").as_int() << std::endl; // 8080
+
+    // Files + overrides.
+    auto files = kcl_lib::Kcl::run_files({ "../test_data/schema.k" },
+        kcl_lib::Options {
+            .overrides = { "app.replicas=5" },
+        });
+
+    // Schema type paths: `_type` is rewritten to "AppConfig" by default;
+    // pass full_type_path = true to keep "pkg.path.AppConfig".
+    auto typed = kcl_lib::Kcl::run_files({ "../test_data/schema.k" },
+        kcl_lib::Options {
+            .include_schema_type_path = true,
+        });
+
+    // Validation.
+    bool ok = kcl_lib::Kcl::validate(
+        "schema Person:\n    name: str\n    age: int\n",
+        "{\"name\": \"Alice\", \"age\": 10}",
+        "json");
+    return 0;
+}
+```
+
+Run the facade example.
+
+```shell
+./facade
+```
+
+</p>
+</details>
+
 ### exec_program
 
 Execute KCL file with arguments and return the JSON/YAML result.
