@@ -1,0 +1,11 @@
+kcl_cli_configs:
+  files:
+    - main.k
+  disable_none: true
+  overrides:
+    - app.name="from-settings"
+kcl_options:
+  - key: env
+    value: prod
+  - key: replicas
+    value: 3

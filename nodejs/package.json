@@ -23,6 +23,8 @@
   "files": [
     "index.d.ts",
     "index.js",
+    "facade.d.ts",
+    "facade.js",
     "LICENSE",
     "NOTICE"
   ],
