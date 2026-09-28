@@ -167,31 +167,31 @@ jobs:
       # Downloading each into its own sub-dir lets us copy the populated
       # package directory back into the matching checkout path.
       - name: Download windows x64 artifact
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8
         with:
           name: kcltool-win-x64
           path: _artifacts/win-x64
 
       - name: Download linux arm64 artifact
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8
         with:
           name: kcltool-linux-arm64
           path: _artifacts/linux-arm64
 
       - name: Download linux x64 artifact
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8
         with:
           name: kcltool-linux-x64
           path: _artifacts/linux-x64
 
       - name: Download darwin x64 artifact
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8
         with:
           name: kcltool-osx-x64
           path: _artifacts/osx-x64
 
       - name: Download darwin arm64 artifact
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8
         with:
           name: kcltool-osx-arm64
           path: _artifacts/osx-arm64
