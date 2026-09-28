@@ -24,11 +24,13 @@ This way you'll be able to import the above dependency to use the SDK.
 
 ```xml
 <dependency>
-    <groupId>com.kcl</groupId>
+    <groupId>io.kcl-lang</groupId>
     <artifactId>kcl-lib-kotlin</artifactId>
     <version>0.13.0</version>
 </dependency>
 ```
+
+> **Migrating from `com.kcl:kcl-lib-kotlin`?** The old coordinate was published to GitHub Packages under `com.kcl:kcl-lib-kotlin` and remains available there for existing users. New releases use the `io.kcl-lang:kcl-lib-kotlin` coordinate on both GitHub Packages and Maven Central — update your `<groupId>` (artifactId and version are unchanged).
 
 Write the code
 
