@@ -679,6 +679,9 @@ mod ffi {
     pub struct TestResult {
         /// List of test case information.
         pub info: Vec<TestCaseInfo>,
+        /// Aggregated coverage report. Populated only when
+        /// `TestArgs.coverage` is true; empty otherwise.
+        pub coverage: OptionalTestCoverageReport,
     }
     /// Message representing information about a single test case.
     pub struct TestCaseInfo {
@@ -690,6 +693,76 @@ mod ffi {
         pub duration: u64,
         /// Log message from the test case.
         pub log_message: String,
+        /// Per-case line coverage. Populated only when `TestArgs.coverage`
+        /// is true; empty otherwise. Each entry maps "filename:line" to the
+        /// number of times that line was entered while running this case.
+        pub line_hits: Vec<HashMapStringU64Value>,
+    }
+
+    #[derive(Debug, Default)]
+    struct HashMapStringU64Value {
+        key: String,
+        value: u64,
+    }
+
+    /// Message describing aggregated coverage data for a single source file.
+    #[derive(Debug, Default)]
+    pub struct FileCoverage {
+        /// Source file path, relative to the package root when possible.
+        pub filename: String,
+        /// Sorted list of lines that executed at least once across all tests
+        /// that covered this file.
+        pub covered_lines: Vec<u64>,
+        /// Sorted list of lines in this file that contain an executable
+        /// statement (i.e., lines that *could* be covered).
+        pub executable_lines: Vec<u64>,
+        /// Per-line execution count across all tests that covered this file.
+        /// Keys are line numbers (1-based); values are hit counts.
+        pub line_hits: Vec<HashMapU64U64Value>,
+    }
+
+    #[derive(Debug, Default)]
+    struct HashMapU64U64Value {
+        key: u64,
+        value: u64,
+    }
+
+    #[derive(Debug, Default)]
+    struct HashMapStringFileCoverageValue {
+        key: String,
+        value: FileCoverage,
+    }
+
+    /// Message describing aggregated coverage across the entire test run.
+    #[derive(Debug, Default)]
+    pub struct TestCoverageReport {
+        /// Per-file coverage keyed by source file path.
+        pub files: Vec<HashMapStringFileCoverageValue>,
+        /// Roll-up of all files in `TestCoverageReport.files`.
+        pub summary: OptionalCoverageSummary,
+    }
+
+    /// Roll-up coverage metrics.
+    #[derive(Debug, Default)]
+    pub struct CoverageSummary {
+        /// Number of executable lines that were hit by at least one test.
+        pub covered: u64,
+        /// Total number of executable lines discovered.
+        pub executable: u64,
+        /// Coverage percentage in the inclusive range [0.0, 100.0].
+        pub percent: f64,
+    }
+
+    #[derive(Debug, Default)]
+    struct OptionalCoverageSummary {
+        has_value: bool,
+        value: CoverageSummary,
+    }
+
+    #[derive(Debug, Default)]
+    struct OptionalTestCoverageReport {
+        has_value: bool,
+        value: TestCoverageReport,
     }
 
     /// Message representing a KCL type.
@@ -1786,6 +1859,75 @@ fn build_test_args(args: &TestArgs) -> kcl_api::TestArgs {
     }
 }
 
+impl FileCoverage {
+    #[inline]
+    fn new(r: &kcl_api::FileCoverage) -> Self {
+        Self {
+            filename: r.filename.clone(),
+            covered_lines: r.covered_lines.clone(),
+            executable_lines: r.executable_lines.clone(),
+            line_hits: r
+                .line_hits
+                .iter()
+                .map(|(k, v)| HashMapU64U64Value { key: *k, value: *v })
+                .collect(),
+        }
+    }
+}
+
+impl OptionalCoverageSummary {
+    #[inline]
+    fn new(r: &Option<kcl_api::CoverageSummary>) -> Self {
+        match r.as_ref() {
+            None => Self {
+                has_value: false,
+                value: Default::default(),
+            },
+            Some(r) => Self {
+                has_value: true,
+                value: CoverageSummary {
+                    covered: r.covered,
+                    executable: r.executable,
+                    percent: r.percent,
+                },
+            },
+        }
+    }
+}
+
+impl TestCoverageReport {
+    #[inline]
+    fn new(r: &kcl_api::TestCoverageReport) -> Self {
+        Self {
+            files: r
+                .files
+                .iter()
+                .map(|(k, v)| HashMapStringFileCoverageValue {
+                    key: k.to_string(),
+                    value: FileCoverage::new(v),
+                })
+                .collect(),
+            summary: OptionalCoverageSummary::new(&r.summary),
+        }
+    }
+}
+
+impl OptionalTestCoverageReport {
+    #[inline]
+    fn new(r: &Option<kcl_api::TestCoverageReport>) -> Self {
+        match r.as_ref() {
+            None => Self {
+                has_value: false,
+                value: Default::default(),
+            },
+            Some(r) => Self {
+                has_value: true,
+                value: TestCoverageReport::new(r),
+            },
+        }
+    }
+}
+
 impl TestResult {
     #[inline]
     fn new(r: kcl_api::TestResult) -> Self {
@@ -1798,8 +1940,17 @@ impl TestResult {
                     error: t.error.clone(),
                     duration: t.duration,
                     log_message: t.log_message.clone(),
+                    line_hits: t
+                        .line_hits
+                        .iter()
+                        .map(|(k, v)| HashMapStringU64Value {
+                            key: k.to_string(),
+                            value: *v,
+                        })
+                        .collect(),
                 })
                 .collect(),
+            coverage: OptionalTestCoverageReport::new(&r.coverage),
         }
     }
 }
