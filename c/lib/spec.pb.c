@@ -207,6 +207,24 @@ PB_BIND(TestResult, TestResult, AUTO)
 PB_BIND(TestCaseInfo, TestCaseInfo, AUTO)
 
 
+PB_BIND(TestCaseInfo_LineHitsEntry, TestCaseInfo_LineHitsEntry, AUTO)
+
+
+PB_BIND(FileCoverage, FileCoverage, AUTO)
+
+
+PB_BIND(FileCoverage_LineHitsEntry, FileCoverage_LineHitsEntry, AUTO)
+
+
+PB_BIND(TestCoverageReport, TestCoverageReport, AUTO)
+
+
+PB_BIND(TestCoverageReport_FilesEntry, TestCoverageReport_FilesEntry, AUTO)
+
+
+PB_BIND(CoverageSummary, CoverageSummary, AUTO)
+
+
 PB_BIND(UpdateDependenciesArgs, UpdateDependenciesArgs, AUTO)
 
 
@@ -240,4 +258,12 @@ PB_BIND(Decorator_KeywordsEntry, Decorator_KeywordsEntry, AUTO)
 PB_BIND(Example, Example, AUTO)
 
 
+
+#ifndef PB_CONVERT_DOUBLE_FLOAT
+/* On some platforms (such as AVR), double is really float.
+ * To be able to encode/decode double on these platforms, you need.
+ * to define PB_CONVERT_DOUBLE_FLOAT in pb.h or compiler command line.
+ */
+PB_STATIC_ASSERT(sizeof(double) == 8, DOUBLE_MUST_BE_8_BYTES)
+#endif
 
