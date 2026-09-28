@@ -644,6 +644,11 @@ static inline bool kcl_load_package(const char* const* paths, size_t path_count,
     if (buffer == NULL || result_buffer == NULL || program_buffer == NULL)
         goto done;
 
+    // strs lives for the whole function: encode_str_list is invoked from
+    // pb_encode (called by kcl_encode_tagged_submsg) after the `if` block
+    // below has gone out of scope, so the struct must be hoisted to
+    // function scope to avoid a stack-use-after-scope.
+    struct RepeatedString strs = { 0 };
     LoadPackageArgs args = LoadPackageArgs_init_zero;
     args.resolve_ast = resolve_ast;
     args.load_builtin = load_builtin;
@@ -658,7 +663,7 @@ static inline bool kcl_load_package(const char* const* paths, size_t path_count,
             files[i].len = strlen(paths[i]);
             file_ptrs[i] = &files[i];
         }
-        struct RepeatedString strs = { .repeated = file_ptrs, .index = 0, .saved_index = 0, .max_size = path_count };
+        strs = (struct RepeatedString){ .repeated = file_ptrs, .index = 0, .saved_index = 0, .max_size = path_count };
         args.has_parse_args = true;
         args.parse_args.paths.funcs.encode = encode_str_list;
         args.parse_args.paths.arg = &strs;
@@ -774,6 +779,10 @@ static inline bool kcl_list_options(const char* const* paths, size_t path_count,
     if (buffer == NULL || result_buffer == NULL)
         goto done;
 
+    // Hoisted out of the `if` block below — see kcl_load_package for the
+    // rationale (stack-use-after-scope on Linux when the encode callback
+    // runs after this block ends).
+    struct RepeatedString strs = { 0 };
     ParseProgramArgs args = ParseProgramArgs_init_zero;
     if (path_count > 0) {
         files = (struct Buffer*)malloc(path_count * sizeof(struct Buffer));
@@ -785,7 +794,7 @@ static inline bool kcl_list_options(const char* const* paths, size_t path_count,
             files[i].len = strlen(paths[i]);
             file_ptrs[i] = &files[i];
         }
-        struct RepeatedString strs = { .repeated = file_ptrs, .index = 0, .saved_index = 0, .max_size = path_count };
+        strs = (struct RepeatedString){ .repeated = file_ptrs, .index = 0, .saved_index = 0, .max_size = path_count };
         args.paths.funcs.encode = encode_str_list;
         args.paths.arg = &strs;
     }
@@ -838,6 +847,11 @@ static inline bool kcl_list_variables(const char* const* files, size_t file_coun
     if (buffer == NULL || result_buffer == NULL)
         goto done;
 
+    // Hoisted out of the `if` blocks below — see kcl_load_package for the
+    // rationale (stack-use-after-scope on Linux when the encode callback
+    // runs after these blocks end).
+    struct RepeatedString file_strs = { 0 };
+    struct RepeatedString spec_strs = { 0 };
     ListVariablesArgs args = ListVariablesArgs_init_zero;
     if (file_count > 0) {
         file_bufs = (struct Buffer*)malloc(file_count * sizeof(struct Buffer));
@@ -849,7 +863,7 @@ static inline bool kcl_list_variables(const char* const* files, size_t file_coun
             file_bufs[i].len = strlen(files[i]);
             file_ptrs[i] = &file_bufs[i];
         }
-        struct RepeatedString file_strs = { .repeated = file_ptrs, .index = 0, .saved_index = 0, .max_size = file_count };
+        file_strs = (struct RepeatedString){ .repeated = file_ptrs, .index = 0, .saved_index = 0, .max_size = file_count };
         args.files.funcs.encode = encode_str_list;
         args.files.arg = &file_strs;
     }
@@ -863,7 +877,7 @@ static inline bool kcl_list_variables(const char* const* files, size_t file_coun
             spec_bufs[i].len = strlen(specs[i]);
             spec_ptrs[i] = &spec_bufs[i];
         }
-        struct RepeatedString spec_strs = { .repeated = spec_ptrs, .index = 0, .saved_index = 0, .max_size = spec_count };
+        spec_strs = (struct RepeatedString){ .repeated = spec_ptrs, .index = 0, .saved_index = 0, .max_size = spec_count };
         args.specs.funcs.encode = encode_str_list;
         args.specs.arg = &spec_strs;
     }
@@ -934,6 +948,11 @@ static inline bool kcl_override_file(const char* file,
     if (buffer == NULL || result_buffer == NULL)
         goto done;
 
+    // Hoisted out of the `if` blocks below — see kcl_load_package for the
+    // rationale (stack-use-after-scope on Linux when the encode callback
+    // runs after these blocks end).
+    struct RepeatedString spec_strs = { 0 };
+    struct RepeatedString import_strs = { 0 };
     OverrideFileArgs args = OverrideFileArgs_init_zero;
     args.file.funcs.encode = encode_string;
     args.file.arg = (void*)file;
@@ -947,7 +966,7 @@ static inline bool kcl_override_file(const char* file,
             spec_bufs[i].len = strlen(specs[i]);
             spec_ptrs[i] = &spec_bufs[i];
         }
-        struct RepeatedString spec_strs = { .repeated = spec_ptrs, .index = 0, .saved_index = 0, .max_size = spec_count };
+        spec_strs = (struct RepeatedString){ .repeated = spec_ptrs, .index = 0, .saved_index = 0, .max_size = spec_count };
         args.specs.funcs.encode = encode_str_list;
         args.specs.arg = &spec_strs;
     }
@@ -961,7 +980,7 @@ static inline bool kcl_override_file(const char* file,
             import_bufs[i].len = strlen(import_paths[i]);
             import_ptrs[i] = &import_bufs[i];
         }
-        struct RepeatedString import_strs = { .repeated = import_ptrs, .index = 0, .saved_index = 0, .max_size = import_path_count };
+        import_strs = (struct RepeatedString){ .repeated = import_ptrs, .index = 0, .saved_index = 0, .max_size = import_path_count };
         args.import_paths.funcs.encode = encode_str_list;
         args.import_paths.arg = &import_strs;
     }
@@ -1021,6 +1040,10 @@ static inline bool kcl_get_schema_type_mapping(const char* work_dir,
     if (buffer == NULL || result_buffer == NULL)
         goto done;
 
+    // Hoisted out of the `if` block below — see kcl_load_package for the
+    // rationale (stack-use-after-scope on Linux when the encode callback
+    // runs after this block ends).
+    struct RepeatedString strs = { 0 };
     GetSchemaTypeMappingArgs args = GetSchemaTypeMappingArgs_init_zero;
     args.has_exec_args = true;
     if (work_dir != NULL) {
@@ -1037,7 +1060,7 @@ static inline bool kcl_get_schema_type_mapping(const char* work_dir,
             files[i].len = strlen(filenames[i]);
             file_ptrs[i] = &files[i];
         }
-        struct RepeatedString strs = { .repeated = file_ptrs, .index = 0, .saved_index = 0, .max_size = filename_count };
+        strs = (struct RepeatedString){ .repeated = file_ptrs, .index = 0, .saved_index = 0, .max_size = filename_count };
         args.exec_args.k_filename_list.funcs.encode = encode_str_list;
         args.exec_args.k_filename_list.arg = &strs;
     }
@@ -1104,6 +1127,10 @@ static inline bool kcl_get_schema_type_mapping_under_path(const char* work_dir,
     if (buffer == NULL || result_buffer == NULL)
         goto done;
 
+    // Hoisted out of the `if` block below — see kcl_load_package for the
+    // rationale (stack-use-after-scope on Linux when the encode callback
+    // runs after this block ends).
+    struct RepeatedString strs = { 0 };
     GetSchemaTypeMappingArgs args = GetSchemaTypeMappingArgs_init_zero;
     args.has_exec_args = true;
     if (work_dir != NULL) {
@@ -1120,7 +1147,7 @@ static inline bool kcl_get_schema_type_mapping_under_path(const char* work_dir,
             files[i].len = strlen(filenames[i]);
             file_ptrs[i] = &files[i];
         }
-        struct RepeatedString strs = { .repeated = file_ptrs, .index = 0, .saved_index = 0, .max_size = filename_count };
+        strs = (struct RepeatedString){ .repeated = file_ptrs, .index = 0, .saved_index = 0, .max_size = filename_count };
         args.exec_args.k_filename_list.funcs.encode = encode_str_list;
         args.exec_args.k_filename_list.arg = &strs;
     }
@@ -1232,6 +1259,10 @@ static inline bool kcl_load_settings_files(const char* work_dir,
     if (buffer == NULL || result_buffer == NULL || output_buffer == NULL)
         goto done;
 
+    // Hoisted out of the `if` block below — see kcl_load_package for the
+    // rationale (stack-use-after-scope on Linux when the encode callback
+    // runs after this block ends).
+    struct RepeatedString strs = { 0 };
     LoadSettingsFilesArgs args = LoadSettingsFilesArgs_init_zero;
     if (work_dir != NULL) {
         args.work_dir.funcs.encode = encode_string;
@@ -1247,7 +1278,7 @@ static inline bool kcl_load_settings_files(const char* work_dir,
             file_bufs[i].len = strlen(files[i]);
             file_ptrs[i] = &file_bufs[i];
         }
-        struct RepeatedString strs = { .repeated = file_ptrs, .index = 0, .saved_index = 0, .max_size = file_count };
+        strs = (struct RepeatedString){ .repeated = file_ptrs, .index = 0, .saved_index = 0, .max_size = file_count };
         args.files.funcs.encode = encode_str_list;
         args.files.arg = &strs;
     }
@@ -1320,6 +1351,10 @@ static inline bool kcl_rename(const char* package_root, const char* symbol_path,
     if (buffer == NULL || result_buffer == NULL)
         goto done;
 
+    // Hoisted out of the `if` block below — see kcl_load_package for the
+    // rationale (stack-use-after-scope on Linux when the encode callback
+    // runs after this block ends).
+    struct RepeatedString strs = { 0 };
     RenameArgs args = RenameArgs_init_zero;
     args.package_root.funcs.encode = encode_string;
     args.package_root.arg = (void*)package_root;
@@ -1337,7 +1372,7 @@ static inline bool kcl_rename(const char* package_root, const char* symbol_path,
             path_bufs[i].len = strlen(file_paths[i]);
             path_ptrs[i] = &path_bufs[i];
         }
-        struct RepeatedString strs = { .repeated = path_ptrs, .index = 0, .saved_index = 0, .max_size = file_path_count };
+        strs = (struct RepeatedString){ .repeated = path_ptrs, .index = 0, .saved_index = 0, .max_size = file_path_count };
         args.file_paths.funcs.encode = encode_str_list;
         args.file_paths.arg = &strs;
     }
@@ -1452,6 +1487,11 @@ static inline bool kcl_test(const char* work_dir,
     if (buffer == NULL || result_buffer == NULL)
         goto done;
 
+    // Hoisted out of the `if` blocks below — see kcl_load_package for the
+    // rationale (stack-use-after-scope on Linux when the encode callback
+    // runs after this block ends).
+    struct RepeatedString strs = { 0 };
+    struct RepeatedString pkg_strs = { 0 };
     TestArgs args = TestArgs_init_zero;
     args.has_exec_args = true;
     if (work_dir != NULL) {
@@ -1468,7 +1508,7 @@ static inline bool kcl_test(const char* work_dir,
             files[i].len = strlen(filenames[i]);
             file_ptrs[i] = &files[i];
         }
-        struct RepeatedString strs = { .repeated = file_ptrs, .index = 0, .saved_index = 0, .max_size = filename_count };
+        strs = (struct RepeatedString){ .repeated = file_ptrs, .index = 0, .saved_index = 0, .max_size = filename_count };
         args.exec_args.k_filename_list.funcs.encode = encode_str_list;
         args.exec_args.k_filename_list.arg = &strs;
     }
@@ -1482,7 +1522,7 @@ static inline bool kcl_test(const char* work_dir,
             pkgs[i].len = strlen(pkg_list[i]);
             pkg_ptrs[i] = &pkgs[i];
         }
-        struct RepeatedString pkg_strs = { .repeated = pkg_ptrs, .index = 0, .saved_index = 0, .max_size = pkg_count };
+        pkg_strs = (struct RepeatedString){ .repeated = pkg_ptrs, .index = 0, .saved_index = 0, .max_size = pkg_count };
         args.pkg_list.funcs.encode = encode_str_list;
         args.pkg_list.arg = &pkg_strs;
     }
