@@ -16,8 +16,6 @@ pub fn build(b: *std.Build) void {
     // set a preferred release mode, allowing the user to decide how to optimize.
     const optimize = b.standardOptimizeOption(.{});
 
-    const os = target.query.os_tag orelse builtin.os.tag;
-
     const protobuf_dep = b.dependency("protobuf", .{
         .target = target,
         .optimize = optimize,
@@ -41,17 +39,17 @@ pub fn build(b: *std.Build) void {
         }),
     });
 
-    lib.root_module.link_libc = true;
-    lib.root_module.link_libcpp = true;
-    lib.root_module.addLibraryPath(kclLibPath(b, &target));
-    lib.root_module.linkSystemLibrary(kclLibName(), .{});
+    linkNativeKcl(b, lib.root_module, &target);
     lib.root_module.addImport("spec", spec_module);
     lib.step.dependOn(gen_spec_step);
-    if (os == .windows) {
-        linkWindowsLibraries(lib);
-    } else if (os == .macos) {
-        linkMacOSLibraries(lib);
-    }
+
+    // Options shared by the test steps below (fixture paths etc.).
+    const test_options = b.addOptions();
+    test_options.addOption(
+        []const u8,
+        "ast_alignment_fixture",
+        b.pathResolve(&.{ b.build_root.path orelse ".", "test_data", "ast_alignment", "main.k" }),
+    );
 
     // This declares intent for the library to be installed into the standard
     // location when the user invokes the "install" step (the default step when
@@ -67,22 +65,69 @@ pub fn build(b: *std.Build) void {
             .optimize = optimize,
         }),
     });
-
-    lib_unit_tests.root_module.link_libc = true;
-    lib_unit_tests.root_module.link_libcpp = true;
-    lib_unit_tests.root_module.addLibraryPath(kclLibPath(b, &target));
-    lib_unit_tests.root_module.linkSystemLibrary(kclLibName(), .{});
+    linkNativeKcl(b, lib_unit_tests.root_module, &target);
     lib_unit_tests.root_module.addImport("spec", spec_module);
     lib_unit_tests.step.dependOn(gen_spec_step);
-    if (os == .windows) {
-        linkWindowsLibraries(lib_unit_tests);
-    } else if (os == .macos) {
-        linkMacOSLibraries(lib_unit_tests);
-    }
+
+    // High-level kcl API tests (src/kcl.zig).
+    const kcl_unit_tests = b.addTest(.{
+        .root_module = b.createModule(.{
+            .root_source_file = b.path("src/kcl.zig"),
+            .target = b.graph.host,
+            .optimize = optimize,
+        }),
+    });
+    linkNativeKcl(b, kcl_unit_tests.root_module, &target);
+    kcl_unit_tests.root_module.addImport("spec", spec_module);
+    kcl_unit_tests.step.dependOn(gen_spec_step);
+
+    // Typed AST package tests (src/ast.zig) + the alignment test against
+    // the runtime-emitted ast_json (tests/ast_alignment.zig).
+    const ast_unit_tests = b.addTest(.{
+        .root_module = b.createModule(.{
+            .root_source_file = b.path("src/ast.zig"),
+            .target = b.graph.host,
+            .optimize = optimize,
+        }),
+    });
+
+    const ast_alignment_tests = b.addTest(.{
+        .root_module = b.createModule(.{
+            .root_source_file = b.path("src/ast_alignment_test.zig"),
+            .target = b.graph.host,
+            .optimize = optimize,
+        }),
+    });
+    linkNativeKcl(b, ast_alignment_tests.root_module, &target);
+    ast_alignment_tests.root_module.addImport("spec", spec_module);
+    ast_alignment_tests.root_module.addOptions("test_options", test_options);
+    ast_alignment_tests.step.dependOn(gen_spec_step);
 
     const run_lib_unit_tests = b.addRunArtifact(lib_unit_tests);
+    const run_kcl_unit_tests = b.addRunArtifact(kcl_unit_tests);
+    const run_ast_unit_tests = b.addRunArtifact(ast_unit_tests);
+    const run_ast_alignment_tests = b.addRunArtifact(ast_alignment_tests);
     const test_step = b.step("test", "Run unit tests");
     test_step.dependOn(&run_lib_unit_tests.step);
+    test_step.dependOn(&run_kcl_unit_tests.step);
+    test_step.dependOn(&run_ast_unit_tests.step);
+    test_step.dependOn(&run_ast_alignment_tests.step);
+}
+
+/// Wires a module so it can link the prebuilt native `libkcl` and call the
+/// C FFI dispatcher: libc/libc++, the platform library path, the system
+/// library itself and the platform-specific system libraries.
+fn linkNativeKcl(b: *std.Build, module: *std.Build.Module, target: *const std.Build.ResolvedTarget) void {
+    const os = target.query.os_tag orelse builtin.os.tag;
+    module.link_libc = true;
+    module.link_libcpp = true;
+    module.addLibraryPath(kclLibPath(b, target));
+    module.linkSystemLibrary(kclLibName(), .{});
+    if (os == .windows) {
+        linkWindowsLibraries(module);
+    } else if (os == .macos) {
+        linkMacOSLibraries(module);
+    }
 }
 
 // Generates the typed protobuf bindings in `src/proto` from
@@ -134,18 +179,18 @@ fn addSpecProtoCodegen(b: *std.Build, protobuf_dep: *std.Build.Dependency) *std.
     return &run_fix.step;
 }
 
-fn linkWindowsLibraries(lib: *std.Build.Step.Compile) void {
-    lib.root_module.linkSystemLibrary("userenv", .{});
-    lib.root_module.linkSystemLibrary("ole32", .{});
-    lib.root_module.linkSystemLibrary("ntdll", .{});
-    lib.root_module.linkSystemLibrary("kernel32", .{});
-    lib.root_module.linkSystemLibrary("bcrypt", .{});
-    lib.root_module.linkSystemLibrary("ws2_32", .{});
+fn linkWindowsLibraries(module: *std.Build.Module) void {
+    module.linkSystemLibrary("userenv", .{});
+    module.linkSystemLibrary("ole32", .{});
+    module.linkSystemLibrary("ntdll", .{});
+    module.linkSystemLibrary("kernel32", .{});
+    module.linkSystemLibrary("bcrypt", .{});
+    module.linkSystemLibrary("ws2_32", .{});
 }
 
-fn linkMacOSLibraries(lib: *std.Build.Step.Compile) void {
-    lib.root_module.linkFramework("CoreFoundation", .{});
-    lib.root_module.linkFramework("Security", .{});
+fn linkMacOSLibraries(module: *std.Build.Module) void {
+    module.linkFramework("CoreFoundation", .{});
+    module.linkFramework("Security", .{});
 }
 
 fn kclLibName() []const u8 {

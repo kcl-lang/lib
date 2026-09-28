@@ -59,10 +59,69 @@ pub fn call(allocator: std.mem.Allocator, name: []const u8, args: []const u8) ![
 It accepts the fully-qualified RPC name (e.g. `"KclService.ExecProgram"`) and
 raw protobuf request bytes, returning the raw response bytes.
 
+## High-level `kcl` API
+
+`src/kcl.zig` mirrors the Go SDK's `pkg/kcl` on top of the wrappers above:
+
+```zig
+const kcl = @import("kcl.zig");
+
+var options = kcl.Options.init(allocator);
+defer options.deinit();
+_ = options.withOverrides(&.{ "alice.age=18" });
+
+var result = try kcl.runCode(allocator, "alice = {age = 18}", &options);
+defer result.deinit(allocator);
+
+// Dot-path navigation over the result document ("a.b.c", integer
+// segments index arrays). JSON is preferred; YAML results fall back to
+// a built-in minimal YAML reader.
+const age = try result.get(allocator, "alice.age");
+```
+
++ `run` (single file), `runFiles` (multiple paths), `runCode` (inline
+  source) all take `*Options` and return `kcl.Result`
+  (`json_result` / `yaml_result` / `log_message` / `err_message`).
++ `Options` covers the `kcl-go` `With*` set: `args` (`-D`), `overrides`
+  (`-O`), `selectors` (`-S`), `settings` (`kcl.yaml`, merged through
+  `loadSettingsFiles` with explicit options winning), `external_pkgs`
+  (`-E`), `format`, `error_format`, `disable_none`, `sort_keys`,
+  `show_hidden`, `include_schema_type_path` (with the `_type` short-name
+  rewriting hook, disabled by `full_type_path`), `strict_range_check`,
+  `verbose` / `debug`, `compile_only`, `fast_eval`, `print_override_ast`
+  and `disable_yaml_result`.
++ A non-empty `err_message` fails the call with `error.KclError`; the
+  message is retrieved via `kcl.lastErrorMessage()`.
+
+## Typed AST
+
+`src/ast.zig` parses the `ast_json` returned by `parseProgram` /
+`parseFile` into typed AST nodes (mirroring the Rust `ast` crate, same
+coverage as the Python/Lua/... AST packages):
+
+```zig
+const ast = @import("ast.zig");
+
+// An arena is the intended allocation strategy: parsed nodes live and
+// die with the arena.
+var arena = std.heap.ArenaAllocator.init(allocator);
+defer arena.deinit();
+
+const program = try ast.parseProgram(arena.allocator(), parse_result.ast_json);
+```
+
+`Module`, `Stmt`/`StmtNode`, `Expr`/`ExprNode`, `Type`/`TypeNode` and the
+DTO types (`Pos`, `Decorator`, `Identifier`, ...) are re-exported from
+`ast.zig`; every node carries a `pos`. `src/ast_alignment_test.zig`
+round-trips `test_data/ast_alignment/main.k` through the typed AST and
+compares it against the runtime-emitted JSON, matching the
+`AstJsonAlignmentTest` suites of the other bindings.
+
 ### Notes
 
 + The bindings cover the full 20-RPC `KclService` surface from
-  `../spec/spec.proto` plus `BuiltinService.ListMethod`.
+  `../spec/spec.proto` plus `BuiltinService.ListMethod`, with the
+  high-level facade and the typed AST package built on top.
 + The prebuilt libkcl v0.13.0 binary predates the `BuiltinService.*`
   registration: `listMethod` returns an empty result on it (the corresponding
   unit test therefore tolerates both the empty and the populated result).
