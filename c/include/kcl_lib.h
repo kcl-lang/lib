@@ -1420,6 +1420,10 @@ static inline bool kcl_rename_code(const char* package_root, const char* symbol_
     if (buffer == NULL || result_buffer == NULL)
         goto done;
 
+    // Hoisted out of the `if` block below — see kcl_load_package for the
+    // rationale (stack-use-after-scope on Linux when the encode callback
+    // runs after this block ends).
+    struct KclStringPairList pair_list = { 0 };
     RenameCodeArgs args = RenameCodeArgs_init_zero;
     args.package_root.funcs.encode = encode_string;
     args.package_root.arg = (void*)package_root;
@@ -1428,7 +1432,7 @@ static inline bool kcl_rename_code(const char* package_root, const char* symbol_
     args.new_name.funcs.encode = encode_string;
     args.new_name.arg = (void*)new_name;
     if (source_code_count > 0) {
-        struct KclStringPairList pair_list = { .items = source_codes, .count = source_code_count, .index = 0 };
+        pair_list = (struct KclStringPairList){ .items = source_codes, .count = source_code_count, .index = 0 };
         args.source_codes.funcs.encode = kcl_encode_string_map_entries;
         args.source_codes.arg = &pair_list;
     }
