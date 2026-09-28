@@ -127,7 +127,17 @@ static inline void kcl_copy_string(char* dst, size_t dst_size, const uint8_t* sr
 
 static inline size_t kcl_call(const char* api_str, const uint8_t* args, size_t args_len, uint8_t* result_buffer)
 {
-    return call_native((const uint8_t*)api_str, strlen(api_str), args, args_len, result_buffer);
+    size_t result_length = call_native((const uint8_t*)api_str, strlen(api_str), args, args_len, result_buffer);
+    // Null-terminate so the error path can pass the buffer to kcl_copy_string
+    // (which uses strlen on src). Rust's call_native does not append a NUL,
+    // and the rest of the malloc'd result_buffer is uninitialised — on Linux
+    // those bytes can be non-zero, making strlen read past the actual reply
+    // and segfault when it runs off the allocation.
+    if (result_length < BUFFER_SIZE)
+        result_buffer[result_length] = '\0';
+    else
+        result_buffer[BUFFER_SIZE - 1] = '\0';
+    return result_length;
 }
 
 static inline bool kcl_decode_string_list(pb_istream_t* stream, const pb_field_t* field, void** arg)
@@ -146,39 +156,34 @@ static inline bool kcl_decode_string_list(pb_istream_t* stream, const pb_field_t
     return true;
 }
 
-// Encode a nested submessage field by hand. nanopb's
-// `pb_encode_submessage` would do this for us, but only when the field
-// is stored statically. Our callback-driven submessage fields need
-// the same two-pass treatment (sizing, then write into a substream)
-// so the length prefix and the payload stay in sync. The stateful
-// `encode_str_list` callback rewinds `index -> saved_index` on every
-// invocation, so it can be driven twice safely.
+// Encode a nested submessage field in a single pass: nanopb's own
+// submessage encoder runs a sizing pass followed by a write pass, which
+// breaks stateful encode callbacks (encode_str_list advances its index
+// on the first pass, leaving nothing to emit on the second). Encoding
+// into a scratch buffer first keeps each callback invocation single-pass
+// so the length prefix and the payload always stay in lockstep on every
+// platform (the two-pass substream approach works on macOS but the
+// encoded buffer comes out truncated on Linux/gcc, which then segfaults
+// the decoder downstream).
 static inline bool kcl_encode_tagged_submsg(pb_ostream_t* stream, uint32_t field_tag, const pb_msgdesc_t* fields, const void* msg)
 {
-    pb_ostream_t sizing = PB_OSTREAM_SIZING;
-    if (!pb_encode(&sizing, fields, msg))
+    uint8_t* inner = (uint8_t*)malloc(BUFFER_SIZE);
+    bool status = false;
+    if (inner == NULL)
         return false;
-    size_t size = sizing.bytes_written;
-
+    pb_ostream_t inner_stream = pb_ostream_from_buffer(inner, BUFFER_SIZE);
+    if (!pb_encode(&inner_stream, fields, msg))
+        goto done;
     if (!pb_encode_tag(stream, PB_WT_STRING, field_tag))
-        return false;
-    if (!pb_encode_varint(stream, size))
-        return false;
-
-    if (stream->callback == NULL)
-        return pb_write(stream, NULL, size);
-    if (stream->bytes_written + size > stream->max_size)
-        return false;
-
-    pb_ostream_t substream = *stream;
-    substream.max_size = size;
-    substream.bytes_written = 0;
-    if (!pb_encode(&substream, fields, msg))
-        return false;
-
-    stream->bytes_written += substream.bytes_written;
-    stream->state = substream.state;
-    return true;
+        goto done;
+    if (!pb_encode_varint(stream, inner_stream.bytes_written))
+        goto done;
+    if (!pb_write(stream, inner, inner_stream.bytes_written))
+        goto done;
+    status = true;
+done:
+    free(inner);
+    return status;
 }
 
 // Encode a singular string field manually (used alongside
