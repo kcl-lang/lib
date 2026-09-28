@@ -132,6 +132,48 @@ public object ExecProgramResultKt {
     public fun clearErrMessage() {
       _builder.clearErrMessage()
     }
+
+    /**
+     * ```
+     * Source Map v3 (tc39.es/source-map) JSON mapping the generated YAML
+     * back to the originating KCL source. Populated only when the caller
+     * requests a source map; empty otherwise.
+     * ```
+     *
+     * `optional string sourcemap = 5;`
+     */
+    public var sourcemap: kotlin.String
+      @kotlin.jvm.JvmName("getSourcemap")
+        get() = _builder.sourcemap
+      @kotlin.jvm.JvmName("setSourcemap")
+        set(value) {
+        _builder.sourcemap = value
+      }
+    /**
+     * ```
+     * Source Map v3 (tc39.es/source-map) JSON mapping the generated YAML
+     * back to the originating KCL source. Populated only when the caller
+     * requests a source map; empty otherwise.
+     * ```
+     *
+     * `optional string sourcemap = 5;`
+     */
+    public fun clearSourcemap() {
+      _builder.clearSourcemap()
+    }
+    /**
+     * ```
+     * Source Map v3 (tc39.es/source-map) JSON mapping the generated YAML
+     * back to the originating KCL source. Populated only when the caller
+     * requests a source map; empty otherwise.
+     * ```
+     *
+     * `optional string sourcemap = 5;`
+     * @return Whether the sourcemap field is set.
+     */
+    public fun hasSourcemap(): kotlin.Boolean {
+      return _builder.hasSourcemap()
+    }
   }
 }
 @kotlin.jvm.JvmSynthetic

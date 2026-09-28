@@ -131,9 +131,54 @@ public object TestResultKt {
     public fun com.google.protobuf.kotlin.DslList<com.kcl.api.Spec.TestCaseInfo, InfoProxy>.clear() {
       _builder.clearInfo()
     }
+
+    /**
+     * ```
+     * Aggregated coverage report. Populated only when
+     * [TestArgs.coverage] is true; empty otherwise.
+     * ```
+     *
+     * `.com.kcl.api.TestCoverageReport coverage = 3;`
+     */
+    public var coverage: com.kcl.api.Spec.TestCoverageReport
+      @kotlin.jvm.JvmName("getCoverage")
+        get() = _builder.coverage
+      @kotlin.jvm.JvmName("setCoverage")
+        set(value) {
+        _builder.coverage = value
+      }
+    /**
+     * ```
+     * Aggregated coverage report. Populated only when
+     * [TestArgs.coverage] is true; empty otherwise.
+     * ```
+     *
+     * `.com.kcl.api.TestCoverageReport coverage = 3;`
+     */
+    public fun clearCoverage() {
+      _builder.clearCoverage()
+    }
+    /**
+     * ```
+     * Aggregated coverage report. Populated only when
+     * [TestArgs.coverage] is true; empty otherwise.
+     * ```
+     *
+     * `.com.kcl.api.TestCoverageReport coverage = 3;`
+     * @return Whether the coverage field is set.
+     */
+    public fun hasCoverage(): kotlin.Boolean {
+      return _builder.hasCoverage()
+    }
+
+    public val TestResultKt.Dsl.coverageOrNull: com.kcl.api.Spec.TestCoverageReport?
+      get() = _builder.coverageOrNull
   }
 }
 @kotlin.jvm.JvmSynthetic
 public inline fun com.kcl.api.Spec.TestResult.copy(block: `com.kcl.api`.TestResultKt.Dsl.() -> kotlin.Unit): com.kcl.api.Spec.TestResult =
   `com.kcl.api`.TestResultKt.Dsl._create(this.toBuilder()).apply { block() }._build()
+
+public val com.kcl.api.Spec.TestResultOrBuilder.coverageOrNull: com.kcl.api.Spec.TestCoverageReport?
+  get() = if (hasCoverage()) getCoverage() else null
 

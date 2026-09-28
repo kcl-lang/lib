@@ -132,6 +132,103 @@ public object TestCaseInfoKt {
     public fun clearLogMessage() {
       _builder.clearLogMessage()
     }
+
+    /**
+     * An uninstantiable, behaviorless type to represent the field in
+     * generics.
+     */
+    @kotlin.OptIn(com.google.protobuf.kotlin.OnlyForUseByGeneratedProtoCode::class)
+    public class LineHitsProxy private constructor() : com.google.protobuf.kotlin.DslProxy()
+    /**
+     * ```
+     * Per-case line coverage. Populated only when [TestArgs.coverage]
+     * is true; empty otherwise. Each entry maps "filename:line" to the
+     * number of times that line was entered while running this case.
+     * ```
+     *
+     * `map<string, uint64> line_hits = 5;`
+     */
+     public val lineHits: com.google.protobuf.kotlin.DslMap<kotlin.String, kotlin.Long, LineHitsProxy>
+      @kotlin.jvm.JvmSynthetic
+@kotlin.jvm.JvmName("getLineHitsMap")
+      get() = com.google.protobuf.kotlin.DslMap(
+        _builder.lineHitsMap
+      )
+    /**
+     * ```
+     * Per-case line coverage. Populated only when [TestArgs.coverage]
+     * is true; empty otherwise. Each entry maps "filename:line" to the
+     * number of times that line was entered while running this case.
+     * ```
+     *
+     * `map<string, uint64> line_hits = 5;`
+     */
+    @kotlin.jvm.JvmName("putLineHits")
+    public fun com.google.protobuf.kotlin.DslMap<kotlin.String, kotlin.Long, LineHitsProxy>
+      .put(key: kotlin.String, value: kotlin.Long) {
+         _builder.putLineHits(key, value)
+       }
+    /**
+     * ```
+     * Per-case line coverage. Populated only when [TestArgs.coverage]
+     * is true; empty otherwise. Each entry maps "filename:line" to the
+     * number of times that line was entered while running this case.
+     * ```
+     *
+     * `map<string, uint64> line_hits = 5;`
+     */
+    @kotlin.jvm.JvmSynthetic
+@kotlin.jvm.JvmName("setLineHits")
+    @Suppress("NOTHING_TO_INLINE")
+    public inline operator fun com.google.protobuf.kotlin.DslMap<kotlin.String, kotlin.Long, LineHitsProxy>
+      .set(key: kotlin.String, value: kotlin.Long) {
+         put(key, value)
+       }
+    /**
+     * ```
+     * Per-case line coverage. Populated only when [TestArgs.coverage]
+     * is true; empty otherwise. Each entry maps "filename:line" to the
+     * number of times that line was entered while running this case.
+     * ```
+     *
+     * `map<string, uint64> line_hits = 5;`
+     */
+    @kotlin.jvm.JvmSynthetic
+@kotlin.jvm.JvmName("removeLineHits")
+    public fun com.google.protobuf.kotlin.DslMap<kotlin.String, kotlin.Long, LineHitsProxy>
+      .remove(key: kotlin.String) {
+         _builder.removeLineHits(key)
+       }
+    /**
+     * ```
+     * Per-case line coverage. Populated only when [TestArgs.coverage]
+     * is true; empty otherwise. Each entry maps "filename:line" to the
+     * number of times that line was entered while running this case.
+     * ```
+     *
+     * `map<string, uint64> line_hits = 5;`
+     */
+    @kotlin.jvm.JvmSynthetic
+@kotlin.jvm.JvmName("putAllLineHits")
+    public fun com.google.protobuf.kotlin.DslMap<kotlin.String, kotlin.Long, LineHitsProxy>
+      .putAll(map: kotlin.collections.Map<kotlin.String, kotlin.Long>) {
+         _builder.putAllLineHits(map)
+       }
+    /**
+     * ```
+     * Per-case line coverage. Populated only when [TestArgs.coverage]
+     * is true; empty otherwise. Each entry maps "filename:line" to the
+     * number of times that line was entered while running this case.
+     * ```
+     *
+     * `map<string, uint64> line_hits = 5;`
+     */
+    @kotlin.jvm.JvmSynthetic
+@kotlin.jvm.JvmName("clearLineHits")
+    public fun com.google.protobuf.kotlin.DslMap<kotlin.String, kotlin.Long, LineHitsProxy>
+      .clear() {
+         _builder.clearLineHits()
+       }
   }
 }
 @kotlin.jvm.JvmSynthetic
