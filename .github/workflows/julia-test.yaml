@@ -1,0 +1,50 @@
+name: julia-test
+
+on:
+  push:
+    branches:
+      - main
+      - master
+    tags:
+      - '*'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "julia/**"
+      - ".github/workflows/julia-test.yaml"
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}-${{ github.event_name }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  build-and-test:
+    strategy:
+      matrix:
+        os: [macos-latest, ubuntu-latest]
+        julia_version: ["1.13"]
+    defaults:
+      run:
+        working-directory: "julia"
+    runs-on: ${{ matrix.os }}
+    steps:
+    - uses: actions/checkout@v7
+    - name: Setup Julia
+      uses: julia-actions/setup-julia@v2
+      with:
+        version: "${{ matrix.julia_version }}"
+    - name: Install protobuf
+      run: |
+        if [ "$RUNNER_OS" == "Linux" ]; then
+          sudo apt-get update && sudo apt-get install -y protobuf-compiler
+        else
+          brew install protobuf
+        fi
+      shell: bash
+    - name: Run tests
+      run: make test
