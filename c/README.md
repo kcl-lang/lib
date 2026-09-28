@@ -1,111 +1,87 @@
 # KCL Artifact Library for C
 
+The C binding for the [KCL](https://kcl-lang.io/) artifact library. It
+links against the same shared library (`libkcl_lib_c.so`) as the other
+language bindings and exposes every KCL service method either as a raw
+protobuf encode/decode pair or through the typed wrappers in `kcl_lib.h`.
+
 ## Developing
 
 **Prerequisites**
 
-+ Make
-+ C++ compiler with C++11 support
-+ Cargo
++ `make`
++ A C11-capable C compiler (`cc` / `gcc` / `clang`)
++ `cargo` (release build of the Rust dispatcher)
 
-Run the command to build KCL C Lib.
+Build the static archive + shared library and the bundled example
+binaries:
 
 ```shell
-make cargo
-make
+make           # builds cargo release + lib/libkcl_lib_c.a
+make examples  # builds every example/*.c into ./examples/
+make clean     # removes build artefacts
+```
+
+Run a single example from the `c/` directory so the relative
+`./test_data/...` paths resolve:
+
+```shell
+./examples/exec_api
 ```
 
 ## Formatting
 
 ```shell
-make fmt
+make fmt   # cargo fmt + clang-format (WebKit) across .c/.cpp/.h
 ```
 
 ## Examples
 
-Run the following command to build all example codes.
+Every example under `examples/` is a self-contained C program that
+calls one wrapper from `kcl_lib.h`. Run `make examples` and then invoke
+the matching binary from the `c/` directory.
 
-```shell
-make examples
-```
+| Binary                          | Wrapper                  | Fixture                      |
+|---------------------------------|--------------------------|------------------------------|
+| `ast_alignment`                 | raw protobuf             | `test_data/ast_alignment/`   |
+| `exec_api`                      | `kcl_exec_program`       | `test_data/schema.k`         |
+| `exec_api_format`               | `kcl_exec_program`       | (round-trip format/sourcemap)|
+| `exec_api_format_runtime`       | `kcl_exec_program`       | (runtime sourcemap)          |
+| `format_path_api`               | `kcl_format_path`        | `test_data/format_api_tmp.k` |
+| `get_schema_type_mapping_api`   | `kcl_get_schema_type_mapping` | `test_data/schema_ty/` |
+| `get_schema_type_mapping_under_path_api` | `kcl_get_schema_type_mapping_under_path` | `test_data/schema_ty/` |
+| `list_method_api`               | `kcl_list_method`        | —                            |
+| `list_options_api`              | `kcl_list_options`       | `test_data/options.k`        |
+| `list_variables_api`            | `kcl_list_variables`     | `test_data/variables.k`      |
+| `load_package_api`              | `kcl_load_package`       | `test_data/schema.k`         |
+| `load_settings_files_api`       | `kcl_load_settings_files`| `test_data/settings/`        |
+| `override_file_api`             | `kcl_override_file`      | (in-place temp file)         |
+| `ping_api`                      | `kcl_ping`               | —                            |
+| `rename_api`                    | `kcl_rename`             | `test_data/rename/`          |
+| `rename_code_api`               | `kcl_rename_code`        | —                            |
+| `test_api`                      | `kcl_test`               | `test_data/testing/`         |
+| `update_dependencies_api`       | `kcl_update_dependencies`| —                            |
+| `validate_api`                  | `kcl_validate_code`      | (inline schema snippet)      |
+
+### Quick recipes
 
 + ExecProgram
 
 ```c
 #include <kcl_lib.h>
 
-int exec_file(const char* file_str) {
-    static uint8_t buffer[BUFFER_SIZE];
-    static uint8_t result_buffer[BUFFER_SIZE];
-    size_t message_length;
-    bool status;
-    struct Buffer file = {
-        .buffer = file_str,
-        .len = strlen(file_str),
-    };
-    struct Buffer* files[] = { &file };
-    struct RepeatedString strs = { .repeated = &files[0], .index = 0, .max_size = 1 };
-    ExecProgramArgs args = ExecProgramArgs_init_zero;
-    args.k_filename_list.funcs.encode = encode_str_list;
-    args.k_filename_list.arg = &strs;
-
-    pb_ostream_t stream = pb_ostream_from_buffer(buffer, sizeof(buffer));
-    status = pb_encode(&stream, ExecProgramArgs_fields, &args);
-    message_length = stream.bytes_written;
-
-    if (!status) {
-        printf("Encoding failed: %s\n", PB_GET_ERROR(&stream));
-        return 1;
-    }
-
-    const char* api_str = "KclService.ExecProgram";
-    size_t result_length = call_native((const uint8_t*)api_str, strlen(api_str), buffer, message_length, result_buffer);
-    if (check_error_prefix(result_buffer)) {
-        printf("%s", result_buffer);
-        return 1;
-    }
-    pb_istream_t istream = pb_istream_from_buffer(result_buffer, result_length);
-
-    ExecProgramResult result = ExecProgramResult_init_default;
-
-    static uint8_t yaml_value_buffer[BUFFER_SIZE] = { 0 };
-    result.yaml_result.arg = yaml_value_buffer;
-    result.yaml_result.funcs.decode = decode_string;
-
-    static uint8_t json_value_buffer[BUFFER_SIZE] = { 0 };
-    result.json_result.arg = json_value_buffer;
-    result.json_result.funcs.decode = decode_string;
-
-    static uint8_t err_value_buffer[BUFFER_SIZE] = { 0 };
-    result.err_message.arg = err_value_buffer;
-    result.err_message.funcs.decode = decode_string;
-
-    static uint8_t log_value_buffer[BUFFER_SIZE] = { 0 };
-    result.log_message.arg = log_value_buffer;
-    result.log_message.funcs.decode = decode_string;
-
-    status = pb_decode(&istream, ExecProgramResult_fields, &result);
-
-    if (!status) {
-        printf("Decoding failed: %s\n", PB_GET_ERROR(&istream));
-        return 1;
-    }
-
-    if (result.yaml_result.arg) {
-        printf("%s\n", (char*)result.yaml_result.arg);
-    }
-
-    return 0;
-}
-
 int main()
 {
-    exec_file("./test_data/schema.k");
+    static char yaml[BUFFER_SIZE];
+    static char exec_err[BUFFER_SIZE];
+    const char* files[] = { "./test_data/schema.k" };
+    if (kcl_exec_program(files, 1, yaml, sizeof(yaml),
+                         exec_err, sizeof(exec_err))) {
+        printf("%s\n", yaml);
+    }
     return 0;
 }
 ```
-
-Run the ExecProgram example.
 
 ```shell
 ./examples/exec_api
@@ -116,67 +92,22 @@ Run the ExecProgram example.
 ```c
 #include <kcl_lib.h>
 
-int validate(const char* code_str, const char* data_str)
-{
-    static uint8_t buffer[BUFFER_SIZE];
-    static uint8_t result_buffer[BUFFER_SIZE];
-    size_t message_length;
-    bool status;
-
-    ValidateCodeArgs validate_args = ValidateCodeArgs_init_zero;
-    validate_args.code.funcs.encode = encode_string;
-    validate_args.code.arg = (void*)code_str;
-    validate_args.data.funcs.encode = encode_string;
-    validate_args.data.arg = (void*)data_str;
-
-    pb_ostream_t stream = pb_ostream_from_buffer(buffer, sizeof(buffer));
-    status = pb_encode(&stream, ValidateCodeArgs_fields, &validate_args);
-    message_length = stream.bytes_written;
-
-    if (!status) {
-        printf("Encoding failed: %s\n", PB_GET_ERROR(&stream));
-        return 1;
-    }
-
-    const char* api_str = "KclService.ValidateCode";
-    size_t result_length = call_native((const uint8_t*)api_str, strlen(api_str), buffer, message_length, result_buffer);
-    pb_istream_t istream = pb_istream_from_buffer(result_buffer, result_length);
-    ValidateCodeResult result = ValidateCodeResult_init_default;
-
-    result.err_message.funcs.decode = decode_string;
-    static uint8_t value_buffer[BUFFER_SIZE] = { 0 };
-    result.err_message.arg = value_buffer;
-
-    status = pb_decode(&istream, ValidateCodeResult_fields, &result);
-
-    if (!status) {
-        printf("Decoding failed: %s\n", PB_GET_ERROR(&istream));
-        return 1;
-    }
-
-    printf("Validate Status: %d\n", result.success);
-    if (result.err_message.arg) {
-        printf("Validate Error Message: %s\n", (char*)result.err_message.arg);
-    }
-    return 0;
-}
-
 int main()
 {
-    const char* code_str = "schema Person:\n"
-                           "    name: str\n"
-                           "    age: int\n"
-                           "    check:\n"
-                           "        0 < age < 120\n";
-    const char* data_str = "{\"name\": \"Alice\", \"age\": 10}";
-    const char* error_data_str = "{\"name\": \"Alice\", \"age\": 1110}";
-    validate(code_str, data_str);
-    validate(code_str, error_data_str);
+    bool success = false;
+    char validate_err[BUFFER_SIZE] = { 0 };
+    const char* code = "schema Person:\n"
+                       "    name: str\n"
+                       "    age: int\n"
+                       "    check:\n"
+                       "        0 < age < 120\n";
+    if (kcl_validate_code(code, "{\"name\": \"Alice\", \"age\": 10}",
+                          &success, validate_err, sizeof(validate_err))) {
+        printf("Validate Status: %d\n", success);
+    }
     return 0;
 }
 ```
-
-Run the ValidateCode example.
 
 ```shell
 ./examples/validate_api
@@ -184,10 +115,37 @@ Run the ValidateCode example.
 
 ## Typed API
 
-`kcl_lib.h` provides typed wrappers around the raw protobuf encode/decode
-helpers for the commonly used methods. All wrappers return `true` on success
-and `false` on failure (on failure the error message is copied into the
-provided output buffer when one is available).
+`kcl_lib.h` exposes one wrapper per KCL service method. Wrappers that
+return a single scalar / string take an output buffer plus its size;
+wrappers that return a typed list take a fixed-size array plus a count
+out-parameter. All wrappers return `true` on success and `false` on
+failure — on failure a diagnostic is copied into `err_out` when one is
+supplied.
+
+| Wrapper                              | Purpose                                                                 |
+|--------------------------------------|-------------------------------------------------------------------------|
+| `kcl_ping`                           | Round-trip a string through `KclService.Ping`                          |
+| `kcl_get_version`                    | Fill a `struct KclVersion` from `KclService.GetVersion`                 |
+| `kcl_exec_program`                   | Compile + evaluate files into YAML/JSON                                |
+| `kcl_validate_code`                  | Validate a code snippet against optional data                           |
+| `kcl_format_code`                    | Format an in-memory KCL snippet                                         |
+| `kcl_format_path`                    | Format files on disk (`dry_run` available)                              |
+| `kcl_lint_path`                      | Lint a list of files                                                    |
+| `kcl_parse_file` / `kcl_parse_program` | Render a file or set of files to AST JSON                             |
+| `kcl_list_method`                    | Enumerate every method on `KclService`                                  |
+| `kcl_list_options`                   | Inspect the `option(...)` declarations in files                         |
+| `kcl_list_variables`                 | Extract every declared variable (with op symbol & parse errors)         |
+| `kcl_load_package`                   | Parse a package into program / paths / scopes / symbol / fqn maps       |
+| `kcl_load_settings_files`            | Merge `kcl.yaml` settings + CLI options into a `KclLoadSettingsFilesResult` |
+| `kcl_override_file`                  | Apply a CLI-style override spec to a file on disk                       |
+| `kcl_get_schema_type_mapping`        | Schema → KCL type map for an entire work dir                            |
+| `kcl_get_schema_type_mapping_under_path` | Schema → KCL type map scoped to a sub-path                          |
+| `kcl_rename`                         | Rename a symbol across files on disk                                    |
+| `kcl_rename_code`                    | Rename a symbol inside an in-memory code snippet                        |
+| `kcl_test`                           | Run the `*_test.k` test cases under a work dir                          |
+| `kcl_update_dependencies`            | Refresh an external-package manifest (`vendor` mode supported)         |
+
+### Example: wiring multiple wrappers
 
 ```c
 #include <kcl_lib.h>
@@ -210,7 +168,8 @@ int main()
     static char yaml[BUFFER_SIZE];
     static char exec_err[BUFFER_SIZE];
     const char* files[] = { "./test_data/schema.k" };
-    if (kcl_exec_program(files, 1, yaml, sizeof(yaml), exec_err, sizeof(exec_err))) {
+    if (kcl_exec_program(files, 1, yaml, sizeof(yaml),
+                         exec_err, sizeof(exec_err))) {
         printf("%s\n", yaml);
     }
 
@@ -218,7 +177,8 @@ int main()
     bool success = false;
     char validate_err[BUFFER_SIZE] = { 0 };
     const char* code = "schema Person:\n    name: str\n    age: int\n    check:\n        0 < age < 120\n";
-    if (kcl_validate_code(code, "{\"name\": \"Alice\", \"age\": 10}", &success, validate_err, sizeof(validate_err))) {
+    if (kcl_validate_code(code, "{\"name\": \"Alice\", \"age\": 10}",
+                          &success, validate_err, sizeof(validate_err))) {
         printf("Validate Status: %d\n", success);
     }
 
@@ -235,6 +195,52 @@ int main()
         printf("%s\n", lint_results);
     }
 
+    // ListOptions
+    static struct KclOptionHelp options[16] = { 0 };
+    size_t option_count = 0;
+    char list_err[BUFFER_SIZE] = { 0 };
+    const char* opt_files[] = { "./test_data/options.k" };
+    if (kcl_list_options(opt_files, 1, options, 16, &option_count,
+                         list_err, sizeof(list_err))) {
+        for (size_t i = 0; i < option_count; ++i) {
+            printf("  %s = %s\n", options[i].name, options[i].default_value);
+        }
+    }
+
     return 0;
 }
 ```
+
+## Raw protobuf API
+
+If a service method is not wrapped yet (or you need to bypass the typed
+helpers), you can encode the `*Args` message yourself, dispatch it via
+`call_native`, and decode the matching `*Result`. The `ExecProgram` and
+`ValidateCode` snippets under [Quick recipes](#quick-recipes) show this
+shape.
+
+All KCL service replies are prefixed with `ERROR:` on failure — the
+helper `check_error_prefix(result_buffer)` in `kcl_lib.h` tests for
+that prefix so the caller can print the diagnostic verbatim.
+
+## Linking from your own project
+
+The build produces two artefacts under `c/`:
+
+* `lib/libkcl_lib_c.a` — the static archive containing the protobuf
+  runtime (`pb_*`), the generated `spec.pb.c` bindings, and the typed
+  wrappers in `kcl_lib_msgs.c`.
+* `target/release/libkcl_lib_c.so` — the Rust dispatcher that the
+  typed wrappers ultimately call into via `kcl_ffi.h`'s `call_native`.
+
+When compiling your own program, link both:
+
+```shell
+cc -I c/include   your_program.c   \
+    -L c/target/release -Wl,-rpath,$PWD/c/target/release -lkcl_lib_c \
+    c/lib/libkcl_lib_c.a
+```
+
+The `target/release` directory is rebuilt by `make cargo` whenever the
+Rust source changes; `make examples` regenerates `lib/libkcl_lib_c.a`
+and every example binary.
