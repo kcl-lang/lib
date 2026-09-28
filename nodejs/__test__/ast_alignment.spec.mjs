@@ -10,7 +10,9 @@ import { fileURLToPath } from 'url'
 import { dirname, join } from 'path'
 
 import { parseFile, ParseFileArgs, parseProgram, ParseProgramArgs } from '../index.js'
-import { parseModule, parseProgram as parseProgramAst } from '../src/ast/index.mjs'
+// Import through the package export map (`"./ast"` in package.json) so this
+// spec also exercises the published entry point, not just the source tree.
+import { parseModule, parseProgram as parseProgramAst } from '@kcl-lib/native/ast'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const FIXTURE = join(__dirname, 'ast_alignment', 'main.k')

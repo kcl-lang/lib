@@ -89,6 +89,7 @@ impl ExecProgramArgs {
         error_format: Option<String>,
         format: Option<String>,
         sourcemap_output: Option<String>,
+        emit_attribute_metadata: Option<bool>,
     ) -> Result<Self> {
         Ok(Self(kcl_api::ExecProgramArgs {
             k_filename_list: paths,
@@ -132,6 +133,7 @@ impl ExecProgramArgs {
             error_format: error_format.unwrap_or_default(),
             format: format.unwrap_or_default(),
             sourcemap_output,
+            emit_attribute_metadata: emit_attribute_metadata.unwrap_or_default(),
             ..Default::default()
         }))
     }
