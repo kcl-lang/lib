@@ -266,7 +266,7 @@ class ScopeIndex(_message.Message):
     def __init__(self, i: _Optional[int] = ..., g: _Optional[int] = ..., kind: _Optional[str] = ...) -> None: ...
 
 class ExecProgramArgs(_message.Message):
-    __slots__ = ("work_dir", "k_filename_list", "k_code_list", "args", "overrides", "disable_yaml_result", "print_override_ast", "strict_range_check", "disable_none", "verbose", "debug", "sort_keys", "external_pkgs", "include_schema_type_path", "compile_only", "show_hidden", "path_selector", "fast_eval", "error_format", "format", "sourcemap_output")
+    __slots__ = ("work_dir", "k_filename_list", "k_code_list", "args", "overrides", "disable_yaml_result", "print_override_ast", "strict_range_check", "disable_none", "verbose", "debug", "sort_keys", "external_pkgs", "include_schema_type_path", "compile_only", "show_hidden", "path_selector", "fast_eval", "error_format", "format", "emit_attribute_metadata", "sourcemap_output")
     WORK_DIR_FIELD_NUMBER: _ClassVar[int]
     K_FILENAME_LIST_FIELD_NUMBER: _ClassVar[int]
     K_CODE_LIST_FIELD_NUMBER: _ClassVar[int]
@@ -287,6 +287,7 @@ class ExecProgramArgs(_message.Message):
     FAST_EVAL_FIELD_NUMBER: _ClassVar[int]
     ERROR_FORMAT_FIELD_NUMBER: _ClassVar[int]
     FORMAT_FIELD_NUMBER: _ClassVar[int]
+    EMIT_ATTRIBUTE_METADATA_FIELD_NUMBER: _ClassVar[int]
     SOURCEMAP_OUTPUT_FIELD_NUMBER: _ClassVar[int]
     work_dir: str
     k_filename_list: _containers.RepeatedScalarFieldContainer[str]
@@ -308,8 +309,9 @@ class ExecProgramArgs(_message.Message):
     fast_eval: bool
     error_format: str
     format: str
+    emit_attribute_metadata: bool
     sourcemap_output: str
-    def __init__(self, work_dir: _Optional[str] = ..., k_filename_list: _Optional[_Iterable[str]] = ..., k_code_list: _Optional[_Iterable[str]] = ..., args: _Optional[_Iterable[_Union[Argument, _Mapping]]] = ..., overrides: _Optional[_Iterable[str]] = ..., disable_yaml_result: _Optional[bool] = ..., print_override_ast: _Optional[bool] = ..., strict_range_check: _Optional[bool] = ..., disable_none: _Optional[bool] = ..., verbose: _Optional[int] = ..., debug: _Optional[int] = ..., sort_keys: _Optional[bool] = ..., external_pkgs: _Optional[_Iterable[_Union[ExternalPkg, _Mapping]]] = ..., include_schema_type_path: _Optional[bool] = ..., compile_only: _Optional[bool] = ..., show_hidden: _Optional[bool] = ..., path_selector: _Optional[_Iterable[str]] = ..., fast_eval: _Optional[bool] = ..., error_format: _Optional[str] = ..., format: _Optional[str] = ..., sourcemap_output: _Optional[str] = ...) -> None: ...
+    def __init__(self, work_dir: _Optional[str] = ..., k_filename_list: _Optional[_Iterable[str]] = ..., k_code_list: _Optional[_Iterable[str]] = ..., args: _Optional[_Iterable[_Union[Argument, _Mapping]]] = ..., overrides: _Optional[_Iterable[str]] = ..., disable_yaml_result: _Optional[bool] = ..., print_override_ast: _Optional[bool] = ..., strict_range_check: _Optional[bool] = ..., disable_none: _Optional[bool] = ..., verbose: _Optional[int] = ..., debug: _Optional[int] = ..., sort_keys: _Optional[bool] = ..., external_pkgs: _Optional[_Iterable[_Union[ExternalPkg, _Mapping]]] = ..., include_schema_type_path: _Optional[bool] = ..., compile_only: _Optional[bool] = ..., show_hidden: _Optional[bool] = ..., path_selector: _Optional[_Iterable[str]] = ..., fast_eval: _Optional[bool] = ..., error_format: _Optional[str] = ..., format: _Optional[str] = ..., emit_attribute_metadata: _Optional[bool] = ..., sourcemap_output: _Optional[str] = ...) -> None: ...
 
 class ExecProgramResult(_message.Message):
     __slots__ = ("json_result", "yaml_result", "log_message", "err_message", "sourcemap")
@@ -623,34 +625,84 @@ class RenameCodeResult(_message.Message):
     def __init__(self, changed_codes: _Optional[_Mapping[str, str]] = ...) -> None: ...
 
 class TestArgs(_message.Message):
-    __slots__ = ("exec_args", "pkg_list", "run_regexp", "fail_fast")
+    __slots__ = ("exec_args", "pkg_list", "run_regexp", "fail_fast", "coverage")
     EXEC_ARGS_FIELD_NUMBER: _ClassVar[int]
     PKG_LIST_FIELD_NUMBER: _ClassVar[int]
     RUN_REGEXP_FIELD_NUMBER: _ClassVar[int]
     FAIL_FAST_FIELD_NUMBER: _ClassVar[int]
+    COVERAGE_FIELD_NUMBER: _ClassVar[int]
     exec_args: ExecProgramArgs
     pkg_list: _containers.RepeatedScalarFieldContainer[str]
     run_regexp: str
     fail_fast: bool
-    def __init__(self, exec_args: _Optional[_Union[ExecProgramArgs, _Mapping]] = ..., pkg_list: _Optional[_Iterable[str]] = ..., run_regexp: _Optional[str] = ..., fail_fast: _Optional[bool] = ...) -> None: ...
+    coverage: bool
+    def __init__(self, exec_args: _Optional[_Union[ExecProgramArgs, _Mapping]] = ..., pkg_list: _Optional[_Iterable[str]] = ..., run_regexp: _Optional[str] = ..., fail_fast: _Optional[bool] = ..., coverage: _Optional[bool] = ...) -> None: ...
 
 class TestResult(_message.Message):
-    __slots__ = ("info",)
+    __slots__ = ("info", "coverage")
     INFO_FIELD_NUMBER: _ClassVar[int]
+    COVERAGE_FIELD_NUMBER: _ClassVar[int]
     info: _containers.RepeatedCompositeFieldContainer[TestCaseInfo]
-    def __init__(self, info: _Optional[_Iterable[_Union[TestCaseInfo, _Mapping]]] = ...) -> None: ...
+    coverage: TestCoverageReport
+    def __init__(self, info: _Optional[_Iterable[_Union[TestCaseInfo, _Mapping]]] = ..., coverage: _Optional[_Union[TestCoverageReport, _Mapping]] = ...) -> None: ...
 
 class TestCaseInfo(_message.Message):
-    __slots__ = ("name", "error", "duration", "log_message")
+    __slots__ = ("name", "error", "duration", "log_message", "line_hits")
     NAME_FIELD_NUMBER: _ClassVar[int]
     ERROR_FIELD_NUMBER: _ClassVar[int]
     DURATION_FIELD_NUMBER: _ClassVar[int]
     LOG_MESSAGE_FIELD_NUMBER: _ClassVar[int]
+    LINE_HITS_FIELD_NUMBER: _ClassVar[int]
     name: str
     error: str
     duration: int
     log_message: str
-    def __init__(self, name: _Optional[str] = ..., error: _Optional[str] = ..., duration: _Optional[int] = ..., log_message: _Optional[str] = ...) -> None: ...
+    line_hits: _containers.ScalarMap[str, int]
+    def __init__(self, name: _Optional[str] = ..., error: _Optional[str] = ..., duration: _Optional[int] = ..., log_message: _Optional[str] = ..., line_hits: _Optional[_Mapping[str, int]] = ...) -> None: ...
+
+class FileCoverage(_message.Message):
+    __slots__ = ("filename", "covered_lines", "executable_lines", "line_hits")
+    class LineHitsEntry(_message.Message):
+        __slots__ = ("key", "value")
+        KEY_FIELD_NUMBER: _ClassVar[int]
+        VALUE_FIELD_NUMBER: _ClassVar[int]
+        key: int
+        value: int
+        def __init__(self, key: _Optional[int] = ..., value: _Optional[int] = ...) -> None: ...
+    FILENAME_FIELD_NUMBER: _ClassVar[int]
+    COVERED_LINES_FIELD_NUMBER: _ClassVar[int]
+    EXECUTABLE_LINES_FIELD_NUMBER: _ClassVar[int]
+    LINE_HITS_FIELD_NUMBER: _ClassVar[int]
+    filename: str
+    covered_lines: _containers.RepeatedScalarFieldContainer[int]
+    executable_lines: _containers.RepeatedScalarFieldContainer[int]
+    line_hits: _containers.ScalarMap[int, int]
+    def __init__(self, filename: _Optional[str] = ..., covered_lines: _Optional[_Iterable[int]] = ..., executable_lines: _Optional[_Iterable[int]] = ..., line_hits: _Optional[_Mapping[int, int]] = ...) -> None: ...
+
+class TestCoverageReport(_message.Message):
+    __slots__ = ("files", "summary")
+    class FilesEntry(_message.Message):
+        __slots__ = ("key", "value")
+        KEY_FIELD_NUMBER: _ClassVar[int]
+        VALUE_FIELD_NUMBER: _ClassVar[int]
+        key: str
+        value: FileCoverage
+        def __init__(self, key: _Optional[str] = ..., value: _Optional[_Union[FileCoverage, _Mapping]] = ...) -> None: ...
+    FILES_FIELD_NUMBER: _ClassVar[int]
+    SUMMARY_FIELD_NUMBER: _ClassVar[int]
+    files: _containers.MessageMap[str, FileCoverage]
+    summary: CoverageSummary
+    def __init__(self, files: _Optional[_Mapping[str, FileCoverage]] = ..., summary: _Optional[_Union[CoverageSummary, _Mapping]] = ...) -> None: ...
+
+class CoverageSummary(_message.Message):
+    __slots__ = ("covered", "executable", "percent")
+    COVERED_FIELD_NUMBER: _ClassVar[int]
+    EXECUTABLE_FIELD_NUMBER: _ClassVar[int]
+    PERCENT_FIELD_NUMBER: _ClassVar[int]
+    covered: int
+    executable: int
+    percent: float
+    def __init__(self, covered: _Optional[int] = ..., executable: _Optional[int] = ..., percent: _Optional[float] = ...) -> None: ...
 
 class UpdateDependenciesArgs(_message.Message):
     __slots__ = ("manifest_path", "vendor")

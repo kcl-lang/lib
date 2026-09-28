@@ -83,7 +83,7 @@ namespace KclLib.API {
             "JgoEZGVmcxgFIAMoCzIYLmNvbS5rY2wuYXBpLlN5bWJvbEluZGV4IjEKC1N5",
             "bWJvbEluZGV4EgkKAWkYASABKAQSCQoBZxgCIAEoBBIMCgRraW5kGAMgASgJ",
             "IjAKClNjb3BlSW5kZXgSCQoBaRgBIAEoBBIJCgFnGAIgASgEEgwKBGtpbmQY",
-            "AyABKAkiqQQKD0V4ZWNQcm9ncmFtQXJncxIQCgh3b3JrX2RpchgBIAEoCRIX",
+            "AyABKAkiygQKD0V4ZWNQcm9ncmFtQXJncxIQCgh3b3JrX2RpchgBIAEoCRIX",
             "Cg9rX2ZpbGVuYW1lX2xpc3QYAiADKAkSEwoLa19jb2RlX2xpc3QYAyADKAkS",
             "IwoEYXJncxgEIAMoCzIVLmNvbS5rY2wuYXBpLkFyZ3VtZW50EhEKCW92ZXJy",
             "aWRlcxgFIAMoCRIbChNkaXNhYmxlX3lhbWxfcmVzdWx0GAYgASgIEhoKEnBy",
@@ -94,154 +94,168 @@ namespace KclLib.API {
             "dWRlX3NjaGVtYV90eXBlX3BhdGgYDiABKAgSFAoMY29tcGlsZV9vbmx5GA8g",
             "ASgIEhMKC3Nob3dfaGlkZGVuGBAgASgIEhUKDXBhdGhfc2VsZWN0b3IYESAD",
             "KAkSEQoJZmFzdF9ldmFsGBIgASgIEhQKDGVycm9yX2Zvcm1hdBgTIAEoCRIO",
-            "CgZmb3JtYXQYFCABKAkSHQoQc291cmNlbWFwX291dHB1dBgWIAEoCUgAiAEB",
-            "QhMKEV9zb3VyY2VtYXBfb3V0cHV0Io0BChFFeGVjUHJvZ3JhbVJlc3VsdBIT",
-            "Cgtqc29uX3Jlc3VsdBgBIAEoCRITCgt5YW1sX3Jlc3VsdBgCIAEoCRITCgts",
-            "b2dfbWVzc2FnZRgDIAEoCRITCgtlcnJfbWVzc2FnZRgEIAEoCRIWCglzb3Vy",
-            "Y2VtYXAYBSABKAlIAIgBAUIMCgpfc291cmNlbWFwIiAKDkZvcm1hdENvZGVB",
-            "cmdzEg4KBnNvdXJjZRgBIAEoCSIlChBGb3JtYXRDb2RlUmVzdWx0EhEKCWZv",
-            "cm1hdHRlZBgBIAEoDCIvCg5Gb3JtYXRQYXRoQXJncxIMCgRwYXRoGAEgASgJ",
-            "Eg8KB2RyeV9ydW4YAiABKAgiKQoQRm9ybWF0UGF0aFJlc3VsdBIVCg1jaGFu",
-            "Z2VkX3BhdGhzGAEgAygJIh0KDExpbnRQYXRoQXJncxINCgVwYXRocxgBIAMo",
-            "CSIhCg5MaW50UGF0aFJlc3VsdBIPCgdyZXN1bHRzGAEgAygJIkUKEE92ZXJy",
-            "aWRlRmlsZUFyZ3MSDAoEZmlsZRgBIAEoCRINCgVzcGVjcxgCIAMoCRIUCgxp",
-            "bXBvcnRfcGF0aHMYAyADKAkiTgoST3ZlcnJpZGVGaWxlUmVzdWx0Eg4KBnJl",
-            "c3VsdBgBIAEoCBIoCgxwYXJzZV9lcnJvcnMYAiADKAsyEi5jb20ua2NsLmFw",
-            "aS5FcnJvciItChRMaXN0VmFyaWFibGVzT3B0aW9ucxIVCg1tZXJnZV9wcm9n",
-            "cmFtGAEgASgIIjgKDFZhcmlhYmxlTGlzdBIoCgl2YXJpYWJsZXMYASADKAsy",
-            "FS5jb20ua2NsLmFwaS5WYXJpYWJsZSJlChFMaXN0VmFyaWFibGVzQXJncxIN",
-            "CgVmaWxlcxgBIAMoCRINCgVzcGVjcxgCIAMoCRIyCgdvcHRpb25zGAMgASgL",
-            "MiEuY29tLmtjbC5hcGkuTGlzdFZhcmlhYmxlc09wdGlvbnMi6wEKE0xpc3RW",
-            "YXJpYWJsZXNSZXN1bHQSQgoJdmFyaWFibGVzGAEgAygLMi8uY29tLmtjbC5h",
-            "cGkuTGlzdFZhcmlhYmxlc1Jlc3VsdC5WYXJpYWJsZXNFbnRyeRIZChF1bnN1",
-            "cHBvcnRlZF9jb2RlcxgCIAMoCRIoCgxwYXJzZV9lcnJvcnMYAyADKAsyEi5j",
-            "b20ua2NsLmFwaS5FcnJvchpLCg5WYXJpYWJsZXNFbnRyeRILCgNrZXkYASAB",
-            "KAkSKAoFdmFsdWUYAiABKAsyGS5jb20ua2NsLmFwaS5WYXJpYWJsZUxpc3Q6",
-            "AjgBIpQBCghWYXJpYWJsZRINCgV2YWx1ZRgBIAEoCRIRCgl0eXBlX25hbWUY",
-            "AiABKAkSDgoGb3Bfc3ltGAMgASgJEikKCmxpc3RfaXRlbXMYBCADKAsyFS5j",
-            "b20ua2NsLmFwaS5WYXJpYWJsZRIrCgxkaWN0X2VudHJpZXMYBSADKAsyFS5j",
-            "b20ua2NsLmFwaS5NYXBFbnRyeSI9CghNYXBFbnRyeRILCgNrZXkYASABKAkS",
-            "JAoFdmFsdWUYAiABKAsyFS5jb20ua2NsLmFwaS5WYXJpYWJsZSJgChhHZXRT",
-            "Y2hlbWFUeXBlTWFwcGluZ0FyZ3MSLwoJZXhlY19hcmdzGAEgASgLMhwuY29t",
-            "LmtjbC5hcGkuRXhlY1Byb2dyYW1BcmdzEhMKC3NjaGVtYV9uYW1lGAIgASgJ",
-            "IskBChpHZXRTY2hlbWFUeXBlTWFwcGluZ1Jlc3VsdBJbChNzY2hlbWFfdHlw",
-            "ZV9tYXBwaW5nGAEgAygLMj4uY29tLmtjbC5hcGkuR2V0U2NoZW1hVHlwZU1h",
-            "cHBpbmdSZXN1bHQuU2NoZW1hVHlwZU1hcHBpbmdFbnRyeRpOChZTY2hlbWFU",
-            "eXBlTWFwcGluZ0VudHJ5EgsKA2tleRgBIAEoCRIjCgV2YWx1ZRgCIAEoCzIU",
-            "LmNvbS5rY2wuYXBpLktjbFR5cGU6AjgBIt8BCiNHZXRTY2hlbWFUeXBlTWFw",
-            "cGluZ1VuZGVyUGF0aFJlc3VsdBJkChNzY2hlbWFfdHlwZV9tYXBwaW5nGAEg",
-            "AygLMkcuY29tLmtjbC5hcGkuR2V0U2NoZW1hVHlwZU1hcHBpbmdVbmRlclBh",
-            "dGhSZXN1bHQuU2NoZW1hVHlwZU1hcHBpbmdFbnRyeRpSChZTY2hlbWFUeXBl",
-            "TWFwcGluZ0VudHJ5EgsKA2tleRgBIAEoCRInCgV2YWx1ZRgCIAEoCzIYLmNv",
-            "bS5rY2wuYXBpLlNjaGVtYVR5cGVzOgI4ASI4CgtTY2hlbWFUeXBlcxIpCgtz",
-            "Y2hlbWFfdHlwZRgBIAMoCzIULmNvbS5rY2wuYXBpLktjbFR5cGUitwEKEFZh",
-            "bGlkYXRlQ29kZUFyZ3MSEAoIZGF0YWZpbGUYASABKAkSDAoEZGF0YRgCIAEo",
-            "CRIMCgRmaWxlGAMgASgJEgwKBGNvZGUYBCABKAkSDgoGc2NoZW1hGAUgASgJ",
-            "EhYKDmF0dHJpYnV0ZV9uYW1lGAYgASgJEg4KBmZvcm1hdBgHIAEoCRIvCg1l",
-            "eHRlcm5hbF9wa2dzGAggAygLMhguY29tLmtjbC5hcGkuRXh0ZXJuYWxQa2ci",
-            "OgoSVmFsaWRhdGVDb2RlUmVzdWx0Eg8KB3N1Y2Nlc3MYASABKAgSEwoLZXJy",
-            "X21lc3NhZ2UYAiABKAkiOgoIUG9zaXRpb24SDAoEbGluZRgBIAEoAxIOCgZj",
-            "b2x1bW4YAiABKAMSEAoIZmlsZW5hbWUYAyABKAkiOAoVTG9hZFNldHRpbmdz",
-            "RmlsZXNBcmdzEhAKCHdvcmtfZGlyGAEgASgJEg0KBWZpbGVzGAIgAygJInoK",
-            "F0xvYWRTZXR0aW5nc0ZpbGVzUmVzdWx0Ei8KD2tjbF9jbGlfY29uZmlncxgB",
-            "IAEoCzIWLmNvbS5rY2wuYXBpLkNsaUNvbmZpZxIuCgtrY2xfb3B0aW9ucxgC",
-            "IAMoCzIZLmNvbS5rY2wuYXBpLktleVZhbHVlUGFpciKDAgoJQ2xpQ29uZmln",
-            "Eg0KBWZpbGVzGAEgAygJEg4KBm91dHB1dBgCIAEoCRIRCglvdmVycmlkZXMY",
-            "AyADKAkSFQoNcGF0aF9zZWxlY3RvchgEIAMoCRIaChJzdHJpY3RfcmFuZ2Vf",
-            "Y2hlY2sYBSABKAgSFAoMZGlzYWJsZV9ub25lGAYgASgIEg8KB3ZlcmJvc2UY",
-            "ByABKAMSDQoFZGVidWcYCCABKAgSEQoJc29ydF9rZXlzGAkgASgIEhMKC3No",
-            "b3dfaGlkZGVuGAogASgIEiAKGGluY2x1ZGVfc2NoZW1hX3R5cGVfcGF0aBgL",
-            "IAEoCBIRCglmYXN0X2V2YWwYDCABKAgiKgoMS2V5VmFsdWVQYWlyEgsKA2tl",
-            "eRgBIAEoCRINCgV2YWx1ZRgCIAEoCSJdCgpSZW5hbWVBcmdzEhQKDHBhY2th",
-            "Z2Vfcm9vdBgBIAEoCRITCgtzeW1ib2xfcGF0aBgCIAEoCRISCgpmaWxlX3Bh",
-            "dGhzGAMgAygJEhAKCG5ld19uYW1lGAQgASgJIiUKDFJlbmFtZVJlc3VsdBIV",
-            "Cg1jaGFuZ2VkX2ZpbGVzGAEgAygJIsUBCg5SZW5hbWVDb2RlQXJncxIUCgxw",
-            "YWNrYWdlX3Jvb3QYASABKAkSEwoLc3ltYm9sX3BhdGgYAiABKAkSQgoMc291",
-            "cmNlX2NvZGVzGAMgAygLMiwuY29tLmtjbC5hcGkuUmVuYW1lQ29kZUFyZ3Mu",
-            "U291cmNlQ29kZXNFbnRyeRIQCghuZXdfbmFtZRgEIAEoCRoyChBTb3VyY2VD",
-            "b2Rlc0VudHJ5EgsKA2tleRgBIAEoCRINCgV2YWx1ZRgCIAEoCToCOAEijwEK",
-            "EFJlbmFtZUNvZGVSZXN1bHQSRgoNY2hhbmdlZF9jb2RlcxgBIAMoCzIvLmNv",
-            "bS5rY2wuYXBpLlJlbmFtZUNvZGVSZXN1bHQuQ2hhbmdlZENvZGVzRW50cnka",
-            "MwoRQ2hhbmdlZENvZGVzRW50cnkSCwoDa2V5GAEgASgJEg0KBXZhbHVlGAIg",
-            "ASgJOgI4ASJ0CghUZXN0QXJncxIvCglleGVjX2FyZ3MYASABKAsyHC5jb20u",
-            "a2NsLmFwaS5FeGVjUHJvZ3JhbUFyZ3MSEAoIcGtnX2xpc3QYAiADKAkSEgoK",
-            "cnVuX3JlZ2V4cBgDIAEoCRIRCglmYWlsX2Zhc3QYBCABKAgiNQoKVGVzdFJl",
-            "c3VsdBInCgRpbmZvGAIgAygLMhkuY29tLmtjbC5hcGkuVGVzdENhc2VJbmZv",
-            "IlIKDFRlc3RDYXNlSW5mbxIMCgRuYW1lGAEgASgJEg0KBWVycm9yGAIgASgJ",
-            "EhAKCGR1cmF0aW9uGAMgASgEEhMKC2xvZ19tZXNzYWdlGAQgASgJIj8KFlVw",
-            "ZGF0ZURlcGVuZGVuY2llc0FyZ3MSFQoNbWFuaWZlc3RfcGF0aBgBIAEoCRIO",
-            "CgZ2ZW5kb3IYAiABKAgiSwoYVXBkYXRlRGVwZW5kZW5jaWVzUmVzdWx0Ei8K",
-            "DWV4dGVybmFsX3BrZ3MYAyADKAsyGC5jb20ua2NsLmFwaS5FeHRlcm5hbFBr",
-            "ZyKBBgoHS2NsVHlwZRIMCgR0eXBlGAEgASgJEikKC3VuaW9uX3R5cGVzGAIg",
-            "AygLMhQuY29tLmtjbC5hcGkuS2NsVHlwZRIPCgdkZWZhdWx0GAMgASgJEhMK",
-            "C3NjaGVtYV9uYW1lGAQgASgJEhIKCnNjaGVtYV9kb2MYBSABKAkSOAoKcHJv",
-            "cGVydGllcxgGIAMoCzIkLmNvbS5rY2wuYXBpLktjbFR5cGUuUHJvcGVydGll",
-            "c0VudHJ5EhAKCHJlcXVpcmVkGAcgAygJEiEKA2tleRgIIAEoCzIULmNvbS5r",
-            "Y2wuYXBpLktjbFR5cGUSIgoEaXRlbRgJIAEoCzIULmNvbS5rY2wuYXBpLktj",
-            "bFR5cGUSDAoEbGluZRgKIAEoBRIqCgpkZWNvcmF0b3JzGAsgAygLMhYuY29t",
-            "LmtjbC5hcGkuRGVjb3JhdG9yEhAKCGZpbGVuYW1lGAwgASgJEhAKCHBrZ19w",
-            "YXRoGA0gASgJEhMKC2Rlc2NyaXB0aW9uGA4gASgJEjQKCGV4YW1wbGVzGA8g",
-            "AygLMiIuY29tLmtjbC5hcGkuS2NsVHlwZS5FeGFtcGxlc0VudHJ5EikKC2Jh",
-            "c2Vfc2NoZW1hGBAgASgLMhQuY29tLmtjbC5hcGkuS2NsVHlwZRIwCghmdW5j",
-            "dGlvbhgRIAEoCzIZLmNvbS5rY2wuYXBpLkZ1bmN0aW9uVHlwZUgAiAEBEjkK",
-            "D2luZGV4X3NpZ25hdHVyZRgSIAEoCzIbLmNvbS5rY2wuYXBpLkluZGV4U2ln",
-            "bmF0dXJlSAGIAQEaRwoPUHJvcGVydGllc0VudHJ5EgsKA2tleRgBIAEoCRIj",
-            "CgV2YWx1ZRgCIAEoCzIULmNvbS5rY2wuYXBpLktjbFR5cGU6AjgBGkUKDUV4",
-            "YW1wbGVzRW50cnkSCwoDa2V5GAEgASgJEiMKBXZhbHVlGAIgASgLMhQuY29t",
-            "LmtjbC5hcGkuRXhhbXBsZToCOAFCCwoJX2Z1bmN0aW9uQhIKEF9pbmRleF9z",
-            "aWduYXR1cmUiXwoMRnVuY3Rpb25UeXBlEiYKBnBhcmFtcxgBIAMoCzIWLmNv",
-            "bS5rY2wuYXBpLlBhcmFtZXRlchInCglyZXR1cm5fdHkYAiABKAsyFC5jb20u",
-            "a2NsLmFwaS5LY2xUeXBlIjsKCVBhcmFtZXRlchIMCgRuYW1lGAEgASgJEiAK",
-            "AnR5GAIgASgLMhQuY29tLmtjbC5hcGkuS2NsVHlwZSKNAQoOSW5kZXhTaWdu",
-            "YXR1cmUSFQoIa2V5X25hbWUYASABKAlIAIgBARIhCgNrZXkYAiABKAsyFC5j",
-            "b20ua2NsLmFwaS5LY2xUeXBlEiEKA3ZhbBgDIAEoCzIULmNvbS5rY2wuYXBp",
-            "LktjbFR5cGUSEQoJYW55X290aGVyGAQgASgIQgsKCV9rZXlfbmFtZSKVAQoJ",
-            "RGVjb3JhdG9yEgwKBG5hbWUYASABKAkSEQoJYXJndW1lbnRzGAIgAygJEjYK",
-            "CGtleXdvcmRzGAMgAygLMiQuY29tLmtjbC5hcGkuRGVjb3JhdG9yLktleXdv",
-            "cmRzRW50cnkaLwoNS2V5d29yZHNFbnRyeRILCgNrZXkYASABKAkSDQoFdmFs",
-            "dWUYAiABKAk6AjgBIj4KB0V4YW1wbGUSDwoHc3VtbWFyeRgBIAEoCRITCgtk",
-            "ZXNjcmlwdGlvbhgCIAEoCRINCgV2YWx1ZRgDIAEoCTKSAQoOQnVpbHRpblNl",
-            "cnZpY2USNgoEUGluZxIVLmNvbS5rY2wuYXBpLlBpbmdBcmdzGhcuY29tLmtj",
-            "bC5hcGkuUGluZ1Jlc3VsdBJICgpMaXN0TWV0aG9kEhsuY29tLmtjbC5hcGku",
-            "TGlzdE1ldGhvZEFyZ3MaHS5jb20ua2NsLmFwaS5MaXN0TWV0aG9kUmVzdWx0",
-            "MrsMCgpLY2xTZXJ2aWNlEjYKBFBpbmcSFS5jb20ua2NsLmFwaS5QaW5nQXJn",
-            "cxoXLmNvbS5rY2wuYXBpLlBpbmdSZXN1bHQSSAoKR2V0VmVyc2lvbhIbLmNv",
-            "bS5rY2wuYXBpLkdldFZlcnNpb25BcmdzGh0uY29tLmtjbC5hcGkuR2V0VmVy",
-            "c2lvblJlc3VsdBJOCgxQYXJzZVByb2dyYW0SHS5jb20ua2NsLmFwaS5QYXJz",
-            "ZVByb2dyYW1BcmdzGh8uY29tLmtjbC5hcGkuUGFyc2VQcm9ncmFtUmVzdWx0",
-            "EkUKCVBhcnNlRmlsZRIaLmNvbS5rY2wuYXBpLlBhcnNlRmlsZUFyZ3MaHC5j",
-            "b20ua2NsLmFwaS5QYXJzZUZpbGVSZXN1bHQSSwoLTG9hZFBhY2thZ2USHC5j",
-            "b20ua2NsLmFwaS5Mb2FkUGFja2FnZUFyZ3MaHi5jb20ua2NsLmFwaS5Mb2Fk",
-            "UGFja2FnZVJlc3VsdBJMCgtMaXN0T3B0aW9ucxIdLmNvbS5rY2wuYXBpLlBh",
-            "cnNlUHJvZ3JhbUFyZ3MaHi5jb20ua2NsLmFwaS5MaXN0T3B0aW9uc1Jlc3Vs",
-            "dBJRCg1MaXN0VmFyaWFibGVzEh4uY29tLmtjbC5hcGkuTGlzdFZhcmlhYmxl",
-            "c0FyZ3MaIC5jb20ua2NsLmFwaS5MaXN0VmFyaWFibGVzUmVzdWx0EksKC0V4",
-            "ZWNQcm9ncmFtEhwuY29tLmtjbC5hcGkuRXhlY1Byb2dyYW1BcmdzGh4uY29t",
-            "LmtjbC5hcGkuRXhlY1Byb2dyYW1SZXN1bHQSTgoMT3ZlcnJpZGVGaWxlEh0u",
-            "Y29tLmtjbC5hcGkuT3ZlcnJpZGVGaWxlQXJncxofLmNvbS5rY2wuYXBpLk92",
-            "ZXJyaWRlRmlsZVJlc3VsdBJmChRHZXRTY2hlbWFUeXBlTWFwcGluZxIlLmNv",
-            "bS5rY2wuYXBpLkdldFNjaGVtYVR5cGVNYXBwaW5nQXJncxonLmNvbS5rY2wu",
-            "YXBpLkdldFNjaGVtYVR5cGVNYXBwaW5nUmVzdWx0EngKHUdldFNjaGVtYVR5",
-            "cGVNYXBwaW5nVW5kZXJQYXRoEiUuY29tLmtjbC5hcGkuR2V0U2NoZW1hVHlw",
-            "ZU1hcHBpbmdBcmdzGjAuY29tLmtjbC5hcGkuR2V0U2NoZW1hVHlwZU1hcHBp",
-            "bmdVbmRlclBhdGhSZXN1bHQSSAoKRm9ybWF0Q29kZRIbLmNvbS5rY2wuYXBp",
-            "LkZvcm1hdENvZGVBcmdzGh0uY29tLmtjbC5hcGkuRm9ybWF0Q29kZVJlc3Vs",
-            "dBJICgpGb3JtYXRQYXRoEhsuY29tLmtjbC5hcGkuRm9ybWF0UGF0aEFyZ3Ma",
-            "HS5jb20ua2NsLmFwaS5Gb3JtYXRQYXRoUmVzdWx0EkIKCExpbnRQYXRoEhku",
-            "Y29tLmtjbC5hcGkuTGludFBhdGhBcmdzGhsuY29tLmtjbC5hcGkuTGludFBh",
-            "dGhSZXN1bHQSTgoMVmFsaWRhdGVDb2RlEh0uY29tLmtjbC5hcGkuVmFsaWRh",
-            "dGVDb2RlQXJncxofLmNvbS5rY2wuYXBpLlZhbGlkYXRlQ29kZVJlc3VsdBJd",
-            "ChFMb2FkU2V0dGluZ3NGaWxlcxIiLmNvbS5rY2wuYXBpLkxvYWRTZXR0aW5n",
-            "c0ZpbGVzQXJncxokLmNvbS5rY2wuYXBpLkxvYWRTZXR0aW5nc0ZpbGVzUmVz",
-            "dWx0EjwKBlJlbmFtZRIXLmNvbS5rY2wuYXBpLlJlbmFtZUFyZ3MaGS5jb20u",
-            "a2NsLmFwaS5SZW5hbWVSZXN1bHQSSAoKUmVuYW1lQ29kZRIbLmNvbS5rY2wu",
-            "YXBpLlJlbmFtZUNvZGVBcmdzGh0uY29tLmtjbC5hcGkuUmVuYW1lQ29kZVJl",
-            "c3VsdBI2CgRUZXN0EhUuY29tLmtjbC5hcGkuVGVzdEFyZ3MaFy5jb20ua2Ns",
-            "LmFwaS5UZXN0UmVzdWx0EmAKElVwZGF0ZURlcGVuZGVuY2llcxIjLmNvbS5r",
-            "Y2wuYXBpLlVwZGF0ZURlcGVuZGVuY2llc0FyZ3MaJS5jb20ua2NsLmFwaS5V",
-            "cGRhdGVEZXBlbmRlbmNpZXNSZXN1bHRCFFoFLjthcGmqAgpLY2xMaWIuQVBJ",
-            "YgZwcm90bzM="
-));
+            "CgZmb3JtYXQYFCABKAkSHwoXZW1pdF9hdHRyaWJ1dGVfbWV0YWRhdGEYFSAB",
+            "KAgSHQoQc291cmNlbWFwX291dHB1dBgWIAEoCUgAiAEBQhMKEV9zb3VyY2Vt",
+            "YXBfb3V0cHV0Io0BChFFeGVjUHJvZ3JhbVJlc3VsdBITCgtqc29uX3Jlc3Vs",
+            "dBgBIAEoCRITCgt5YW1sX3Jlc3VsdBgCIAEoCRITCgtsb2dfbWVzc2FnZRgD",
+            "IAEoCRITCgtlcnJfbWVzc2FnZRgEIAEoCRIWCglzb3VyY2VtYXAYBSABKAlI",
+            "AIgBAUIMCgpfc291cmNlbWFwIiAKDkZvcm1hdENvZGVBcmdzEg4KBnNvdXJj",
+            "ZRgBIAEoCSIlChBGb3JtYXRDb2RlUmVzdWx0EhEKCWZvcm1hdHRlZBgBIAEo",
+            "DCIvCg5Gb3JtYXRQYXRoQXJncxIMCgRwYXRoGAEgASgJEg8KB2RyeV9ydW4Y",
+            "AiABKAgiKQoQRm9ybWF0UGF0aFJlc3VsdBIVCg1jaGFuZ2VkX3BhdGhzGAEg",
+            "AygJIh0KDExpbnRQYXRoQXJncxINCgVwYXRocxgBIAMoCSIhCg5MaW50UGF0",
+            "aFJlc3VsdBIPCgdyZXN1bHRzGAEgAygJIkUKEE92ZXJyaWRlRmlsZUFyZ3MS",
+            "DAoEZmlsZRgBIAEoCRINCgVzcGVjcxgCIAMoCRIUCgxpbXBvcnRfcGF0aHMY",
+            "AyADKAkiTgoST3ZlcnJpZGVGaWxlUmVzdWx0Eg4KBnJlc3VsdBgBIAEoCBIo",
+            "CgxwYXJzZV9lcnJvcnMYAiADKAsyEi5jb20ua2NsLmFwaS5FcnJvciItChRM",
+            "aXN0VmFyaWFibGVzT3B0aW9ucxIVCg1tZXJnZV9wcm9ncmFtGAEgASgIIjgK",
+            "DFZhcmlhYmxlTGlzdBIoCgl2YXJpYWJsZXMYASADKAsyFS5jb20ua2NsLmFw",
+            "aS5WYXJpYWJsZSJlChFMaXN0VmFyaWFibGVzQXJncxINCgVmaWxlcxgBIAMo",
+            "CRINCgVzcGVjcxgCIAMoCRIyCgdvcHRpb25zGAMgASgLMiEuY29tLmtjbC5h",
+            "cGkuTGlzdFZhcmlhYmxlc09wdGlvbnMi6wEKE0xpc3RWYXJpYWJsZXNSZXN1",
+            "bHQSQgoJdmFyaWFibGVzGAEgAygLMi8uY29tLmtjbC5hcGkuTGlzdFZhcmlh",
+            "Ymxlc1Jlc3VsdC5WYXJpYWJsZXNFbnRyeRIZChF1bnN1cHBvcnRlZF9jb2Rl",
+            "cxgCIAMoCRIoCgxwYXJzZV9lcnJvcnMYAyADKAsyEi5jb20ua2NsLmFwaS5F",
+            "cnJvchpLCg5WYXJpYWJsZXNFbnRyeRILCgNrZXkYASABKAkSKAoFdmFsdWUY",
+            "AiABKAsyGS5jb20ua2NsLmFwaS5WYXJpYWJsZUxpc3Q6AjgBIpQBCghWYXJp",
+            "YWJsZRINCgV2YWx1ZRgBIAEoCRIRCgl0eXBlX25hbWUYAiABKAkSDgoGb3Bf",
+            "c3ltGAMgASgJEikKCmxpc3RfaXRlbXMYBCADKAsyFS5jb20ua2NsLmFwaS5W",
+            "YXJpYWJsZRIrCgxkaWN0X2VudHJpZXMYBSADKAsyFS5jb20ua2NsLmFwaS5N",
+            "YXBFbnRyeSI9CghNYXBFbnRyeRILCgNrZXkYASABKAkSJAoFdmFsdWUYAiAB",
+            "KAsyFS5jb20ua2NsLmFwaS5WYXJpYWJsZSJgChhHZXRTY2hlbWFUeXBlTWFw",
+            "cGluZ0FyZ3MSLwoJZXhlY19hcmdzGAEgASgLMhwuY29tLmtjbC5hcGkuRXhl",
+            "Y1Byb2dyYW1BcmdzEhMKC3NjaGVtYV9uYW1lGAIgASgJIskBChpHZXRTY2hl",
+            "bWFUeXBlTWFwcGluZ1Jlc3VsdBJbChNzY2hlbWFfdHlwZV9tYXBwaW5nGAEg",
+            "AygLMj4uY29tLmtjbC5hcGkuR2V0U2NoZW1hVHlwZU1hcHBpbmdSZXN1bHQu",
+            "U2NoZW1hVHlwZU1hcHBpbmdFbnRyeRpOChZTY2hlbWFUeXBlTWFwcGluZ0Vu",
+            "dHJ5EgsKA2tleRgBIAEoCRIjCgV2YWx1ZRgCIAEoCzIULmNvbS5rY2wuYXBp",
+            "LktjbFR5cGU6AjgBIt8BCiNHZXRTY2hlbWFUeXBlTWFwcGluZ1VuZGVyUGF0",
+            "aFJlc3VsdBJkChNzY2hlbWFfdHlwZV9tYXBwaW5nGAEgAygLMkcuY29tLmtj",
+            "bC5hcGkuR2V0U2NoZW1hVHlwZU1hcHBpbmdVbmRlclBhdGhSZXN1bHQuU2No",
+            "ZW1hVHlwZU1hcHBpbmdFbnRyeRpSChZTY2hlbWFUeXBlTWFwcGluZ0VudHJ5",
+            "EgsKA2tleRgBIAEoCRInCgV2YWx1ZRgCIAEoCzIYLmNvbS5rY2wuYXBpLlNj",
+            "aGVtYVR5cGVzOgI4ASI4CgtTY2hlbWFUeXBlcxIpCgtzY2hlbWFfdHlwZRgB",
+            "IAMoCzIULmNvbS5rY2wuYXBpLktjbFR5cGUitwEKEFZhbGlkYXRlQ29kZUFy",
+            "Z3MSEAoIZGF0YWZpbGUYASABKAkSDAoEZGF0YRgCIAEoCRIMCgRmaWxlGAMg",
+            "ASgJEgwKBGNvZGUYBCABKAkSDgoGc2NoZW1hGAUgASgJEhYKDmF0dHJpYnV0",
+            "ZV9uYW1lGAYgASgJEg4KBmZvcm1hdBgHIAEoCRIvCg1leHRlcm5hbF9wa2dz",
+            "GAggAygLMhguY29tLmtjbC5hcGkuRXh0ZXJuYWxQa2ciOgoSVmFsaWRhdGVD",
+            "b2RlUmVzdWx0Eg8KB3N1Y2Nlc3MYASABKAgSEwoLZXJyX21lc3NhZ2UYAiAB",
+            "KAkiOgoIUG9zaXRpb24SDAoEbGluZRgBIAEoAxIOCgZjb2x1bW4YAiABKAMS",
+            "EAoIZmlsZW5hbWUYAyABKAkiOAoVTG9hZFNldHRpbmdzRmlsZXNBcmdzEhAK",
+            "CHdvcmtfZGlyGAEgASgJEg0KBWZpbGVzGAIgAygJInoKF0xvYWRTZXR0aW5n",
+            "c0ZpbGVzUmVzdWx0Ei8KD2tjbF9jbGlfY29uZmlncxgBIAEoCzIWLmNvbS5r",
+            "Y2wuYXBpLkNsaUNvbmZpZxIuCgtrY2xfb3B0aW9ucxgCIAMoCzIZLmNvbS5r",
+            "Y2wuYXBpLktleVZhbHVlUGFpciKDAgoJQ2xpQ29uZmlnEg0KBWZpbGVzGAEg",
+            "AygJEg4KBm91dHB1dBgCIAEoCRIRCglvdmVycmlkZXMYAyADKAkSFQoNcGF0",
+            "aF9zZWxlY3RvchgEIAMoCRIaChJzdHJpY3RfcmFuZ2VfY2hlY2sYBSABKAgS",
+            "FAoMZGlzYWJsZV9ub25lGAYgASgIEg8KB3ZlcmJvc2UYByABKAMSDQoFZGVi",
+            "dWcYCCABKAgSEQoJc29ydF9rZXlzGAkgASgIEhMKC3Nob3dfaGlkZGVuGAog",
+            "ASgIEiAKGGluY2x1ZGVfc2NoZW1hX3R5cGVfcGF0aBgLIAEoCBIRCglmYXN0",
+            "X2V2YWwYDCABKAgiKgoMS2V5VmFsdWVQYWlyEgsKA2tleRgBIAEoCRINCgV2",
+            "YWx1ZRgCIAEoCSJdCgpSZW5hbWVBcmdzEhQKDHBhY2thZ2Vfcm9vdBgBIAEo",
+            "CRITCgtzeW1ib2xfcGF0aBgCIAEoCRISCgpmaWxlX3BhdGhzGAMgAygJEhAK",
+            "CG5ld19uYW1lGAQgASgJIiUKDFJlbmFtZVJlc3VsdBIVCg1jaGFuZ2VkX2Zp",
+            "bGVzGAEgAygJIsUBCg5SZW5hbWVDb2RlQXJncxIUCgxwYWNrYWdlX3Jvb3QY",
+            "ASABKAkSEwoLc3ltYm9sX3BhdGgYAiABKAkSQgoMc291cmNlX2NvZGVzGAMg",
+            "AygLMiwuY29tLmtjbC5hcGkuUmVuYW1lQ29kZUFyZ3MuU291cmNlQ29kZXNF",
+            "bnRyeRIQCghuZXdfbmFtZRgEIAEoCRoyChBTb3VyY2VDb2Rlc0VudHJ5EgsK",
+            "A2tleRgBIAEoCRINCgV2YWx1ZRgCIAEoCToCOAEijwEKEFJlbmFtZUNvZGVS",
+            "ZXN1bHQSRgoNY2hhbmdlZF9jb2RlcxgBIAMoCzIvLmNvbS5rY2wuYXBpLlJl",
+            "bmFtZUNvZGVSZXN1bHQuQ2hhbmdlZENvZGVzRW50cnkaMwoRQ2hhbmdlZENv",
+            "ZGVzRW50cnkSCwoDa2V5GAEgASgJEg0KBXZhbHVlGAIgASgJOgI4ASKGAQoI",
+            "VGVzdEFyZ3MSLwoJZXhlY19hcmdzGAEgASgLMhwuY29tLmtjbC5hcGkuRXhl",
+            "Y1Byb2dyYW1BcmdzEhAKCHBrZ19saXN0GAIgAygJEhIKCnJ1bl9yZWdleHAY",
+            "AyABKAkSEQoJZmFpbF9mYXN0GAQgASgIEhAKCGNvdmVyYWdlGAUgASgIImgK",
+            "ClRlc3RSZXN1bHQSJwoEaW5mbxgCIAMoCzIZLmNvbS5rY2wuYXBpLlRlc3RD",
+            "YXNlSW5mbxIxCghjb3ZlcmFnZRgDIAEoCzIfLmNvbS5rY2wuYXBpLlRlc3RD",
+            "b3ZlcmFnZVJlcG9ydCK/AQoMVGVzdENhc2VJbmZvEgwKBG5hbWUYASABKAkS",
+            "DQoFZXJyb3IYAiABKAkSEAoIZHVyYXRpb24YAyABKAQSEwoLbG9nX21lc3Nh",
+            "Z2UYBCABKAkSOgoJbGluZV9oaXRzGAUgAygLMicuY29tLmtjbC5hcGkuVGVz",
+            "dENhc2VJbmZvLkxpbmVIaXRzRW50cnkaLwoNTGluZUhpdHNFbnRyeRILCgNr",
+            "ZXkYASABKAkSDQoFdmFsdWUYAiABKAQ6AjgBIr4BCgxGaWxlQ292ZXJhZ2US",
+            "EAoIZmlsZW5hbWUYASABKAkSFQoNY292ZXJlZF9saW5lcxgCIAMoBBIYChBl",
+            "eGVjdXRhYmxlX2xpbmVzGAMgAygEEjoKCWxpbmVfaGl0cxgEIAMoCzInLmNv",
+            "bS5rY2wuYXBpLkZpbGVDb3ZlcmFnZS5MaW5lSGl0c0VudHJ5Gi8KDUxpbmVI",
+            "aXRzRW50cnkSCwoDa2V5GAEgASgEEg0KBXZhbHVlGAIgASgEOgI4ASLHAQoS",
+            "VGVzdENvdmVyYWdlUmVwb3J0EjkKBWZpbGVzGAEgAygLMiouY29tLmtjbC5h",
+            "cGkuVGVzdENvdmVyYWdlUmVwb3J0LkZpbGVzRW50cnkSLQoHc3VtbWFyeRgC",
+            "IAEoCzIcLmNvbS5rY2wuYXBpLkNvdmVyYWdlU3VtbWFyeRpHCgpGaWxlc0Vu",
+            "dHJ5EgsKA2tleRgBIAEoCRIoCgV2YWx1ZRgCIAEoCzIZLmNvbS5rY2wuYXBp",
+            "LkZpbGVDb3ZlcmFnZToCOAEiRwoPQ292ZXJhZ2VTdW1tYXJ5Eg8KB2NvdmVy",
+            "ZWQYASABKAQSEgoKZXhlY3V0YWJsZRgCIAEoBBIPCgdwZXJjZW50GAMgASgB",
+            "Ij8KFlVwZGF0ZURlcGVuZGVuY2llc0FyZ3MSFQoNbWFuaWZlc3RfcGF0aBgB",
+            "IAEoCRIOCgZ2ZW5kb3IYAiABKAgiSwoYVXBkYXRlRGVwZW5kZW5jaWVzUmVz",
+            "dWx0Ei8KDWV4dGVybmFsX3BrZ3MYAyADKAsyGC5jb20ua2NsLmFwaS5FeHRl",
+            "cm5hbFBrZyKBBgoHS2NsVHlwZRIMCgR0eXBlGAEgASgJEikKC3VuaW9uX3R5",
+            "cGVzGAIgAygLMhQuY29tLmtjbC5hcGkuS2NsVHlwZRIPCgdkZWZhdWx0GAMg",
+            "ASgJEhMKC3NjaGVtYV9uYW1lGAQgASgJEhIKCnNjaGVtYV9kb2MYBSABKAkS",
+            "OAoKcHJvcGVydGllcxgGIAMoCzIkLmNvbS5rY2wuYXBpLktjbFR5cGUuUHJv",
+            "cGVydGllc0VudHJ5EhAKCHJlcXVpcmVkGAcgAygJEiEKA2tleRgIIAEoCzIU",
+            "LmNvbS5rY2wuYXBpLktjbFR5cGUSIgoEaXRlbRgJIAEoCzIULmNvbS5rY2wu",
+            "YXBpLktjbFR5cGUSDAoEbGluZRgKIAEoBRIqCgpkZWNvcmF0b3JzGAsgAygL",
+            "MhYuY29tLmtjbC5hcGkuRGVjb3JhdG9yEhAKCGZpbGVuYW1lGAwgASgJEhAK",
+            "CHBrZ19wYXRoGA0gASgJEhMKC2Rlc2NyaXB0aW9uGA4gASgJEjQKCGV4YW1w",
+            "bGVzGA8gAygLMiIuY29tLmtjbC5hcGkuS2NsVHlwZS5FeGFtcGxlc0VudHJ5",
+            "EikKC2Jhc2Vfc2NoZW1hGBAgASgLMhQuY29tLmtjbC5hcGkuS2NsVHlwZRIw",
+            "CghmdW5jdGlvbhgRIAEoCzIZLmNvbS5rY2wuYXBpLkZ1bmN0aW9uVHlwZUgA",
+            "iAEBEjkKD2luZGV4X3NpZ25hdHVyZRgSIAEoCzIbLmNvbS5rY2wuYXBpLklu",
+            "ZGV4U2lnbmF0dXJlSAGIAQEaRwoPUHJvcGVydGllc0VudHJ5EgsKA2tleRgB",
+            "IAEoCRIjCgV2YWx1ZRgCIAEoCzIULmNvbS5rY2wuYXBpLktjbFR5cGU6AjgB",
+            "GkUKDUV4YW1wbGVzRW50cnkSCwoDa2V5GAEgASgJEiMKBXZhbHVlGAIgASgL",
+            "MhQuY29tLmtjbC5hcGkuRXhhbXBsZToCOAFCCwoJX2Z1bmN0aW9uQhIKEF9p",
+            "bmRleF9zaWduYXR1cmUiXwoMRnVuY3Rpb25UeXBlEiYKBnBhcmFtcxgBIAMo",
+            "CzIWLmNvbS5rY2wuYXBpLlBhcmFtZXRlchInCglyZXR1cm5fdHkYAiABKAsy",
+            "FC5jb20ua2NsLmFwaS5LY2xUeXBlIjsKCVBhcmFtZXRlchIMCgRuYW1lGAEg",
+            "ASgJEiAKAnR5GAIgASgLMhQuY29tLmtjbC5hcGkuS2NsVHlwZSKNAQoOSW5k",
+            "ZXhTaWduYXR1cmUSFQoIa2V5X25hbWUYASABKAlIAIgBARIhCgNrZXkYAiAB",
+            "KAsyFC5jb20ua2NsLmFwaS5LY2xUeXBlEiEKA3ZhbBgDIAEoCzIULmNvbS5r",
+            "Y2wuYXBpLktjbFR5cGUSEQoJYW55X290aGVyGAQgASgIQgsKCV9rZXlfbmFt",
+            "ZSKVAQoJRGVjb3JhdG9yEgwKBG5hbWUYASABKAkSEQoJYXJndW1lbnRzGAIg",
+            "AygJEjYKCGtleXdvcmRzGAMgAygLMiQuY29tLmtjbC5hcGkuRGVjb3JhdG9y",
+            "LktleXdvcmRzRW50cnkaLwoNS2V5d29yZHNFbnRyeRILCgNrZXkYASABKAkS",
+            "DQoFdmFsdWUYAiABKAk6AjgBIj4KB0V4YW1wbGUSDwoHc3VtbWFyeRgBIAEo",
+            "CRITCgtkZXNjcmlwdGlvbhgCIAEoCRINCgV2YWx1ZRgDIAEoCTKSAQoOQnVp",
+            "bHRpblNlcnZpY2USNgoEUGluZxIVLmNvbS5rY2wuYXBpLlBpbmdBcmdzGhcu",
+            "Y29tLmtjbC5hcGkuUGluZ1Jlc3VsdBJICgpMaXN0TWV0aG9kEhsuY29tLmtj",
+            "bC5hcGkuTGlzdE1ldGhvZEFyZ3MaHS5jb20ua2NsLmFwaS5MaXN0TWV0aG9k",
+            "UmVzdWx0MrsMCgpLY2xTZXJ2aWNlEjYKBFBpbmcSFS5jb20ua2NsLmFwaS5Q",
+            "aW5nQXJncxoXLmNvbS5rY2wuYXBpLlBpbmdSZXN1bHQSSAoKR2V0VmVyc2lv",
+            "bhIbLmNvbS5rY2wuYXBpLkdldFZlcnNpb25BcmdzGh0uY29tLmtjbC5hcGku",
+            "R2V0VmVyc2lvblJlc3VsdBJOCgxQYXJzZVByb2dyYW0SHS5jb20ua2NsLmFw",
+            "aS5QYXJzZVByb2dyYW1BcmdzGh8uY29tLmtjbC5hcGkuUGFyc2VQcm9ncmFt",
+            "UmVzdWx0EkUKCVBhcnNlRmlsZRIaLmNvbS5rY2wuYXBpLlBhcnNlRmlsZUFy",
+            "Z3MaHC5jb20ua2NsLmFwaS5QYXJzZUZpbGVSZXN1bHQSSwoLTG9hZFBhY2th",
+            "Z2USHC5jb20ua2NsLmFwaS5Mb2FkUGFja2FnZUFyZ3MaHi5jb20ua2NsLmFw",
+            "aS5Mb2FkUGFja2FnZVJlc3VsdBJMCgtMaXN0T3B0aW9ucxIdLmNvbS5rY2wu",
+            "YXBpLlBhcnNlUHJvZ3JhbUFyZ3MaHi5jb20ua2NsLmFwaS5MaXN0T3B0aW9u",
+            "c1Jlc3VsdBJRCg1MaXN0VmFyaWFibGVzEh4uY29tLmtjbC5hcGkuTGlzdFZh",
+            "cmlhYmxlc0FyZ3MaIC5jb20ua2NsLmFwaS5MaXN0VmFyaWFibGVzUmVzdWx0",
+            "EksKC0V4ZWNQcm9ncmFtEhwuY29tLmtjbC5hcGkuRXhlY1Byb2dyYW1Bcmdz",
+            "Gh4uY29tLmtjbC5hcGkuRXhlY1Byb2dyYW1SZXN1bHQSTgoMT3ZlcnJpZGVG",
+            "aWxlEh0uY29tLmtjbC5hcGkuT3ZlcnJpZGVGaWxlQXJncxofLmNvbS5rY2wu",
+            "YXBpLk92ZXJyaWRlRmlsZVJlc3VsdBJmChRHZXRTY2hlbWFUeXBlTWFwcGlu",
+            "ZxIlLmNvbS5rY2wuYXBpLkdldFNjaGVtYVR5cGVNYXBwaW5nQXJncxonLmNv",
+            "bS5rY2wuYXBpLkdldFNjaGVtYVR5cGVNYXBwaW5nUmVzdWx0EngKHUdldFNj",
+            "aGVtYVR5cGVNYXBwaW5nVW5kZXJQYXRoEiUuY29tLmtjbC5hcGkuR2V0U2No",
+            "ZW1hVHlwZU1hcHBpbmdBcmdzGjAuY29tLmtjbC5hcGkuR2V0U2NoZW1hVHlw",
+            "ZU1hcHBpbmdVbmRlclBhdGhSZXN1bHQSSAoKRm9ybWF0Q29kZRIbLmNvbS5r",
+            "Y2wuYXBpLkZvcm1hdENvZGVBcmdzGh0uY29tLmtjbC5hcGkuRm9ybWF0Q29k",
+            "ZVJlc3VsdBJICgpGb3JtYXRQYXRoEhsuY29tLmtjbC5hcGkuRm9ybWF0UGF0",
+            "aEFyZ3MaHS5jb20ua2NsLmFwaS5Gb3JtYXRQYXRoUmVzdWx0EkIKCExpbnRQ",
+            "YXRoEhkuY29tLmtjbC5hcGkuTGludFBhdGhBcmdzGhsuY29tLmtjbC5hcGku",
+            "TGludFBhdGhSZXN1bHQSTgoMVmFsaWRhdGVDb2RlEh0uY29tLmtjbC5hcGku",
+            "VmFsaWRhdGVDb2RlQXJncxofLmNvbS5rY2wuYXBpLlZhbGlkYXRlQ29kZVJl",
+            "c3VsdBJdChFMb2FkU2V0dGluZ3NGaWxlcxIiLmNvbS5rY2wuYXBpLkxvYWRT",
+            "ZXR0aW5nc0ZpbGVzQXJncxokLmNvbS5rY2wuYXBpLkxvYWRTZXR0aW5nc0Zp",
+            "bGVzUmVzdWx0EjwKBlJlbmFtZRIXLmNvbS5rY2wuYXBpLlJlbmFtZUFyZ3Ma",
+            "GS5jb20ua2NsLmFwaS5SZW5hbWVSZXN1bHQSSAoKUmVuYW1lQ29kZRIbLmNv",
+            "bS5rY2wuYXBpLlJlbmFtZUNvZGVBcmdzGh0uY29tLmtjbC5hcGkuUmVuYW1l",
+            "Q29kZVJlc3VsdBI2CgRUZXN0EhUuY29tLmtjbC5hcGkuVGVzdEFyZ3MaFy5j",
+            "b20ua2NsLmFwaS5UZXN0UmVzdWx0EmAKElVwZGF0ZURlcGVuZGVuY2llcxIj",
+            "LmNvbS5rY2wuYXBpLlVwZGF0ZURlcGVuZGVuY2llc0FyZ3MaJS5jb20ua2Ns",
+            "LmFwaS5VcGRhdGVEZXBlbmRlbmNpZXNSZXN1bHRCFFoFLjthcGmqAgpLY2xM",
+            "aWIuQVBJYgZwcm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
@@ -267,7 +281,7 @@ namespace KclLib.API {
             new pbr::GeneratedClrTypeInfo(typeof(global::KclLib.API.Scope), global::KclLib.API.Scope.Parser, new[]{ "Kind", "Parent", "Owner", "Children", "Defs" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::KclLib.API.SymbolIndex), global::KclLib.API.SymbolIndex.Parser, new[]{ "I", "G", "Kind" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::KclLib.API.ScopeIndex), global::KclLib.API.ScopeIndex.Parser, new[]{ "I", "G", "Kind" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::KclLib.API.ExecProgramArgs), global::KclLib.API.ExecProgramArgs.Parser, new[]{ "WorkDir", "KFilenameList", "KCodeList", "Args", "Overrides", "DisableYamlResult", "PrintOverrideAst", "StrictRangeCheck", "DisableNone", "Verbose", "Debug", "SortKeys", "ExternalPkgs", "IncludeSchemaTypePath", "CompileOnly", "ShowHidden", "PathSelector", "FastEval", "ErrorFormat", "Format", "SourcemapOutput" }, new[]{ "SourcemapOutput" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::KclLib.API.ExecProgramArgs), global::KclLib.API.ExecProgramArgs.Parser, new[]{ "WorkDir", "KFilenameList", "KCodeList", "Args", "Overrides", "DisableYamlResult", "PrintOverrideAst", "StrictRangeCheck", "DisableNone", "Verbose", "Debug", "SortKeys", "ExternalPkgs", "IncludeSchemaTypePath", "CompileOnly", "ShowHidden", "PathSelector", "FastEval", "ErrorFormat", "Format", "EmitAttributeMetadata", "SourcemapOutput" }, new[]{ "SourcemapOutput" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::KclLib.API.ExecProgramResult), global::KclLib.API.ExecProgramResult.Parser, new[]{ "JsonResult", "YamlResult", "LogMessage", "ErrMessage", "Sourcemap" }, new[]{ "Sourcemap" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::KclLib.API.FormatCodeArgs), global::KclLib.API.FormatCodeArgs.Parser, new[]{ "Source" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::KclLib.API.FormatCodeResult), global::KclLib.API.FormatCodeResult.Parser, new[]{ "Formatted" }, null, null, null, null),
@@ -298,9 +312,12 @@ namespace KclLib.API {
             new pbr::GeneratedClrTypeInfo(typeof(global::KclLib.API.RenameResult), global::KclLib.API.RenameResult.Parser, new[]{ "ChangedFiles" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::KclLib.API.RenameCodeArgs), global::KclLib.API.RenameCodeArgs.Parser, new[]{ "PackageRoot", "SymbolPath", "SourceCodes", "NewName" }, null, null, null, new pbr::GeneratedClrTypeInfo[] { null, }),
             new pbr::GeneratedClrTypeInfo(typeof(global::KclLib.API.RenameCodeResult), global::KclLib.API.RenameCodeResult.Parser, new[]{ "ChangedCodes" }, null, null, null, new pbr::GeneratedClrTypeInfo[] { null, }),
-            new pbr::GeneratedClrTypeInfo(typeof(global::KclLib.API.TestArgs), global::KclLib.API.TestArgs.Parser, new[]{ "ExecArgs", "PkgList", "RunRegexp", "FailFast" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::KclLib.API.TestResult), global::KclLib.API.TestResult.Parser, new[]{ "Info" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::KclLib.API.TestCaseInfo), global::KclLib.API.TestCaseInfo.Parser, new[]{ "Name", "Error", "Duration", "LogMessage" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::KclLib.API.TestArgs), global::KclLib.API.TestArgs.Parser, new[]{ "ExecArgs", "PkgList", "RunRegexp", "FailFast", "Coverage" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::KclLib.API.TestResult), global::KclLib.API.TestResult.Parser, new[]{ "Info", "Coverage" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::KclLib.API.TestCaseInfo), global::KclLib.API.TestCaseInfo.Parser, new[]{ "Name", "Error", "Duration", "LogMessage", "LineHits" }, null, null, null, new pbr::GeneratedClrTypeInfo[] { null, }),
+            new pbr::GeneratedClrTypeInfo(typeof(global::KclLib.API.FileCoverage), global::KclLib.API.FileCoverage.Parser, new[]{ "Filename", "CoveredLines", "ExecutableLines", "LineHits" }, null, null, null, new pbr::GeneratedClrTypeInfo[] { null, }),
+            new pbr::GeneratedClrTypeInfo(typeof(global::KclLib.API.TestCoverageReport), global::KclLib.API.TestCoverageReport.Parser, new[]{ "Files", "Summary" }, null, null, null, new pbr::GeneratedClrTypeInfo[] { null, }),
+            new pbr::GeneratedClrTypeInfo(typeof(global::KclLib.API.CoverageSummary), global::KclLib.API.CoverageSummary.Parser, new[]{ "Covered", "Executable", "Percent" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::KclLib.API.UpdateDependenciesArgs), global::KclLib.API.UpdateDependenciesArgs.Parser, new[]{ "ManifestPath", "Vendor" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::KclLib.API.UpdateDependenciesResult), global::KclLib.API.UpdateDependenciesResult.Parser, new[]{ "ExternalPkgs" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::KclLib.API.KclType), global::KclLib.API.KclType.Parser, new[]{ "Type", "UnionTypes", "Default", "SchemaName", "SchemaDoc", "Properties", "Required", "Key", "Item", "Line", "Decorators", "Filename", "PkgPath", "Description", "Examples", "BaseSchema", "Function", "IndexSignature" }, new[]{ "Function", "IndexSignature" }, null, null, new pbr::GeneratedClrTypeInfo[] { null, null, }),
@@ -510,7 +527,11 @@ namespace KclLib.API {
     #else
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
@@ -533,7 +554,11 @@ namespace KclLib.API {
     void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
             break;
@@ -747,7 +772,11 @@ namespace KclLib.API {
     #else
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
@@ -770,7 +799,11 @@ namespace KclLib.API {
     void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
             break;
@@ -1004,7 +1037,11 @@ namespace KclLib.API {
     #else
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
@@ -1031,7 +1068,11 @@ namespace KclLib.API {
     void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
             break;
@@ -1251,7 +1292,11 @@ namespace KclLib.API {
     #else
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
@@ -1277,7 +1322,11 @@ namespace KclLib.API {
     void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
             break;
@@ -1461,7 +1510,11 @@ namespace KclLib.API {
     #else
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
@@ -1480,7 +1533,11 @@ namespace KclLib.API {
     void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
             break;
@@ -1657,7 +1714,11 @@ namespace KclLib.API {
     #else
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
@@ -1676,7 +1737,11 @@ namespace KclLib.API {
     void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
             break;
@@ -1821,7 +1886,11 @@ namespace KclLib.API {
     #else
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
@@ -1836,7 +1905,11 @@ namespace KclLib.API {
     void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
             break;
@@ -2105,7 +2178,11 @@ namespace KclLib.API {
     #else
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
@@ -2136,7 +2213,11 @@ namespace KclLib.API {
     void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
             break;
@@ -2293,7 +2374,11 @@ namespace KclLib.API {
     #else
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
@@ -2308,7 +2393,11 @@ namespace KclLib.API {
     void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
             break;
@@ -2470,7 +2559,11 @@ namespace KclLib.API {
     #else
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
@@ -2489,7 +2582,11 @@ namespace KclLib.API {
     void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
             break;
@@ -2719,7 +2816,11 @@ namespace KclLib.API {
     #else
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
@@ -2746,7 +2847,11 @@ namespace KclLib.API {
     void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
             break;
@@ -2973,7 +3078,11 @@ namespace KclLib.API {
     #else
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
@@ -3000,7 +3109,11 @@ namespace KclLib.API {
     void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
             break;
@@ -3216,7 +3329,11 @@ namespace KclLib.API {
     #else
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
@@ -3243,7 +3360,11 @@ namespace KclLib.API {
     void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
             break;
@@ -3470,7 +3591,11 @@ namespace KclLib.API {
     #else
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
@@ -3497,7 +3622,11 @@ namespace KclLib.API {
     void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
             break;
@@ -3781,7 +3910,11 @@ namespace KclLib.API {
     #else
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
@@ -3815,7 +3948,11 @@ namespace KclLib.API {
     void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
             break;
@@ -4196,7 +4333,11 @@ namespace KclLib.API {
     #else
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
@@ -4251,7 +4392,11 @@ namespace KclLib.API {
     void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
             break;
@@ -4453,7 +4598,11 @@ namespace KclLib.API {
     #else
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
@@ -4472,7 +4621,11 @@ namespace KclLib.API {
     void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
             break;
@@ -4777,7 +4930,11 @@ namespace KclLib.API {
     #else
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
@@ -4812,7 +4969,11 @@ namespace KclLib.API {
     void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
             break;
@@ -5163,7 +5324,11 @@ namespace KclLib.API {
     #else
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
@@ -5211,7 +5376,11 @@ namespace KclLib.API {
     void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
             break;
@@ -5529,7 +5698,11 @@ namespace KclLib.API {
     #else
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
@@ -5570,7 +5743,11 @@ namespace KclLib.API {
     void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
             break;
@@ -5833,7 +6010,11 @@ namespace KclLib.API {
     #else
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
@@ -5860,7 +6041,11 @@ namespace KclLib.API {
     void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
             break;
@@ -6109,7 +6294,11 @@ namespace KclLib.API {
     #else
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
@@ -6136,7 +6325,11 @@ namespace KclLib.API {
     void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
             break;
@@ -6217,6 +6410,7 @@ namespace KclLib.API {
       fastEval_ = other.fastEval_;
       errorFormat_ = other.errorFormat_;
       format_ = other.format_;
+      emitAttributeMetadata_ = other.emitAttributeMetadata_;
       sourcemapOutput_ = other.sourcemapOutput_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
@@ -6525,6 +6719,27 @@ namespace KclLib.API {
       }
     }
 
+    /// <summary>Field number for the "emit_attribute_metadata" field.</summary>
+    public const int EmitAttributeMetadataFieldNumber = 21;
+    private bool emitAttributeMetadata_;
+    /// <summary>
+    /// Emit a side-channel marker in the planned YAML/JSON that names
+    /// schema attributes to be carried over to downstream emitters. The
+    /// marker is the sibling key `__kcl_info_meta__` whose value is a
+    /// list of attribute names (e.g. those decorated with
+    /// `@info(type="attr")`). Consumers (CLI/kcl-go) interpret it when
+    /// emitting XML. Defaults to false to keep `-o json` / `-o yaml`
+    /// output byte-identical to pre-change.
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool EmitAttributeMetadata {
+      get { return emitAttributeMetadata_; }
+      set {
+        emitAttributeMetadata_ = value;
+      }
+    }
+
     /// <summary>Field number for the "sourcemap_output" field.</summary>
     public const int SourcemapOutputFieldNumber = 22;
     private readonly static string SourcemapOutputDefaultValue = "";
@@ -6593,6 +6808,7 @@ namespace KclLib.API {
       if (FastEval != other.FastEval) return false;
       if (ErrorFormat != other.ErrorFormat) return false;
       if (Format != other.Format) return false;
+      if (EmitAttributeMetadata != other.EmitAttributeMetadata) return false;
       if (SourcemapOutput != other.SourcemapOutput) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
@@ -6621,6 +6837,7 @@ namespace KclLib.API {
       if (FastEval != false) hash ^= FastEval.GetHashCode();
       if (ErrorFormat.Length != 0) hash ^= ErrorFormat.GetHashCode();
       if (Format.Length != 0) hash ^= Format.GetHashCode();
+      if (EmitAttributeMetadata != false) hash ^= EmitAttributeMetadata.GetHashCode();
       if (HasSourcemapOutput) hash ^= SourcemapOutput.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
@@ -6702,6 +6919,10 @@ namespace KclLib.API {
         output.WriteRawTag(162, 1);
         output.WriteString(Format);
       }
+      if (EmitAttributeMetadata != false) {
+        output.WriteRawTag(168, 1);
+        output.WriteBool(EmitAttributeMetadata);
+      }
       if (HasSourcemapOutput) {
         output.WriteRawTag(178, 1);
         output.WriteString(SourcemapOutput);
@@ -6778,6 +6999,10 @@ namespace KclLib.API {
         output.WriteRawTag(162, 1);
         output.WriteString(Format);
       }
+      if (EmitAttributeMetadata != false) {
+        output.WriteRawTag(168, 1);
+        output.WriteBool(EmitAttributeMetadata);
+      }
       if (HasSourcemapOutput) {
         output.WriteRawTag(178, 1);
         output.WriteString(SourcemapOutput);
@@ -6839,6 +7064,9 @@ namespace KclLib.API {
       }
       if (Format.Length != 0) {
         size += 2 + pb::CodedOutputStream.ComputeStringSize(Format);
+      }
+      if (EmitAttributeMetadata != false) {
+        size += 2 + 1;
       }
       if (HasSourcemapOutput) {
         size += 2 + pb::CodedOutputStream.ComputeStringSize(SourcemapOutput);
@@ -6903,6 +7131,9 @@ namespace KclLib.API {
       if (other.Format.Length != 0) {
         Format = other.Format;
       }
+      if (other.EmitAttributeMetadata != false) {
+        EmitAttributeMetadata = other.EmitAttributeMetadata;
+      }
       if (other.HasSourcemapOutput) {
         SourcemapOutput = other.SourcemapOutput;
       }
@@ -6917,7 +7148,11 @@ namespace KclLib.API {
     #else
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
@@ -7001,6 +7236,10 @@ namespace KclLib.API {
             Format = input.ReadString();
             break;
           }
+          case 168: {
+            EmitAttributeMetadata = input.ReadBool();
+            break;
+          }
           case 178: {
             SourcemapOutput = input.ReadString();
             break;
@@ -7016,7 +7255,11 @@ namespace KclLib.API {
     void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
             break;
@@ -7098,6 +7341,10 @@ namespace KclLib.API {
           }
           case 162: {
             Format = input.ReadString();
+            break;
+          }
+          case 168: {
+            EmitAttributeMetadata = input.ReadBool();
             break;
           }
           case 178: {
@@ -7417,7 +7664,11 @@ namespace KclLib.API {
     #else
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
@@ -7452,7 +7703,11 @@ namespace KclLib.API {
     void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
             break;
@@ -7645,7 +7900,11 @@ namespace KclLib.API {
     #else
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
@@ -7664,7 +7923,11 @@ namespace KclLib.API {
     void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
             break;
@@ -7841,7 +8104,11 @@ namespace KclLib.API {
     #else
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
@@ -7860,7 +8127,11 @@ namespace KclLib.API {
     void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
             break;
@@ -8069,7 +8340,11 @@ namespace KclLib.API {
     #else
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
@@ -8092,7 +8367,11 @@ namespace KclLib.API {
     void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
             break;
@@ -8262,7 +8541,11 @@ namespace KclLib.API {
     #else
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
@@ -8281,7 +8564,11 @@ namespace KclLib.API {
     void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
             break;
@@ -8447,7 +8734,11 @@ namespace KclLib.API {
     #else
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
@@ -8466,7 +8757,11 @@ namespace KclLib.API {
     void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
             break;
@@ -8632,7 +8927,11 @@ namespace KclLib.API {
     #else
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
@@ -8651,7 +8950,11 @@ namespace KclLib.API {
     void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
             break;
@@ -8870,7 +9173,11 @@ namespace KclLib.API {
     #else
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
@@ -8897,7 +9204,11 @@ namespace KclLib.API {
     void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
             break;
@@ -9103,7 +9414,11 @@ namespace KclLib.API {
     #else
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
@@ -9126,7 +9441,11 @@ namespace KclLib.API {
     void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
             break;
@@ -9307,7 +9626,11 @@ namespace KclLib.API {
     #else
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
@@ -9326,7 +9649,11 @@ namespace KclLib.API {
     void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
             break;
@@ -9492,7 +9819,11 @@ namespace KclLib.API {
     #else
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
@@ -9511,7 +9842,11 @@ namespace KclLib.API {
     void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
             break;
@@ -9733,7 +10068,11 @@ namespace KclLib.API {
     #else
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
@@ -9763,7 +10102,11 @@ namespace KclLib.API {
     void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
             break;
@@ -9982,7 +10325,11 @@ namespace KclLib.API {
     #else
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
@@ -10009,7 +10356,11 @@ namespace KclLib.API {
     void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
             break;
@@ -10300,7 +10651,11 @@ namespace KclLib.API {
     #else
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
@@ -10335,7 +10690,11 @@ namespace KclLib.API {
     void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
             break;
@@ -10563,7 +10922,11 @@ namespace KclLib.API {
     #else
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
@@ -10589,7 +10952,11 @@ namespace KclLib.API {
     void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
             break;
@@ -10808,7 +11175,11 @@ namespace KclLib.API {
     #else
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
@@ -10834,7 +11205,11 @@ namespace KclLib.API {
     void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
             break;
@@ -11007,7 +11382,11 @@ namespace KclLib.API {
     #else
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
@@ -11026,7 +11405,11 @@ namespace KclLib.API {
     void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
             break;
@@ -11192,7 +11575,11 @@ namespace KclLib.API {
     #else
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
@@ -11211,7 +11598,11 @@ namespace KclLib.API {
     void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
             break;
@@ -11374,7 +11765,11 @@ namespace KclLib.API {
     #else
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
@@ -11393,7 +11788,11 @@ namespace KclLib.API {
     void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
             break;
@@ -11783,7 +12182,11 @@ namespace KclLib.API {
     #else
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
@@ -11830,7 +12233,11 @@ namespace KclLib.API {
     void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
             break;
@@ -12067,7 +12474,11 @@ namespace KclLib.API {
     #else
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
@@ -12090,7 +12501,11 @@ namespace KclLib.API {
     void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
             break;
@@ -12335,7 +12750,11 @@ namespace KclLib.API {
     #else
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
@@ -12362,7 +12781,11 @@ namespace KclLib.API {
     void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
             break;
@@ -12568,7 +12991,11 @@ namespace KclLib.API {
     #else
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
@@ -12591,7 +13018,11 @@ namespace KclLib.API {
     void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
             break;
@@ -12796,7 +13227,11 @@ namespace KclLib.API {
     #else
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
@@ -12822,7 +13257,11 @@ namespace KclLib.API {
     void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
             break;
@@ -13325,7 +13764,11 @@ namespace KclLib.API {
     #else
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
@@ -13388,7 +13831,11 @@ namespace KclLib.API {
     void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
             break;
@@ -13641,7 +14088,11 @@ namespace KclLib.API {
     #else
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
@@ -13664,7 +14115,11 @@ namespace KclLib.API {
     void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
             break;
@@ -13930,7 +14385,11 @@ namespace KclLib.API {
     #else
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
@@ -13961,7 +14420,11 @@ namespace KclLib.API {
     void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
             break;
@@ -14139,7 +14602,11 @@ namespace KclLib.API {
     #else
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
@@ -14158,7 +14625,11 @@ namespace KclLib.API {
     void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
             break;
@@ -14420,7 +14891,11 @@ namespace KclLib.API {
     #else
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
@@ -14451,7 +14926,11 @@ namespace KclLib.API {
     void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
             break;
@@ -14629,7 +15108,11 @@ namespace KclLib.API {
     #else
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
@@ -14648,7 +15131,11 @@ namespace KclLib.API {
     void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
             break;
@@ -14705,6 +15192,7 @@ namespace KclLib.API {
       pkgList_ = other.pkgList_.Clone();
       runRegexp_ = other.runRegexp_;
       failFast_ = other.failFast_;
+      coverage_ = other.coverage_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -14773,6 +15261,24 @@ namespace KclLib.API {
       }
     }
 
+    /// <summary>Field number for the "coverage" field.</summary>
+    public const int CoverageFieldNumber = 5;
+    private bool coverage_;
+    /// <summary>
+    /// Flag to collect line-level coverage data while running tests. When true,
+    /// the test tool records, for every top-level KCL statement that executes,
+    /// the source file path and line number. The aggregated result is returned
+    /// in [TestResult.coverage]. Defaults to false.
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool Coverage {
+      get { return coverage_; }
+      set {
+        coverage_ = value;
+      }
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
@@ -14792,6 +15298,7 @@ namespace KclLib.API {
       if(!pkgList_.Equals(other.pkgList_)) return false;
       if (RunRegexp != other.RunRegexp) return false;
       if (FailFast != other.FailFast) return false;
+      if (Coverage != other.Coverage) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -14803,6 +15310,7 @@ namespace KclLib.API {
       hash ^= pkgList_.GetHashCode();
       if (RunRegexp.Length != 0) hash ^= RunRegexp.GetHashCode();
       if (FailFast != false) hash ^= FailFast.GetHashCode();
+      if (Coverage != false) hash ^= Coverage.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -14834,6 +15342,10 @@ namespace KclLib.API {
         output.WriteRawTag(32);
         output.WriteBool(FailFast);
       }
+      if (Coverage != false) {
+        output.WriteRawTag(40);
+        output.WriteBool(Coverage);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -14857,6 +15369,10 @@ namespace KclLib.API {
         output.WriteRawTag(32);
         output.WriteBool(FailFast);
       }
+      if (Coverage != false) {
+        output.WriteRawTag(40);
+        output.WriteBool(Coverage);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -14875,6 +15391,9 @@ namespace KclLib.API {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(RunRegexp);
       }
       if (FailFast != false) {
+        size += 1 + 1;
+      }
+      if (Coverage != false) {
         size += 1 + 1;
       }
       if (_unknownFields != null) {
@@ -14902,6 +15421,9 @@ namespace KclLib.API {
       if (other.FailFast != false) {
         FailFast = other.FailFast;
       }
+      if (other.Coverage != false) {
+        Coverage = other.Coverage;
+      }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
 
@@ -14913,7 +15435,11 @@ namespace KclLib.API {
     #else
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
@@ -14936,6 +15462,10 @@ namespace KclLib.API {
             FailFast = input.ReadBool();
             break;
           }
+          case 40: {
+            Coverage = input.ReadBool();
+            break;
+          }
         }
       }
     #endif
@@ -14947,7 +15477,11 @@ namespace KclLib.API {
     void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
             break;
@@ -14968,6 +15502,10 @@ namespace KclLib.API {
           }
           case 32: {
             FailFast = input.ReadBool();
+            break;
+          }
+          case 40: {
+            Coverage = input.ReadBool();
             break;
           }
         }
@@ -15016,6 +15554,7 @@ namespace KclLib.API {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public TestResult(TestResult other) : this() {
       info_ = other.info_.Clone();
+      coverage_ = other.coverage_ != null ? other.coverage_.Clone() : null;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -15039,6 +15578,22 @@ namespace KclLib.API {
       get { return info_; }
     }
 
+    /// <summary>Field number for the "coverage" field.</summary>
+    public const int CoverageFieldNumber = 3;
+    private global::KclLib.API.TestCoverageReport coverage_;
+    /// <summary>
+    /// Aggregated coverage report. Populated only when
+    /// [TestArgs.coverage] is true; empty otherwise.
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public global::KclLib.API.TestCoverageReport Coverage {
+      get { return coverage_; }
+      set {
+        coverage_ = value;
+      }
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
@@ -15055,6 +15610,7 @@ namespace KclLib.API {
         return true;
       }
       if(!info_.Equals(other.info_)) return false;
+      if (!object.Equals(Coverage, other.Coverage)) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -15063,6 +15619,7 @@ namespace KclLib.API {
     public override int GetHashCode() {
       int hash = 1;
       hash ^= info_.GetHashCode();
+      if (coverage_ != null) hash ^= Coverage.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -15082,6 +15639,10 @@ namespace KclLib.API {
       output.WriteRawMessage(this);
     #else
       info_.WriteTo(output, _repeated_info_codec);
+      if (coverage_ != null) {
+        output.WriteRawTag(26);
+        output.WriteMessage(Coverage);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -15093,6 +15654,10 @@ namespace KclLib.API {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
       info_.WriteTo(ref output, _repeated_info_codec);
+      if (coverage_ != null) {
+        output.WriteRawTag(26);
+        output.WriteMessage(Coverage);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -15104,6 +15669,9 @@ namespace KclLib.API {
     public int CalculateSize() {
       int size = 0;
       size += info_.CalculateSize(_repeated_info_codec);
+      if (coverage_ != null) {
+        size += 1 + pb::CodedOutputStream.ComputeMessageSize(Coverage);
+      }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
       }
@@ -15117,6 +15685,12 @@ namespace KclLib.API {
         return;
       }
       info_.Add(other.info_);
+      if (other.coverage_ != null) {
+        if (coverage_ == null) {
+          Coverage = new global::KclLib.API.TestCoverageReport();
+        }
+        Coverage.MergeFrom(other.Coverage);
+      }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
 
@@ -15128,12 +15702,23 @@ namespace KclLib.API {
     #else
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
           case 18: {
             info_.AddEntriesFrom(input, _repeated_info_codec);
+            break;
+          }
+          case 26: {
+            if (coverage_ == null) {
+              Coverage = new global::KclLib.API.TestCoverageReport();
+            }
+            input.ReadMessage(Coverage);
             break;
           }
         }
@@ -15147,12 +15732,23 @@ namespace KclLib.API {
     void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
             break;
           case 18: {
             info_.AddEntriesFrom(ref input, _repeated_info_codec);
+            break;
+          }
+          case 26: {
+            if (coverage_ == null) {
+              Coverage = new global::KclLib.API.TestCoverageReport();
+            }
+            input.ReadMessage(Coverage);
             break;
           }
         }
@@ -15204,6 +15800,7 @@ namespace KclLib.API {
       error_ = other.error_;
       duration_ = other.duration_;
       logMessage_ = other.logMessage_;
+      lineHits_ = other.lineHits_.Clone();
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -15273,6 +15870,22 @@ namespace KclLib.API {
       }
     }
 
+    /// <summary>Field number for the "line_hits" field.</summary>
+    public const int LineHitsFieldNumber = 5;
+    private static readonly pbc::MapField<string, ulong>.Codec _map_lineHits_codec
+        = new pbc::MapField<string, ulong>.Codec(pb::FieldCodec.ForString(10, ""), pb::FieldCodec.ForUInt64(16, 0UL), 42);
+    private readonly pbc::MapField<string, ulong> lineHits_ = new pbc::MapField<string, ulong>();
+    /// <summary>
+    /// Per-case line coverage. Populated only when [TestArgs.coverage]
+    /// is true; empty otherwise. Each entry maps "filename:line" to the
+    /// number of times that line was entered while running this case.
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public pbc::MapField<string, ulong> LineHits {
+      get { return lineHits_; }
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
@@ -15292,6 +15905,7 @@ namespace KclLib.API {
       if (Error != other.Error) return false;
       if (Duration != other.Duration) return false;
       if (LogMessage != other.LogMessage) return false;
+      if (!LineHits.Equals(other.LineHits)) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -15303,6 +15917,7 @@ namespace KclLib.API {
       if (Error.Length != 0) hash ^= Error.GetHashCode();
       if (Duration != 0UL) hash ^= Duration.GetHashCode();
       if (LogMessage.Length != 0) hash ^= LogMessage.GetHashCode();
+      hash ^= LineHits.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -15337,6 +15952,7 @@ namespace KclLib.API {
         output.WriteRawTag(34);
         output.WriteString(LogMessage);
       }
+      lineHits_.WriteTo(output, _map_lineHits_codec);
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -15363,6 +15979,7 @@ namespace KclLib.API {
         output.WriteRawTag(34);
         output.WriteString(LogMessage);
       }
+      lineHits_.WriteTo(ref output, _map_lineHits_codec);
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -15385,6 +16002,7 @@ namespace KclLib.API {
       if (LogMessage.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(LogMessage);
       }
+      size += lineHits_.CalculateSize(_map_lineHits_codec);
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
       }
@@ -15409,6 +16027,7 @@ namespace KclLib.API {
       if (other.LogMessage.Length != 0) {
         LogMessage = other.LogMessage;
       }
+      lineHits_.MergeFrom(other.lineHits_);
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
 
@@ -15420,7 +16039,11 @@ namespace KclLib.API {
     #else
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
@@ -15440,6 +16063,10 @@ namespace KclLib.API {
             LogMessage = input.ReadString();
             break;
           }
+          case 42: {
+            lineHits_.AddEntriesFrom(input, _map_lineHits_codec);
+            break;
+          }
         }
       }
     #endif
@@ -15451,7 +16078,11 @@ namespace KclLib.API {
     void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
             break;
@@ -15469,6 +16100,835 @@ namespace KclLib.API {
           }
           case 34: {
             LogMessage = input.ReadString();
+            break;
+          }
+          case 42: {
+            lineHits_.AddEntriesFrom(ref input, _map_lineHits_codec);
+            break;
+          }
+        }
+      }
+    }
+    #endif
+
+  }
+
+  /// <summary>
+  /// Message describing aggregated coverage data for a single source file.
+  /// </summary>
+  [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
+  public sealed partial class FileCoverage : pb::IMessage<FileCoverage>
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      , pb::IBufferMessage
+  #endif
+  {
+    private static readonly pb::MessageParser<FileCoverage> _parser = new pb::MessageParser<FileCoverage>(() => new FileCoverage());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public static pb::MessageParser<FileCoverage> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[56]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public FileCoverage() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public FileCoverage(FileCoverage other) : this() {
+      filename_ = other.filename_;
+      coveredLines_ = other.coveredLines_.Clone();
+      executableLines_ = other.executableLines_.Clone();
+      lineHits_ = other.lineHits_.Clone();
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public FileCoverage Clone() {
+      return new FileCoverage(this);
+    }
+
+    /// <summary>Field number for the "filename" field.</summary>
+    public const int FilenameFieldNumber = 1;
+    private string filename_ = "";
+    /// <summary>
+    /// Source file path, relative to the package root when possible.
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string Filename {
+      get { return filename_; }
+      set {
+        filename_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "covered_lines" field.</summary>
+    public const int CoveredLinesFieldNumber = 2;
+    private static readonly pb::FieldCodec<ulong> _repeated_coveredLines_codec
+        = pb::FieldCodec.ForUInt64(18);
+    private readonly pbc::RepeatedField<ulong> coveredLines_ = new pbc::RepeatedField<ulong>();
+    /// <summary>
+    /// Sorted list of lines that executed at least once across all tests
+    /// that covered this file.
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public pbc::RepeatedField<ulong> CoveredLines {
+      get { return coveredLines_; }
+    }
+
+    /// <summary>Field number for the "executable_lines" field.</summary>
+    public const int ExecutableLinesFieldNumber = 3;
+    private static readonly pb::FieldCodec<ulong> _repeated_executableLines_codec
+        = pb::FieldCodec.ForUInt64(26);
+    private readonly pbc::RepeatedField<ulong> executableLines_ = new pbc::RepeatedField<ulong>();
+    /// <summary>
+    /// Sorted list of lines in this file that contain an executable
+    /// statement (i.e. lines that *could* be covered). Lines that contain
+    /// only blank lines, comments or non-executable tokens are excluded.
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public pbc::RepeatedField<ulong> ExecutableLines {
+      get { return executableLines_; }
+    }
+
+    /// <summary>Field number for the "line_hits" field.</summary>
+    public const int LineHitsFieldNumber = 4;
+    private static readonly pbc::MapField<ulong, ulong>.Codec _map_lineHits_codec
+        = new pbc::MapField<ulong, ulong>.Codec(pb::FieldCodec.ForUInt64(8, 0UL), pb::FieldCodec.ForUInt64(16, 0UL), 34);
+    private readonly pbc::MapField<ulong, ulong> lineHits_ = new pbc::MapField<ulong, ulong>();
+    /// <summary>
+    /// Per-line execution count across all tests that covered this file.
+    /// Keys are line numbers (1-based); values are hit counts.
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public pbc::MapField<ulong, ulong> LineHits {
+      get { return lineHits_; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override bool Equals(object other) {
+      return Equals(other as FileCoverage);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool Equals(FileCoverage other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (Filename != other.Filename) return false;
+      if(!coveredLines_.Equals(other.coveredLines_)) return false;
+      if(!executableLines_.Equals(other.executableLines_)) return false;
+      if (!LineHits.Equals(other.LineHits)) return false;
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (Filename.Length != 0) hash ^= Filename.GetHashCode();
+      hash ^= coveredLines_.GetHashCode();
+      hash ^= executableLines_.GetHashCode();
+      hash ^= LineHits.GetHashCode();
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void WriteTo(pb::CodedOutputStream output) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      output.WriteRawMessage(this);
+    #else
+      if (Filename.Length != 0) {
+        output.WriteRawTag(10);
+        output.WriteString(Filename);
+      }
+      coveredLines_.WriteTo(output, _repeated_coveredLines_codec);
+      executableLines_.WriteTo(output, _repeated_executableLines_codec);
+      lineHits_.WriteTo(output, _map_lineHits_codec);
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+      if (Filename.Length != 0) {
+        output.WriteRawTag(10);
+        output.WriteString(Filename);
+      }
+      coveredLines_.WriteTo(ref output, _repeated_coveredLines_codec);
+      executableLines_.WriteTo(ref output, _repeated_executableLines_codec);
+      lineHits_.WriteTo(ref output, _map_lineHits_codec);
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(ref output);
+      }
+    }
+    #endif
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public int CalculateSize() {
+      int size = 0;
+      if (Filename.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(Filename);
+      }
+      size += coveredLines_.CalculateSize(_repeated_coveredLines_codec);
+      size += executableLines_.CalculateSize(_repeated_executableLines_codec);
+      size += lineHits_.CalculateSize(_map_lineHits_codec);
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void MergeFrom(FileCoverage other) {
+      if (other == null) {
+        return;
+      }
+      if (other.Filename.Length != 0) {
+        Filename = other.Filename;
+      }
+      coveredLines_.Add(other.coveredLines_);
+      executableLines_.Add(other.executableLines_);
+      lineHits_.MergeFrom(other.lineHits_);
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void MergeFrom(pb::CodedInputStream input) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      input.ReadRawMessage(this);
+    #else
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+          case 10: {
+            Filename = input.ReadString();
+            break;
+          }
+          case 18:
+          case 16: {
+            coveredLines_.AddEntriesFrom(input, _repeated_coveredLines_codec);
+            break;
+          }
+          case 26:
+          case 24: {
+            executableLines_.AddEntriesFrom(input, _repeated_executableLines_codec);
+            break;
+          }
+          case 34: {
+            lineHits_.AddEntriesFrom(input, _map_lineHits_codec);
+            break;
+          }
+        }
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
+            break;
+          case 10: {
+            Filename = input.ReadString();
+            break;
+          }
+          case 18:
+          case 16: {
+            coveredLines_.AddEntriesFrom(ref input, _repeated_coveredLines_codec);
+            break;
+          }
+          case 26:
+          case 24: {
+            executableLines_.AddEntriesFrom(ref input, _repeated_executableLines_codec);
+            break;
+          }
+          case 34: {
+            lineHits_.AddEntriesFrom(ref input, _map_lineHits_codec);
+            break;
+          }
+        }
+      }
+    }
+    #endif
+
+  }
+
+  /// <summary>
+  /// Message describing aggregated coverage across the entire test run.
+  /// </summary>
+  [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
+  public sealed partial class TestCoverageReport : pb::IMessage<TestCoverageReport>
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      , pb::IBufferMessage
+  #endif
+  {
+    private static readonly pb::MessageParser<TestCoverageReport> _parser = new pb::MessageParser<TestCoverageReport>(() => new TestCoverageReport());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public static pb::MessageParser<TestCoverageReport> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[57]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public TestCoverageReport() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public TestCoverageReport(TestCoverageReport other) : this() {
+      files_ = other.files_.Clone();
+      summary_ = other.summary_ != null ? other.summary_.Clone() : null;
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public TestCoverageReport Clone() {
+      return new TestCoverageReport(this);
+    }
+
+    /// <summary>Field number for the "files" field.</summary>
+    public const int FilesFieldNumber = 1;
+    private static readonly pbc::MapField<string, global::KclLib.API.FileCoverage>.Codec _map_files_codec
+        = new pbc::MapField<string, global::KclLib.API.FileCoverage>.Codec(pb::FieldCodec.ForString(10, ""), pb::FieldCodec.ForMessage(18, global::KclLib.API.FileCoverage.Parser), 10);
+    private readonly pbc::MapField<string, global::KclLib.API.FileCoverage> files_ = new pbc::MapField<string, global::KclLib.API.FileCoverage>();
+    /// <summary>
+    /// Per-file coverage keyed by source file path.
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public pbc::MapField<string, global::KclLib.API.FileCoverage> Files {
+      get { return files_; }
+    }
+
+    /// <summary>Field number for the "summary" field.</summary>
+    public const int SummaryFieldNumber = 2;
+    private global::KclLib.API.CoverageSummary summary_;
+    /// <summary>
+    /// Roll-up of all files in [TestCoverageReport.files].
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public global::KclLib.API.CoverageSummary Summary {
+      get { return summary_; }
+      set {
+        summary_ = value;
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override bool Equals(object other) {
+      return Equals(other as TestCoverageReport);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool Equals(TestCoverageReport other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (!Files.Equals(other.Files)) return false;
+      if (!object.Equals(Summary, other.Summary)) return false;
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override int GetHashCode() {
+      int hash = 1;
+      hash ^= Files.GetHashCode();
+      if (summary_ != null) hash ^= Summary.GetHashCode();
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void WriteTo(pb::CodedOutputStream output) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      output.WriteRawMessage(this);
+    #else
+      files_.WriteTo(output, _map_files_codec);
+      if (summary_ != null) {
+        output.WriteRawTag(18);
+        output.WriteMessage(Summary);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+      files_.WriteTo(ref output, _map_files_codec);
+      if (summary_ != null) {
+        output.WriteRawTag(18);
+        output.WriteMessage(Summary);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(ref output);
+      }
+    }
+    #endif
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public int CalculateSize() {
+      int size = 0;
+      size += files_.CalculateSize(_map_files_codec);
+      if (summary_ != null) {
+        size += 1 + pb::CodedOutputStream.ComputeMessageSize(Summary);
+      }
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void MergeFrom(TestCoverageReport other) {
+      if (other == null) {
+        return;
+      }
+      files_.MergeFrom(other.files_);
+      if (other.summary_ != null) {
+        if (summary_ == null) {
+          Summary = new global::KclLib.API.CoverageSummary();
+        }
+        Summary.MergeFrom(other.Summary);
+      }
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void MergeFrom(pb::CodedInputStream input) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      input.ReadRawMessage(this);
+    #else
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+          case 10: {
+            files_.AddEntriesFrom(input, _map_files_codec);
+            break;
+          }
+          case 18: {
+            if (summary_ == null) {
+              Summary = new global::KclLib.API.CoverageSummary();
+            }
+            input.ReadMessage(Summary);
+            break;
+          }
+        }
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
+            break;
+          case 10: {
+            files_.AddEntriesFrom(ref input, _map_files_codec);
+            break;
+          }
+          case 18: {
+            if (summary_ == null) {
+              Summary = new global::KclLib.API.CoverageSummary();
+            }
+            input.ReadMessage(Summary);
+            break;
+          }
+        }
+      }
+    }
+    #endif
+
+  }
+
+  /// <summary>
+  /// Roll-up coverage metrics.
+  /// </summary>
+  [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
+  public sealed partial class CoverageSummary : pb::IMessage<CoverageSummary>
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      , pb::IBufferMessage
+  #endif
+  {
+    private static readonly pb::MessageParser<CoverageSummary> _parser = new pb::MessageParser<CoverageSummary>(() => new CoverageSummary());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public static pb::MessageParser<CoverageSummary> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[58]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public CoverageSummary() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public CoverageSummary(CoverageSummary other) : this() {
+      covered_ = other.covered_;
+      executable_ = other.executable_;
+      percent_ = other.percent_;
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public CoverageSummary Clone() {
+      return new CoverageSummary(this);
+    }
+
+    /// <summary>Field number for the "covered" field.</summary>
+    public const int CoveredFieldNumber = 1;
+    private ulong covered_;
+    /// <summary>
+    /// Number of executable lines that were hit by at least one test.
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public ulong Covered {
+      get { return covered_; }
+      set {
+        covered_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "executable" field.</summary>
+    public const int ExecutableFieldNumber = 2;
+    private ulong executable_;
+    /// <summary>
+    /// Total number of executable lines discovered.
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public ulong Executable {
+      get { return executable_; }
+      set {
+        executable_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "percent" field.</summary>
+    public const int PercentFieldNumber = 3;
+    private double percent_;
+    /// <summary>
+    /// Coverage percentage in the inclusive range [0.0, 100.0].
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public double Percent {
+      get { return percent_; }
+      set {
+        percent_ = value;
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override bool Equals(object other) {
+      return Equals(other as CoverageSummary);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool Equals(CoverageSummary other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (Covered != other.Covered) return false;
+      if (Executable != other.Executable) return false;
+      if (!pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.Equals(Percent, other.Percent)) return false;
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (Covered != 0UL) hash ^= Covered.GetHashCode();
+      if (Executable != 0UL) hash ^= Executable.GetHashCode();
+      if (Percent != 0D) hash ^= pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.GetHashCode(Percent);
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void WriteTo(pb::CodedOutputStream output) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      output.WriteRawMessage(this);
+    #else
+      if (Covered != 0UL) {
+        output.WriteRawTag(8);
+        output.WriteUInt64(Covered);
+      }
+      if (Executable != 0UL) {
+        output.WriteRawTag(16);
+        output.WriteUInt64(Executable);
+      }
+      if (Percent != 0D) {
+        output.WriteRawTag(25);
+        output.WriteDouble(Percent);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+      if (Covered != 0UL) {
+        output.WriteRawTag(8);
+        output.WriteUInt64(Covered);
+      }
+      if (Executable != 0UL) {
+        output.WriteRawTag(16);
+        output.WriteUInt64(Executable);
+      }
+      if (Percent != 0D) {
+        output.WriteRawTag(25);
+        output.WriteDouble(Percent);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(ref output);
+      }
+    }
+    #endif
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public int CalculateSize() {
+      int size = 0;
+      if (Covered != 0UL) {
+        size += 1 + pb::CodedOutputStream.ComputeUInt64Size(Covered);
+      }
+      if (Executable != 0UL) {
+        size += 1 + pb::CodedOutputStream.ComputeUInt64Size(Executable);
+      }
+      if (Percent != 0D) {
+        size += 1 + 8;
+      }
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void MergeFrom(CoverageSummary other) {
+      if (other == null) {
+        return;
+      }
+      if (other.Covered != 0UL) {
+        Covered = other.Covered;
+      }
+      if (other.Executable != 0UL) {
+        Executable = other.Executable;
+      }
+      if (other.Percent != 0D) {
+        Percent = other.Percent;
+      }
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void MergeFrom(pb::CodedInputStream input) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      input.ReadRawMessage(this);
+    #else
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+          case 8: {
+            Covered = input.ReadUInt64();
+            break;
+          }
+          case 16: {
+            Executable = input.ReadUInt64();
+            break;
+          }
+          case 25: {
+            Percent = input.ReadDouble();
+            break;
+          }
+        }
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
+            break;
+          case 8: {
+            Covered = input.ReadUInt64();
+            break;
+          }
+          case 16: {
+            Executable = input.ReadUInt64();
+            break;
+          }
+          case 25: {
+            Percent = input.ReadDouble();
             break;
           }
         }
@@ -15496,7 +16956,7 @@ namespace KclLib.API {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[56]; }
+      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[59]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -15672,7 +17132,11 @@ namespace KclLib.API {
     #else
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
@@ -15695,7 +17159,11 @@ namespace KclLib.API {
     void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
             break;
@@ -15732,7 +17200,7 @@ namespace KclLib.API {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[57]; }
+      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[60]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -15865,7 +17333,11 @@ namespace KclLib.API {
     #else
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
@@ -15884,7 +17356,11 @@ namespace KclLib.API {
     void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
             break;
@@ -15917,7 +17393,7 @@ namespace KclLib.API {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[58]; }
+      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[61]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -16565,7 +18041,11 @@ namespace KclLib.API {
     #else
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
@@ -16667,7 +18147,11 @@ namespace KclLib.API {
     void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
             break;
@@ -16780,7 +18264,7 @@ namespace KclLib.API {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[59]; }
+      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[62]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -16942,7 +18426,11 @@ namespace KclLib.API {
     #else
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
@@ -16968,7 +18456,11 @@ namespace KclLib.API {
     void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
             break;
@@ -17005,7 +18497,7 @@ namespace KclLib.API {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[60]; }
+      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[63]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -17178,7 +18670,11 @@ namespace KclLib.API {
     #else
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
@@ -17204,7 +18700,11 @@ namespace KclLib.API {
     void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
             break;
@@ -17244,7 +18744,7 @@ namespace KclLib.API {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[61]; }
+      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[64]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -17501,7 +19001,11 @@ namespace KclLib.API {
     #else
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
@@ -17538,7 +19042,11 @@ namespace KclLib.API {
     void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
             break;
@@ -17589,7 +19097,7 @@ namespace KclLib.API {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[62]; }
+      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[65]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -17775,7 +19283,11 @@ namespace KclLib.API {
     #else
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
@@ -17802,7 +19314,11 @@ namespace KclLib.API {
     void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
             break;
@@ -17843,7 +19359,7 @@ namespace KclLib.API {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[63]; }
+      get { return global::KclLib.API.SpecReflection.Descriptor.MessageTypes[66]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -18051,7 +19567,11 @@ namespace KclLib.API {
     #else
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
@@ -18078,7 +19598,11 @@ namespace KclLib.API {
     void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
             break;

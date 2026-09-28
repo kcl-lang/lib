@@ -219,6 +219,37 @@ public object TestArgsKt {
     public fun clearFailFast() {
       _builder.clearFailFast()
     }
+
+    /**
+     * ```
+     * Flag to collect line-level coverage data while running tests. When true,
+     * the test tool records, for every top-level KCL statement that executes,
+     * the source file path and line number. The aggregated result is returned
+     * in [TestResult.coverage]. Defaults to false.
+     * ```
+     *
+     * `bool coverage = 5;`
+     */
+    public var coverage: kotlin.Boolean
+      @kotlin.jvm.JvmName("getCoverage")
+        get() = _builder.coverage
+      @kotlin.jvm.JvmName("setCoverage")
+        set(value) {
+        _builder.coverage = value
+      }
+    /**
+     * ```
+     * Flag to collect line-level coverage data while running tests. When true,
+     * the test tool records, for every top-level KCL statement that executes,
+     * the source file path and line number. The aggregated result is returned
+     * in [TestResult.coverage]. Defaults to false.
+     * ```
+     *
+     * `bool coverage = 5;`
+     */
+    public fun clearCoverage() {
+      _builder.clearCoverage()
+    }
   }
 }
 @kotlin.jvm.JvmSynthetic

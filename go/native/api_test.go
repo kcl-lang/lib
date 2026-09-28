@@ -30,6 +30,20 @@ const (
 	testWorkDir           = "./../test_data"
 )
 
+func TestPing(t *testing.T) {
+	client := NewNativeServiceClient()
+
+	args := &api.PingArgs{Value: "hello"}
+	result, err := client.Ping(args)
+	if err != nil {
+		t.Fatalf("Ping failed: %v", err)
+	}
+
+	if result.Value != args.Value {
+		t.Errorf("Expected ping value %q, got %q", args.Value, result.Value)
+	}
+}
+
 func TestExecAPI(t *testing.T) {
 	client := NewNativeServiceClient()
 	args := &api.ExecProgramArgs{
@@ -388,6 +402,64 @@ func TestFormatCodeAPI(t *testing.T) {
 `
 	if string(result.Formatted) != expectedFormatted {
 		t.Errorf("Expected formatted code:\n%s\nGot:\n%s", expectedFormatted, string(result.Formatted))
+	}
+}
+
+func TestFormatPath(t *testing.T) {
+	client := NewNativeServiceClient()
+
+	// FormatPath mutates files in place, so operate on a copy of the fixture
+	// in a temp dir instead of the checked-in test data. Rewrite the copy
+	// with unformatted source so the formatter has something to change.
+	tmpFile := filepath.Join(t.TempDir(), "test.k")
+	content, err := os.ReadFile(testFileFormatPath)
+	if err != nil {
+		t.Fatalf("Failed to read format path fixture: %v", err)
+	}
+	if err := os.WriteFile(tmpFile, content, 0644); err != nil {
+		t.Fatalf("Failed to copy format path fixture: %v", err)
+	}
+	if err := os.WriteFile(tmpFile, []byte("a   =   1\n"), 0644); err != nil {
+		t.Fatalf("Failed to write messy test file: %v", err)
+	}
+
+	args := &api.FormatPathArgs{Path: tmpFile}
+	result, err := client.FormatPath(args)
+	if err != nil {
+		t.Fatalf("FormatPath failed: %v", err)
+	}
+
+	resolvedTmp, err := filepath.EvalSymlinks(tmpFile)
+	if err != nil {
+		resolvedTmp = tmpFile
+	}
+	found := false
+	for _, p := range result.ChangedPaths {
+		if p == tmpFile || p == resolvedTmp {
+			found = true
+			break
+		}
+	}
+	if !found {
+		t.Errorf("Expected changed path %q, got %v", tmpFile, result.ChangedPaths)
+	}
+
+	expected := "a = 1\n"
+	formatted, err := os.ReadFile(tmpFile)
+	if err != nil {
+		t.Fatalf("Failed to read formatted file: %v", err)
+	}
+	if string(formatted) != expected {
+		t.Errorf("Expected content:\n%s\nGot:\n%s", expected, string(formatted))
+	}
+
+	// Once formatted, nothing is reported as changed.
+	result, err = client.FormatPath(args)
+	if err != nil {
+		t.Fatalf("FormatPath (second run) failed: %v", err)
+	}
+	if len(result.ChangedPaths) != 0 {
+		t.Errorf("Expected no changed paths on second run, got %v", result.ChangedPaths)
 	}
 }
 

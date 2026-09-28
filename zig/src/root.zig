@@ -328,6 +328,136 @@ test "typed execProgram propagates sourcemap_output end-to-end" {
     try testing.expect(std.mem.indexOf(u8, result.sourcemap.?, "\"version\"") != null);
 }
 
+// Pure protobuf round-trip — does not require the native dispatcher.
+// Covers ExecProgramArgs.emit_attribute_metadata (21).
+test "ExecProgramArgs emit_attribute_metadata round-trip on the wire" {
+    const allocator = testing.allocator;
+
+    var args: spec.ExecProgramArgs = .{};
+    args.emit_attribute_metadata = true;
+
+    var writer: std.Io.Writer.Allocating = .init(allocator);
+    defer writer.deinit();
+    try args.encode(&writer.writer, allocator);
+
+    var reader: std.Io.Reader = .fixed(writer.written());
+    var decoded = try spec.ExecProgramArgs.decode(&reader, allocator);
+    defer decoded.deinit(allocator);
+
+    try testing.expect(decoded.emit_attribute_metadata);
+}
+
+// Pure protobuf round-trip for TestArgs.coverage (5).
+test "TestArgs coverage round-trips on the wire" {
+    const allocator = testing.allocator;
+
+    var args: spec.TestArgs = .{ .coverage = true };
+
+    var writer: std.Io.Writer.Allocating = .init(allocator);
+    defer writer.deinit();
+    try args.encode(&writer.writer, allocator);
+
+    var reader: std.Io.Reader = .fixed(writer.written());
+    var decoded = try spec.TestArgs.decode(&reader, allocator);
+    defer decoded.deinit(allocator);
+
+    try testing.expect(decoded.coverage);
+}
+
+// Pure protobuf round-trip for TestResult.coverage (3) carrying a full
+// TestCoverageReport (TestCoverageReport.files/summary, FileCoverage and its
+// map<uint64, uint64> line_hits, CoverageSummary), plus TestCaseInfo.line_hits
+// (5, map<string, uint64>).
+test "TestResult coverage report round-trips on the wire" {
+    const allocator = testing.allocator;
+
+    var case_hits: std.ArrayList(spec.TestCaseInfo.LineHitsEntry) = .empty;
+    defer case_hits.deinit(allocator);
+    try case_hits.append(allocator, .{ .key = "pkg/func.k:2", .value = 3 });
+
+    var info: std.ArrayList(spec.TestCaseInfo) = .empty;
+    defer info.deinit(allocator);
+    try info.append(allocator, .{
+        .name = "test_func_0",
+        .duration = 42,
+        .line_hits = case_hits,
+    });
+
+    var covered_lines: std.ArrayList(u64) = .empty;
+    defer covered_lines.deinit(allocator);
+    try covered_lines.append(allocator, 2);
+    try covered_lines.append(allocator, 4);
+
+    var file_line_hits: std.ArrayList(spec.FileCoverage.LineHitsEntry) = .empty;
+    defer file_line_hits.deinit(allocator);
+    try file_line_hits.append(allocator, .{ .key = 2, .value = 3 });
+
+    var files: std.ArrayList(spec.TestCoverageReport.FilesEntry) = .empty;
+    defer files.deinit(allocator);
+    try files.append(allocator, .{
+        .key = "pkg/func.k",
+        .value = .{
+            .filename = "pkg/func.k",
+            .covered_lines = covered_lines,
+            .line_hits = file_line_hits,
+        },
+    });
+
+    var result: spec.TestResult = .{};
+    result.info = info;
+    result.coverage = .{
+        .files = files,
+        .summary = .{ .covered = 2, .executable = 4, .percent = 50.0 },
+    };
+
+    var writer: std.Io.Writer.Allocating = .init(allocator);
+    defer writer.deinit();
+    try result.encode(&writer.writer, allocator);
+
+    var reader: std.Io.Reader = .fixed(writer.written());
+    var decoded = try spec.TestResult.decode(&reader, allocator);
+    defer decoded.deinit(allocator);
+
+    try testing.expectEqual(@as(usize, 1), decoded.info.items.len);
+    try testing.expectEqualStrings("test_func_0", decoded.info.items[0].name);
+    try testing.expectEqual(@as(u64, 42), decoded.info.items[0].duration);
+    try testing.expectEqual(@as(usize, 1), decoded.info.items[0].line_hits.items.len);
+    try testing.expectEqualStrings("pkg/func.k:2", decoded.info.items[0].line_hits.items[0].key);
+    try testing.expectEqual(@as(u64, 3), decoded.info.items[0].line_hits.items[0].value);
+
+    const report = decoded.coverage.?;
+    try testing.expectEqual(@as(usize, 1), report.files.items.len);
+    try testing.expectEqualStrings("pkg/func.k", report.files.items[0].key);
+    try testing.expectEqualStrings("pkg/func.k", report.files.items[0].value.?.filename);
+    try testing.expectEqual(@as(usize, 2), report.files.items[0].value.?.covered_lines.items.len);
+    try testing.expectEqual(@as(u64, 4), report.files.items[0].value.?.covered_lines.items[1]);
+    try testing.expectEqual(@as(usize, 1), report.files.items[0].value.?.line_hits.items.len);
+    try testing.expectEqual(@as(u64, 2), report.files.items[0].value.?.line_hits.items[0].key);
+    try testing.expectEqual(@as(u64, 3), report.files.items[0].value.?.line_hits.items[0].value);
+
+    try testing.expectEqual(@as(u64, 2), report.summary.?.covered);
+    try testing.expectEqual(@as(u64, 4), report.summary.?.executable);
+    try testing.expectEqual(@as(f64, 50.0), report.summary.?.percent);
+}
+
+// End-to-end: runs KCL through the native dispatcher with
+// emit_attribute_metadata set. The runtime may predate the flag (the field is
+// proto3-optional on the wire and ignored on decode), so only assert the call
+// succeeds.
+test "typed execProgram accepts emit_attribute_metadata end-to-end" {
+    const allocator = testing.allocator;
+    var k_code_list: std.ArrayList([]const u8) = .empty;
+    defer k_code_list.deinit(allocator);
+    try k_code_list.append(allocator, "alice = {age = 18}");
+    var result = try execProgram(allocator, .{
+        .k_code_list = k_code_list,
+        .emit_attribute_metadata = true,
+    });
+    defer result.deinit(allocator);
+    try testing.expectEqualStrings("", result.err_message);
+    try testing.expect(std.mem.indexOf(u8, result.json_result, "alice") != null);
+}
+
 // ---------------------------------------------------------------------------
 // Tests for the typed wrappers below the universal `call` dispatcher.
 //

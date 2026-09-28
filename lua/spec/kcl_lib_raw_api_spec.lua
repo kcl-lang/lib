@@ -193,6 +193,38 @@ a = 1
     end)
   end)
 
+  describe("get_schema_type_mapping_under_path", function()
+    it("keeps external dependency schemas in their own package", function()
+      -- The runtime resolves package paths against the work dir, so the
+      -- fixture paths must be absolute (mirrors the python/go tests).
+      local root = pl_path.abspath("./spec/test_data/get_schema_ty_under_path")
+      local args = {
+        exec_args = {
+          k_filename_list = { root .. "/aaa" },
+          external_pkgs = {
+            { pkg_name = "bbb", pkg_path = root .. "/bbb" },
+          },
+        },
+      }
+      local result = assert(api:get_schema_type_mapping_under_path(args))
+      local mapping = result.schema_type_mapping
+      assert.is_not_nil(mapping["__main__"])
+      assert.is_not_nil(mapping["bbb"])
+      local schemas = {}
+      for _, sty in ipairs(mapping["bbb"].schema_type) do
+        schemas[sty.schema_name] = sty
+      end
+      assert.is_not_nil(schemas["Base"])
+      assert.is_not_nil(schemas["B"])
+      assert.are.equal("bbb", schemas["Base"].pkg_path)
+      assert.are.equal("bbb", schemas["B"].pkg_path)
+      -- Regression test for https://github.com/kcl-lang/kcl/issues/1546:
+      -- the base schema must resolve across the package boundary.
+      assert.are.equal("Base", schemas["B"].base_schema.schema_name)
+      assert.are.equal("bbb", schemas["B"].base_schema.pkg_path)
+    end)
+  end)
+
   describe("validate_code", function()
     it("can call the native function", function()
       local args = {

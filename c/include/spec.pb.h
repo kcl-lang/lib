@@ -286,6 +286,14 @@ typedef struct _ExecProgramArgs {
     /* Output format selector. One of: yaml, json.
  When empty the runtime generates both formats (legacy behaviour). */
     pb_callback_t format;
+    /* Emit a side-channel marker in the planned YAML/JSON that names
+ schema attributes to be carried over to downstream emitters. The
+ marker is the sibling key `__kcl_info_meta__` whose value is a
+ list of attribute names (e.g. those decorated with
+ `@info(type="attr")`). Consumers (CLI/kcl-go) interpret it when
+ emitting XML. Defaults to false to keep `-o json` / `-o yaml`
+ output byte-identical to pre-change. */
+    bool emit_attribute_metadata;
     /* Optional path of the Source Map v3 (tc39.es/source-map) document to
  emit for the generated YAML. When non-empty, the runtime records the
  mapping between generated YAML lines and the originating KCL source
@@ -617,13 +625,12 @@ typedef struct _TestArgs {
     pb_callback_t run_regexp;
     /* Flag to stop the test run on the first failure. */
     bool fail_fast;
+    /* Flag to collect line-level coverage data while running tests. When true,
+ the test tool records, for every top-level KCL statement that executes,
+ the source file path and line number. The aggregated result is returned
+ in [TestResult.coverage]. Defaults to false. */
+    bool coverage;
 } TestArgs;
-
-/* Message for test response. */
-typedef struct _TestResult {
-    /* List of test case information. */
-    pb_callback_t info;
-} TestResult;
 
 /* Message representing information about a single test case. */
 typedef struct _TestCaseInfo {
@@ -635,7 +642,72 @@ typedef struct _TestCaseInfo {
     uint64_t duration;
     /* Log message from the test case. */
     pb_callback_t log_message;
+    /* Per-case line coverage. Populated only when [TestArgs.coverage]
+ is true; empty otherwise. Each entry maps "filename:line" to the
+ number of times that line was entered while running this case. */
+    pb_callback_t line_hits;
 } TestCaseInfo;
+
+typedef struct _TestCaseInfo_LineHitsEntry {
+    pb_callback_t key;
+    uint64_t value;
+} TestCaseInfo_LineHitsEntry;
+
+/* Message describing aggregated coverage data for a single source file. */
+typedef struct _FileCoverage {
+    /* Source file path, relative to the package root when possible. */
+    pb_callback_t filename;
+    /* Sorted list of lines that executed at least once across all tests
+ that covered this file. */
+    pb_callback_t covered_lines;
+    /* Sorted list of lines in this file that contain an executable
+ statement (i.e. lines that *could* be covered). Lines that contain
+ only blank lines, comments or non-executable tokens are excluded. */
+    pb_callback_t executable_lines;
+    /* Per-line execution count across all tests that covered this file.
+ Keys are line numbers (1-based); values are hit counts. */
+    pb_callback_t line_hits;
+} FileCoverage;
+
+typedef struct _FileCoverage_LineHitsEntry {
+    uint64_t key;
+    uint64_t value;
+} FileCoverage_LineHitsEntry;
+
+typedef struct _TestCoverageReport_FilesEntry {
+    pb_callback_t key;
+    bool has_value;
+    FileCoverage value;
+} TestCoverageReport_FilesEntry;
+
+/* Roll-up coverage metrics. */
+typedef struct _CoverageSummary {
+    /* Number of executable lines that were hit by at least one test. */
+    uint64_t covered;
+    /* Total number of executable lines discovered. */
+    uint64_t executable;
+    /* Coverage percentage in the inclusive range [0.0, 100.0]. */
+    double percent;
+} CoverageSummary;
+
+/* Message describing aggregated coverage across the entire test run. */
+typedef struct _TestCoverageReport {
+    /* Per-file coverage keyed by source file path. */
+    pb_callback_t files;
+    /* Roll-up of all files in [TestCoverageReport.files]. */
+    bool has_summary;
+    CoverageSummary summary;
+} TestCoverageReport;
+
+/* Message for test response. */
+typedef struct _TestResult {
+    /* List of test case information. */
+    pb_callback_t info;
+    /* Aggregated coverage report. Populated only when
+ [TestArgs.coverage] is true; empty otherwise. */
+    bool has_coverage;
+    TestCoverageReport coverage;
+} TestResult;
 
 /* Message for update dependencies request arguments. */
 typedef struct _UpdateDependenciesArgs {
@@ -818,7 +890,7 @@ extern "C" {
 #define Scope_init_default                       {{{NULL}, NULL}, false, ScopeIndex_init_default, false, SymbolIndex_init_default, {{NULL}, NULL}, {{NULL}, NULL}}
 #define SymbolIndex_init_default                 {0, 0, {{NULL}, NULL}}
 #define ScopeIndex_init_default                  {0, 0, {{NULL}, NULL}}
-#define ExecProgramArgs_init_default             {{{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, 0, 0, 0, 0, 0, 0, 0, {{NULL}, NULL}, 0, 0, 0, {{NULL}, NULL}, 0, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}}
+#define ExecProgramArgs_init_default             {{{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, 0, 0, 0, 0, 0, 0, 0, {{NULL}, NULL}, 0, 0, 0, {{NULL}, NULL}, 0, {{NULL}, NULL}, {{NULL}, NULL}, 0, {{NULL}, NULL}}
 #define ExecProgramResult_init_default           {{{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}}
 #define FormatCodeArgs_init_default              {{{NULL}, NULL}}
 #define FormatCodeResult_init_default            {{{NULL}, NULL}}
@@ -854,9 +926,15 @@ extern "C" {
 #define RenameCodeArgs_SourceCodesEntry_init_default {{{NULL}, NULL}, {{NULL}, NULL}}
 #define RenameCodeResult_init_default            {{{NULL}, NULL}}
 #define RenameCodeResult_ChangedCodesEntry_init_default {{{NULL}, NULL}, {{NULL}, NULL}}
-#define TestArgs_init_default                    {false, ExecProgramArgs_init_default, {{NULL}, NULL}, {{NULL}, NULL}, 0}
-#define TestResult_init_default                  {{{NULL}, NULL}}
-#define TestCaseInfo_init_default                {{{NULL}, NULL}, {{NULL}, NULL}, 0, {{NULL}, NULL}}
+#define TestArgs_init_default                    {false, ExecProgramArgs_init_default, {{NULL}, NULL}, {{NULL}, NULL}, 0, 0}
+#define TestResult_init_default                  {{{NULL}, NULL}, false, TestCoverageReport_init_default}
+#define TestCaseInfo_init_default                {{{NULL}, NULL}, {{NULL}, NULL}, 0, {{NULL}, NULL}, {{NULL}, NULL}}
+#define TestCaseInfo_LineHitsEntry_init_default  {{{NULL}, NULL}, 0}
+#define FileCoverage_init_default                {{{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}}
+#define FileCoverage_LineHitsEntry_init_default  {0, 0}
+#define TestCoverageReport_init_default          {{{NULL}, NULL}, false, CoverageSummary_init_default}
+#define TestCoverageReport_FilesEntry_init_default {{{NULL}, NULL}, false, FileCoverage_init_default}
+#define CoverageSummary_init_default             {0, 0, 0}
 #define UpdateDependenciesArgs_init_default      {{{NULL}, NULL}, 0}
 #define UpdateDependenciesResult_init_default    {{{NULL}, NULL}}
 #define KclType_init_default                     {{{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}}
@@ -896,7 +974,7 @@ extern "C" {
 #define Scope_init_zero                          {{{NULL}, NULL}, false, ScopeIndex_init_zero, false, SymbolIndex_init_zero, {{NULL}, NULL}, {{NULL}, NULL}}
 #define SymbolIndex_init_zero                    {0, 0, {{NULL}, NULL}}
 #define ScopeIndex_init_zero                     {0, 0, {{NULL}, NULL}}
-#define ExecProgramArgs_init_zero                {{{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, 0, 0, 0, 0, 0, 0, 0, {{NULL}, NULL}, 0, 0, 0, {{NULL}, NULL}, 0, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}}
+#define ExecProgramArgs_init_zero                {{{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, 0, 0, 0, 0, 0, 0, 0, {{NULL}, NULL}, 0, 0, 0, {{NULL}, NULL}, 0, {{NULL}, NULL}, {{NULL}, NULL}, 0, {{NULL}, NULL}}
 #define ExecProgramResult_init_zero              {{{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}}
 #define FormatCodeArgs_init_zero                 {{{NULL}, NULL}}
 #define FormatCodeResult_init_zero               {{{NULL}, NULL}}
@@ -932,9 +1010,15 @@ extern "C" {
 #define RenameCodeArgs_SourceCodesEntry_init_zero {{{NULL}, NULL}, {{NULL}, NULL}}
 #define RenameCodeResult_init_zero               {{{NULL}, NULL}}
 #define RenameCodeResult_ChangedCodesEntry_init_zero {{{NULL}, NULL}, {{NULL}, NULL}}
-#define TestArgs_init_zero                       {false, ExecProgramArgs_init_zero, {{NULL}, NULL}, {{NULL}, NULL}, 0}
-#define TestResult_init_zero                     {{{NULL}, NULL}}
-#define TestCaseInfo_init_zero                   {{{NULL}, NULL}, {{NULL}, NULL}, 0, {{NULL}, NULL}}
+#define TestArgs_init_zero                       {false, ExecProgramArgs_init_zero, {{NULL}, NULL}, {{NULL}, NULL}, 0, 0}
+#define TestResult_init_zero                     {{{NULL}, NULL}, false, TestCoverageReport_init_zero}
+#define TestCaseInfo_init_zero                   {{{NULL}, NULL}, {{NULL}, NULL}, 0, {{NULL}, NULL}, {{NULL}, NULL}}
+#define TestCaseInfo_LineHitsEntry_init_zero     {{{NULL}, NULL}, 0}
+#define FileCoverage_init_zero                   {{{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}}
+#define FileCoverage_LineHitsEntry_init_zero     {0, 0}
+#define TestCoverageReport_init_zero             {{{NULL}, NULL}, false, CoverageSummary_init_zero}
+#define TestCoverageReport_FilesEntry_init_zero  {{{NULL}, NULL}, false, FileCoverage_init_zero}
+#define CoverageSummary_init_zero                {0, 0, 0}
 #define UpdateDependenciesArgs_init_zero         {{{NULL}, NULL}, 0}
 #define UpdateDependenciesResult_init_zero       {{{NULL}, NULL}}
 #define KclType_init_zero                        {{{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}}
@@ -1035,6 +1119,7 @@ extern "C" {
 #define ExecProgramArgs_fast_eval_tag            18
 #define ExecProgramArgs_error_format_tag         19
 #define ExecProgramArgs_format_tag               20
+#define ExecProgramArgs_emit_attribute_metadata_tag 21
 #define ExecProgramArgs_sourcemap_output_tag     22
 #define ExecProgramResult_json_result_tag        1
 #define ExecProgramResult_yaml_result_tag        2
@@ -1128,11 +1213,29 @@ extern "C" {
 #define TestArgs_pkg_list_tag                    2
 #define TestArgs_run_regexp_tag                  3
 #define TestArgs_fail_fast_tag                   4
-#define TestResult_info_tag                      2
+#define TestArgs_coverage_tag                    5
 #define TestCaseInfo_name_tag                    1
 #define TestCaseInfo_error_tag                   2
 #define TestCaseInfo_duration_tag                3
 #define TestCaseInfo_log_message_tag             4
+#define TestCaseInfo_line_hits_tag               5
+#define TestCaseInfo_LineHitsEntry_key_tag       1
+#define TestCaseInfo_LineHitsEntry_value_tag     2
+#define FileCoverage_filename_tag                1
+#define FileCoverage_covered_lines_tag           2
+#define FileCoverage_executable_lines_tag        3
+#define FileCoverage_line_hits_tag               4
+#define FileCoverage_LineHitsEntry_key_tag       1
+#define FileCoverage_LineHitsEntry_value_tag     2
+#define TestCoverageReport_FilesEntry_key_tag    1
+#define TestCoverageReport_FilesEntry_value_tag  2
+#define CoverageSummary_covered_tag              1
+#define CoverageSummary_executable_tag           2
+#define CoverageSummary_percent_tag              3
+#define TestCoverageReport_files_tag             1
+#define TestCoverageReport_summary_tag           2
+#define TestResult_info_tag                      2
+#define TestResult_coverage_tag                  3
 #define UpdateDependenciesArgs_manifest_path_tag 1
 #define UpdateDependenciesArgs_vendor_tag        2
 #define UpdateDependenciesResult_external_pkgs_tag 3
@@ -1427,6 +1530,7 @@ X(a, CALLBACK, REPEATED, STRING,   path_selector,    17) \
 X(a, STATIC,   SINGULAR, BOOL,     fast_eval,        18) \
 X(a, CALLBACK, SINGULAR, STRING,   error_format,     19) \
 X(a, CALLBACK, SINGULAR, STRING,   format,           20) \
+X(a, STATIC,   SINGULAR, BOOL,     emit_attribute_metadata,  21) \
 X(a, CALLBACK, OPTIONAL, STRING,   sourcemap_output,  22)
 #define ExecProgramArgs_CALLBACK pb_default_field_callback
 #define ExecProgramArgs_DEFAULT NULL
@@ -1685,24 +1789,72 @@ X(a, CALLBACK, SINGULAR, STRING,   value,             2)
 X(a, STATIC,   OPTIONAL, MESSAGE,  exec_args,         1) \
 X(a, CALLBACK, REPEATED, STRING,   pkg_list,          2) \
 X(a, CALLBACK, SINGULAR, STRING,   run_regexp,        3) \
-X(a, STATIC,   SINGULAR, BOOL,     fail_fast,         4)
+X(a, STATIC,   SINGULAR, BOOL,     fail_fast,         4) \
+X(a, STATIC,   SINGULAR, BOOL,     coverage,          5)
 #define TestArgs_CALLBACK pb_default_field_callback
 #define TestArgs_DEFAULT NULL
 #define TestArgs_exec_args_MSGTYPE ExecProgramArgs
 
 #define TestResult_FIELDLIST(X, a) \
-X(a, CALLBACK, REPEATED, MESSAGE,  info,              2)
+X(a, CALLBACK, REPEATED, MESSAGE,  info,              2) \
+X(a, STATIC,   OPTIONAL, MESSAGE,  coverage,          3)
 #define TestResult_CALLBACK pb_default_field_callback
 #define TestResult_DEFAULT NULL
 #define TestResult_info_MSGTYPE TestCaseInfo
+#define TestResult_coverage_MSGTYPE TestCoverageReport
 
 #define TestCaseInfo_FIELDLIST(X, a) \
 X(a, CALLBACK, SINGULAR, STRING,   name,              1) \
 X(a, CALLBACK, SINGULAR, STRING,   error,             2) \
 X(a, STATIC,   SINGULAR, UINT64,   duration,          3) \
-X(a, CALLBACK, SINGULAR, STRING,   log_message,       4)
+X(a, CALLBACK, SINGULAR, STRING,   log_message,       4) \
+X(a, CALLBACK, REPEATED, MESSAGE,  line_hits,         5)
 #define TestCaseInfo_CALLBACK pb_default_field_callback
 #define TestCaseInfo_DEFAULT NULL
+#define TestCaseInfo_line_hits_MSGTYPE TestCaseInfo_LineHitsEntry
+
+#define TestCaseInfo_LineHitsEntry_FIELDLIST(X, a) \
+X(a, CALLBACK, SINGULAR, STRING,   key,               1) \
+X(a, STATIC,   SINGULAR, UINT64,   value,             2)
+#define TestCaseInfo_LineHitsEntry_CALLBACK pb_default_field_callback
+#define TestCaseInfo_LineHitsEntry_DEFAULT NULL
+
+#define FileCoverage_FIELDLIST(X, a) \
+X(a, CALLBACK, SINGULAR, STRING,   filename,          1) \
+X(a, CALLBACK, REPEATED, UINT64,   covered_lines,     2) \
+X(a, CALLBACK, REPEATED, UINT64,   executable_lines,   3) \
+X(a, CALLBACK, REPEATED, MESSAGE,  line_hits,         4)
+#define FileCoverage_CALLBACK pb_default_field_callback
+#define FileCoverage_DEFAULT NULL
+#define FileCoverage_line_hits_MSGTYPE FileCoverage_LineHitsEntry
+
+#define FileCoverage_LineHitsEntry_FIELDLIST(X, a) \
+X(a, STATIC,   SINGULAR, UINT64,   key,               1) \
+X(a, STATIC,   SINGULAR, UINT64,   value,             2)
+#define FileCoverage_LineHitsEntry_CALLBACK NULL
+#define FileCoverage_LineHitsEntry_DEFAULT NULL
+
+#define TestCoverageReport_FIELDLIST(X, a) \
+X(a, CALLBACK, REPEATED, MESSAGE,  files,             1) \
+X(a, STATIC,   OPTIONAL, MESSAGE,  summary,           2)
+#define TestCoverageReport_CALLBACK pb_default_field_callback
+#define TestCoverageReport_DEFAULT NULL
+#define TestCoverageReport_files_MSGTYPE TestCoverageReport_FilesEntry
+#define TestCoverageReport_summary_MSGTYPE CoverageSummary
+
+#define TestCoverageReport_FilesEntry_FIELDLIST(X, a) \
+X(a, CALLBACK, SINGULAR, STRING,   key,               1) \
+X(a, STATIC,   OPTIONAL, MESSAGE,  value,             2)
+#define TestCoverageReport_FilesEntry_CALLBACK pb_default_field_callback
+#define TestCoverageReport_FilesEntry_DEFAULT NULL
+#define TestCoverageReport_FilesEntry_value_MSGTYPE FileCoverage
+
+#define CoverageSummary_FIELDLIST(X, a) \
+X(a, STATIC,   SINGULAR, UINT64,   covered,           1) \
+X(a, STATIC,   SINGULAR, UINT64,   executable,        2) \
+X(a, STATIC,   SINGULAR, DOUBLE,   percent,           3)
+#define CoverageSummary_CALLBACK NULL
+#define CoverageSummary_DEFAULT NULL
 
 #define UpdateDependenciesArgs_FIELDLIST(X, a) \
 X(a, CALLBACK, SINGULAR, STRING,   manifest_path,     1) \
@@ -1874,6 +2026,12 @@ extern const pb_msgdesc_t RenameCodeResult_ChangedCodesEntry_msg;
 extern const pb_msgdesc_t TestArgs_msg;
 extern const pb_msgdesc_t TestResult_msg;
 extern const pb_msgdesc_t TestCaseInfo_msg;
+extern const pb_msgdesc_t TestCaseInfo_LineHitsEntry_msg;
+extern const pb_msgdesc_t FileCoverage_msg;
+extern const pb_msgdesc_t FileCoverage_LineHitsEntry_msg;
+extern const pb_msgdesc_t TestCoverageReport_msg;
+extern const pb_msgdesc_t TestCoverageReport_FilesEntry_msg;
+extern const pb_msgdesc_t CoverageSummary_msg;
 extern const pb_msgdesc_t UpdateDependenciesArgs_msg;
 extern const pb_msgdesc_t UpdateDependenciesResult_msg;
 extern const pb_msgdesc_t KclType_msg;
@@ -1954,6 +2112,12 @@ extern const pb_msgdesc_t Example_msg;
 #define TestArgs_fields &TestArgs_msg
 #define TestResult_fields &TestResult_msg
 #define TestCaseInfo_fields &TestCaseInfo_msg
+#define TestCaseInfo_LineHitsEntry_fields &TestCaseInfo_LineHitsEntry_msg
+#define FileCoverage_fields &FileCoverage_msg
+#define FileCoverage_LineHitsEntry_fields &FileCoverage_LineHitsEntry_msg
+#define TestCoverageReport_fields &TestCoverageReport_msg
+#define TestCoverageReport_FilesEntry_fields &TestCoverageReport_FilesEntry_msg
+#define CoverageSummary_fields &CoverageSummary_msg
 #define UpdateDependenciesArgs_fields &UpdateDependenciesArgs_msg
 #define UpdateDependenciesResult_fields &UpdateDependenciesResult_msg
 #define KclType_fields &KclType_msg
@@ -2031,6 +2195,10 @@ extern const pb_msgdesc_t Example_msg;
 /* TestArgs_size depends on runtime parameters */
 /* TestResult_size depends on runtime parameters */
 /* TestCaseInfo_size depends on runtime parameters */
+/* TestCaseInfo_LineHitsEntry_size depends on runtime parameters */
+/* FileCoverage_size depends on runtime parameters */
+/* TestCoverageReport_size depends on runtime parameters */
+/* TestCoverageReport_FilesEntry_size depends on runtime parameters */
 /* UpdateDependenciesArgs_size depends on runtime parameters */
 /* UpdateDependenciesResult_size depends on runtime parameters */
 /* KclType_size depends on runtime parameters */
@@ -2042,10 +2210,12 @@ extern const pb_msgdesc_t Example_msg;
 /* Decorator_size depends on runtime parameters */
 /* Decorator_KeywordsEntry_size depends on runtime parameters */
 /* Example_size depends on runtime parameters */
+#define CoverageSummary_size                     31
+#define FileCoverage_LineHitsEntry_size          22
 #define GetVersionArgs_size                      0
 #define ListMethodArgs_size                      0
 #define ListVariablesOptions_size                2
-#define SPEC_PB_H_MAX_SIZE                       ListVariablesOptions_size
+#define SPEC_PB_H_MAX_SIZE                       CoverageSummary_size
 
 #ifdef __cplusplus
 } /* extern "C" */

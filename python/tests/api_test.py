@@ -390,3 +390,51 @@ def test_get_version_api():
     api_instance = api.API()
     result = api_instance.get_version()
     assert "Version" in str(result) and "GitCommit" in str(result)
+
+
+def test_ping_api():
+    """Ping the KCL service and return the same value."""
+    import kcl_lib.api as api
+
+    api_instance = api.API()
+    result = api_instance.ping(api.PingArgs(value="Hello, KCL!"))
+    assert result.value == "Hello, KCL!"
+
+
+def test_list_method_api():
+    """List all the methods supported by the KCL service."""
+    import kcl_lib.api as api
+
+    api_instance = api.API()
+    result = api_instance.list_method()
+    assert len(result.method_name_list) > 0
+
+
+def test_exec_api_with_emit_attribute_metadata():
+    """Execute KCL file with `emit_attribute_metadata` enabled."""
+    import kcl_lib.api as api
+
+    args = api.ExecProgramArgs(
+        k_filename_list=[TEST_FILE], emit_attribute_metadata=True
+    )
+
+    api_instance = api.API()
+    result = api_instance.exec_program(args)
+    assert result.yaml_result == "app:\n  replicas: 2"
+
+
+def test_testing_api_with_coverage():
+    """Run KCL tests with line coverage collection enabled."""
+    import kcl_lib.api as api
+
+    args = api.TestArgs(
+        pkg_list=["./tests/test_data/testing/..."],
+        coverage=True,
+    )
+
+    api_instance = api.API()
+    result = api_instance.test(args)
+
+    assert len(result.info) == 2
+    assert len(result.coverage.files) > 0
+    assert result.coverage.summary.executable > 0

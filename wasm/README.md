@@ -56,15 +56,15 @@ console.log(pingResult);
 
 ### Typed API
 
-For all KCL service methods except `FormatCode` (already covered by
-`invokeKCLFmt`), the package ships typed TypeScript wrappers that handle the
-protobuf encoding/decoding for you:
+For all KCL service methods the package ships typed TypeScript wrappers that
+handle the protobuf encoding/decoding for you:
 
 `ping`, `getVersion`, `parseProgram`, `parseFile`, `loadPackage`,
 `listOptions`, `listVariables`, `overrideFile`, `execProgram`,
-`getSchemaTypeMapping`, `getSchemaTypeMappingUnderPath`, `formatPath`,
-`lintPath`, `validateCode`, `loadSettingsFiles`, `rename`, `renameCode`,
-`test` and `updateDependencies`.
+`getSchemaTypeMapping`, `getSchemaTypeMappingUnderPath`, `formatCode`,
+`formatPath`, `lintPath`, `validateCode`, `loadSettingsFiles`, `rename`,
+`renameCode`, `test` and `updateDependencies`, plus the `BuiltinService`
+wrappers `builtinPing` and `listMethod`.
 
 ```typescript
 import { load, ping, lintPath, getVersion } from "@kcl-lib/wasm";

@@ -5,6 +5,27 @@
   "license": "Apache-2.0",
   "main": "index.js",
   "types": "index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "default": "./index.js"
+    },
+    "./facade": {
+      "types": "./facade.d.ts",
+      "default": "./facade.js"
+    },
+    "./facade.js": {
+      "types": "./facade.d.ts",
+      "default": "./facade.js"
+    },
+    "./ast": {
+      "types": "./src/ast/index.d.mts",
+      "default": "./src/ast/index.mjs"
+    },
+    "./ast/*": "./src/ast/*",
+    "./index.js": "./index.js",
+    "./package.json": "./package.json"
+  },
   "napi": {
     "name": "kcl-lib",
     "package": {
@@ -25,6 +46,7 @@
     "index.js",
     "facade.d.ts",
     "facade.js",
+    "src/ast",
     "LICENSE",
     "NOTICE"
   ],

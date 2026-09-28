@@ -500,6 +500,7 @@ export declare class ExecProgramArgs {
     errorFormat?: string | undefined | null,
     format?: string | undefined | null,
     sourcemapOutput?: string | undefined | null,
+    emitAttributeMetadata?: boolean | undefined | null,
   )
 }
 export declare class ParseProgramArgs {

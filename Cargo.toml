@@ -17,3 +17,6 @@ kcl-loader = { git = "https://github.com/kcl-lang/kcl", version = "0.13.0" }
 kcl-parser = { git = "https://github.com/kcl-lang/kcl", version = "0.13.0" }
 kcl-runtime = { git = "https://github.com/kcl-lang/kcl", version = "0.13.0" }
 kcl-primitives = { git = "https://github.com/kcl-lang/kcl", version = "0.13.0" }
+
+[dev-dependencies]
+serde_json = "1"

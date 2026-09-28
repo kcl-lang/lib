@@ -59,6 +59,22 @@ cmake ..
 make -j8
 ```
 
+### Running the tests
+
+The assertion-based test suite in `tests/test_api.cpp` (plain `CHECK` macro, no
+external dependencies) is built and registered with ctest only when
+`KCL_LIB_ENABLE_TESTING` is on:
+
+```shell
+cmake -B build -DKCL_LIB_ENABLE_TESTING=ON
+cmake --build build --parallel
+ctest --test-dir build --output-on-failure
+```
+
+It covers the core RPCs (get_version, ping, exec_program, parse_file,
+parse_program, format_code, lint_path, validate_code, list_options) plus the
+Test RPC with line coverage enabled.
+
 ## Examples
 
 ### facade

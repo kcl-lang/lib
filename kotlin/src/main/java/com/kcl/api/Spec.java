@@ -26332,6 +26332,21 @@ com.kcl.api.Spec.ScopeIndex defaultValue) {
 
     /**
      * <pre>
+     * Emit a side-channel marker in the planned YAML/JSON that names
+     * schema attributes to be carried over to downstream emitters. The
+     * marker is the sibling key `__kcl_info_meta__` whose value is a
+     * list of attribute names (e.g. those decorated with
+     * `@info(type="attr")`). Consumers (CLI/kcl-go) interpret it when
+     * emitting XML. Defaults to false to keep `-o json` / `-o yaml`
+     * output byte-identical to pre-change.
+     * </pre>
+     *
+     * <code>bool emit_attribute_metadata = 21;</code>
+     * @return The emitAttributeMetadata.
+     */
+    boolean getEmitAttributeMetadata();
+    /**
+     * <pre>
      * Optional path of the Source Map v3 (tc39.es/source-map) document to
      * emit for the generated YAML. When non-empty, the runtime records the
      * mapping between generated YAML lines and the originating KCL source
@@ -27073,6 +27088,27 @@ com.kcl.api.Spec.ScopeIndex defaultValue) {
       }
     }
 
+    public static final int EMIT_ATTRIBUTE_METADATA_FIELD_NUMBER = 21;
+    private boolean emitAttributeMetadata_ = false;
+    /**
+     * <pre>
+     * Emit a side-channel marker in the planned YAML/JSON that names
+     * schema attributes to be carried over to downstream emitters. The
+     * marker is the sibling key `__kcl_info_meta__` whose value is a
+     * list of attribute names (e.g. those decorated with
+     * `@info(type="attr")`). Consumers (CLI/kcl-go) interpret it when
+     * emitting XML. Defaults to false to keep `-o json` / `-o yaml`
+     * output byte-identical to pre-change.
+     * </pre>
+     *
+     * <code>bool emit_attribute_metadata = 21;</code>
+     * @return The emitAttributeMetadata.
+     */
+    @java.lang.Override
+    public boolean getEmitAttributeMetadata() {
+      return emitAttributeMetadata_;
+    }
+
     public static final int SOURCEMAP_OUTPUT_FIELD_NUMBER = 22;
     @SuppressWarnings("serial")
     private volatile java.lang.Object sourcemapOutput_ = "";
@@ -27218,6 +27254,9 @@ com.kcl.api.Spec.ScopeIndex defaultValue) {
       if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(format_)) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 20, format_);
       }
+      if (emitAttributeMetadata_ != false) {
+        output.writeBool(21, emitAttributeMetadata_);
+      }
       if (((bitField0_ & 0x00000001) != 0)) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 22, sourcemapOutput_);
       }
@@ -27323,6 +27362,10 @@ com.kcl.api.Spec.ScopeIndex defaultValue) {
       if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(format_)) {
         size += com.google.protobuf.GeneratedMessageV3.computeStringSize(20, format_);
       }
+      if (emitAttributeMetadata_ != false) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBoolSize(21, emitAttributeMetadata_);
+      }
       if (((bitField0_ & 0x00000001) != 0)) {
         size += com.google.protobuf.GeneratedMessageV3.computeStringSize(22, sourcemapOutput_);
       }
@@ -27381,6 +27424,8 @@ com.kcl.api.Spec.ScopeIndex defaultValue) {
           .equals(other.getErrorFormat())) return false;
       if (!getFormat()
           .equals(other.getFormat())) return false;
+      if (getEmitAttributeMetadata()
+          != other.getEmitAttributeMetadata()) return false;
       if (hasSourcemapOutput() != other.hasSourcemapOutput()) return false;
       if (hasSourcemapOutput()) {
         if (!getSourcemapOutput()
@@ -27458,6 +27503,9 @@ com.kcl.api.Spec.ScopeIndex defaultValue) {
       hash = (53 * hash) + getErrorFormat().hashCode();
       hash = (37 * hash) + FORMAT_FIELD_NUMBER;
       hash = (53 * hash) + getFormat().hashCode();
+      hash = (37 * hash) + EMIT_ATTRIBUTE_METADATA_FIELD_NUMBER;
+      hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
+          getEmitAttributeMetadata());
       if (hasSourcemapOutput()) {
         hash = (37 * hash) + SOURCEMAP_OUTPUT_FIELD_NUMBER;
         hash = (53 * hash) + getSourcemapOutput().hashCode();
@@ -27633,6 +27681,7 @@ com.kcl.api.Spec.ScopeIndex defaultValue) {
         fastEval_ = false;
         errorFormat_ = "";
         format_ = "";
+        emitAttributeMetadata_ = false;
         sourcemapOutput_ = "";
         return this;
       }
@@ -27747,8 +27796,11 @@ com.kcl.api.Spec.ScopeIndex defaultValue) {
         if (((from_bitField0_ & 0x00080000) != 0)) {
           result.format_ = format_;
         }
-        int to_bitField0_ = 0;
         if (((from_bitField0_ & 0x00100000) != 0)) {
+          result.emitAttributeMetadata_ = emitAttributeMetadata_;
+        }
+        int to_bitField0_ = 0;
+        if (((from_bitField0_ & 0x00200000) != 0)) {
           result.sourcemapOutput_ = sourcemapOutput_;
           to_bitField0_ |= 0x00000001;
         }
@@ -27939,9 +27991,12 @@ com.kcl.api.Spec.ScopeIndex defaultValue) {
           bitField0_ |= 0x00080000;
           onChanged();
         }
+        if (other.getEmitAttributeMetadata() != false) {
+          setEmitAttributeMetadata(other.getEmitAttributeMetadata());
+        }
         if (other.hasSourcemapOutput()) {
           sourcemapOutput_ = other.sourcemapOutput_;
-          bitField0_ |= 0x00100000;
+          bitField0_ |= 0x00200000;
           onChanged();
         }
         this.mergeUnknownFields(other.getUnknownFields());
@@ -28090,9 +28145,14 @@ com.kcl.api.Spec.ScopeIndex defaultValue) {
                 bitField0_ |= 0x00080000;
                 break;
               } // case 162
+              case 168: {
+                emitAttributeMetadata_ = input.readBool();
+                bitField0_ |= 0x00100000;
+                break;
+              } // case 168
               case 178: {
                 sourcemapOutput_ = input.readStringRequireUtf8();
-                bitField0_ |= 0x00100000;
+                bitField0_ |= 0x00200000;
                 break;
               } // case 178
               default: {
@@ -30102,6 +30162,69 @@ com.kcl.api.Spec.ScopeIndex defaultValue) {
         onChanged();
         return this;
       }
+
+      private boolean emitAttributeMetadata_ ;
+      /**
+       * <pre>
+       * Emit a side-channel marker in the planned YAML/JSON that names
+       * schema attributes to be carried over to downstream emitters. The
+       * marker is the sibling key `__kcl_info_meta__` whose value is a
+       * list of attribute names (e.g. those decorated with
+       * `@info(type="attr")`). Consumers (CLI/kcl-go) interpret it when
+       * emitting XML. Defaults to false to keep `-o json` / `-o yaml`
+       * output byte-identical to pre-change.
+       * </pre>
+       *
+       * <code>bool emit_attribute_metadata = 21;</code>
+       * @return The emitAttributeMetadata.
+       */
+      @java.lang.Override
+      public boolean getEmitAttributeMetadata() {
+        return emitAttributeMetadata_;
+      }
+      /**
+       * <pre>
+       * Emit a side-channel marker in the planned YAML/JSON that names
+       * schema attributes to be carried over to downstream emitters. The
+       * marker is the sibling key `__kcl_info_meta__` whose value is a
+       * list of attribute names (e.g. those decorated with
+       * `@info(type="attr")`). Consumers (CLI/kcl-go) interpret it when
+       * emitting XML. Defaults to false to keep `-o json` / `-o yaml`
+       * output byte-identical to pre-change.
+       * </pre>
+       *
+       * <code>bool emit_attribute_metadata = 21;</code>
+       * @param value The emitAttributeMetadata to set.
+       * @return This builder for chaining.
+       */
+      public Builder setEmitAttributeMetadata(boolean value) {
+
+        emitAttributeMetadata_ = value;
+        bitField0_ |= 0x00100000;
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * Emit a side-channel marker in the planned YAML/JSON that names
+       * schema attributes to be carried over to downstream emitters. The
+       * marker is the sibling key `__kcl_info_meta__` whose value is a
+       * list of attribute names (e.g. those decorated with
+       * `@info(type="attr")`). Consumers (CLI/kcl-go) interpret it when
+       * emitting XML. Defaults to false to keep `-o json` / `-o yaml`
+       * output byte-identical to pre-change.
+       * </pre>
+       *
+       * <code>bool emit_attribute_metadata = 21;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearEmitAttributeMetadata() {
+        bitField0_ = (bitField0_ & ~0x00100000);
+        emitAttributeMetadata_ = false;
+        onChanged();
+        return this;
+      }
+
       private java.lang.Object sourcemapOutput_ = "";
       /**
        * <pre>
@@ -30116,7 +30239,7 @@ com.kcl.api.Spec.ScopeIndex defaultValue) {
        * @return Whether the sourcemapOutput field is set.
        */
       public boolean hasSourcemapOutput() {
-        return ((bitField0_ & 0x00100000) != 0);
+        return ((bitField0_ & 0x00200000) != 0);
       }
       /**
        * <pre>
@@ -30184,7 +30307,7 @@ com.kcl.api.Spec.ScopeIndex defaultValue) {
           java.lang.String value) {
         if (value == null) { throw new NullPointerException(); }
         sourcemapOutput_ = value;
-        bitField0_ |= 0x00100000;
+        bitField0_ |= 0x00200000;
         onChanged();
         return this;
       }
@@ -30202,7 +30325,7 @@ com.kcl.api.Spec.ScopeIndex defaultValue) {
        */
       public Builder clearSourcemapOutput() {
         sourcemapOutput_ = getDefaultInstance().getSourcemapOutput();
-        bitField0_ = (bitField0_ & ~0x00100000);
+        bitField0_ = (bitField0_ & ~0x00200000);
         onChanged();
         return this;
       }
@@ -30224,7 +30347,7 @@ com.kcl.api.Spec.ScopeIndex defaultValue) {
         if (value == null) { throw new NullPointerException(); }
         checkByteStringIsUtf8(value);
         sourcemapOutput_ = value;
-        bitField0_ |= 0x00100000;
+        bitField0_ |= 0x00200000;
         onChanged();
         return this;
       }
@@ -61009,6 +61132,19 @@ java.lang.String defaultValue) {
      * @return The failFast.
      */
     boolean getFailFast();
+
+    /**
+     * <pre>
+     * Flag to collect line-level coverage data while running tests. When true,
+     * the test tool records, for every top-level KCL statement that executes,
+     * the source file path and line number. The aggregated result is returned
+     * in [TestResult.coverage]. Defaults to false.
+     * </pre>
+     *
+     * <code>bool coverage = 5;</code>
+     * @return The coverage.
+     */
+    boolean getCoverage();
   }
   /**
    * <pre>
@@ -61206,6 +61342,24 @@ java.lang.String defaultValue) {
       return failFast_;
     }
 
+    public static final int COVERAGE_FIELD_NUMBER = 5;
+    private boolean coverage_ = false;
+    /**
+     * <pre>
+     * Flag to collect line-level coverage data while running tests. When true,
+     * the test tool records, for every top-level KCL statement that executes,
+     * the source file path and line number. The aggregated result is returned
+     * in [TestResult.coverage]. Defaults to false.
+     * </pre>
+     *
+     * <code>bool coverage = 5;</code>
+     * @return The coverage.
+     */
+    @java.lang.Override
+    public boolean getCoverage() {
+      return coverage_;
+    }
+
     private byte memoizedIsInitialized = -1;
     @java.lang.Override
     public final boolean isInitialized() {
@@ -61231,6 +61385,9 @@ java.lang.String defaultValue) {
       }
       if (failFast_ != false) {
         output.writeBool(4, failFast_);
+      }
+      if (coverage_ != false) {
+        output.writeBool(5, coverage_);
       }
       getUnknownFields().writeTo(output);
     }
@@ -61260,6 +61417,10 @@ java.lang.String defaultValue) {
         size += com.google.protobuf.CodedOutputStream
           .computeBoolSize(4, failFast_);
       }
+      if (coverage_ != false) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBoolSize(5, coverage_);
+      }
       size += getUnknownFields().getSerializedSize();
       memoizedSize = size;
       return size;
@@ -61286,6 +61447,8 @@ java.lang.String defaultValue) {
           .equals(other.getRunRegexp())) return false;
       if (getFailFast()
           != other.getFailFast()) return false;
+      if (getCoverage()
+          != other.getCoverage()) return false;
       if (!getUnknownFields().equals(other.getUnknownFields())) return false;
       return true;
     }
@@ -61310,6 +61473,9 @@ java.lang.String defaultValue) {
       hash = (37 * hash) + FAIL_FAST_FIELD_NUMBER;
       hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
           getFailFast());
+      hash = (37 * hash) + COVERAGE_FIELD_NUMBER;
+      hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
+          getCoverage());
       hash = (29 * hash) + getUnknownFields().hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -61460,6 +61626,7 @@ java.lang.String defaultValue) {
             com.google.protobuf.LazyStringArrayList.emptyList();
         runRegexp_ = "";
         failFast_ = false;
+        coverage_ = false;
         return this;
       }
 
@@ -61509,6 +61676,9 @@ java.lang.String defaultValue) {
         }
         if (((from_bitField0_ & 0x00000008) != 0)) {
           result.failFast_ = failFast_;
+        }
+        if (((from_bitField0_ & 0x00000010) != 0)) {
+          result.coverage_ = coverage_;
         }
         result.bitField0_ |= to_bitField0_;
       }
@@ -61578,6 +61748,9 @@ java.lang.String defaultValue) {
         if (other.getFailFast() != false) {
           setFailFast(other.getFailFast());
         }
+        if (other.getCoverage() != false) {
+          setCoverage(other.getCoverage());
+        }
         this.mergeUnknownFields(other.getUnknownFields());
         onChanged();
         return this;
@@ -61627,6 +61800,11 @@ java.lang.String defaultValue) {
                 bitField0_ |= 0x00000008;
                 break;
               } // case 32
+              case 40: {
+                coverage_ = input.readBool();
+                bitField0_ |= 0x00000010;
+                break;
+              } // case 40
               default: {
                 if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                   done = true; // was an endgroup tag
@@ -62083,6 +62261,59 @@ java.lang.String defaultValue) {
         onChanged();
         return this;
       }
+
+      private boolean coverage_ ;
+      /**
+       * <pre>
+       * Flag to collect line-level coverage data while running tests. When true,
+       * the test tool records, for every top-level KCL statement that executes,
+       * the source file path and line number. The aggregated result is returned
+       * in [TestResult.coverage]. Defaults to false.
+       * </pre>
+       *
+       * <code>bool coverage = 5;</code>
+       * @return The coverage.
+       */
+      @java.lang.Override
+      public boolean getCoverage() {
+        return coverage_;
+      }
+      /**
+       * <pre>
+       * Flag to collect line-level coverage data while running tests. When true,
+       * the test tool records, for every top-level KCL statement that executes,
+       * the source file path and line number. The aggregated result is returned
+       * in [TestResult.coverage]. Defaults to false.
+       * </pre>
+       *
+       * <code>bool coverage = 5;</code>
+       * @param value The coverage to set.
+       * @return This builder for chaining.
+       */
+      public Builder setCoverage(boolean value) {
+
+        coverage_ = value;
+        bitField0_ |= 0x00000010;
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * Flag to collect line-level coverage data while running tests. When true,
+       * the test tool records, for every top-level KCL statement that executes,
+       * the source file path and line number. The aggregated result is returned
+       * in [TestResult.coverage]. Defaults to false.
+       * </pre>
+       *
+       * <code>bool coverage = 5;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearCoverage() {
+        bitField0_ = (bitField0_ & ~0x00000010);
+        coverage_ = false;
+        onChanged();
+        return this;
+      }
       @java.lang.Override
       public final Builder setUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
@@ -62194,6 +62425,36 @@ java.lang.String defaultValue) {
      */
     com.kcl.api.Spec.TestCaseInfoOrBuilder getInfoOrBuilder(
         int index);
+
+    /**
+     * <pre>
+     * Aggregated coverage report. Populated only when
+     * [TestArgs.coverage] is true; empty otherwise.
+     * </pre>
+     *
+     * <code>.com.kcl.api.TestCoverageReport coverage = 3;</code>
+     * @return Whether the coverage field is set.
+     */
+    boolean hasCoverage();
+    /**
+     * <pre>
+     * Aggregated coverage report. Populated only when
+     * [TestArgs.coverage] is true; empty otherwise.
+     * </pre>
+     *
+     * <code>.com.kcl.api.TestCoverageReport coverage = 3;</code>
+     * @return The coverage.
+     */
+    com.kcl.api.Spec.TestCoverageReport getCoverage();
+    /**
+     * <pre>
+     * Aggregated coverage report. Populated only when
+     * [TestArgs.coverage] is true; empty otherwise.
+     * </pre>
+     *
+     * <code>.com.kcl.api.TestCoverageReport coverage = 3;</code>
+     */
+    com.kcl.api.Spec.TestCoverageReportOrBuilder getCoverageOrBuilder();
   }
   /**
    * <pre>
@@ -62235,6 +62496,7 @@ java.lang.String defaultValue) {
               com.kcl.api.Spec.TestResult.class, com.kcl.api.Spec.TestResult.Builder.class);
     }
 
+    private int bitField0_;
     public static final int INFO_FIELD_NUMBER = 2;
     @SuppressWarnings("serial")
     private java.util.List<com.kcl.api.Spec.TestCaseInfo> info_;
@@ -62296,6 +62558,47 @@ java.lang.String defaultValue) {
       return info_.get(index);
     }
 
+    public static final int COVERAGE_FIELD_NUMBER = 3;
+    private com.kcl.api.Spec.TestCoverageReport coverage_;
+    /**
+     * <pre>
+     * Aggregated coverage report. Populated only when
+     * [TestArgs.coverage] is true; empty otherwise.
+     * </pre>
+     *
+     * <code>.com.kcl.api.TestCoverageReport coverage = 3;</code>
+     * @return Whether the coverage field is set.
+     */
+    @java.lang.Override
+    public boolean hasCoverage() {
+      return ((bitField0_ & 0x00000001) != 0);
+    }
+    /**
+     * <pre>
+     * Aggregated coverage report. Populated only when
+     * [TestArgs.coverage] is true; empty otherwise.
+     * </pre>
+     *
+     * <code>.com.kcl.api.TestCoverageReport coverage = 3;</code>
+     * @return The coverage.
+     */
+    @java.lang.Override
+    public com.kcl.api.Spec.TestCoverageReport getCoverage() {
+      return coverage_ == null ? com.kcl.api.Spec.TestCoverageReport.getDefaultInstance() : coverage_;
+    }
+    /**
+     * <pre>
+     * Aggregated coverage report. Populated only when
+     * [TestArgs.coverage] is true; empty otherwise.
+     * </pre>
+     *
+     * <code>.com.kcl.api.TestCoverageReport coverage = 3;</code>
+     */
+    @java.lang.Override
+    public com.kcl.api.Spec.TestCoverageReportOrBuilder getCoverageOrBuilder() {
+      return coverage_ == null ? com.kcl.api.Spec.TestCoverageReport.getDefaultInstance() : coverage_;
+    }
+
     private byte memoizedIsInitialized = -1;
     @java.lang.Override
     public final boolean isInitialized() {
@@ -62313,6 +62616,9 @@ java.lang.String defaultValue) {
       for (int i = 0; i < info_.size(); i++) {
         output.writeMessage(2, info_.get(i));
       }
+      if (((bitField0_ & 0x00000001) != 0)) {
+        output.writeMessage(3, getCoverage());
+      }
       getUnknownFields().writeTo(output);
     }
 
@@ -62325,6 +62631,10 @@ java.lang.String defaultValue) {
       for (int i = 0; i < info_.size(); i++) {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(2, info_.get(i));
+      }
+      if (((bitField0_ & 0x00000001) != 0)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(3, getCoverage());
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSize = size;
@@ -62343,6 +62653,11 @@ java.lang.String defaultValue) {
 
       if (!getInfoList()
           .equals(other.getInfoList())) return false;
+      if (hasCoverage() != other.hasCoverage()) return false;
+      if (hasCoverage()) {
+        if (!getCoverage()
+            .equals(other.getCoverage())) return false;
+      }
       if (!getUnknownFields().equals(other.getUnknownFields())) return false;
       return true;
     }
@@ -62357,6 +62672,10 @@ java.lang.String defaultValue) {
       if (getInfoCount() > 0) {
         hash = (37 * hash) + INFO_FIELD_NUMBER;
         hash = (53 * hash) + getInfoList().hashCode();
+      }
+      if (hasCoverage()) {
+        hash = (37 * hash) + COVERAGE_FIELD_NUMBER;
+        hash = (53 * hash) + getCoverage().hashCode();
       }
       hash = (29 * hash) + getUnknownFields().hashCode();
       memoizedHashCode = hash;
@@ -62500,6 +62819,11 @@ java.lang.String defaultValue) {
           infoBuilder_.clear();
         }
         bitField0_ = (bitField0_ & ~0x00000001);
+        coverage_ = null;
+        if (coverageBuilder_ != null) {
+          coverageBuilder_.dispose();
+          coverageBuilder_ = null;
+        }
         return this;
       }
 
@@ -62546,6 +62870,14 @@ java.lang.String defaultValue) {
 
       private void buildPartial0(com.kcl.api.Spec.TestResult result) {
         int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        if (((from_bitField0_ & 0x00000002) != 0)) {
+          result.coverage_ = coverageBuilder_ == null
+              ? coverage_
+              : coverageBuilder_.build();
+          to_bitField0_ |= 0x00000001;
+        }
+        result.bitField0_ |= to_bitField0_;
       }
 
       @java.lang.Override
@@ -62618,6 +62950,9 @@ java.lang.String defaultValue) {
             }
           }
         }
+        if (other.hasCoverage()) {
+          mergeCoverage(other.getCoverage());
+        }
         this.mergeUnknownFields(other.getUnknownFields());
         onChanged();
         return this;
@@ -62657,6 +62992,13 @@ java.lang.String defaultValue) {
                 }
                 break;
               } // case 18
+              case 26: {
+                input.readMessage(
+                    getCoverageFieldBuilder().getBuilder(),
+                    extensionRegistry);
+                bitField0_ |= 0x00000002;
+                break;
+              } // case 26
               default: {
                 if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                   done = true; // was an endgroup tag
@@ -62985,6 +63327,172 @@ java.lang.String defaultValue) {
         }
         return infoBuilder_;
       }
+
+      private com.kcl.api.Spec.TestCoverageReport coverage_;
+      private com.google.protobuf.SingleFieldBuilderV3<
+          com.kcl.api.Spec.TestCoverageReport, com.kcl.api.Spec.TestCoverageReport.Builder, com.kcl.api.Spec.TestCoverageReportOrBuilder> coverageBuilder_;
+      /**
+       * <pre>
+       * Aggregated coverage report. Populated only when
+       * [TestArgs.coverage] is true; empty otherwise.
+       * </pre>
+       *
+       * <code>.com.kcl.api.TestCoverageReport coverage = 3;</code>
+       * @return Whether the coverage field is set.
+       */
+      public boolean hasCoverage() {
+        return ((bitField0_ & 0x00000002) != 0);
+      }
+      /**
+       * <pre>
+       * Aggregated coverage report. Populated only when
+       * [TestArgs.coverage] is true; empty otherwise.
+       * </pre>
+       *
+       * <code>.com.kcl.api.TestCoverageReport coverage = 3;</code>
+       * @return The coverage.
+       */
+      public com.kcl.api.Spec.TestCoverageReport getCoverage() {
+        if (coverageBuilder_ == null) {
+          return coverage_ == null ? com.kcl.api.Spec.TestCoverageReport.getDefaultInstance() : coverage_;
+        } else {
+          return coverageBuilder_.getMessage();
+        }
+      }
+      /**
+       * <pre>
+       * Aggregated coverage report. Populated only when
+       * [TestArgs.coverage] is true; empty otherwise.
+       * </pre>
+       *
+       * <code>.com.kcl.api.TestCoverageReport coverage = 3;</code>
+       */
+      public Builder setCoverage(com.kcl.api.Spec.TestCoverageReport value) {
+        if (coverageBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          coverage_ = value;
+        } else {
+          coverageBuilder_.setMessage(value);
+        }
+        bitField0_ |= 0x00000002;
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * Aggregated coverage report. Populated only when
+       * [TestArgs.coverage] is true; empty otherwise.
+       * </pre>
+       *
+       * <code>.com.kcl.api.TestCoverageReport coverage = 3;</code>
+       */
+      public Builder setCoverage(
+          com.kcl.api.Spec.TestCoverageReport.Builder builderForValue) {
+        if (coverageBuilder_ == null) {
+          coverage_ = builderForValue.build();
+        } else {
+          coverageBuilder_.setMessage(builderForValue.build());
+        }
+        bitField0_ |= 0x00000002;
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * Aggregated coverage report. Populated only when
+       * [TestArgs.coverage] is true; empty otherwise.
+       * </pre>
+       *
+       * <code>.com.kcl.api.TestCoverageReport coverage = 3;</code>
+       */
+      public Builder mergeCoverage(com.kcl.api.Spec.TestCoverageReport value) {
+        if (coverageBuilder_ == null) {
+          if (((bitField0_ & 0x00000002) != 0) &&
+            coverage_ != null &&
+            coverage_ != com.kcl.api.Spec.TestCoverageReport.getDefaultInstance()) {
+            getCoverageBuilder().mergeFrom(value);
+          } else {
+            coverage_ = value;
+          }
+        } else {
+          coverageBuilder_.mergeFrom(value);
+        }
+        if (coverage_ != null) {
+          bitField0_ |= 0x00000002;
+          onChanged();
+        }
+        return this;
+      }
+      /**
+       * <pre>
+       * Aggregated coverage report. Populated only when
+       * [TestArgs.coverage] is true; empty otherwise.
+       * </pre>
+       *
+       * <code>.com.kcl.api.TestCoverageReport coverage = 3;</code>
+       */
+      public Builder clearCoverage() {
+        bitField0_ = (bitField0_ & ~0x00000002);
+        coverage_ = null;
+        if (coverageBuilder_ != null) {
+          coverageBuilder_.dispose();
+          coverageBuilder_ = null;
+        }
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * Aggregated coverage report. Populated only when
+       * [TestArgs.coverage] is true; empty otherwise.
+       * </pre>
+       *
+       * <code>.com.kcl.api.TestCoverageReport coverage = 3;</code>
+       */
+      public com.kcl.api.Spec.TestCoverageReport.Builder getCoverageBuilder() {
+        bitField0_ |= 0x00000002;
+        onChanged();
+        return getCoverageFieldBuilder().getBuilder();
+      }
+      /**
+       * <pre>
+       * Aggregated coverage report. Populated only when
+       * [TestArgs.coverage] is true; empty otherwise.
+       * </pre>
+       *
+       * <code>.com.kcl.api.TestCoverageReport coverage = 3;</code>
+       */
+      public com.kcl.api.Spec.TestCoverageReportOrBuilder getCoverageOrBuilder() {
+        if (coverageBuilder_ != null) {
+          return coverageBuilder_.getMessageOrBuilder();
+        } else {
+          return coverage_ == null ?
+              com.kcl.api.Spec.TestCoverageReport.getDefaultInstance() : coverage_;
+        }
+      }
+      /**
+       * <pre>
+       * Aggregated coverage report. Populated only when
+       * [TestArgs.coverage] is true; empty otherwise.
+       * </pre>
+       *
+       * <code>.com.kcl.api.TestCoverageReport coverage = 3;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilderV3<
+          com.kcl.api.Spec.TestCoverageReport, com.kcl.api.Spec.TestCoverageReport.Builder, com.kcl.api.Spec.TestCoverageReportOrBuilder> 
+          getCoverageFieldBuilder() {
+        if (coverageBuilder_ == null) {
+          coverageBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+              com.kcl.api.Spec.TestCoverageReport, com.kcl.api.Spec.TestCoverageReport.Builder, com.kcl.api.Spec.TestCoverageReportOrBuilder>(
+                  getCoverage(),
+                  getParentForChildren(),
+                  isClean());
+          coverage_ = null;
+        }
+        return coverageBuilder_;
+      }
       @java.lang.Override
       public final Builder setUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
@@ -63122,6 +63630,69 @@ java.lang.String defaultValue) {
      */
     com.google.protobuf.ByteString
         getLogMessageBytes();
+
+
+    /**
+     * <pre>
+     * Per-case line coverage. Populated only when [TestArgs.coverage]
+     * is true; empty otherwise. Each entry maps "filename:line" to the
+     * number of times that line was entered while running this case.
+     * </pre>
+     *
+     * <code>map&lt;string, uint64&gt; line_hits = 5;</code>
+     */
+    int getLineHitsCount();
+    /**
+     * <pre>
+     * Per-case line coverage. Populated only when [TestArgs.coverage]
+     * is true; empty otherwise. Each entry maps "filename:line" to the
+     * number of times that line was entered while running this case.
+     * </pre>
+     *
+     * <code>map&lt;string, uint64&gt; line_hits = 5;</code>
+     */
+    boolean containsLineHits(
+        java.lang.String key);
+    /**
+     * Use {@link #getLineHitsMap()} instead.
+     */
+    @java.lang.Deprecated
+    java.util.Map<java.lang.String, java.lang.Long>
+    getLineHits();
+    /**
+     * <pre>
+     * Per-case line coverage. Populated only when [TestArgs.coverage]
+     * is true; empty otherwise. Each entry maps "filename:line" to the
+     * number of times that line was entered while running this case.
+     * </pre>
+     *
+     * <code>map&lt;string, uint64&gt; line_hits = 5;</code>
+     */
+    java.util.Map<java.lang.String, java.lang.Long>
+    getLineHitsMap();
+    /**
+     * <pre>
+     * Per-case line coverage. Populated only when [TestArgs.coverage]
+     * is true; empty otherwise. Each entry maps "filename:line" to the
+     * number of times that line was entered while running this case.
+     * </pre>
+     *
+     * <code>map&lt;string, uint64&gt; line_hits = 5;</code>
+     */
+    long getLineHitsOrDefault(
+        java.lang.String key,
+        long defaultValue);
+    /**
+     * <pre>
+     * Per-case line coverage. Populated only when [TestArgs.coverage]
+     * is true; empty otherwise. Each entry maps "filename:line" to the
+     * number of times that line was entered while running this case.
+     * </pre>
+     *
+     * <code>map&lt;string, uint64&gt; line_hits = 5;</code>
+     */
+    long getLineHitsOrThrow(
+        java.lang.String key);
   }
   /**
    * <pre>
@@ -63165,6 +63736,18 @@ java.lang.String defaultValue) {
               com.kcl.api.Spec.TestCaseInfo.class, com.kcl.api.Spec.TestCaseInfo.Builder.class);
     }
 
+    @SuppressWarnings({"rawtypes"})
+    @java.lang.Override
+    protected com.google.protobuf.MapFieldReflectionAccessor internalGetMapFieldReflection(
+        int number) {
+      switch (number) {
+        case 5:
+          return internalGetLineHits();
+        default:
+          throw new RuntimeException(
+              "Invalid map field number: " + number);
+      }
+    }
     public static final int NAME_FIELD_NUMBER = 1;
     @SuppressWarnings("serial")
     private volatile java.lang.Object name_ = "";
@@ -63321,6 +63904,108 @@ java.lang.String defaultValue) {
       }
     }
 
+
+    public static final int LINE_HITS_FIELD_NUMBER = 5;
+    private static final class LineHitsDefaultEntryHolder {
+      static final com.google.protobuf.MapEntry<
+          java.lang.String, java.lang.Long> defaultEntry =
+              com.google.protobuf.MapEntry
+              .<java.lang.String, java.lang.Long>newDefaultInstance(
+                  com.kcl.api.Spec.internal_static_com_kcl_api_TestCaseInfo_LineHitsEntry_descriptor,
+                  com.google.protobuf.WireFormat.FieldType.STRING,
+                  "",
+                  com.google.protobuf.WireFormat.FieldType.UINT64,
+                  0L);
+    }
+    @SuppressWarnings("serial")
+    private com.google.protobuf.MapField<
+        java.lang.String, java.lang.Long> lineHits_;
+    private com.google.protobuf.MapField<java.lang.String, java.lang.Long>
+    internalGetLineHits() {
+      if (lineHits_ == null) {
+        return com.google.protobuf.MapField.emptyMapField(
+            LineHitsDefaultEntryHolder.defaultEntry);
+      }
+      return lineHits_;
+    }
+    public int getLineHitsCount() {
+      return internalGetLineHits().getMap().size();
+    }
+    /**
+     * <pre>
+     * Per-case line coverage. Populated only when [TestArgs.coverage]
+     * is true; empty otherwise. Each entry maps "filename:line" to the
+     * number of times that line was entered while running this case.
+     * </pre>
+     *
+     * <code>map&lt;string, uint64&gt; line_hits = 5;</code>
+     */
+    @java.lang.Override
+    public boolean containsLineHits(
+        java.lang.String key) {
+      if (key == null) { throw new NullPointerException("map key"); }
+      return internalGetLineHits().getMap().containsKey(key);
+    }
+    /**
+     * Use {@link #getLineHitsMap()} instead.
+     */
+    @java.lang.Override
+    @java.lang.Deprecated
+    public java.util.Map<java.lang.String, java.lang.Long> getLineHits() {
+      return getLineHitsMap();
+    }
+    /**
+     * <pre>
+     * Per-case line coverage. Populated only when [TestArgs.coverage]
+     * is true; empty otherwise. Each entry maps "filename:line" to the
+     * number of times that line was entered while running this case.
+     * </pre>
+     *
+     * <code>map&lt;string, uint64&gt; line_hits = 5;</code>
+     */
+    @java.lang.Override
+    public java.util.Map<java.lang.String, java.lang.Long> getLineHitsMap() {
+      return internalGetLineHits().getMap();
+    }
+    /**
+     * <pre>
+     * Per-case line coverage. Populated only when [TestArgs.coverage]
+     * is true; empty otherwise. Each entry maps "filename:line" to the
+     * number of times that line was entered while running this case.
+     * </pre>
+     *
+     * <code>map&lt;string, uint64&gt; line_hits = 5;</code>
+     */
+    @java.lang.Override
+    public long getLineHitsOrDefault(
+        java.lang.String key,
+        long defaultValue) {
+      if (key == null) { throw new NullPointerException("map key"); }
+      java.util.Map<java.lang.String, java.lang.Long> map =
+          internalGetLineHits().getMap();
+      return map.containsKey(key) ? map.get(key) : defaultValue;
+    }
+    /**
+     * <pre>
+     * Per-case line coverage. Populated only when [TestArgs.coverage]
+     * is true; empty otherwise. Each entry maps "filename:line" to the
+     * number of times that line was entered while running this case.
+     * </pre>
+     *
+     * <code>map&lt;string, uint64&gt; line_hits = 5;</code>
+     */
+    @java.lang.Override
+    public long getLineHitsOrThrow(
+        java.lang.String key) {
+      if (key == null) { throw new NullPointerException("map key"); }
+      java.util.Map<java.lang.String, java.lang.Long> map =
+          internalGetLineHits().getMap();
+      if (!map.containsKey(key)) {
+        throw new java.lang.IllegalArgumentException();
+      }
+      return map.get(key);
+    }
+
     private byte memoizedIsInitialized = -1;
     @java.lang.Override
     public final boolean isInitialized() {
@@ -63347,6 +64032,12 @@ java.lang.String defaultValue) {
       if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(logMessage_)) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 4, logMessage_);
       }
+      com.google.protobuf.GeneratedMessageV3
+        .serializeStringMapTo(
+          output,
+          internalGetLineHits(),
+          LineHitsDefaultEntryHolder.defaultEntry,
+          5);
       getUnknownFields().writeTo(output);
     }
 
@@ -63368,6 +64059,16 @@ java.lang.String defaultValue) {
       }
       if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(logMessage_)) {
         size += com.google.protobuf.GeneratedMessageV3.computeStringSize(4, logMessage_);
+      }
+      for (java.util.Map.Entry<java.lang.String, java.lang.Long> entry
+           : internalGetLineHits().getMap().entrySet()) {
+        com.google.protobuf.MapEntry<java.lang.String, java.lang.Long>
+        lineHits__ = LineHitsDefaultEntryHolder.defaultEntry.newBuilderForType()
+            .setKey(entry.getKey())
+            .setValue(entry.getValue())
+            .build();
+        size += com.google.protobuf.CodedOutputStream
+            .computeMessageSize(5, lineHits__);
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSize = size;
@@ -63392,6 +64093,8 @@ java.lang.String defaultValue) {
           != other.getDuration()) return false;
       if (!getLogMessage()
           .equals(other.getLogMessage())) return false;
+      if (!internalGetLineHits().equals(
+          other.internalGetLineHits())) return false;
       if (!getUnknownFields().equals(other.getUnknownFields())) return false;
       return true;
     }
@@ -63412,6 +64115,10 @@ java.lang.String defaultValue) {
           getDuration());
       hash = (37 * hash) + LOG_MESSAGE_FIELD_NUMBER;
       hash = (53 * hash) + getLogMessage().hashCode();
+      if (!internalGetLineHits().getMap().isEmpty()) {
+        hash = (37 * hash) + LINE_HITS_FIELD_NUMBER;
+        hash = (53 * hash) + internalGetLineHits().hashCode();
+      }
       hash = (29 * hash) + getUnknownFields().hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -63533,6 +64240,29 @@ java.lang.String defaultValue) {
                 com.kcl.api.Spec.TestCaseInfo.class, com.kcl.api.Spec.TestCaseInfo.Builder.class);
       }
 
+      @SuppressWarnings({"rawtypes"})
+      protected com.google.protobuf.MapFieldReflectionAccessor internalGetMapFieldReflection(
+          int number) {
+        switch (number) {
+          case 5:
+            return internalGetLineHits();
+          default:
+            throw new RuntimeException(
+                "Invalid map field number: " + number);
+        }
+      }
+      @SuppressWarnings({"rawtypes"})
+      protected com.google.protobuf.MapFieldReflectionAccessor internalGetMutableMapFieldReflection(
+          int number) {
+        switch (number) {
+          case 5:
+            return internalGetMutableLineHits();
+          default:
+            throw new RuntimeException(
+                "Invalid map field number: " + number);
+        }
+      }
+
       // Construct using com.kcl.api.Spec.TestCaseInfo.newBuilder()
       private Builder() {
 
@@ -63551,6 +64281,7 @@ java.lang.String defaultValue) {
         error_ = "";
         duration_ = 0L;
         logMessage_ = "";
+        internalGetMutableLineHits().clear();
         return this;
       }
 
@@ -63595,6 +64326,10 @@ java.lang.String defaultValue) {
         }
         if (((from_bitField0_ & 0x00000008) != 0)) {
           result.logMessage_ = logMessage_;
+        }
+        if (((from_bitField0_ & 0x00000010) != 0)) {
+          result.lineHits_ = internalGetLineHits();
+          result.lineHits_.makeImmutable();
         }
       }
 
@@ -63660,6 +64395,9 @@ java.lang.String defaultValue) {
           bitField0_ |= 0x00000008;
           onChanged();
         }
+        internalGetMutableLineHits().mergeFrom(
+            other.internalGetLineHits());
+        bitField0_ |= 0x00000010;
         this.mergeUnknownFields(other.getUnknownFields());
         onChanged();
         return this;
@@ -63706,6 +64444,15 @@ java.lang.String defaultValue) {
                 bitField0_ |= 0x00000008;
                 break;
               } // case 34
+              case 42: {
+                com.google.protobuf.MapEntry<java.lang.String, java.lang.Long>
+                lineHits__ = input.readMessage(
+                    LineHitsDefaultEntryHolder.defaultEntry.getParserForType(), extensionRegistry);
+                internalGetMutableLineHits().getMutableMap().put(
+                    lineHits__.getKey(), lineHits__.getValue());
+                bitField0_ |= 0x00000010;
+                break;
+              } // case 42
               default: {
                 if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                   done = true; // was an endgroup tag
@@ -64024,6 +64771,173 @@ java.lang.String defaultValue) {
         onChanged();
         return this;
       }
+
+      private com.google.protobuf.MapField<
+          java.lang.String, java.lang.Long> lineHits_;
+      private com.google.protobuf.MapField<java.lang.String, java.lang.Long>
+          internalGetLineHits() {
+        if (lineHits_ == null) {
+          return com.google.protobuf.MapField.emptyMapField(
+              LineHitsDefaultEntryHolder.defaultEntry);
+        }
+        return lineHits_;
+      }
+      private com.google.protobuf.MapField<java.lang.String, java.lang.Long>
+          internalGetMutableLineHits() {
+        if (lineHits_ == null) {
+          lineHits_ = com.google.protobuf.MapField.newMapField(
+              LineHitsDefaultEntryHolder.defaultEntry);
+        }
+        if (!lineHits_.isMutable()) {
+          lineHits_ = lineHits_.copy();
+        }
+        bitField0_ |= 0x00000010;
+        onChanged();
+        return lineHits_;
+      }
+      public int getLineHitsCount() {
+        return internalGetLineHits().getMap().size();
+      }
+      /**
+     * <pre>
+     * Per-case line coverage. Populated only when [TestArgs.coverage]
+     * is true; empty otherwise. Each entry maps "filename:line" to the
+     * number of times that line was entered while running this case.
+     * </pre>
+     *
+     * <code>map&lt;string, uint64&gt; line_hits = 5;</code>
+       */
+      @java.lang.Override
+      public boolean containsLineHits(
+          java.lang.String key) {
+        if (key == null) { throw new NullPointerException("map key"); }
+        return internalGetLineHits().getMap().containsKey(key);
+      }
+      /**
+       * Use {@link #getLineHitsMap()} instead.
+       */
+      @java.lang.Override
+      @java.lang.Deprecated
+      public java.util.Map<java.lang.String, java.lang.Long> getLineHits() {
+        return getLineHitsMap();
+      }
+      /**
+     * <pre>
+     * Per-case line coverage. Populated only when [TestArgs.coverage]
+     * is true; empty otherwise. Each entry maps "filename:line" to the
+     * number of times that line was entered while running this case.
+     * </pre>
+     *
+     * <code>map&lt;string, uint64&gt; line_hits = 5;</code>
+       */
+      @java.lang.Override
+      public java.util.Map<java.lang.String, java.lang.Long> getLineHitsMap() {
+        return internalGetLineHits().getMap();
+      }
+      /**
+     * <pre>
+     * Per-case line coverage. Populated only when [TestArgs.coverage]
+     * is true; empty otherwise. Each entry maps "filename:line" to the
+     * number of times that line was entered while running this case.
+     * </pre>
+     *
+     * <code>map&lt;string, uint64&gt; line_hits = 5;</code>
+       */
+      @java.lang.Override
+      public long getLineHitsOrDefault(
+          java.lang.String key,
+          long defaultValue) {
+        if (key == null) { throw new NullPointerException("map key"); }
+        java.util.Map<java.lang.String, java.lang.Long> map =
+            internalGetLineHits().getMap();
+        return map.containsKey(key) ? map.get(key) : defaultValue;
+      }
+      /**
+     * <pre>
+     * Per-case line coverage. Populated only when [TestArgs.coverage]
+     * is true; empty otherwise. Each entry maps "filename:line" to the
+     * number of times that line was entered while running this case.
+     * </pre>
+     *
+     * <code>map&lt;string, uint64&gt; line_hits = 5;</code>
+       */
+      @java.lang.Override
+      public long getLineHitsOrThrow(
+          java.lang.String key) {
+        if (key == null) { throw new NullPointerException("map key"); }
+        java.util.Map<java.lang.String, java.lang.Long> map =
+            internalGetLineHits().getMap();
+        if (!map.containsKey(key)) {
+          throw new java.lang.IllegalArgumentException();
+        }
+        return map.get(key);
+      }
+      public Builder clearLineHits() {
+        bitField0_ = (bitField0_ & ~0x00000010);
+        internalGetMutableLineHits().getMutableMap()
+            .clear();
+        return this;
+      }
+      /**
+     * <pre>
+     * Per-case line coverage. Populated only when [TestArgs.coverage]
+     * is true; empty otherwise. Each entry maps "filename:line" to the
+     * number of times that line was entered while running this case.
+     * </pre>
+     *
+     * <code>map&lt;string, uint64&gt; line_hits = 5;</code>
+       */
+      public Builder removeLineHits(
+          java.lang.String key) {
+        if (key == null) { throw new NullPointerException("map key"); }
+        internalGetMutableLineHits().getMutableMap()
+            .remove(key);
+        return this;
+      }
+      /**
+       * Use alternate mutation accessors instead.
+       */
+      @java.lang.Deprecated
+      public java.util.Map<java.lang.String, java.lang.Long>
+          getMutableLineHits() {
+        bitField0_ |= 0x00000010;
+        return internalGetMutableLineHits().getMutableMap();
+      }
+      /**
+     * <pre>
+     * Per-case line coverage. Populated only when [TestArgs.coverage]
+     * is true; empty otherwise. Each entry maps "filename:line" to the
+     * number of times that line was entered while running this case.
+     * </pre>
+     *
+     * <code>map&lt;string, uint64&gt; line_hits = 5;</code>
+       */
+      public Builder putLineHits(
+          java.lang.String key,
+          long value) {
+        if (key == null) { throw new NullPointerException("map key"); }
+        internalGetMutableLineHits().getMutableMap()
+            .put(key, value);
+        bitField0_ |= 0x00000010;
+        return this;
+      }
+      /**
+     * <pre>
+     * Per-case line coverage. Populated only when [TestArgs.coverage]
+     * is true; empty otherwise. Each entry maps "filename:line" to the
+     * number of times that line was entered while running this case.
+     * </pre>
+     *
+     * <code>map&lt;string, uint64&gt; line_hits = 5;</code>
+       */
+      public Builder putAllLineHits(
+          java.util.Map<java.lang.String, java.lang.Long> values) {
+        internalGetMutableLineHits().getMutableMap()
+            .putAll(values);
+        bitField0_ |= 0x00000010;
+        return this;
+      }
+
       /**
        * <pre>
        * Log message from the test case.
@@ -64101,6 +65015,3256 @@ java.lang.String defaultValue) {
 
     @java.lang.Override
     public com.kcl.api.Spec.TestCaseInfo getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
+  }
+
+  public interface FileCoverageOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:com.kcl.api.FileCoverage)
+      com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <pre>
+     * Source file path, relative to the package root when possible.
+     * </pre>
+     *
+     * <code>string filename = 1;</code>
+     * @return The filename.
+     */
+    java.lang.String getFilename();
+    /**
+     * <pre>
+     * Source file path, relative to the package root when possible.
+     * </pre>
+     *
+     * <code>string filename = 1;</code>
+     * @return The bytes for filename.
+     */
+    com.google.protobuf.ByteString
+        getFilenameBytes();
+    /**
+     * <pre>
+     * Sorted list of lines that executed at least once across all tests
+     * that covered this file.
+     * </pre>
+     *
+     * <code>repeated uint64 covered_lines = 2;</code>
+     * @return A list containing the coveredLines.
+     */
+    java.util.List<java.lang.Long> getCoveredLinesList();
+    /**
+     * <pre>
+     * Sorted list of lines that executed at least once across all tests
+     * that covered this file.
+     * </pre>
+     *
+     * <code>repeated uint64 covered_lines = 2;</code>
+     * @return The count of coveredLines.
+     */
+    int getCoveredLinesCount();
+    /**
+     * <pre>
+     * Sorted list of lines that executed at least once across all tests
+     * that covered this file.
+     * </pre>
+     *
+     * <code>repeated uint64 covered_lines = 2;</code>
+     * @param index The index of the element to return.
+     * @return The coveredLines at the given index.
+     */
+    long getCoveredLines(int index);
+    /**
+     * <pre>
+     * Sorted list of lines in this file that contain an executable
+     * statement (i.e. lines that *could* be covered). Lines that contain
+     * only blank lines, comments or non-executable tokens are excluded.
+     * </pre>
+     *
+     * <code>repeated uint64 executable_lines = 3;</code>
+     * @return A list containing the executableLines.
+     */
+    java.util.List<java.lang.Long> getExecutableLinesList();
+    /**
+     * <pre>
+     * Sorted list of lines in this file that contain an executable
+     * statement (i.e. lines that *could* be covered). Lines that contain
+     * only blank lines, comments or non-executable tokens are excluded.
+     * </pre>
+     *
+     * <code>repeated uint64 executable_lines = 3;</code>
+     * @return The count of executableLines.
+     */
+    int getExecutableLinesCount();
+    /**
+     * <pre>
+     * Sorted list of lines in this file that contain an executable
+     * statement (i.e. lines that *could* be covered). Lines that contain
+     * only blank lines, comments or non-executable tokens are excluded.
+     * </pre>
+     *
+     * <code>repeated uint64 executable_lines = 3;</code>
+     * @param index The index of the element to return.
+     * @return The executableLines at the given index.
+     */
+    long getExecutableLines(int index);
+    /**
+     * <pre>
+     * Per-line execution count across all tests that covered this file.
+     * Keys are line numbers (1-based); values are hit counts.
+     * </pre>
+     *
+     * <code>map&lt;uint64, uint64&gt; line_hits = 4;</code>
+     * @return The number of key/value mappings.
+     */
+    int getLineHitsCount();
+    /**
+     * <pre>
+     * Per-line execution count across all tests that covered this file.
+     * Keys are line numbers (1-based); values are hit counts.
+     * </pre>
+     *
+     * <code>map&lt;uint64, uint64&gt; line_hits = 4;</code>
+     * @param key The key to check.
+     */
+    boolean containsLineHits(
+        java.lang.Long key);
+    /**
+     * Use {@link #getLineHitsMap()} instead.
+     */
+    @java.lang.Deprecated
+    java.util.Map<java.lang.Long, java.lang.Long>
+    getLineHits();
+    /**
+     * <pre>
+     * Per-line execution count across all tests that covered this file.
+     * Keys are line numbers (1-based); values are hit counts.
+     * </pre>
+     *
+     * <code>map&lt;uint64, uint64&gt; line_hits = 4;</code>
+     */
+    java.util.Map<java.lang.Long, java.lang.Long>
+    getLineHitsMap();
+    /**
+     * <pre>
+     * Per-line execution count across all tests that covered this file.
+     * Keys are line numbers (1-based); values are hit counts.
+     * </pre>
+     *
+     * <code>map&lt;uint64, uint64&gt; line_hits = 4;</code>
+     * @param key The key to look up.
+     */
+    long getLineHitsOrDefault(
+        java.lang.Long key,
+        long defaultValue);
+    /**
+     * <pre>
+     * Per-line execution count across all tests that covered this file.
+     * Keys are line numbers (1-based); values are hit counts.
+     * </pre>
+     *
+     * <code>map&lt;uint64, uint64&gt; line_hits = 4;</code>
+     * @param key The key to look up.
+     */
+    long getLineHitsOrThrow(
+        java.lang.Long key);
+  }
+  /**
+   * <pre>
+   * Message describing aggregated coverage data for a single source file.
+   * </pre>
+   *
+   * Protobuf type {@code com.kcl.api.FileCoverage}
+   */
+  public static final class FileCoverage extends
+      com.google.protobuf.GeneratedMessageV3 implements
+      // @@protoc_insertion_point(message_implements:com.kcl.api.FileCoverage)
+      FileCoverageOrBuilder {
+  private static final long serialVersionUID = 0L;
+    // Use FileCoverage.newBuilder() to construct.
+    private FileCoverage(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
+    }
+    private FileCoverage() {
+      filename_ = "";
+      coveredLines_ = newLongList();
+      executableLines_ = newLongList();
+    }
+
+    @java.lang.Override
+    @SuppressWarnings({"unused"})
+    protected java.lang.Object newInstance(
+        UnusedPrivateParameter unused) {
+      return new FileCoverage();
+    }
+
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return com.kcl.api.Spec.internal_static_com_kcl_api_FileCoverage_descriptor;
+    }
+
+    @SuppressWarnings({"rawtypes"})
+    @java.lang.Override
+    protected com.google.protobuf.MapFieldReflectionAccessor internalGetMapFieldReflection(
+        int number) {
+      switch (number) {
+        case 4:
+          return internalGetLineHits();
+        default:
+          throw new RuntimeException(
+              "Invalid map field number: " + number);
+      }
+    }
+    @java.lang.Override
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return com.kcl.api.Spec.internal_static_com_kcl_api_FileCoverage_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              com.kcl.api.Spec.FileCoverage.class, com.kcl.api.Spec.FileCoverage.Builder.class);
+    }
+    public static final int FILENAME_FIELD_NUMBER = 1;
+    @SuppressWarnings("serial")
+    private volatile java.lang.Object filename_ = "";
+    /**
+     * <pre>
+     * Source file path, relative to the package root when possible.
+     * </pre>
+     *
+     * <code>string filename = 1;</code>
+     * @return The filename.
+     */
+    @java.lang.Override
+    public java.lang.String getFilename() {
+      java.lang.Object ref = filename_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        filename_ = s;
+        return s;
+      }
+    }
+    /**
+     * <pre>
+     * Source file path, relative to the package root when possible.
+     * </pre>
+     *
+     * <code>string filename = 1;</code>
+     * @return The bytes for filename.
+     */
+    @java.lang.Override
+    public com.google.protobuf.ByteString
+        getFilenameBytes() {
+      java.lang.Object ref = filename_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        filename_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int COVEREDLINES_FIELD_NUMBER = 2;
+    @SuppressWarnings("serial")
+    private com.google.protobuf.Internal.LongList coveredLines_ = newLongList();
+    private int coveredLinesMemoizedSerializedSize = -1;
+    /**
+     * <pre>
+     * Sorted list of lines that executed at least once across all tests
+     * that covered this file.
+     * </pre>
+     *
+     * <code>repeated uint64 covered_lines = 2;</code>
+     * @return A list containing the coveredLines.
+     */
+    @java.lang.Override
+    public java.util.List<java.lang.Long>
+        getCoveredLinesList() {
+      return coveredLines_;
+    }
+    /**
+     * <pre>
+     * Sorted list of lines that executed at least once across all tests
+     * that covered this file.
+     * </pre>
+     *
+     * <code>repeated uint64 covered_lines = 2;</code>
+     * @return The count of coveredLines.
+     */
+    public int getCoveredLinesCount() {
+      return coveredLines_.size();
+    }
+    /**
+     * <pre>
+     * Sorted list of lines that executed at least once across all tests
+     * that covered this file.
+     * </pre>
+     *
+     * <code>repeated uint64 covered_lines = 2;</code>
+     * @param index The index of the element to return.
+     * @return The coveredLines at the given index.
+     */
+    public long getCoveredLines(int index) {
+      return coveredLines_.getLong(index);
+    }
+
+    public static final int EXECUTABLELINES_FIELD_NUMBER = 3;
+    @SuppressWarnings("serial")
+    private com.google.protobuf.Internal.LongList executableLines_ = newLongList();
+    private int executableLinesMemoizedSerializedSize = -1;
+    /**
+     * <pre>
+     * Sorted list of lines in this file that contain an executable
+     * statement (i.e. lines that *could* be covered). Lines that contain
+     * only blank lines, comments or non-executable tokens are excluded.
+     * </pre>
+     *
+     * <code>repeated uint64 executable_lines = 3;</code>
+     * @return A list containing the executableLines.
+     */
+    @java.lang.Override
+    public java.util.List<java.lang.Long>
+        getExecutableLinesList() {
+      return executableLines_;
+    }
+    /**
+     * <pre>
+     * Sorted list of lines in this file that contain an executable
+     * statement (i.e. lines that *could* be covered). Lines that contain
+     * only blank lines, comments or non-executable tokens are excluded.
+     * </pre>
+     *
+     * <code>repeated uint64 executable_lines = 3;</code>
+     * @return The count of executableLines.
+     */
+    public int getExecutableLinesCount() {
+      return executableLines_.size();
+    }
+    /**
+     * <pre>
+     * Sorted list of lines in this file that contain an executable
+     * statement (i.e. lines that *could* be covered). Lines that contain
+     * only blank lines, comments or non-executable tokens are excluded.
+     * </pre>
+     *
+     * <code>repeated uint64 executable_lines = 3;</code>
+     * @param index The index of the element to return.
+     * @return The executableLines at the given index.
+     */
+    public long getExecutableLines(int index) {
+      return executableLines_.getLong(index);
+    }
+
+    public static final int LINEHITS_FIELD_NUMBER = 4;
+    private static final class LineHitsDefaultEntryHolder {
+      static final com.google.protobuf.MapEntry<
+          java.lang.Long, java.lang.Long> defaultEntry =
+              com.google.protobuf.MapEntry
+              .<java.lang.Long, java.lang.Long>newDefaultInstance(
+                  com.kcl.api.Spec.internal_static_com_kcl_api_FileCoverage_LineHitsEntry_descriptor, 
+                  com.google.protobuf.WireFormat.FieldType.UINT64,
+                  0L,
+                  com.google.protobuf.WireFormat.FieldType.UINT64,
+                  0L);
+    }
+    @SuppressWarnings("serial")
+    private com.google.protobuf.MapField<
+        java.lang.Long, java.lang.Long> lineHits_;
+    private com.google.protobuf.MapField<java.lang.Long, java.lang.Long>
+    internalGetLineHits() {
+      if (lineHits_ == null) {
+        return com.google.protobuf.MapField.emptyMapField(
+            LineHitsDefaultEntryHolder.defaultEntry);
+      }
+      return lineHits_;
+    }
+    public int getLineHitsCount() {
+      return internalGetLineHits().getMap().size();
+    }
+    /**
+     * <pre>
+     * Per-line execution count across all tests that covered this file.
+     * Keys are line numbers (1-based); values are hit counts.
+     * </pre>
+     *
+     * <code>map&lt;uint64, uint64&gt; line_hits = 4;</code>
+     */
+    @java.lang.Override
+    public boolean containsLineHits(
+        java.lang.Long key) {
+      if (key == null) { throw new NullPointerException("map key"); }
+      return internalGetLineHits().getMap().containsKey(key);
+    }
+    /**
+     * Use {@link #getLineHitsMap()} instead.
+     */
+    @java.lang.Override
+    @java.lang.Deprecated
+    public java.util.Map<java.lang.Long, java.lang.Long> getLineHits() {
+      return getLineHitsMap();
+    }
+    /**
+     * <pre>
+     * Per-line execution count across all tests that covered this file.
+     * Keys are line numbers (1-based); values are hit counts.
+     * </pre>
+     *
+     * <code>map&lt;uint64, uint64&gt; line_hits = 4;</code>
+     */
+    @java.lang.Override
+    public java.util.Map<java.lang.Long, java.lang.Long> getLineHitsMap() {
+      return internalGetLineHits().getMap();
+    }
+    /**
+     * <pre>
+     * Per-line execution count across all tests that covered this file.
+     * Keys are line numbers (1-based); values are hit counts.
+     * </pre>
+     *
+     * <code>map&lt;uint64, uint64&gt; line_hits = 4;</code>
+     */
+    @java.lang.Override
+    public long getLineHitsOrDefault(
+        java.lang.Long key,
+        long defaultValue) {
+      if (key == null) { throw new NullPointerException("map key"); }
+      java.util.Map<java.lang.Long, java.lang.Long> map =
+          internalGetLineHits().getMap();
+      return map.containsKey(key) ? map.get(key) : defaultValue;
+    }
+    /**
+     * <pre>
+     * Per-line execution count across all tests that covered this file.
+     * Keys are line numbers (1-based); values are hit counts.
+     * </pre>
+     *
+     * <code>map&lt;uint64, uint64&gt; line_hits = 4;</code>
+     */
+    @java.lang.Override
+    public long getLineHitsOrThrow(
+        java.lang.Long key) {
+      if (key == null) { throw new NullPointerException("map key"); }
+      java.util.Map<java.lang.Long, java.lang.Long> map =
+          internalGetLineHits().getMap();
+      if (!map.containsKey(key)) {
+        throw new java.lang.IllegalArgumentException();
+      }
+      return map.get(key);
+    }
+
+    private byte memoizedIsInitialized = -1;
+    @java.lang.Override
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    @java.lang.Override
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(filename_)) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 1, filename_);
+      }
+      if (getCoveredLinesList().size() > 0) {
+        output.writeTag(2, com.google.protobuf.WireFormat.WIRETYPE_LENGTH_DELIMITED);
+        output.writeUInt32NoTag(coveredLinesMemoizedSerializedSize);
+      }
+      for (int i = 0; i < coveredLines_.size(); i++) {
+        output.writeUInt64NoTag(coveredLines_.getLong(i));
+      }
+      if (getExecutableLinesList().size() > 0) {
+        output.writeTag(3, com.google.protobuf.WireFormat.WIRETYPE_LENGTH_DELIMITED);
+        output.writeUInt32NoTag(executableLinesMemoizedSerializedSize);
+      }
+      for (int i = 0; i < executableLines_.size(); i++) {
+        output.writeUInt64NoTag(executableLines_.getLong(i));
+      }
+      for (java.util.Map.Entry<java.lang.Long, java.lang.Long> entry
+           : internalGetLineHits().getMap().entrySet()) {
+        com.google.protobuf.MapEntry<java.lang.Long, java.lang.Long>
+        lineHits__ = LineHitsDefaultEntryHolder.defaultEntry.newBuilderForType()
+            .setKey(entry.getKey())
+            .setValue(entry.getValue())
+            .build();
+        output.writeMessage(4, lineHits__);
+      }
+      getUnknownFields().writeTo(output);
+    }
+
+    @java.lang.Override
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(filename_)) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, filename_);
+      }
+      {
+        int dataSize = 0;
+        for (int i = 0; i < coveredLines_.size(); i++) {
+          dataSize += com.google.protobuf.CodedOutputStream
+            .computeUInt64SizeNoTag(coveredLines_.getLong(i));
+        }
+        size += dataSize;
+        if (!getCoveredLinesList().isEmpty()) {
+          size += 1;
+          size += com.google.protobuf.CodedOutputStream
+              .computeUInt32SizeNoTag(dataSize);
+        }
+        coveredLinesMemoizedSerializedSize = dataSize;
+      }
+      {
+        int dataSize = 0;
+        for (int i = 0; i < executableLines_.size(); i++) {
+          dataSize += com.google.protobuf.CodedOutputStream
+            .computeUInt64SizeNoTag(executableLines_.getLong(i));
+        }
+        size += dataSize;
+        if (!getExecutableLinesList().isEmpty()) {
+          size += 1;
+          size += com.google.protobuf.CodedOutputStream
+              .computeUInt32SizeNoTag(dataSize);
+        }
+        executableLinesMemoizedSerializedSize = dataSize;
+      }
+      for (java.util.Map.Entry<java.lang.Long, java.lang.Long> entry
+           : internalGetLineHits().getMap().entrySet()) {
+        com.google.protobuf.MapEntry<java.lang.Long, java.lang.Long>
+        lineHits__ = LineHitsDefaultEntryHolder.defaultEntry.newBuilderForType()
+            .setKey(entry.getKey())
+            .setValue(entry.getValue())
+            .build();
+        size += com.google.protobuf.CodedOutputStream
+            .computeMessageSize(4, lineHits__);
+      }
+      size += getUnknownFields().getSerializedSize();
+      memoizedSize = size;
+      return size;
+    }
+
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof com.kcl.api.Spec.FileCoverage)) {
+        return super.equals(obj);
+      }
+      com.kcl.api.Spec.FileCoverage other = (com.kcl.api.Spec.FileCoverage) obj;
+
+      if (!getFilename()
+          .equals(other.getFilename())) return false;
+      if (!getCoveredLinesList()
+          .equals(other.getCoveredLinesList())) return false;
+      if (!getExecutableLinesList()
+          .equals(other.getExecutableLinesList())) return false;
+      if (!internalGetLineHits().equals(
+          other.internalGetLineHits())) return false;
+      if (!getUnknownFields().equals(other.getUnknownFields())) return false;
+      return true;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptor().hashCode();
+      hash = (37 * hash) + FILENAME_FIELD_NUMBER;
+      hash = (53 * hash) + getFilename().hashCode();
+      if (getCoveredLinesCount() > 0) {
+        hash = (37 * hash) + COVEREDLINES_FIELD_NUMBER;
+        hash = (53 * hash) + getCoveredLinesList().hashCode();
+      }
+      if (getExecutableLinesCount() > 0) {
+        hash = (37 * hash) + EXECUTABLELINES_FIELD_NUMBER;
+        hash = (53 * hash) + getExecutableLinesList().hashCode();
+      }
+      if (!internalGetLineHits().getMap().isEmpty()) {
+        hash = (37 * hash) + LINEHITS_FIELD_NUMBER;
+        hash = (53 * hash) + internalGetLineHits().hashCode();
+      }
+      hash = (29 * hash) + getUnknownFields().hashCode();
+      memoizedHashCode = hash;
+      return hash;
+    }
+
+    public static com.kcl.api.Spec.FileCoverage parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {{
+      return PARSER.parseFrom(data);
+    }}
+    public static com.kcl.api.Spec.FileCoverage parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {{
+      return PARSER.parseFrom(data, extensionRegistry);
+    }}
+    public static com.kcl.api.Spec.FileCoverage parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {{
+      return PARSER.parseFrom(data);
+    }}
+    public static com.kcl.api.Spec.FileCoverage parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {{
+      return PARSER.parseFrom(data, extensionRegistry);
+    }}
+    public static com.kcl.api.Spec.FileCoverage parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {{
+      return PARSER.parseFrom(data);
+    }}
+    public static com.kcl.api.Spec.FileCoverage parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {{
+      return PARSER.parseFrom(data, extensionRegistry);
+    }}
+    public static com.kcl.api.Spec.FileCoverage parseFrom(java.io.InputStream input)
+        throws java.io.IOException {{
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }}
+    public static com.kcl.api.Spec.FileCoverage parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {{
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }}
+
+    public static com.kcl.api.Spec.FileCoverage parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {{
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
+    }}
+
+    public static com.kcl.api.Spec.FileCoverage parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {{
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }}
+    public static com.kcl.api.Spec.FileCoverage parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {{
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }}
+    public static com.kcl.api.Spec.FileCoverage parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {{
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }}
+    @java.lang.Override
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(com.kcl.api.Spec.FileCoverage prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    @java.lang.Override
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * <pre>
+     * Message describing aggregated coverage data for a single source file.
+     * </pre>
+     *
+     * Protobuf type {@code com.kcl.api.FileCoverage}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:com.kcl.api.FileCoverage)
+        com.kcl.api.Spec.FileCoverageOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return com.kcl.api.Spec.internal_static_com_kcl_api_FileCoverage_descriptor;
+      }
+
+      @SuppressWarnings({"rawtypes"})
+      protected com.google.protobuf.MapFieldReflectionAccessor internalGetMapFieldReflection(
+          int number) {
+        switch (number) {
+          case 4:
+            return internalGetLineHits();
+          default:
+            throw new RuntimeException(
+                "Invalid map field number: " + number);
+        }
+      }
+      @SuppressWarnings({"rawtypes"})
+      protected com.google.protobuf.MapFieldReflectionAccessor internalGetMutableMapFieldReflection(
+          int number) {
+        switch (number) {
+          case 4:
+            return internalGetMutableLineHits();
+          default:
+            throw new RuntimeException(
+                "Invalid map field number: " + number);
+        }
+      }
+      @java.lang.Override
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return com.kcl.api.Spec.internal_static_com_kcl_api_FileCoverage_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                com.kcl.api.Spec.FileCoverage.class, com.kcl.api.Spec.FileCoverage.Builder.class);
+      }
+
+      // Construct using com.kcl.api.Spec.FileCoverage.newBuilder()
+      private Builder() {
+
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        super(parent);
+
+      }
+      @java.lang.Override
+      public Builder clear() {
+        super.clear();
+        bitField0_ = 0;
+        filename_ = "";
+        coveredLines_ = newLongList();
+        executableLines_ = newLongList();
+        internalGetMutableLineHits().clear();
+        return this;
+      }
+
+      @java.lang.Override
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return com.kcl.api.Spec.internal_static_com_kcl_api_FileCoverage_descriptor;
+      }
+
+      @java.lang.Override
+      public com.kcl.api.Spec.FileCoverage getDefaultInstanceForType() {
+        return com.kcl.api.Spec.FileCoverage.getDefaultInstance();
+      }
+
+      @java.lang.Override
+      public com.kcl.api.Spec.FileCoverage build() {
+        com.kcl.api.Spec.FileCoverage result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      @java.lang.Override
+      public com.kcl.api.Spec.FileCoverage buildPartial() {
+        com.kcl.api.Spec.FileCoverage result = new com.kcl.api.Spec.FileCoverage(this);
+        if (bitField0_ != 0) { buildPartial0(result); }
+        onBuilt();
+        return result;
+      }
+
+      private void buildPartial0(com.kcl.api.Spec.FileCoverage result) {
+        int from_bitField0_ = bitField0_;
+        if (((from_bitField0_ & 0x00000001) != 0)) {
+          result.filename_ = filename_;
+        }
+        if (((from_bitField0_ & 0x00000002) != 0)) {
+          coveredLines_.makeImmutable();
+          result.coveredLines_ = coveredLines_;
+        }
+        if (((from_bitField0_ & 0x00000004) != 0)) {
+          executableLines_.makeImmutable();
+          result.executableLines_ = executableLines_;
+        }
+        if (((from_bitField0_ & 0x00000008) != 0)) {
+          result.lineHits_ = internalGetLineHits();
+          result.lineHits_.makeImmutable();
+        }
+      }
+
+      @java.lang.Override
+      public Builder clone() {
+        return super.clone();
+      }
+      @java.lang.Override
+      public Builder setField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.setField(field, value);
+      }
+      @java.lang.Override
+      public Builder clearField(
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return super.clearField(field);
+      }
+      @java.lang.Override
+      public Builder clearOneof(
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return super.clearOneof(oneof);
+      }
+      @java.lang.Override
+      public Builder setRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, java.lang.Object value) {
+        return super.setRepeatedField(field, index, value);
+      }
+      @java.lang.Override
+      public Builder addRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.addRepeatedField(field, value);
+      }
+      @java.lang.Override
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof com.kcl.api.Spec.FileCoverage) {
+          return mergeFrom((com.kcl.api.Spec.FileCoverage)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(com.kcl.api.Spec.FileCoverage other) {
+        if (other == com.kcl.api.Spec.FileCoverage.getDefaultInstance()) return this;
+        if (!other.getFilename().isEmpty()) {
+          filename_ = other.filename_;
+          bitField0_ |= 0x00000001;
+          onChanged();
+        }
+        if (!other.coveredLines_.isEmpty()) {
+          if (coveredLines_.isEmpty()) {
+            coveredLines_ = other.coveredLines_;
+            bitField0_ |= 0x00000002;
+          } else {
+            ensureCoveredLinesIsMutable();
+            coveredLines_.addAll(other.coveredLines_);
+          }
+          onChanged();
+        }
+        if (!other.executableLines_.isEmpty()) {
+          if (executableLines_.isEmpty()) {
+            executableLines_ = other.executableLines_;
+            bitField0_ |= 0x00000004;
+          } else {
+            ensureExecutableLinesIsMutable();
+            executableLines_.addAll(other.executableLines_);
+          }
+          onChanged();
+        }
+        internalGetMutableLineHits().mergeFrom(
+            other.internalGetLineHits());
+        bitField0_ |= 0x00000008;
+        this.mergeUnknownFields(other.getUnknownFields());
+        onChanged();
+        return this;
+      }
+
+      @java.lang.Override
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      @java.lang.Override
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        if (extensionRegistry == null) {
+          throw new java.lang.NullPointerException();
+        }
+        try {
+          boolean done = false;
+          while (!done) {
+            int tag = input.readTag();
+            switch (tag) {
+              case 0:
+                done = true;
+                break;
+              case 10: {
+                filename_ = input.readStringRequireUtf8();
+                bitField0_ |= 0x00000001;
+                break;
+              } // case 10
+              case 16: {
+                ensureCoveredLinesIsMutable();
+                coveredLines_.addLong(input.readUInt64());
+                break;
+              } // case 16
+              case 18: {
+                int length = input.readRawVarint32();
+                int oldLimit = input.pushLimit(length);
+                ensureCoveredLinesIsMutable();
+                while (input.getBytesUntilLimit() > 0) {
+                  coveredLines_.addLong(input.readUInt64());
+                }
+                input.popLimit(oldLimit);
+                break;
+              } // case 18
+              case 24: {
+                ensureExecutableLinesIsMutable();
+                executableLines_.addLong(input.readUInt64());
+                break;
+              } // case 24
+              case 26: {
+                int length = input.readRawVarint32();
+                int oldLimit = input.pushLimit(length);
+                ensureExecutableLinesIsMutable();
+                while (input.getBytesUntilLimit() > 0) {
+                  executableLines_.addLong(input.readUInt64());
+                }
+                input.popLimit(oldLimit);
+                break;
+              } // case 26
+              case 34: {
+                com.google.protobuf.MapEntry<java.lang.Long, java.lang.Long>
+                lineHits__ = input.readMessage(
+                    LineHitsDefaultEntryHolder.defaultEntry.getParserForType(), extensionRegistry);
+                internalGetMutableLineHits().getMutableMap().put(
+                    lineHits__.getKey(), lineHits__.getValue());
+                bitField0_ |= 0x00000008;
+                break;
+              } // case 34
+              default: {
+                if (!super.parseUnknownField(input, extensionRegistry, tag)) {
+                  done = true; // was an endgroup tag
+                }
+                break;
+              } // default:
+            } // switch (tag)
+          } // while (!done)
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          throw e.unwrapIOException();
+        } finally {
+          onChanged();
+        } // finally
+        return this;
+      }
+      private int bitField0_;
+
+      private java.lang.Object filename_ = "";
+      /**
+       * <pre>
+       * Source file path, relative to the package root when possible.
+       * </pre>
+       *
+       * <code>string filename = 1;</code>
+       * @return The filename.
+       */
+      public java.lang.String getFilename() {
+        java.lang.Object ref = filename_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          filename_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <pre>
+       * Source file path, relative to the package root when possible.
+       * </pre>
+       *
+       * <code>string filename = 1;</code>
+       * @return The bytes for filename.
+       */
+      public com.google.protobuf.ByteString
+          getFilenameBytes() {
+        java.lang.Object ref = filename_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          filename_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <pre>
+       * Source file path, relative to the package root when possible.
+       * </pre>
+       *
+       * <code>string filename = 1;</code>
+       * @param value The filename to set.
+       * @return This builder for chaining.
+       */
+      public Builder setFilename(
+          java.lang.String value) {
+        if (value == null) { throw new NullPointerException(); }
+        filename_ = value;
+        bitField0_ |= 0x00000001;
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * Source file path, relative to the package root when possible.
+       * </pre>
+       *
+       * <code>string filename = 1;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearFilename() {
+        filename_ = getDefaultInstance().getFilename();
+        bitField0_ = (bitField0_ & ~0x00000001);
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * Source file path, relative to the package root when possible.
+       * </pre>
+       *
+       * <code>string filename = 1;</code>
+       * @param value The bytes for filename to set.
+       * @return This builder for chaining.
+       */
+      public Builder setFilenameBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) { throw new NullPointerException(); }
+        checkByteStringIsUtf8(value);
+        filename_ = value;
+        bitField0_ |= 0x00000001;
+        onChanged();
+        return this;
+      }
+
+      @SuppressWarnings("serial")
+      private com.google.protobuf.Internal.LongList coveredLines_ = newLongList();
+      private void ensureCoveredLinesIsMutable() {
+        if (!coveredLines_.isModifiable()) {
+          coveredLines_ = mutableCopy(coveredLines_);
+        }
+        bitField0_ |= 0x00000002;
+      }
+      /**
+       * <pre>
+       * Sorted list of lines that executed at least once across all tests
+       * that covered this file.
+       * </pre>
+       *
+       * <code>repeated uint64 covered_lines = 2;</code>
+       * @return A list containing the coveredLines.
+       */
+      public java.util.List<java.lang.Long>
+          getCoveredLinesList() {
+        coveredLines_.makeImmutable();
+        return coveredLines_;
+      }
+      /**
+       * <pre>
+       * Sorted list of lines that executed at least once across all tests
+       * that covered this file.
+       * </pre>
+       *
+       * <code>repeated uint64 covered_lines = 2;</code>
+       * @return The count of coveredLines.
+       */
+      public int getCoveredLinesCount() {
+        return coveredLines_.size();
+      }
+      /**
+       * <pre>
+       * Sorted list of lines that executed at least once across all tests
+       * that covered this file.
+       * </pre>
+       *
+       * <code>repeated uint64 covered_lines = 2;</code>
+       * @param index The index of the element to return.
+       * @return The coveredLines at the given index.
+       */
+      public long getCoveredLines(int index) {
+        return coveredLines_.getLong(index);
+      }
+      /**
+       * <pre>
+       * Sorted list of lines that executed at least once across all tests
+       * that covered this file.
+       * </pre>
+       *
+       * <code>repeated uint64 covered_lines = 2;</code>
+       * @param index The index to set the value at.
+       * @param value The coveredLines to set.
+       * @return This builder for chaining.
+       */
+      public Builder setCoveredLines(
+          int index, long value) {
+        ensureCoveredLinesIsMutable();
+        coveredLines_.setLong(index, value);
+        bitField0_ |= 0x00000002;
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * Sorted list of lines that executed at least once across all tests
+       * that covered this file.
+       * </pre>
+       *
+       * <code>repeated uint64 covered_lines = 2;</code>
+       * @param value The coveredLines to add.
+       * @return This builder for chaining.
+       */
+      public Builder addCoveredLines(long value) {
+        ensureCoveredLinesIsMutable();
+        coveredLines_.addLong(value);
+        bitField0_ |= 0x00000002;
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * Sorted list of lines that executed at least once across all tests
+       * that covered this file.
+       * </pre>
+       *
+       * <code>repeated uint64 covered_lines = 2;</code>
+       * @param values The coveredLines to add.
+       * @return This builder for chaining.
+       */
+      public Builder addAllCoveredLines(
+          java.lang.Iterable<? extends java.lang.Long> values) {
+        ensureCoveredLinesIsMutable();
+        com.google.protobuf.AbstractMessageLite.Builder.addAll(
+            values, coveredLines_);
+        bitField0_ |= 0x00000002;
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * Sorted list of lines that executed at least once across all tests
+       * that covered this file.
+       * </pre>
+       *
+       * <code>repeated uint64 covered_lines = 2;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearCoveredLines() {
+        coveredLines_ = newLongList();
+        bitField0_ = (bitField0_ & ~0x00000002);
+        onChanged();
+        return this;
+      }
+
+      @SuppressWarnings("serial")
+      private com.google.protobuf.Internal.LongList executableLines_ = newLongList();
+      private void ensureExecutableLinesIsMutable() {
+        if (!executableLines_.isModifiable()) {
+          executableLines_ = mutableCopy(executableLines_);
+        }
+        bitField0_ |= 0x00000004;
+      }
+      /**
+       * <pre>
+       * Sorted list of lines in this file that contain an executable
+       * statement (i.e. lines that *could* be covered). Lines that contain
+       * only blank lines, comments or non-executable tokens are excluded.
+       * </pre>
+       *
+       * <code>repeated uint64 executable_lines = 3;</code>
+       * @return A list containing the executableLines.
+       */
+      public java.util.List<java.lang.Long>
+          getExecutableLinesList() {
+        executableLines_.makeImmutable();
+        return executableLines_;
+      }
+      /**
+       * <pre>
+       * Sorted list of lines in this file that contain an executable
+       * statement (i.e. lines that *could* be covered). Lines that contain
+       * only blank lines, comments or non-executable tokens are excluded.
+       * </pre>
+       *
+       * <code>repeated uint64 executable_lines = 3;</code>
+       * @return The count of executableLines.
+       */
+      public int getExecutableLinesCount() {
+        return executableLines_.size();
+      }
+      /**
+       * <pre>
+       * Sorted list of lines in this file that contain an executable
+       * statement (i.e. lines that *could* be covered). Lines that contain
+       * only blank lines, comments or non-executable tokens are excluded.
+       * </pre>
+       *
+       * <code>repeated uint64 executable_lines = 3;</code>
+       * @param index The index of the element to return.
+       * @return The executableLines at the given index.
+       */
+      public long getExecutableLines(int index) {
+        return executableLines_.getLong(index);
+      }
+      /**
+       * <pre>
+       * Sorted list of lines in this file that contain an executable
+       * statement (i.e. lines that *could* be covered). Lines that contain
+       * only blank lines, comments or non-executable tokens are excluded.
+       * </pre>
+       *
+       * <code>repeated uint64 executable_lines = 3;</code>
+       * @param index The index to set the value at.
+       * @param value The executableLines to set.
+       * @return This builder for chaining.
+       */
+      public Builder setExecutableLines(
+          int index, long value) {
+        ensureExecutableLinesIsMutable();
+        executableLines_.setLong(index, value);
+        bitField0_ |= 0x00000004;
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * Sorted list of lines in this file that contain an executable
+       * statement (i.e. lines that *could* be covered). Lines that contain
+       * only blank lines, comments or non-executable tokens are excluded.
+       * </pre>
+       *
+       * <code>repeated uint64 executable_lines = 3;</code>
+       * @param value The executableLines to add.
+       * @return This builder for chaining.
+       */
+      public Builder addExecutableLines(long value) {
+        ensureExecutableLinesIsMutable();
+        executableLines_.addLong(value);
+        bitField0_ |= 0x00000004;
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * Sorted list of lines in this file that contain an executable
+       * statement (i.e. lines that *could* be covered). Lines that contain
+       * only blank lines, comments or non-executable tokens are excluded.
+       * </pre>
+       *
+       * <code>repeated uint64 executable_lines = 3;</code>
+       * @param values The executableLines to add.
+       * @return This builder for chaining.
+       */
+      public Builder addAllExecutableLines(
+          java.lang.Iterable<? extends java.lang.Long> values) {
+        ensureExecutableLinesIsMutable();
+        com.google.protobuf.AbstractMessageLite.Builder.addAll(
+            values, executableLines_);
+        bitField0_ |= 0x00000004;
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * Sorted list of lines in this file that contain an executable
+       * statement (i.e. lines that *could* be covered). Lines that contain
+       * only blank lines, comments or non-executable tokens are excluded.
+       * </pre>
+       *
+       * <code>repeated uint64 executable_lines = 3;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearExecutableLines() {
+        executableLines_ = newLongList();
+        bitField0_ = (bitField0_ & ~0x00000004);
+        onChanged();
+        return this;
+      }
+
+      private com.google.protobuf.MapField<
+          java.lang.Long, java.lang.Long> lineHits_;
+      private com.google.protobuf.MapField<java.lang.Long, java.lang.Long>
+          internalGetLineHits() {
+        if (lineHits_ == null) {
+          return com.google.protobuf.MapField.emptyMapField(
+              LineHitsDefaultEntryHolder.defaultEntry);
+        }
+        return lineHits_;
+      }
+      private com.google.protobuf.MapField<java.lang.Long, java.lang.Long>
+          internalGetMutableLineHits() {
+        if (lineHits_ == null) {
+          lineHits_ = com.google.protobuf.MapField.newMapField(
+              LineHitsDefaultEntryHolder.defaultEntry);
+        }
+        if (!lineHits_.isMutable()) {
+          lineHits_ = lineHits_.copy();
+        }
+        bitField0_ |= 0x00000008;
+        onChanged();
+        return lineHits_;
+      }
+      public int getLineHitsCount() {
+        return internalGetLineHits().getMap().size();
+      }
+      /**
+       * <pre>
+       * Per-line execution count across all tests that covered this file.
+       * Keys are line numbers (1-based); values are hit counts.
+       * </pre>
+       *
+       * <code>map&lt;uint64, uint64&gt; line_hits = 4;</code>
+       */
+      @java.lang.Override
+      public boolean containsLineHits(
+          java.lang.Long key) {
+        if (key == null) { throw new NullPointerException("map key"); }
+        return internalGetLineHits().getMap().containsKey(key);
+      }
+      /**
+       * Use {@link #getLineHitsMap()} instead.
+       */
+      @java.lang.Override
+      @java.lang.Deprecated
+      public java.util.Map<java.lang.Long, java.lang.Long> getLineHits() {
+        return getLineHitsMap();
+      }
+      /**
+       * <pre>
+       * Per-line execution count across all tests that covered this file.
+       * Keys are line numbers (1-based); values are hit counts.
+       * </pre>
+       *
+       * <code>map&lt;uint64, uint64&gt; line_hits = 4;</code>
+       */
+      @java.lang.Override
+      public java.util.Map<java.lang.Long, java.lang.Long> getLineHitsMap() {
+        return internalGetLineHits().getMap();
+      }
+      /**
+       * <pre>
+       * Per-line execution count across all tests that covered this file.
+       * Keys are line numbers (1-based); values are hit counts.
+       * </pre>
+       *
+       * <code>map&lt;uint64, uint64&gt; line_hits = 4;</code>
+       */
+      @java.lang.Override
+      public long getLineHitsOrDefault(
+          java.lang.Long key,
+          long defaultValue) {
+        if (key == null) { throw new NullPointerException("map key"); }
+        java.util.Map<java.lang.Long, java.lang.Long> map =
+            internalGetLineHits().getMap();
+        return map.containsKey(key) ? map.get(key) : defaultValue;
+      }
+      /**
+       * <pre>
+       * Per-line execution count across all tests that covered this file.
+       * Keys are line numbers (1-based); values are hit counts.
+       * </pre>
+       *
+       * <code>map&lt;uint64, uint64&gt; line_hits = 4;</code>
+       */
+      @java.lang.Override
+      public long getLineHitsOrThrow(
+          java.lang.Long key) {
+        if (key == null) { throw new NullPointerException("map key"); }
+        java.util.Map<java.lang.Long, java.lang.Long> map =
+            internalGetLineHits().getMap();
+        if (!map.containsKey(key)) {
+          throw new java.lang.IllegalArgumentException();
+        }
+        return map.get(key);
+      }
+      public Builder clearLineHits() {
+        bitField0_ = (bitField0_ & ~0x00000008);
+        internalGetMutableLineHits().getMutableMap()
+            .clear();
+        return this;
+      }
+      /**
+       * <pre>
+       * Per-line execution count across all tests that covered this file.
+       * Keys are line numbers (1-based); values are hit counts.
+       * </pre>
+       *
+       * <code>map&lt;uint64, uint64&gt; line_hits = 4;</code>
+       * @param key The key to remove.
+       */
+      public Builder removeLineHits(
+          java.lang.Long key) {
+        if (key == null) { throw new NullPointerException("map key"); }
+        internalGetMutableLineHits().getMutableMap()
+            .remove(key);
+        return this;
+      }
+      /**
+       * Use alternate mutation accessors instead.
+       */
+      @java.lang.Deprecated
+      public java.util.Map<java.lang.Long, java.lang.Long>
+          getMutableLineHits() {
+        bitField0_ |= 0x00000008;
+        return internalGetMutableLineHits().getMutableMap();
+      }
+      /**
+       * <pre>
+       * Per-line execution count across all tests that covered this file.
+       * Keys are line numbers (1-based); values are hit counts.
+       * </pre>
+       *
+       * <code>map&lt;uint64, uint64&gt; line_hits = 4;</code>
+       * @param key The key to add.
+       */
+      public Builder putLineHits(
+          java.lang.Long key,
+          long value) {
+        if (key == null) { throw new NullPointerException("map key"); }
+        internalGetMutableLineHits().getMutableMap()
+            .put(key, value);
+        bitField0_ |= 0x00000008;
+        return this;
+      }
+      /**
+       * <pre>
+       * Per-line execution count across all tests that covered this file.
+       * Keys are line numbers (1-based); values are hit counts.
+       * </pre>
+       *
+       * <code>map&lt;uint64, uint64&gt; line_hits = 4;</code>
+       * @param values The values to add.
+       */
+      public Builder putAllLineHits(
+          java.util.Map<java.lang.Long, java.lang.Long> values) {
+        internalGetMutableLineHits().getMutableMap()
+            .putAll(values);
+        bitField0_ |= 0x00000008;
+        return this;
+      }
+
+      @java.lang.Override
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.setUnknownFields(unknownFields);
+      }
+
+      @java.lang.Override
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.mergeUnknownFields(unknownFields);
+      }
+
+
+      // @@protoc_insertion_point(builder_scope:com.kcl.api.FileCoverage)
+    }
+
+    // @@protoc_insertion_point(class_scope:com.kcl.api.FileCoverage)
+    private static final com.kcl.api.Spec.FileCoverage DEFAULT_INSTANCE;
+    static {
+      DEFAULT_INSTANCE = new com.kcl.api.Spec.FileCoverage();
+    }
+
+    public static com.kcl.api.Spec.FileCoverage getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    private static final com.google.protobuf.Parser<FileCoverage>
+        PARSER = new com.google.protobuf.AbstractParser<FileCoverage>() {
+          @java.lang.Override
+          public FileCoverage parsePartialFrom(
+              com.google.protobuf.CodedInputStream input,
+              com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+              throws com.google.protobuf.InvalidProtocolBufferException {
+            Builder builder = newBuilder();
+            try {
+              builder.mergeFrom(input, extensionRegistry);
+            } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+              throw e.setUnfinishedMessage(builder.buildPartial());
+            } catch (com.google.protobuf.UninitializedMessageException e) {
+              throw e.asInvalidProtocolBufferException().setUnfinishedMessage(builder.buildPartial());
+            } catch (java.io.IOException e) {
+              throw new com.google.protobuf.InvalidProtocolBufferException(e)
+                  .setUnfinishedMessage(builder.buildPartial());
+            }
+            return builder.buildPartial();
+          }
+        };
+
+    public static com.google.protobuf.Parser<FileCoverage> parser() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<FileCoverage> getParserForType() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.kcl.api.Spec.FileCoverage getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
+  }
+
+  public interface TestCoverageReportOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:com.kcl.api.TestCoverageReport)
+      com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <pre>
+     * Per-file coverage keyed by source file path.
+     * </pre>
+     *
+     * <code>map&lt;string, .com.kcl.api.FileCoverage&gt; files = 1;</code>
+     * @return The number of key/value mappings.
+     */
+    int getFilesCount();
+    /**
+     * <pre>
+     * Per-file coverage keyed by source file path.
+     * </pre>
+     *
+     * <code>map&lt;string, .com.kcl.api.FileCoverage&gt; files = 1;</code>
+     * @param key The key to check.
+     */
+    boolean containsFiles(
+        java.lang.String key);
+    /**
+     * Use {@link #getFilesMap()} instead.
+     */
+    @java.lang.Deprecated
+    java.util.Map<java.lang.String, com.kcl.api.Spec.FileCoverage>
+    getFiles();
+    /**
+     * <pre>
+     * Per-file coverage keyed by source file path.
+     * </pre>
+     *
+     * <code>map&lt;string, .com.kcl.api.FileCoverage&gt; files = 1;</code>
+     */
+    java.util.Map<java.lang.String, com.kcl.api.Spec.FileCoverage>
+    getFilesMap();
+    /**
+     * <pre>
+     * Per-file coverage keyed by source file path.
+     * </pre>
+     *
+     * <code>map&lt;string, .com.kcl.api.FileCoverage&gt; files = 1;</code>
+     * @param key The key to look up.
+     */
+    com.kcl.api.Spec.FileCoverage getFilesOrDefault(
+        java.lang.String key,
+        com.kcl.api.Spec.FileCoverage defaultValue);
+    /**
+     * <pre>
+     * Per-file coverage keyed by source file path.
+     * </pre>
+     *
+     * <code>map&lt;string, .com.kcl.api.FileCoverage&gt; files = 1;</code>
+     * @param key The key to look up.
+     */
+    com.kcl.api.Spec.FileCoverage getFilesOrThrow(
+        java.lang.String key);
+    /**
+     * <pre>
+     * Roll-up of all files in [TestCoverageReport.files].
+     * </pre>
+     *
+     * <code>.com.kcl.api.CoverageSummary summary = 2;</code>
+     * @return Whether the summary field is set.
+     */
+    boolean hasSummary();
+    /**
+     * <pre>
+     * Roll-up of all files in [TestCoverageReport.files].
+     * </pre>
+     *
+     * <code>.com.kcl.api.CoverageSummary summary = 2;</code>
+     * @return The summary.
+     */
+    com.kcl.api.Spec.CoverageSummary getSummary();
+    /**
+     * <pre>
+     * Roll-up of all files in [TestCoverageReport.files].
+     * </pre>
+     *
+     * <code>.com.kcl.api.CoverageSummary summary = 2;</code>
+     */
+    com.kcl.api.Spec.CoverageSummaryOrBuilder getSummaryOrBuilder();
+  }
+  /**
+   * <pre>
+   * Message describing aggregated coverage across the entire test run.
+   * </pre>
+   *
+   * Protobuf type {@code com.kcl.api.TestCoverageReport}
+   */
+  public static final class TestCoverageReport extends
+      com.google.protobuf.GeneratedMessageV3 implements
+      // @@protoc_insertion_point(message_implements:com.kcl.api.TestCoverageReport)
+      TestCoverageReportOrBuilder {
+  private static final long serialVersionUID = 0L;
+    // Use TestCoverageReport.newBuilder() to construct.
+    private TestCoverageReport(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
+    }
+    private TestCoverageReport() {
+    }
+
+    @java.lang.Override
+    @SuppressWarnings({"unused"})
+    protected java.lang.Object newInstance(
+        UnusedPrivateParameter unused) {
+      return new TestCoverageReport();
+    }
+
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return com.kcl.api.Spec.internal_static_com_kcl_api_TestCoverageReport_descriptor;
+    }
+
+    @SuppressWarnings({"rawtypes"})
+    @java.lang.Override
+    protected com.google.protobuf.MapFieldReflectionAccessor internalGetMapFieldReflection(
+        int number) {
+      switch (number) {
+        case 1:
+          return internalGetFiles();
+        default:
+          throw new RuntimeException(
+              "Invalid map field number: " + number);
+      }
+    }
+    @java.lang.Override
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return com.kcl.api.Spec.internal_static_com_kcl_api_TestCoverageReport_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              com.kcl.api.Spec.TestCoverageReport.class, com.kcl.api.Spec.TestCoverageReport.Builder.class);
+    }
+
+    private int bitField0_;
+    public static final int FILES_FIELD_NUMBER = 1;
+    private static final class FilesDefaultEntryHolder {
+      static final com.google.protobuf.MapEntry<
+          java.lang.String, com.kcl.api.Spec.FileCoverage> defaultEntry =
+              com.google.protobuf.MapEntry
+              .<java.lang.String, com.kcl.api.Spec.FileCoverage>newDefaultInstance(
+                  com.kcl.api.Spec.internal_static_com_kcl_api_TestCoverageReport_FilesEntry_descriptor, 
+                  com.google.protobuf.WireFormat.FieldType.STRING,
+                  "",
+                  com.google.protobuf.WireFormat.FieldType.MESSAGE,
+                  com.kcl.api.Spec.FileCoverage.getDefaultInstance());
+    }
+    @SuppressWarnings("serial")
+    private com.google.protobuf.MapField<
+        java.lang.String, com.kcl.api.Spec.FileCoverage> files_;
+    private com.google.protobuf.MapField<java.lang.String, com.kcl.api.Spec.FileCoverage>
+    internalGetFiles() {
+      if (files_ == null) {
+        return com.google.protobuf.MapField.emptyMapField(
+            FilesDefaultEntryHolder.defaultEntry);
+      }
+      return files_;
+    }
+    public int getFilesCount() {
+      return internalGetFiles().getMap().size();
+    }
+    /**
+     * <pre>
+     * Per-file coverage keyed by source file path.
+     * </pre>
+     *
+     * <code>map&lt;string, .com.kcl.api.FileCoverage&gt; files = 1;</code>
+     */
+    @java.lang.Override
+    public boolean containsFiles(
+        java.lang.String key) {
+      if (key == null) { throw new NullPointerException("map key"); }
+      return internalGetFiles().getMap().containsKey(key);
+    }
+    /**
+     * Use {@link #getFilesMap()} instead.
+     */
+    @java.lang.Override
+    @java.lang.Deprecated
+    public java.util.Map<java.lang.String, com.kcl.api.Spec.FileCoverage> getFiles() {
+      return getFilesMap();
+    }
+    /**
+     * <pre>
+     * Per-file coverage keyed by source file path.
+     * </pre>
+     *
+     * <code>map&lt;string, .com.kcl.api.FileCoverage&gt; files = 1;</code>
+     */
+    @java.lang.Override
+    public java.util.Map<java.lang.String, com.kcl.api.Spec.FileCoverage> getFilesMap() {
+      return internalGetFiles().getMap();
+    }
+    /**
+     * <pre>
+     * Per-file coverage keyed by source file path.
+     * </pre>
+     *
+     * <code>map&lt;string, .com.kcl.api.FileCoverage&gt; files = 1;</code>
+     */
+    @java.lang.Override
+    public com.kcl.api.Spec.FileCoverage getFilesOrDefault(
+        java.lang.String key,
+        com.kcl.api.Spec.FileCoverage defaultValue) {
+      if (key == null) { throw new NullPointerException("map key"); }
+      java.util.Map<java.lang.String, com.kcl.api.Spec.FileCoverage> map =
+          internalGetFiles().getMap();
+      return map.containsKey(key) ? map.get(key) : defaultValue;
+    }
+    /**
+     * <pre>
+     * Per-file coverage keyed by source file path.
+     * </pre>
+     *
+     * <code>map&lt;string, .com.kcl.api.FileCoverage&gt; files = 1;</code>
+     */
+    @java.lang.Override
+    public com.kcl.api.Spec.FileCoverage getFilesOrThrow(
+        java.lang.String key) {
+      if (key == null) { throw new NullPointerException("map key"); }
+      java.util.Map<java.lang.String, com.kcl.api.Spec.FileCoverage> map =
+          internalGetFiles().getMap();
+      if (!map.containsKey(key)) {
+        throw new java.lang.IllegalArgumentException();
+      }
+      return map.get(key);
+    }
+
+    public static final int SUMMARY_FIELD_NUMBER = 2;
+    private com.kcl.api.Spec.CoverageSummary summary_;
+    /**
+     * <pre>
+     * Roll-up of all files in [TestCoverageReport.files].
+     * </pre>
+     *
+     * <code>.com.kcl.api.CoverageSummary summary = 2;</code>
+     * @return Whether the summary field is set.
+     */
+    @java.lang.Override
+    public boolean hasSummary() {
+      return ((bitField0_ & 0x00000001) != 0);
+    }
+    /**
+     * <pre>
+     * Roll-up of all files in [TestCoverageReport.files].
+     * </pre>
+     *
+     * <code>.com.kcl.api.CoverageSummary summary = 2;</code>
+     * @return The summary.
+     */
+    @java.lang.Override
+    public com.kcl.api.Spec.CoverageSummary getSummary() {
+      return summary_ == null ? com.kcl.api.Spec.CoverageSummary.getDefaultInstance() : summary_;
+    }
+    /**
+     * <pre>
+     * Roll-up of all files in [TestCoverageReport.files].
+     * </pre>
+     *
+     * <code>.com.kcl.api.CoverageSummary summary = 2;</code>
+     */
+    @java.lang.Override
+    public com.kcl.api.Spec.CoverageSummaryOrBuilder getSummaryOrBuilder() {
+      return summary_ == null ? com.kcl.api.Spec.CoverageSummary.getDefaultInstance() : summary_;
+    }
+
+    private byte memoizedIsInitialized = -1;
+    @java.lang.Override
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    @java.lang.Override
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      com.google.protobuf.GeneratedMessageV3
+        .serializeStringMapTo(
+          output,
+          internalGetFiles(),
+          FilesDefaultEntryHolder.defaultEntry,
+          1);
+      if (((bitField0_ & 0x00000001) != 0)) {
+        output.writeMessage(2, getSummary());
+      }
+      getUnknownFields().writeTo(output);
+    }
+
+    @java.lang.Override
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      for (java.util.Map.Entry<java.lang.String, com.kcl.api.Spec.FileCoverage> entry
+           : internalGetFiles().getMap().entrySet()) {
+        com.google.protobuf.MapEntry<java.lang.String, com.kcl.api.Spec.FileCoverage>
+        files__ = FilesDefaultEntryHolder.defaultEntry.newBuilderForType()
+            .setKey(entry.getKey())
+            .setValue(entry.getValue())
+            .build();
+        size += com.google.protobuf.CodedOutputStream
+            .computeMessageSize(1, files__);
+      }
+      if (((bitField0_ & 0x00000001) != 0)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(2, getSummary());
+      }
+      size += getUnknownFields().getSerializedSize();
+      memoizedSize = size;
+      return size;
+    }
+
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof com.kcl.api.Spec.TestCoverageReport)) {
+        return super.equals(obj);
+      }
+      com.kcl.api.Spec.TestCoverageReport other = (com.kcl.api.Spec.TestCoverageReport) obj;
+
+      if (!internalGetFiles().equals(
+          other.internalGetFiles())) return false;
+      if (hasSummary() != other.hasSummary()) return false;
+      if (hasSummary()) {
+        if (!getSummary()
+            .equals(other.getSummary())) return false;
+      }
+      if (!getUnknownFields().equals(other.getUnknownFields())) return false;
+      return true;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptor().hashCode();
+      if (!internalGetFiles().getMap().isEmpty()) {
+        hash = (37 * hash) + FILES_FIELD_NUMBER;
+        hash = (53 * hash) + internalGetFiles().hashCode();
+      }
+      if (hasSummary()) {
+        hash = (37 * hash) + SUMMARY_FIELD_NUMBER;
+        hash = (53 * hash) + getSummary().hashCode();
+      }
+      hash = (29 * hash) + getUnknownFields().hashCode();
+      memoizedHashCode = hash;
+      return hash;
+    }
+
+    public static com.kcl.api.Spec.TestCoverageReport parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {{
+      return PARSER.parseFrom(data);
+    }}
+    public static com.kcl.api.Spec.TestCoverageReport parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {{
+      return PARSER.parseFrom(data, extensionRegistry);
+    }}
+    public static com.kcl.api.Spec.TestCoverageReport parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {{
+      return PARSER.parseFrom(data);
+    }}
+    public static com.kcl.api.Spec.TestCoverageReport parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {{
+      return PARSER.parseFrom(data, extensionRegistry);
+    }}
+    public static com.kcl.api.Spec.TestCoverageReport parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {{
+      return PARSER.parseFrom(data);
+    }}
+    public static com.kcl.api.Spec.TestCoverageReport parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {{
+      return PARSER.parseFrom(data, extensionRegistry);
+    }}
+    public static com.kcl.api.Spec.TestCoverageReport parseFrom(java.io.InputStream input)
+        throws java.io.IOException {{
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }}
+    public static com.kcl.api.Spec.TestCoverageReport parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {{
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }}
+
+    public static com.kcl.api.Spec.TestCoverageReport parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {{
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
+    }}
+
+    public static com.kcl.api.Spec.TestCoverageReport parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {{
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }}
+    public static com.kcl.api.Spec.TestCoverageReport parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {{
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }}
+    public static com.kcl.api.Spec.TestCoverageReport parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {{
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }}
+    @java.lang.Override
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(com.kcl.api.Spec.TestCoverageReport prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    @java.lang.Override
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * <pre>
+     * Message describing aggregated coverage across the entire test run.
+     * </pre>
+     *
+     * Protobuf type {@code com.kcl.api.TestCoverageReport}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:com.kcl.api.TestCoverageReport)
+        com.kcl.api.Spec.TestCoverageReportOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return com.kcl.api.Spec.internal_static_com_kcl_api_TestCoverageReport_descriptor;
+      }
+
+      @SuppressWarnings({"rawtypes"})
+      protected com.google.protobuf.MapFieldReflectionAccessor internalGetMapFieldReflection(
+          int number) {
+        switch (number) {
+          case 1:
+            return internalGetFiles();
+          default:
+            throw new RuntimeException(
+                "Invalid map field number: " + number);
+        }
+      }
+      @SuppressWarnings({"rawtypes"})
+      protected com.google.protobuf.MapFieldReflectionAccessor internalGetMutableMapFieldReflection(
+          int number) {
+        switch (number) {
+          case 1:
+            return internalGetMutableFiles();
+          default:
+            throw new RuntimeException(
+                "Invalid map field number: " + number);
+        }
+      }
+      @java.lang.Override
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return com.kcl.api.Spec.internal_static_com_kcl_api_TestCoverageReport_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                com.kcl.api.Spec.TestCoverageReport.class, com.kcl.api.Spec.TestCoverageReport.Builder.class);
+      }
+
+      // Construct using com.kcl.api.Spec.TestCoverageReport.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessageV3
+                .alwaysUseFieldBuilders) {
+          getSummaryFieldBuilder();
+        }
+      }
+      @java.lang.Override
+      public Builder clear() {
+        super.clear();
+        bitField0_ = 0;
+        internalGetMutableFiles().clear();
+        summary_ = null;
+        if (summaryBuilder_ != null) {
+          summaryBuilder_.dispose();
+          summaryBuilder_ = null;
+        }
+        return this;
+      }
+
+      @java.lang.Override
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return com.kcl.api.Spec.internal_static_com_kcl_api_TestCoverageReport_descriptor;
+      }
+
+      @java.lang.Override
+      public com.kcl.api.Spec.TestCoverageReport getDefaultInstanceForType() {
+        return com.kcl.api.Spec.TestCoverageReport.getDefaultInstance();
+      }
+
+      @java.lang.Override
+      public com.kcl.api.Spec.TestCoverageReport build() {
+        com.kcl.api.Spec.TestCoverageReport result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      @java.lang.Override
+      public com.kcl.api.Spec.TestCoverageReport buildPartial() {
+        com.kcl.api.Spec.TestCoverageReport result = new com.kcl.api.Spec.TestCoverageReport(this);
+        if (bitField0_ != 0) { buildPartial0(result); }
+        onBuilt();
+        return result;
+      }
+
+      private void buildPartial0(com.kcl.api.Spec.TestCoverageReport result) {
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        if (((from_bitField0_ & 0x00000001) != 0)) {
+          result.files_ = internalGetFiles();
+          result.files_.makeImmutable();
+        }
+        if (((from_bitField0_ & 0x00000002) != 0)) {
+          result.summary_ = summaryBuilder_ == null
+              ? summary_
+              : summaryBuilder_.build();
+          to_bitField0_ |= 0x00000001;
+        }
+        result.bitField0_ |= to_bitField0_;
+      }
+
+      @java.lang.Override
+      public Builder clone() {
+        return super.clone();
+      }
+      @java.lang.Override
+      public Builder setField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.setField(field, value);
+      }
+      @java.lang.Override
+      public Builder clearField(
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return super.clearField(field);
+      }
+      @java.lang.Override
+      public Builder clearOneof(
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return super.clearOneof(oneof);
+      }
+      @java.lang.Override
+      public Builder setRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, java.lang.Object value) {
+        return super.setRepeatedField(field, index, value);
+      }
+      @java.lang.Override
+      public Builder addRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.addRepeatedField(field, value);
+      }
+      @java.lang.Override
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof com.kcl.api.Spec.TestCoverageReport) {
+          return mergeFrom((com.kcl.api.Spec.TestCoverageReport)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(com.kcl.api.Spec.TestCoverageReport other) {
+        if (other == com.kcl.api.Spec.TestCoverageReport.getDefaultInstance()) return this;
+        internalGetMutableFiles().mergeFrom(
+            other.internalGetFiles());
+        bitField0_ |= 0x00000001;
+        if (other.hasSummary()) {
+          mergeSummary(other.getSummary());
+        }
+        this.mergeUnknownFields(other.getUnknownFields());
+        onChanged();
+        return this;
+      }
+
+      @java.lang.Override
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      @java.lang.Override
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        if (extensionRegistry == null) {
+          throw new java.lang.NullPointerException();
+        }
+        try {
+          boolean done = false;
+          while (!done) {
+            int tag = input.readTag();
+            switch (tag) {
+              case 0:
+                done = true;
+                break;
+              case 10: {
+                com.google.protobuf.MapEntry<java.lang.String, com.kcl.api.Spec.FileCoverage>
+                files__ = input.readMessage(
+                    FilesDefaultEntryHolder.defaultEntry.getParserForType(), extensionRegistry);
+                internalGetMutableFiles().getMutableMap().put(
+                    files__.getKey(), files__.getValue());
+                bitField0_ |= 0x00000001;
+                break;
+              } // case 10
+              case 18: {
+                input.readMessage(
+                    getSummaryFieldBuilder().getBuilder(),
+                    extensionRegistry);
+                bitField0_ |= 0x00000002;
+                break;
+              } // case 18
+              default: {
+                if (!super.parseUnknownField(input, extensionRegistry, tag)) {
+                  done = true; // was an endgroup tag
+                }
+                break;
+              } // default:
+            } // switch (tag)
+          } // while (!done)
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          throw e.unwrapIOException();
+        } finally {
+          onChanged();
+        } // finally
+        return this;
+      }
+      private int bitField0_;
+
+      private com.google.protobuf.MapField<
+          java.lang.String, com.kcl.api.Spec.FileCoverage> files_;
+      private com.google.protobuf.MapField<java.lang.String, com.kcl.api.Spec.FileCoverage>
+          internalGetFiles() {
+        if (files_ == null) {
+          return com.google.protobuf.MapField.emptyMapField(
+              FilesDefaultEntryHolder.defaultEntry);
+        }
+        return files_;
+      }
+      private com.google.protobuf.MapField<java.lang.String, com.kcl.api.Spec.FileCoverage>
+          internalGetMutableFiles() {
+        if (files_ == null) {
+          files_ = com.google.protobuf.MapField.newMapField(
+              FilesDefaultEntryHolder.defaultEntry);
+        }
+        if (!files_.isMutable()) {
+          files_ = files_.copy();
+        }
+        bitField0_ |= 0x00000001;
+        onChanged();
+        return files_;
+      }
+      public int getFilesCount() {
+        return internalGetFiles().getMap().size();
+      }
+      /**
+       * <pre>
+       * Per-file coverage keyed by source file path.
+       * </pre>
+       *
+       * <code>map&lt;string, .com.kcl.api.FileCoverage&gt; files = 1;</code>
+       */
+      @java.lang.Override
+      public boolean containsFiles(
+          java.lang.String key) {
+        if (key == null) { throw new NullPointerException("map key"); }
+        return internalGetFiles().getMap().containsKey(key);
+      }
+      /**
+       * Use {@link #getFilesMap()} instead.
+       */
+      @java.lang.Override
+      @java.lang.Deprecated
+      public java.util.Map<java.lang.String, com.kcl.api.Spec.FileCoverage> getFiles() {
+        return getFilesMap();
+      }
+      /**
+       * <pre>
+       * Per-file coverage keyed by source file path.
+       * </pre>
+       *
+       * <code>map&lt;string, .com.kcl.api.FileCoverage&gt; files = 1;</code>
+       */
+      @java.lang.Override
+      public java.util.Map<java.lang.String, com.kcl.api.Spec.FileCoverage> getFilesMap() {
+        return internalGetFiles().getMap();
+      }
+      /**
+       * <pre>
+       * Per-file coverage keyed by source file path.
+       * </pre>
+       *
+       * <code>map&lt;string, .com.kcl.api.FileCoverage&gt; files = 1;</code>
+       */
+      @java.lang.Override
+      public com.kcl.api.Spec.FileCoverage getFilesOrDefault(
+          java.lang.String key,
+          com.kcl.api.Spec.FileCoverage defaultValue) {
+        if (key == null) { throw new NullPointerException("map key"); }
+        java.util.Map<java.lang.String, com.kcl.api.Spec.FileCoverage> map =
+            internalGetFiles().getMap();
+        return map.containsKey(key) ? map.get(key) : defaultValue;
+      }
+      /**
+       * <pre>
+       * Per-file coverage keyed by source file path.
+       * </pre>
+       *
+       * <code>map&lt;string, .com.kcl.api.FileCoverage&gt; files = 1;</code>
+       */
+      @java.lang.Override
+      public com.kcl.api.Spec.FileCoverage getFilesOrThrow(
+          java.lang.String key) {
+        if (key == null) { throw new NullPointerException("map key"); }
+        java.util.Map<java.lang.String, com.kcl.api.Spec.FileCoverage> map =
+            internalGetFiles().getMap();
+        if (!map.containsKey(key)) {
+          throw new java.lang.IllegalArgumentException();
+        }
+        return map.get(key);
+      }
+      public Builder clearFiles() {
+        bitField0_ = (bitField0_ & ~0x00000001);
+        internalGetMutableFiles().getMutableMap()
+            .clear();
+        return this;
+      }
+      /**
+       * <pre>
+       * Per-file coverage keyed by source file path.
+       * </pre>
+       *
+       * <code>map&lt;string, .com.kcl.api.FileCoverage&gt; files = 1;</code>
+       * @param key The key to remove.
+       */
+      public Builder removeFiles(
+          java.lang.String key) {
+        if (key == null) { throw new NullPointerException("map key"); }
+        internalGetMutableFiles().getMutableMap()
+            .remove(key);
+        return this;
+      }
+      /**
+       * Use alternate mutation accessors instead.
+       */
+      @java.lang.Deprecated
+      public java.util.Map<java.lang.String, com.kcl.api.Spec.FileCoverage>
+          getMutableFiles() {
+        bitField0_ |= 0x00000001;
+        return internalGetMutableFiles().getMutableMap();
+      }
+      /**
+       * <pre>
+       * Per-file coverage keyed by source file path.
+       * </pre>
+       *
+       * <code>map&lt;string, .com.kcl.api.FileCoverage&gt; files = 1;</code>
+       * @param key The key to add.
+       */
+      public Builder putFiles(
+          java.lang.String key,
+          com.kcl.api.Spec.FileCoverage value) {
+        if (key == null) { throw new NullPointerException("map key"); }
+        if (value == null) { throw new NullPointerException("map value"); }
+        internalGetMutableFiles().getMutableMap()
+            .put(key, value);
+        bitField0_ |= 0x00000001;
+        return this;
+      }
+      /**
+       * <pre>
+       * Per-file coverage keyed by source file path.
+       * </pre>
+       *
+       * <code>map&lt;string, .com.kcl.api.FileCoverage&gt; files = 1;</code>
+       * @param values The values to add.
+       */
+      public Builder putAllFiles(
+          java.util.Map<java.lang.String, com.kcl.api.Spec.FileCoverage> values) {
+        internalGetMutableFiles().getMutableMap()
+            .putAll(values);
+        bitField0_ |= 0x00000001;
+        return this;
+      }
+
+      private com.kcl.api.Spec.CoverageSummary summary_;
+      private com.google.protobuf.SingleFieldBuilderV3<
+          com.kcl.api.Spec.CoverageSummary, com.kcl.api.Spec.CoverageSummary.Builder, com.kcl.api.Spec.CoverageSummaryOrBuilder> summaryBuilder_;
+      /**
+       * <pre>
+       * Roll-up of all files in [TestCoverageReport.files].
+       * </pre>
+       *
+       * <code>.com.kcl.api.CoverageSummary summary = 2;</code>
+       * @return Whether the summary field is set.
+       */
+      public boolean hasSummary() {
+        return ((bitField0_ & 0x00000002) != 0);
+      }
+      /**
+       * <pre>
+       * Roll-up of all files in [TestCoverageReport.files].
+       * </pre>
+       *
+       * <code>.com.kcl.api.CoverageSummary summary = 2;</code>
+       * @return The summary.
+       */
+      public com.kcl.api.Spec.CoverageSummary getSummary() {
+        if (summaryBuilder_ == null) {
+          return summary_ == null ? com.kcl.api.Spec.CoverageSummary.getDefaultInstance() : summary_;
+        } else {
+          return summaryBuilder_.getMessage();
+        }
+      }
+      /**
+       * <pre>
+       * Roll-up of all files in [TestCoverageReport.files].
+       * </pre>
+       *
+       * <code>.com.kcl.api.CoverageSummary summary = 2;</code>
+       */
+      public Builder setSummary(com.kcl.api.Spec.CoverageSummary value) {
+        if (summaryBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          summary_ = value;
+        } else {
+          summaryBuilder_.setMessage(value);
+        }
+        bitField0_ |= 0x00000002;
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * Roll-up of all files in [TestCoverageReport.files].
+       * </pre>
+       *
+       * <code>.com.kcl.api.CoverageSummary summary = 2;</code>
+       */
+      public Builder setSummary(
+          com.kcl.api.Spec.CoverageSummary.Builder builderForValue) {
+        if (summaryBuilder_ == null) {
+          summary_ = builderForValue.build();
+        } else {
+          summaryBuilder_.setMessage(builderForValue.build());
+        }
+        bitField0_ |= 0x00000002;
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * Roll-up of all files in [TestCoverageReport.files].
+       * </pre>
+       *
+       * <code>.com.kcl.api.CoverageSummary summary = 2;</code>
+       */
+      public Builder mergeSummary(com.kcl.api.Spec.CoverageSummary value) {
+        if (summaryBuilder_ == null) {
+          if (((bitField0_ & 0x00000002) != 0) &&
+            summary_ != null &&
+            summary_ != com.kcl.api.Spec.CoverageSummary.getDefaultInstance()) {
+            getSummaryBuilder().mergeFrom(value);
+          } else {
+            summary_ = value;
+          }
+        } else {
+          summaryBuilder_.mergeFrom(value);
+        }
+        if (summary_ != null) {
+          bitField0_ |= 0x00000002;
+          onChanged();
+        }
+        return this;
+      }
+      /**
+       * <pre>
+       * Roll-up of all files in [TestCoverageReport.files].
+       * </pre>
+       *
+       * <code>.com.kcl.api.CoverageSummary summary = 2;</code>
+       */
+      public Builder clearSummary() {
+        bitField0_ = (bitField0_ & ~0x00000002);
+        summary_ = null;
+        if (summaryBuilder_ != null) {
+          summaryBuilder_.dispose();
+          summaryBuilder_ = null;
+        }
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * Roll-up of all files in [TestCoverageReport.files].
+       * </pre>
+       *
+       * <code>.com.kcl.api.CoverageSummary summary = 2;</code>
+       */
+      public com.kcl.api.Spec.CoverageSummary.Builder getSummaryBuilder() {
+        bitField0_ |= 0x00000002;
+        onChanged();
+        return getSummaryFieldBuilder().getBuilder();
+      }
+      /**
+       * <pre>
+       * Roll-up of all files in [TestCoverageReport.files].
+       * </pre>
+       *
+       * <code>.com.kcl.api.CoverageSummary summary = 2;</code>
+       */
+      public com.kcl.api.Spec.CoverageSummaryOrBuilder getSummaryOrBuilder() {
+        if (summaryBuilder_ != null) {
+          return summaryBuilder_.getMessageOrBuilder();
+        } else {
+          return summary_ == null ?
+              com.kcl.api.Spec.CoverageSummary.getDefaultInstance() : summary_;
+        }
+      }
+      /**
+       * <pre>
+       * Roll-up of all files in [TestCoverageReport.files].
+       * </pre>
+       *
+       * <code>.com.kcl.api.CoverageSummary summary = 2;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilderV3<
+          com.kcl.api.Spec.CoverageSummary, com.kcl.api.Spec.CoverageSummary.Builder, com.kcl.api.Spec.CoverageSummaryOrBuilder> 
+          getSummaryFieldBuilder() {
+        if (summaryBuilder_ == null) {
+          summaryBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+              com.kcl.api.Spec.CoverageSummary, com.kcl.api.Spec.CoverageSummary.Builder, com.kcl.api.Spec.CoverageSummaryOrBuilder>(
+                  getSummary(),
+                  getParentForChildren(),
+                  isClean());
+          summary_ = null;
+        }
+        return summaryBuilder_;
+      }
+
+      @java.lang.Override
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.setUnknownFields(unknownFields);
+      }
+
+      @java.lang.Override
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.mergeUnknownFields(unknownFields);
+      }
+
+
+      // @@protoc_insertion_point(builder_scope:com.kcl.api.TestCoverageReport)
+    }
+
+    // @@protoc_insertion_point(class_scope:com.kcl.api.TestCoverageReport)
+    private static final com.kcl.api.Spec.TestCoverageReport DEFAULT_INSTANCE;
+    static {
+      DEFAULT_INSTANCE = new com.kcl.api.Spec.TestCoverageReport();
+    }
+
+    public static com.kcl.api.Spec.TestCoverageReport getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    private static final com.google.protobuf.Parser<TestCoverageReport>
+        PARSER = new com.google.protobuf.AbstractParser<TestCoverageReport>() {
+          @java.lang.Override
+          public TestCoverageReport parsePartialFrom(
+              com.google.protobuf.CodedInputStream input,
+              com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+              throws com.google.protobuf.InvalidProtocolBufferException {
+            Builder builder = newBuilder();
+            try {
+              builder.mergeFrom(input, extensionRegistry);
+            } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+              throw e.setUnfinishedMessage(builder.buildPartial());
+            } catch (com.google.protobuf.UninitializedMessageException e) {
+              throw e.asInvalidProtocolBufferException().setUnfinishedMessage(builder.buildPartial());
+            } catch (java.io.IOException e) {
+              throw new com.google.protobuf.InvalidProtocolBufferException(e)
+                  .setUnfinishedMessage(builder.buildPartial());
+            }
+            return builder.buildPartial();
+          }
+        };
+
+    public static com.google.protobuf.Parser<TestCoverageReport> parser() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<TestCoverageReport> getParserForType() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.kcl.api.Spec.TestCoverageReport getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
+  }
+
+  public interface CoverageSummaryOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:com.kcl.api.CoverageSummary)
+      com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <pre>
+     * Number of executable lines that were hit by at least one test.
+     * </pre>
+     *
+     * <code>uint64 covered = 1;</code>
+     * @return The covered.
+     */
+    long getCovered();
+    /**
+     * <pre>
+     * Total number of executable lines discovered.
+     * </pre>
+     *
+     * <code>uint64 executable = 2;</code>
+     * @return The executable.
+     */
+    long getExecutable();
+    /**
+     * <pre>
+     * Coverage percentage in the inclusive range [0.0, 100.0].
+     * </pre>
+     *
+     * <code>double percent = 3;</code>
+     * @return The percent.
+     */
+    double getPercent();
+  }
+  /**
+   * <pre>
+   * Roll-up coverage metrics.
+   * </pre>
+   *
+   * Protobuf type {@code com.kcl.api.CoverageSummary}
+   */
+  public static final class CoverageSummary extends
+      com.google.protobuf.GeneratedMessageV3 implements
+      // @@protoc_insertion_point(message_implements:com.kcl.api.CoverageSummary)
+      CoverageSummaryOrBuilder {
+  private static final long serialVersionUID = 0L;
+    // Use CoverageSummary.newBuilder() to construct.
+    private CoverageSummary(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
+    }
+    private CoverageSummary() {
+    }
+
+    @java.lang.Override
+    @SuppressWarnings({"unused"})
+    protected java.lang.Object newInstance(
+        UnusedPrivateParameter unused) {
+      return new CoverageSummary();
+    }
+
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return com.kcl.api.Spec.internal_static_com_kcl_api_CoverageSummary_descriptor;
+    }
+
+    @java.lang.Override
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return com.kcl.api.Spec.internal_static_com_kcl_api_CoverageSummary_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              com.kcl.api.Spec.CoverageSummary.class, com.kcl.api.Spec.CoverageSummary.Builder.class);
+    }
+    public static final int COVERED_FIELD_NUMBER = 1;
+    private long covered_ = 0L;
+    /**
+     * <pre>
+     * Number of executable lines that were hit by at least one test.
+     * </pre>
+     *
+     * <code>uint64 covered = 1;</code>
+     * @return The covered.
+     */
+    @java.lang.Override
+    public long getCovered() {
+      return covered_;
+    }
+
+    public static final int EXECUTABLE_FIELD_NUMBER = 2;
+    private long executable_ = 0L;
+    /**
+     * <pre>
+     * Total number of executable lines discovered.
+     * </pre>
+     *
+     * <code>uint64 executable = 2;</code>
+     * @return The executable.
+     */
+    @java.lang.Override
+    public long getExecutable() {
+      return executable_;
+    }
+
+    public static final int PERCENT_FIELD_NUMBER = 3;
+    private double percent_ = 0D;
+    /**
+     * <pre>
+     * Coverage percentage in the inclusive range [0.0, 100.0].
+     * </pre>
+     *
+     * <code>double percent = 3;</code>
+     * @return The percent.
+     */
+    @java.lang.Override
+    public double getPercent() {
+      return percent_;
+    }
+
+    private byte memoizedIsInitialized = -1;
+    @java.lang.Override
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    @java.lang.Override
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      if (covered_ != 0L) {
+        output.writeUInt64(1, covered_);
+      }
+      if (executable_ != 0L) {
+        output.writeUInt64(2, executable_);
+      }
+      if (java.lang.Double.doubleToRawLongBits(percent_) != 0) {
+        output.writeDouble(3, percent_);
+      }
+      getUnknownFields().writeTo(output);
+    }
+
+    @java.lang.Override
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (covered_ != 0L) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeUInt64Size(1, covered_);
+      }
+      if (executable_ != 0L) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeUInt64Size(2, executable_);
+      }
+      if (java.lang.Double.doubleToRawLongBits(percent_) != 0) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeDoubleSize(3, percent_);
+      }
+      size += getUnknownFields().getSerializedSize();
+      memoizedSize = size;
+      return size;
+    }
+
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof com.kcl.api.Spec.CoverageSummary)) {
+        return super.equals(obj);
+      }
+      com.kcl.api.Spec.CoverageSummary other = (com.kcl.api.Spec.CoverageSummary) obj;
+
+      if (getCovered()
+          != other.getCovered()) return false;
+      if (getExecutable()
+          != other.getExecutable()) return false;
+      if (java.lang.Double.doubleToLongBits(getPercent())
+          != java.lang.Double.doubleToLongBits(other.getPercent())) return false;
+      if (!getUnknownFields().equals(other.getUnknownFields())) return false;
+      return true;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptor().hashCode();
+      hash = (37 * hash) + COVERED_FIELD_NUMBER;
+      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+          getCovered());
+      hash = (37 * hash) + EXECUTABLE_FIELD_NUMBER;
+      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+          getExecutable());
+      hash = (37 * hash) + PERCENT_FIELD_NUMBER;
+      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+          java.lang.Double.doubleToLongBits(getPercent()));
+      hash = (29 * hash) + getUnknownFields().hashCode();
+      memoizedHashCode = hash;
+      return hash;
+    }
+
+    public static com.kcl.api.Spec.CoverageSummary parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {{
+      return PARSER.parseFrom(data);
+    }}
+    public static com.kcl.api.Spec.CoverageSummary parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {{
+      return PARSER.parseFrom(data, extensionRegistry);
+    }}
+    public static com.kcl.api.Spec.CoverageSummary parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {{
+      return PARSER.parseFrom(data);
+    }}
+    public static com.kcl.api.Spec.CoverageSummary parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {{
+      return PARSER.parseFrom(data, extensionRegistry);
+    }}
+    public static com.kcl.api.Spec.CoverageSummary parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {{
+      return PARSER.parseFrom(data);
+    }}
+    public static com.kcl.api.Spec.CoverageSummary parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {{
+      return PARSER.parseFrom(data, extensionRegistry);
+    }}
+    public static com.kcl.api.Spec.CoverageSummary parseFrom(java.io.InputStream input)
+        throws java.io.IOException {{
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }}
+    public static com.kcl.api.Spec.CoverageSummary parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {{
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }}
+
+    public static com.kcl.api.Spec.CoverageSummary parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {{
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
+    }}
+
+    public static com.kcl.api.Spec.CoverageSummary parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {{
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }}
+    public static com.kcl.api.Spec.CoverageSummary parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {{
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }}
+    public static com.kcl.api.Spec.CoverageSummary parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {{
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }}
+    @java.lang.Override
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(com.kcl.api.Spec.CoverageSummary prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    @java.lang.Override
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * <pre>
+     * Roll-up coverage metrics.
+     * </pre>
+     *
+     * Protobuf type {@code com.kcl.api.CoverageSummary}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:com.kcl.api.CoverageSummary)
+        com.kcl.api.Spec.CoverageSummaryOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return com.kcl.api.Spec.internal_static_com_kcl_api_CoverageSummary_descriptor;
+      }
+
+      @java.lang.Override
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return com.kcl.api.Spec.internal_static_com_kcl_api_CoverageSummary_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                com.kcl.api.Spec.CoverageSummary.class, com.kcl.api.Spec.CoverageSummary.Builder.class);
+      }
+
+      // Construct using com.kcl.api.Spec.CoverageSummary.newBuilder()
+      private Builder() {
+
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        super(parent);
+
+      }
+      @java.lang.Override
+      public Builder clear() {
+        super.clear();
+        bitField0_ = 0;
+        covered_ = 0L;
+        executable_ = 0L;
+        percent_ = 0D;
+        return this;
+      }
+
+      @java.lang.Override
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return com.kcl.api.Spec.internal_static_com_kcl_api_CoverageSummary_descriptor;
+      }
+
+      @java.lang.Override
+      public com.kcl.api.Spec.CoverageSummary getDefaultInstanceForType() {
+        return com.kcl.api.Spec.CoverageSummary.getDefaultInstance();
+      }
+
+      @java.lang.Override
+      public com.kcl.api.Spec.CoverageSummary build() {
+        com.kcl.api.Spec.CoverageSummary result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      @java.lang.Override
+      public com.kcl.api.Spec.CoverageSummary buildPartial() {
+        com.kcl.api.Spec.CoverageSummary result = new com.kcl.api.Spec.CoverageSummary(this);
+        if (bitField0_ != 0) { buildPartial0(result); }
+        onBuilt();
+        return result;
+      }
+
+      private void buildPartial0(com.kcl.api.Spec.CoverageSummary result) {
+        int from_bitField0_ = bitField0_;
+        if (((from_bitField0_ & 0x00000001) != 0)) {
+          result.covered_ = covered_;
+        }
+        if (((from_bitField0_ & 0x00000002) != 0)) {
+          result.executable_ = executable_;
+        }
+        if (((from_bitField0_ & 0x00000004) != 0)) {
+          result.percent_ = percent_;
+        }
+      }
+
+      @java.lang.Override
+      public Builder clone() {
+        return super.clone();
+      }
+      @java.lang.Override
+      public Builder setField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.setField(field, value);
+      }
+      @java.lang.Override
+      public Builder clearField(
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return super.clearField(field);
+      }
+      @java.lang.Override
+      public Builder clearOneof(
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return super.clearOneof(oneof);
+      }
+      @java.lang.Override
+      public Builder setRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, java.lang.Object value) {
+        return super.setRepeatedField(field, index, value);
+      }
+      @java.lang.Override
+      public Builder addRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.addRepeatedField(field, value);
+      }
+      @java.lang.Override
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof com.kcl.api.Spec.CoverageSummary) {
+          return mergeFrom((com.kcl.api.Spec.CoverageSummary)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(com.kcl.api.Spec.CoverageSummary other) {
+        if (other == com.kcl.api.Spec.CoverageSummary.getDefaultInstance()) return this;
+        if (other.getCovered() != 0L) {
+          setCovered(other.getCovered());
+        }
+        if (other.getExecutable() != 0L) {
+          setExecutable(other.getExecutable());
+        }
+        if (other.getPercent() != 0D) {
+          setPercent(other.getPercent());
+        }
+        this.mergeUnknownFields(other.getUnknownFields());
+        onChanged();
+        return this;
+      }
+
+      @java.lang.Override
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      @java.lang.Override
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        if (extensionRegistry == null) {
+          throw new java.lang.NullPointerException();
+        }
+        try {
+          boolean done = false;
+          while (!done) {
+            int tag = input.readTag();
+            switch (tag) {
+              case 0:
+                done = true;
+                break;
+              case 8: {
+                covered_ = input.readUInt64();
+                bitField0_ |= 0x00000001;
+                break;
+              } // case 8
+              case 16: {
+                executable_ = input.readUInt64();
+                bitField0_ |= 0x00000002;
+                break;
+              } // case 16
+              case 25: {
+                percent_ = input.readDouble();
+                bitField0_ |= 0x00000004;
+                break;
+              } // case 25
+              default: {
+                if (!super.parseUnknownField(input, extensionRegistry, tag)) {
+                  done = true; // was an endgroup tag
+                }
+                break;
+              } // default:
+            } // switch (tag)
+          } // while (!done)
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          throw e.unwrapIOException();
+        } finally {
+          onChanged();
+        } // finally
+        return this;
+      }
+      private int bitField0_;
+
+      private long covered_ ;
+      /**
+       * <pre>
+       * Number of executable lines that were hit by at least one test.
+       * </pre>
+       *
+       * <code>uint64 covered = 1;</code>
+       * @return The covered.
+       */
+      @java.lang.Override
+      public long getCovered() {
+        return covered_;
+      }
+      /**
+       * <pre>
+       * Number of executable lines that were hit by at least one test.
+       * </pre>
+       *
+       * <code>uint64 covered = 1;</code>
+       * @param value The covered to set.
+       * @return This builder for chaining.
+       */
+      public Builder setCovered(long value) {
+
+        covered_ = value;
+        bitField0_ |= 0x00000001;
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * Number of executable lines that were hit by at least one test.
+       * </pre>
+       *
+       * <code>uint64 covered = 1;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearCovered() {
+        bitField0_ = (bitField0_ & ~0x00000001);
+        covered_ = 0L;
+        onChanged();
+        return this;
+      }
+
+      private long executable_ ;
+      /**
+       * <pre>
+       * Total number of executable lines discovered.
+       * </pre>
+       *
+       * <code>uint64 executable = 2;</code>
+       * @return The executable.
+       */
+      @java.lang.Override
+      public long getExecutable() {
+        return executable_;
+      }
+      /**
+       * <pre>
+       * Total number of executable lines discovered.
+       * </pre>
+       *
+       * <code>uint64 executable = 2;</code>
+       * @param value The executable to set.
+       * @return This builder for chaining.
+       */
+      public Builder setExecutable(long value) {
+
+        executable_ = value;
+        bitField0_ |= 0x00000002;
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * Total number of executable lines discovered.
+       * </pre>
+       *
+       * <code>uint64 executable = 2;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearExecutable() {
+        bitField0_ = (bitField0_ & ~0x00000002);
+        executable_ = 0L;
+        onChanged();
+        return this;
+      }
+
+      private double percent_ ;
+      /**
+       * <pre>
+       * Coverage percentage in the inclusive range [0.0, 100.0].
+       * </pre>
+       *
+       * <code>double percent = 3;</code>
+       * @return The percent.
+       */
+      @java.lang.Override
+      public double getPercent() {
+        return percent_;
+      }
+      /**
+       * <pre>
+       * Coverage percentage in the inclusive range [0.0, 100.0].
+       * </pre>
+       *
+       * <code>double percent = 3;</code>
+       * @param value The percent to set.
+       * @return This builder for chaining.
+       */
+      public Builder setPercent(double value) {
+
+        percent_ = value;
+        bitField0_ |= 0x00000004;
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * Coverage percentage in the inclusive range [0.0, 100.0].
+       * </pre>
+       *
+       * <code>double percent = 3;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearPercent() {
+        bitField0_ = (bitField0_ & ~0x00000004);
+        percent_ = 0D;
+        onChanged();
+        return this;
+      }
+
+      @java.lang.Override
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.setUnknownFields(unknownFields);
+      }
+
+      @java.lang.Override
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.mergeUnknownFields(unknownFields);
+      }
+
+
+      // @@protoc_insertion_point(builder_scope:com.kcl.api.CoverageSummary)
+    }
+
+    // @@protoc_insertion_point(class_scope:com.kcl.api.CoverageSummary)
+    private static final com.kcl.api.Spec.CoverageSummary DEFAULT_INSTANCE;
+    static {
+      DEFAULT_INSTANCE = new com.kcl.api.Spec.CoverageSummary();
+    }
+
+    public static com.kcl.api.Spec.CoverageSummary getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    private static final com.google.protobuf.Parser<CoverageSummary>
+        PARSER = new com.google.protobuf.AbstractParser<CoverageSummary>() {
+          @java.lang.Override
+          public CoverageSummary parsePartialFrom(
+              com.google.protobuf.CodedInputStream input,
+              com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+              throws com.google.protobuf.InvalidProtocolBufferException {
+            Builder builder = newBuilder();
+            try {
+              builder.mergeFrom(input, extensionRegistry);
+            } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+              throw e.setUnfinishedMessage(builder.buildPartial());
+            } catch (com.google.protobuf.UninitializedMessageException e) {
+              throw e.asInvalidProtocolBufferException().setUnfinishedMessage(builder.buildPartial());
+            } catch (java.io.IOException e) {
+              throw new com.google.protobuf.InvalidProtocolBufferException(e)
+                  .setUnfinishedMessage(builder.buildPartial());
+            }
+            return builder.buildPartial();
+          }
+        };
+
+    public static com.google.protobuf.Parser<CoverageSummary> parser() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<CoverageSummary> getParserForType() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.kcl.api.Spec.CoverageSummary getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
 
@@ -76386,6 +80550,36 @@ java.lang.String defaultValue) {
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_com_kcl_api_TestCaseInfo_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_com_kcl_api_TestCaseInfo_LineHitsEntry_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_com_kcl_api_TestCaseInfo_LineHitsEntry_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_com_kcl_api_FileCoverage_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_com_kcl_api_FileCoverage_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_com_kcl_api_FileCoverage_LineHitsEntry_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_com_kcl_api_FileCoverage_LineHitsEntry_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_com_kcl_api_TestCoverageReport_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_com_kcl_api_TestCoverageReport_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_com_kcl_api_TestCoverageReport_FilesEntry_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_com_kcl_api_TestCoverageReport_FilesEntry_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_com_kcl_api_CoverageSummary_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_com_kcl_api_CoverageSummary_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_com_kcl_api_UpdateDependenciesArgs_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
@@ -76449,169 +80643,220 @@ java.lang.String defaultValue) {
       descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n\nspec.proto\022\013com.kcl.api\"1\n\013ExternalPkg\022\020\n\010pkg_name\030\001 \001(\t\022\020" +
-      "\n\010pkg_path\030\002 \001(\t\"'\n\010Argument\022\014\n\004name\030\001 \001(\t\022\r\n\005value\030\002 \001(\t\"L\n" +
-      "\005Error\022\r\n\005level\030\001 \001(\t\022\014\n\004code\030\002 \001(\t\022&\n\010messages\030\003 \003(\0132\024.com." +
-      "kcl.api.Message\":\n\007Message\022\013\n\003msg\030\001 \001(\t\022\"\n\003pos\030\002 \001(\0132\025.com.k" +
-      "cl.api.Position\"\031\n\010PingArgs\022\r\n\005value\030\001 \001(\t\"\033\n\nPingResult\022\r\n\005" +
-      "value\030\001 \001(\t\"\020\n\016GetVersionArgs\"\\\n\020GetVersionResult\022\017\n\007version" +
-      "\030\001 \001(\t\022\020\n\010checksum\030\002 \001(\t\022\017\n\007git_sha\030\003 \001(\t\022\024\n\014version_info\030\004 " +
-      "\001(\t\"\020\n\016ListMethodArgs\",\n\020ListMethodResult\022\030\n\020method_name_lis" +
-      "t\030\001 \003(\t\"^\n\rParseFileArgs\022\014\n\004path\030\001 \001(\t\022\016\n\006source\030\002 \001(\t\022/\n\rex" +
-      "ternal_pkgs\030\003 \003(\0132\030.com.kcl.api.ExternalPkg\"U\n\017ParseFileResu" +
-      "lt\022\020\n\010ast_json\030\001 \001(\t\022\014\n\004deps\030\002 \003(\t\022\"\n\006errors\030\003 \003(\0132\022.com.kcl" +
-      ".api.Error\"c\n\020ParseProgramArgs\022\r\n\005paths\030\001 \003(\t\022\017\n\007sources\030\002 \003" +
-      "(\t\022/\n\rexternal_pkgs\030\003 \003(\0132\030.com.kcl.api.ExternalPkg\"Y\n\022Parse" +
-      "ProgramResult\022\020\n\010ast_json\030\001 \001(\t\022\r\n\005paths\030\002 \003(\t\022\"\n\006errors\030\003 \003" +
-      "(\0132\022.com.kcl.api.Error\"\207\001\n\017LoadPackageArgs\0221\n\nparse_args\030\001 \001" +
-      "(\0132\035.com.kcl.api.ParseProgramArgs\022\023\n\013resolve_ast\030\002 \001(\010\022\024\n\014lo" +
-      "ad_builtin\030\003 \001(\010\022\026\n\016with_ast_index\030\004 \001(\010\"\360\007\n\021LoadPackageResu" +
-      "lt\022\017\n\007program\030\001 \001(\t\022\r\n\005paths\030\002 \003(\t\022(\n\014parse_errors\030\003 \003(\0132\022.c" +
-      "om.kcl.api.Error\022'\n\013type_errors\030\004 \003(\0132\022.com.kcl.api.Error\022:\n" +
-      "\006scopes\030\005 \003(\0132*.com.kcl.api.LoadPackageResult.ScopesEntry\022<\n" +
-      "\007symbols\030\006 \003(\0132+.com.kcl.api.LoadPackageResult.SymbolsEntry\022" +
-      "J\n\017node_symbol_map\030\007 \003(\01321.com.kcl.api.LoadPackageResult.Nod" +
-      "eSymbolMapEntry\022J\n\017symbol_node_map\030\010 \003(\01321.com.kcl.api.LoadP" +
-      "ackageResult.SymbolNodeMapEntry\022[\n\030fully_qualified_name_map\030" +
-      "\t \003(\01329.com.kcl.api.LoadPackageResult.FullyQualifiedNameMapE" +
-      "ntry\022F\n\rpkg_scope_map\030\n \003(\0132/.com.kcl.api.LoadPackageResult." +
-      "PkgScopeMapEntry\032A\n\013ScopesEntry\022\013\n\003key\030\001 \001(\t\022!\n\005value\030\002 \001(\0132" +
-      "\022.com.kcl.api.Scope:\0028\001\032C\n\014SymbolsEntry\022\013\n\003key\030\001 \001(\t\022\"\n\005valu" +
-      "e\030\002 \001(\0132\023.com.kcl.api.Symbol:\0028\001\032N\n\022NodeSymbolMapEntry\022\013\n\003ke" +
-      "y\030\001 \001(\t\022'\n\005value\030\002 \001(\0132\030.com.kcl.api.SymbolIndex:\0028\001\0324\n\022Symb" +
-      "olNodeMapEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\032V\n\032FullyQuali" +
-      "fiedNameMapEntry\022\013\n\003key\030\001 \001(\t\022'\n\005value\030\002 \001(\0132\030.com.kcl.api.S" +
-      "ymbolIndex:\0028\001\032K\n\020PkgScopeMapEntry\022\013\n\003key\030\001 \001(\t\022&\n\005value\030\002 \001" +
-      "(\0132\027.com.kcl.api.ScopeIndex:\0028\001\"=\n\021ListOptionsResult\022(\n\007opti" +
-      "ons\030\002 \003(\0132\027.com.kcl.api.OptionHelp\"_\n\nOptionHelp\022\014\n\004name\030\001 \001" +
-      "(\t\022\014\n\004type\030\002 \001(\t\022\020\n\010required\030\003 \001(\010\022\025\n\rdefault_value\030\004 \001(\t\022\014\n" +
-      "\004help\030\005 \001(\t\"\304\001\n\006Symbol\022 \n\002ty\030\001 \001(\0132\024.com.kcl.api.KclType\022\014\n\004" +
-      "name\030\002 \001(\t\022'\n\005owner\030\003 \001(\0132\030.com.kcl.api.SymbolIndex\022%\n\003def\030\004" +
-      " \001(\0132\030.com.kcl.api.SymbolIndex\022'\n\005attrs\030\005 \003(\0132\030.com.kcl.api." +
-      "SymbolIndex\022\021\n\tis_global\030\006 \001(\010\"\272\001\n\005Scope\022\014\n\004kind\030\001 \001(\t\022'\n\006pa" +
-      "rent\030\002 \001(\0132\027.com.kcl.api.ScopeIndex\022'\n\005owner\030\003 \001(\0132\030.com.kcl" +
-      ".api.SymbolIndex\022)\n\010children\030\004 \003(\0132\027.com.kcl.api.ScopeIndex\022" +
-      "&\n\004defs\030\005 \003(\0132\030.com.kcl.api.SymbolIndex\"1\n\013SymbolIndex\022\t\n\001i\030" +
-      "\001 \001(\004\022\t\n\001g\030\002 \001(\004\022\014\n\004kind\030\003 \001(\t\"0\n\nScopeIndex\022\t\n\001i\030\001 \001(\004\022\t\n\001g" +
-      "\030\002 \001(\004\022\014\n\004kind\030\003 \001(\t\"\251\004\n\017ExecProgramArgs\022\020\n\010work_dir\030\001 \001(\t\022\027" +
-      "\n\017k_filename_list\030\002 \003(\t\022\023\n\013k_code_list\030\003 \003(\t\022#\n\004args\030\004 \003(\0132\025" +
-      ".com.kcl.api.Argument\022\021\n\toverrides\030\005 \003(\t\022\033\n\023disable_yaml_res" +
-      "ult\030\006 \001(\010\022\032\n\022print_override_ast\030\007 \001(\010\022\032\n\022strict_range_check\030" +
-      "\010 \001(\010\022\024\n\014disable_none\030\t \001(\010\022\017\n\007verbose\030\n \001(\005\022\r\n\005debug\030\013 \001(\005\022" +
-      "\021\n\tsort_keys\030\014 \001(\010\022/\n\rexternal_pkgs\030\r \003(\0132\030.com.kcl.api.Exte" +
-      "rnalPkg\022 \n\030include_schema_type_path\030\016 \001(\010\022\024\n\014compile_only\030\017 " +
-      "\001(\010\022\023\n\013show_hidden\030\020 \001(\010\022\025\n\rpath_selector\030\021 \003(\t\022\021\n\tfast_eval" +
-      "\030\022 \001(\010\022\024\n\014error_format\030\023 \001(\t\022\016\n\006format\030\024 \001(\t\022\035\n\020sourcemap_ou" +
-      "tput\030\026 \001(\tH\000\210\001\001B\023\n\021_sourcemap_output\"\215\001\n\021ExecProgramResult\022\023" +
-      "\n\013json_result\030\001 \001(\t\022\023\n\013yaml_result\030\002 \001(\t\022\023\n\013log_message\030\003 \001(" +
-      "\t\022\023\n\013err_message\030\004 \001(\t\022\026\n\tsourcemap\030\005 \001(\tH\000\210\001\001B\014\n\n_sourcemap" +
-      "\" \n\016FormatCodeArgs\022\016\n\006source\030\001 \001(\t\"%\n\020FormatCodeResult\022\021\n\tfo" +
-      "rmatted\030\001 \001(\014\"/\n\016FormatPathArgs\022\014\n\004path\030\001 \001(\t\022\017\n\007dry_run\030\002 \001" +
-      "(\010\")\n\020FormatPathResult\022\025\n\rchanged_paths\030\001 \003(\t\"\035\n\014LintPathArg" +
-      "s\022\r\n\005paths\030\001 \003(\t\"!\n\016LintPathResult\022\017\n\007results\030\001 \003(\t\"E\n\020Overr" +
-      "ideFileArgs\022\014\n\004file\030\001 \001(\t\022\r\n\005specs\030\002 \003(\t\022\024\n\014import_paths\030\003 \003" +
-      "(\t\"N\n\022OverrideFileResult\022\016\n\006result\030\001 \001(\010\022(\n\014parse_errors\030\002 \003" +
-      "(\0132\022.com.kcl.api.Error\"-\n\024ListVariablesOptions\022\025\n\rmerge_prog" +
-      "ram\030\001 \001(\010\"8\n\014VariableList\022(\n\tvariables\030\001 \003(\0132\025.com.kcl.api.V" +
-      "ariable\"e\n\021ListVariablesArgs\022\r\n\005files\030\001 \003(\t\022\r\n\005specs\030\002 \003(\t\0222" +
-      "\n\007options\030\003 \001(\0132!.com.kcl.api.ListVariablesOptions\"\353\001\n\023ListV" +
-      "ariablesResult\022B\n\tvariables\030\001 \003(\0132/.com.kcl.api.ListVariable" +
-      "sResult.VariablesEntry\022\031\n\021unsupported_codes\030\002 \003(\t\022(\n\014parse_e" +
-      "rrors\030\003 \003(\0132\022.com.kcl.api.Error\032K\n\016VariablesEntry\022\013\n\003key\030\001 \001" +
-      "(\t\022(\n\005value\030\002 \001(\0132\031.com.kcl.api.VariableList:\0028\001\"\224\001\n\010Variabl" +
-      "e\022\r\n\005value\030\001 \001(\t\022\021\n\ttype_name\030\002 \001(\t\022\016\n\006op_sym\030\003 \001(\t\022)\n\nlist_" +
-      "items\030\004 \003(\0132\025.com.kcl.api.Variable\022+\n\014dict_entries\030\005 \003(\0132\025.c" +
-      "om.kcl.api.MapEntry\"=\n\010MapEntry\022\013\n\003key\030\001 \001(\t\022$\n\005value\030\002 \001(\0132" +
-      "\025.com.kcl.api.Variable\"`\n\030GetSchemaTypeMappingArgs\022/\n\texec_a" +
-      "rgs\030\001 \001(\0132\034.com.kcl.api.ExecProgramArgs\022\023\n\013schema_name\030\002 \001(\t" +
-      "\"\311\001\n\032GetSchemaTypeMappingResult\022[\n\023schema_type_mapping\030\001 \003(\013" +
-      "2>.com.kcl.api.GetSchemaTypeMappingResult.SchemaTypeMappingE" +
-      "ntry\032N\n\026SchemaTypeMappingEntry\022\013\n\003key\030\001 \001(\t\022#\n\005value\030\002 \001(\0132\024" +
-      ".com.kcl.api.KclType:\0028\001\"\337\001\n#GetSchemaTypeMappingUnderPathRe" +
-      "sult\022d\n\023schema_type_mapping\030\001 \003(\0132G.com.kcl.api.GetSchemaTyp" +
-      "eMappingUnderPathResult.SchemaTypeMappingEntry\032R\n\026SchemaType" +
-      "MappingEntry\022\013\n\003key\030\001 \001(\t\022'\n\005value\030\002 \001(\0132\030.com.kcl.api.Schem" +
-      "aTypes:\0028\001\"8\n\013SchemaTypes\022)\n\013schema_type\030\001 \003(\0132\024.com.kcl.api" +
-      ".KclType\"\267\001\n\020ValidateCodeArgs\022\020\n\010datafile\030\001 \001(\t\022\014\n\004data\030\002 \001(" +
-      "\t\022\014\n\004file\030\003 \001(\t\022\014\n\004code\030\004 \001(\t\022\016\n\006schema\030\005 \001(\t\022\026\n\016attribute_n" +
-      "ame\030\006 \001(\t\022\016\n\006format\030\007 \001(\t\022/\n\rexternal_pkgs\030\010 \003(\0132\030.com.kcl.a" +
-      "pi.ExternalPkg\":\n\022ValidateCodeResult\022\017\n\007success\030\001 \001(\010\022\023\n\013err" +
-      "_message\030\002 \001(\t\":\n\010Position\022\014\n\004line\030\001 \001(\003\022\016\n\006column\030\002 \001(\003\022\020\n\010" +
-      "filename\030\003 \001(\t\"8\n\025LoadSettingsFilesArgs\022\020\n\010work_dir\030\001 \001(\t\022\r\n" +
-      "\005files\030\002 \003(\t\"z\n\027LoadSettingsFilesResult\022/\n\017kcl_cli_configs\030\001" +
-      " \001(\0132\026.com.kcl.api.CliConfig\022.\n\013kcl_options\030\002 \003(\0132\031.com.kcl." +
-      "api.KeyValuePair\"\203\002\n\tCliConfig\022\r\n\005files\030\001 \003(\t\022\016\n\006output\030\002 \001(" +
-      "\t\022\021\n\toverrides\030\003 \003(\t\022\025\n\rpath_selector\030\004 \003(\t\022\032\n\022strict_range_" +
-      "check\030\005 \001(\010\022\024\n\014disable_none\030\006 \001(\010\022\017\n\007verbose\030\007 \001(\003\022\r\n\005debug\030" +
-      "\010 \001(\010\022\021\n\tsort_keys\030\t \001(\010\022\023\n\013show_hidden\030\n \001(\010\022 \n\030include_sch" +
-      "ema_type_path\030\013 \001(\010\022\021\n\tfast_eval\030\014 \001(\010\"*\n\014KeyValuePair\022\013\n\003ke" +
-      "y\030\001 \001(\t\022\r\n\005value\030\002 \001(\t\"]\n\nRenameArgs\022\024\n\014package_root\030\001 \001(\t\022\023" +
-      "\n\013symbol_path\030\002 \001(\t\022\022\n\nfile_paths\030\003 \003(\t\022\020\n\010new_name\030\004 \001(\t\"%\n" +
-      "\014RenameResult\022\025\n\rchanged_files\030\001 \003(\t\"\305\001\n\016RenameCodeArgs\022\024\n\014p" +
-      "ackage_root\030\001 \001(\t\022\023\n\013symbol_path\030\002 \001(\t\022B\n\014source_codes\030\003 \003(\013" +
-      "2,.com.kcl.api.RenameCodeArgs.SourceCodesEntry\022\020\n\010new_name\030\004" +
-      " \001(\t\0322\n\020SourceCodesEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\"\217\001\n" +
-      "\020RenameCodeResult\022F\n\rchanged_codes\030\001 \003(\0132/.com.kcl.api.Renam" +
-      "eCodeResult.ChangedCodesEntry\0323\n\021ChangedCodesEntry\022\013\n\003key\030\001 " +
-      "\001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\"t\n\010TestArgs\022/\n\texec_args\030\001 \001(\0132\034.com." +
-      "kcl.api.ExecProgramArgs\022\020\n\010pkg_list\030\002 \003(\t\022\022\n\nrun_regexp\030\003 \001(" +
-      "\t\022\021\n\tfail_fast\030\004 \001(\010\"5\n\nTestResult\022'\n\004info\030\002 \003(\0132\031.com.kcl.a" +
-      "pi.TestCaseInfo\"R\n\014TestCaseInfo\022\014\n\004name\030\001 \001(\t\022\r\n\005error\030\002 \001(\t" +
-      "\022\020\n\010duration\030\003 \001(\004\022\023\n\013log_message\030\004 \001(\t\"?\n\026UpdateDependencie" +
-      "sArgs\022\025\n\rmanifest_path\030\001 \001(\t\022\016\n\006vendor\030\002 \001(\010\"K\n\030UpdateDepend" +
-      "enciesResult\022/\n\rexternal_pkgs\030\003 \003(\0132\030.com.kcl.api.ExternalPk" +
-      "g\"\201\006\n\007KclType\022\014\n\004type\030\001 \001(\t\022)\n\013union_types\030\002 \003(\0132\024.com.kcl.a" +
-      "pi.KclType\022\017\n\007default\030\003 \001(\t\022\023\n\013schema_name\030\004 \001(\t\022\022\n\nschema_d" +
-      "oc\030\005 \001(\t\0228\n\nproperties\030\006 \003(\0132$.com.kcl.api.KclType.Propertie" +
-      "sEntry\022\020\n\010required\030\007 \003(\t\022!\n\003key\030\010 \001(\0132\024.com.kcl.api.KclType\022" +
-      "\"\n\004item\030\t \001(\0132\024.com.kcl.api.KclType\022\014\n\004line\030\n \001(\005\022*\n\ndecorat" +
-      "ors\030\013 \003(\0132\026.com.kcl.api.Decorator\022\020\n\010filename\030\014 \001(\t\022\020\n\010pkg_p" +
-      "ath\030\r \001(\t\022\023\n\013description\030\016 \001(\t\0224\n\010examples\030\017 \003(\0132\".com.kcl.a" +
-      "pi.KclType.ExamplesEntry\022)\n\013base_schema\030\020 \001(\0132\024.com.kcl.api." +
-      "KclType\0220\n\010function\030\021 \001(\0132\031.com.kcl.api.FunctionTypeH\000\210\001\001\0229\n" +
-      "\017index_signature\030\022 \001(\0132\033.com.kcl.api.IndexSignatureH\001\210\001\001\032G\n\017" +
-      "PropertiesEntry\022\013\n\003key\030\001 \001(\t\022#\n\005value\030\002 \001(\0132\024.com.kcl.api.Kc" +
-      "lType:\0028\001\032E\n\rExamplesEntry\022\013\n\003key\030\001 \001(\t\022#\n\005value\030\002 \001(\0132\024.com" +
-      ".kcl.api.Example:\0028\001B\013\n\t_functionB\022\n\020_index_signature\"_\n\014Fun" +
-      "ctionType\022&\n\006params\030\001 \003(\0132\026.com.kcl.api.Parameter\022'\n\treturn_" +
-      "ty\030\002 \001(\0132\024.com.kcl.api.KclType\";\n\tParameter\022\014\n\004name\030\001 \001(\t\022 \n" +
-      "\002ty\030\002 \001(\0132\024.com.kcl.api.KclType\"\215\001\n\016IndexSignature\022\025\n\010key_na" +
-      "me\030\001 \001(\tH\000\210\001\001\022!\n\003key\030\002 \001(\0132\024.com.kcl.api.KclType\022!\n\003val\030\003 \001(" +
-      "\0132\024.com.kcl.api.KclType\022\021\n\tany_other\030\004 \001(\010B\013\n\t_key_name\"\225\001\n\t" +
-      "Decorator\022\014\n\004name\030\001 \001(\t\022\021\n\targuments\030\002 \003(\t\0226\n\010keywords\030\003 \003(\013" +
-      "2$.com.kcl.api.Decorator.KeywordsEntry\032/\n\rKeywordsEntry\022\013\n\003k" +
-      "ey\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\">\n\007Example\022\017\n\007summary\030\001 \001(\t\022\023\n\013d" +
-      "escription\030\002 \001(\t\022\r\n\005value\030\003 \001(\t2\222\001\n\016BuiltinService\0226\n\004Ping\022\025" +
-      ".com.kcl.api.PingArgs\032\027.com.kcl.api.PingResult\022H\n\nListMethod" +
-      "\022\033.com.kcl.api.ListMethodArgs\032\035.com.kcl.api.ListMethodResult" +
-      "2\273\014\n\nKclService\0226\n\004Ping\022\025.com.kcl.api.PingArgs\032\027.com.kcl.api" +
-      ".PingResult\022H\n\nGetVersion\022\033.com.kcl.api.GetVersionArgs\032\035.com" +
-      ".kcl.api.GetVersionResult\022N\n\014ParseProgram\022\035.com.kcl.api.Pars" +
-      "eProgramArgs\032\037.com.kcl.api.ParseProgramResult\022E\n\tParseFile\022\032" +
-      ".com.kcl.api.ParseFileArgs\032\034.com.kcl.api.ParseFileResult\022K\n\013" +
-      "LoadPackage\022\034.com.kcl.api.LoadPackageArgs\032\036.com.kcl.api.Load" +
-      "PackageResult\022L\n\013ListOptions\022\035.com.kcl.api.ParseProgramArgs\032" +
-      "\036.com.kcl.api.ListOptionsResult\022Q\n\rListVariables\022\036.com.kcl.a" +
-      "pi.ListVariablesArgs\032 .com.kcl.api.ListVariablesResult\022K\n\013Ex" +
-      "ecProgram\022\034.com.kcl.api.ExecProgramArgs\032\036.com.kcl.api.ExecPr" +
-      "ogramResult\022N\n\014OverrideFile\022\035.com.kcl.api.OverrideFileArgs\032\037" +
-      ".com.kcl.api.OverrideFileResult\022f\n\024GetSchemaTypeMapping\022%.co" +
-      "m.kcl.api.GetSchemaTypeMappingArgs\032'.com.kcl.api.GetSchemaTy" +
-      "peMappingResult\022x\n\035GetSchemaTypeMappingUnderPath\022%.com.kcl.a" +
-      "pi.GetSchemaTypeMappingArgs\0320.com.kcl.api.GetSchemaTypeMappi" +
-      "ngUnderPathResult\022H\n\nFormatCode\022\033.com.kcl.api.FormatCodeArgs" +
-      "\032\035.com.kcl.api.FormatCodeResult\022H\n\nFormatPath\022\033.com.kcl.api." +
-      "FormatPathArgs\032\035.com.kcl.api.FormatPathResult\022B\n\010LintPath\022\031." +
-      "com.kcl.api.LintPathArgs\032\033.com.kcl.api.LintPathResult\022N\n\014Val" +
-      "idateCode\022\035.com.kcl.api.ValidateCodeArgs\032\037.com.kcl.api.Valid" +
-      "ateCodeResult\022]\n\021LoadSettingsFiles\022\".com.kcl.api.LoadSetting" +
-      "sFilesArgs\032$.com.kcl.api.LoadSettingsFilesResult\022<\n\006Rename\022\027" +
-      ".com.kcl.api.RenameArgs\032\031.com.kcl.api.RenameResult\022H\n\nRename" +
-      "Code\022\033.com.kcl.api.RenameCodeArgs\032\035.com.kcl.api.RenameCodeRe" +
-      "sult\0226\n\004Test\022\025.com.kcl.api.TestArgs\032\027.com.kcl.api.TestResult" +
-      "\022`\n\022UpdateDependencies\022#.com.kcl.api.UpdateDependenciesArgs\032" +
-      "%.com.kcl.api.UpdateDependenciesResultB\024Z\005.;api\252\002\nKclLib.API" +
-      "b\006proto3"
+      "\n\nspec.proto\022\013com.kcl.api\"C\n\013ExternalPkg\022\031\n\010pkg_name\030\001 \001(\tR\007" +
+      "pkgName\022\031\n\010pkg_path\030\002 \001(\tR\007pkgPath\"4\n\010Argument\022\022\n\004name\030\001 \001(\t" +
+      "R\004name\022\024\n\005value\030\002 \001(\tR\005value\"c\n\005Error\022\024\n\005level\030\001 \001(\tR\005level\022" +
+      "\022\n\004code\030\002 \001(\tR\004code\0220\n\010messages\030\003 \003(\0132\024.com.kcl.api.MessageR" +
+      "\010messages\"D\n\007Message\022\020\n\003msg\030\001 \001(\tR\003msg\022\'\n\003pos\030\002 \001(\0132\025.com.kc" +
+      "l.api.PositionR\003pos\" \n\010PingArgs\022\024\n\005value\030\001 \001(\tR\005value\"\"\n\nPin" +
+      "gResult\022\024\n\005value\030\001 \001(\tR\005value\"\020\n\016GetVersionArgs\"\204\001\n\020GetVersi" +
+      "onResult\022\030\n\007version\030\001 \001(\tR\007version\022\032\n\010checksum\030\002 \001(\tR\010checks" +
+      "um\022\027\n\007git_sha\030\003 \001(\tR\006gitSha\022!\n\014version_info\030\004 \001(\tR\013versionIn" +
+      "fo\"\020\n\016ListMethodArgs\"<\n\020ListMethodResult\022(\n\020method_name_list" +
+      "\030\001 \003(\tR\016methodNameList\"z\n\rParseFileArgs\022\022\n\004path\030\001 \001(\tR\004path\022" +
+      "\026\n\006source\030\002 \001(\tR\006source\022=\n\rexternal_pkgs\030\003 \003(\0132\030.com.kcl.api" +
+      ".ExternalPkgR\014externalPkgs\"l\n\017ParseFileResult\022\031\n\010ast_json\030\001 " +
+      "\001(\tR\007astJson\022\022\n\004deps\030\002 \003(\tR\004deps\022*\n\006errors\030\003 \003(\0132\022.com.kcl.a" +
+      "pi.ErrorR\006errors\"\201\001\n\020ParseProgramArgs\022\024\n\005paths\030\001 \003(\tR\005paths\022" +
+      "\030\n\007sources\030\002 \003(\tR\007sources\022=\n\rexternal_pkgs\030\003 \003(\0132\030.com.kcl.a" +
+      "pi.ExternalPkgR\014externalPkgs\"q\n\022ParseProgramResult\022\031\n\010ast_js" +
+      "on\030\001 \001(\tR\007astJson\022\024\n\005paths\030\002 \003(\tR\005paths\022*\n\006errors\030\003 \003(\0132\022.co" +
+      "m.kcl.api.ErrorR\006errors\"\271\001\n\017LoadPackageArgs\022<\n\nparse_args\030\001 " +
+      "\001(\0132\035.com.kcl.api.ParseProgramArgsR\tparseArgs\022\037\n\013resolve_ast" +
+      "\030\002 \001(\010R\nresolveAst\022!\n\014load_builtin\030\003 \001(\010R\013loadBuiltin\022$\n\016wit" +
+      "h_ast_index\030\004 \001(\010R\014withAstIndex\"\264\t\n\021LoadPackageResult\022\030\n\007pro" +
+      "gram\030\001 \001(\tR\007program\022\024\n\005paths\030\002 \003(\tR\005paths\0225\n\014parse_errors\030\003 " +
+      "\003(\0132\022.com.kcl.api.ErrorR\013parseErrors\0223\n\013type_errors\030\004 \003(\0132\022." +
+      "com.kcl.api.ErrorR\ntypeErrors\022B\n\006scopes\030\005 \003(\0132*.com.kcl.api." +
+      "LoadPackageResult.ScopesEntryR\006scopes\022E\n\007symbols\030\006 \003(\0132+.com" +
+      ".kcl.api.LoadPackageResult.SymbolsEntryR\007symbols\022Y\n\017node_sym" +
+      "bol_map\030\007 \003(\01321.com.kcl.api.LoadPackageResult.NodeSymbolMapE" +
+      "ntryR\rnodeSymbolMap\022Y\n\017symbol_node_map\030\010 \003(\01321.com.kcl.api.L" +
+      "oadPackageResult.SymbolNodeMapEntryR\rsymbolNodeMap\022r\n\030fully_" +
+      "qualified_name_map\030\t \003(\01329.com.kcl.api.LoadPackageResult.Ful" +
+      "lyQualifiedNameMapEntryR\025fullyQualifiedNameMap\022S\n\rpkg_scope_" +
+      "map\030\n \003(\0132/.com.kcl.api.LoadPackageResult.PkgScopeMapEntryR\013" +
+      "pkgScopeMap\032M\n\013ScopesEntry\022\020\n\003key\030\001 \001(\tR\003key\022(\n\005value\030\002 \001(\0132" +
+      "\022.com.kcl.api.ScopeR\005value:\0028\001\032O\n\014SymbolsEntry\022\020\n\003key\030\001 \001(\tR" +
+      "\003key\022)\n\005value\030\002 \001(\0132\023.com.kcl.api.SymbolR\005value:\0028\001\032Z\n\022NodeS" +
+      "ymbolMapEntry\022\020\n\003key\030\001 \001(\tR\003key\022.\n\005value\030\002 \001(\0132\030.com.kcl.api" +
+      ".SymbolIndexR\005value:\0028\001\032@\n\022SymbolNodeMapEntry\022\020\n\003key\030\001 \001(\tR\003" +
+      "key\022\024\n\005value\030\002 \001(\tR\005value:\0028\001\032b\n\032FullyQualifiedNameMapEntry\022" +
+      "\020\n\003key\030\001 \001(\tR\003key\022.\n\005value\030\002 \001(\0132\030.com.kcl.api.SymbolIndexR\005" +
+      "value:\0028\001\032W\n\020PkgScopeMapEntry\022\020\n\003key\030\001 \001(\tR\003key\022-\n\005value\030\002 \001" +
+      "(\0132\027.com.kcl.api.ScopeIndexR\005value:\0028\001\"F\n\021ListOptionsResult\022" +
+      "1\n\007options\030\002 \003(\0132\027.com.kcl.api.OptionHelpR\007options\"\211\001\n\nOptio" +
+      "nHelp\022\022\n\004name\030\001 \001(\tR\004name\022\022\n\004type\030\002 \001(\tR\004type\022\032\n\010required\030\003 " +
+      "\001(\010R\010required\022#\n\rdefault_value\030\004 \001(\tR\014defaultValue\022\022\n\004help\030\005" +
+      " \001(\tR\004help\"\353\001\n\006Symbol\022$\n\002ty\030\001 \001(\0132\024.com.kcl.api.KclTypeR\002ty\022" +
+      "\022\n\004name\030\002 \001(\tR\004name\022.\n\005owner\030\003 \001(\0132\030.com.kcl.api.SymbolIndex" +
+      "R\005owner\022*\n\003def\030\004 \001(\0132\030.com.kcl.api.SymbolIndexR\003def\022.\n\005attrs" +
+      "\030\005 \003(\0132\030.com.kcl.api.SymbolIndexR\005attrs\022\033\n\tis_global\030\006 \001(\010R\010" +
+      "isGlobal\"\337\001\n\005Scope\022\022\n\004kind\030\001 \001(\tR\004kind\022/\n\006parent\030\002 \001(\0132\027.com" +
+      ".kcl.api.ScopeIndexR\006parent\022.\n\005owner\030\003 \001(\0132\030.com.kcl.api.Sym" +
+      "bolIndexR\005owner\0223\n\010children\030\004 \003(\0132\027.com.kcl.api.ScopeIndexR\010" +
+      "children\022,\n\004defs\030\005 \003(\0132\030.com.kcl.api.SymbolIndexR\004defs\"=\n\013Sy" +
+      "mbolIndex\022\014\n\001i\030\001 \001(\004R\001i\022\014\n\001g\030\002 \001(\004R\001g\022\022\n\004kind\030\003 \001(\tR\004kind\"<\n" +
+      "\nScopeIndex\022\014\n\001i\030\001 \001(\004R\001i\022\014\n\001g\030\002 \001(\004R\001g\022\022\n\004kind\030\003 \001(\tR\004kind\"" +
+      "\357\006\n\017ExecProgramArgs\022\031\n\010work_dir\030\001 \001(\tR\007workDir\022&\n\017k_filename" +
+      "_list\030\002 \003(\tR\rkFilenameList\022\036\n\013k_code_list\030\003 \003(\tR\tkCodeList\022)" +
+      "\n\004args\030\004 \003(\0132\025.com.kcl.api.ArgumentR\004args\022\034\n\toverrides\030\005 \003(\t" +
+      "R\toverrides\022.\n\023disable_yaml_result\030\006 \001(\010R\021disableYamlResult\022" +
+      ",\n\022print_override_ast\030\007 \001(\010R\020printOverrideAst\022,\n\022strict_rang" +
+      "e_check\030\010 \001(\010R\020strictRangeCheck\022!\n\014disable_none\030\t \001(\010R\013disab" +
+      "leNone\022\030\n\007verbose\030\n \001(\005R\007verbose\022\024\n\005debug\030\013 \001(\005R\005debug\022\033\n\tso" +
+      "rt_keys\030\014 \001(\010R\010sortKeys\022=\n\rexternal_pkgs\030\r \003(\0132\030.com.kcl.api" +
+      ".ExternalPkgR\014externalPkgs\0227\n\030include_schema_type_path\030\016 \001(\010" +
+      "R\025includeSchemaTypePath\022!\n\014compile_only\030\017 \001(\010R\013compileOnly\022\037" +
+      "\n\013show_hidden\030\020 \001(\010R\nshowHidden\022#\n\rpath_selector\030\021 \003(\tR\014path" +
+      "Selector\022\033\n\tfast_eval\030\022 \001(\010R\010fastEval\022!\n\014error_format\030\023 \001(\tR" +
+      "\013errorFormat\022\026\n\006format\030\024 \001(\tR\006format\0226\n\027emit_attribute_metad" +
+      "ata\030\025 \001(\010R\025emitAttributeMetadata\022.\n\020sourcemap_output\030\026 \001(\tH\000" +
+      "R\017sourcemapOutput\210\001\001B\023\n\021_sourcemap_output\"\310\001\n\021ExecProgramRes" +
+      "ult\022\037\n\013json_result\030\001 \001(\tR\njsonResult\022\037\n\013yaml_result\030\002 \001(\tR\ny" +
+      "amlResult\022\037\n\013log_message\030\003 \001(\tR\nlogMessage\022\037\n\013err_message\030\004 " +
+      "\001(\tR\nerrMessage\022!\n\tsourcemap\030\005 \001(\tH\000R\tsourcemap\210\001\001B\014\n\n_sourc" +
+      "emap\"(\n\016FormatCodeArgs\022\026\n\006source\030\001 \001(\tR\006source\"0\n\020FormatCode" +
+      "Result\022\034\n\tformatted\030\001 \001(\014R\tformatted\"=\n\016FormatPathArgs\022\022\n\004pa" +
+      "th\030\001 \001(\tR\004path\022\027\n\007dry_run\030\002 \001(\010R\006dryRun\"7\n\020FormatPathResult\022" +
+      "#\n\rchanged_paths\030\001 \003(\tR\014changedPaths\"$\n\014LintPathArgs\022\024\n\005path" +
+      "s\030\001 \003(\tR\005paths\"*\n\016LintPathResult\022\030\n\007results\030\001 \003(\tR\007results\"_" +
+      "\n\020OverrideFileArgs\022\022\n\004file\030\001 \001(\tR\004file\022\024\n\005specs\030\002 \003(\tR\005specs" +
+      "\022!\n\014import_paths\030\003 \003(\tR\013importPaths\"c\n\022OverrideFileResult\022\026\n" +
+      "\006result\030\001 \001(\010R\006result\0225\n\014parse_errors\030\002 \003(\0132\022.com.kcl.api.Er" +
+      "rorR\013parseErrors\";\n\024ListVariablesOptions\022#\n\rmerge_program\030\001 " +
+      "\001(\010R\014mergeProgram\"C\n\014VariableList\0223\n\tvariables\030\001 \003(\0132\025.com.k" +
+      "cl.api.VariableR\tvariables\"|\n\021ListVariablesArgs\022\024\n\005files\030\001 \003" +
+      "(\tR\005files\022\024\n\005specs\030\002 \003(\tR\005specs\022;\n\007options\030\003 \001(\0132!.com.kcl.a" +
+      "pi.ListVariablesOptionsR\007options\"\241\002\n\023ListVariablesResult\022M\n\t" +
+      "variables\030\001 \003(\0132/.com.kcl.api.ListVariablesResult.VariablesE" +
+      "ntryR\tvariables\022+\n\021unsupported_codes\030\002 \003(\tR\020unsupportedCodes" +
+      "\0225\n\014parse_errors\030\003 \003(\0132\022.com.kcl.api.ErrorR\013parseErrors\032W\n\016V" +
+      "ariablesEntry\022\020\n\003key\030\001 \001(\tR\003key\022/\n\005value\030\002 \001(\0132\031.com.kcl.api" +
+      ".VariableListR\005value:\0028\001\"\304\001\n\010Variable\022\024\n\005value\030\001 \001(\tR\005value\022" +
+      "\033\n\ttype_name\030\002 \001(\tR\010typeName\022\025\n\006op_sym\030\003 \001(\tR\005opSym\0224\n\nlist_" +
+      "items\030\004 \003(\0132\025.com.kcl.api.VariableR\tlistItems\0228\n\014dict_entrie" +
+      "s\030\005 \003(\0132\025.com.kcl.api.MapEntryR\013dictEntries\"I\n\010MapEntry\022\020\n\003k" +
+      "ey\030\001 \001(\tR\003key\022+\n\005value\030\002 \001(\0132\025.com.kcl.api.VariableR\005value\"v" +
+      "\n\030GetSchemaTypeMappingArgs\0229\n\texec_args\030\001 \001(\0132\034.com.kcl.api." +
+      "ExecProgramArgsR\010execArgs\022\037\n\013schema_name\030\002 \001(\tR\nschemaName\"\350" +
+      "\001\n\032GetSchemaTypeMappingResult\022n\n\023schema_type_mapping\030\001 \003(\0132>" +
+      ".com.kcl.api.GetSchemaTypeMappingResult.SchemaTypeMappingEnt" +
+      "ryR\021schemaTypeMapping\032Z\n\026SchemaTypeMappingEntry\022\020\n\003key\030\001 \001(\t" +
+      "R\003key\022*\n\005value\030\002 \001(\0132\024.com.kcl.api.KclTypeR\005value:\0028\001\"\376\001\n#Ge" +
+      "tSchemaTypeMappingUnderPathResult\022w\n\023schema_type_mapping\030\001 \003" +
+      "(\0132G.com.kcl.api.GetSchemaTypeMappingUnderPathResult.SchemaT" +
+      "ypeMappingEntryR\021schemaTypeMapping\032^\n\026SchemaTypeMappingEntry" +
+      "\022\020\n\003key\030\001 \001(\tR\003key\022.\n\005value\030\002 \001(\0132\030.com.kcl.api.SchemaTypesR" +
+      "\005value:\0028\001\"D\n\013SchemaTypes\0225\n\013schema_type\030\001 \003(\0132\024.com.kcl.api" +
+      ".KclTypeR\nschemaType\"\200\002\n\020ValidateCodeArgs\022\032\n\010datafile\030\001 \001(\tR" +
+      "\010datafile\022\022\n\004data\030\002 \001(\tR\004data\022\022\n\004file\030\003 \001(\tR\004file\022\022\n\004code\030\004 " +
+      "\001(\tR\004code\022\026\n\006schema\030\005 \001(\tR\006schema\022%\n\016attribute_name\030\006 \001(\tR\ra" +
+      "ttributeName\022\026\n\006format\030\007 \001(\tR\006format\022=\n\rexternal_pkgs\030\010 \003(\0132" +
+      "\030.com.kcl.api.ExternalPkgR\014externalPkgs\"O\n\022ValidateCodeResul" +
+      "t\022\030\n\007success\030\001 \001(\010R\007success\022\037\n\013err_message\030\002 \001(\tR\nerrMessage" +
+      "\"R\n\010Position\022\022\n\004line\030\001 \001(\003R\004line\022\026\n\006column\030\002 \001(\003R\006column\022\032\n\010" +
+      "filename\030\003 \001(\tR\010filename\"H\n\025LoadSettingsFilesArgs\022\031\n\010work_di" +
+      "r\030\001 \001(\tR\007workDir\022\024\n\005files\030\002 \003(\tR\005files\"\225\001\n\027LoadSettingsFiles" +
+      "Result\022>\n\017kcl_cli_configs\030\001 \001(\0132\026.com.kcl.api.CliConfigR\rkcl" +
+      "CliConfigs\022:\n\013kcl_options\030\002 \003(\0132\031.com.kcl.api.KeyValuePairR\n" +
+      "kclOptions\"\221\003\n\tCliConfig\022\024\n\005files\030\001 \003(\tR\005files\022\026\n\006output\030\002 \001" +
+      "(\tR\006output\022\034\n\toverrides\030\003 \003(\tR\toverrides\022#\n\rpath_selector\030\004 " +
+      "\003(\tR\014pathSelector\022,\n\022strict_range_check\030\005 \001(\010R\020strictRangeCh" +
+      "eck\022!\n\014disable_none\030\006 \001(\010R\013disableNone\022\030\n\007verbose\030\007 \001(\003R\007ver" +
+      "bose\022\024\n\005debug\030\010 \001(\010R\005debug\022\033\n\tsort_keys\030\t \001(\010R\010sortKeys\022\037\n\013s" +
+      "how_hidden\030\n \001(\010R\nshowHidden\0227\n\030include_schema_type_path\030\013 \001" +
+      "(\010R\025includeSchemaTypePath\022\033\n\tfast_eval\030\014 \001(\010R\010fastEval\"6\n\014Ke" +
+      "yValuePair\022\020\n\003key\030\001 \001(\tR\003key\022\024\n\005value\030\002 \001(\tR\005value\"\212\001\n\nRenam" +
+      "eArgs\022!\n\014package_root\030\001 \001(\tR\013packageRoot\022\037\n\013symbol_path\030\002 \001(" +
+      "\tR\nsymbolPath\022\035\n\nfile_paths\030\003 \003(\tR\tfilePaths\022\031\n\010new_name\030\004 \001" +
+      "(\tR\007newName\"3\n\014RenameResult\022#\n\rchanged_files\030\001 \003(\tR\014changedF" +
+      "iles\"\200\002\n\016RenameCodeArgs\022!\n\014package_root\030\001 \001(\tR\013packageRoot\022\037" +
+      "\n\013symbol_path\030\002 \001(\tR\nsymbolPath\022O\n\014source_codes\030\003 \003(\0132,.com." +
+      "kcl.api.RenameCodeArgs.SourceCodesEntryR\013sourceCodes\022\031\n\010new_" +
+      "name\030\004 \001(\tR\007newName\032>\n\020SourceCodesEntry\022\020\n\003key\030\001 \001(\tR\003key\022\024\n" +
+      "\005value\030\002 \001(\tR\005value:\0028\001\"\251\001\n\020RenameCodeResult\022T\n\rchanged_code" +
+      "s\030\001 \003(\0132/.com.kcl.api.RenameCodeResult.ChangedCodesEntryR\014ch" +
+      "angedCodes\032?\n\021ChangedCodesEntry\022\020\n\003key\030\001 \001(\tR\003key\022\024\n\005value\030\002" +
+      " \001(\tR\005value:\0028\001\"\270\001\n\010TestArgs\0229\n\texec_args\030\001 \001(\0132\034.com.kcl.ap" +
+      "i.ExecProgramArgsR\010execArgs\022\031\n\010pkg_list\030\002 \003(\tR\007pkgList\022\035\n\nru" +
+      "n_regexp\030\003 \001(\tR\trunRegexp\022\033\n\tfail_fast\030\004 \001(\010R\010failFast\022\032\n\010co" +
+      "verage\030\005 \001(\010R\010coverage\"x\n\nTestResult\022-\n\004info\030\002 \003(\0132\031.com.kcl" +
+      ".api.TestCaseInfoR\004info\022;\n\010coverage\030\003 \001(\0132\037.com.kcl.api.Test" +
+      "CoverageReportR\010coverage\"\370\001\n\014TestCaseInfo\022\022\n\004name\030\001 \001(\tR\004nam" +
+      "e\022\024\n\005error\030\002 \001(\tR\005error\022\032\n\010duration\030\003 \001(\004R\010duration\022\037\n\013log_m" +
+      "essage\030\004 \001(\tR\nlogMessage\022D\n\tline_hits\030\005 \003(\0132\'.com.kcl.api.Te" +
+      "stCaseInfo.LineHitsEntryR\010lineHits\032;\n\rLineHitsEntry\022\020\n\003key\030\001" +
+      " \001(\tR\003key\022\024\n\005value\030\002 \001(\004R\005value:\0028\001\"\375\001\n\014FileCoverage\022\032\n\010file" +
+      "name\030\001 \001(\tR\010filename\022#\n\rcovered_lines\030\002 \003(\004R\014coveredLines\022)\n" +
+      "\020executable_lines\030\003 \003(\004R\017executableLines\022D\n\tline_hits\030\004 \003(\0132" +
+      "\'.com.kcl.api.FileCoverage.LineHitsEntryR\010lineHits\032;\n\rLineHi" +
+      "tsEntry\022\020\n\003key\030\001 \001(\004R\003key\022\024\n\005value\030\002 \001(\004R\005value:\0028\001\"\343\001\n\022Test" +
+      "CoverageReport\022@\n\005files\030\001 \003(\0132*.com.kcl.api.TestCoverageRepo" +
+      "rt.FilesEntryR\005files\0226\n\007summary\030\002 \001(\0132\034.com.kcl.api.Coverage" +
+      "SummaryR\007summary\032S\n\nFilesEntry\022\020\n\003key\030\001 \001(\tR\003key\022/\n\005value\030\002 " +
+      "\001(\0132\031.com.kcl.api.FileCoverageR\005value:\0028\001\"e\n\017CoverageSummary" +
+      "\022\030\n\007covered\030\001 \001(\004R\007covered\022\036\n\nexecutable\030\002 \001(\004R\nexecutable\022\030" +
+      "\n\007percent\030\003 \001(\001R\007percent\"U\n\026UpdateDependenciesArgs\022#\n\rmanife" +
+      "st_path\030\001 \001(\tR\014manifestPath\022\026\n\006vendor\030\002 \001(\010R\006vendor\"Y\n\030Updat" +
+      "eDependenciesResult\022=\n\rexternal_pkgs\030\003 \003(\0132\030.com.kcl.api.Ext" +
+      "ernalPkgR\014externalPkgs\"\316\007\n\007KclType\022\022\n\004type\030\001 \001(\tR\004type\0225\n\013un" +
+      "ion_types\030\002 \003(\0132\024.com.kcl.api.KclTypeR\nunionTypes\022\030\n\007default" +
+      "\030\003 \001(\tR\007default\022\037\n\013schema_name\030\004 \001(\tR\nschemaName\022\035\n\nschema_d" +
+      "oc\030\005 \001(\tR\tschemaDoc\022D\n\nproperties\030\006 \003(\0132$.com.kcl.api.KclTyp" +
+      "e.PropertiesEntryR\nproperties\022\032\n\010required\030\007 \003(\tR\010required\022&\n" +
+      "\003key\030\010 \001(\0132\024.com.kcl.api.KclTypeR\003key\022(\n\004item\030\t \001(\0132\024.com.kc" +
+      "l.api.KclTypeR\004item\022\022\n\004line\030\n \001(\005R\004line\0226\n\ndecorators\030\013 \003(\0132" +
+      "\026.com.kcl.api.DecoratorR\ndecorators\022\032\n\010filename\030\014 \001(\tR\010filen" +
+      "ame\022\031\n\010pkg_path\030\r \001(\tR\007pkgPath\022 \n\013description\030\016 \001(\tR\013descrip" +
+      "tion\022>\n\010examples\030\017 \003(\0132\".com.kcl.api.KclType.ExamplesEntryR\010" +
+      "examples\0225\n\013base_schema\030\020 \001(\0132\024.com.kcl.api.KclTypeR\nbaseSch" +
+      "ema\022:\n\010function\030\021 \001(\0132\031.com.kcl.api.FunctionTypeH\000R\010function" +
+      "\210\001\001\022I\n\017index_signature\030\022 \001(\0132\033.com.kcl.api.IndexSignatureH\001R" +
+      "\016indexSignature\210\001\001\032S\n\017PropertiesEntry\022\020\n\003key\030\001 \001(\tR\003key\022*\n\005v" +
+      "alue\030\002 \001(\0132\024.com.kcl.api.KclTypeR\005value:\0028\001\032Q\n\rExamplesEntry" +
+      "\022\020\n\003key\030\001 \001(\tR\003key\022*\n\005value\030\002 \001(\0132\024.com.kcl.api.ExampleR\005val" +
+      "ue:\0028\001B\013\n\t_functionB\022\n\020_index_signature\"q\n\014FunctionType\022.\n\006p" +
+      "arams\030\001 \003(\0132\026.com.kcl.api.ParameterR\006params\0221\n\treturn_ty\030\002 \001" +
+      "(\0132\024.com.kcl.api.KclTypeR\010returnTy\"E\n\tParameter\022\022\n\004name\030\001 \001(" +
+      "\tR\004name\022$\n\002ty\030\002 \001(\0132\024.com.kcl.api.KclTypeR\002ty\"\252\001\n\016IndexSigna" +
+      "ture\022\036\n\010key_name\030\001 \001(\tH\000R\007keyName\210\001\001\022&\n\003key\030\002 \001(\0132\024.com.kcl." +
+      "api.KclTypeR\003key\022&\n\003val\030\003 \001(\0132\024.com.kcl.api.KclTypeR\003val\022\033\n\t" +
+      "any_other\030\004 \001(\010R\010anyOtherB\013\n\t_key_name\"\274\001\n\tDecorator\022\022\n\004name" +
+      "\030\001 \001(\tR\004name\022\034\n\targuments\030\002 \003(\tR\targuments\022@\n\010keywords\030\003 \003(\013" +
+      "2$.com.kcl.api.Decorator.KeywordsEntryR\010keywords\032;\n\rKeywords" +
+      "Entry\022\020\n\003key\030\001 \001(\tR\003key\022\024\n\005value\030\002 \001(\tR\005value:\0028\001\"[\n\007Example" +
+      "\022\030\n\007summary\030\001 \001(\tR\007summary\022 \n\013description\030\002 \001(\tR\013description" +
+      "\022\024\n\005value\030\003 \001(\tR\005value2\222\001\n\016BuiltinService\0226\n\004Ping\022\025.com.kcl." +
+      "api.PingArgs\032\027.com.kcl.api.PingResult\022H\n\nListMethod\022\033.com.kc" +
+      "l.api.ListMethodArgs\032\035.com.kcl.api.ListMethodResult2\273\014\n\nKclS" +
+      "ervice\0226\n\004Ping\022\025.com.kcl.api.PingArgs\032\027.com.kcl.api.PingResu" +
+      "lt\022H\n\nGetVersion\022\033.com.kcl.api.GetVersionArgs\032\035.com.kcl.api." +
+      "GetVersionResult\022N\n\014ParseProgram\022\035.com.kcl.api.ParseProgramA" +
+      "rgs\032\037.com.kcl.api.ParseProgramResult\022E\n\tParseFile\022\032.com.kcl." +
+      "api.ParseFileArgs\032\034.com.kcl.api.ParseFileResult\022K\n\013LoadPacka" +
+      "ge\022\034.com.kcl.api.LoadPackageArgs\032\036.com.kcl.api.LoadPackageRe" +
+      "sult\022L\n\013ListOptions\022\035.com.kcl.api.ParseProgramArgs\032\036.com.kcl" +
+      ".api.ListOptionsResult\022Q\n\rListVariables\022\036.com.kcl.api.ListVa" +
+      "riablesArgs\032 .com.kcl.api.ListVariablesResult\022K\n\013ExecProgram" +
+      "\022\034.com.kcl.api.ExecProgramArgs\032\036.com.kcl.api.ExecProgramResu" +
+      "lt\022N\n\014OverrideFile\022\035.com.kcl.api.OverrideFileArgs\032\037.com.kcl." +
+      "api.OverrideFileResult\022f\n\024GetSchemaTypeMapping\022%.com.kcl.api" +
+      ".GetSchemaTypeMappingArgs\032\'.com.kcl.api.GetSchemaTypeMapping" +
+      "Result\022x\n\035GetSchemaTypeMappingUnderPath\022%.com.kcl.api.GetSch" +
+      "emaTypeMappingArgs\0320.com.kcl.api.GetSchemaTypeMappingUnderPa" +
+      "thResult\022H\n\nFormatCode\022\033.com.kcl.api.FormatCodeArgs\032\035.com.kc" +
+      "l.api.FormatCodeResult\022H\n\nFormatPath\022\033.com.kcl.api.FormatPat" +
+      "hArgs\032\035.com.kcl.api.FormatPathResult\022B\n\010LintPath\022\031.com.kcl.a" +
+      "pi.LintPathArgs\032\033.com.kcl.api.LintPathResult\022N\n\014ValidateCode" +
+      "\022\035.com.kcl.api.ValidateCodeArgs\032\037.com.kcl.api.ValidateCodeRe" +
+      "sult\022]\n\021LoadSettingsFiles\022\".com.kcl.api.LoadSettingsFilesArg" +
+      "s\032$.com.kcl.api.LoadSettingsFilesResult\022<\n\006Rename\022\027.com.kcl." +
+      "api.RenameArgs\032\031.com.kcl.api.RenameResult\022H\n\nRenameCode\022\033.co" +
+      "m.kcl.api.RenameCodeArgs\032\035.com.kcl.api.RenameCodeResult\0226\n\004T" +
+      "est\022\025.com.kcl.api.TestArgs\032\027.com.kcl.api.TestResult\022`\n\022Updat" +
+      "eDependencies\022#.com.kcl.api.UpdateDependenciesArgs\032%.com.kcl" +
+      ".api.UpdateDependenciesResultB\024Z\005.;api\252\002\nKclLib.APIb\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -76790,7 +81035,7 @@ java.lang.String defaultValue) {
     internal_static_com_kcl_api_ExecProgramArgs_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_kcl_api_ExecProgramArgs_descriptor,
-        new java.lang.String[] { "WorkDir", "KFilenameList", "KCodeList", "Args", "Overrides", "DisableYamlResult", "PrintOverrideAst", "StrictRangeCheck", "DisableNone", "Verbose", "Debug", "SortKeys", "ExternalPkgs", "IncludeSchemaTypePath", "CompileOnly", "ShowHidden", "PathSelector", "FastEval", "ErrorFormat", "Format", "SourcemapOutput", });
+        new java.lang.String[] { "WorkDir", "KFilenameList", "KCodeList", "Args", "Overrides", "DisableYamlResult", "PrintOverrideAst", "StrictRangeCheck", "DisableNone", "Verbose", "Debug", "SortKeys", "ExternalPkgs", "IncludeSchemaTypePath", "CompileOnly", "ShowHidden", "PathSelector", "FastEval", "ErrorFormat", "Format", "EmitAttributeMetadata", "SourcemapOutput", });
     internal_static_com_kcl_api_ExecProgramResult_descriptor =
       getDescriptor().getMessageTypes().get(23);
     internal_static_com_kcl_api_ExecProgramResult_fieldAccessorTable = new
@@ -77006,33 +81251,69 @@ java.lang.String defaultValue) {
     internal_static_com_kcl_api_TestArgs_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_kcl_api_TestArgs_descriptor,
-        new java.lang.String[] { "ExecArgs", "PkgList", "RunRegexp", "FailFast", });
+        new java.lang.String[] { "ExecArgs", "PkgList", "RunRegexp", "FailFast", "Coverage", });
     internal_static_com_kcl_api_TestResult_descriptor =
       getDescriptor().getMessageTypes().get(54);
     internal_static_com_kcl_api_TestResult_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_kcl_api_TestResult_descriptor,
-        new java.lang.String[] { "Info", });
+        new java.lang.String[] { "Info", "Coverage", });
     internal_static_com_kcl_api_TestCaseInfo_descriptor =
       getDescriptor().getMessageTypes().get(55);
     internal_static_com_kcl_api_TestCaseInfo_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_kcl_api_TestCaseInfo_descriptor,
-        new java.lang.String[] { "Name", "Error", "Duration", "LogMessage", });
-    internal_static_com_kcl_api_UpdateDependenciesArgs_descriptor =
+        new java.lang.String[] { "Name", "Error", "Duration", "LogMessage", "LineHits", });
+    internal_static_com_kcl_api_TestCaseInfo_LineHitsEntry_descriptor =
+      internal_static_com_kcl_api_TestCaseInfo_descriptor.getNestedTypes().get(0);
+    internal_static_com_kcl_api_TestCaseInfo_LineHitsEntry_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_com_kcl_api_TestCaseInfo_LineHitsEntry_descriptor,
+        new java.lang.String[] { "Key", "Value", });
+    internal_static_com_kcl_api_FileCoverage_descriptor =
       getDescriptor().getMessageTypes().get(56);
+    internal_static_com_kcl_api_FileCoverage_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_com_kcl_api_FileCoverage_descriptor,
+        new java.lang.String[] { "Filename", "CoveredLines", "ExecutableLines", "LineHits", });
+    internal_static_com_kcl_api_FileCoverage_LineHitsEntry_descriptor =
+      internal_static_com_kcl_api_FileCoverage_descriptor.getNestedTypes().get(0);
+    internal_static_com_kcl_api_FileCoverage_LineHitsEntry_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_com_kcl_api_FileCoverage_LineHitsEntry_descriptor,
+        new java.lang.String[] { "Key", "Value", });
+    internal_static_com_kcl_api_TestCoverageReport_descriptor =
+      getDescriptor().getMessageTypes().get(57);
+    internal_static_com_kcl_api_TestCoverageReport_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_com_kcl_api_TestCoverageReport_descriptor,
+        new java.lang.String[] { "Files", "Summary", });
+    internal_static_com_kcl_api_TestCoverageReport_FilesEntry_descriptor =
+      internal_static_com_kcl_api_TestCoverageReport_descriptor.getNestedTypes().get(0);
+    internal_static_com_kcl_api_TestCoverageReport_FilesEntry_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_com_kcl_api_TestCoverageReport_FilesEntry_descriptor,
+        new java.lang.String[] { "Key", "Value", });
+    internal_static_com_kcl_api_CoverageSummary_descriptor =
+      getDescriptor().getMessageTypes().get(58);
+    internal_static_com_kcl_api_CoverageSummary_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_com_kcl_api_CoverageSummary_descriptor,
+        new java.lang.String[] { "Covered", "Executable", "Percent", });
+    internal_static_com_kcl_api_UpdateDependenciesArgs_descriptor =
+      getDescriptor().getMessageTypes().get(59);
     internal_static_com_kcl_api_UpdateDependenciesArgs_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_kcl_api_UpdateDependenciesArgs_descriptor,
         new java.lang.String[] { "ManifestPath", "Vendor", });
     internal_static_com_kcl_api_UpdateDependenciesResult_descriptor =
-      getDescriptor().getMessageTypes().get(57);
+      getDescriptor().getMessageTypes().get(60);
     internal_static_com_kcl_api_UpdateDependenciesResult_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_kcl_api_UpdateDependenciesResult_descriptor,
         new java.lang.String[] { "ExternalPkgs", });
     internal_static_com_kcl_api_KclType_descriptor =
-      getDescriptor().getMessageTypes().get(58);
+      getDescriptor().getMessageTypes().get(61);
     internal_static_com_kcl_api_KclType_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_kcl_api_KclType_descriptor,
@@ -77050,25 +81331,25 @@ java.lang.String defaultValue) {
         internal_static_com_kcl_api_KclType_ExamplesEntry_descriptor,
         new java.lang.String[] { "Key", "Value", });
     internal_static_com_kcl_api_FunctionType_descriptor =
-      getDescriptor().getMessageTypes().get(59);
+      getDescriptor().getMessageTypes().get(62);
     internal_static_com_kcl_api_FunctionType_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_kcl_api_FunctionType_descriptor,
         new java.lang.String[] { "Params", "ReturnTy", });
     internal_static_com_kcl_api_Parameter_descriptor =
-      getDescriptor().getMessageTypes().get(60);
+      getDescriptor().getMessageTypes().get(63);
     internal_static_com_kcl_api_Parameter_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_kcl_api_Parameter_descriptor,
         new java.lang.String[] { "Name", "Ty", });
     internal_static_com_kcl_api_IndexSignature_descriptor =
-      getDescriptor().getMessageTypes().get(61);
+      getDescriptor().getMessageTypes().get(64);
     internal_static_com_kcl_api_IndexSignature_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_kcl_api_IndexSignature_descriptor,
         new java.lang.String[] { "KeyName", "Key", "Val", "AnyOther", });
     internal_static_com_kcl_api_Decorator_descriptor =
-      getDescriptor().getMessageTypes().get(62);
+      getDescriptor().getMessageTypes().get(65);
     internal_static_com_kcl_api_Decorator_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_kcl_api_Decorator_descriptor,
@@ -77080,7 +81361,7 @@ java.lang.String defaultValue) {
         internal_static_com_kcl_api_Decorator_KeywordsEntry_descriptor,
         new java.lang.String[] { "Key", "Value", });
     internal_static_com_kcl_api_Example_descriptor =
-      getDescriptor().getMessageTypes().get(63);
+      getDescriptor().getMessageTypes().get(66);
     internal_static_com_kcl_api_Example_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_kcl_api_Example_descriptor,

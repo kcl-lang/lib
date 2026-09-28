@@ -123,6 +123,17 @@ export class ProtoReader {
     return Number(this.readSignedVarint());
   }
 
+  readDouble(): number {
+    // Fixed-width 64-bit field (wire type 1), little-endian IEEE 754.
+    if (this.pos + 8 > this.buf.length) {
+      throw new Error("truncated protobuf field");
+    }
+    const view = new DataView(this.buf.buffer, this.buf.byteOffset + this.pos);
+    const value = view.getFloat64(0, true);
+    this.pos += 8;
+    return value;
+  }
+
   readUint64(): number {
     return Number(this.readVarint());
   }

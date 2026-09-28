@@ -84,3 +84,24 @@ if(WIN32)
             RUNTIME_OUTPUT_DIRECTORY_RELEASE ${CMAKE_BINARY_DIR}
     )
 endif()
+
+# Assertion-based API test suite (tests/test_api.cpp, plain CHECK macro).
+# Built and registered with ctest only when testing is enabled:
+#   cmake -B build -DKCL_LIB_ENABLE_TESTING=ON
+if(KCL_LIB_ENABLE_TESTING)
+    enable_testing()
+    add_executable(kcl_lib_api_tests tests/test_api.cpp)
+    target_include_directories(kcl_lib_api_tests PUBLIC ${CPP_INCLUDE_DIR})
+    target_link_libraries(kcl_lib_api_tests PUBLIC kcl-lib-cpp)
+    target_compile_definitions(kcl_lib_api_tests PRIVATE
+            KCL_TEST_DATA_DIR="${PROJECT_SOURCE_DIR}/test_data")
+    if(WIN32)
+        target_link_libraries(kcl_lib_api_tests PRIVATE userenv ws2_32 bcrypt)
+    endif()
+    if(APPLE)
+        find_library(CORESERVICES_LIB CoreServices)
+        target_link_libraries(kcl_lib_api_tests PRIVATE ${CORESERVICES_LIB})
+        target_link_libraries(kcl_lib_api_tests PRIVATE "-framework CoreFoundation -framework Security")
+    endif()
+    add_test(NAME kcl_lib_api_tests COMMAND kcl_lib_api_tests)
+endif()
