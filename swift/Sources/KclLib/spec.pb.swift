@@ -529,22 +529,6 @@ public struct ExecProgramArgs: @unchecked Sendable {
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
 
-  /// Diagnostic output format. One of: pretty, short, arcanist, sarif.
-  /// When set to anything other than "pretty", compile/eval errors are
-  /// emitted to stderr in the chosen machine-readable format. Falls back
-  /// to the `KCL_ERROR_FORMAT` environment variable when empty.
-  public var errorFormat: String {
-    get {return _storage._errorFormat}
-    set {_uniqueStorage()._errorFormat = newValue}
-  }
-
-  /// Output format selector. One of: yaml, json.
-  /// When empty the runtime generates both formats (legacy behaviour).
-  public var format: String {
-    get {return _storage._format}
-    set {_uniqueStorage()._format = newValue}
-  }
-
   /// Working directory.
   public var workDir: String {
     get {return _storage._workDir}
@@ -653,6 +637,34 @@ public struct ExecProgramArgs: @unchecked Sendable {
     set {_uniqueStorage()._fastEval = newValue}
   }
 
+  /// Diagnostic output format. One of: pretty, short, arcanist, sarif.
+  /// When set to anything other than "pretty", compile/eval errors are
+  /// emitted to stderr in the chosen machine-readable format. Falls back
+  /// to the `KCL_ERROR_FORMAT` environment variable when empty.
+  public var errorFormat: String {
+    get {return _storage._errorFormat}
+    set {_uniqueStorage()._errorFormat = newValue}
+  }
+
+  /// Output format selector. One of: yaml, json.
+  /// When empty the runtime generates both formats (legacy behaviour).
+  public var format: String {
+    get {return _storage._format}
+    set {_uniqueStorage()._format = newValue}
+  }
+
+  /// Emit a side-channel marker in the planned YAML/JSON that names
+  /// schema attributes to be carried over to downstream emitters. The
+  /// marker is the sibling key `__kcl_info_meta__` whose value is a
+  /// list of attribute names (e.g. those decorated with
+  /// `@info(type="attr")`). Consumers (CLI/kcl-go) interpret it when
+  /// emitting XML. Defaults to false to keep `-o json` / `-o yaml`
+  /// output byte-identical to pre-change.
+  public var emitAttributeMetadata: Bool {
+    get {return _storage._emitAttributeMetadata}
+    set {_uniqueStorage()._emitAttributeMetadata = newValue}
+  }
+
   /// Optional path of the Source Map v3 (tc39.es/source-map) document to
   /// emit for the generated YAML. When non-empty, the runtime records the
   /// mapping between generated YAML lines and the originating KCL source
@@ -747,6 +759,9 @@ public struct FormatPathArgs: Sendable {
 
   /// Path of the file to format.
   public var path: String = String()
+
+  /// Whether to dry run the formatting.
+  public var dryRun: Bool = false
 
   public var unknownFields = SwiftProtobuf.UnknownStorage()
 
@@ -1306,6 +1321,12 @@ public struct TestArgs: Sendable {
   /// Flag to stop the test run on the first failure.
   public var failFast: Bool = false
 
+  /// Flag to collect line-level coverage data while running tests. When true,
+  /// the test tool records, for every top-level KCL statement that executes,
+  /// the source file path and line number. The aggregated result is returned
+  /// in [TestResult.coverage]. Defaults to false.
+  public var coverage: Bool = false
+
   public var unknownFields = SwiftProtobuf.UnknownStorage()
 
   public init() {}
@@ -1322,9 +1343,22 @@ public struct TestResult: Sendable {
   /// List of test case information.
   public var info: [TestCaseInfo] = []
 
+  /// Aggregated coverage report. Populated only when
+  /// [TestArgs.coverage] is true; empty otherwise.
+  public var coverage: TestCoverageReport {
+    get {return _coverage ?? TestCoverageReport()}
+    set {_coverage = newValue}
+  }
+  /// Returns true if `coverage` has been explicitly set.
+  public var hasCoverage: Bool {return self._coverage != nil}
+  /// Clears the value of `coverage`. Subsequent reads from it will return its default value.
+  public mutating func clearCoverage() {self._coverage = nil}
+
   public var unknownFields = SwiftProtobuf.UnknownStorage()
 
   public init() {}
+
+  fileprivate var _coverage: TestCoverageReport? = nil
 }
 
 /// Message representing information about a single test case.
@@ -1344,6 +1378,84 @@ public struct TestCaseInfo: Sendable {
 
   /// Log message from the test case.
   public var logMessage: String = String()
+
+  /// Per-case line coverage. Populated only when [TestArgs.coverage]
+  /// is true; empty otherwise. Each entry maps "filename:line" to the
+  /// number of times that line was entered while running this case.
+  public var lineHits: Dictionary<String,UInt64> = [:]
+
+  public var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  public init() {}
+}
+
+/// Message describing aggregated coverage data for a single source file.
+public struct FileCoverage: Sendable {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  /// Source file path, relative to the package root when possible.
+  public var filename: String = String()
+
+  /// Sorted list of lines that executed at least once across all tests
+  /// that covered this file.
+  public var coveredLines: [UInt64] = []
+
+  /// Sorted list of lines in this file that contain an executable
+  /// statement (i.e. lines that *could* be covered). Lines that contain
+  /// only blank lines, comments or non-executable tokens are excluded.
+  public var executableLines: [UInt64] = []
+
+  /// Per-line execution count across all tests that covered this file.
+  /// Keys are line numbers (1-based); values are hit counts.
+  public var lineHits: Dictionary<UInt64,UInt64> = [:]
+
+  public var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  public init() {}
+}
+
+/// Message describing aggregated coverage across the entire test run.
+public struct TestCoverageReport: Sendable {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  /// Per-file coverage keyed by source file path.
+  public var files: Dictionary<String,FileCoverage> = [:]
+
+  /// Roll-up of all files in [TestCoverageReport.files].
+  public var summary: CoverageSummary {
+    get {return _summary ?? CoverageSummary()}
+    set {_summary = newValue}
+  }
+  /// Returns true if `summary` has been explicitly set.
+  public var hasSummary: Bool {return self._summary != nil}
+  /// Clears the value of `summary`. Subsequent reads from it will return its default value.
+  public mutating func clearSummary() {self._summary = nil}
+
+  public var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  public init() {}
+
+  fileprivate var _summary: CoverageSummary? = nil
+}
+
+/// Roll-up coverage metrics.
+public struct CoverageSummary: Sendable {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  /// Number of executable lines that were hit by at least one test.
+  public var covered: UInt64 = 0
+
+  /// Total number of executable lines discovered.
+  public var executable: UInt64 = 0
+
+  /// Coverage percentage in the inclusive range [0.0, 100.0].
+  public var percent: Double = 0
 
   public var unknownFields = SwiftProtobuf.UnknownStorage()
 
@@ -2650,6 +2762,7 @@ extension ExecProgramArgs: SwiftProtobuf.Message, SwiftProtobuf._MessageImplemen
     18: .standard(proto: "fast_eval"),
     19: .standard(proto: "error_format"),
     20: .same(proto: "format"),
+    21: .standard(proto: "emit_attribute_metadata"),
     22: .standard(proto: "sourcemap_output"),
   ]
 
@@ -2674,6 +2787,7 @@ extension ExecProgramArgs: SwiftProtobuf.Message, SwiftProtobuf._MessageImplemen
     var _fastEval: Bool = false
     var _errorFormat: String = String()
     var _format: String = String()
+    var _emitAttributeMetadata: Bool = false
     var _sourcemapOutput: String? = nil
 
     #if swift(>=5.10)
@@ -2709,6 +2823,7 @@ extension ExecProgramArgs: SwiftProtobuf.Message, SwiftProtobuf._MessageImplemen
       _fastEval = source._fastEval
       _errorFormat = source._errorFormat
       _format = source._format
+      _emitAttributeMetadata = source._emitAttributeMetadata
       _sourcemapOutput = source._sourcemapOutput
     }
   }
@@ -2748,6 +2863,7 @@ extension ExecProgramArgs: SwiftProtobuf.Message, SwiftProtobuf._MessageImplemen
         case 18: try { try decoder.decodeSingularBoolField(value: &_storage._fastEval) }()
         case 19: try { try decoder.decodeSingularStringField(value: &_storage._errorFormat) }()
         case 20: try { try decoder.decodeSingularStringField(value: &_storage._format) }()
+        case 21: try { try decoder.decodeSingularBoolField(value: &_storage._emitAttributeMetadata) }()
         case 22: try { try decoder.decodeSingularStringField(value: &_storage._sourcemapOutput) }()
         default: break
         }
@@ -2757,6 +2873,10 @@ extension ExecProgramArgs: SwiftProtobuf.Message, SwiftProtobuf._MessageImplemen
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
     try withExtendedLifetime(_storage) { (_storage: _StorageClass) in
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every if/case branch local when no optimizations
+      // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+      // https://github.com/apple/swift-protobuf/issues/1182
       if !_storage._workDir.isEmpty {
         try visitor.visitSingularStringField(value: _storage._workDir, fieldNumber: 1)
       }
@@ -2817,10 +2937,9 @@ extension ExecProgramArgs: SwiftProtobuf.Message, SwiftProtobuf._MessageImplemen
       if !_storage._format.isEmpty {
         try visitor.visitSingularStringField(value: _storage._format, fieldNumber: 20)
       }
-      // The use of inline closures is to circumvent an issue where the compiler
-      // allocates stack space for every if/case branch local when no optimizations
-      // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
-      // https://github.com/apple/swift-protobuf/issues/1182
+      if _storage._emitAttributeMetadata != false {
+        try visitor.visitSingularBoolField(value: _storage._emitAttributeMetadata, fieldNumber: 21)
+      }
       try { if let v = _storage._sourcemapOutput {
         try visitor.visitSingularStringField(value: v, fieldNumber: 22)
       } }()
@@ -2853,6 +2972,7 @@ extension ExecProgramArgs: SwiftProtobuf.Message, SwiftProtobuf._MessageImplemen
         if _storage._fastEval != rhs_storage._fastEval {return false}
         if _storage._errorFormat != rhs_storage._errorFormat {return false}
         if _storage._format != rhs_storage._format {return false}
+        if _storage._emitAttributeMetadata != rhs_storage._emitAttributeMetadata {return false}
         if _storage._sourcemapOutput != rhs_storage._sourcemapOutput {return false}
         return true
       }
@@ -2890,6 +3010,10 @@ extension ExecProgramResult: SwiftProtobuf.Message, SwiftProtobuf._MessageImplem
   }
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
     if !self.jsonResult.isEmpty {
       try visitor.visitSingularStringField(value: self.jsonResult, fieldNumber: 1)
     }
@@ -2902,10 +3026,6 @@ extension ExecProgramResult: SwiftProtobuf.Message, SwiftProtobuf._MessageImplem
     if !self.errMessage.isEmpty {
       try visitor.visitSingularStringField(value: self.errMessage, fieldNumber: 4)
     }
-    // The use of inline closures is to circumvent an issue where the compiler
-    // allocates stack space for every if/case branch local when no optimizations
-    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
-    // https://github.com/apple/swift-protobuf/issues/1182
     try { if let v = self._sourcemap {
       try visitor.visitSingularStringField(value: v, fieldNumber: 5)
     } }()
@@ -2991,6 +3111,7 @@ extension FormatPathArgs: SwiftProtobuf.Message, SwiftProtobuf._MessageImplement
   public static let protoMessageName: String = _protobuf_package + ".FormatPathArgs"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "path"),
+    2: .standard(proto: "dry_run"),
   ]
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -3000,6 +3121,7 @@ extension FormatPathArgs: SwiftProtobuf.Message, SwiftProtobuf._MessageImplement
       // enabled. https://github.com/apple/swift-protobuf/issues/1034
       switch fieldNumber {
       case 1: try { try decoder.decodeSingularStringField(value: &self.path) }()
+      case 2: try { try decoder.decodeSingularBoolField(value: &self.dryRun) }()
       default: break
       }
     }
@@ -3009,11 +3131,15 @@ extension FormatPathArgs: SwiftProtobuf.Message, SwiftProtobuf._MessageImplement
     if !self.path.isEmpty {
       try visitor.visitSingularStringField(value: self.path, fieldNumber: 1)
     }
+    if self.dryRun != false {
+      try visitor.visitSingularBoolField(value: self.dryRun, fieldNumber: 2)
+    }
     try unknownFields.traverse(visitor: &visitor)
   }
 
   public static func ==(lhs: FormatPathArgs, rhs: FormatPathArgs) -> Bool {
     if lhs.path != rhs.path {return false}
+    if lhs.dryRun != rhs.dryRun {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }
@@ -3745,7 +3871,6 @@ extension Position: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationB
   }
 }
 
-
 extension LoadSettingsFilesArgs: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
   public static let protoMessageName: String = _protobuf_package + ".LoadSettingsFilesArgs"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
@@ -4133,6 +4258,7 @@ extension TestArgs: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationB
     2: .standard(proto: "pkg_list"),
     3: .standard(proto: "run_regexp"),
     4: .standard(proto: "fail_fast"),
+    5: .same(proto: "coverage"),
   ]
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -4145,6 +4271,7 @@ extension TestArgs: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationB
       case 2: try { try decoder.decodeRepeatedStringField(value: &self.pkgList) }()
       case 3: try { try decoder.decodeSingularStringField(value: &self.runRegexp) }()
       case 4: try { try decoder.decodeSingularBoolField(value: &self.failFast) }()
+      case 5: try { try decoder.decodeSingularBoolField(value: &self.coverage) }()
       default: break
       }
     }
@@ -4167,6 +4294,9 @@ extension TestArgs: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationB
     if self.failFast != false {
       try visitor.visitSingularBoolField(value: self.failFast, fieldNumber: 4)
     }
+    if self.coverage != false {
+      try visitor.visitSingularBoolField(value: self.coverage, fieldNumber: 5)
+    }
     try unknownFields.traverse(visitor: &visitor)
   }
 
@@ -4175,6 +4305,7 @@ extension TestArgs: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationB
     if lhs.pkgList != rhs.pkgList {return false}
     if lhs.runRegexp != rhs.runRegexp {return false}
     if lhs.failFast != rhs.failFast {return false}
+    if lhs.coverage != rhs.coverage {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }
@@ -4184,6 +4315,7 @@ extension TestResult: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementatio
   public static let protoMessageName: String = _protobuf_package + ".TestResult"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     2: .same(proto: "info"),
+    3: .same(proto: "coverage"),
   ]
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -4193,20 +4325,29 @@ extension TestResult: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementatio
       // enabled. https://github.com/apple/swift-protobuf/issues/1034
       switch fieldNumber {
       case 2: try { try decoder.decodeRepeatedMessageField(value: &self.info) }()
+      case 3: try { try decoder.decodeSingularMessageField(value: &self._coverage) }()
       default: break
       }
     }
   }
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
     if !self.info.isEmpty {
       try visitor.visitRepeatedMessageField(value: self.info, fieldNumber: 2)
     }
+    try { if let v = self._coverage {
+      try visitor.visitSingularMessageField(value: v, fieldNumber: 3)
+    } }()
     try unknownFields.traverse(visitor: &visitor)
   }
 
   public static func ==(lhs: TestResult, rhs: TestResult) -> Bool {
     if lhs.info != rhs.info {return false}
+    if lhs._coverage != rhs._coverage {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }
@@ -4219,6 +4360,7 @@ extension TestCaseInfo: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementat
     2: .same(proto: "error"),
     3: .same(proto: "duration"),
     4: .standard(proto: "log_message"),
+    5: .standard(proto: "line_hits"),
   ]
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -4231,6 +4373,7 @@ extension TestCaseInfo: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementat
       case 2: try { try decoder.decodeSingularStringField(value: &self.error) }()
       case 3: try { try decoder.decodeSingularUInt64Field(value: &self.duration) }()
       case 4: try { try decoder.decodeSingularStringField(value: &self.logMessage) }()
+      case 5: try { try decoder.decodeMapField(fieldType: SwiftProtobuf._ProtobufMap<SwiftProtobuf.ProtobufString,SwiftProtobuf.ProtobufUInt64>.self, value: &self.lineHits) }()
       default: break
       }
     }
@@ -4249,6 +4392,9 @@ extension TestCaseInfo: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementat
     if !self.logMessage.isEmpty {
       try visitor.visitSingularStringField(value: self.logMessage, fieldNumber: 4)
     }
+    if !self.lineHits.isEmpty {
+      try visitor.visitMapField(fieldType: SwiftProtobuf._ProtobufMap<SwiftProtobuf.ProtobufString,SwiftProtobuf.ProtobufUInt64>.self, value: self.lineHits, fieldNumber: 5)
+    }
     try unknownFields.traverse(visitor: &visitor)
   }
 
@@ -4257,6 +4403,143 @@ extension TestCaseInfo: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementat
     if lhs.error != rhs.error {return false}
     if lhs.duration != rhs.duration {return false}
     if lhs.logMessage != rhs.logMessage {return false}
+    if lhs.lineHits != rhs.lineHits {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+extension FileCoverage: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = _protobuf_package + ".FileCoverage"
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .same(proto: "filename"),
+    2: .standard(proto: "covered_lines"),
+    3: .standard(proto: "executable_lines"),
+    4: .standard(proto: "line_hits"),
+  ]
+
+  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeSingularStringField(value: &self.filename) }()
+      case 2: try { try decoder.decodeRepeatedUInt64Field(value: &self.coveredLines) }()
+      case 3: try { try decoder.decodeRepeatedUInt64Field(value: &self.executableLines) }()
+      case 4: try { try decoder.decodeMapField(fieldType: SwiftProtobuf._ProtobufMap<SwiftProtobuf.ProtobufUInt64,SwiftProtobuf.ProtobufUInt64>.self, value: &self.lineHits) }()
+      default: break
+      }
+    }
+  }
+
+  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    if !self.filename.isEmpty {
+      try visitor.visitSingularStringField(value: self.filename, fieldNumber: 1)
+    }
+    if !self.coveredLines.isEmpty {
+      try visitor.visitPackedUInt64Field(value: self.coveredLines, fieldNumber: 2)
+    }
+    if !self.executableLines.isEmpty {
+      try visitor.visitPackedUInt64Field(value: self.executableLines, fieldNumber: 3)
+    }
+    if !self.lineHits.isEmpty {
+      try visitor.visitMapField(fieldType: SwiftProtobuf._ProtobufMap<SwiftProtobuf.ProtobufUInt64,SwiftProtobuf.ProtobufUInt64>.self, value: self.lineHits, fieldNumber: 4)
+    }
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  public static func ==(lhs: FileCoverage, rhs: FileCoverage) -> Bool {
+    if lhs.filename != rhs.filename {return false}
+    if lhs.coveredLines != rhs.coveredLines {return false}
+    if lhs.executableLines != rhs.executableLines {return false}
+    if lhs.lineHits != rhs.lineHits {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+extension TestCoverageReport: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = _protobuf_package + ".TestCoverageReport"
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .same(proto: "files"),
+    2: .same(proto: "summary"),
+  ]
+
+  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeMapField(fieldType: SwiftProtobuf._ProtobufMessageMap<SwiftProtobuf.ProtobufString,FileCoverage>.self, value: &self.files) }()
+      case 2: try { try decoder.decodeSingularMessageField(value: &self._summary) }()
+      default: break
+      }
+    }
+  }
+
+  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
+    if !self.files.isEmpty {
+      try visitor.visitMapField(fieldType: SwiftProtobuf._ProtobufMessageMap<SwiftProtobuf.ProtobufString,FileCoverage>.self, value: self.files, fieldNumber: 1)
+    }
+    try { if let v = self._summary {
+      try visitor.visitSingularMessageField(value: v, fieldNumber: 2)
+    } }()
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  public static func ==(lhs: TestCoverageReport, rhs: TestCoverageReport) -> Bool {
+    if lhs.files != rhs.files {return false}
+    if lhs._summary != rhs._summary {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+extension CoverageSummary: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = _protobuf_package + ".CoverageSummary"
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .same(proto: "covered"),
+    2: .same(proto: "executable"),
+    3: .same(proto: "percent"),
+  ]
+
+  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeSingularUInt64Field(value: &self.covered) }()
+      case 2: try { try decoder.decodeSingularUInt64Field(value: &self.executable) }()
+      case 3: try { try decoder.decodeSingularDoubleField(value: &self.percent) }()
+      default: break
+      }
+    }
+  }
+
+  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    if self.covered != 0 {
+      try visitor.visitSingularUInt64Field(value: self.covered, fieldNumber: 1)
+    }
+    if self.executable != 0 {
+      try visitor.visitSingularUInt64Field(value: self.executable, fieldNumber: 2)
+    }
+    if self.percent.bitPattern != 0 {
+      try visitor.visitSingularDoubleField(value: self.percent, fieldNumber: 3)
+    }
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  public static func ==(lhs: CoverageSummary, rhs: CoverageSummary) -> Bool {
+    if lhs.covered != rhs.covered {return false}
+    if lhs.executable != rhs.executable {return false}
+    if lhs.percent != rhs.percent {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }
