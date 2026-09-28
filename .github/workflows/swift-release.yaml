@@ -10,8 +10,11 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: false
 
+# Need `contents: write` so `bundle-into-tag` can force-update the tag with
+# the prebuilt universal .a attached. The `read` default would reject the
+# force-push of a tag we do not own.
 permissions:
-  contents: read
+  contents: write
 
 env:
   # Matches the macOS deployment target pinned by the nodejs workflow; the
@@ -50,12 +53,69 @@ jobs:
           if-no-files-found: error
           path: swift/Sources/CKclLib/lib/libkcl_lib_c.a
 
+  # TODO(swift): once we switch to XCFramework + .binaryTarget(url:checksum:)
+  # in Package.swift, this job can be deleted. SPM will then pull the
+  # binary from the GitHub Release URL instead of from the tag commit.
+  bundle-into-tag:
+    if: startsWith(github.ref, 'refs/tags/')
+    runs-on: macos-latest
+    needs: [build]
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          # Full history so we can amend the tagged commit.
+          fetch-depth: 0
+          ref: ${{ github.ref }}
+
+      - name: Download per-arch .a artifacts
+        uses: actions/download-artifact@v7
+        with:
+          path: per-arch
+          pattern: libkcl_lib_c-darwin-*
+          merge-multiple: true
+
+      - name: Combine into universal .a with lipo
+        run: |
+          set -euo pipefail
+          mkdir -p swift/Sources/CKclLib/lib
+          lipo -create \
+            per-arch/libkcl_lib_c-darwin-x86_64/libkcl_lib_c.a \
+            per-arch/libkcl_lib_c-darwin-arm64/libkcl_lib_c.a \
+            -output swift/Sources/CKclLib/lib/libkcl_lib_c.a
+          echo "---- resulting .a ----"
+          file swift/Sources/CKclLib/lib/libkcl_lib_c.a
+          ls -la swift/Sources/CKclLib/lib/
+
+      - name: Commit .a onto the tagged commit and force-update the tag
+        env:
+          TAG: ${{ github.ref_name }}
+        run: |
+          set -euo pipefail
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          # The root .gitignore excludes `*.a`; force-add so the universal
+          # binary can land in the tagged commit. This file is intentionally
+          # NOT committed on regular development commits.
+          git add -f swift/Sources/CKclLib/lib/libkcl_lib_c.a
+          if git diff --cached --quiet; then
+            echo "No changes to commit (tag already carries the .a); skipping force-push."
+            exit 0
+          fi
+          git commit -m "chore(swift): bundle universal libkcl_lib_c.a for ${TAG}"
+
+          # Move the tag forward to this commit so SPM consumers pulling
+          # the tag get the .a at the path Package.swift expects. This
+          # rewrites the tag — acceptable for release tags.
+          git tag -f "$TAG" HEAD
+          git push origin "$TAG" --force
+
   release:
     if: startsWith(github.ref, 'refs/tags/')
     runs-on: ubuntu-latest
     permissions:
       contents: write
-    needs: [build]
+    needs: [build, bundle-into-tag]
     steps:
       - uses: actions/checkout@v6
       - name: Download artifacts

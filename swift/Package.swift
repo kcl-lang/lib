@@ -31,6 +31,15 @@ let package = Package(
                 "CKclLib",
                 .product(name: "SwiftProtobuf", package: "swift-protobuf")
             ],
+            // Sources/CKclLib/lib/libkcl_lib_c.a is NOT in git. It is added
+            // by the swift-release workflow at tag time (force-updates the
+            // tagged commit) so SPM consumers can `swift build` against a
+            // tagged release directly. For local development, run `make
+            // cargo` (or `make build`) first.
+            //
+            // TODO(swift): move to XCFramework + .binaryTarget(url:checksum:)
+            // pointed at the GitHub Release so the tag payload stops carrying
+            // the binary and cross-platform builds (Linux Swift) work.
             linkerSettings: [
                 .unsafeFlags(["-L", "Sources/CKclLib/lib"])
             ]

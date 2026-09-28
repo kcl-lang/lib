@@ -53,6 +53,10 @@
         <formatter-maven-plugin.version>2.16.0</formatter-maven-plugin.version>
         <protobuf-java.version>4.33.1</protobuf-java.version>
         <protobuf-maven-plugin.version>0.6.1</protobuf-maven-plugin.version>
+        <!-- Maven Central publishing toolchain. Activated by `-P central`
+             in the deploy-central workflow job. -->
+        <central-publishing-maven-plugin.version>0.7.0</central-publishing-maven-plugin.version>
+        <maven-gpg-plugin.version>3.2.7</maven-gpg-plugin.version>
     </properties>
     <dependencies>
         <!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-api -->
@@ -312,6 +316,53 @@
                     <value>prod</value>
                 </property>
             </activation>
+        </profile>
+        <!-- Maven Central publishing profile. Activated by the
+             deploy-central workflow job via `-P central`. Adds GPG signing
+             (required by Central) and the central-publishing plugin that
+             uploads artifacts through the Central Portal REST API.
+
+             Required repo secrets (set in repo settings before tagging):
+               - MAVEN_CENTRAL_USERNAME / MAVEN_CENTRAL_TOKEN
+                 (User Token from https://central.sonatype.com/, mapped to
+                  the <server id="central"> entry written by setup-java)
+               - MAVEN_CENTRAL_GPG_PRIVATE_KEY
+                 (ASCII-armored GPG private key whose fingerprint is
+                  registered on the Central Portal namespace)
+               - MAVEN_CENTRAL_GPG_PASSPHRASE
+        -->
+        <profile>
+            <id>central</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>${maven-gpg-plugin.version}</version>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.sonatype.central</groupId>
+                        <artifactId>central-publishing-maven-plugin</artifactId>
+                        <version>${central-publishing-maven-plugin.version}</version>
+                        <extensions>true</extensions>
+                        <configuration>
+                            <publishingServerId>central</publishingServerId>
+                            <autoPublish>true</autoPublish>
+                            <waitUntil>published</waitUntil>
+                            <deploymentName>kcl-lib-${project.version}</deploymentName>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
         </profile>
     </profiles>
     <distributionManagement>
