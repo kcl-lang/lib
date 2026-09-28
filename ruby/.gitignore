@@ -1,0 +1,4 @@
+/target/
+/vendor/bundle/
+/lib/kcl_lib/kcl_ruby.*
+*.gem

@@ -163,6 +163,25 @@ result = api.exec_program(args)
 print(result.yaml_result)
 ```
 
+### Ruby
+
+```shell
+gem install kcl-lib
+```
+
+Write the code
+
+```ruby
+require "kcl_lib"
+
+args = KclLib::ExecProgramArgs.new(k_filename_list: ["./test_data/schema.k"])
+api = KclLib::API.new
+result = api.exec_program(args)
+puts result.yaml_result
+```
+
+See [here](./ruby/) for the initial version build notes.
+
 ### Node.js
 
 ```shell

@@ -1,0 +1,63 @@
+name: ruby-test
+
+on:
+  push:
+    branches:
+      - main
+      - master
+    tags:
+      - '*'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "ruby/**"
+      - ".github/workflows/ruby-test.yaml"
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}-${{ github.event_name }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  build-and-test:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-latest, ubuntu-latest]
+    defaults:
+      run:
+        working-directory: "ruby"
+    runs-on: ${{ matrix.os }}
+    steps:
+    - uses: actions/checkout@v7
+    - name: Setup Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: "3.4"
+    - name: Install Ruby dependencies
+      run: bundle install
+    - name: Install protobuf
+      if: runner.os == 'macOS'
+      run: brew install protobuf
+    - name: Install protobuf
+      if: runner.os == 'Linux'
+      run: sudo apt-get update && sudo apt-get install -y protobuf-compiler
+    - name: Install Rust
+      uses: actions-rs/toolchain@v1
+      with:
+        toolchain: 1.91
+        override: true
+        components: clippy, rustfmt
+    - name: Build
+      run: make build
+    - name: Test
+      run: make test
+      env:
+        # Prefer the setup-ruby Ruby over any Homebrew Ruby so the gems from
+        # `bundle install` resolve (the Makefile auto-detects /opt/homebrew
+        # first, which does not see setup-ruby's gem home on CI runners).
+        RUBY: ruby
