@@ -644,9 +644,12 @@ private enum YamlEmitter {
       return "null"
     }
     // `NSNumber as? Bool` bridges lossily on Darwin (NSNumber(1) casts to
-    // true), so booleans must be told apart via CFBoolean.
+    // true), so booleans must be told apart from numeric NSNumbers. On
+    // Darwin we use CFBoolean's type ID; on Linux (swift-corelibs-foundation)
+    // CFBoolean isn't exposed, so we fall back to the Objective-C type
+    // encoding — NSNumber stores Bool as signed char ('c') on both platforms.
     if let n = value as? NSNumber {
-      if CFGetTypeID(n) == CFBooleanGetTypeID() {
+      if YamlEmitter.isBoolNumber(n) {
         return n.boolValue ? "true" : "false"
       }
       return String(describing: n)
@@ -700,6 +703,22 @@ private enum YamlEmitter {
     }
     return true
   }
+
+  /// True if `n` wraps a `Bool` rather than a numeric value.
+  ///
+  /// On Darwin, CFBoolean is exposed by Foundation and `CFGetTypeID` gives
+  /// the most reliable answer (and is what the original code used). On
+  /// Linux, swift-corelibs-foundation does not link CoreFoundation, so we
+  /// fall back to the Objective-C type encoding — Bool is encoded as
+  /// `'c'` (signed char) on both platforms, while Int/Double/Float use
+  /// different codes ('i'/'q', 'd', 'f', ...).
+  fileprivate static func isBoolNumber(_ n: NSNumber) -> Bool {
+    #if canImport(Darwin)
+    return CFGetTypeID(n) == CFBooleanGetTypeID()
+    #else
+    return n.objCType.pointee == 0x63  // 'c'
+    #endif
+  }
 }
 
 private func typeName(of value: Any) -> String {
@@ -710,7 +729,7 @@ private func typeName(of value: Any) -> String {
     return "list"
   }
   if let n = value as? NSNumber {
-    return CFGetTypeID(n) == CFBooleanGetTypeID() ? "bool" : "number"
+    return YamlEmitter.isBoolNumber(n) ? "bool" : "number"
   }
   if value is String {
     return "string"
