@@ -143,7 +143,7 @@ jobs:
 
           ls -la "${dest}"
 
-      - uses: actions/upload-artifact@v6
+      - uses: actions/upload-artifact@v7
         with:
           name: kcltool-${{ matrix.classifier }}
           if-no-files-found: error
@@ -254,7 +254,7 @@ jobs:
           echo "---- local feed (final) ----"
           ls -la local-feed
 
-      - uses: actions/upload-artifact@v6
+      - uses: actions/upload-artifact@v7
         with:
           name: KclTool NuGet Packages
           path: |
