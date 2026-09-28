@@ -47,7 +47,7 @@ jobs:
         working-directory: swift
         run: make build
       - name: Upload artifact
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: libkcl_lib_c-darwin-${{ matrix.arch }}
           if-no-files-found: error
