@@ -142,7 +142,7 @@ jobs:
 
   deploy:
     runs-on: ubuntu-latest
-      
+
     permissions:
       contents: read
       packages: write
@@ -180,3 +180,64 @@ jobs:
 
         env:
           GITHUB_TOKEN: ${{ github.token }}
+
+  # Maven Central publishing. Requires the four secrets listed in
+  # kotlin/pom.xml's `central` profile comment to be set in repo settings.
+  # The job is skipped (not failed) when any secret is missing so the
+  # workflow can land the scaffold without red builds, and quietly
+  # enables Central publishing once the operator fills them in.
+  deploy-central:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+    needs: [ test-and-build, build-centos7 ]
+    if: >-
+      startsWith(github.ref, 'refs/tags/') &&
+      secrets.MAVEN_CENTRAL_USERNAME != '' &&
+      secrets.MAVEN_CENTRAL_TOKEN != '' &&
+      secrets.MAVEN_CENTRAL_GPG_PRIVATE_KEY != '' &&
+      secrets.MAVEN_CENTRAL_GPG_PASSPHRASE != ''
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Set up JDK 8 + Central Portal credentials + GPG key
+        uses: actions/setup-java@v6.0.0
+        with:
+          distribution: 'temurin'
+          java-version: '8'
+          # Writes <server id="central"> into $GITHUB_WORKSPACE/settings.xml
+          # with username/password from the secrets below.
+          server-id: central
+          server-username: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
+          server-password: ${{ secrets.MAVEN_CENTRAL_TOKEN }}
+          settings-path: ${{ github.workspace }}
+          # Imports the GPG key into the runner's keyring and stores the
+          # passphrase where maven-gpg-plugin picks it up.
+          gpg-private-key: ${{ secrets.MAVEN_CENTRAL_GPG_PRIVATE_KEY }}
+          gpg-passphrase: ${{ secrets.MAVEN_CENTRAL_GPG_PASSPHRASE }}
+
+      - name: Install Rust (cargo exec plugin re-builds the JNI lib)
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: 1.91
+          override: true
+
+      - name: Install Python (build.py runs under python3)
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.10'
+
+      - name: Build, sign, and publish to Maven Central
+        working-directory: kotlin
+        run: |
+          # -P central activates maven-gpg-plugin (signs all artifacts)
+          # and central-publishing-maven-plugin (uploads via Central
+          # Portal REST API with autoPublish=true). -DskipTests avoids
+          # re-running JUnit; -Dcargo-build.profile=release matches the
+          # release-mode binary the test-and-build job produced.
+          mvn deploy -P central \
+            -DskipTests=true \
+            -Dcargo-build.profile=release \
+            -s $GITHUB_WORKSPACE/settings.xml
