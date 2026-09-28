@@ -389,6 +389,130 @@ schema Person:
         Assert.AreEqual(false, unset.HasSourcemap);
     }
 
+    // Pure protobuf round-trip — covers ExecProgramArgs.emit_attribute_metadata
+    // (field 21, bool).
+    [TestMethod]
+    public void TestExecProgramArgsEmitAttributeMetadataRoundTrip()
+    {
+        var args = new ExecProgramArgs { EmitAttributeMetadata = true };
+        Assert.AreEqual(true, args.EmitAttributeMetadata);
+
+        var decoded = ExecProgramArgs.Parser.ParseFrom(args.ToByteArray());
+        Assert.AreEqual(true, decoded.EmitAttributeMetadata);
+
+        var unset = new ExecProgramArgs();
+        Assert.AreEqual(false, unset.EmitAttributeMetadata);
+    }
+
+    // Pure protobuf round-trip — covers TestArgs.coverage (field 5, bool).
+    [TestMethod]
+    public void TestTestArgsCoverageRoundTrip()
+    {
+        var args = new TestArgs { Coverage = true };
+        Assert.AreEqual(true, args.Coverage);
+
+        var decoded = TestArgs.Parser.ParseFrom(args.ToByteArray());
+        Assert.AreEqual(true, decoded.Coverage);
+
+        var unset = new TestArgs();
+        Assert.AreEqual(false, unset.Coverage);
+    }
+
+    // Pure protobuf round-trip — covers TestResult.coverage (field 3,
+    // TestCoverageReport) and TestCaseInfo.line_hits (field 5,
+    // map<string, uint64>).
+    [TestMethod]
+    public void TestTestResultCoverageAndLineHitsRoundTrip()
+    {
+        var result = new TestResult();
+        result.Info.Add(new TestCaseInfo
+        {
+            Name = "test_case_1",
+            Duration = 1000,
+            LogMessage = "log",
+        });
+        result.Info[0].LineHits.Add("main.k:1", 3);
+        result.Info[0].LineHits.Add("main.k:2", 1);
+        result.Coverage = new TestCoverageReport();
+        result.Coverage.Files.Add("main.k", new FileCoverage
+        {
+            Filename = "main.k",
+        });
+        result.Coverage.Files["main.k"].CoveredLines.Add(1);
+        result.Coverage.Files["main.k"].CoveredLines.Add(2);
+        result.Coverage.Files["main.k"].ExecutableLines.Add(1);
+        result.Coverage.Files["main.k"].ExecutableLines.Add(2);
+        result.Coverage.Files["main.k"].LineHits.Add(1, 3);
+        result.Coverage.Files["main.k"].LineHits.Add(2, 1);
+        result.Coverage.Summary = new CoverageSummary
+        {
+            Covered = 2,
+            Executable = 2,
+            Percent = 100.0,
+        };
+
+        var decoded = TestResult.Parser.ParseFrom(result.ToByteArray());
+        Assert.AreEqual(1, decoded.Info.Count);
+        Assert.AreEqual("test_case_1", decoded.Info[0].Name);
+        Assert.AreEqual(2, decoded.Info[0].LineHits.Count);
+        Assert.AreEqual(3UL, decoded.Info[0].LineHits["main.k:1"]);
+        Assert.AreEqual(1UL, decoded.Info[0].LineHits["main.k:2"]);
+        Assert.AreEqual(1, decoded.Coverage.Files.Count);
+        var file = decoded.Coverage.Files["main.k"];
+        Assert.AreEqual("main.k", file.Filename);
+        CollectionAssert.AreEqual(new ulong[] { 1, 2 }, file.CoveredLines);
+        CollectionAssert.AreEqual(new ulong[] { 1, 2 }, file.ExecutableLines);
+        Assert.AreEqual(2, file.LineHits.Count);
+        Assert.AreEqual(3UL, file.LineHits[1]);
+        Assert.AreEqual(1UL, file.LineHits[2]);
+        Assert.AreEqual(2UL, decoded.Coverage.Summary.Covered);
+        Assert.AreEqual(2UL, decoded.Coverage.Summary.Executable);
+        Assert.AreEqual(100.0, decoded.Coverage.Summary.Percent);
+
+        var unset = new TestResult();
+        Assert.IsNull(unset.Coverage);
+    }
+
+    // Pure protobuf round-trip — covers the new coverage message types
+    // FileCoverage, TestCoverageReport and CoverageSummary.
+    [TestMethod]
+    public void TestCoverageMessagesRoundTrip()
+    {
+        var summary = new CoverageSummary
+        {
+            Covered = 7,
+            Executable = 10,
+            Percent = 70.0,
+        };
+        var decodedSummary = CoverageSummary.Parser.ParseFrom(summary.ToByteArray());
+        Assert.AreEqual(7UL, decodedSummary.Covered);
+        Assert.AreEqual(10UL, decodedSummary.Executable);
+        Assert.AreEqual(70.0, decodedSummary.Percent);
+
+        var file = new FileCoverage
+        {
+            Filename = "pkg/main.k",
+        };
+        file.CoveredLines.Add(3);
+        file.ExecutableLines.Add(3);
+        file.ExecutableLines.Add(7);
+        file.LineHits.Add(3, 5);
+        var decodedFile = FileCoverage.Parser.ParseFrom(file.ToByteArray());
+        Assert.AreEqual("pkg/main.k", decodedFile.Filename);
+        CollectionAssert.AreEqual(new ulong[] { 3 }, decodedFile.CoveredLines);
+        CollectionAssert.AreEqual(new ulong[] { 3, 7 }, decodedFile.ExecutableLines);
+        Assert.AreEqual(1, decodedFile.LineHits.Count);
+        Assert.AreEqual(5UL, decodedFile.LineHits[3]);
+
+        var report = new TestCoverageReport();
+        report.Files.Add("pkg/main.k", file);
+        report.Summary = summary;
+        var decodedReport = TestCoverageReport.Parser.ParseFrom(report.ToByteArray());
+        Assert.AreEqual(1, decodedReport.Files.Count);
+        Assert.AreEqual("pkg/main.k", decodedReport.Files["pkg/main.k"].Filename);
+        Assert.AreEqual(7UL, decodedReport.Summary.Covered);
+    }
+
     static string FindCsprojInParentDirectory(string directory)
     {
         string parentDirectory = Directory.GetParent(directory).FullName;
