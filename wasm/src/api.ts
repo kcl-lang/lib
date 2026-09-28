@@ -167,6 +167,7 @@ export interface ExecProgramArgs {
   fastEval?: boolean;
   errorFormat?: string;
   format?: string;
+  emitAttributeMetadata?: boolean;
   sourcemapOutput?: string;
 }
 
@@ -175,6 +176,19 @@ export interface ExecProgramResult {
   yamlResult: string;
   logMessage: string;
   errMessage: string;
+  sourcemap: string;
+}
+
+export interface FormatCodeArgs {
+  source?: string;
+}
+
+export interface FormatCodeResult {
+  formatted: Uint8Array;
+}
+
+export interface ListMethodResult {
+  methodNameList: string[];
 }
 
 export interface GetSchemaTypeMappingArgs {
@@ -284,6 +298,7 @@ export interface TestArgs {
   pkgList?: string[];
   runRegexp?: string;
   failFast?: boolean;
+  coverage?: boolean;
 }
 
 export interface TestCaseInfo {
@@ -291,10 +306,30 @@ export interface TestCaseInfo {
   error: string;
   duration: number;
   logMessage: string;
+  lineHits: Record<string, number>;
 }
 
 export interface TestResult {
   info: TestCaseInfo[];
+  coverage?: TestCoverageReport;
+}
+
+export interface FileCoverage {
+  filename: string;
+  coveredLines: number[];
+  executableLines: number[];
+  lineHits: Record<number, number>;
+}
+
+export interface CoverageSummary {
+  covered: number;
+  executable: number;
+  percent: number;
+}
+
+export interface TestCoverageReport {
+  files: Record<string, FileCoverage>;
+  summary?: CoverageSummary;
 }
 
 export interface UpdateDependenciesArgs {
@@ -386,6 +421,7 @@ export interface KclType {
 }
 
 const KCL_SERVICE = "KclService.";
+const BUILTIN_SERVICE = "BuiltinService.";
 
 function encodeExternalPkg(pkg: ExternalPkg): Uint8Array {
   return concatBytes(stringField(1, pkg.pkgName), stringField(2, pkg.pkgPath));
@@ -437,6 +473,7 @@ function encodeExecProgramArgs(args: ExecProgramArgs): Uint8Array {
     boolField(18, args.fastEval ?? false),
     stringField(19, args.errorFormat),
     stringField(20, args.format),
+    boolField(21, args.emitAttributeMetadata ?? false),
     stringField(22, args.sourcemapOutput)
   );
 }
@@ -990,6 +1027,7 @@ function decodeTestCaseInfo(r: ProtoReader): TestCaseInfo {
     error: "",
     duration: 0,
     logMessage: "",
+    lineHits: {},
   };
   while (!r.eof) {
     const tag = r.readTag();
@@ -1006,11 +1044,99 @@ function decodeTestCaseInfo(r: ProtoReader): TestCaseInfo {
       case 4:
         info.logMessage = r.readString();
         break;
+      case 5: {
+        const [k, v] = decodeStringMapEntry(r, (m) => m.readUint64());
+        info.lineHits[k] = v;
+        break;
+      }
       default:
         r.skip(tag & 7);
     }
   }
   return info;
+}
+
+function decodeFileCoverage(r: ProtoReader): FileCoverage {
+  const file: FileCoverage = {
+    filename: "",
+    coveredLines: [],
+    executableLines: [],
+    lineHits: {},
+  };
+  while (!r.eof) {
+    const tag = r.readTag();
+    switch (tag >>> 3) {
+      case 1:
+        file.filename = r.readString();
+        break;
+      case 2:
+        file.coveredLines.push(r.readUint64());
+        break;
+      case 3:
+        file.executableLines.push(r.readUint64());
+        break;
+      case 4: {
+        // map<uint64, uint64>: entry key and value are both varints.
+        const entry = r.readMessage();
+        let line = 0;
+        let hits: number | undefined;
+        while (!entry.eof) {
+          const t = entry.readTag();
+          if (t >>> 3 === 1) line = entry.readUint64();
+          else if (t >>> 3 === 2) hits = entry.readUint64();
+          else entry.skip(t & 7);
+        }
+        file.lineHits[line] = hits ?? 0;
+        break;
+      }
+      default:
+        r.skip(tag & 7);
+    }
+  }
+  return file;
+}
+
+function decodeCoverageSummary(r: ProtoReader): CoverageSummary {
+  const summary: CoverageSummary = { covered: 0, executable: 0, percent: 0 };
+  while (!r.eof) {
+    const tag = r.readTag();
+    switch (tag >>> 3) {
+      case 1:
+        summary.covered = r.readUint64();
+        break;
+      case 2:
+        summary.executable = r.readUint64();
+        break;
+      case 3:
+        summary.percent = r.readDouble();
+        break;
+      default:
+        r.skip(tag & 7);
+    }
+  }
+  return summary;
+}
+
+function decodeTestCoverageReport(r: ProtoReader): TestCoverageReport {
+  const report: TestCoverageReport = { files: {} };
+  while (!r.eof) {
+    const tag = r.readTag();
+    switch (tag >>> 3) {
+      case 1: {
+        const [k, v] = decodeStringMapEntry(r, (m) =>
+          decodeFileCoverage(m.readMessage())
+        );
+        report.files[k] = v;
+        break;
+      }
+      case 2:
+        report.summary = decodeCoverageSummary(r.readMessage());
+        break;
+      default:
+        r.skip(tag & 7);
+    }
+  }
+  return report;
 }
 
 function decodeStringMapEntry<V>(
@@ -1029,17 +1155,7 @@ function decodeStringMapEntry<V>(
   return [key, value as V];
 }
 
-function callService(
-  instance: WebAssembly.Instance,
-  method: string,
-  args: Uint8Array,
-  resultBufferSize?: number
-): Uint8Array {
-  const result = invokeKCLCallNative(instance, {
-    methodName: KCL_SERVICE + method,
-    args,
-    resultBufferSize,
-  });
+function checkServiceError(result: Uint8Array): Uint8Array {
   if (
     result.length >= 6 &&
     result[0] === 0x45 &&
@@ -1052,6 +1168,36 @@ function callService(
     throw new Error(new TextDecoder().decode(result.slice(6)));
   }
   return result;
+}
+
+function callService(
+  instance: WebAssembly.Instance,
+  method: string,
+  args: Uint8Array,
+  resultBufferSize?: number
+): Uint8Array {
+  return callBuiltinService(
+    instance,
+    method,
+    args,
+    resultBufferSize,
+    KCL_SERVICE
+  );
+}
+
+function callBuiltinService(
+  instance: WebAssembly.Instance,
+  method: string,
+  args: Uint8Array,
+  resultBufferSize?: number,
+  service: string = BUILTIN_SERVICE
+): Uint8Array {
+  const result = invokeKCLCallNative(instance, {
+    methodName: service + method,
+    args,
+    resultBufferSize,
+  });
+  return checkServiceError(result);
 }
 
 export function ping(
@@ -1068,6 +1214,45 @@ export function ping(
   while (!r.eof) {
     const tag = r.readTag();
     if (tag >>> 3 === 1) out.value = r.readString();
+    else r.skip(tag & 7);
+  }
+  return out;
+}
+
+/**
+ * Ping over `BuiltinService` (the runtime reuses the KclService
+ * implementation, so the wire shape matches {@link ping}).
+ */
+export function builtinPing(
+  instance: WebAssembly.Instance,
+  args: PingArgs = {}
+): PingResult {
+  const result = callBuiltinService(
+    instance,
+    "Ping",
+    stringField(1, args.value ?? "")
+  );
+  const r = new ProtoReader(result);
+  const out: PingResult = { value: "" };
+  while (!r.eof) {
+    const tag = r.readTag();
+    if (tag >>> 3 === 1) out.value = r.readString();
+    else r.skip(tag & 7);
+  }
+  return out;
+}
+
+/**
+ * List the RPC method names registered in the runtime
+ * (`BuiltinService.ListMethod`), e.g. `"KclService.ExecProgram"`.
+ */
+export function listMethod(instance: WebAssembly.Instance): ListMethodResult {
+  const result = callBuiltinService(instance, "ListMethod", new Uint8Array(0));
+  const r = new ProtoReader(result);
+  const out: ListMethodResult = { methodNameList: [] };
+  while (!r.eof) {
+    const tag = r.readTag();
+    if (tag >>> 3 === 1) out.methodNameList.push(r.readString());
     else r.skip(tag & 7);
   }
   return out;
@@ -1366,12 +1551,17 @@ export function execProgram(
     "ExecProgram",
     encodeExecProgramArgs(args)
   );
+  return decodeExecProgramResult(result);
+}
+
+export function decodeExecProgramResult(result: Uint8Array): ExecProgramResult {
   const r = new ProtoReader(result);
   const out: ExecProgramResult = {
     jsonResult: "",
     yamlResult: "",
     logMessage: "",
     errMessage: "",
+    sourcemap: "",
   };
   while (!r.eof) {
     const tag = r.readTag();
@@ -1387,6 +1577,9 @@ export function execProgram(
         break;
       case 4:
         out.errMessage = r.readString();
+        break;
+      case 5:
+        out.sourcemap = r.readString();
         break;
       default:
         r.skip(tag & 7);
@@ -1459,6 +1652,25 @@ export function getSchemaTypeMappingUnderPath(
     } else {
       r.skip(tag & 7);
     }
+  }
+  return out;
+}
+
+export function formatCode(
+  instance: WebAssembly.Instance,
+  args: FormatCodeArgs
+): FormatCodeResult {
+  const result = callService(
+    instance,
+    "FormatCode",
+    stringField(1, args.source ?? "")
+  );
+  const r = new ProtoReader(result);
+  const out: FormatCodeResult = { formatted: new Uint8Array(0) };
+  while (!r.eof) {
+    const tag = r.readTag();
+    if (tag >>> 3 === 1) out.formatted = r.readBytes();
+    else r.skip(tag & 7);
   }
   return out;
 }
@@ -1624,15 +1836,28 @@ export function test(
     ),
     encodeStringList(2, args.pkgList),
     stringField(3, args.runRegexp ?? ""),
-    boolField(4, args.failFast ?? false)
+    boolField(4, args.failFast ?? false),
+    boolField(5, args.coverage ?? false)
   );
   const result = callService(instance, "Test", encoded);
+  return decodeTestResult(result);
+}
+
+export function decodeTestResult(result: Uint8Array): TestResult {
   const r = new ProtoReader(result);
   const out: TestResult = { info: [] };
   while (!r.eof) {
     const tag = r.readTag();
-    if (tag >>> 3 === 2) out.info.push(decodeTestCaseInfo(r.readMessage()));
-    else r.skip(tag & 7);
+    switch (tag >>> 3) {
+      case 2:
+        out.info.push(decodeTestCaseInfo(r.readMessage()));
+        break;
+      case 3:
+        out.coverage = decodeTestCoverageReport(r.readMessage());
+        break;
+      default:
+        r.skip(tag & 7);
+    }
   }
   return out;
 }
