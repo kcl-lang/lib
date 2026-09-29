@@ -59,6 +59,7 @@ the matching binary from the `c/` directory.
 | `ping_api`                      | `kcl_ping`               | —                            |
 | `rename_api`                    | `kcl_rename`             | `test_data/rename/`          |
 | `rename_code_api`               | `kcl_rename_code`        | —                            |
+| `run_once`                      | `kcl_run_code` / `kcl_validate_code` | (inline snippets) |
 | `test_api`                      | `kcl_test`               | `test_data/testing/`         |
 | `update_dependencies_api`       | `kcl_update_dependencies`| —                            |
 | `validate_api`                  | `kcl_validate_code`      | (inline schema snippet)      |
@@ -94,7 +95,6 @@ int main()
 
 int main()
 {
-    bool success = false;
     char validate_err[BUFFER_SIZE] = { 0 };
     const char* code = "schema Person:\n"
                        "    name: str\n"
@@ -102,8 +102,10 @@ int main()
                        "    check:\n"
                        "        0 < age < 120\n";
     if (kcl_validate_code(code, "{\"name\": \"Alice\", \"age\": 10}",
-                          &success, validate_err, sizeof(validate_err))) {
-        printf("Validate Status: %d\n", success);
+                          validate_err, sizeof(validate_err))) {
+        printf("Data is valid\n");
+    } else {
+        printf("Data is invalid: %s\n", validate_err);
     }
     return 0;
 }
@@ -127,6 +129,7 @@ supplied.
 | `kcl_ping`                           | Round-trip a string through `KclService.Ping`                          |
 | `kcl_get_version`                    | Fill a `struct KclVersion` from `KclService.GetVersion`                 |
 | `kcl_exec_program`                   | Compile + evaluate files into YAML/JSON                                |
+| `kcl_run_code`                       | Compile + evaluate a single in-memory code snippet into YAML           |
 | `kcl_validate_code`                  | Validate a code snippet against optional data                           |
 | `kcl_format_code`                    | Format an in-memory KCL snippet                                         |
 | `kcl_format_path`                    | Format files on disk (`dry_run` available)                              |
@@ -174,12 +177,11 @@ int main()
     }
 
     // ValidateCode
-    bool success = false;
     char validate_err[BUFFER_SIZE] = { 0 };
     const char* code = "schema Person:\n    name: str\n    age: int\n    check:\n        0 < age < 120\n";
     if (kcl_validate_code(code, "{\"name\": \"Alice\", \"age\": 10}",
-                          &success, validate_err, sizeof(validate_err))) {
-        printf("Validate Status: %d\n", success);
+                          validate_err, sizeof(validate_err))) {
+        printf("Data is valid\n");
     }
 
     // FormatCode
