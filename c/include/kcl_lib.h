@@ -24,7 +24,7 @@ extern "C" {
 // to every error reply. MUST stay in lockstep with the `"ERROR:..."`
 // literals in `crates/api/src/service/capi.rs` (both the `call!` macro and
 // the panic branch of `kcl_service_call_with_length`). See
-// `/Users/timi/codes/lib/docs/abi.md` §4 for the full convention.
+// `docs/abi.md` §4 for the full convention.
 #define ERROR_PREFIX "ERROR:"
 #define ERROR_PREFIX_LEN 6
 
@@ -354,9 +354,10 @@ done:
     return status;
 }
 
-// Validate data against the schema code. Copies the validation error
-// message into err_out and sets success. Returns false on failure.
-static inline bool kcl_validate_code(const char* code, const char* data, bool* success, char* err_out, size_t err_out_size)
+// Validate data against the schema code. Returns true when the data is
+// valid, false when it is not or when the call itself fails (in which case
+// err_out receives the RPC error message).
+static inline bool kcl_validate_code(const char* code, const char* data, char* err_out, size_t err_out_size)
 {
     uint8_t* buffer = (uint8_t*)malloc(BUFFER_SIZE);
     uint8_t* result_buffer = (uint8_t*)malloc(BUFFER_SIZE);
@@ -388,10 +389,8 @@ static inline bool kcl_validate_code(const char* code, const char* data, bool* s
     if (!pb_decode(&istream, ValidateCodeResult_fields, &result))
         goto done;
 
-    if (success != NULL)
-        *success = result.success;
     kcl_copy_string(err_out, err_out_size, err_buffer);
-    status = true;
+    status = result.success;
 
 done:
     free(buffer);
@@ -1626,6 +1625,61 @@ static inline bool kcl_update_dependencies(const char* manifest_path, bool vendo
 done:
     free(buffer);
     free(result_buffer);
+    return status;
+}
+
+// Execute a single KCL code snippet (via the `k_code_list` field of
+// ExecProgramArgs) and copy the YAML result and error message into out_buf
+// and err_buf. Returns false and copies the error message into err_buf on
+// failure.
+static inline bool kcl_run_code(const char* code, char* out_buf, size_t out_buf_len, char* err_buf, size_t err_buf_len)
+{
+    uint8_t* buffer = (uint8_t*)malloc(BUFFER_SIZE);
+    uint8_t* result_buffer = (uint8_t*)malloc(BUFFER_SIZE);
+    uint8_t* yaml_buffer = (uint8_t*)calloc(1, BUFFER_SIZE);
+    uint8_t* err_buffer = (uint8_t*)calloc(1, BUFFER_SIZE);
+    struct Buffer snippet = {
+        .buffer = code,
+        .len = strlen(code),
+    };
+    struct Buffer* code_ptrs[] = { &snippet };
+    struct RepeatedString strs = { .repeated = code_ptrs, .index = 0, .saved_index = 0, .max_size = 1 };
+    bool status = false;
+    if (buffer == NULL || result_buffer == NULL || yaml_buffer == NULL || err_buffer == NULL)
+        goto done;
+
+    ExecProgramArgs args = ExecProgramArgs_init_zero;
+    args.k_code_list.funcs.encode = encode_str_list;
+    args.k_code_list.arg = &strs;
+
+    pb_ostream_t stream = pb_ostream_from_buffer(buffer, BUFFER_SIZE);
+    if (!pb_encode(&stream, ExecProgramArgs_fields, &args))
+        goto done;
+
+    size_t result_length = kcl_call("KclService.ExecProgram", buffer, stream.bytes_written, result_buffer);
+    if (check_error_prefix(result_buffer)) {
+        kcl_copy_string(err_buf, err_buf_len, result_buffer);
+        goto done;
+    }
+
+    pb_istream_t istream = pb_istream_from_buffer(result_buffer, result_length);
+    ExecProgramResult result = ExecProgramResult_init_default;
+    result.yaml_result.funcs.decode = decode_string;
+    result.yaml_result.arg = yaml_buffer;
+    result.err_message.funcs.decode = decode_string;
+    result.err_message.arg = err_buffer;
+    if (!pb_decode(&istream, ExecProgramResult_fields, &result))
+        goto done;
+
+    kcl_copy_string(out_buf, out_buf_len, yaml_buffer);
+    kcl_copy_string(err_buf, err_buf_len, err_buffer);
+    status = true;
+
+done:
+    free(buffer);
+    free(result_buffer);
+    free(yaml_buffer);
+    free(err_buffer);
     return status;
 }
 
