@@ -55,6 +55,93 @@ end
         @test occursin("Cannot find the kcl file", err.message)
     end
 
+    # The facade entry points live at KclLib.run/run_files/must_run: `run` in
+    # particular is deliberately not exported because Base.run owns the name.
+    @testset "facade: run with inline code" begin
+        result = KclLib.run(code="a = 1")
+        @test result isa KCLResult
+        @test yaml_string(result) == "a: 1"
+        @test occursin("\"a\": 1", json_string(result))
+        @test to_dict(result)["a"] == 1
+        @test get(result, "a") == 1
+    end
+
+    @testset "facade: dotted-path get" begin
+        result = KclLib.run(code="a = {b = {c = 42, msg = \"hi\"}}")
+        @test get(result, "a.b.c") == 42
+        @test get(result, "a.b.msg") == "hi"
+        @test get(result, "a.b") == Dict("c" => 42, "msg" => "hi")
+        @test get(result, "a.x.y") === nothing
+        @test get(result, "a.x", "fallback") == "fallback"
+        @test get(result, "", 7) == 7
+    end
+
+    @testset "facade: run_files" begin
+        mktempdir() do dir
+            file = joinpath(dir, "main.k")
+            write(file, "app = {replicas = 2}\n")
+            result = KclLib.run_files([file])
+            @test yaml_string(result) == "app:\n  replicas: 2"
+            @test get(result, "app.replicas") == 2
+        end
+    end
+
+    @testset "facade: overrides, args and path_selector" begin
+        overridden = KclLib.run(code="a = 1", overrides=["a=2"])
+        @test get(overridden, "a") == 2
+
+        with_option = KclLib.run(code="env = option(\"env\")", args=["env=prod"])
+        @test get(with_option, "env") == "prod"
+
+        with_argument_objs = KclLib.run(code="env = option(\"env\")", args=[Argument(name="env", value="dev")])
+        @test get(with_argument_objs, "env") == "dev"
+
+        selected = KclLib.run(code="a = {b = 1}\nc = 2", path_selector=["a"])
+        @test get(selected, "b") == 1
+        @test get(selected, "c") === nothing
+    end
+
+    @testset "facade: run without code or files raises" begin
+        @test_throws ArgumentError KclLib.run()
+        @test_throws ArgumentError KclLib.run_files(String[]; overrides=["a=1"])
+    end
+
+    @testset "facade: run error raises KclError" begin
+        err = try
+            KclLib.run(code="a = = 1")
+            nothing
+        catch e
+            e
+        end
+        @test err isa KclError
+        @test !isempty(err.message)
+
+        @test_throws KclError KclLib.run(code="a = = 1")
+    end
+
+    @testset "facade: must_run" begin
+        result = KclLib.must_run(code="a = 1")
+        @test result isa KCLResult
+        @test get(result, "a") == 1
+
+        mktempdir() do dir
+            file = joinpath(dir, "main.k")
+            write(file, "b = 2\n")
+            from_file = KclLib.must_run([file])
+            @test yaml_string(from_file) == "b: 2"
+            single = KclLib.must_run(file)
+            @test get(single, "b") == 2
+        end
+
+        @test_throws KclError KclLib.must_run(code="a = = 1")
+    end
+
+    @testset "facade: validate_code" begin
+        schema = "schema Person:\n    name: str\n    age: int\n\n    check:\n        0 < age < 120\n"
+        @test validate_code("{\"name\": \"Alice\", \"age\": 10}", schema; format="json")
+        @test !validate_code("{\"name\": \"Alice\", \"age\": 1110}", schema; format="json")
+    end
+
     @testset "parse_program" begin
         result = parse_program(ParseProgramArgs(paths=[SCHEMA_K]))
         @test length(result.paths) == 1
