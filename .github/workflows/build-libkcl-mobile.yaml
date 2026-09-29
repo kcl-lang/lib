@@ -1,0 +1,191 @@
+name: build-libkcl-mobile
+
+# Cross-compiles `c/` (kcl-lib-c) for Android and iOS and stages the
+# resulting libkcl.{so,a} under go/lib/<platform>/, matching the layout the
+# other desktop platforms use. Triggered manually (workflow_dispatch) and on
+# changes to the build inputs (c/, Cargo manifests, this workflow).
+#
+# Android runs on ubuntu-latest with the Android NDK toolchain and uses
+# aarch64-linux-android + x86_64-linux-android targets. iOS runs on
+# macos-latest (Xcode ships there) and produces both device (aarch64-apple-ios)
+# and simulator (aarch64-apple-ios-sim) static archives.
+#
+# Local quick-build (macOS only): the iOS targets can be built locally with
+#   cargo build --release --target aarch64-apple-ios      --manifest-path c/Cargo.toml
+#   cargo build --release --target aarch64-apple-ios-sim  --manifest-path c/Cargo.toml
+# then copy c/target/<triple>/release/libkcl_lib_c.{a,so} to go/lib/<platform>/.
+
+on:
+  push:
+    branches:
+      - main
+      - master
+    paths:
+      - "c/**"
+      - "Cargo.toml"
+      - "Cargo.lock"
+      - ".github/workflows/build-libkcl-mobile.yaml"
+  pull_request:
+    branches:
+      - main
+      - master
+    paths:
+      - "c/**"
+      - "Cargo.toml"
+      - "Cargo.lock"
+      - ".github/workflows/build-libkcl-mobile.yaml"
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}-${{ github.event_name }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  # ---------------------------------------------------------------------------
+  # Android: ubuntu + NDK. Builds cdylib (.so) for arm64-v8a (most physical
+  # devices) and x86_64 (Android emulator on x86_64 hosts).
+  # ---------------------------------------------------------------------------
+  android:
+    name: Android ${{ matrix.target }} (${{ matrix.platform-dir }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - target: aarch64-linux-android
+            triple: aarch64-linux-android21
+            platform-dir: android-arm64
+            api: 21
+          - target: x86_64-linux-android
+            triple: x86_64-linux-android21
+            platform-dir: android-x86_64
+            api: 21
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Install Rust targets
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.target }}
+
+      - name: Install Android NDK
+        uses: nttld/setup-ndk@v1
+        id: ndk
+        with:
+          ndk-version: r26d
+          add-to-path: false
+
+      - name: Probe NDK install path
+        run: |
+          echo "outputs: '${{ toJson(steps.ndk.outputs) }}'"
+          ls -la "${{ steps.ndk.outputs.ndk-path }}/toolchains/llvm/prebuilt/linux-x86_64/bin/clang" 2>&1 | head -3
+
+      # rustc's final link invocation goes through CARGO_TARGET_<TRIPLE>_LINKER
+      # directly — it does NOT inherit CFLAGS_/LDFLAGS_ env vars, and it does
+      # NOT pass --target=<triple>21 to the linker. Without that flag NDK
+      # clang acts as a host linker and can't find -llog/-ldl/-lc in the
+      # NDK sysroot. The wrapper injects --target and --sysroot explicitly.
+      - name: Wrap NDK clang for cargo link step
+        env:
+          NDK: ${{ steps.ndk.outputs.ndk-path }}
+        run: |
+          mkdir -p "$RUNNER_TEMP/ndk-linker"
+          cat > "$RUNNER_TEMP/ndk-linker/aarch64-linux-android-clang" <<'EOF'
+          #!/bin/bash
+          set -e
+          exec "$NDK/toolchains/llvm/prebuilt/linux-x86_64/bin/clang" \
+            --target=aarch64-linux-android21 \
+            --sysroot="$NDK/toolchains/llvm/prebuilt/linux-x86_64/sysroot" \
+            "$@"
+          EOF
+          cat > "$RUNNER_TEMP/ndk-linker/x86_64-linux-android-clang" <<'EOF'
+          #!/bin/bash
+          set -e
+          exec "$NDK/toolchains/llvm/prebuilt/linux-x86_64/bin/clang" \
+            --target=x86_64-linux-android21 \
+            --sysroot="$NDK/toolchains/llvm/prebuilt/linux-x86_64/sysroot" \
+            "$@"
+          EOF
+          chmod +x "$RUNNER_TEMP/ndk-linker/"*
+
+      - name: Build libkcl for ${{ matrix.target }}
+        env:
+          NDK: ${{ steps.ndk.outputs.ndk-path }}
+          # cc-rs / bindgen look at these per-target env names; NDK r26
+          # only ships llvm-{clang,ar,ranlib,nm,strip,ld}, not the
+          # triple-prefixed wrappers, so we have to spell them out.
+          CC_aarch64_linux_android: ${{ steps.ndk.outputs.ndk-path }}/toolchains/llvm/prebuilt/linux-x86_64/bin/clang
+          CC_x86_64_linux_android: ${{ steps.ndk.outputs.ndk-path }}/toolchains/llvm/prebuilt/linux-x86_64/bin/clang
+          AR_aarch64_linux_android: ${{ steps.ndk.outputs.ndk-path }}/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-ar
+          AR_x86_64_linux_android: ${{ steps.ndk.outputs.ndk-path }}/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-ar
+          # Force the cc-rs build scripts through the same wrapper so the
+          # sysroot is consistent for both build-script linking and the
+          # rustc link step.
+          CFLAGS_aarch64_linux_android: --target=aarch64-linux-android21 --sysroot=${{ steps.ndk.outputs.ndk-path }}/toolchains/llvm/prebuilt/linux-x86_64/sysroot
+          CFLAGS_x86_64_linux_android: --target=x86_64-linux-android21 --sysroot=${{ steps.ndk.outputs.ndk-path }}/toolchains/llvm/prebuilt/linux-x86_64/sysroot
+          CARGO_TARGET_AARCH64_LINUX_ANDROID_LINKER: ${{ runner.temp }}/ndk-linker/aarch64-linux-android-clang
+          CARGO_TARGET_X86_64_LINUX_ANDROID_LINKER: ${{ runner.temp }}/ndk-linker/x86_64-linux-android-clang
+        run: |
+          cargo build --release \
+            --target ${{ matrix.target }} \
+            --manifest-path c/Cargo.toml
+
+      - name: Stage into go/lib/${{ matrix.platform-dir }}/
+        run: |
+          mkdir -p go/lib/${{ matrix.platform-dir }}
+          cp c/target/${{ matrix.target }}/release/libkcl_lib_c.so \
+             go/lib/${{ matrix.platform-dir }}/libkcl.so
+          echo "package android_${{ matrix.platform-dir == 'android-arm64' && 'arm64' || 'x86_64' }}" \
+            > go/lib/${{ matrix.platform-dir }}/dummy.go
+          file go/lib/${{ matrix.platform-dir }}/libkcl.so
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: libkcl-${{ matrix.platform-dir }}
+          path: go/lib/${{ matrix.platform-dir }}/
+
+  # ---------------------------------------------------------------------------
+  # iOS: macos-latest (Xcode pre-installed). Static archive (.a) — iOS apps
+  # cannot dlopen(); the Flutter app must link libkcl.a at build time.
+  # ---------------------------------------------------------------------------
+  ios:
+    name: iOS ${{ matrix.target }} (${{ matrix.platform-dir }})
+    runs-on: macos-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - target: aarch64-apple-ios
+            platform-dir: ios-arm64
+          - target: aarch64-apple-ios-sim
+            platform-dir: ios-arm64-sim
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Install Rust targets
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.target }}
+
+      - name: Build libkcl for ${{ matrix.target }}
+        run: |
+          cargo build --release \
+            --target ${{ matrix.target }} \
+            --manifest-path c/Cargo.toml
+
+      - name: Stage into go/lib/${{ matrix.platform-dir }}/
+        run: |
+          mkdir -p go/lib/${{ matrix.platform-dir }}
+          cp c/target/${{ matrix.target }}/release/libkcl_lib_c.a \
+             go/lib/${{ matrix.platform-dir }}/libkcl.a
+          echo "package ios_${{ matrix.platform-dir == 'ios-arm64' && 'arm64' || 'arm64_sim' }}" \
+            > go/lib/${{ matrix.platform-dir }}/dummy.go
+          lipo -info go/lib/${{ matrix.platform-dir }}/libkcl.a
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: libkcl-${{ matrix.platform-dir }}
+          path: go/lib/${{ matrix.platform-dir }}/

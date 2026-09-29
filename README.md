@@ -242,6 +242,56 @@ val api = API()
 val result = api.execProgram(args)
 ```
 
+### Dart / Flutter
+
+Install in a Dart project via `git` (until the package is published to
+pub.dev):
+
+```shell
+dart pub add 'kcl_lib': \
+  { git: 'https://github.com/kcl-lang/lib.git', subdir: 'dart' }
+```
+
+Or in `pubspec.yaml`:
+
+```yaml
+dependencies:
+  kcl_lib:
+    git: https://github.com/kcl-lang/lib.git
+    path: dart
+```
+
+Write the code
+
+```dart
+import 'package:kcl_lib/kcl_lib.dart';
+
+void main() {
+  final result = execProgram(
+    ExecProgramArgs(kFilenameList: ['test_data/schema.k']),
+  );
+  print(result.yamlResult);
+}
+```
+
+The binding is a thin `dart:ffi` wrapper over the same prebuilt `libkcl.{so,dylib,dll,a}`
+binaries that the Go binding ships under
+[`go/lib/`](go/lib/). At runtime, point it at the prebuilt binary by setting
+the `KCL_DART_LIB` environment variable:
+
+```shell
+export KCL_DART_LIB="$PWD/go/lib/darwin-arm64/libkcl.dylib"  # adjust platform
+```
+
+**Flutter mobile** auto-resolves the right archive: drop `libkcl.so` into
+`android/app/src/main/jniLibs/<abi>/` and link `libkcl.a` into the iOS
+target — see [`dart/README.md`](dart/README.md) for the full Flutter setup.
+The mobile archives are produced in this repo by
+[`.github/workflows/build-libkcl-mobile.yaml`](.github/workflows/build-libkcl-mobile.yaml).
+
+See [`dart/README.md`](dart/README.md) for full API reference and
+[`dart/test/`](dart/test/) for usage examples.
+
 ### Swift
 
 ```swift

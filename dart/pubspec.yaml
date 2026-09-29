@@ -1,0 +1,31 @@
+name: kcl_lib
+description: >
+  Dart/Flutter language binding for the KCL configuration language.
+
+  Like the other KCL language bindings, this package is a thin wrapper around
+  the universal protobuf dispatcher shipped as a prebuilt `libkcl` shared
+  library (see `go/lib/` in the parent repository). The Dart runtime never
+  builds any Rust code.
+version: 0.13.0
+
+environment:
+  # protoc_plugin 25.x and protobuf 6.x both require Dart SDK 3.7+.
+  sdk: '>=3.7.0 <4.0.0'
+
+dependencies:
+  # Match what protoc_plugin 25.x emits — the generated code uses
+  # `$_clearField` / `$_defaultFor` / `$_getList` APIs that exist in
+  # protobuf 4.x+ but not in 3.x.
+  protobuf: ^6.1.0
+  # dart:ffi plus its malloc/conversion helpers (toNativeUtf8, calloc).
+  ffi: ^2.1.0
+  # Used by tool/regen_proto.dart.
+  path: ^1.9.0
+
+dev_dependencies:
+  test: ^1.24.0
+  lints: ^3.0.0
+
+# Vendored protobuf message code lives under lib/src/pb/ and is checked in.
+# Regenerate with `dart run tool/regen_proto.dart` (or `make proto`) — see
+# README.md for the toolchain install steps.
