@@ -259,22 +259,13 @@ class ApiTest < Minitest::Test
     assert_equal 2, result.info.length
   end
 
-  # ghcr.io rate-limits the shared CI egress IPs aggressively; treat a
-  # registry outage as a skip rather than a hard failure.
-  def update_dependencies_or_skip(api)
-    api.update_dependencies(
-      KclLib::UpdateDependenciesArgs.new(manifest_path: "./test_data/update_dependencies")
-    )
-  rescue KclLib::KclError => e
-    skip "external OCI registry unavailable: #{e.message}" if e.message.include?("Registry error")
-    raise
-  end
-
   def test_update_dependencies_api
     # Download and update dependencies defined in the `kcl.mod` file and
     # return the external package name and location list.
     api = KclLib::API.new
-    result = update_dependencies_or_skip(api)
+    result = api.update_dependencies(
+      KclLib::UpdateDependenciesArgs.new(manifest_path: "./test_data/update_dependencies")
+    )
     pkg_names = result.external_pkgs.map(&:pkg_name)
     assert_equal 2, pkg_names.length
     assert_includes pkg_names, "helloworld"
@@ -283,7 +274,9 @@ class ApiTest < Minitest::Test
 
   def test_exec_api_with_external_dependencies
     api = KclLib::API.new
-    result = update_dependencies_or_skip(api)
+    result = api.update_dependencies(
+      KclLib::UpdateDependenciesArgs.new(manifest_path: "./test_data/update_dependencies")
+    )
     exec_args = KclLib::ExecProgramArgs.new(
       k_filename_list: ["./test_data/update_dependencies/main.k"],
       external_pkgs: result.external_pkgs.to_a

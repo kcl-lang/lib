@@ -376,8 +376,8 @@ final class KClLibTests: XCTestCase {
             "expected per-case line hits with coverage enabled")
     }
 
-    // Downloads the dependencies declared in the fixture kcl.mod
-    // (helloworld from OCI, flask from git) — requires network access.
+    // Resolves the dependencies declared in the local fixture kcl.mod
+    // (helloworld and flask, both local sibling packages — no network).
     func testUpdateDependencies() throws {
         var args = UpdateDependenciesArgs()
         args.manifestPath = "test_data/update_dependencies"
