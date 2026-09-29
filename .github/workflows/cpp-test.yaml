@@ -50,8 +50,12 @@ jobs:
         export MACOSX_DEPLOYMENT_TARGET=12.0
         mkdir build
         cd build
-        cmake ..
+        cmake .. -DKCL_LIB_ENABLE_TESTING=ON
         make -j8
+    - name: Run Tests
+      run: |
+        cd build
+        ctest --output-on-failure
     - name: Run Examples
       shell: bash
       run: |
