@@ -57,6 +57,9 @@ jobs:
       - name: Build
         run: pnpm build
 
+      - name: Run ava tests
+        run: pnpm test
+
       - name: Test
         run: cargo test --no-fail-fast
 
@@ -126,6 +129,9 @@ jobs:
         shell: bash
         working-directory: .
         run: ${{ matrix.settings.build }}
+      - name: Run ava tests
+        if: matrix.settings.target == 'x86_64-unknown-linux-gnu'
+        run: pnpm test
       - uses: actions/upload-artifact@v7
         with:
           name: bindings-linux-${{ matrix.settings.target }}
@@ -165,6 +171,10 @@ jobs:
       - name: Build
         shell: bash
         run: ${{ matrix.settings.build }}
+      - name: Run ava tests
+        if: matrix.settings.target == 'x86_64-pc-windows-msvc'
+        run: pnpm test
+        shell: bash
       - uses: actions/upload-artifact@v7
         with:
           name: bindings-windows-${{ matrix.settings.target }}
@@ -213,6 +223,10 @@ jobs:
         run: pnpm i
       - name: Build
         run: ${{ matrix.settings.build }}
+        shell: bash
+      - name: Run ava tests
+        if: matrix.settings.target == 'x86_64-apple-darwin'
+        run: pnpm test
         shell: bash
       - uses: actions/upload-artifact@v7
         with:
