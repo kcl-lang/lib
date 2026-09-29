@@ -182,6 +182,27 @@ puts result.yaml_result
 
 See [here](./ruby/) for the initial version build notes.
 
+### Julia
+
+Unlike the other bindings, the Julia binding does not build any Rust code: it
+`ccall`s the same prebuilt `libkcl` shared libraries shipped under
+[`go/lib`](go/lib/) (see [julia/README.md](julia/README.md) for platform
+details and the `KCL_JL_LIB` override).
+
+```julia
+using Pkg
+Pkg.add(url="https://github.com/kcl-lang/lib.git", subdir="julia")
+```
+
+Write the code
+
+```julia
+using KclLib
+
+result = exec_program(ExecProgramArgs(k_filename_list=["test_data/schema.k"]))
+println(result.yaml_result)
+```
+
 ### Node.js
 
 ```shell

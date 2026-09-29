@@ -1,0 +1,17 @@
+name = "KclLib"
+uuid = "739c31e6-accf-4447-b2e8-a9920cc4cdad"
+version = "0.13.0"
+
+[deps]
+Libdl = "8f399da3-3557-5675-b5ff-fb832c97cbdb"
+ProtoBuf = "3349acd9-ac6a-5e09-bcdb-63829b23a429"
+
+[compat]
+ProtoBuf = "1"
+julia = "1.6"
+
+[extras]
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+
+[targets]
+test = ["Test"]
