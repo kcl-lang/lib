@@ -8,8 +8,5 @@ publish = false
 crate-type = ["cdylib", "staticlib"]
 doc = false
 
-[build-dependencies]
-cbindgen = "0.26.0"
-
 [dependencies]
 kcl-api = { git = "https://github.com/kcl-lang/kcl", version = "0.13.0" }
