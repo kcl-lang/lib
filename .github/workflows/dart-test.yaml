@@ -1,0 +1,134 @@
+name: dart-test
+
+on:
+  push:
+    branches:
+      - main
+      - master
+    tags:
+      - '*'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "dart/**"
+      - "spec/**"
+      - ".github/workflows/dart-test.yaml"
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}-${{ github.event_name }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  build-and-test:
+    name: Test on ${{ matrix.os }}
+    defaults:
+      run:
+        working-directory: "dart"
+    strategy:
+      fail-fast: false
+      matrix:
+        # The 5 desktop platforms that have matching prebuilt libkcl binaries
+        # under go/lib/. Mobile (Android/iOS) is exercised by a separate
+        # workflow — see dart/README.md.
+        #
+        # We don't include windows-11-arm: the committed prebuilt at
+        # go/lib/windows-arm64/kcl.dll is the same x86_64 PE32+ image as
+        # windows-amd64/kcl.dll, so the Dart FFI loader fails with
+        # "%1 is not a valid Win32 application" on the ARM64 runner. Fixing
+        # that requires cross-building libkcl for `aarch64-pc-windows-msvc`
+        # (out of scope for this PR — same matrix shape as c-test/dotnet-test).
+        os:
+          - ubuntu-latest        # linux-amd64
+          - ubuntu-22.04-arm     # linux-arm64
+          - macos-latest         # darwin-arm64
+          - macos-15-intel       # darwin-amd64
+          - windows-latest       # windows-amd64
+    runs-on: ${{ matrix.os }}
+    steps:
+    - uses: actions/checkout@v7
+
+    - name: Install Dart SDK
+      uses: dart-lang/setup-dart@v1
+      with:
+        sdk: stable
+
+    - name: Install protoc
+      shell: bash
+      run: |
+        if [ "$RUNNER_OS" = "Linux" ]; then
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq protobuf-compiler
+        elif [ "$RUNNER_OS" = "macOS" ]; then
+          brew install protobuf
+        elif [ "$RUNNER_OS" == "Windows" ]; then
+          choco install -y --no-progress protoc
+        fi
+
+    - name: Install protoc-gen-dart
+      shell: bash
+      run: |
+        # On Windows runners the protoc_plugin package drops `protoc-gen-dart.bat`
+        # into `$PUB_CACHE\bin`, and we need it on PATH for `protoc --dart_out`.
+        # Use `$PUB_CACHE/bin` (Windows-style) rather than `$HOME/.pub-cache/bin`:
+        # in Git Bash `$HOME` is MSYS-style (`/c/Users/runneradmin`), and exporting
+        # an MSYS path through `$GITHUB_PATH` produces an unparseable PATH entry,
+        # so the next step's `command -v protoc-gen-dart` falls through to fail.
+        # `$PUB_CACHE` is set to a Windows path by `setup-dart`, so it round-trips
+        # cleanly across `$GITHUB_PATH`.
+        dart pub global activate protoc_plugin
+        echo "$PUB_CACHE/bin" >> "$GITHUB_PATH"
+
+    - name: Map runner arch to libkcl platform key
+      id: arch
+      shell: bash
+      run: |
+        # Compute the platform dir + (name, ext), then write each GHA
+        # output on its own line. GHA parses `$GITHUB_OUTPUT` one
+        # name=value pair per line, so writing `dir=foo ext=bar` on a
+        # single line collapses into one output (`dir=foo ext=bar`)
+        # with `ext` left unset.
+        #
+        # Windows archives are `kcl.dll` (no `lib` prefix, matches the Go
+        # embed path in go/lib/kcl_lib_windows_*.go); every other platform
+        # uses `libkcl.<so|dylib>`.
+        case "$RUNNER_OS" in
+          Linux)
+            case "$RUNNER_ARCH" in
+              X64)   dir=linux-amd64;  name=libkcl; ext=so ;;
+              ARM64) dir=linux-arm64;  name=libkcl; ext=so ;;
+            esac ;;
+          macOS)
+            case "$RUNNER_ARCH" in
+              X64)   dir=darwin-amd64; name=libkcl; ext=dylib ;;
+              ARM64) dir=darwin-arm64; name=libkcl; ext=dylib ;;
+            esac ;;
+          Windows)
+            case "$RUNNER_ARCH" in
+              X64)   dir=windows-amd64; name=kcl; ext=dll ;;
+              ARM64) dir=windows-arm64; name=kcl; ext=dll ;;
+            esac ;;
+        esac
+        echo "dir=$dir"   >> "$GITHUB_OUTPUT"
+        echo "name=$name" >> "$GITHUB_OUTPUT"
+        echo "ext=$ext"   >> "$GITHUB_OUTPUT"
+
+    - name: Set KCL_DART_LIB
+      shell: bash
+      working-directory: "dart"
+      run: |
+        lib="$GITHUB_WORKSPACE/go/lib/${{ steps.arch.outputs.dir }}/${{ steps.arch.outputs.name }}.${{ steps.arch.outputs.ext }}"
+        test -f "$lib" || (echo "missing prebuilt libkcl at $lib"; exit 1)
+        echo "KCL_DART_LIB=$lib" >> "$GITHUB_ENV"
+
+    - name: Regenerate Dart protobuf bindings
+      shell: bash
+      run: make proto
+
+    - name: Run tests
+      shell: bash
+      run: make test
