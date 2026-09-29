@@ -2,4 +2,11 @@
 # Without this, Windows' default `core.autocrlf=true` converts LF to CRLF
 # on checkout, which causes the KCL formatter to rewrite the file (seen
 # as a change in `test_format_path_api`).
+#
+# `*.k` covers every language's test fixture (nodejs/__test__/test_data,
+# go/test_data, python/tests/test_data, java/src/test_data,
+# kotlin/src/test_data, dotnet/KclLib.Tests/test_data, cpp/test_data,
+# swift/test_data, ruby/test_data, lua/spec/test_data, plus the top-level
+# testdata/) so the formatter sees LF on Windows CI just like on macOS/Linux.
+*.k text eol=lf
 python/tests/test_data/** text eol=lf
