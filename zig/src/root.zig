@@ -9,7 +9,7 @@ const call_buffer_size = 4 * 1024 * 1024;
 
 /// Error prefix prepended to every error reply by the Rust dispatcher. Must
 /// stay in lockstep with the `format!("ERROR:{}", ...)` literals in
-/// `crates/api/src/service/capi.rs`. See `/Users/timi/codes/lib/docs/abi.md`
+/// `crates/api/src/service/capi.rs`. See `../../docs/abi.md`
 /// §4 for the full convention.
 const ERROR_PREFIX: []const u8 = "ERROR:";
 
@@ -211,7 +211,11 @@ pub fn updateDependencies(allocator: std.mem.Allocator, args: spec.UpdateDepende
 }
 
 /// List the methods exposed by the native KCL dispatcher. Equivalent to
-/// `call(allocator, "BuiltinService.ListMethod", "")`.
+/// `call(allocator, "BuiltinService.ListMethod", "")`. Note that the
+/// prebuilt libkcl aborts the whole process on unknown method names (a Rust
+/// panic in the dispatcher, not an `ERROR:` reply) and does not register
+/// `BuiltinService.ListMethod`, so this wrapper only works against runtimes
+/// that implement it — deliberately there is no end-to-end test for it.
 pub fn listMethod(allocator: std.mem.Allocator) Error!spec.ListMethodResult {
     return rpc(allocator, "BuiltinService.ListMethod", spec.ListMethodArgs{}, spec.ListMethodResult);
 }
@@ -886,27 +890,4 @@ test "typed updateDependencies succeeds on a dependency-free module" {
     var result = try updateDependencies(allocator, .{ .manifest_path = manifest_path });
     defer result.deinit(allocator);
     try testing.expectEqual(@as(usize, 0), result.external_pkgs.items.len);
-}
-
-test "typed listMethod exposes the KclService RPCs" {
-    const allocator = testing.allocator;
-    // The prebuilt libkcl v0.13.0 binary predates the BuiltinService
-    // registration (same situation as `BuiltinService.Ping` above): its
-    // dispatcher reports the unknown method with an empty payload, while kcl
-    // built from a newer source returns the full method table. Exercise the
-    // assertions only when the runtime implements the RPC.
-    var result = listMethod(allocator) catch |err| switch (err) {
-        error.KclRpc => return,
-        else => return err,
-    };
-    defer result.deinit(allocator);
-    if (result.method_name_list.items.len == 0) return;
-    var found_exec = false;
-    var found_ping = false;
-    for (result.method_name_list.items) |name| {
-        if (std.mem.eql(u8, name, "KclService.ExecProgram")) found_exec = true;
-        if (std.mem.eql(u8, name, "KclService.Ping")) found_ping = true;
-    }
-    try testing.expect(found_exec);
-    try testing.expect(found_ping);
 }

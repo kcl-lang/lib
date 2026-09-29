@@ -40,16 +40,7 @@ jobs:
       with:
         version: "29.x"
         repo-token: ${{ secrets.GITHUB_TOKEN }}
-    - name: Ready msys2
-      uses: msys2/setup-msys2@v2
-      with:
-        msystem: MINGW64
-        update: true
-        install: git mingw-w64-x86_64-toolchain
-        path-type: inherit
-      if: matrix.os == 'windows-latest'
     - name: Check
       run: zig fmt --check .
-      if: matrix.os != 'windows-latest'
     - name: Build and Test
       run: zig build test
