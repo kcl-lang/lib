@@ -380,6 +380,26 @@ pub fn runCode(allocator: Allocator, code: []const u8, options: *Options) Error!
     return exec(allocator, &args, options);
 }
 
+/// Validate `data` (a JSON document string) against the schema defined by
+/// the KCL `code` (kcl-go `kcl.ValidateCode`). Returns silently on success;
+/// on failure returns `error.KclError` with the runtime diagnostic available
+/// from `lastErrorMessage()`.
+pub fn validate(allocator: Allocator, code: []const u8, data: []const u8) Error!void {
+    var result = try root.validateCode(allocator, .{
+        .code = code,
+        .data = data,
+        .format = "json",
+    });
+    defer result.deinit(allocator);
+    if (!result.success or result.err_message.len > 0) {
+        setLastErrorMessage(if (result.err_message.len > 0)
+            result.err_message
+        else
+            "kcl: validation failed");
+        return error.KclError;
+    }
+}
+
 fn exec(allocator: Allocator, args: *spec.ExecProgramArgs, options: *Options) Error!Result {
     var resp = try root.execProgram(allocator, args.*);
     defer resp.deinit(allocator);
@@ -951,6 +971,21 @@ test "run returns error.KclError with the err_message" {
 
     // Compile errors surface through the RPC-layer error convention.
     try testing.expectError(error.KclRpc, runCode(allocator, "a = b +", &options));
+}
+
+test "validate accepts data matching the schema" {
+    const allocator = testing.allocator;
+    const code = "schema Person:\n    name: str\n    age: int\n\n    check:\n        0 < age < 120\n";
+
+    try validate(allocator, code, "{\"name\": \"Alice\", \"age\": 10}");
+}
+
+test "validate rejects data violating the schema" {
+    const allocator = testing.allocator;
+    const code = "schema Person:\n    name: str\n    age: int\n\n    check:\n        0 < age < 120\n";
+
+    try testing.expectError(error.KclError, validate(allocator, code, "{\"name\": \"Alice\", \"age\": 1110}"));
+    try testing.expect(lastErrorMessage().?.len > 0);
 }
 
 test "withOptions parses -D key=value pairs" {
