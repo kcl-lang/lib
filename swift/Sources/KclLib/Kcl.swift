@@ -89,7 +89,17 @@ public enum Kcl {
     guard !bag.kCodeList.isEmpty || !bag.kFilenameList.isEmpty else {
       throw KclError.runtime("kcl.Run: no kcl file or code")
     }
-    let resp = try API().execProgram(bag.makeExecProgramArgs())
+    let resp: ExecProgramResult
+    if let pluginContext = options.pluginContext {
+      let api = API()
+      api.attachPluginContext(pluginContext)
+      // The native plugin callback resolves the context through a global
+      // slot; release it once the run completes.
+      defer { api.detachPluginContext() }
+      resp = try api.execProgram(bag.makeExecProgramArgs())
+    } else {
+      resp = try API().execProgram(bag.makeExecProgramArgs())
+    }
     return try wrapResult(resp, bag: bag)
   }
 
@@ -243,6 +253,9 @@ public struct KclOptions {
   public var format: String?
   /// Sink receiving the runtime's `log_message` output (kcl-go `WithLogger`).
   public var logger: ((String) -> Void)?
+  /// Plugin context whose registered methods KCL code may invoke through
+  /// `kcl_plugin.<name>.<method>` during the run.
+  public var pluginContext: PluginContext?
 
   public init() {
     self.workDir = nil
@@ -267,6 +280,7 @@ public struct KclOptions {
     self.errorFormat = nil
     self.format = nil
     self.logger = nil
+    self.pluginContext = nil
   }
 }
 
