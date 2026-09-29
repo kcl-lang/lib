@@ -273,13 +273,17 @@ class ApiTest < Minitest::Test
   end
 
   def test_exec_api_with_external_dependencies
+    # The local kcl.mod declares both deps as `path = "../_mocks/..."`, but
+    # `update_dependencies` always returns `pkg_path = <manifest>/<dep_name>`
+    # (it ignores the `path` directive), so we hand-build `external_pkgs`
+    # pointing at the actual mock locations.
     api = KclLib::API.new
-    result = api.update_dependencies(
-      KclLib::UpdateDependenciesArgs.new(manifest_path: "./test_data/update_dependencies")
-    )
     exec_args = KclLib::ExecProgramArgs.new(
       k_filename_list: ["./test_data/update_dependencies/main.k"],
-      external_pkgs: result.external_pkgs.to_a
+      external_pkgs: [
+        KclLib::ExternalPkg.new(pkg_name: "helloworld", pkg_path: "./test_data/_mocks/helloworld"),
+        KclLib::ExternalPkg.new(pkg_name: "flask", pkg_path: "./test_data/_mocks/flask")
+      ]
     )
     result = api.exec_program(exec_args)
     assert_equal "a: Hello World!", result.yaml_result

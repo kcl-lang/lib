@@ -369,15 +369,22 @@ def test_update_dependencies_api():
 def test_exec_api_with_external_dependencies():
     import kcl_lib.api as api
 
-    args = api.UpdateDependenciesArgs(
-        manifest_path="./tests/test_data/update_dependencies"
-    )
-
+    # The local kcl.mod declares both deps as `path = "../_mocks/..."`, but
+    # `update_dependencies` always returns `pkg_path = <manifest>/<dep_name>`
+    # (it ignores the `path` directive), so we hand-build `external_pkgs`
+    # pointing at the actual mock locations.
     api_instance = api.API()
-    result = api_instance.update_dependencies(args)
     exec_args = api.ExecProgramArgs(
         k_filename_list=["./tests/test_data/update_dependencies/main.k"],
-        external_pkgs=result.external_pkgs,
+        external_pkgs=[
+            api.ExternalPkg(
+                pkg_name="helloworld",
+                pkg_path="./tests/test_data/_mocks/helloworld",
+            ),
+            api.ExternalPkg(
+                pkg_name="flask", pkg_path="./tests/test_data/_mocks/flask"
+            ),
+        ],
     )
     result = api_instance.exec_program(exec_args)
     assert result.yaml_result == "a: Hello World!"

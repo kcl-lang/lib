@@ -311,17 +311,24 @@ schema Person:
     [TestMethod]
     public void TestExecAPIWithExternalDependencies()
     {
-        var manifestPath = Path.Combine(parentDirectory, "test_data", "update_dependencies");
-        var testFile = Path.Combine(manifestPath, "main.k");
-        // First, update dependencies.
-        var updateArgs = new UpdateDependenciesArgs { ManifestPath = manifestPath };
-
-        var depResult = new API().UpdateDependencies(updateArgs);
-        // Prepare arguments for executing the program with external dependencies.
+        var testDataDir = Path.Combine(parentDirectory, "test_data");
+        var testFile = Path.Combine(testDataDir, "update_dependencies", "main.k");
+        // The local kcl.mod declares both deps as `path = "../_mocks/..."`, but
+        // `update_dependencies` always returns `pkg_path = <manifest>/<dep_name>`
+        // (it ignores the `path` directive), so we hand-build `external_pkgs`
+        // pointing at the actual mock locations.
         var execArgs = new ExecProgramArgs();
         execArgs.KFilenameList.Add(testFile);
-        execArgs.ExternalPkgs.AddRange(depResult.ExternalPkgs);
-        // Execute the program and assert the result.
+        execArgs.ExternalPkgs.Add(new ExternalPkg
+        {
+            PkgName = "helloworld",
+            PkgPath = Path.Combine(testDataDir, "_mocks", "helloworld"),
+        });
+        execArgs.ExternalPkgs.Add(new ExternalPkg
+        {
+            PkgName = "flask",
+            PkgPath = Path.Combine(testDataDir, "_mocks", "flask"),
+        });
         var execResult = new API().ExecProgram(execArgs);
         Assert.AreEqual("a: Hello World!", execResult.YamlResult);
     }

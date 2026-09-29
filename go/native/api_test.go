@@ -637,17 +637,16 @@ func TestUpdateDependenciesAPI(t *testing.T) {
 func TestExecAPIWithExternalDependencies(t *testing.T) {
 	client := NewNativeServiceClient()
 
-	updateArgs := &api.UpdateDependenciesArgs{
-		ManifestPath: testFileUpdateDep,
-	}
-	updateResult, err := client.UpdateDependencies(updateArgs)
-	if err != nil {
-		t.Fatalf("UpdateDependencies failed: %v", err)
-	}
-
+	// The local kcl.mod declares both deps as `path = "../_mocks/..."`, but
+	// `update_dependencies` always returns `pkg_path = <manifest>/<dep_name>`
+	// (it ignores the `path` directive), so we hand-build `external_pkgs`
+	// pointing at the actual mock locations.
 	execArgs := &api.ExecProgramArgs{
 		KFilenameList: []string{testFileUpdateDepMain},
-		ExternalPkgs:  updateResult.ExternalPkgs,
+		ExternalPkgs: []*api.ExternalPkg{
+			{PkgName: "helloworld", PkgPath: "./../test_data/_mocks/helloworld"},
+			{PkgName: "flask", PkgPath: "./../test_data/_mocks/flask"},
+		},
 	}
 	execResult, err := client.ExecProgram(execArgs)
 	if err != nil {
