@@ -521,4 +521,112 @@ function API:validate(opts)
   return res
 end
 
+---Format an in-memory KCL source string via the FormatCode RPC.
+---@param source string
+---@return string The formatted code.
+function API:format_code(source)
+  if type(source) ~= "string" then
+    error("format_code: source must be a string", 2)
+  end
+  return self.raw:format_code({ source = source }).formatted
+end
+
+---Format KCL file(s) under `path` via the FormatPath RPC.
+---`opts.dry_run` reports the files that would be reformatted without
+---rewriting them.
+---@param path string
+---@param opts table|nil
+---@return string[] changed_paths
+function API:format_path(path, opts)
+  if type(path) ~= "string" then
+    error("format_path: path must be a string", 2)
+  end
+  opts = opts or {}
+  return self.raw:format_path({
+    path = path,
+    dry_run = not not opts.dry_run,
+  }).changed_paths
+end
+
+---Lint KCL file(s) via the LintPath RPC and return the list of
+---diagnostics. An empty list means the files passed every lint rule.
+---@param paths string|string[]
+---@return string[] results
+function API:lint_path(paths)
+  local list = as_list(paths)
+  if list == nil then
+    error("lint_path: paths must be a string or a list of strings", 2)
+  end
+  return self.raw:lint_path({ paths = list }).results
+end
+
+---Run KCL unit tests via the Test RPC.
+---`opts` accepts `pkg_list`, `run_regexp`, `fail_fast` and `coverage`;
+---each `info[i].error` is empty exactly when that case passed.
+---@param opts table|nil
+---@return table The decoded TestResult (`info`).
+function API:test(opts)
+  opts = opts or {}
+  return self.raw:test({
+    pkg_list = as_list(opts.pkg_list),
+    run_regexp = opts.run_regexp,
+    fail_fast = opts.fail_fast,
+    coverage = opts.coverage,
+  })
+end
+
+---Rename `symbol_path` across `file_paths` via the Rename RPC.
+---`opts` accepts `package_root`, `symbol_path`, `file_paths` and
+---`new_name`.
+---@param opts table
+---@return table The decoded RenameResult (`changed_files`).
+function API:rename(opts)
+  if type(opts) ~= "table" then
+    error("rename: opts must be a table", 2)
+  end
+  return self.raw:rename({
+    package_root = opts.package_root,
+    symbol_path = opts.symbol_path,
+    file_paths = as_list(opts.file_paths),
+    new_name = opts.new_name,
+  })
+end
+
+---Rename a symbol inside in-memory sources via the RenameCode RPC; no
+---files on disk are touched. `opts` accepts `package_root`,
+---`symbol_path`, `source_codes` (a map of file path to code) and
+---`new_name`.
+---@param opts table
+---@return table The decoded RenameCodeResult (`changed_codes`).
+function API:rename_code(opts)
+  if type(opts) ~= "table" then
+    error("rename_code: opts must be a table", 2)
+  end
+  return self.raw:rename_code({
+    package_root = opts.package_root,
+    symbol_path = opts.symbol_path,
+    source_codes = opts.source_codes,
+    new_name = opts.new_name,
+  })
+end
+
+---Parse a KCL file (or in-memory source) into its AST via the ParseFile
+---RPC.
+---@param path string|nil
+---@param opts table|nil `source` for in-memory code, `external_pkgs`.
+---@return table The decoded ParseFileResult (`ast_json`, `deps`, `errors`).
+function API:parse_file(path, opts)
+  if path ~= nil and type(path) ~= "string" then
+    error("parse_file: path must be a string", 2)
+  end
+  opts = opts or {}
+  return self.raw:parse_file({
+    path = path,
+    source = opts.source,
+    external_pkgs = opts.external_pkgs ~= nil
+        and build_external_pkgs(opts.external_pkgs)
+      or nil,
+  })
+end
+
 return API:new()
