@@ -131,4 +131,17 @@ RawAPI.update_dependencies = add_method(
   "UpdateDependenciesResult"
 )
 
+-- `BuiltinService.ListMethod`: lists every method exposed by the native
+-- dispatcher. `ListMethodArgs` is an empty protobuf message, so callers pass
+-- `{}` as the request.
+--
+-- Prebuilt libkcl v0.13.0 predates the `BuiltinService` registration: the
+-- dispatcher either answers with an empty payload (decoded as an empty
+-- `method_name_list`) or surfaces an `ERROR:`-prefixed string that the
+-- wrapper above turns into a Lua error. Callers should `pcall` this RPC and
+-- treat both empty and populated answers as success, mirroring the Julia
+-- and Zig bindings.
+RawAPI.list_method =
+  add_method("BuiltinService.ListMethod", "ListMethodArgs", "ListMethodResult")
+
 return RawAPI:new()
