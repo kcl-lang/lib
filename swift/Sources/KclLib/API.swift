@@ -27,6 +27,29 @@ public class API: Service {
 
   public init() {}
 
+  /// Attaches a plugin context: RPCs made through this instance are then
+  /// dispatched with the plugin agent callback, so KCL code can invoke the
+  /// Swift functions registered on the context via
+  /// `kcl_plugin.<name>.<method>`. The attached context becomes the
+  /// process-wide active one (the native callback receives no user data,
+  /// so it resolves the context globally); attaching another context
+  /// anywhere replaces it.
+  public func attachPluginContext(_ context: PluginContext) {
+    pluginContext = context
+    PluginAgentRegistry.attach(context)
+  }
+
+  /// Detaches the context passed to `attachPluginContext`, if it is still
+  /// the active one. Subsequent RPCs use the plain one-shot entry point
+  /// again.
+  public func detachPluginContext() {
+    let context = pluginContext
+    pluginContext = nil
+    if let context {
+      PluginAgentRegistry.detach(context)
+    }
+  }
+
   // Parses a single KCL file and returns its Abstract Syntax Tree (AST) as a JSON string.
   public func parseFile(_ args: ParseFileArgs) throws -> ParseFileResult {
     return try ParseFileResult(
@@ -180,13 +203,50 @@ public class API: Service {
     )
   }
 
+  private var pluginContext: PluginContext?
+
   private func callNative(name: String, args: Data) throws -> Data {
+    if pluginContext != nil {
+      return try callNativeWithPluginAgent(name: name, args: args)
+    }
     // Convert name to byte array
     let nameBytes = [UInt8](name.utf8)
     var resultBuf = [UInt8](repeating: 0, count: 2048 * 2048)
     let resultLength = CKclLib.callNative(
       nameBytes, UInt(nameBytes.count), [UInt8](args), UInt(args.count), &resultBuf)
-    let result = Data(bytes: resultBuf, count: Int(resultLength))
+    return try unwrapResult(Data(bytes: resultBuf, count: Int(resultLength)))
+  }
+
+  /// Plugin-enabled dispatch: routes through kcl-api's instance-oriented C
+  /// API (`kcl_service_new`/`kcl_service_call_with_length`/`kcl_service_delete`)
+  /// so the service carries the plugin agent function pointer. A fresh
+  /// service is created per call — the native side documents it as not
+  /// thread-safe, and its only state is the plugin agent address, so this
+  /// keeps concurrent calls isolated at negligible cost. The result string
+  /// is Rust-owned; `kcl_service_free_string` is its matching deallocator.
+  private func callNativeWithPluginAgent(name: String, args: Data) throws -> Data {
+    guard let service = kcl_service_new(PluginAgentRegistry.pointer) else {
+      throw KclError.runtime("kcl_service_new returned null")
+    }
+    defer { kcl_service_delete(service) }
+
+    var nameBytes = name.utf8.map { CChar(bitPattern: $0) }
+    nameBytes.append(0)
+    let argsBytes = [UInt8](args)
+    var resultLength = UInt(0)
+    guard let resultPtr = kcl_service_call_with_length(
+      service, nameBytes, argsBytes, UInt(argsBytes.count), &resultLength
+    ) else {
+      throw KclError.runtime("kcl_service_call_with_length returned null")
+    }
+    defer { kcl_service_free_string(UnsafeMutablePointer(mutating: resultPtr)) }
+
+    return try unwrapResult(Data(bytes: resultPtr, count: Int(resultLength)))
+  }
+
+  /// Shared `ERROR:`-prefix handling for both dispatch paths. The prefix is
+  /// the single source of truth for failures on the universal dispatcher.
+  private func unwrapResult(_ result: Data) throws -> Data {
     let resultString = String(bytes: result, encoding: .utf8) ?? ""
     if resultString.isEmpty || !resultString.hasPrefix(API.ERROR_PREFIX) {
       return result
