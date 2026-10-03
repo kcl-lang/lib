@@ -12,6 +12,9 @@ on:
       - main
     paths:
       - "cpp/**"
+      # ast_contract decodes the captured parser output as its fixture, so
+      # regenerating the golden file must re-run this workflow.
+      - "testdata/ast/**"
       - ".github/workflows/cpp-test.yaml"
   workflow_dispatch:
 
@@ -34,10 +37,17 @@ jobs:
     steps:
     - uses: actions/checkout@v7
     - name: Install dependencies
-      if: "contains(matrix.os, 'ubuntu-latest')"
       run: |
-        sudo apt-get update
-        sudo apt-get install libgtest-dev ninja-build
+        # nlohmann/json is the facade's preferred JSON backend. ctest runs the
+        # facade example twice (default backend + `facade_bundled_json`, which
+        # forces the bundled parser), so both paths stay covered; installing
+        # the package is what makes the default backend the nlohmann one.
+        if [ "$RUNNER_OS" = "Linux" ]; then
+          sudo apt-get update
+          sudo apt-get install libgtest-dev ninja-build nlohmann-json3-dev
+        else
+          brew install nlohmann-json
+        fi
     - name: Install Rust
       uses: actions-rs/toolchain@v1
       with:

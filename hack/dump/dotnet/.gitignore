@@ -1,0 +1,6 @@
+# `dotnet run` builds into the project directory, so the dumper's scratch
+# output lands here beside its sources. The root .gitignore covers `*.dll`
+# but not the rest of `bin/` and `obj/`, and these are build products that a
+# dumper run recreates from `Program.cs` and `Dump.csproj` every time.
+bin/
+obj/
