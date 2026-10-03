@@ -7,10 +7,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Collection of {@link KCLResult} documents produced by a run, mirroring
- * kcl-go's {@code KCLResultList}. The raw runtime outputs
- * ({@code json_result}/{@code yaml_result}) are kept for callers that need
- * the untouched response.
+ * Collection of {@link KCLResult} documents produced by a run, mirroring kcl-go's {@code KCLResultList}. The raw
+ * runtime outputs ({@code json_result}/{@code yaml_result}) are kept for callers that need the untouched response.
  */
 public final class KCLResultList implements Iterable<KCLResult> {
     private final List<KCLResult> results;
@@ -62,12 +60,10 @@ public final class KCLResultList implements Iterable<KCLResult> {
     }
 
     /**
-     * The first document decoded as a map, mirroring kcl-go's
-     * {@code KCLResultList.ToMap}.
+     * The first document decoded as a map, mirroring kcl-go's {@code KCLResultList.ToMap}.
      *
      * @throws KclException
-     *             when the result list is empty or the first document is not a
-     *             map
+     *             when the result list is empty or the first document is not a map
      */
     public Map<String, Object> toMap() {
         KCLResult first = first();

@@ -128,6 +128,18 @@ public interface IService
     TestResult Test(TestArgs args);
 
     /// <summary>
+    /// Formats a test result into a human-readable report. One line per test
+    /// case, `{name}: PASS|FAIL ({duration}ms)` with the case log message or
+    /// error on the next line when there is one, a separator of 80 `-`, then
+    /// the non-zero `PASS`, `FAIL` and `SKIPPED` counts. Every line, including
+    /// the last, ends with a newline; an empty result renders as
+    /// `no test files\n`.
+    /// </summary>
+    /// <param name="args">Arguments carrying the test result to format.</param>
+    /// <returns>The pretty-printed test report.</returns>
+    FormatTestReportResult FormatTestReport(FormatTestReportArgs args);
+
+    /// <summary>
     /// Updates dependencies for a KCL project based on defined specifications.
     /// </summary>
     /// <param name="args">Arguments for dependency updating.</param>

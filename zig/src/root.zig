@@ -4,6 +4,11 @@
 const std = @import("std");
 const testing = std.testing;
 const spec = @import("spec");
+const plugin = @import("plugin.zig");
+
+/// Plugin support: `register` a host method under `kcl_plugin.<plugin>.<method>`
+/// so KCL source can `import kcl_plugin.<plugin>` and call it.
+pub const plugins = plugin;
 
 const call_buffer_size = 4 * 1024 * 1024;
 
@@ -36,7 +41,14 @@ extern "c" fn call_native(
 /// language binding (`call` in Python / Go, `callNative` in Swift / dotnet,
 /// `call` in C / C++). It lets Zig callers reach the full spec surface even
 /// when no typed wrapper has been generated.
+///
+/// Once a plugin method has been registered this routes through a KCL service
+/// handle instead, because `call_native` is stateless and cannot carry the
+/// plugin agent (docs/abi.md §6). Both entry points decode the same protobuf
+/// payloads, so the reply is identical either way.
 pub fn call(allocator: std.mem.Allocator, name: []const u8, args: []const u8) ![]u8 {
+    if (try plugin.dispatch(allocator, name, args)) |reply| return reply;
+
     // The C side copies the whole response into `result_ptr` unconditionally
     // and returns its length; the buffer size cannot be queried up front.
     // Use the same 4 MiB scratch buffer as the C and dotnet bindings and
@@ -57,10 +69,14 @@ pub fn call(allocator: std.mem.Allocator, name: []const u8, args: []const u8) ![
 /// Error set shared by the typed wrappers below. `KclRpc` is returned when
 /// the native side answers with an `ERROR:`-prefixed payload (the convention
 /// every other binding relies on); `MalformedResponse` when the answer is not
-/// a decodable protobuf message of the expected type.
+/// a decodable protobuf message of the expected type. The two plugin errors
+/// come from `plugin.zig` and only surface once a plugin is registered.
 pub const Error = std.mem.Allocator.Error || std.Io.Writer.Error || error{
     KclRpc,
     MalformedResponse,
+    InvalidName,
+    RegistryFull,
+    ServiceCallFailed,
 };
 
 fn rpc(
@@ -201,6 +217,13 @@ pub fn renameCode(allocator: std.mem.Allocator, args: spec.RenameCodeArgs) Error
 /// `call(allocator, "KclService.Test", encoded)`.
 pub fn @"test"(allocator: std.mem.Allocator, args: spec.TestArgs) Error!spec.TestResult {
     return rpc(allocator, "KclService.Test", args, spec.TestResult);
+}
+
+/// Format a `TestResult` into the pretty-printed report string, byte-identical
+/// to the kcl-go `PrettyReporter`. Equivalent to
+/// `call(allocator, "KclService.FormatTestReport", encoded)`.
+pub fn formatTestReport(allocator: std.mem.Allocator, args: spec.FormatTestReportArgs) Error!spec.FormatTestReportResult {
+    return rpc(allocator, "KclService.FormatTestReport", args, spec.FormatTestReportResult);
 }
 
 /// Download and update the dependencies declared in the `kcl.mod` file at
@@ -873,6 +896,54 @@ test "typed test runs kcl unit tests of a package" {
     for (result.info.items) |info| {
         try testing.expectEqualStrings("", info.@"error");
     }
+}
+
+// Pure protobuf round-trip for FormatTestReportArgs.result (1) and
+// FormatTestReportResult.report (1). The prebuilt libkcl that `zig build`
+// links against predates KclService.FormatTestReport — the native dispatcher
+// panics with "unknown method name" — so there is deliberately no end-to-end
+// test here; this covers the message plumbing the wrapper uses.
+test "FormatTestReport args and result round-trip on the wire" {
+    const allocator = testing.allocator;
+
+    var info: std.ArrayList(spec.TestCaseInfo) = .empty;
+    defer info.deinit(allocator);
+    try info.append(allocator, .{ .name = "test_case_1", .duration = 1500 });
+    try info.append(allocator, .{
+        .name = "test_case_2",
+        .@"error" = "Error: assert failed",
+        .duration = 2500,
+    });
+
+    var args: spec.FormatTestReportArgs = .{ .result = .{ .info = info } };
+
+    var writer: std.Io.Writer.Allocating = .init(allocator);
+    defer writer.deinit();
+    try args.encode(&writer.writer, allocator);
+
+    var reader: std.Io.Reader = .fixed(writer.written());
+    var decoded = try spec.FormatTestReportArgs.decode(&reader, allocator);
+    defer decoded.deinit(allocator);
+
+    const cases = decoded.result.?.info.items;
+    try testing.expectEqual(@as(usize, 2), cases.len);
+    try testing.expectEqualStrings("test_case_1", cases[0].name);
+    try testing.expectEqual(@as(u64, 1500), cases[0].duration);
+    try testing.expectEqualStrings("test_case_2", cases[1].name);
+    try testing.expectEqualStrings("Error: assert failed", cases[1].@"error");
+
+    const report = "test_case_1: PASS (1ms)\ntest_case_2: FAIL (2ms)\n";
+    var result: spec.FormatTestReportResult = .{ .report = report };
+
+    var result_writer: std.Io.Writer.Allocating = .init(allocator);
+    defer result_writer.deinit();
+    try result.encode(&result_writer.writer, allocator);
+
+    var result_reader: std.Io.Reader = .fixed(result_writer.written());
+    var decoded_result = try spec.FormatTestReportResult.decode(&result_reader, allocator);
+    defer decoded_result.deinit(allocator);
+
+    try testing.expectEqualStrings(report, decoded_result.report);
 }
 
 test "typed updateDependencies succeeds on a dependency-free module" {

@@ -148,9 +148,151 @@ by fully-qualified name and raw protobuf bytes.
 | `rename(args)`                   | `KclService.Rename`                              |
 | `renameCode(args)`               | `KclService.RenameCode`                          |
 | `runTests(args)`                 | `KclService.Test`                                |
+| `formatTestReport(args)`         | `KclService.FormatTestReport`                    |
 | `updateDependencies(args)`       | `KclService.UpdateDependencies`                  |
 | `ping(args)`                     | `KclService.Ping`                                |
 | `listMethod()`                   | `KclService.ListMethod`                          |
+
+## Typed AST
+
+`parseFile` and `parseProgram` return the AST as a JSON string.
+`parseModule(json)` and `parseProgramAst(json)` decode it into typed objects
+mirroring Rust's AST in `../kcl/crates/ast/src/ast.rs`.
+
+```dart
+import 'package:kcl_lib/kcl_lib.dart';
+
+const source = '''
+schema Person:
+    name: str = "anonymous"
+    age: int = 0
+''';
+
+final m = parseModule(parseFile(ParseFileArgs(path: 'main.k', source: source)).astJson);
+
+for (final ref in m.body) {
+  final s = ref.node;
+  if (s is! SchemaStmt) continue;
+  print('${s.name!.node} on line ${ref.pos!.line}');
+  for (final a in s.body) {
+    final attr = a.node;
+    if (attr is SchemaAttr) print('  ${attr.name!.node}: ${attr.ty!.node}');
+  }
+}
+```
+
+`Node<T>` pairs a value with the `Pos` it was parsed at, mirroring Rust's
+`NodeRef<T>`. `KclStmt` and `KclExpr` are **sealed**, so a `switch` over them
+is exhaustive at compile time, and every node exposes the `type` tag the parser
+emitted through its `tag` getter.
+
+Three serde shapes are worth knowing, because they are the details most easily
+guessed wrong:
+
+- `Stmt` and `Expr` are `#[serde(tag = "type")]`. Because the variants are
+  newtypes over a struct, serde *flattens* the struct's fields into the same
+  object — an identifier is `{"type": "Identifier", "names": [...]}`, not
+  `{"type": "Identifier", "identifier": {...}}`.
+- `Type` is `#[serde(tag = "type", content = "value")]`, so a basic type reads
+  back as `{"type": "Basic", "value": "Int"}`, **not** `{"type": "Int"}`. Use
+  `BasicType` / `UnionType` / `DictType` and read the payload off the struct.
+- The plain structs nested inside `NodeRef<T>` — `Identifier`, `Target`,
+  `Keyword`, `Arguments`, `ConfigEntry`, `CheckExpr`, `CallExpr`, `CompClause`,
+  `SchemaExpr` — carry no tag. That is why `SchemaStmt.decorators` decodes to
+  a `Decorator` rather than a tagged variant, and why `SchemaExpr.name` is a
+  `Node<Identifier>` rather than a `Node<KclExpr>`.
+
+Type names match the Java binding's (`com.kcl.ast`), so a class named in the
+Rust source or in `java/src/main/java/com/kcl/ast/` is the class named here:
+`Compare`, `ListComp`, `DictComp`, `NumberLit`, `StringLit`, `NameConstantLit`,
+`JoinedString`, `FormattedValue`, `Subscript`, `Module`, `Pos`, `Node`.
+
+Three payloads reach this package untagged, and Java gives each of them a
+second name because Jackson cannot reuse a class the `Expr` subtype table
+owns. Dart's decoders dispatch on the tag by hand, so each is one class under
+two names rather than a second class:
+
+| Java | here | the same object as |
+| --- | --- | --- |
+| `Decorator` | `typedef Decorator = CallExpr` | `SchemaAttr.decorators` is `Vec<NodeRef<CallExpr>>` |
+| `SchemaConfig` | `typedef SchemaConfig = SchemaExpr` | `UnificationStmt.value` is `NodeRef<SchemaExpr>` |
+| `CheckExpr` | `CheckExpr` | one class, used tagged (`Expr::Check`) and untagged (`SchemaStmt.checks`) |
+
+`Decorator` and `FunctionType` are also protobuf message names in
+`spec.pb.dart`; the AST spelling wins in the `package:kcl_lib/kcl_lib.dart`
+barrel, and the generated ones are reachable by importing `src/pb/spec.pb.dart`
+directly.
+
+An unrecognised tag decodes to `UnknownStmt` / `UnknownExpr` / `UnknownType`
+with the raw payload attached, so a newer parser degrades instead of throwing.
+**This is a deliberate divergence from Java**, which raises
+`InvalidTypeIdException` on a tag missing from its `@JsonSubTypes` list: Dart
+has no such mechanism, and keeping the payload means a file using syntax a
+newer `libkcl` adds is still traversable.
+
+`parseProgramAst` is named with an `Ast` suffix because `parseProgram` already
+occupies that name in the barrel — it is the RPC wrapper that takes
+`ParseProgramArgs`. It accepts both program encodings: a bare array of modules
+and the `{"root": …, "pkgs": {"__main__": […]}}` envelope.
+
+## Plugins
+
+A plugin exposes Dart functions to KCL code. The program imports the plugin
+module and then calls the method unqualified:
+
+```kcl
+import kcl_plugin.strings
+
+result = strings.join("KCL", "KCL", 123)
+```
+
+The runtime resolves that to a `kcl_plugin.strings.join` call into the host,
+so `registerPlugin` only ever sees the two halves.
+
+```dart
+import 'package:kcl_lib/kcl_lib.dart';
+
+registerPlugin('strings', 'join', (args, kwargs) => '"KCL.KCL.123"');
+
+final result = execProgram(ExecProgramArgs(kCodeList: [
+  'import kcl_plugin.strings\nresult = strings.join("KCL", "KCL", 123)\n',
+]));
+print(result.yamlResult); // result: KCL.KCL.123
+```
+
+| Function | Purpose |
+| --- | --- |
+| `registerPlugin(plugin, method, fn)` | Adds or replaces one method. |
+| `pluginRegistered(plugin, method)` | Whether a name resolves. |
+| `disablePlugins()` | Empties the registry and releases the service handle. |
+| `hasPlugins()` | Whether anything is registered. |
+
+A method is called as `fn(String args, String kwargs) -> String`, where both
+arguments are the raw JSON the runtime sends and the return value must be
+JSON-encoded. Register methods at start-up — nothing evaluated before the
+first registration can reach the plugin. Throwing is allowed: the exception is
+caught at the agent boundary and reported to the runtime, so it never unwinds
+into the native frames underneath.
+
+Two properties are worth calling out:
+
++ **No JSON dependency.** Arguments arrive as raw JSON strings and the result
+  must be JSON-encoded, so a method that ignores its arguments needs no parser
+  at all. One that inspects them can use `dart:convert`.
++ **Errors are data, not crashes.** Calling a method that was never
+  registered — or one that threw — yields a
+  `{"__kcl_PanicInfo__": "..."}` object, matching what Go's
+  `plugin.JSONError` and Python's `_call_py_method` return. Following this
+  binding's [error semantics](#error-semantics), it arrives in
+  `result.errMessage` rather than as a thrown `KclError`.
+
+`call_native` is the stateless universal dispatcher and cannot carry a plugin
+agent, so the first `registerPlugin` binds a `kcl_service_new` handle and every
+subsequent call routes through `kcl_service_call_with_length`. The agent
+itself is a `NativeCallable.isolateLocal` callback, so it runs on the mutator
+thread of the isolate that registered it — the same thread that drives
+`execProgram`. With nothing registered the binding keeps using `call_native`
+unchanged, so programs that do not use plugins are unaffected.
 
 ## Flutter mobile setup
 
@@ -263,10 +405,29 @@ The vendored message code under `lib/src/pb/` is regenerated and committed.
 - `lib/src/kcl_lib.dart` — typed wrappers for every RPC, plus `KclError`
   and the `rawCall` escape hatch.
 - `lib/src/kcl_lib_ffi.dart` — `dart:ffi` binding of the universal
-  dispatcher (`call_native`); manages the 4 MiB scratch buffer and the
-  `libkcl` lookup.
+  dispatcher (`call_native`) and the plugin service handle
+  (`kcl_service_*`); manages the 4 MiB scratch buffer and the `libkcl`
+  lookup.
+- `lib/src/kcl_plugin.dart` — plugin registry and the `NativeCallable`
+  plugin agent.
+- `lib/src/ast/` — the typed AST: `Node`/`Pos` plus the sealed `AstType`,
+  `KclExpr` and `KclStmt` hierarchies and the flat DTOs.
+- `lib/src/kcl_ast.dart` — barrel for the AST, re-exported from
+  `lib/kcl_lib.dart`.
 - `lib/src/pb/` — generated protobuf message code (vendored).
-- `test/kcl_lib_test.dart` — end-to-end tests for all 21 RPCs.
+- `test/kcl_lib_test.dart` — end-to-end tests for all 21 RPCs plus the
+  plugin round trip.
+- `test/kcl_ast_test.dart` — pins the AST wire contract against a real
+  fixture parsed through the FFI, so the typed AST cannot silently drift from
+  the parser.
+- `test/ast_contract_test.dart` — decodes the shared golden capture at
+  `../testdata/ast/alignment.json` and asserts that no tag anywhere in it
+  falls through as `UnknownExpr` / `UnknownStmt` / `UnknownType`. A tag the
+  decoder does not recognise becomes a zero-valued node rather than an error,
+  so without this the decoder could resolve nothing and still look plausible.
+  It also `switch`es over the sealed `KclExpr` / `KclStmt` / `AstType`
+  hierarchies with no `default` arm, which only compiles if every variant the
+  Rust enums declare has a Dart counterpart.
 - `test/test_data/` — fixtures copied from `../python/tests/test_data`.
 
 ## License

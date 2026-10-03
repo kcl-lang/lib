@@ -66,7 +66,7 @@ T _invoke<T extends GeneratedMessage>(
 }
 
 // ---------------------------------------------------------------------------
-// KclService — the main 19 RPCs.
+// KclService — the main 20 RPCs.
 // ---------------------------------------------------------------------------
 
 /// Executes a KCL module and returns its YAML/JSON output.
@@ -160,6 +160,30 @@ RenameCodeResult renameCode(RenameCodeArgs args) =>
 /// same file. The RPC name is still `KclService.Test`.
 TestResult runTests(TestArgs args) =>
     _invoke('KclService.Test', args, TestResult.fromBuffer);
+
+/// Formats a test result into a human-readable report.
+///
+/// The output is byte-identical to the kcl-go `PrettyReporter` format and is
+/// deterministic for a given result. Every line, including the last one, ends
+/// with `\n`:
+///
+/// - One line per case in result order: `{name}: {STATUS} ({duration_ms}ms)`,
+///   where STATUS is `PASS` or `FAIL` and `duration_ms` is the case duration
+///   in microseconds truncated to whole milliseconds (integer division, so
+///   `1500µs` renders as `1ms`). A case with a non-empty log message appends
+///   the log on the next line; otherwise a failed case appends its error
+///   string as-is.
+/// - A separator line of exactly 80 `-` characters.
+/// - Only for non-zero counts, in this order: `PASS: {p}/{total}`,
+///   `FAIL: {f}/{total}`, `SKIPPED: {s}/{total}`.
+/// - An empty result (no cases, no coverage) renders exactly `no test files\n`.
+///
+/// The input is the [TestResult] returned by [runTests].
+FormatTestReportResult formatTestReport(FormatTestReportArgs args) => _invoke(
+      'KclService.FormatTestReport',
+      args,
+      FormatTestReportResult.fromBuffer,
+    );
 
 /// Resolves and updates the KCL module dependencies.
 UpdateDependenciesResult updateDependencies(UpdateDependenciesArgs args) =>

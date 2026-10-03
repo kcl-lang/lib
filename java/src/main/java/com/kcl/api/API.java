@@ -360,13 +360,12 @@ public class API implements Service {
     }
 
     /**
-     * Gets the schema type mappings of the program rooted at the input paths
-     * and all of their external dependency packages.
+     * Gets the schema type mappings of the program rooted at the input paths and all of their external dependency
+     * packages.
      *
      * <p>
-     * Different from {@link #getSchemaTypeMapping}, the result is keyed by
-     * package name (e.g. {@code "__main__"}, {@code "mymod.v1"}) and each
-     * value holds that package's schema list, so schemas defined in kcl.mod
+     * Different from {@link #getSchemaTypeMapping}, the result is keyed by package name (e.g. {@code "__main__"},
+     * {@code "mymod.v1"}) and each value holds that package's schema list, so schemas defined in kcl.mod
      * {@code [dependencies]} keep their own pkgpath and base schema. See
      * <a href="https://github.com/kcl-lang/kcl/issues/1546">kcl-lang/kcl#1546</a>.
      *
@@ -645,6 +644,38 @@ public class API implements Service {
     }
 
     /**
+     * Formats a test result into a human-readable report.
+     *
+     * <p>
+     * Example usage:
+     *
+     * <pre>
+     * import com.kcl.api.*;
+     *
+     * API apiInstance = new API();
+     * FormatTestReportArgs args = FormatTestReportArgs.newBuilder()
+     *         .setResult(TestResult.newBuilder()
+     *                 .addInfo(TestCaseInfo.newBuilder().setName("test_case_1").setDuration(1500).build())
+     *                 .build())
+     *         .build();
+     * FormatTestReportResult result = apiInstance.formatTestReport(args);
+     * }
+     * </pre>
+     *
+     * @param args
+     *            the arguments specifying the test result to format.
+     *
+     * @return the pretty-printed report.
+     *
+     * @throws Exception
+     *             if an error occurs during the remote procedure call.
+     */
+    @Override
+    public FormatTestReportResult formatTestReport(FormatTestReportArgs args) throws Exception {
+        return FormatTestReportResult.parseFrom(call("KclService.FormatTestReport", args.toByteArray()));
+    }
+
+    /**
      * Updates dependencies defined in the kcl.mod file.
      *
      * <p>
@@ -692,9 +723,13 @@ public class API implements Service {
     /**
      * Pings the KCL service to verify connectivity and echoes back the sent value.
      *
-     * @param args arguments carrying the value to echo.
+     * @param args
+     *            arguments carrying the value to echo.
+     * 
      * @return the ping result containing the echoed value.
-     * @throws Exception if the underlying RPC fails.
+     * 
+     * @throws Exception
+     *             if the underlying RPC fails.
      */
     @Override
     public PingResult ping(PingArgs args) throws Exception {
@@ -704,16 +739,17 @@ public class API implements Service {
     /**
      * Lists the KCL service method names supported by the underlying runtime.
      *
-     * @return a {@link ListMethodResult} whose {@code methodNameList} is the
-     *         set of supported RPC names.
-     * @throws Exception if the underlying RPC fails.
+     * @return a {@link ListMethodResult} whose {@code methodNameList} is the set of supported RPC names.
+     * 
+     * @throws Exception
+     *             if the underlying RPC fails.
      */
     @Override
     public ListMethodResult listMethod() throws Exception {
         // ListMethodArgs is empty, but the runtime still expects the encoded
         // (zero-byte) payload when going through the universal dispatcher.
-        return ListMethodResult.parseFrom(
-                call("BuiltinService.ListMethod", ListMethodArgs.getDefaultInstance().toByteArray()));
+        return ListMethodResult
+                .parseFrom(call("BuiltinService.ListMethod", ListMethodArgs.getDefaultInstance().toByteArray()));
     }
 
     private byte[] call(String name, byte[] args) throws Exception {

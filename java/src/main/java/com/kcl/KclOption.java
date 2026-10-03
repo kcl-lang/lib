@@ -13,12 +13,10 @@ import com.kcl.api.Spec.ExternalPkg;
  * Functional option accepted by the {@link Kcl} facade entry points.
  *
  * <p>
- * Mirrors kcl-go's {@code Option}: each option contributes a slice of state
- * that is merged into a shared {@link KclOptionBag} before the
- * {@link ExecProgramArgs} proto is materialised. Users build options with the
- * static {@code with*} factories on {@link Kcl}; the {@link #apply} method is
- * only callable from within the {@code com.kcl} package because its parameter
- * type is package-private.
+ * Mirrors kcl-go's {@code Option}: each option contributes a slice of state that is merged into a shared
+ * {@link KclOptionBag} before the {@link ExecProgramArgs} proto is materialised. Users build options with the static
+ * {@code with*} factories on {@link Kcl}; the {@link #apply} method is only callable from within the {@code com.kcl}
+ * package because its parameter type is package-private.
  */
 @FunctionalInterface
 public interface KclOption {
@@ -26,9 +24,8 @@ public interface KclOption {
 }
 
 /**
- * Mutable bag of merged option state, mirroring the union of fields the
- * kcl-go {@code Option} struct can populate. Internal to the facade; users
- * only ever see {@link KclOption} instances.
+ * Mutable bag of merged option state, mirroring the union of fields the kcl-go {@code Option} struct can populate.
+ * Internal to the facade; users only ever see {@link KclOption} instances.
  */
 final class KclOptionBag {
     String workDir;
@@ -60,13 +57,10 @@ final class KclOptionBag {
      * Materialise the bag into an {@link ExecProgramArgs} proto.
      *
      * <p>
-     * When a settings file was recorded via
-     * {@code Kcl.withSettings(String)}, it is parsed first and provides the
-     * base set of fields; anything the caller populated explicitly through
-     * other options is merged on top with kcl-go's {@code Merge} semantics:
-     * repeated fields append, non-empty scalars overwrite (last wins), and
-     * plain boolean fields only propagate when {@code true} (the zero value
-     * means "not set").
+     * When a settings file was recorded via {@code Kcl.withSettings(String)}, it is parsed first and provides the base
+     * set of fields; anything the caller populated explicitly through other options is merged on top with kcl-go's
+     * {@code Merge} semantics: repeated fields append, non-empty scalars overwrite (last wins), and plain boolean
+     * fields only propagate when {@code true} (the zero value means "not set").
      */
     ExecProgramArgs toExecProgramArgs() {
         Builder builder = ExecProgramArgs.newBuilder();

@@ -297,6 +297,16 @@ export interface TestResult {
   /** List of test case information. */
   info: Array<TestCaseInfo>
 }
+/** Message for format test report request arguments. */
+export interface FormatTestReportArgs {
+  /** The test result to format, as returned by the `test` API. */
+  result: TestResult
+}
+/** Message for format test report response. */
+export interface FormatTestReportResult {
+  /** The pretty-printed report. */
+  report: string
+}
 /** Message representing information about a single test case. */
 export interface TestCaseInfo {
   /** Name of the test case. */
@@ -459,6 +469,8 @@ export declare function getVersion(): GetVersionResult
 export declare function ping(args: PingArgs): PingResult
 /** Return the list of method names supported by the KCL service. */
 export declare function listMethod(): ListMethodResult
+/** Format a test result into a human-readable report. */
+export declare function formatTestReport(args: FormatTestReportArgs): FormatTestReportResult
 /**
  * Message for load package request arguments.
  * - paths: List of KCL files.

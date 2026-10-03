@@ -11,9 +11,8 @@ import org.junit.Test;
 import com.kcl.api.Spec.ExecProgramArgs;
 
 /**
- * Tests for the high-level {@link Kcl} facade: inline code runs, file runs,
- * error propagation, kcl.yaml settings parsing, option merging and
- * {@link KCLResult} accessors.
+ * Tests for the high-level {@link Kcl} facade: inline code runs, file runs, error propagation, kcl.yaml settings
+ * parsing, option merging and {@link KCLResult} accessors.
  */
 public class KclFacadeTest {
 
@@ -83,14 +82,12 @@ public class KclFacadeTest {
     @Test
     public void testRunThrowsWhenNoInputOrBadSettings() {
         Assert.assertThrows(KclException.class, () -> Kcl.runWithOpts());
-        Assert.assertThrows(KclException.class,
-                () -> Kcl.run("a = 1", Kcl.withSettings("no/such/kcl.yaml")));
+        Assert.assertThrows(KclException.class, () -> Kcl.run("a = 1", Kcl.withSettings("no/such/kcl.yaml")));
     }
 
     @Test
     public void testSettingsRun() {
-        KCLResultList result = Kcl.runWithOpts(Kcl.withSettings(FACADE_DIR + "/kcl.yaml"),
-                Kcl.withWorkDir(FACADE_DIR));
+        KCLResultList result = Kcl.runWithOpts(Kcl.withSettings(FACADE_DIR + "/kcl.yaml"), Kcl.withWorkDir(FACADE_DIR));
         // path_selector selects INTO the path, yielding the app subtree
         Map<String, Object> doc = result.toMap();
         Assert.assertEquals(2, doc.size());
@@ -100,8 +97,7 @@ public class KclFacadeTest {
         // kcl_options become option() arguments
         Assert.assertEquals(Optional.of("prod"), result.first().getString("name"));
         // sort_keys is observable in the raw YAML key order
-        Assert.assertTrue(result.getRawYamlResult().indexOf("name:") < result.getRawYamlResult()
-                .indexOf("replicas:"));
+        Assert.assertTrue(result.getRawYamlResult().indexOf("name:") < result.getRawYamlResult().indexOf("replicas:"));
     }
 
     @Test
@@ -188,9 +184,7 @@ public class KclFacadeTest {
     public void testExecResultToKCLResult() {
         // one JSON stream value per YAML document
         com.kcl.api.Spec.ExecProgramResult multi = com.kcl.api.Spec.ExecProgramResult.newBuilder()
-                .setJsonResult("{\"x\": 1}\n{\"y\": 2}")
-                .setYamlResult("x: 1\n---\n'y': 2")
-                .build();
+                .setJsonResult("{\"x\": 1}\n{\"y\": 2}").setYamlResult("x: 1\n---\n'y': 2").build();
         KCLResultList parsed = Kcl.execResultToKCLResult(multi);
         Assert.assertEquals(2, parsed.size());
         Assert.assertEquals(Optional.of(1), parsed.get(0).getInt("x"));
@@ -199,22 +193,18 @@ public class KclFacadeTest {
 
         // a stream holding a single whole-document list
         com.kcl.api.Spec.ExecProgramResult listDoc = com.kcl.api.Spec.ExecProgramResult.newBuilder()
-                .setJsonResult("[[1, 2]]")
-                .setYamlResult("- 1\n- 2")
-                .build();
+                .setJsonResult("[[1, 2]]").setYamlResult("- 1\n- 2").build();
         Assert.assertEquals(Arrays.asList(1, 2), Kcl.execResultToKCLResult(listDoc).first().toList());
 
         // err_message becomes an exception
         com.kcl.api.Spec.ExecProgramResult failed = com.kcl.api.Spec.ExecProgramResult.newBuilder()
-                .setErrMessage("boom")
-                .build();
+                .setErrMessage("boom").build();
         KclException err = Assert.assertThrows(KclException.class, () -> Kcl.execResultToKCLResult(failed));
         Assert.assertEquals("boom", err.getMessage());
 
         // a blank JSON mirror yields an empty result list
         com.kcl.api.Spec.ExecProgramResult noJson = com.kcl.api.Spec.ExecProgramResult.newBuilder()
-                .setYamlResult("a: 1")
-                .build();
+                .setYamlResult("a: 1").build();
         Assert.assertTrue(Kcl.execResultToKCLResult(noJson).isEmpty());
     }
 

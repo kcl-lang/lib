@@ -127,7 +127,34 @@ static inline void kcl_copy_string(char* dst, size_t dst_size, const uint8_t* sr
 
 static inline size_t kcl_call(const char* api_str, const uint8_t* args, size_t args_len, uint8_t* result_buffer)
 {
-    size_t result_length = call_native((const uint8_t*)api_str, strlen(api_str), args, args_len, result_buffer);
+    size_t result_length;
+    // `kcl_plugin_service_handle` is weak: it is NULL unless the plugin shim
+    // (kcl_lib_plugin.c) is linked in, and returns 0 until a plugin method is
+    // registered. Either way a program that does not use plugins keeps taking
+    // the stateless `call_native` path below.
+    KclServiceHandle svc = kcl_plugin_service_handle != NULL ? kcl_plugin_service_handle() : 0;
+    if (svc != 0) {
+        size_t out_len = 0;
+        const uint8_t* reply = kcl_service_call_with_length(svc, api_str, (const char*)args, args_len, &out_len);
+        if (reply == NULL) {
+            result_buffer[0] = '\0';
+            return 0;
+        }
+        // The reply is always a NUL-terminated CString, but the runtime only
+        // writes `out_len` on the success path — its panic branch returns an
+        // "ERROR:..." string without setting the length. Recover it with
+        // strlen in that case so the error still reaches the caller.
+        if (out_len == 0) {
+            out_len = strlen((const char*)reply);
+        }
+        result_length = out_len < BUFFER_SIZE ? out_len : BUFFER_SIZE - 1;
+        memcpy(result_buffer, reply, result_length);
+        kcl_service_free_string(reply);
+        result_buffer[result_length] = '\0';
+        return result_length;
+    }
+
+    result_length = call_native((const uint8_t*)api_str, strlen(api_str), args, args_len, result_buffer);
     // Null-terminate so the error path can pass the buffer to kcl_copy_string
     // (which uses strlen on src). Rust's call_native does not append a NUL,
     // and the rest of the malloc'd result_buffer is uninitialised — on Linux
@@ -1578,6 +1605,78 @@ done:
     free(file_ptrs);
     free(pkgs);
     free(pkg_ptrs);
+    return status;
+}
+
+// Format the test cases in `info` (as decoded by kcl_test) into a
+// human-readable report and copy it into out. The report is byte-identical
+// to the kcl-go `PrettyReporter` format and is deterministic for a given
+// result: one `{name}: {STATUS} ({duration_ms}ms)` line per case in result
+// order, where STATUS is PASS or FAIL and the duration is the case duration
+// in microseconds truncated to whole milliseconds (1500us renders as
+// `1ms`); when a case has a non-empty log message the log is appended on
+// the next line, otherwise a failed case appends its error string as-is.
+// Those lines are followed by a separator of exactly 80 '-' characters and
+// then, only for non-zero counts, `PASS: {p}/{total}`, `FAIL: {f}/{total}`
+// and `SKIPPED: {s}/{total}`. An empty result renders as `no test files\n`.
+// Every line, including the last one, ends with "\n".
+// Returns false and copies the error message into out on failure.
+static inline bool kcl_format_test_report(const struct KclTestCaseInfo* info, size_t info_count,
+    char* out, size_t out_size)
+{
+    uint8_t* buffer = (uint8_t*)malloc(BUFFER_SIZE);
+    uint8_t* result_buffer = (uint8_t*)malloc(BUFFER_SIZE);
+    uint8_t* cases_buffer = (uint8_t*)malloc(BUFFER_SIZE);
+    uint8_t* report_buffer = (uint8_t*)calloc(1, BUFFER_SIZE);
+    bool status = false;
+    if (buffer == NULL || result_buffer == NULL || cases_buffer == NULL || report_buffer == NULL)
+        goto done;
+
+    // The TestResult is assembled by hand rather than through
+    // TestResult_fields: its `info` field is a repeated message, which
+    // nanopb would only fill from a stateful encode callback. Same
+    // pattern as kcl_test, which encodes TestArgs field by field.
+    pb_ostream_t cases_stream = pb_ostream_from_buffer(cases_buffer, BUFFER_SIZE);
+    for (size_t i = 0; i < info_count; ++i) {
+        TestCaseInfo info_msg = TestCaseInfo_init_zero;
+        info_msg.name.funcs.encode = encode_string;
+        info_msg.name.arg = (void*)info[i].name;
+        info_msg.error.funcs.encode = encode_string;
+        info_msg.error.arg = (void*)info[i].error;
+        info_msg.duration = info[i].duration;
+        info_msg.log_message.funcs.encode = encode_string;
+        info_msg.log_message.arg = (void*)info[i].log_message;
+        if (!kcl_encode_tagged_submsg(&cases_stream, TestResult_info_tag, TestCaseInfo_fields, &info_msg))
+            goto done;
+    }
+
+    pb_ostream_t stream = pb_ostream_from_buffer(buffer, BUFFER_SIZE);
+    if (!pb_encode_tag(&stream, PB_WT_STRING, FormatTestReportArgs_result_tag)
+        || !pb_encode_varint(&stream, cases_stream.bytes_written)
+        || !pb_write(&stream, cases_buffer, cases_stream.bytes_written))
+        goto done;
+
+    size_t result_length = kcl_call("KclService.FormatTestReport", buffer, stream.bytes_written, result_buffer);
+    if (check_error_prefix(result_buffer)) {
+        kcl_copy_string(out, out_size, result_buffer);
+        goto done;
+    }
+
+    pb_istream_t istream = pb_istream_from_buffer(result_buffer, result_length);
+    FormatTestReportResult res = FormatTestReportResult_init_default;
+    res.report.funcs.decode = decode_string;
+    res.report.arg = report_buffer;
+    if (!pb_decode(&istream, FormatTestReportResult_fields, &res))
+        goto done;
+
+    kcl_copy_string(out, out_size, report_buffer);
+    status = true;
+
+done:
+    free(buffer);
+    free(result_buffer);
+    free(cases_buffer);
+    free(report_buffer);
     return status;
 }
 

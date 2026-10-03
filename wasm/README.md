@@ -63,8 +63,8 @@ handle the protobuf encoding/decoding for you:
 `listOptions`, `listVariables`, `overrideFile`, `execProgram`,
 `getSchemaTypeMapping`, `getSchemaTypeMappingUnderPath`, `formatCode`,
 `formatPath`, `lintPath`, `validateCode`, `loadSettingsFiles`, `rename`,
-`renameCode`, `test` and `updateDependencies`, plus the `BuiltinService`
-wrappers `builtinPing` and `listMethod`.
+`renameCode`, `test`, `formatTestReport` and `updateDependencies`, plus the
+`BuiltinService` wrappers `builtinPing` and `listMethod`.
 
 ```typescript
 import { load, ping, lintPath, getVersion } from "@kcl-lib/wasm";
