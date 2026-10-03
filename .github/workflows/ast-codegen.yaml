@@ -1,0 +1,107 @@
+name: ast-codegen
+
+# `python/kcl_lib/ast/` and `wasm/src/ast/` are generated from
+# `kcl-lang/kcl`'s `crates/ast/src/ast.rs` by `tools/generate_ast.py`. They
+# used to be hand-written, and every binding's copy of the same declarations
+# drifted from the Rust on its own schedule — which is the whole reason the
+# generator exists.
+#
+# That creates one new way for the drift to come back: a checked-in generated
+# file that nobody regenerates. Nothing in either language's build notices a
+# stale interface — `tsc` is perfectly happy with one, and so is `pytest` — so
+# this workflow re-runs the generator and diffs the bytes.
+#
+# It is self-contained on purpose. `ast-shape-test.yaml` checks the *decoders*
+# against the Rust field types, and it triggers on `wasm/src/ast/**` and
+# `python/kcl_lib/ast/**`; it does not know that those files are generated, and
+# it cannot tell a stale file from a correct one. This workflow owns the
+# question "does the checked-in text still match the tool that produced it",
+# plus the two contract suites that actually run the generated decoders.
+on:
+  push:
+    branches:
+      - main
+      - master
+    tags:
+      - '*'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "hack/check_generated_ast.rb"
+      - "tools/**"
+      - "python/kcl_lib/ast/**"
+      - "python/tests/ast_contract_test.py"
+      - "wasm/src/ast/**"
+      - "wasm/tests/ast_contract.test.ts"
+      - ".github/workflows/ast-codegen.yaml"
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}-${{ github.event_name }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  codegen:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          path: lib
+      # The generator parses the Rust source, and it lives in the kcl repo
+      # rather than here. Checked out as a sibling so the default
+      # `../../kcl/crates/ast/src/ast.rs` path resolves, which is the same
+      # layout ast-shape-test.yaml sets up. Pinning nothing on purpose: a new
+      # field in ast.rs is supposed to turn this red, and an `ast.rs` nobody
+      # has regenerated the bindings for is the exact failure being guarded
+      # against.
+      - name: Checkout kcl
+        uses: actions/checkout@v7
+        with:
+          repository: kcl-lang/kcl
+          path: kcl
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.4"
+
+      # Self-test + determinism + freshness, in that order: the self-test is
+      # what catches a generator that has quietly stopped modelling something,
+      # the freshness diff is what catches a file edited without re-running it.
+      - name: Check the generated bindings are current and deterministic
+        working-directory: "lib"
+        run: ruby hack/check_generated_ast.rb
+
+      # The freshness check compares bytes, which says nothing about whether the
+      # bytes decode the parser's output correctly. These two do: they run the
+      # generated decoders against a captured `ast.json`.
+      # `python/kcl_lib/__init__.py` does `from ._kcl_lib import *` and the Rust
+      # extension is not built here, so the wider python suite fails at import;
+      # the contract test stubs the extension, which is why it is this file and
+      # not `python-test.yaml`'s job to run it.
+      - name: Run the Python AST contract test
+        working-directory: "lib/python"
+        run: |
+          python -m pip install --quiet pytest
+          python -m pytest tests/ast_contract_test.py -q
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22.x
+      - name: Install wasm dependencies
+        working-directory: "lib/wasm"
+        run: npm install
+      - name: Type-check the generated TypeScript
+        working-directory: "lib/wasm"
+        run: npx tsc --noEmit -p tsconfig.json
+      - name: Run the wasm AST contract test
+        working-directory: "lib/wasm"
+        run: npx jest tests/ast_contract.test.ts

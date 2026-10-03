@@ -12,9 +12,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * }
  * </pre>
  *
- * The polymorphic discriminator {@code "StringLit"} is registered on the
- * {@link Expr} base class via {@code @JsonSubTypes}; do NOT add a
- * {@code @JsonTypeName} here or it will conflict.
+ * The polymorphic discriminator {@code "StringLit"} is registered on the {@link Expr} base class via
+ * {@code @JsonSubTypes}; do NOT add a {@code @JsonTypeName} here or it will conflict.
  */
 public class StringLit extends Expr {
     @JsonProperty("is_long_string")

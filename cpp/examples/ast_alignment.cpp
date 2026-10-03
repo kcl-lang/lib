@@ -149,16 +149,20 @@ int test_schema_stmt_decorators(const char* ast_json)
     auto module = kcl::ast::parse_module(ast_json);
     const kcl_stmt_t* article = find_schema(module.get(), "Article");
     assert(article != nullptr);
-    auto* decos = static_cast<kcl_decorator_node_list_t*>(article->u.schema_stmt.decorators);
-    assert(decos != nullptr && decos->count > 0);
-    for (size_t i = 0; i < decos->count; i++) {
-        auto* d = static_cast<kcl_decorator_t*>(decos->items[i].node);
+    /* `SchemaStmt.decorators` is `Vec<NodeRef<CallExpr>>` upstream, so
+     * the wire carries a full `{func,args,keywords}` payload per item
+     * rather than the shorter `Decorator` DTO the old C header modelled. */
+    const kcl_call_expr_node_list_t& decos = article->u.schema_stmt.decorators;
+    assert(decos.count > 0);
+    for (size_t i = 0; i < decos.count; i++) {
+        auto* d = static_cast<kcl_call_expr_t*>(decos.items[i].node);
         assert(d != nullptr);
-        assert(d->func != nullptr);
-        auto* f = static_cast<kcl_expr_t*>(d->func->node);
+        assert(d->func.node != nullptr);
+        auto* f = static_cast<kcl_expr_t*>(d->func.node);
         assert(f != nullptr);
-        /* Decorator.func wraps an Identifier expression — no
-         * `"type":"Call"` tag in the flat shape. */
+        /* `CallExpr.func` holds the callee expression directly — the
+         * `Expr::Identifier` newtype is flattened onto this object, so
+         * there is no inner `"type"` tag to match. */
         assert(f->kind == KCL_EXPR_KIND_IDENTIFIER);
     }
     return 0;
@@ -176,8 +180,12 @@ int test_schema_attr_decorators(const char* ast_json)
             || inner->u.schema_attr.name.node == nullptr
             || std::strcmp(inner->u.schema_attr.name.node, "name") != 0)
             continue;
-        auto* decos = static_cast<kcl_decorator_node_list_t*>(inner->u.schema_attr.decorators);
-        assert(decos != nullptr && decos->count == 1);
+        const kcl_call_expr_node_list_t& decos = inner->u.schema_attr.decorators;
+        assert(decos.count == 1);
+        auto* d = static_cast<kcl_call_expr_t*>(decos.items[0].node);
+        assert(d != nullptr);
+        assert(d->func.node != nullptr);
+        assert(static_cast<kcl_expr_t*>(d->func.node)->kind == KCL_EXPR_KIND_IDENTIFIER);
         found = 1;
         break;
     }
@@ -193,8 +201,15 @@ int test_lambda_expr_with_arguments(const char* ast_json)
     auto* value = static_cast<kcl_expr_t*>(adder->u.assign_stmt.value.node);
     assert(value != nullptr);
     assert(value->kind == KCL_EXPR_KIND_LAMBDA);
-    auto* args = static_cast<kcl_arguments_t*>(value->u.lambda_expr.args.node);
+    auto* args = static_cast<kcl_arguments_t*>(value->u.lambda_expr.args->node);
     assert(args != nullptr && args->args.count == 2);
+    /* `Arguments.defaults` is a `Vec<Option<NodeRef<Expr>>>`, index-aligned
+     * with `args` — this lambda annotates both params but gives neither a
+     * default, so every slot stays empty. */
+    assert(args->defaults.count == 2);
+    for (size_t i = 0; i < args->defaults.count; i++)
+        assert(!args->defaults.items[i].present);
+    assert(args->ty_list.count == 2);
     return 0;
 }
 

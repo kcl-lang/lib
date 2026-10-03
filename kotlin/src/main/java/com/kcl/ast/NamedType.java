@@ -4,16 +4,14 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 
 @JsonTypeName("Named")
 public class NamedType extends Type {
-    public static class NamedTypeValue {
-        private Identifier identifier;
-
-        public Identifier getIdentifier() {
-            return identifier;
-        }
-
-        public void setIdentifier(Identifier identifier) {
-            this.identifier = identifier;
-        }
+    /**
+     * Rust declares {@code Named(Identifier)} — a newtype variant of the
+     * adjacently tagged {@code Type} enum, so serde puts the {@code Identifier}
+     * struct's own fields straight under {@code value} and there is no
+     * {@code identifier} key to wrap them in. Extending {@code Identifier} is
+     * what makes the inherited accessors bind those fields.
+     */
+    public static class NamedTypeValue extends Identifier {
     }
 
     NamedTypeValue value;

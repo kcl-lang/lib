@@ -1,5 +1,6 @@
 package com.kcl.ast;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import java.util.List;
 
@@ -15,6 +16,7 @@ public class UnionType extends Type {
             this.typeElements = typeElements;
         }
 
+        @JsonProperty("type_elements")
         private List<NodeRef<Type>> typeElements;
     }
 

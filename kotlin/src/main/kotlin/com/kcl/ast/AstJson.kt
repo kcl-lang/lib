@@ -8,12 +8,14 @@
 // Wire shape mirrors Rust's `#[serde(tag = "type")]` plus the handful of
 // flat DTOs (`Decorator`, `SchemaConfig`, `ConfigEntry`, `Keyword`,
 // `Arguments`, `MemberOrIndex`, `Target`) whose `NodeRef<T>` payload lacks
-// the polymorphic discriminator — see AST_DRIFT.md note A.
+// the polymorphic discriminator — the Rust source declares them as plain
+// structs rather than enum variants.
 
 package com.kcl.ast
 
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.datatype.jdk8.Jdk8Module
 
 /**
  * Shared `ObjectMapper` configured to ignore unknown properties. This
@@ -21,8 +23,14 @@ import com.fasterxml.jackson.databind.ObjectMapper
  * `parseModule` / `parseProgram` accept both the long-form
  * `NumberLit`/`StringLit`/`NameConstantLit` discriminators (cross the
  * wire) and any future additive fields.
+ *
+ * The AST models Rust's `Option<T>` as `java.util.Optional`, so the Jdk8
+ * module is registered here: without it Jackson raises
+ * `InvalidDefinitionException` the moment it meets one of those fields
+ * rather than leaving it empty.
  */
 internal val AST_OBJECT_MAPPER: ObjectMapper = ObjectMapper().apply {
+    registerModule(Jdk8Module())
     configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
 }
 

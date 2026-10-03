@@ -836,6 +836,13 @@ function validate_code(data::AbstractString, code::AbstractString;
     return result.success
 end
 
+# ---------------------------------------------------------------------------
+# Typed AST. `ast.jl` sits on top of `parse_file` / `parse_program` and the
+# internal JSON reader above, so it is included last.
+# ---------------------------------------------------------------------------
+
+include("ast.jl")
+
 export call, KclError,
     ping, get_version, parse_program, parse_file, load_package, list_options,
     list_variables, exec_program, override_file, get_schema_type_mapping,
@@ -846,10 +853,30 @@ export call, KclError,
     PluginMethod,
     KCLResult, yaml_string, json_string, to_dict
 
-# NB: the `run`/`run_files`/`must_run` facade entry points are intentionally
-# left unexported — `Base.run` already owns `run`, so exporting the family
-# would make every bare reference ambiguous for `using KclLib` callers.
-# Reach them as `KclLib.run(...)` or via `import KclLib: run, run_files,
-# must_run`.
+# Typed AST (src/ast.jl). Every struct and abstract type is exported - callers
+# dispatch with `isa` / `node_type`, so the variant names are the API. The
+# `*_from_wire` decoders stay unexported: callers go through `parse_module` /
+# `parse_program_ast` rather than poking at the wire format directly.
+#
+# The names follow the Java binding's vocabulary (`Compare`, `ListComp`,
+# `SchemaConfig`, `Decorator`, ...), which is the one the cross-binding
+# checkers and docs key on. `KclModule` is the one exception that is exported
+# as well, kept as an alias so the pre-rename name still resolves.
+export parse_module, parse_program_ast, node_type,
+    Pos, Node, Comment,
+    AstType, AnyType, BasicType, NamedType, ListType, DictType,
+    UnionType, LiteralType, FunctionType, UnknownType,
+    Identifier, MemberOrIndex, Member, Index, Target, Keyword, Arguments,
+    ConfigEntry, Decorator, SchemaConfig, SchemaIndexSignature,
+    KclExpr, TargetExpr, IdentifierExpr, UnaryExpr, BinaryExpr, IfExpr,
+    SelectorExpr, CallExpr, ParenExpr, QuantExpr, ListExpr, ListIfItemExpr,
+    CompClause, ListComp, StarredExpr, DictComp, ConfigIfEntryExpr,
+    SchemaExpr, ConfigExpr, CheckExpr, LambdaExpr, Subscript, KeywordExpr,
+    ArgumentsExpr, Compare, NumberLit, StringLit,
+    NameConstantLit, JoinedString, FormattedValue, MissingExpr,
+    UnknownExpr,
+    KclStmt, TypeAliasStmt, ExprStmt, UnificationStmt, AssignStmt, AugAssignStmt,
+    AssertStmt, IfStmt, ImportStmt, SchemaAttr, SchemaStmt, RuleStmt, UnknownStmt,
+    Module, KclModule
 
 end # module KclLib

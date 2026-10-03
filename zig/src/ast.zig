@@ -92,8 +92,13 @@ pub const SchemaRefType = @import("ast/types.zig").SchemaRefType;
 
 pub const Identifier = @import("ast/dto.zig").Identifier;
 pub const IdentifierNode = @import("ast/dto.zig").IdentifierNode;
-pub const Decorator = @import("ast/dto.zig").Decorator;
-pub const SchemaConfig = @import("ast/dto.zig").SchemaConfig;
+/// A decorator is an `ast::CallExpr`; there is no separate `Decorator` DTO.
+pub const Decorator = @import("ast/dto.zig").CallExpr;
+pub const DecoratorNode = @import("ast/dto.zig").CallExprNode;
+/// `UnificationStmt.value` is a `NodeRef<SchemaExpr>`; there is no separate
+/// `SchemaConfig` DTO.
+pub const SchemaConfig = @import("ast/dto.zig").SchemaExpr;
+pub const SchemaConfigNode = @import("ast/dto.zig").SchemaExprNode;
 pub const ConfigEntry = @import("ast/dto.zig").ConfigEntry;
 pub const KeyValuePair = @import("ast/dto.zig").KeyValuePair;
 pub const MemberOrIndex = @import("ast/dto.zig").MemberOrIndex;

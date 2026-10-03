@@ -13,22 +13,22 @@ local ast = require("kcl_lib.ast")
 
 local FIXTURE = "./spec/test_data/ast_alignment/main.k"
 
--- Find the first SchemaStmt in the module whose name matches.
+-- Find the first Schema statement in the module whose name matches.
 local function find_schema(module, name)
   for _, stmt_ref in ipairs(module.body) do
     local stmt = stmt_ref.node
-    if stmt.type == "SchemaStmt" and stmt.name ~= nil and stmt.name.node == name then
+    if stmt.type == "Schema" and stmt.name ~= nil and stmt.name.node == name then
       return stmt
     end
   end
   return nil
 end
 
--- Find the first AssignStmt in the module whose first target name matches.
+-- Find the first Assign statement in the module whose first target name matches.
 local function find_assign(module, name)
   for _, stmt_ref in ipairs(module.body) do
     local stmt = stmt_ref.node
-    if stmt.type == "AssignStmt" and stmt.targets[1] ~= nil then
+    if stmt.type == "Assign" and stmt.targets[1] ~= nil then
       local target = stmt.targets[1].node
       if target.name ~= nil and target.name.node == name then
         return stmt
@@ -46,7 +46,7 @@ local function find_string_lit(items)
     local node = item.node
     -- SchemaStmt.body carries nested SchemaAttr / CheckExpr / etc. —
     -- recurse so a check-block string literal counts too.
-    if node.type == "SchemaStmt" then
+    if node.type == "Schema" then
       local inner = find_string_lit(node.body)
       if inner ~= nil then
         return inner
@@ -96,15 +96,15 @@ describe("kcl_lib.ast", function()
       assert.is_true(ce.is_shorthand)
     end)
 
-    it("parses an AssignStmt whose value is a SchemaExpr", function()
+    it("parses an Assign whose value is a Schema expression", function()
       local result = assert(api:parse_file({ path = FIXTURE }))
       local module = ast.parse_module(result.ast_json)
       local assign = find_assign(module, "x")
       assert.is_not_nil(assign)
-      assert.are.equal("SchemaExpr", assign.value.node.type)
+      assert.are.equal("Schema", assign.value.node.type)
     end)
 
-    it("parses SchemaStmt decorators as a flat DTO", function()
+    it("parses SchemaStmt decorators as a flat CallExpr", function()
       local result = assert(api:parse_file({ path = FIXTURE }))
       local module = ast.parse_module(result.ast_json)
       local article = find_schema(module, "Article")
@@ -113,9 +113,10 @@ describe("kcl_lib.ast", function()
       for _, deco_ref in ipairs(article.decorators) do
         local deco = deco_ref.node
         assert.is_not_nil(deco.func)
-        -- Decorator.func wraps an Identifier expression (no
-        -- `"type":"Call"` tag in the flat shape).
-        assert.are.equal("IdentifierExpr", deco.func.node.type)
+        -- A decorator is a `CallExpr`; `func` wraps an Identifier
+        -- expression (there is no `"type":"Call"` tag on the element,
+        -- because only the `Expr` enum is tagged).
+        assert.are.equal("Identifier", deco.func.node.type)
       end
     end)
 
@@ -136,12 +137,12 @@ describe("kcl_lib.ast", function()
       assert.are.equal(1, #name_attr.decorators)
     end)
 
-    it("parses a LambdaExpr with Arguments", function()
+    it("parses a Lambda with Arguments", function()
       local result = assert(api:parse_file({ path = FIXTURE }))
       local module = ast.parse_module(result.ast_json)
       local adder = find_assign(module, "adder")
       assert.is_not_nil(adder)
-      assert.are.equal("LambdaExpr", adder.value.node.type)
+      assert.are.equal("Lambda", adder.value.node.type)
       assert.are.equal(2, #adder.value.node.args.node.args)
     end)
   end)

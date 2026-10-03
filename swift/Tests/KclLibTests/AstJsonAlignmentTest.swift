@@ -1,13 +1,13 @@
 // AstJsonAlignmentTest.swift — Round-trip AST alignment tests for the Swift binding.
 //
-// Mirrors the Java `AstJsonAlignmentTest`, Go `TestAstJsonAlignment`,
-// Python `tests/ast_test.py`, Node.js `__test__/ast_alignment.spec.mjs`,
-// .NET `KclLib.Tests/AstAlignmentTest.cs`, WASM
-// `tests/ast_alignment.test.ts`, and Kotlin
-// `AstJsonAlignmentTest.kt`: parse a real KCL fixture through the
-// native FFI (`API.parseFile`/`API.parseProgram`) and verify the
-// resulting `astJson` string deserializes cleanly into the typed AST
-// structs in `KclLib.AST`.
+// Parses a real KCL fixture through the native FFI (`API.parseFile` /
+// `API.parseProgram`) and checks the resulting `astJson` deserializes into
+// the typed AST in `KclLibAST`.
+//
+// The wire *contract* itself — which tags exist, which payloads are
+// flattened — is pinned by `KclLibASTTests` against the shared golden
+// capture. What this file adds is the other half: that the parser we ship
+// actually produces that contract.
 
 import XCTest
 
@@ -23,176 +23,151 @@ final class AstJsonAlignmentTest: XCTestCase {
         return swiftDir.appendingPathComponent("Tests/KclLibTests/test_data/ast_alignment/main.k").path
     }
 
-    func testModuleFilenameAndNoPkg() throws {
+    private func parsedModule() throws -> Module {
         var args = ParseFileArgs()
         args.path = fixturePath()
         let result = try API().parseFile(args)
         XCTAssertEqual(result.errors.count, 0)
-        let module = try parseModule(result.astJson)
+        return try parseModule(result.astJson)
+    }
+
+    func testModuleFilenameAndNoPkg() throws {
+        let module = try parsedModule()
         XCTAssertTrue(module.filename.hasSuffix("main.k"))
-        // Module must not carry a `pkg` field — round-trip should produce
-        // neither one in input nor one on output.
-        let moduleMirror = Mirror(reflecting: module)
-        for child in moduleMirror.children {
+        // The Rust `Module` struct has no `pkg` field, so neither does ours.
+        for child in Mirror(reflecting: module).children {
             XCTAssertNotEqual(child.label, "pkg", "Module should not have a pkg field")
         }
     }
 
-    func testLiteralDiscriminatorsUseLongForm() throws {
-        var args = ParseFileArgs()
-        args.path = fixturePath()
-        let result = try API().parseFile(args)
-        XCTAssertTrue(result.astJson.contains("\"StringLit\""), "expected \"StringLit\" tag in wire JSON")
-        let module = try parseModule(result.astJson)
-        // The fixture contains string literals in SchemaAttr defaults
-        // (e.g. `name: str = "anonymous"`). Walk into the schema body to
-        // find at least one `StringLit` Expr variant.
+    func testSchemaAttrDefaultIsAStringLit() throws {
+        // The tag is the serde variant name, not the longer
+        // `StringLiteralExpression` that `get_expr_name()` returns for
+        // diagnostics.
+        let module = try parsedModule()
         var foundStringLit = false
         for stmtRef in module.body {
-            if case .schema(let schemaStmt) = stmtRef.node {
-                for attrRef in schemaStmt.body {
-                    if case .schemaAttr(let attr) = attrRef.node {
-                        if let v = attr.value {
-                            if case .stringLit = v.node {
-                                foundStringLit = true
-                            }
-                        }
-                    }
-                }
+            guard case .schema(let schema) = stmtRef.node else { continue }
+            for attrRef in schema.body {
+                guard case .schemaAttr(let attr) = attrRef.node,
+                      case .stringLit = attr.value?.node
+                else { continue }
+                foundStringLit = true
             }
         }
-        XCTAssertTrue(foundStringLit, "expected at least one StringLit in fixture body")
+        XCTAssertTrue(foundStringLit, "expected at least one StringLit in the fixture body")
     }
 
-    func testConfigEntryIsShorthandRoundTrips() {
-        // Mirror Rust's #[serde(skip_serializing_if = "is_false")]: omitted
-        // when false, emitted when true. The Swift AST exposes this as a
-        // boolean defaulting to false.
-        let ce = ConfigEntry(
-            key: NodeRef(node: Expr.missing(MissingExpr())),
-            value: NodeRef(node: Expr.missing(MissingExpr())),
-            operation: nil,
-            isShorthand: false
-        )
-        XCTAssertFalse(ce.isShorthand)
-        let ce2 = ConfigEntry(
-            key: NodeRef(node: Expr.missing(MissingExpr())),
-            value: NodeRef(node: Expr.missing(MissingExpr())),
-            operation: nil,
-            isShorthand: true
-        )
-        XCTAssertTrue(ce2.isShorthand)
-    }
-
-    func testAssignStmtWithSchemaExprValue() throws {
-        var args = ParseFileArgs()
-        args.path = fixturePath()
-        let result = try API().parseFile(args)
-        let module = try parseModule(result.astJson)
-        let assign = module.body.first { stmtRef in
-            if case .assign(let a) = stmtRef.node {
-                if let first = a.targets.first?.node, first.name.node == "x" {
-                    return true
-                }
-            }
-            return false
+    func testSchemaAttrDecoratorsAreFlatCallExpressions() throws {
+        // `decorators` is `Vec<NodeRef<CallExpr>>`, so each element is a bare
+        // `{func,args,keywords}` with no `"type":"Call"` tag.
+        guard case .schema(let person) = try schema(named: "Person") else {
+            return XCTFail("expected the Person schema")
         }
-        XCTAssertNotNil(assign)
-        if case .assign(let a) = assign!.node {
-            if case .schema = a.value.node {
-                // expected
-            } else {
-                XCTFail("expected SchemaExpr on the right-hand side of `x =`")
-            }
+        guard case .schemaAttr(let name) = person.body[0].node else {
+            return XCTFail("expected the name attribute first")
+        }
+        XCTAssertEqual(name.decorators.count, 1)
+        // `@deprecated` has no call parentheses, so it decodes as a
+        // `CallExpr` with an empty argument list.
+        XCTAssertEqual(name.decorators[0].node.args.count, 0)
+        XCTAssertEqual(name.decorators[0].node.keywords.count, 0)
+        if case .identifier(let callee) = name.decorators[0].node.func.node {
+            XCTAssertEqual(callee.dottedName(), "deprecated")
+        } else {
+            XCTFail("expected the decorator callee to be an IdentifierExpr")
         }
     }
 
-    func testSchemaStmtDecoratorsAreFlatDecoratorDTO() throws {
-        var args = ParseFileArgs()
-        args.path = fixturePath()
-        let result = try API().parseFile(args)
-        let module = try parseModule(result.astJson)
-        let article = module.body.first { stmtRef in
-            if case .schema(let s) = stmtRef.node, s.name.node == "Article" {
-                return true
-            }
-            return false
+    func testSchemaDecoratorOnTheSchemaHeader() throws {
+        guard case .schema(let article) = try schema(named: "Article") else {
+            return XCTFail("expected the Article schema")
         }
-        XCTAssertNotNil(article)
-        if case .schema(let schema) = article!.node {
-            XCTAssertGreaterThan(schema.decorators.count, 0)
-            for decoRef in schema.decorators {
-                let deco = decoRef.node
-                XCTAssertNotNil(deco.func)
-                if let f = deco.func {
-                    if case .identifier = f.node {
-                        // expected: Decorator.Func is a Node wrapping an
-                        // Identifier expression (no `"type":"Call"` tag in
-                        // the flat shape).
-                    } else {
-                        XCTFail("Decorator.func should resolve to IdentifierExpr")
-                    }
-                }
-            }
+        XCTAssertEqual(article.decorators.count, 1)
+        // `schema Article(HasTimestamp)` — the parent is an Identifier.
+        XCTAssertEqual(article.parentName?.node.dottedName(), "HasTimestamp")
+        // Newer kcl runtimes also copy the parent into `mixins`; the pinned
+        // runtime lists it only in `parent_name`, so there is nothing to
+        // assert against until the pin moves.
+        try XCTSkipIf(article.mixins.isEmpty, "the pinned kcl runtime does not copy the parent into mixins")
+        XCTAssertEqual(article.mixins.map { $0.node.dottedName() }, ["HasTimestamp"])
+    }
+
+    func testCheckOnSchemaAttrHasMsgAndIfCond() throws {
+        guard case .schema(let person) = try schema(named: "Person") else {
+            return XCTFail("expected the Person schema")
+        }
+        XCTAssertEqual(person.checks.count, 1)
+        XCTAssertNotNil(person.checks[0].node.test)
+        XCTAssertNotNil(person.checks[0].node.ifCond)
+        XCTAssertNotNil(person.checks[0].node.msg)
+    }
+
+    func testSchemaInstantiationIsASchemaExpr() throws {
+        guard case .assign(let assign) = try assignment(named: "x") else {
+            return XCTFail("expected the x assignment")
+        }
+        guard case .schema(let schema) = assign.value.node else {
+            return XCTFail("expected a SchemaExpr on the right-hand side of `x =`")
+        }
+        XCTAssertEqual(schema.name.node.dottedName(), "Person")
+        // `Person {…}` puts its entries in `config`, not `keywords`.
+        XCTAssertTrue(schema.keywords.isEmpty)
+        if case .config(let config) = schema.config.node {
+            XCTAssertEqual(config.items.count, 2)
+        } else {
+            XCTFail("expected a ConfigExpr")
         }
     }
 
-    func testSchemaAttrHasDecoratorsField() throws {
-        var args = ParseFileArgs()
-        args.path = fixturePath()
-        let result = try API().parseFile(args)
-        let module = try parseModule(result.astJson)
-        let person = module.body.first { stmtRef in
-            if case .schema(let s) = stmtRef.node, s.name.node == "Person" {
-                return true
-            }
-            return false
+    func testLambdaArgumentsCarryTypesAndPositionalNullDefaults() throws {
+        guard case .assign(let assign) = try assignment(named: "adder") else {
+            return XCTFail("expected the adder assignment")
         }
-        XCTAssertNotNil(person)
-        if case .schema(let schema) = person!.node {
-            let nameAttr = schema.body.first { stmtRef in
-                if case .schemaAttr(let a) = stmtRef.node, a.name.node == "name" {
-                    return true
-                }
-                return false
-            }
-            XCTAssertNotNil(nameAttr)
-            if case .schemaAttr(let attr) = nameAttr!.node {
-                XCTAssertEqual(attr.decorators.count, 1)
-            }
+        guard case .lambda(let lambda) = assign.value.node else {
+            return XCTFail("expected a LambdaExpr on the right-hand side of `adder =`")
         }
+        let args = try XCTUnwrap(lambda.args?.node)
+        XCTAssertEqual(args.args.map { $0.node.dottedName() }, ["x", "y"])
+        // Neither parameter has a default, but the slots are still there —
+        // they are index-aligned with `args` and `tyList`.
+        XCTAssertEqual(args.defaults.count, 2)
+        XCTAssertNil(args.defaults[0])
+        XCTAssertNil(args.defaults[1])
+        XCTAssertEqual(args.tyList.count, 2)
+        // The body is statements, not expressions.
+        XCTAssertEqual(lambda.body.count, 1)
+        if case .expr = lambda.body[0].node {} else { XCTFail("expected an ExprStmt body") }
     }
 
-    func testLambdaExprWithArguments() throws {
-        var args = ParseFileArgs()
-        args.path = fixturePath()
-        let result = try API().parseFile(args)
-        let module = try parseModule(result.astJson)
-        let adder = module.body.first { stmtRef in
-            if case .assign(let a) = stmtRef.node {
-                if let first = a.targets.first?.node, first.name.node == "adder" {
-                    return true
-                }
-            }
-            return false
-        }
-        XCTAssertNotNil(adder)
-        if case .assign(let a) = adder!.node {
-            if case .lambda(let lambda) = a.value.node {
-                XCTAssertEqual(lambda.args.node.args.count, 2)
-            } else {
-                XCTFail("expected LambdaExpr on the right-hand side of `adder =`")
-            }
-        }
-    }
-
-    func testParseProgramReturnsListOfModules() throws {
+    func testParseProgramReturnsTheMainPackage() throws {
         var args = ParseProgramArgs()
         args.paths.append(fixturePath())
         let result = try API().parseProgram(args)
         XCTAssertEqual(result.errors.count, 0)
         let modules = try parseProgram(result.astJson)
-        XCTAssertGreaterThan(modules.count, 0)
+        XCTAssertFalse(modules.isEmpty)
         XCTAssertTrue(modules[0].filename.hasSuffix(".k"))
+    }
+
+    // MARK: - Lookups
+
+    private func schema(named name: String) throws -> Stmt {
+        let module = try parsedModule()
+        return try XCTUnwrap(
+            module.body.first { if case .schema(let s) = $0.node, s.name.node == name { return true } else { return false } },
+            "no schema named \(name)"
+        ).node
+    }
+
+    private func assignment(named name: String) throws -> Stmt {
+        let module = try parsedModule()
+        return try XCTUnwrap(
+            module.body.first {
+                if case .assign(let a) = $0.node, a.targets.first?.node.name.node == name { return true }
+                return false
+            },
+            "no assignment named \(name)"
+        ).node
     }
 }
