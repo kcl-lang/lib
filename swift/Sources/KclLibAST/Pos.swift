@@ -1,71 +1,48 @@
-// Pos.swift — Typed AST package for the Swift binding.
+// Pos.swift — Typed AST model for the Swift binding.
 //
-// Mirrors the work already merged for Java (#322), Go, Python (#328),
-// Node.js (#329), .NET (#330), WASM (#330), and Kotlin (#331). Wire
-// shape follows `kcl-lang/kcl crates/ast/src/ast.rs`:
+// Single source of truth: `kcl-lang/kcl crates/ast/src/ast.rs`. Everything
+// below mirrors one Rust declaration, and the three serde shapes are what
+// decide whether a field carries a `"type"` discriminator:
 //
-//   - `#[serde(tag = "type")]` polymorphic dispatch — every `Stmt` /
-//     `Expr` / `Type` variant carries a `"type"` discriminator.
-//   - Flat DTOs (`Decorator`, `SchemaConfig`, `ConfigEntry`, `Keyword`,
-//     `Arguments`, `MemberOrIndex`, `Target`) where the `NodeRef<T>`
-//     payload lacks the polymorphic tag — see AST_DRIFT.md note A.
+//   * `Stmt` and `Expr` are `#[serde(tag = "type")]` — *internally* tagged,
+//     with no `rename_all`, so the wire tag is the variant name verbatim
+//     (`NumberLit`, `ListIfItem`, `Check`, …) and the newtype variant's
+//     struct fields are **flattened into the same object** as the tag.
+//     `Expr::Identifier(Identifier)` therefore arrives as
+//     `{"type":"Identifier","names":[…],"pkgpath":"","ctx":"Load"}`, never
+//     as `{"type":"Identifier","identifier":{…}}`.
 //
-// Lives in the `KclLibAST` SPM target (separate from `KclLib`) so
-// the AST type names (`Decorator`, `FunctionType`, …) don't collide
-// with the protobuf-generated structs of the same name in `KclLib`.
-// This mirrors the .NET binding, which also puts the typed AST into
-// its own assembly (`KclLib.AST`).
+//   * `Type` is `#[serde(tag = "type", content = "value")]` — *adjacently*
+//     tagged, so the payload lives under `value`. The tag names the shape,
+//     not the type: `BasicType` is a fieldless enum with no struct wrapper,
+//     so the wire is `{"type":"Basic","value":"Int"}`. `Any` is the only
+//     unit variant, so it serializes to the bare `{"type":"Any"}` with no
+//     `value` key at all.
 //
-// Swift doesn't have a `serde` analogue, so we parse with
-// `JSONSerialization` into `[String: Any]` and provide typed accessor
-// helpers rather than `Codable` — that gives us the same wire-shape
-// surface as the other bindings without writing a custom decoder.
+//   * `MemberOrIndex` and `NumberLitValue` are also adjacently tagged, and
+//     `LiteralType` is a third level of the same thing nested inside
+//     `Type::Literal`'s payload.
+//
+// A fourth rule matters as much as the three shapes: which fields are
+// declared as *structs* rather than *enum variants* have no tag even when
+// they sit inside a tagged node. `SchemaStmt.decorators` is
+// `Vec<NodeRef<CallExpr>>`, so a decorator is a bare `{func,args,keywords}`;
+// `SchemaStmt.checks` is `Vec<NodeRef<CheckExpr>>`, so a check is a bare
+// `{test,if_cond,msg}`. `DictComp.entry` is a bare `ConfigEntry` with no
+// `NodeRef` wrapper at all, and `Target.paths` is a bare `Vec<MemberOrIndex>`.
+//
+// Swift has no `serde` analogue, so `AstJson.swift` parses with
+// `JSONSerialization` into `[String: Any]` and these types are built by hand
+// rather than by a `Codable` decoder. That keeps the same wire surface as
+// the other bindings without writing a custom polymorphic decoder.
 
 import Foundation
 
-// MARK: - Module & Program
-
-/// A KCL module: a single `.k` source file's AST. Wire shape mirrors
-/// `ast::Module` in `crates/ast/src/ast.rs`. The Rust struct has no `pkg`
-/// field, so we omit it here too.
-public struct Module: Sendable {
-    public let filename: String
-    public let doc: NodeRef<String>?
-    public let body: [NodeRef<Stmt>]
-    public let comments: [NodeRef<Comment>]
-
-    public init(
-        filename: String,
-        doc: NodeRef<String>? = nil,
-        body: [NodeRef<Stmt>] = [],
-        comments: [NodeRef<Comment>] = [],
-    ) {
-        self.filename = filename
-        self.doc = doc
-        self.body = body
-        self.comments = comments
-    }
-}
-
-/// Envelope returned by `parseProgram`. Wire shape is
-/// `{"root": ".", "pkgs": {"__main__": [Module, …]}}`. We only expose
-/// the modules of the `__main__` package; external packages are kept
-/// available via the `pkgs` map for callers that need them.
-public struct Program: Sendable {
-    public let root: String
-    public let mainPackage: [Module]
-    public let pkgs: [String: [Module]]
-
-    public init(root: String, mainPackage: [Module], pkgs: [String: [Module]]) {
-        self.root = root
-        self.mainPackage = mainPackage
-        self.pkgs = pkgs
-    }
-}
-
 // MARK: - Base primitives
 
-/// `ast::Pos` — file, line, column information attached to every AST node.
+/// `ast::Pos` — file, line and column of a node. On the wire these five
+/// fields are flattened onto the `Node<T>` wrapper itself, not nested under
+/// a `"position"` key.
 public struct Pos: Sendable, Equatable {
     public let filename: String
     public let line: Int64
@@ -82,9 +59,11 @@ public struct Pos: Sendable, Equatable {
     }
 }
 
-/// `NodeRef<T>` — the file/line/column wrapper that all AST nodes carry.
-/// In Rust this is a single struct; in Swift we keep `position` optional
-/// because some wire shapes omit it (e.g. when nested under a flat DTO).
+/// `ast::Node<T>` — `{id, node, filename, line, column, end_line, end_column}`.
+///
+/// `position` is optional here because a bare `T` (as in
+/// `Type::Named(Identifier)`, where the newtype payload is inlined into
+/// `value`) arrives with no wrapper to read a position from.
 public struct NodeRef<T: Sendable>: Sendable {
     public let node: T
     public let position: Pos?
@@ -97,38 +76,86 @@ public struct NodeRef<T: Sendable>: Sendable {
     }
 }
 
-/// `ast::Comment` — a comment attached to the source. Treated as a
-/// `NodeRef<String>` in Rust.
-public typealias Comment = NodeRef<String>
+/// `ast::Comment` — a plain struct with a single `text` field, so a
+/// `NodeRef<Comment>` is `{node: {text}, filename, …}`, not a bare string.
+public struct Comment: Sendable {
+    public let text: String
 
-// MARK: - Stmt, Expr, Type (polymorphic enums)
+    public init(text: String) {
+        self.text = text
+    }
+}
 
-/// `ast::Stmt` — top-level statement in a module. Mirrors the seven
-/// `#[serde(tag = "type")]` variants.
+/// `ast::Module` — one `.k` file. There is deliberately no `pkg` field:
+/// the Rust struct has none either.
+public struct Module: Sendable {
+    public let filename: String
+    public let doc: NodeRef<String>?
+    public let body: [NodeRef<Stmt>]
+    public let comments: [NodeRef<Comment>]
+
+    public init(
+        filename: String,
+        doc: NodeRef<String>? = nil,
+        body: [NodeRef<Stmt>] = [],
+        comments: [NodeRef<Comment>] = []
+    ) {
+        self.filename = filename
+        self.doc = doc
+        self.body = body
+        self.comments = comments
+    }
+}
+
+/// The `ParseProgramResult.astJson` payload. The wire is
+/// `{"root": ".", "pkgs": {"__main__": [Module, …]}}`; we surface the main
+/// package's modules directly and keep the full map for callers that need
+/// the imported packages too.
+public struct Program: Sendable {
+    public let root: String
+    public let mainPackage: [Module]
+    public let pkgs: [String: [Module]]
+
+    public init(root: String, mainPackage: [Module], pkgs: [String: [Module]]) {
+        self.root = root
+        self.mainPackage = mainPackage
+        self.pkgs = pkgs
+    }
+}
+
+// MARK: - Polymorphic enums
+
+/// `ast::Stmt` — eleven `#[serde(tag = "type")]` variants. `if` and `import`
+/// are Swift keywords so the case labels are backticked; the wire tag is
+/// unaffected.
 public indirect enum Stmt: Sendable {
+    case typeAlias(TypeAliasStmt)
     case expr(ExprStmt)
     case unification(UnificationStmt)
     case assign(AssignStmt)
-    case schema(SchemaStmt)
-    case schemaAttr(SchemaAttr)
-    case rule(RuleStmt)
-    case `import`(ImportStmt)
-    case typeAlias(TypeAliasStmt)
+    case augAssign(AugAssignStmt)
     case assert(AssertStmt)
-    // `if` is a Swift reserved keyword — use backticks so callers can
-    // still pattern-match `case .if(let s)`. Wire tag is still "If"
-    // (the Rust serde discriminator) — only the Swift case label is
-    // backticked.
     case `if`(IfStmt)
+    case `import`(ImportStmt)
+    case schemaAttr(SchemaAttr)
+    case schema(SchemaStmt)
+    case rule(RuleStmt)
+    /// A variant this build doesn't know about. Kept verbatim so a newer
+    /// parser's output survives the round trip instead of being dropped.
     case unknown(type: String)
 }
 
+/// `ast::Expr` — thirty `#[serde(tag = "type")]` variants.
+///
+/// Note there is no separate `IdentifierExpr` type: `Expr::Identifier` wraps
+/// the `Identifier` DTO directly, so the identifier's `names`/`pkgpath`/`ctx`
+/// sit next to the tag rather than under an extra key.
 public indirect enum Expr: Sendable {
-    case target(TargetExpr)
-    case identifier(IdentifierExpr)
+    case target(Target)
+    case identifier(Identifier)
     case unary(UnaryExpr)
     case binary(BinaryExpr)
-    case ifExpr(IfExpr)
+    case `if`(IfExpr)
     case selector(SelectorExpr)
     case call(CallExpr)
     case paren(ParenExpr)
@@ -142,10 +169,11 @@ public indirect enum Expr: Sendable {
     case compClause(CompClause)
     case schema(SchemaExpr)
     case config(ConfigExpr)
+    case check(CheckExpr)
     case lambda(LambdaExpr)
-    // `subscript` is a Swift reserved keyword — backtick it. Wire tag
-    // is still "Subscript".
     case `subscript`(Subscript)
+    case keyword(Keyword)
+    case arguments(Arguments)
     case compare(Compare)
     case numberLit(NumberLit)
     case stringLit(StringLit)
@@ -153,43 +181,110 @@ public indirect enum Expr: Sendable {
     case joinedString(JoinedString)
     case formattedValue(FormattedValue)
     case missing(MissingExpr)
-    case check(CheckExpr)
     case unknown(type: String)
 }
 
+/// `ast::Type` — eight `#[serde(tag = "type", content = "value")]` variants.
+/// The name `KclTypeNode` avoids colliding with Swift's `Type` protocol
+/// existential and with the protobuf `Type` in `KclLib`.
 public indirect enum KclTypeNode: Sendable {
     case any(AnyType)
+    case named(Identifier)
     case basic(BasicType)
     case list(ListType)
     case dict(DictType)
-    case schemaRef(SchemaRefType)
+    case union(UnionType)
     case literal(LiteralType)
     case function(FunctionType)
-    case union(UnionType)
-    case named(NamedType)
-    case strLiteral(StrLiteralType)
-    case intLiteral(IntLiteralType)
-    case floatLiteral(FloatLiteralType)
-    case boolLiteral(BoolLiteralType)
-    case keyValue(KeyValueType)
     case unknown(type: String)
 }
 
-// MARK: - Stmt variants
+/// `ast::MemberOrIndex` — the dotted/indexed path of a `Target`.
+public indirect enum MemberOrIndex: Sendable {
+    case member(NodeRef<String>)
+    case index(NodeRef<Expr>)
+}
+
+/// `ast::NumberLitValue` — `{type:"Int",value:1}` / `{type:"Float",value:1.5}`.
+public indirect enum NumberLitValue: Sendable {
+    case int(Int64)
+    case float(Double)
+}
+
+/// `ast::LiteralType` — itself adjacently tagged, so `Type::Literal` nests a
+/// second tagged document inside its `value`.
+public indirect enum LiteralTypeValue: Sendable {
+    case bool(Bool)
+    case int(IntLiteralType)
+    case float(Double)
+    case str(String)
+}
+
+// MARK: - Stmt payloads
+
+public struct TypeAliasStmt: Sendable {
+    /// `type_name`, not `name` — the wire key is what matters and a decoder
+    /// that guesses at names silently decodes null.
+    public let typeName: NodeRef<Identifier>
+    /// The human-readable spelling Rust carries alongside the parsed `ty`.
+    public let typeValue: NodeRef<String>
+    public let ty: NodeRef<KclTypeNode>
+}
 
 public struct ExprStmt: Sendable {
+    /// A list even though a statement holds one expression: `a, b = 1, 2`
+    /// desugars into two.
     public let exprs: [NodeRef<Expr>]
 }
 
 public struct UnificationStmt: Sendable {
-    public let target: NodeRef<Target>
-    public let value: NodeRef<SchemaConfig>
+    /// `data: ASchema {}` — the target is an `Identifier` and the value a
+    /// `SchemaExpr`, both bare structs rather than tagged expressions.
+    public let target: NodeRef<Identifier>
+    public let value: NodeRef<SchemaExpr>
 }
 
 public struct AssignStmt: Sendable {
+    /// `Target` is a struct, so each element has no `"type"` tag even though
+    /// the statement wrapping it does.
     public let targets: [NodeRef<Target>]
-    public let ty: NodeRef<KclTypeNode>?
     public let value: NodeRef<Expr>
+    public let ty: NodeRef<KclTypeNode>?
+}
+
+public struct AugAssignStmt: Sendable {
+    public let target: NodeRef<Target>
+    public let value: NodeRef<Expr>
+    public let op: AugOp
+}
+
+public struct AssertStmt: Sendable {
+    /// Same three fields as `CheckExpr`, but it *is* a statement so it
+    /// carries the tag `"Assert"`.
+    public let test: NodeRef<Expr>
+    public let ifCond: NodeRef<Expr>?
+    public let msg: NodeRef<Expr>?
+}
+
+public struct IfStmt: Sendable {
+    public let body: [NodeRef<Stmt>]
+    public let cond: NodeRef<Expr>
+    /// A flat list of statements, not a nested `IfStmt`: the `elif` chain is
+    /// a sibling list. Modelling it as a nested if is the classic way to get
+    /// `elif` wrong.
+    public let orelse: [NodeRef<Stmt>]
+}
+
+public struct ImportStmt: Sendable {
+    /// A flat five-field struct with no `"node"` wrapper. `path` *does* carry
+    /// a position (it is a `Node<String>`), but the statement does not.
+    public let path: NodeRef<String>
+    public let rawpath: String
+    public let name: String
+    public let asname: NodeRef<String>?
+    /// Not `pkg_root`: `pkg_name` is the package this import indexes into,
+    /// and it is `"__main__"` for builtins, plugins and internal packages.
+    public let pkgName: String
 }
 
 public struct SchemaStmt: Sendable {
@@ -202,7 +297,9 @@ public struct SchemaStmt: Sendable {
     public let args: NodeRef<Arguments>?
     public let mixins: [NodeRef<Identifier>]
     public let body: [NodeRef<Stmt>]
-    public let decorators: [NodeRef<Decorator>]
+    /// `Vec<NodeRef<CallExpr>>` — a bare `{func,args,keywords}`, untagged.
+    public let decorators: [NodeRef<CallExpr>]
+    /// `Vec<NodeRef<CheckExpr>>` — a bare `{test,if_cond,msg}`, untagged.
     public let checks: [NodeRef<CheckExpr>]
     public let indexSignature: NodeRef<SchemaIndexSignature>?
 }
@@ -210,61 +307,28 @@ public struct SchemaStmt: Sendable {
 public struct SchemaAttr: Sendable {
     public let doc: String
     public let name: NodeRef<String>
+    /// `Some(Assign)` for an ordinary attribute — Rust uses `op` for the
+    /// augmented operator but a plain `attr: int = 1` still reports
+    /// `"Assign"` here.
     public let op: AugOp?
     public let value: NodeRef<Expr>?
     public let isOptional: Bool
-    public let decorators: [NodeRef<Decorator>]
-    public let ty: NodeRef<KclTypeNode>?
+    public let decorators: [NodeRef<CallExpr>]
+    /// Not optional: Rust declares `ty: NodeRef<Type>`.
+    public let ty: NodeRef<KclTypeNode>
 }
 
 public struct RuleStmt: Sendable {
     public let doc: NodeRef<String>?
     public let name: NodeRef<String>
     public let parentRules: [NodeRef<Identifier>]
-    public let decorators: [NodeRef<Decorator>]
+    public let decorators: [NodeRef<CallExpr>]
     public let checks: [NodeRef<CheckExpr>]
     public let args: NodeRef<Arguments>?
     public let forHostName: NodeRef<Identifier>?
 }
 
-public struct ImportStmt: Sendable {
-    public let path: String
-    public let asName: String?
-    public let pkgName: String?
-    public let pkgRoot: String?
-}
-
-public struct TypeAliasStmt: Sendable {
-    public let name: NodeRef<String>
-    public let ty: NodeRef<KclTypeNode>
-}
-
-public struct AssertStmt: Sendable {
-    public let source: NodeRef<Expr>
-    public let assertMsg: NodeRef<String>?
-}
-
-public struct IfStmt: Sendable {
-    public let cond: NodeRef<Expr>
-    public let body: [NodeRef<Stmt>]
-    public let orElse: NodeRef<Expr>?
-}
-
-// MARK: - Expr variants
-
-public struct TargetExpr: Sendable {
-    public let name: NodeRef<String>
-}
-
-public struct IdentifierExpr: Sendable {
-    // Mirror Rust's `IdentifierExpr { names: Vec<Node<String>>, pkgpath: Vec<String> }`.
-    // `names` is an array of `Node<String>` (one element per dotted
-    // segment, e.g. `["foo", "bar", "baz"]` for `foo.bar.baz`). The
-    // wire shape carries a full Node<String> per element so position
-    // info is preserved.
-    public let names: [NodeRef<String>]
-    public let pkgpath: [String]
-}
+// MARK: - Expr payloads
 
 public struct UnaryExpr: Sendable {
     public let op: UnaryOp
@@ -272,25 +336,27 @@ public struct UnaryExpr: Sendable {
 }
 
 public struct BinaryExpr: Sendable {
-    public let op: BinOp
     public let left: NodeRef<Expr>
+    public let op: BinOp
     public let right: NodeRef<Expr>
 }
 
 public struct IfExpr: Sendable {
-    public let cond: NodeRef<Expr>
     public let body: NodeRef<Expr>
-    public let orElse: NodeRef<Expr>?
+    public let cond: NodeRef<Expr>
+    public let orelse: NodeRef<Expr>
 }
 
 public struct SelectorExpr: Sendable {
     public let value: NodeRef<Expr>
-    public let attrName: NodeRef<String>
+    /// `attr`, an `Identifier` — not `attr_name`, and not a bare string.
+    public let attr: NodeRef<Identifier>
+    public let ctx: ExprContext
+    /// True for `a?.b` — the `?` is recorded, not folded into `ctx`.
+    public let hasQuestion: Bool
 }
 
 public struct CallExpr: Sendable {
-    // `func` is a Swift reserved keyword — backtick the property name
-    // so the wire shape mirrors `CallExpr::func` in Rust's `ast.rs`.
     public let `func`: NodeRef<Expr>
     public let args: [NodeRef<Expr>]
     public let keywords: [NodeRef<Keyword>]
@@ -301,27 +367,29 @@ public struct ParenExpr: Sendable {
 }
 
 public struct QuantExpr: Sendable {
-    public let target: NodeRef<Target>
-    public let variables: [NodeRef<QuantOperation>]
+    public let target: NodeRef<Expr>
+    public let variables: [NodeRef<Identifier>]
     public let op: QuantOperation
-    public let cond: NodeRef<Expr>
+    /// The predicate is `test`, not `cond`.
+    public let test: NodeRef<Expr>
+    public let ifCond: NodeRef<Expr>?
+    public let ctx: ExprContext
 }
 
 public struct ListExpr: Sendable {
     public let elts: [NodeRef<Expr>]
+    public let ctx: ExprContext
 }
 
 public struct ListIfItemExpr: Sendable {
-    public let ifExpr: NodeRef<Expr>
-    public let orElse: NodeRef<Expr>?
-    public var expr: NodeRef<Expr> { ifExpr }
-    public var exprOrElse: NodeRef<Expr>? { orElse }
+    public let ifCond: NodeRef<Expr>
+    public let exprs: [NodeRef<Expr>]
+    public let orelse: NodeRef<Expr>?
 }
 
 public struct ListComp: Sendable {
     public let elt: NodeRef<Expr>
     public let generators: [NodeRef<CompClause>]
-    public let cond: NodeRef<Expr>?
 }
 
 public struct StarredExpr: Sendable {
@@ -330,27 +398,28 @@ public struct StarredExpr: Sendable {
 }
 
 public struct DictComp: Sendable {
-    public let key: NodeRef<Expr>
-    public let value: NodeRef<Expr>
+    /// A bare `ConfigEntry` — no `NodeRef` wrapper, so the entry's `key`,
+    /// `value` and `operation` sit directly under `entry`.
+    public let entry: ConfigEntry
     public let generators: [NodeRef<CompClause>]
-    public let cond: NodeRef<Expr>?
 }
 
 public struct ConfigIfEntryExpr: Sendable {
-    public let ifExpr: NodeRef<Expr>
-    public var expr: NodeRef<Expr> { ifExpr }
-}
-
-public struct CompClause: Sendable {
-    public let targets: [NodeRef<Target>]
-    public let iter: NodeRef<Expr>
-    public let ifs: [NodeRef<Expr>]
+    public let ifCond: NodeRef<Expr>
+    public let items: [NodeRef<ConfigEntry>]
+    /// The else branch is a whole `ConfigExpr`, not a second
+    /// `ConfigIfEntryExpr`.
+    public let orelse: NodeRef<Expr>?
 }
 
 public struct SchemaExpr: Sendable {
-    public let name: NodeRef<Expr>
+    /// `NodeRef<Identifier>`, not an `Expr` — `Person` in `Person {…}` is
+    /// an identifier, not a `Selector` or `Identifier` expression.
+    public let name: NodeRef<Identifier>
     public let args: [NodeRef<Expr>]
-    public let kwargs: [NodeRef<Keyword>]
+    public let keywords: [NodeRef<Keyword>]
+    /// For `Person {name = "Alice"}` the entries land here and `keywords`
+    /// stays empty; `Person(1, name = "Bob")` is a plain `Expr::Call`.
     public let config: NodeRef<Expr>
 }
 
@@ -359,18 +428,30 @@ public struct ConfigExpr: Sendable {
 }
 
 public struct LambdaExpr: Sendable {
-    public let args: NodeRef<Arguments>
+    /// Optional: `lambda { … }` has no parameter list at all, and absent is
+    /// different from empty on the wire.
+    public let args: NodeRef<Arguments>?
+    /// Statements, not expressions — a lambda body is a `Vec<NodeRef<Stmt>>`.
     public let body: [NodeRef<Stmt>]
     public let returnTy: NodeRef<KclTypeNode>?
 }
 
 public struct Subscript: Sendable {
     public let value: NodeRef<Expr>
-    public let index: NodeRef<Expr>
+    /// `a[i]` sets `index`; `a[1:2:3]` sets `lower`/`upper`/`step`. The
+    /// three are separate fields rather than one slice expression.
+    public let index: NodeRef<Expr>?
+    public let lower: NodeRef<Expr>?
+    public let upper: NodeRef<Expr>?
+    public let step: NodeRef<Expr>?
+    public let ctx: ExprContext
+    public let hasQuestion: Bool
 }
 
 public struct Compare: Sendable {
     public let left: NodeRef<Expr>
+    /// Parallel arrays: `ops[i]` is the operator between `left`
+    /// (or `comparators[i-1]`) and `comparators[i]`.
     public let ops: [CmpOp]
     public let comparators: [NodeRef<Expr>]
 }
@@ -391,178 +472,181 @@ public struct NameConstantLit: Sendable {
 }
 
 public struct JoinedString: Sendable {
-    public let values: [NodeRef<Expr>]
     public let isLongString: Bool
+    public let values: [NodeRef<Expr>]
     public let rawValue: String
 }
 
 public struct FormattedValue: Sendable {
+    public let isLongString: Bool
     public let value: NodeRef<Expr>
-    public let spec: String?
+    /// `format_spec`, and a bare `String` — there is no node position.
+    public let formatSpec: String?
 }
 
 public struct MissingExpr: Sendable {}
 
 public struct CheckExpr: Sendable {
-    // Wire shape: `{test, if_cond, msg}` — see `ast::CheckExpr` in
-    // `crates/ast/src/ast.rs`. The "predicate" is `test`, not `cond`;
-    // `if_cond` is the optional `if <expr>` gate; `msg` is the
-    // optional string-literal message.
     public let test: NodeRef<Expr>
     public let ifCond: NodeRef<Expr>?
-    public let msg: NodeRef<String>?
+    public let msg: NodeRef<Expr>?
 }
 
-// MARK: - Type variants
+// MARK: - Type payloads
 
+/// `Type::Any` — the only unit variant of `Type`, and the only one with no
+/// payload: the wire is the bare `{"type":"Any"}` with no `value` key.
 public struct AnyType: Sendable {}
 
-public struct BasicType: Sendable {
-    public let type: String  // literal type discriminator (always "Basic")
-    public let kind: String  // e.g. "str", "int", "bool"
-}
-
 public struct ListType: Sendable {
-    public let innerType: NodeRef<KclTypeNode>
+    public let innerType: NodeRef<KclTypeNode>?
 }
 
 public struct DictType: Sendable {
-    public let keyType: NodeRef<KclTypeNode>
-    public let valueType: NodeRef<KclTypeNode>
+    public let keyType: NodeRef<KclTypeNode>?
+    public let valueType: NodeRef<KclTypeNode>?
 }
 
-public struct SchemaRefType: Sendable {
-    public let schemaName: NodeRef<String>
-    public let pkgpath: [String]
+public struct UnionType: Sendable {
+    /// `type_elements`, not `types`.
+    public let typeElements: [NodeRef<KclTypeNode>]
+}
+
+public struct FunctionType: Sendable {
+    /// Both are `Option<…>`: `(int, str) -> bool` omits the parameter list
+    /// parentheses' absence, and a bare `-> bool` has no `params_ty`.
+    public let paramsTy: [NodeRef<KclTypeNode>]?
+    public let retTy: NodeRef<KclTypeNode>?
 }
 
 public struct LiteralType: Sendable {
     public let value: LiteralTypeValue
 }
 
-public struct FunctionType: Sendable {
-    public let params: [NodeRef<KclTypeNode>]
-    public let ret: NodeRef<KclTypeNode>
-}
-
-public struct UnionType: Sendable {
-    public let any: Bool
-    public let types: [NodeRef<KclTypeNode>]
-}
-
-public struct NamedType: Sendable {
-    public let name: NodeRef<Identifier>
-}
-
-public struct StrLiteralType: Sendable {
-    public let value: String
-}
-
+/// `IntLiteralType` — the newtype payload of `LiteralType::Int`, inlined
+/// into `value` rather than nested under another key.
 public struct IntLiteralType: Sendable {
     public let value: Int64
+    public let suffix: NumberBinarySuffix?
 }
 
-public struct FloatLiteralType: Sendable {
-    public let value: Double
+// MARK: - Flat DTOs
+
+/// `ast::Identifier` — a dotted name plus a package path and a load/store
+/// context. Appears as a bare struct (inside `NodeRef<Identifier>` fields),
+/// as the flattened payload of `Expr::Identifier`, and inlined into
+/// `Type::Named`'s `value`.
+public struct Identifier: Sendable {
+    /// One entry per dotted segment; each carries its own position.
+    public let names: [NodeRef<String>]
+    public let pkgpath: String
+    public let ctx: ExprContext
+
+    public init(names: [NodeRef<String>], pkgpath: String = "", ctx: ExprContext = .load) {
+        self.names = names
+        self.pkgpath = pkgpath
+        self.ctx = ctx
+    }
+
+    /// `foo.bar.baz` from `["foo", "bar", "baz"]`.
+    public func dottedName() -> String {
+        names.map { $0.node }.joined(separator: ".")
+    }
 }
 
-public struct BoolLiteralType: Sendable {
-    public let value: Bool
-}
-
-public struct KeyValueType: Sendable {
-    public let key: NodeRef<KclTypeNode>
-    public let value: NodeRef<KclTypeNode>
-}
-
-// MARK: - Flat DTOs (note A)
-
-public struct Decorator: Sendable {
-    // `func` is a Swift reserved keyword — backtick the property name
-    // so the wire shape mirrors `Decorator::func` in Rust's `ast.rs`.
-    public let `func`: NodeRef<Expr>?
-    public let args: [NodeRef<Expr>]
-    public let keywords: [NodeRef<Keyword>]
-}
-
-public struct SchemaConfig: Sendable {
-    public let name: NodeRef<Expr>?
-    public let args: [NodeRef<Expr>]
-    public let kwargs: [NodeRef<Keyword>]
-    public let config: NodeRef<Expr>?
-}
-
-public struct ConfigEntry: Sendable {
-    public let key: NodeRef<Expr>
-    public let value: NodeRef<Expr>
-    public let operation: ConfigEntryOperation?
-    public let isShorthand: Bool
-}
-
-public struct Keyword: Sendable {
-    public let arg: NodeRef<Expr>?
-    public let value: NodeRef<Expr>
-}
-
-public struct Arguments: Sendable {
-    public let args: [NodeRef<Expr>]
-    public let defaults: [NodeRef<Expr>]
-    public let tyList: [NodeRef<KclTypeNode>]
-}
-
-public enum MemberOrIndex: Sendable {
-    case member(NodeRef<String>)
-    case index(NodeRef<Expr>)
-}
-
+/// `ast::Target` — an assignment target: a name plus an optional
+/// member/index path. A struct, so it has no `"type"` tag even inside a
+/// tagged statement, and it *is* the payload of `Expr::Target`.
 public struct Target: Sendable {
     public let name: NodeRef<String>
+    /// A bare `Vec<MemberOrIndex>` — each element is adjacently tagged
+    /// `{"type":"Member"|"Index","value":…}`.
     public let paths: [MemberOrIndex]
     public let pkgpath: String
 }
 
-public struct QuantOperation: Sendable {
-    public let target: NodeRef<Target>
-    public let op: String  // "all", "any", "filter", "map"
-    public var name: NodeRef<String> { target.node.name }
+public struct ConfigEntry: Sendable {
+    /// Optional: the ES6-style `{name}` shorthand has no separate key.
+    public let key: NodeRef<Expr>?
+    public let value: NodeRef<Expr>
+    public let operation: ConfigEntryOperation
+    /// `#[serde(skip_serializing_if = "is_false")]` upstream, so the key is
+    /// absent unless true. We expose it as a plain `Bool`.
+    public let isShorthand: Bool
+}
+
+public struct Keyword: Sendable {
+    /// An `Identifier`, not an expression: `k = 3` names the parameter `k`.
+    public let arg: NodeRef<Identifier>
+    public let value: NodeRef<Expr>?
+}
+
+public struct Arguments: Sendable {
+    public let args: [NodeRef<Identifier>]
+    /// `Vec<Option<…>>`, index-aligned with `args` and `tyList` — see
+    /// `OptionalNodeRefList` in `AstJson.swift` for why the nulls matter.
+    public let defaults: [NodeRef<Expr>?]
+    public let tyList: [NodeRef<KclTypeNode>?]
+}
+
+public struct CompClause: Sendable {
+    /// Identifiers, not targets: `[i for i in xs]` binds `i`.
+    public let targets: [NodeRef<Identifier>]
+    public let iter: NodeRef<Expr>
+    public let ifs: [NodeRef<Expr>]
 }
 
 public struct SchemaIndexSignature: Sendable {
-    public let keyType: NodeRef<KclTypeNode>
-    public let valueType: NodeRef<KclTypeNode>
+    public let keyName: NodeRef<String>?
+    public let value: NodeRef<Expr>?
+    public let anyOther: Bool
+    public let keyTy: NodeRef<KclTypeNode>
+    public let valueTy: NodeRef<KclTypeNode>
 }
 
-public struct Identifier: Sendable {
-    public let names: [String]
-    public let pkgpath: [String]
-}
-
-public struct PosOnly: Sendable {}
-
-// MARK: - Operator & literal enums
-
-public enum BinOp: String, Sendable {
-    case add = "Add"
-    case sub = "Sub"
-    case mul = "Mul"
-    case div = "Div"
-    case floorDiv = "FloorDiv"
-    case mod = "Mod"
-    case pow = "Pow"
-    case bitOr = "BitOr"
-    case bitAnd = "BitAnd"
-    case bitXor = "BitXor"
-    case lShift = "LShift"
-    case rShift = "RShift"
-    case assign = "Assign"
-    case augAssign = "AugAssign"
-}
+// MARK: - Operator and literal enums
 
 public enum UnaryOp: String, Sendable {
     case uAdd = "UAdd"
     case uSub = "USub"
     case invert = "Invert"
     case not = "Not"
+}
+
+public enum BinOp: String, Sendable {
+    case add = "Add"
+    case sub = "Sub"
+    case mul = "Mul"
+    case div = "Div"
+    case mod = "Mod"
+    case pow = "Pow"
+    case floorDiv = "FloorDiv"
+    case lShift = "LShift"
+    case rShift = "RShift"
+    case bitXor = "BitXor"
+    case bitAnd = "BitAnd"
+    case bitOr = "BitOr"
+    case andOp = "And"
+    case orOp = "Or"
+    /// The type-cast operator. It lives here rather than in `CmpOp`
+    /// because `a as T` parses as a binary expression.
+    case asOp = "As"
+}
+
+public enum AugOp: String, Sendable {
+    case assign = "Assign"
+    case add = "Add"
+    case sub = "Sub"
+    case mul = "Mul"
+    case div = "Div"
+    case mod = "Mod"
+    case pow = "Pow"
+    case floorDiv = "FloorDiv"
+    case lShift = "LShift"
+    case rShift = "RShift"
+    case bitXor = "BitXor"
+    case bitAnd = "BitAnd"
+    case bitOr = "BitOr"
 }
 
 public enum CmpOp: String, Sendable {
@@ -572,40 +656,31 @@ public enum CmpOp: String, Sendable {
     case ltE = "LtE"
     case gt = "Gt"
     case gtE = "GtE"
-    // `is` and `in` are Swift reserved keywords — backtick the case
-    // labels. Raw values ("Is" / "In") still match the Rust serde
-    // discriminator.
+    // `is` and `in` are Swift keywords, so the case labels are backticked.
+    // The raw values are the wire tags either way.
     case `is` = "Is"
-    case isNot = "IsNot"
     case `in` = "In"
     case notIn = "NotIn"
+    case `not` = "Not"
+    case isNot = "IsNot"
 }
 
-public enum AugOp: String, Sendable {
-    case assign = "Assign"
-    case add = "Add"
-    case sub = "Sub"
-    case mul = "Mul"
-    case div = "Div"
-    case floorDiv = "FloorDiv"
-    case mod = "Mod"
-    case pow = "Pow"
-    case bitOr = "BitOr"
-    case bitAnd = "BitAnd"
-    case bitXor = "BitXor"
-    case lShift = "LShift"
-    case rShift = "RShift"
+public enum QuantOperation: String, Sendable {
+    case all = "All"
+    case any = "Any"
+    case filter = "Filter"
+    case map = "Map"
 }
 
 public enum ConfigEntryOperation: String, Sendable {
     case union = "Union"
-    case override = "Override"
+    case overrideOp = "Override"
+    case insert = "Insert"
 }
 
 public enum ExprContext: String, Sendable {
     case load = "Load"
     case store = "Store"
-    case del = "Del"
 }
 
 public enum NameConstant: String, Sendable {
@@ -615,27 +690,31 @@ public enum NameConstant: String, Sendable {
     case undefined = "Undefined"
 }
 
+/// `ast::NumberBinarySuffix` — note `K` and `k` (and `M`/`m`) are distinct
+/// spellings, which is why these are explicit raw values rather than
+/// lowercased.
 public enum NumberBinarySuffix: String, Sendable {
-    case none = ""
-    case i = "I"
-    case m = "M"
-    case k = "K"
-    case mi = "Mi"
+    case n = "n"
+    case u = "u"
+    case m = "m"
+    case k = "k"
+    case kUpper = "K"
+    case mUpper = "M"
     case g = "G"
-    case gi = "Gi"
     case t = "T"
+    case p = "P"
+    case ki = "Ki"
+    case mi = "Mi"
+    case gi = "Gi"
     case ti = "Ti"
+    case pi = "Pi"
 }
 
-public struct NumberLitValue: Sendable {
-    public let rawValue: String
-    public let value: Double
-    public let binarySuffix: NumberBinarySuffix?
-}
-
-public enum LiteralTypeValue: Sendable {
-    case string(String)
-    case int(Int64)
-    case float(Double)
-    case bool(Bool)
+/// `ast::BasicType` — a fieldless enum, which is why the wire carries the
+/// bare string `{"type":"Basic","value":"Int"}` and never `{"type":"Int"}`.
+public enum BasicType: String, Sendable {
+    case bool = "Bool"
+    case int = "Int"
+    case float = "Float"
+    case str = "Str"
 }

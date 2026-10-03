@@ -21,36 +21,33 @@ import com.kcl.api.Spec.ParseProgramResult;
 import com.kcl.util.JsonUtil;
 
 /**
- * Round-trip tests that verify the Java AST classes match the JSON shape
- * produced by the Rust compiler in {@code ../kcl/crates/ast/src/ast.rs}.
+ * Round-trip tests that verify the Java AST classes match the JSON shape produced by the Rust compiler in
+ * {@code ../kcl/crates/ast/src/ast.rs}.
  *
- * <p>Each test parses a real KCL source file via {@code parseFile} /
- * {@code parseProgram} and asserts that the resulting {@code ast_json}
- * deserializes cleanly into the Java AST classes with the structure we expect.
+ * <p>
+ * Each test parses a real KCL source file via {@code parseFile} / {@code parseProgram} and asserts that the resulting
+ * {@code ast_json} deserializes cleanly into the Java AST classes with the structure we expect.
  *
- * <p>If the Java AST drifts from the Rust schema — wrong field names, missing
- * variants, wrong discriminator values — the deserialization fails with a
- * clear message, or an assertion fails.
+ * <p>
+ * If the Java AST drifts from the Rust schema — wrong field names, missing variants, wrong discriminator values — the
+ * deserialization fails with a clear message, or an assertion fails.
  */
 public class AstJsonAlignmentTest {
 
     private static final ObjectMapper MAPPER = new ObjectMapper();
-    private static final String FIXTURE =
-            "src/test_data/ast_alignment/main.k";
+    private static final String FIXTURE = "src/test_data/ast_alignment/main.k";
 
     private static String parseAstJson(String relativePath) throws Exception {
         Path path = Paths.get(relativePath);
         API api = new API();
-        ParseFileResult result = api.parseFile(
-                ParseFileArgs.newBuilder().setPath(path.toString()).build());
+        ParseFileResult result = api.parseFile(ParseFileArgs.newBuilder().setPath(path.toString()).build());
         return result.getAstJson();
     }
 
     private static String parseProgramAstJson(String relativePath) throws Exception {
         Path path = Paths.get(relativePath);
         API api = new API();
-        ParseProgramResult result = api.parseProgram(
-                ParseProgramArgs.newBuilder().addPaths(path.toString()).build());
+        ParseProgramResult result = api.parseProgram(ParseProgramArgs.newBuilder().addPaths(path.toString()).build());
         return result.getAstJson();
     }
 
@@ -73,12 +70,10 @@ public class AstJsonAlignmentTest {
         // Rust Module has no `pkg` field — the serialized JSON must not contain
         // one, and Java's Module class must not produce one either.
         JsonNode tree = MAPPER.readTree(json);
-        assertFalse("Module JSON must not contain 'pkg': " + json,
-                tree.has("pkg"));
+        assertFalse("Module JSON must not contain 'pkg': " + json, tree.has("pkg"));
 
         String reserialized = MAPPER.writeValueAsString(m);
-        assertFalse("Java Module must not serialize 'pkg': " + reserialized,
-                reserialized.contains("\"pkg\""));
+        assertFalse("Java Module must not serialize 'pkg': " + reserialized, reserialized.contains("\"pkg\""));
     }
 
     // --- NumberLit/StringLit/NameConstantLit discriminator ----------------
@@ -98,20 +93,15 @@ public class AstJsonAlignmentTest {
 
     private void checkLiteralDiscriminators(JsonNode node) {
         String type = node.path("type").asText("");
-        if (type.equals("NumberLit") || type.equals("StringLit")
-                || type.equals("NameConstantLit")) {
+        if (type.equals("NumberLit") || type.equals("StringLit") || type.equals("NameConstantLit")) {
             // ok — this is the form we want
-        } else if (type.equals("Number") || type.equals("String")
-                || type.equals("NameConstant")) {
-            throw new AssertionError(
-                    "Rust emits Expr variant discriminators ('NumberLit', "
-                            + "'StringLit', 'NameConstantLit'); got short form '"
-                            + type + "' in " + node);
+        } else if (type.equals("Number") || type.equals("String") || type.equals("NameConstant")) {
+            throw new AssertionError("Rust emits Expr variant discriminators ('NumberLit', "
+                    + "'StringLit', 'NameConstantLit'); got short form '" + type + "' in " + node);
         }
         // recurse into children that may carry Expr nodes
-        for (String key : new String[]{"value", "node", "expr", "if_cond",
-                "test", "msg", "arg", "left", "right", "body", "orelse",
-                "operands", "func", "cond"}) {
+        for (String key : new String[] { "value", "node", "expr", "if_cond", "test", "msg", "arg", "left", "right",
+                "body", "orelse", "operands", "func", "cond" }) {
             if (node.has(key)) {
                 checkLiteralDiscriminators(node.path(key));
             }
@@ -130,20 +120,12 @@ public class AstJsonAlignmentTest {
         // Round-trip a ConfigEntry literal: when the Rust compiler emits
         // `is_shorthand`, the field must be preserved; when absent, it must
         // default to false.
-        String withShorthand = "{"
-                + "\"key\":null,"
-                + "\"value\":null,"
-                + "\"operation\":\"Union\","
-                + "\"is_shorthand\":true"
-                + "}";
+        String withShorthand = "{" + "\"key\":null," + "\"value\":null," + "\"operation\":\"Union\","
+                + "\"is_shorthand\":true" + "}";
         ConfigEntry ce1 = MAPPER.readValue(withShorthand, ConfigEntry.class);
         assertTrue(ce1.isShorthand());
 
-        String withoutShorthand = "{"
-                + "\"key\":null,"
-                + "\"value\":null,"
-                + "\"operation\":\"Union\""
-                + "}";
+        String withoutShorthand = "{" + "\"key\":null," + "\"value\":null," + "\"operation\":\"Union\"" + "}";
         ConfigEntry ce2 = MAPPER.readValue(withoutShorthand, ConfigEntry.class);
         assertFalse(ce2.isShorthand());
     }
@@ -180,14 +162,12 @@ public class AstJsonAlignmentTest {
         assertNotNull("expected Article schema", articleSchema);
 
         JsonNode decorators = articleSchema.path("decorators");
-        assertTrue("Article should have at least one decorator",
-                decorators.isArray() && decorators.size() > 0);
+        assertTrue("Article should have at least one decorator", decorators.isArray() && decorators.size() > 0);
 
         for (JsonNode decorator : decorators) {
             JsonNode node = decorator.path("node");
             // Rust emits a flat {func, args, keywords} object — no "type" tag.
-            assertFalse("Decorator node must not carry a 'type' tag: " + node,
-                    node.has("type"));
+            assertFalse("Decorator node must not carry a 'type' tag: " + node, node.has("type"));
             assertTrue("Decorator must carry 'func': " + node, node.has("func"));
         }
     }
@@ -202,13 +182,10 @@ public class AstJsonAlignmentTest {
         assertNotNull(articleSchemaNode);
 
         Module m = MAPPER.readValue(json, Module.class);
-        SchemaStmt article = (SchemaStmt) m.getBody().stream()
-                .map(n -> n.getNode())
-                .filter(n -> n instanceof SchemaStmt
-                        && ((SchemaStmt) n).getName() != null
+        SchemaStmt article = (SchemaStmt) m.getBody().stream().map(n -> n.getNode())
+                .filter(n -> n instanceof SchemaStmt && ((SchemaStmt) n).getName() != null
                         && "Article".equals(((SchemaStmt) n).getName().getNode()))
-                .findFirst().orElseThrow(
-                        () -> new AssertionError("Article schema not found"));
+                .findFirst().orElseThrow(() -> new AssertionError("Article schema not found"));
         assertNotNull(article);
         List<NodeRef<Decorator>> decorators = article.getDecorators();
         assertNotNull(decorators);
@@ -231,22 +208,17 @@ public class AstJsonAlignmentTest {
             Stmt stmt = wrapped.getNode();
             if (stmt instanceof SchemaStmt) {
                 SchemaStmt schema = (SchemaStmt) stmt;
-                if (schema.getName() != null
-                        && "Person".equals(schema.getName().getNode())) {
+                if (schema.getName() != null && "Person".equals(schema.getName().getNode())) {
                     boolean foundName = false;
                     for (NodeRef<Stmt> attrWrapped : schema.getBody()) {
                         Stmt attr = attrWrapped.getNode();
-                        if (attr instanceof SchemaAttr
-                                && ((SchemaAttr) attr).getName() != null
-                                && "name".equals(
-                                        ((SchemaAttr) attr).getName()
-                                                .getNode())) {
+                        if (attr instanceof SchemaAttr && ((SchemaAttr) attr).getName() != null
+                                && "name".equals(((SchemaAttr) attr).getName().getNode())) {
                             SchemaAttr nameAttr = (SchemaAttr) attr;
                             assertNotNull(nameAttr.getDecorators());
                             // @deprecated has no args.
                             assertEquals(1, nameAttr.getDecorators().size());
-                            assertNotNull(
-                                    nameAttr.getDecorators().get(0).getNode());
+                            assertNotNull(nameAttr.getDecorators().get(0).getNode());
                             foundName = true;
                         }
                     }
@@ -278,8 +250,7 @@ public class AstJsonAlignmentTest {
             if ("Assign".equals(node.path("type").asText())) {
                 JsonNode targets = node.path("targets");
                 if (targets.isArray() && targets.size() > 0) {
-                    JsonNode targetName = targets.path(0).path("node")
-                            .path("name").path("node");
+                    JsonNode targetName = targets.path(0).path("node").path("name").path("node");
                     if (name.equals(targetName.asText())) {
                         return node;
                     }

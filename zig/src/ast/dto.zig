@@ -1,8 +1,8 @@
 //! Flat DTOs — helper structs nested under `NodeRef<T>` where the payload has
 //! no polymorphic `"type"` discriminator on the wire.
 //!
-//! This mirrors the `_dto.py` module of the Python binding and AST_DRIFT.md
-//! note A in the `kcl-lang/lib` repo: positions like `SchemaStmt.decorators`
+//! This mirrors the `_dto.py` module of the Python binding: positions like
+//! `SchemaStmt.decorators`
 //! or `UnificationStmt.value` carry the *flat* payload, unlike the same
 //! shapes appearing as `Expr` variants which gain the discriminator.
 
@@ -64,85 +64,26 @@ pub fn dumpStringPayload(alloc: Allocator, s: []const u8) Error!Value {
     return .{ .string = s };
 }
 
-/// `@deprecated(strict=True)` — the flat decorator payload used in
-/// `SchemaStmt.decorators` / `SchemaAttr.decorators`. Note `func` carries a
-/// fully tagged `Expr` payload on the wire.
-pub const Decorator = struct {
-    func: ?*ExprNode,
-    args: std.ArrayList(*ExprNode),
-    keywords: std.ArrayList(*KeywordNode),
+/// `@deprecated(strict=True)` — a decorator is an `ast::CallExpr`.
+///
+/// `SchemaStmt.decorators` / `SchemaAttr.decorators` are
+/// `Vec<NodeRef<CallExpr>>`, and only the *enum* is tagged, so each element
+/// arrives as a bare `{func, args, keywords}` with no `"type"` key. The type
+/// itself lives in `expr.zig` next to the `Expr::Call` variant that shares it;
+/// the `Node` alias and the parse/dump wrappers are re-exported here so the
+/// flat-DTO consumers (`stmt.zig`) do not have to reach into `expr.zig`.
+pub const CallExpr = expr.CallExpr;
+pub const CallExprNode = base.Node(CallExpr);
+pub const parseCallExprPayload = expr.parseCallExprPayload;
+pub const dumpCallExprPayload = expr.dumpCallExprPayload;
 
-    pub fn parse(alloc: Allocator, v: Value) Error!Decorator {
-        return .{
-            .func = try base.parseOptionalNodeRef(alloc, base.getField(v, "func") orelse .null, expr.Expr, expr.parseExprPayload),
-            .args = try base.parseNodeRefList(alloc, base.getField(v, "args") orelse .null, expr.Expr, expr.parseExprPayload),
-            .keywords = try base.parseNodeRefList(alloc, base.getField(v, "keywords") orelse .null, Keyword, parseKeywordPayload),
-        };
-    }
-
-    pub fn dump(alloc: Allocator, d: Decorator) Error!Value {
-        var obj: std.json.ObjectMap = .empty;
-        try obj.put(alloc, "func", try base.dumpOptionalNodeRef(alloc, d.func, expr.dumpExprPayload));
-        var args: std.json.Array = std.json.Array.init(alloc);
-        for (d.args.items) |a| {
-            try args.append(try base.dumpNodeRef(alloc, a, expr.dumpExprPayload));
-        }
-        try obj.put(alloc, "args", .{ .array = args });
-        var kws: std.json.Array = std.json.Array.init(alloc);
-        for (d.keywords.items) |k| {
-            try kws.append(try base.dumpNodeRef(alloc, k, dumpKeywordPayload));
-        }
-        try obj.put(alloc, "keywords", .{ .array = kws });
-        return .{ .object = obj };
-    }
-};
-
-pub const DecoratorNode = base.Node(Decorator);
-
-pub fn parseDecoratorPayload(alloc: Allocator, v: Value) Error!Decorator {
-    return Decorator.parse(alloc, v);
-}
-
-pub fn dumpDecoratorPayload(alloc: Allocator, d: Decorator) Error!Value {
-    return Decorator.dump(alloc, d);
-}
-
-/// `ASchema(args) { ... }` — the flat schema-instantiation payload used in
-/// `UnificationStmt.value` (the `Expr::Schema` variant gains the tag).
-pub const SchemaConfig = struct {
-    name: ?*IdentifierNode,
-    args: std.ArrayList(*ExprNode),
-    kwargs: std.ArrayList(*KeywordNode),
-    config: ?*ExprNode,
-
-    pub fn parse(alloc: Allocator, v: Value) Error!SchemaConfig {
-        return .{
-            .name = try base.parseOptionalNodeRef(alloc, base.getField(v, "name") orelse .null, Identifier, Identifier.parse),
-            .args = try base.parseNodeRefList(alloc, base.getField(v, "args") orelse .null, expr.Expr, expr.parseExprPayload),
-            .kwargs = try base.parseNodeRefList(alloc, base.getField(v, "kwargs") orelse .null, Keyword, parseKeywordPayload),
-            .config = try base.parseOptionalNodeRef(alloc, base.getField(v, "config") orelse .null, expr.Expr, expr.parseExprPayload),
-        };
-    }
-
-    pub fn dump(alloc: Allocator, s: SchemaConfig) Error!Value {
-        var obj: std.json.ObjectMap = .empty;
-        try obj.put(alloc, "name", try base.dumpOptionalNodeRef(alloc, s.name, Identifier.dump));
-        var args: std.json.Array = std.json.Array.init(alloc);
-        for (s.args.items) |a| {
-            try args.append(try base.dumpNodeRef(alloc, a, expr.dumpExprPayload));
-        }
-        try obj.put(alloc, "args", .{ .array = args });
-        var kws: std.json.Array = std.json.Array.init(alloc);
-        for (s.kwargs.items) |k| {
-            try kws.append(try base.dumpNodeRef(alloc, k, dumpKeywordPayload));
-        }
-        try obj.put(alloc, "kwargs", .{ .array = kws });
-        try obj.put(alloc, "config", try base.dumpOptionalNodeRef(alloc, s.config, expr.dumpExprPayload));
-        return .{ .object = obj };
-    }
-};
-
-pub const SchemaConfigNode = base.Node(SchemaConfig);
+/// `ASchema(args) { ... }` — the `ast::SchemaExpr` payload, shared by the
+/// `Expr::Schema` variant and by `UnificationStmt.value`. Being a plain
+/// struct, the latter arrives with no `"type":"Schema"` key.
+pub const SchemaExpr = expr.SchemaExpr;
+pub const SchemaExprNode = base.Node(SchemaExpr);
+pub const parseSchemaExprPayload = expr.parseSchemaExprPayload;
+pub const dumpSchemaExprPayload = expr.dumpSchemaExprPayload;
 
 /// One entry in a config expression (`key = value`) or a dict-comprehension
 /// `entry`. `is_shorthand` follows Rust's `#[serde(skip_serializing_if =
@@ -291,18 +232,19 @@ pub fn dumpKeywordPayload(alloc: Allocator, k: Keyword) Error!Value {
 }
 
 /// Lambda parameter list `x: int, y: int = 1` — flat payload inside
-/// `LambdaExpr.args`. `defaults` aligns positionally with `args` and may
-/// contain explicit `null`s.
+/// `LambdaExpr.args`. `defaults` and `ty_list` are `Vec<Option<...>>` the
+/// same length as `args`, so their explicit `null`s are meaningful and keep
+/// their slot.
 pub const Arguments = struct {
     args: std.ArrayList(*IdentifierNode),
     defaults: std.ArrayList(?*ExprNode),
-    ty_list: std.ArrayList(*TypeNode),
+    ty_list: std.ArrayList(?*TypeNode),
 
     pub fn parse(alloc: Allocator, v: Value) Error!Arguments {
         return .{
             .args = try base.parseNodeRefList(alloc, base.getField(v, "args") orelse .null, Identifier, Identifier.parse),
             .defaults = try base.parseOptionalNodeRefList(alloc, base.getField(v, "defaults") orelse .null, expr.Expr, expr.parseExprPayload),
-            .ty_list = try base.parseNodeRefList(alloc, base.getField(v, "ty_list") orelse .null, types.Type, types.parseTypePayload),
+            .ty_list = try base.parseOptionalNodeRefList(alloc, base.getField(v, "ty_list") orelse .null, types.Type, types.parseTypePayload),
         };
     }
 
@@ -323,8 +265,14 @@ pub const Arguments = struct {
         }
         try obj.put(alloc, "defaults", .{ .array = defaults });
         var tys: std.json.Array = std.json.Array.init(alloc);
+        // Same positional contract as `defaults`: an absent annotation keeps
+        // its slot so `ty_list` stays index-aligned with `args`.
         for (a.ty_list.items) |n| {
-            try tys.append(try base.dumpNodeRef(alloc, n, types.dumpTypePayload));
+            if (n) |nn| {
+                try tys.append(try base.dumpNodeRef(alloc, nn, types.dumpTypePayload));
+            } else {
+                try tys.append(.null);
+            }
         }
         try obj.put(alloc, "ty_list", .{ .array = tys });
         return .{ .object = obj };
@@ -333,10 +281,12 @@ pub const Arguments = struct {
 
 pub const ArgumentsNode = base.Node(Arguments);
 
-/// `[name: str]: T` — the schema index-signature payload.
+/// `[name: str]: T` — the schema index-signature payload. Note `value` is an
+/// `Option<NodeRef<Expr>>` (the `[k: str]: int = 0` default), while `key_ty`
+/// and `value_ty` are `NodeRef<Type>`.
 pub const SchemaIndexSignature = struct {
     key_name: ?*StringNode,
-    value: ?*TypeNode,
+    value: ?*ExprNode,
     any_other: bool,
     key_ty: ?*TypeNode,
     value_ty: ?*TypeNode,
@@ -344,7 +294,7 @@ pub const SchemaIndexSignature = struct {
     pub fn parse(alloc: Allocator, v: Value) Error!SchemaIndexSignature {
         return .{
             .key_name = try base.parseOptionalNodeRef(alloc, base.getField(v, "key_name") orelse .null, []const u8, parseStringPayload),
-            .value = try base.parseOptionalNodeRef(alloc, base.getField(v, "value") orelse .null, types.Type, types.parseTypePayload),
+            .value = try base.parseOptionalNodeRef(alloc, base.getField(v, "value") orelse .null, expr.Expr, expr.parseExprPayload),
             .any_other = base.getBool(v, "any_other") orelse false,
             .key_ty = try base.parseOptionalNodeRef(alloc, base.getField(v, "key_ty") orelse .null, types.Type, types.parseTypePayload),
             .value_ty = try base.parseOptionalNodeRef(alloc, base.getField(v, "value_ty") orelse .null, types.Type, types.parseTypePayload),
@@ -354,7 +304,7 @@ pub const SchemaIndexSignature = struct {
     pub fn dump(alloc: Allocator, s: SchemaIndexSignature) Error!Value {
         var obj: std.json.ObjectMap = .empty;
         try obj.put(alloc, "key_name", try base.dumpOptionalNodeRef(alloc, s.key_name, dumpStringPayload));
-        try obj.put(alloc, "value", try base.dumpOptionalNodeRef(alloc, s.value, types.dumpTypePayload));
+        try obj.put(alloc, "value", try base.dumpOptionalNodeRef(alloc, s.value, expr.dumpExprPayload));
         try obj.put(alloc, "any_other", .{ .bool = s.any_other });
         try obj.put(alloc, "key_ty", try base.dumpOptionalNodeRef(alloc, s.key_ty, types.dumpTypePayload));
         try obj.put(alloc, "value_ty", try base.dumpOptionalNodeRef(alloc, s.value_ty, types.dumpTypePayload));

@@ -6,6 +6,18 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 option(KCL_LIB_ENABLE_TESTING "Enable building test binary" OFF)
 
+# Optional nlohmann/json backend for kcl_facade.hpp. When found, the facade
+# parses results into `nlohmann::ordered_json`; when not, it falls back to the
+# bundled parser so the header keeps building with only a C++17 toolchain.
+# Both paths are exercised by ctest (see the `facade` / `facade_bundled_json`
+# targets below).
+find_package(nlohmann_json QUIET)
+if(nlohmann_json_FOUND)
+    message(STATUS "kcl-lib-cpp: using nlohmann/json for the facade JSON backend")
+else()
+    message(STATUS "kcl-lib-cpp: nlohmann/json not found, using the bundled facade JSON parser")
+endif()
+
 # Get cargo target dir using cargo locate-project
 # We should do this because the target dir is different for development and release
 execute_process(COMMAND cargo locate-project --workspace --message-format plain
@@ -47,19 +59,25 @@ target_sources(kcl-lib-cpp PRIVATE ${RUST_HEADER_FILE})
 target_include_directories(kcl-lib-cpp PUBLIC ${CPP_INCLUDE_DIR})
 target_link_libraries(kcl-lib-cpp PUBLIC ${RUST_LIB})
 target_link_libraries(kcl-lib-cpp PRIVATE ${CMAKE_DL_LIBS})
+if(nlohmann_json_FOUND)
+    # PUBLIC so the imported target's include directory reaches every
+    # consumer of the facade header, which is what makes the header's own
+    # `__has_include(<nlohmann/json.hpp>)` probe succeed.
+    target_link_libraries(kcl-lib-cpp PUBLIC nlohmann_json::nlohmann_json)
+endif()
 set_target_properties(kcl-lib-cpp
         PROPERTIES ADDITIONAL_CLEAN_FILES ${CARGO_TARGET_DIR}
 )
 
-set(EXECUTABLES facade exec_api exec_with_deps_api override_api update_deps_api validate_api list_options_api get_version_api load_settings_files_api testing_api rename_code_api rename_api lint_path_api format_path_api format_path_dry_run_api format_code_api get_schema_type_api schema_function_type_api list_variables_api load_package_api parse_file_api parse_program_api get_schema_type_under_path_api list_method_api ping_api ast_alignment)
+set(EXECUTABLES facade exec_api exec_with_deps_api override_api update_deps_api validate_api list_options_api get_version_api load_settings_files_api testing_api format_test_report_api rename_code_api rename_api lint_path_api format_path_api format_path_dry_run_api format_code_api get_schema_type_api schema_function_type_api list_variables_api load_package_api parse_file_api parse_program_api get_schema_type_under_path_api list_method_api ping_api ast_alignment ast_contract plugin_api)
 foreach(EXE IN LISTS EXECUTABLES)
     add_executable(${EXE} examples/${EXE}.cpp)
     target_include_directories(${EXE} PUBLIC ${CPP_INCLUDE_DIR})
     target_link_libraries(${EXE} PUBLIC kcl-lib-cpp)
-    # The ast_alignment example exercises the typed AST module —
-    # link against `kcl-lib-ast` (compiled from the C binding's
-    # `kcl_lib_ast.c`) so the example can call `kcl_ast_parse_module`.
-    if(EXE STREQUAL "ast_alignment")
+    # The ast_alignment and ast_contract examples exercise the typed AST
+    # module — link against `kcl-lib-ast` (compiled from the C binding's
+    # `kcl_lib_ast.c`) so they can call `kcl_ast_parse_module`.
+    if(EXE STREQUAL "ast_alignment" OR EXE STREQUAL "ast_contract")
         target_include_directories(${EXE} PUBLIC ${KCL_AST_INCLUDE_DIR})
         target_link_libraries(${EXE} PUBLIC kcl-lib-ast)
     endif()
@@ -104,4 +122,50 @@ if(KCL_LIB_ENABLE_TESTING)
         target_link_libraries(kcl_lib_api_tests PRIVATE "-framework CoreFoundation -framework Security")
     endif()
     add_test(NAME kcl_lib_api_tests COMMAND kcl_lib_api_tests)
+
+    # Contract suite for the typed AST in include/kcl_ast.hpp. It decodes the
+    # shared golden capture at testdata/ast/alignment.json and walks every
+    # tag in it, and it parses a live fixture through the cxx bridge, so it
+    # links kcl-lib-cpp rather than standing alone.
+    add_executable(kcl_ast_tests tests/test_ast.cpp)
+    target_include_directories(kcl_ast_tests PUBLIC ${CPP_INCLUDE_DIR})
+    target_link_libraries(kcl_ast_tests PUBLIC kcl-lib-cpp)
+    target_compile_definitions(kcl_ast_tests PRIVATE
+            KCL_TEST_DATA_DIR="${PROJECT_SOURCE_DIR}/test_data"
+            KCL_AST_FIXTURE="${PROJECT_SOURCE_DIR}/../testdata/ast/alignment.json")
+    if(WIN32)
+        target_link_libraries(kcl_ast_tests PRIVATE userenv ws2_32 bcrypt)
+    endif()
+    if(APPLE)
+        find_library(CORESERVICES_LIB CoreServices)
+        target_link_libraries(kcl_ast_tests PRIVATE ${CORESERVICES_LIB})
+        target_link_libraries(kcl_ast_tests PRIVATE "-framework CoreFoundation -framework Security")
+    endif()
+    add_test(NAME kcl_ast_tests COMMAND kcl_ast_tests)
+
+    # The facade example is the only coverage the facade has, so run it
+    # twice: once with the default JSON backend and once forced onto the
+    # bundled parser, keeping the optional nlohmann/json path honest on
+    # machines that have it installed.
+    add_executable(facade_bundled_json examples/facade.cpp)
+    target_include_directories(facade_bundled_json PUBLIC ${CPP_INCLUDE_DIR})
+    target_link_libraries(facade_bundled_json PUBLIC kcl-lib-cpp)
+    target_compile_definitions(facade_bundled_json PRIVATE KCL_LIB_NO_NLOHMANN)
+    if(WIN32)
+        target_link_libraries(facade_bundled_json PRIVATE userenv ws2_32 bcrypt)
+    endif()
+    if(APPLE)
+        find_library(CORESERVICES_LIB CoreServices)
+        target_link_libraries(facade_bundled_json PRIVATE ${CORESERVICES_LIB})
+        target_link_libraries(facade_bundled_json PRIVATE "-framework CoreFoundation -framework Security")
+    endif()
+
+    add_test(NAME facade COMMAND facade)
+    add_test(NAME facade_bundled_json COMMAND facade_bundled_json)
+    # The plugin example is the only coverage the plugin header has.
+    add_test(NAME plugin_api COMMAND plugin_api)
+    # Both AST examples are built by the EXECUTABLES list above, so without
+    # these they are compiled on every run and executed on none.
+    add_test(NAME ast_alignment COMMAND ast_alignment)
+    add_test(NAME ast_contract COMMAND ast_contract)
 endif()

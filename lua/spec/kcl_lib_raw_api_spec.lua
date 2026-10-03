@@ -298,6 +298,57 @@ c = {
     end)
   end)
 
+  describe("format_test_report", function()
+    -- The pinned `kcl-api` git revision predates this RPC: the dispatcher
+    -- panics with "unknown method name" and answers with an empty payload,
+    -- so the wrapper decodes an empty `report`. Skip in that case, the way
+    -- `list_method` below tolerates its unregistered RPC, and assert the
+    -- documented report whenever the runtime does implement it.
+    it("renders a test result as a pretty-printed report", function()
+      -- `duration` is microseconds; the report truncates it to whole
+      -- milliseconds by integer division, so 1500 renders as `1ms`.
+      local args = {
+        result = {
+          info = {
+            { name = "test_case_1", duration = 1500 },
+            {
+              name = "test_case_2",
+              error = "Error: assert failed",
+              duration = 2500,
+            },
+          },
+        },
+      }
+      local result = assert(api:format_test_report(args))
+      if result.report == "" then
+        pending(
+          "the native runtime does not implement KclService.FormatTestReport"
+        )
+        return
+      end
+      local expected = table.concat({
+        "test_case_1: PASS (1ms)",
+        "test_case_2: FAIL (2ms)",
+        "Error: assert failed",
+        string.rep("-", 80),
+        "PASS: 1/2",
+        "FAIL: 1/2",
+      }, "\n") .. "\n"
+      assert.are.equal(expected, result.report)
+    end)
+
+    it("renders an empty result as the no-test-files line", function()
+      local result = assert(api:format_test_report({}))
+      if result.report == "" then
+        pending(
+          "the native runtime does not implement KclService.FormatTestReport"
+        )
+        return
+      end
+      assert.are.equal("no test files\n", result.report)
+    end)
+  end)
+
   describe("update_dependencies", function()
     it("can call the native function", function()
       local args = { manifest_path = "./spec/test_data/module" }

@@ -77,6 +77,14 @@
             <artifactId>jackson-databind</artifactId>
             <version>2.13.2</version>
         </dependency>
+        <!-- The AST declares Rust's Option<T> as java.util.Optional, which only
+             Jackson can construct with the Jdk8 module registered. Without it
+             every Optional field raises InvalidDefinitionException. -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jdk8</artifactId>
+            <version>2.13.2</version>
+        </dependency>
         <!-- SnakeYAML backend for the high-level Kcl facade (kcl.yaml settings files) -->
         <dependency>
             <groupId>org.yaml</groupId>

@@ -1,5 +1,6 @@
 package com.kcl.ast;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
@@ -32,6 +33,14 @@ public class TargetExpr extends Expr {
 
     public void setName(NodeRef<String> name) {
         this.name = name;
+    }
+
+    // The `name` field as the wire carries it. `getName()` above unwraps it to the bare
+    // string, which is what a caller assembling a target wants and what makes the
+    // `NodeRef` — and its position — unreadable. See `Identifier.getNameNodes`.
+    @JsonIgnore
+    public NodeRef<String> getNameRef() {
+        return name;
     }
 
     public String getPkgpath() {

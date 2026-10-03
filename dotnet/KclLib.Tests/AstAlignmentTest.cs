@@ -146,7 +146,110 @@ public class AstAlignmentTest
         Assert.IsTrue(modules[0].Filename.EndsWith("main.k"));
     }
 
+    [TestMethod]
+    public void TestCommentsCarryTheirText()
+    {
+        var m = ParseFixture();
+        // Rust declares `Comment` as a plain struct with one `String` field, so
+        // the object under `node` is `{"text": "…"}`. Reading `node` as a string
+        // yields null for every one of them, and the array empties out silently.
+        Assert.IsNotNull(m.Comments, "no comments decoded at all");
+        Assert.IsTrue(m.Comments!.Count > 0, "every comment was dropped");
+        Assert.IsTrue(m.Comments!.All(c => c.Node.Text.StartsWith("#")),
+            "a comment came back without its text");
+        Assert.IsNotNull(m.Comments![0].Position, "a comment lost its position");
+    }
+
+    [TestMethod]
+    public void TestNamedTypeDecodesItsIdentifier()
+    {
+        // `Type::Named(Identifier)`. Its payload sat under `value` and was read
+        // off the wrapper, so every named type came back as a bare `BasicType`
+        // carrying the tag and nothing else.
+        var m = ParseFixture();
+        var owner = FindAttr(m, "Endpoint", "owner");
+        var named = owner!.Ty?.Node;
+        Assert.IsInstanceOfType(named, typeof(NamedType));
+        Assert.AreEqual("Person", ((NamedType)named!).Identifier?.Names?[0].Node);
+    }
+
+    [TestMethod]
+    public void TestListTypeDecodesItsInnerType()
+    {
+        // `Type::List(ListType)` — `inner_type` is an `Option<NodeRef<Type>>`
+        // under `value`, so reading it off the wrapper found nothing at all.
+        var m = ParseFixture();
+        var ports = FindAttr(m, "Endpoint", "ports");
+        var list = ports!.Ty?.Node;
+        Assert.IsInstanceOfType(list, typeof(ListType));
+        var inner = ((ListType)list!).InnerType?.Node;
+        Assert.IsInstanceOfType(inner, typeof(BasicType));
+        // A `BasicType` is a fieldless Rust enum, so its payload is the variant
+        // name — `Int`, not `int`.
+        Assert.AreEqual("Int", ((BasicType)inner!).Name);
+    }
+
+    [TestMethod]
+    public void TestTypeAliasDecodesItsTargetType()
+    {
+        var m = ParseFixture();
+        var alias = m.Body!
+            .Select(w => w.Node)
+            .OfType<TypeAliasStmt>()
+            .First(s => s.TypeName?.Node.Names?[0].Node == "TList");
+        var list = alias.Ty?.Node;
+        Assert.IsInstanceOfType(list, typeof(ListType));
+        Assert.IsInstanceOfType(((ListType)list!).InnerType?.Node, typeof(BasicType));
+    }
+
+    [TestMethod]
+    public void TestIfAugAssignAndAssertStatementsDecode()
+    {
+        // These three had no decoder at all, so each fell through to the
+        // catch-all and disappeared from the tree.
+        var m = ParseFixture();
+        var stmts = m.Body!.Select(w => w.Node).ToList();
+
+        var aug = stmts.OfType<AugAssignStmt>()
+            .FirstOrDefault(s => s.Target?.Node.Name?.Node == "_counter");
+        Assert.IsNotNull(aug, "expected the `_counter += 1` AugAssignStmt");
+        Assert.AreEqual("Add", aug!.Op);
+
+        Assert.IsTrue(stmts.OfType<AssertStmt>().Any(a => a.Test != null),
+            "expected an AssertStmt");
+
+        var ifStmt = stmts.OfType<IfStmt>().FirstOrDefault();
+        Assert.IsNotNull(ifStmt, "expected an IfStmt");
+        Assert.IsNotNull(ifStmt!.Cond, "the IfStmt lost its condition");
+        Assert.IsTrue(ifStmt.Body!.Count > 0, "the IfStmt lost its body");
+        Assert.IsTrue(ifStmt.Orelse!.Count > 0, "the IfStmt lost its else branch");
+    }
+
+    [TestMethod]
+    public void TestUnificationTargetIsASingleIdentifier()
+    {
+        // `service: Endpoint {…}` — `target` is one `NodeRef<Identifier>`, where
+        // `AssignStmt` has a list. Reading it as a list of raw JSON elements
+        // always yielded null.
+        var m = ParseFixture();
+        var unif = m.Body!
+            .Select(w => w.Node)
+            .OfType<UnificationStmt>()
+            .FirstOrDefault();
+        Assert.IsNotNull(unif, "expected a UnificationStmt");
+        Assert.IsNotNull(unif!.Target, "the UnificationStmt target was dropped");
+        Assert.IsNotNull(unif.Target!.Node.Names);
+    }
+
     // --- helpers ---------------------------------------------------------
+
+    private static SchemaStmt? FindSchema(Module m, string name) =>
+        m.Body?.Select(w => w.Node).OfType<SchemaStmt>()
+            .FirstOrDefault(s => s.Name?.Node == name);
+
+    private static SchemaAttr? FindAttr(Module m, string schema, string attr) =>
+        FindSchema(m, schema)?.Body?.Select(w => w.Node).OfType<SchemaAttr>()
+            .FirstOrDefault(a => a.Name?.Node == attr);
 
     private static bool IsAssignTargetNamed(AssignStmt stmt, string name)
     {

@@ -1,5 +1,6 @@
 package com.kcl.ast;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import java.util.List;
@@ -36,6 +37,12 @@ public class IdentifierExpr extends Expr {
     // Method to get list of names
     public List<String> getNames() {
         return names.stream().map(Node::getNode).collect(Collectors.toList());
+    }
+
+    /** See `Identifier.getNameNodes` — the untagged `names` value, not the flattened one. */
+    @JsonIgnore
+    public List<NodeRef<String>> getNameNodes() {
+        return names;
     }
 
     public void setNames(List<NodeRef<String>> names) {

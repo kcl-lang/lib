@@ -14,6 +14,12 @@ const std = @import("std");
 const base = @import("base.zig");
 const dto = @import("dto.zig");
 const types = @import("types.zig");
+// Circular by design: `LambdaExpr.body` is a list of *statements*, and
+// `stmt.zig` needs the expression registry to fill in an `ExprStmt`. Zig
+// resolves container-level imports lazily, so the cycle only works because
+// neither module reads the other at load time — every reference is inside a
+// function body.
+const stmt = @import("stmt.zig");
 
 const Allocator = std.mem.Allocator;
 const Error = base.Error;
@@ -57,6 +63,8 @@ pub const Expr = union(enum) {
     formatted_value: FormattedValueExpr,
     missing: MissingExpr,
     check_expr: CheckExpr,
+    keyword: dto.Keyword,
+    arguments: dto.Arguments,
     /// Forward-compatible fallback: unknown variant keeps its tag and raw
     /// payload so it serializes back exactly as received.
     unknown: base.RawUnknown(Value),
@@ -150,12 +158,15 @@ pub const SelectorExpr = struct {
     }
 };
 
+/// `ast::CallExpr`. Also the payload of every decorator:
+/// `SchemaStmt.decorators` is `Vec<NodeRef<CallExpr>>` and its elements carry
+/// no `"type"` key, so `dto.zig` re-exports `parseCallExprPayload` for them.
 pub const CallExpr = struct {
     func: ?*ExprNode,
     args: std.ArrayList(*ExprNode),
     keywords: std.ArrayList(*KeywordNode),
 
-    fn parse(alloc: Allocator, v: Value) Error!CallExpr {
+    pub fn parse(alloc: Allocator, v: Value) Error!CallExpr {
         return .{
             .func = try base.parseOptionalNodeRef(alloc, base.getField(v, "func") orelse .null, Expr, parseExprPayload),
             .args = try base.parseNodeRefList(alloc, base.getField(v, "args") orelse .null, Expr, parseExprPayload),
@@ -163,7 +174,7 @@ pub const CallExpr = struct {
         };
     }
 
-    fn dump(alloc: Allocator, e: CallExpr) Error!Value {
+    pub fn dump(alloc: Allocator, e: CallExpr) Error!Value {
         var obj: std.json.ObjectMap = .empty;
         try obj.put(alloc, "func", try base.dumpOptionalNodeRef(alloc, e.func, dumpExprPayload));
         var args: std.json.Array = std.json.Array.init(alloc);
@@ -179,6 +190,16 @@ pub const CallExpr = struct {
         return .{ .object = obj };
     }
 };
+
+/// Payload helpers for the flat (untagged) uses of `CallExpr` — i.e. the
+/// `decorators` lists, whose elements are `NodeRef<CallExpr>` with no tag.
+pub fn parseCallExprPayload(alloc: Allocator, v: Value) Error!CallExpr {
+    return CallExpr.parse(alloc, v);
+}
+
+pub fn dumpCallExprPayload(alloc: Allocator, e: CallExpr) Error!Value {
+    return CallExpr.dump(alloc, e);
+}
 
 pub const ParenExpr = struct {
     expr: ?*ExprNode,
@@ -323,19 +344,23 @@ pub const StarredExpr = struct {
 };
 
 pub const DictCompExpr = struct {
-    entry: ?*ConfigEntryNode,
+    /// `DictComp.entry` is a bare `ConfigEntry`, not a `NodeRef<ConfigEntry>`:
+    /// Rust declares it `pub entry: ConfigEntry`, so the wire carries the
+    /// payload inline with no `{"node": ...}` wrapper to unwrap. Wrapping it
+    /// would silently decode the whole entry as empty.
+    entry: dto.ConfigEntry,
     generators: std.ArrayList(*CompClauseNode),
 
     fn parse(alloc: Allocator, v: Value) Error!DictCompExpr {
         return .{
-            .entry = try base.parseOptionalNodeRef(alloc, base.getField(v, "entry") orelse .null, dto.ConfigEntry, dto.parseConfigEntryPayload),
+            .entry = try dto.parseConfigEntryPayload(alloc, base.getField(v, "entry") orelse .null),
             .generators = try base.parseNodeRefList(alloc, base.getField(v, "generators") orelse .null, dto.CompClause, dto.CompClause.parse),
         };
     }
 
     fn dump(alloc: Allocator, e: DictCompExpr) Error!Value {
         var obj: std.json.ObjectMap = .empty;
-        try obj.put(alloc, "entry", try base.dumpOptionalNodeRef(alloc, e.entry, dto.dumpConfigEntryPayload));
+        try obj.put(alloc, "entry", try dto.dumpConfigEntryPayload(alloc, e.entry));
         var gens: std.json.Array = std.json.Array.init(alloc);
         for (e.generators.items) |n| {
             try gens.append(try base.dumpNodeRef(alloc, n, dto.CompClause.dump));
@@ -371,13 +396,16 @@ pub const ConfigIfEntryExpr = struct {
     }
 };
 
+/// `ast::SchemaExpr` — the payload of the `Schema` expression variant and of
+/// `UnificationStmt.value`. Being a plain struct, the latter arrives with no
+/// `"type":"Schema"` key.
 pub const SchemaExpr = struct {
     name: ?*IdentifierNode,
     args: std.ArrayList(*ExprNode),
     kwargs: std.ArrayList(*KeywordNode),
     config: ?*ExprNode,
 
-    fn parse(alloc: Allocator, v: Value) Error!SchemaExpr {
+    pub fn parse(alloc: Allocator, v: Value) Error!SchemaExpr {
         return .{
             .name = try base.parseOptionalNodeRef(alloc, base.getField(v, "name") orelse .null, dto.Identifier, dto.Identifier.parse),
             .args = try base.parseNodeRefList(alloc, base.getField(v, "args") orelse .null, Expr, parseExprPayload),
@@ -386,7 +414,7 @@ pub const SchemaExpr = struct {
         };
     }
 
-    fn dump(alloc: Allocator, e: SchemaExpr) Error!Value {
+    pub fn dump(alloc: Allocator, e: SchemaExpr) Error!Value {
         var obj: std.json.ObjectMap = .empty;
         try obj.put(alloc, "name", try base.dumpOptionalNodeRef(alloc, e.name, dto.Identifier.dump));
         var args: std.json.Array = std.json.Array.init(alloc);
@@ -403,6 +431,17 @@ pub const SchemaExpr = struct {
         return .{ .object = obj };
     }
 };
+
+/// Payload helpers for the flat (untagged) uses of `SchemaExpr` — chiefly
+/// `UnificationStmt.value`, which is a `NodeRef<SchemaExpr>` and so arrives
+/// with no `"type":"Schema"` key.
+pub fn parseSchemaExprPayload(alloc: Allocator, v: Value) Error!SchemaExpr {
+    return SchemaExpr.parse(alloc, v);
+}
+
+pub fn dumpSchemaExprPayload(alloc: Allocator, e: SchemaExpr) Error!Value {
+    return SchemaExpr.dump(alloc, e);
+}
 
 pub const ConfigExpr = struct {
     items: std.ArrayList(*ConfigEntryNode),
@@ -426,13 +465,17 @@ pub const ConfigExpr = struct {
 
 pub const LambdaExpr = struct {
     args: ?*ArgumentsNode,
-    body: std.ArrayList(*ExprNode),
+    /// `Vec<NodeRef<Stmt>>` in Rust — a lambda body is statements, not
+    /// expressions. Routing it through the `Expr` registry would look for a
+    /// tag like `"Expr"` / `"Assign"`, find nothing, and yield an `unknown`
+    /// that looks like an empty tree.
+    body: std.ArrayList(*stmt.StmtNode),
     return_ty: ?*TypeNode,
 
     fn parse(alloc: Allocator, v: Value) Error!LambdaExpr {
         return .{
             .args = try base.parseOptionalNodeRef(alloc, base.getField(v, "args") orelse .null, dto.Arguments, dto.Arguments.parse),
-            .body = try base.parseNodeRefList(alloc, base.getField(v, "body") orelse .null, Expr, parseExprPayload),
+            .body = try base.parseNodeRefList(alloc, base.getField(v, "body") orelse .null, stmt.Stmt, stmt.parseStmtPayload),
             .return_ty = try base.parseOptionalNodeRef(alloc, base.getField(v, "return_ty") orelse .null, types.Type, types.parseTypePayload),
         };
     }
@@ -442,7 +485,7 @@ pub const LambdaExpr = struct {
         try obj.put(alloc, "args", try base.dumpOptionalNodeRef(alloc, e.args, dto.Arguments.dump));
         var body: std.json.Array = std.json.Array.init(alloc);
         for (e.body.items) |n| {
-            try body.append(try base.dumpNodeRef(alloc, n, dumpExprPayload));
+            try body.append(try base.dumpNodeRef(alloc, n, stmt.dumpStmtPayload));
         }
         try obj.put(alloc, "body", .{ .array = body });
         try obj.put(alloc, "return_ty", try base.dumpOptionalNodeRef(alloc, e.return_ty, types.dumpTypePayload));
@@ -638,13 +681,14 @@ pub const JoinedStringExpr = struct {
 pub const FormattedValueExpr = struct {
     is_long_string: bool,
     value: ?*ExprNode,
-    format_spec: ?*ExprNode,
+    /// `format_spec` is a plain `Option<String>`, not a `NodeRef<Expr>`.
+    format_spec: ?[]const u8,
 
     fn parse(alloc: Allocator, v: Value) Error!FormattedValueExpr {
         return .{
             .is_long_string = base.getBool(v, "is_long_string") orelse false,
             .value = try base.parseOptionalNodeRef(alloc, base.getField(v, "value") orelse .null, Expr, parseExprPayload),
-            .format_spec = try base.parseOptionalNodeRef(alloc, base.getField(v, "format_spec") orelse .null, Expr, parseExprPayload),
+            .format_spec = if (base.getString(v, "format_spec")) |s| try base.dupeString(alloc, s) else null,
         };
     }
 
@@ -652,7 +696,11 @@ pub const FormattedValueExpr = struct {
         var obj: std.json.ObjectMap = .empty;
         try obj.put(alloc, "is_long_string", .{ .bool = e.is_long_string });
         try obj.put(alloc, "value", try base.dumpOptionalNodeRef(alloc, e.value, dumpExprPayload));
-        try obj.put(alloc, "format_spec", try base.dumpOptionalNodeRef(alloc, e.format_spec, dumpExprPayload));
+        if (e.format_spec) |s| {
+            try obj.put(alloc, "format_spec", .{ .string = s });
+        } else {
+            try obj.put(alloc, "format_spec", .null);
+        }
         return .{ .object = obj };
     }
 };
@@ -674,7 +722,11 @@ pub const MissingExpr = struct {
 pub const CheckExprNode = base.Node(CheckExpr);
 
 /// Flat payload wrapper: `Schema.checks` / `Rule.checks` entries carry no
-/// `"type"` discriminator on the wire (unlike `Expr::CheckExpr`).
+/// `"type"` discriminator on the wire, because `SchemaStmt.checks` is
+/// `Vec<NodeRef<CheckExpr>>` and only the `Expr` enum is tagged. The `Expr::Check`
+/// variant, which *is* tagged, uses `"Check"` — not `"CheckExpression"`; that
+/// longer spelling is what `Expr::type_name_long` returns for diagnostics, not
+/// the serde tag.
 pub fn parseCheckExprPayload(alloc: Allocator, v: Value) Error!CheckExpr {
     return CheckExpr.parse(alloc, v);
 }
@@ -740,7 +792,9 @@ pub fn parseExprPayload(alloc: Allocator, v: Value) Error!Expr {
     if (eql(u8, tag, "JoinedString")) return .{ .joined_string = try JoinedStringExpr.parse(alloc, v) };
     if (eql(u8, tag, "FormattedValue")) return .{ .formatted_value = try FormattedValueExpr.parse(alloc, v) };
     if (eql(u8, tag, "Missing")) return .{ .missing = try MissingExpr.parse(alloc, v) };
-    if (eql(u8, tag, "CheckExpr")) return .{ .check_expr = try CheckExpr.parse(alloc, v) };
+    if (eql(u8, tag, "Check")) return .{ .check_expr = try CheckExpr.parse(alloc, v) };
+    if (eql(u8, tag, "Keyword")) return .{ .keyword = try dto.Keyword.parse(alloc, v) };
+    if (eql(u8, tag, "Arguments")) return .{ .arguments = try dto.Arguments.parse(alloc, v) };
     return .{
         .unknown = .{
             .tag = try base.dupeString(alloc, tag),
@@ -779,7 +833,9 @@ pub fn exprTag(e: Expr) []const u8 {
         .joined_string => "JoinedString",
         .formatted_value => "FormattedValue",
         .missing => "Missing",
-        .check_expr => "CheckExpr",
+        .check_expr => "Check",
+        .keyword => "Keyword",
+        .arguments => "Arguments",
         .unknown => |u| u.tag,
     };
 }
@@ -814,6 +870,8 @@ pub fn dumpExprPayload(alloc: Allocator, e: Expr) Error!Value {
         .formatted_value => |x| try FormattedValueExpr.dump(alloc, x),
         .missing => |x| try MissingExpr.dump(alloc, x),
         .check_expr => |x| try CheckExpr.dump(alloc, x),
+        .keyword => |x| try dto.Keyword.dump(alloc, x),
+        .arguments => |x| try dto.Arguments.dump(alloc, x),
         .unknown => |x| return x.value,
     };
     // Add the discriminator to the inner payload object.

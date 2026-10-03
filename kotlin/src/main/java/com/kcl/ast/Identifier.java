@@ -1,5 +1,6 @@
 package com.kcl.ast;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -38,6 +39,18 @@ public class Identifier {
 
     public void setNames(List<NodeRef<String>> names) {
         this.names = names;
+    }
+
+    /**
+     * The `names` value as the wire carries it. `getNames()` above flattens the
+     * same field to a list of strings for callers that only want the dotted
+     * name, which leaves no public accessor for the `NodeRef` list itself —
+     * so a tree read back from `ast_json` cannot be written out again.
+     * `@JsonIgnore` keeps this off the wire: it is an accessor, not a field.
+     */
+    @JsonIgnore
+    public List<NodeRef<String>> getNameNodes() {
+        return names;
     }
 
     public String getPkgpath() {
