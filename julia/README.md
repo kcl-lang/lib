@@ -140,6 +140,87 @@ result = parse_file(ParseFileArgs(path="test_data/schema.k"))
 @assert isempty(result.deps) && isempty(result.errors)
 ```
 
+### Typed AST
+
+`parse_file` and `parse_program` return the AST as a JSON string. `parse_module`
+and `parse_program_ast` decode it into typed structs mirroring Rust's AST in
+`../kcl/crates/ast/src/ast.rs`.
+
+```julia
+using KclLib
+
+m = parse_module(parse_file(ParseFileArgs(
+    path="main.k",
+    source="""
+    schema Person:
+        name: str = "anonymous"
+        age: int = 0
+    """)).ast_json)
+
+for ref in m.body
+    s = ref.node
+    s isa SchemaStmt || continue
+    println(s.name.node, " on line ", s.pos.line)
+    for attr in s.body
+        a = attr.node
+        a isa SchemaAttr && println("  ", a.name.node, ": ", a.ty.node)
+    end
+end
+```
+
+`Node{T}` pairs a value with the `Pos` it was parsed at, mirroring Rust's
+`NodeRef<T>`. `node_type(x)` returns the `type` tag the parser emitted, which is
+the same discriminator the other bindings key their dispatch on.
+
+Three serde shapes are worth knowing, because they are the details most easily
+guessed wrong:
+
+- `Stmt` and `Expr` are `#[serde(tag = "type")]` — every node carries a `type`.
+- `Type` is `#[serde(tag = "type", content = "value")]` — a basic type reads
+  back as `{"type": "Basic", "value": "Int"}`, **not** `{"type": "Int"}`. Use
+  `BasicType` / `UnionType` / `DictType` / … and read the payload off
+  the struct.
+- The plain structs nested inside `NodeRef<T>` — `Identifier`, `Target`,
+  `Keyword`, `Arguments`, `ConfigEntry`, `CheckExpr`, `CallExpr`, `CompClause`,
+  `SchemaExpr` — carry no tag. That is why `SchemaStmt.decorators` decodes to a
+  `Decorator` rather than a tagged variant, and why `SchemaExpr.name` is a
+  `Node{Identifier}` rather than a `Node{KclExpr}`.
+
+Type names match the Java binding's (`com.kcl.ast`), so a name from `ast.rs` or
+from `java/src/main/java/com/kcl/ast/` is the name here: `Compare`, `ListComp`,
+`DictComp`, `NumberLit`, `StringLit`, `NameConstantLit`, `JoinedString`,
+`FormattedValue`, `Subscript`, `Module`, `Pos`, `Node`. Two spellings are kept
+alongside the Java ones for compatibility with code written against the older
+Julia vocabulary: `KclModule` is an alias of `Module`, and
+`expr_from_wire`/`stmt_from_wire` are unchanged.
+
+Two payloads reach this package untagged, and Java gives each of them a second
+class for Jackson's sake — it cannot reuse a class the `Expr` subtype table
+owns. Julia's dispatch is a plain `if`/`elseif` on the tag, so there is nothing
+to disambiguate and each is one object under two names:
+
+| Java | here | the same object as |
+| --- | --- | --- |
+| `Decorator` | `struct Decorator` plus `CallExpr(::Decorator)` | `SchemaAttr.decorators` is `Vector{NodeRef{CallExpr}}` |
+| `SchemaConfig` | `const SchemaConfig = SchemaExpr` | `UnificationStmt.value` is `NodeRef{SchemaExpr}` |
+
+A third, `CheckExpr`, needs no second name at all: the tagged `Expr::Check` and
+the untagged `SchemaStmt.checks` are the same struct, so there is one class,
+`struct CheckExpr <: KclExpr`, and `stmt.checks[1].node.test` is one hop.
+
+Note that `Expr` is `Base.Expr` in Julia, so the sealed-ish expression base is
+`KclExpr` here while the type hierarchy keeps the plain name `AstType`.
+
+An unrecognised tag decodes to `UnknownStmt` / `UnknownExpr` / `UnknownType`
+with the raw payload attached, so a newer parser degrades instead of throwing.
+**This is a deliberate divergence from Java**, which raises
+`InvalidTypeIdException` on a tag missing from its `@JsonSubTypes` list; Julia
+has no such mechanism, and keeping the payload means a file using syntax a
+newer `libkcl` adds is still traversable.
+
+`parse_program_ast` accepts both program encodings: a bare array of modules and
+the `{"root": …, "pkgs": {"__main__": […]}}` envelope.
+
 ### load_package
 
 ```julia
@@ -269,6 +350,13 @@ result = test(TestArgs(pkg_list=["test_data/testing/module/..."]))
 @assert length(result.info) == 2
 ```
 
+### format_test_report
+
+```julia
+result = test(TestArgs(pkg_list=["test_data/testing/module/..."]))
+print(format_test_report(FormatTestReportArgs(result)).report)
+```
+
 ### update_dependencies
 
 ```julia
@@ -296,6 +384,60 @@ empty `method_name_list` in that case instead of raising.
 ```julia
 bytes = KclLib.call("KclService.Ping", encoded_ping_args)
 ```
+
+### Plugins
+
+A plugin exposes Julia functions to KCL code. The program imports the plugin
+module and then calls the method unqualified:
+
+```kcl
+import kcl_plugin.strings
+
+result = strings.join("KCL", "KCL", 123)
+```
+
+The runtime resolves that to a `kcl_plugin.strings.join` call into the host,
+so `register_plugin` only ever sees the two halves.
+
+```julia
+using KclLib
+
+KclLib.register_plugin("strings", "join", (args, kwargs) -> "\"KCL.KCL.123\"")
+
+result = KclLib.run(code = "import kcl_plugin.strings\nresult = strings.join(\"KCL\", \"KCL\", 123)\n")
+println(KclLib.get(result, "result"))  # KCL.KCL.123
+```
+
+| Function | Purpose |
+| --- | --- |
+| `KclLib.register_plugin(plugin, method, fn)` | Adds or replaces one method. |
+| `KclLib.plugin_registered(plugin, method)` | Whether a name resolves. |
+| `KclLib.disable_plugins()` | Empties the registry and releases the service handle. |
+| `KclLib.has_plugins()` | Whether anything is registered. |
+
+A method is called as `fn(args::String, kwargs::String) -> String`, where both
+arguments are the raw JSON the runtime sends and the return value must be
+JSON-encoded. Register methods at start-up — nothing evaluated before the
+first registration can reach the plugin. Throwing is allowed: the exception is
+caught at the agent boundary and reported to the runtime, so it never unwinds
+into the native frames underneath.
+
+Two properties are worth calling out:
+
++ **No JSON dependency.** Arguments arrive as raw JSON strings and the result
+  must be JSON-encoded, so a method that ignores its arguments needs no parser
+  at all. One that inspects them can use `JSON3.jl` or `JSON.jl`.
++ **Errors are data, not crashes.** Calling a method that was never
+  registered — or one that threw — yields a
+  `{"__kcl_PanicInfo__": "..."}` object, matching what Go's
+  `plugin.JSONError` and Python's `_call_py_method` return, so it surfaces
+  through the normal `err_message` path rather than as a native crash.
+
+`call_native` is the stateless universal dispatcher and cannot carry a plugin
+agent, so the first `register_plugin` binds a `kcl_service_new` handle and
+every subsequent call routes through `kcl_service_call_with_length`. With
+nothing registered the binding keeps using `call_native` unchanged, so
+programs that do not use plugins are unaffected.
 
 ## Development
 
@@ -327,6 +469,16 @@ as the native dispatcher routes by RPC name string.)
 
 - `src/KclLib.jl` — the whole binding: `LibKcl` FFI module (dlopen + `ccall`),
   `call` escape hatch, the 20 typed wrappers and `list_method`.
+- `src/plugin.jl` — the plugin registry and the `@cfunction` agent, included
+  from inside `LibKcl`.
+- `src/ast.jl` — the typed AST: `Pos` / `Node{T}` plus the `AstType`, `KclExpr`,
+  `KclStmt` and DTO hierarchies, decoded with the binding's own JSON reader.
 - `src/pb/` — generated protobuf structs (vendored).
-- `test/runtests.jl` — end-to-end tests covering all 20 RPCs.
+- `test/runtests.jl` — end-to-end tests covering all 20 RPCs and the AST.
+- `test/ast_alignment.jl` — the AST wire contract, asserted against the shared
+  golden capture at `../testdata/ast/alignment.json`: every tag in the tree
+  resolves to a declared variant, `Comment` reads `text` off the struct under
+  `node` rather than off the wrapper, and a `Type` is tagged `type` with its
+  payload in `value`. `runtests.jl` includes it. The Dart package has the
+  mirror-image file, `test/ast_contract_test.dart`.
 - `test_data/` — fixtures copied from `python/tests/test_data`.

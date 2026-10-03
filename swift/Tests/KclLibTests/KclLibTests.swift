@@ -376,6 +376,47 @@ final class KClLibTests: XCTestCase {
             "expected per-case line hits with coverage enabled")
     }
 
+    // The formatter is pure: it renders a TestResult without touching the
+    // runtime, so the same result is formatted twice with the same report.
+    func testFormatTestReport() throws {
+        var testArgs = TestArgs()
+        testArgs.pkgList.append("test_data/testing/...")
+
+        var args = FormatTestReportArgs()
+        args.result = try API().test(testArgs)
+
+        let report = try API().formatTestReport(args).report
+        let lines = report.split(separator: "\n", omittingEmptySubsequences: false)
+
+        // One line per case in result order, then the 80-dash separator, then
+        // the non-zero summary counts. Every line ends with "\n", so the
+        // trailing empty element is expected.
+        XCTAssertEqual(5, lines.count, "expected no FAIL/SKIPPED lines for an all-pass run, got \(lines)")
+        XCTAssertTrue(report.hasSuffix("\n"), "expected a trailing newline in \(report)")
+        // The case duration is machine-dependent, so only the fixed parts of
+        // the line are asserted: `NAME: PASS ({ms}ms)`.
+        for (index, name) in ["test_func_0", "test_func_1"].enumerated() where index < lines.count {
+            let line = String(lines[index])
+            XCTAssertTrue(
+                line.hasPrefix("\(name): PASS (") && line.hasSuffix("ms)"),
+                "expected the case line for \(name), got \(line)")
+        }
+        guard lines.count == 5 else { return }
+        XCTAssertTrue(
+            lines[2] == String(repeating: "-", count: 80),
+            "expected an 80-dash separator, got \(lines[2])")
+        XCTAssertTrue(lines[3] == "PASS: 2/2", "expected the PASS summary, got \(lines[3])")
+
+        XCTAssertEqual(report, try API().formatTestReport(args).report)
+    }
+
+    // An empty result (no cases, no coverage) renders the fixed
+    // "no test files" line.
+    func testFormatTestReportEmpty() throws {
+        let report = try API().formatTestReport(FormatTestReportArgs()).report
+        XCTAssertEqual("no test files\n", report)
+    }
+
     // Resolves the dependencies declared in the local fixture kcl.mod
     // (helloworld and flask, both local sibling packages — no network).
     func testUpdateDependencies() throws {

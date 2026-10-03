@@ -16,26 +16,25 @@ import com.kcl.api.Spec.ExecProgramResult;
 import com.kcl.api.Spec.ExternalPkg;
 
 /**
- * High-level entry points for evaluating KCL, modelled on the capabilities
- * of kcl-go's {@code pkg/kcl} with a JVM-first shape:
- * {@link #run(String, KclOption[])} evaluates in-memory source,
- * {@link #runFiles(List, KclOption[])} evaluates files, and failures always
- * raise {@link KclException} (unchecked) rather than returning error values.
+ * High-level entry points for evaluating KCL, modelled on the capabilities of kcl-go's {@code pkg/kcl} with a JVM-first
+ * shape: {@link #run(String, KclOption[])} evaluates in-memory source, {@link #runFiles(List, KclOption[])} evaluates
+ * files, and failures always raise {@link KclException} (unchecked) rather than returning error values.
  *
  * <p>
- * Options are built with the static {@code with*} factories and merged with
- * kcl-go's {@code Option.Merge} semantics; see {@link KclOption} for details.
+ * Options are built with the static {@code with*} factories and merged with kcl-go's {@code Option.Merge} semantics;
+ * see {@link KclOption} for details.
  *
  * <p>
  * Example:
  *
  * <pre>
- * {@code
- * KCLResultList result = Kcl.run("a = 1\nb = {c = 2}", Kcl.withSortKeys(true));
- * Optional<Integer> c = result.first().getInt("b.c");
+ * {
+ *     &#64;code
+ *     KCLResultList result = Kcl.run("a = 1\nb = {c = 2}", Kcl.withSortKeys(true));
+ *     Optional<Integer> c = result.first().getInt("b.c");
  *
- * KCLResultList files = Kcl.runFiles(Arrays.asList("main.k"),
- *         Kcl.withWorkDir("."), Kcl.withOverrides("name=\"bob\""));
+ *     KCLResultList files = Kcl.runFiles(Arrays.asList("main.k"), Kcl.withWorkDir("."),
+ *             Kcl.withOverrides("name=\"bob\""));
  * }
  * </pre>
  */
@@ -48,13 +47,11 @@ public final class Kcl {
     // ------------------------------------------------------------------
 
     /**
-     * Evaluate the in-memory KCL source {@code code} with optional
-     * {@code options}. Equivalent to kcl-go's {@code Run} combined with
-     * {@code WithCode}.
+     * Evaluate the in-memory KCL source {@code code} with optional {@code options}. Equivalent to kcl-go's {@code Run}
+     * combined with {@code WithCode}.
      *
      * @throws KclException
-     *             when no input is given, the settings file is invalid, or the
-     *             run fails (transport error or non-empty
+     *             when no input is given, the settings file is invalid, or the run fails (transport error or non-empty
      *             {@code err_message})
      */
     public static KCLResultList run(String code, KclOption... options) {
@@ -64,20 +61,17 @@ public final class Kcl {
     }
 
     /**
-     * Evaluate the KCL file {@code path}. Convenience single-file variant of
-     * {@link #runFiles(List, KclOption[])}.
+     * Evaluate the KCL file {@code path}. Convenience single-file variant of {@link #runFiles(List, KclOption[])}.
      */
     public static KCLResultList runFiles(String path, KclOption... options) {
         return runFiles(Collections.singletonList(path), options);
     }
 
     /**
-     * Evaluate the KCL files {@code paths} with optional {@code options}.
-     * Equivalent to kcl-go's {@code RunFiles}.
+     * Evaluate the KCL files {@code paths} with optional {@code options}. Equivalent to kcl-go's {@code RunFiles}.
      *
      * @throws KclException
-     *             when no input is given, the settings file is invalid, or the
-     *             run fails
+     *             when no input is given, the settings file is invalid, or the run fails
      */
     public static KCLResultList runFiles(List<String> paths, KclOption... options) {
         KclOptionBag bag = newBag(options);
@@ -86,14 +80,12 @@ public final class Kcl {
     }
 
     /**
-     * Evaluate with only {@code options} (no seeded input); specify files or
-     * code through {@link #withKFilenames(String[])} /
-     * {@link #withCode(String[])} or a settings file. Equivalent to kcl-go's
+     * Evaluate with only {@code options} (no seeded input); specify files or code through
+     * {@link #withKFilenames(String[])} / {@link #withCode(String[])} or a settings file. Equivalent to kcl-go's
      * {@code RunWithOpts}.
      *
      * @throws KclException
-     *             when no input is given, the settings file is invalid, or the
-     *             run fails
+     *             when no input is given, the settings file is invalid, or the run fails
      */
     public static KCLResultList runWithOpts(KclOption... options) {
         return exec(newBag(options));
@@ -143,19 +135,17 @@ public final class Kcl {
     }
 
     /**
-     * Record a {@code kcl.yaml} settings file whose fields provide the base
-     * program arguments (kcl-go {@code WithSettings}). Explicit
-     * {@code with*} options override the file. An unreadable or invalid file
-     * fails the run.
+     * Record a {@code kcl.yaml} settings file whose fields provide the base program arguments (kcl-go
+     * {@code WithSettings}). Explicit {@code with*} options override the file. An unreadable or invalid file fails the
+     * run.
      */
     public static KclOption withSettings(String path) {
         return bag -> bag.settingsPath = path;
     }
 
     /**
-     * Toggle {@code disable_none} (the {@code -n} flag). Like kcl-go's
-     * {@code Merge}, only {@code true} takes effect; {@code false} leaves the
-     * current value untouched.
+     * Toggle {@code disable_none} (the {@code -n} flag). Like kcl-go's {@code Merge}, only {@code true} takes effect;
+     * {@code false} leaves the current value untouched.
      */
     public static KclOption withDisableNone(boolean disableNone) {
         return bag -> bag.disableNone = disableNone;
@@ -234,12 +224,10 @@ public final class Kcl {
     }
 
     /**
-     * Turn an {@link ExecProgramResult} into a {@link KCLResultList},
-     * mirroring kcl-go's {@code ExecResultToKCLResult}: a non-empty
-     * {@code err_message} becomes an exception; the document list is built by
-     * splitting {@code yaml_result} on {@code ---} separators while the
-     * decoded values come from the runtime JSON stream (with a YAML
-     * per-document fallback).
+     * Turn an {@link ExecProgramResult} into a {@link KCLResultList}, mirroring kcl-go's {@code ExecResultToKCLResult}:
+     * a non-empty {@code err_message} becomes an exception; the document list is built by splitting {@code yaml_result}
+     * on {@code ---} separators while the decoded values come from the runtime JSON stream (with a YAML per-document
+     * fallback).
      */
     static KCLResultList execResultToKCLResult(ExecProgramResult resp) {
         if (resp.getErrMessage() != null && !resp.getErrMessage().isEmpty()) {
@@ -266,9 +254,8 @@ public final class Kcl {
     }
 
     /**
-     * Split a YAML stream into its documents. A separator is any line
-     * starting with {@code ---}; only whitespace or comments may follow on
-     * the same line. Mirrors kcl-go's {@code SplitDocuments}.
+     * Split a YAML stream into its documents. A separator is any line starting with {@code ---}; only whitespace or
+     * comments may follow on the same line. Mirrors kcl-go's {@code SplitDocuments}.
      */
     static List<String> splitDocuments(String yaml) {
         List<String> docs = new ArrayList<String>();

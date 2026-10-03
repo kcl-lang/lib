@@ -1,5 +1,7 @@
 extern crate kcl_api;
 
+use std::sync::atomic::{AtomicU64, Ordering};
+
 use anyhow::Result;
 
 #[cxx::bridge(namespace = "kcl_lib")]
@@ -676,6 +678,7 @@ mod ffi {
         pub coverage: bool,
     }
     /// Message for test response.
+    #[derive(Debug, Default)]
     pub struct TestResult {
         /// List of test case information.
         pub info: Vec<TestCaseInfo>,
@@ -684,6 +687,7 @@ mod ffi {
         pub coverage: OptionalTestCoverageReport,
     }
     /// Message representing information about a single test case.
+    #[derive(Debug, Default)]
     pub struct TestCaseInfo {
         /// Name of the test case.
         pub name: String,
@@ -763,6 +767,26 @@ mod ffi {
     struct OptionalTestCoverageReport {
         has_value: bool,
         value: TestCoverageReport,
+    }
+
+    #[derive(Debug, Default)]
+    struct OptionalTestResult {
+        has_value: bool,
+        value: TestResult,
+    }
+
+    /// Message for format test report request arguments.
+    #[derive(Debug, Default)]
+    pub struct FormatTestReportArgs {
+        /// The test result to format, as returned by the Test RPC.
+        pub result: OptionalTestResult,
+    }
+
+    /// Message for format test report response.
+    #[derive(Debug, Default)]
+    pub struct FormatTestReportResult {
+        /// The pretty-printed report.
+        pub report: String,
     }
 
     /// Message representing a KCL type.
@@ -938,13 +962,41 @@ mod ffi {
         fn rename_code(args: &RenameCodeArgs) -> Result<RenameCodeResult>;
         /// Test KCL packages with test arguments.
         fn test(args: &TestArgs) -> Result<TestResult>;
+        /// Format a test result into a human-readable report.
+        fn format_test_report(args: &FormatTestReportArgs) -> Result<FormatTestReportResult>;
         /// Return the KCL service version information.
         fn get_version() -> Result<GetVersionResult>;
         /// Ping the KCL service and echo back the sent value.
         fn ping(args: &PingArgs) -> Result<PingResult>;
         /// List the KCL service method names supported by the underlying runtime.
         fn list_method() -> Result<ListMethodResult>;
+        /// Install the plugin agent the runtime calls to reach host functions.
+        /// `0` unbinds it, which is the stateless default. See
+        /// `include/kcl_plugin.hpp` for the caller side.
+        fn set_plugin_agent(agent: u64);
     }
+}
+
+/// The plugin agent the KCL runtime calls when a program reaches a
+/// `kcl_plugin.<plugin>.<method>` name (docs/abi.md §7). `0` means "no agent",
+/// which is what every `kcl_lib::API::default()` call site used to build.
+static PLUGIN_AGENT: AtomicU64 = AtomicU64::new(0);
+
+/// A service carrying the plugin agent, if one is installed. The agent only
+/// affects the RPCs that evaluate KCL source, but threading it through every
+/// call site keeps a newly plugin-aware method working without a second pass.
+#[inline]
+fn api() -> kcl_api::API {
+    kcl_api::API {
+        plugin_agent: PLUGIN_AGENT.load(Ordering::Acquire),
+    }
+}
+
+/// Bind (or, with `0`, unbind) the plugin agent. Called by
+/// `kcl_lib::register_plugin` on the first registration and by
+/// `kcl_lib::disable_plugins` when the registry is emptied.
+fn set_plugin_agent(agent: u64) {
+    PLUGIN_AGENT.store(agent, Ordering::Release);
 }
 
 use ffi::*;
@@ -1050,7 +1102,7 @@ fn build_optional_exec_program_args(
 
 /// Execute KCL file with arguments and return the JSON/YAML result.
 fn exec_program(args: &ExecProgramArgs) -> Result<ExecProgramResult> {
-    let api = kcl_api::API::default();
+    let api = api();
     let result = api.exec_program(&build_exec_program_args(args))?;
     Ok(ExecProgramResult {
         yaml_result: result.yaml_result,
@@ -1063,7 +1115,7 @@ fn exec_program(args: &ExecProgramArgs) -> Result<ExecProgramResult> {
 
 /// Validate code using schema and JSON/YAML data strings.
 fn validate_code(args: &ValidateCodeArgs) -> Result<ValidateCodeResult> {
-    let api = kcl_api::API::default();
+    let api = api();
     let result = api.validate_code(&kcl_api::ValidateCodeArgs {
         datafile: args.datafile.clone(),
         data: args.data.clone(),
@@ -1091,7 +1143,7 @@ fn validate_code(args: &ValidateCodeArgs) -> Result<ValidateCodeResult> {
 /// See [https://www.kcl-lang.io/docs/user_docs/guides/automation](https://www.kcl-lang.io/docs/user_docs/guides/automation)
 /// for more override spec guide.
 fn override_file(args: &OverrideFileArgs) -> Result<OverrideFileResult> {
-    let api = kcl_api::API::default();
+    let api = api();
     let result = api.override_file(&kcl_api::OverrideFileArgs {
         file: args.file.clone(),
         specs: args.specs.clone(),
@@ -1110,7 +1162,7 @@ fn override_file(args: &OverrideFileArgs) -> Result<OverrideFileResult> {
 /// Download and update dependencies defined in the `kcl.mod` file and return the
 /// external package name and location list.
 fn update_dependencies(args: &UpdateDependenciesArgs) -> Result<UpdateDependenciesResult> {
-    let api = kcl_api::API::default();
+    let api = api();
     let result = api.update_dependencies(&kcl_api::UpdateDependenciesArgs {
         manifest_path: args.manifest_path.clone(),
         vendor: args.vendor,
@@ -1265,7 +1317,7 @@ impl Symbol {
 /// Provides users with the ability to parse KCL program and semantic
 /// model information including symbols, types, definitions, etc.
 fn load_package(args: &LoadPackageArgs) -> Result<LoadPackageResult> {
-    let api = kcl_api::API::default();
+    let api = api();
     let result = api.load_package(&build_load_package_args(args))?;
     Ok(LoadPackageResult::new(result))
 }
@@ -1320,7 +1372,7 @@ impl ParseProgramResult {
 
 /// Parse KCL program with entry files.
 fn parse_program(args: &ParseProgramArgs) -> Result<ParseProgramResult> {
-    let api = kcl_api::API::default();
+    let api = api();
     let result = api.parse_program(&build_parse_program_args(args))?;
     Ok(ParseProgramResult::new(result))
 }
@@ -1354,7 +1406,7 @@ impl ParseFileResult {
 /// Parse KCL single file to Module AST JSON string with import dependencies
 /// and parse errors.
 fn parse_file(args: &ParseFileArgs) -> Result<ParseFileResult> {
-    let api = kcl_api::API::default();
+    let api = api();
     let result = api.parse_file(&build_parse_file_args(args))?;
     Ok(ParseFileResult::new(result))
 }
@@ -1380,7 +1432,7 @@ impl ListOptionsResult {
 
 /// Provides users with the ability to parse kcl program and get all option information.
 fn list_options(args: &ParseProgramArgs) -> Result<ListOptionsResult> {
-    let api = kcl_api::API::default();
+    let api = api();
     let result = api.list_options(&build_parse_program_args(args))?;
     Ok(ListOptionsResult::new(result))
 }
@@ -1447,7 +1499,7 @@ impl ListVariablesResult {
 /// Provides users with the ability to parse KCL program and get
 /// all variables by specs.
 fn list_variables(args: &ListVariablesArgs) -> Result<ListVariablesResult> {
-    let api = kcl_api::API::default();
+    let api = api();
     let result = api.list_variables(&build_list_variables_args(args))?;
     Ok(ListVariablesResult::new(result))
 }
@@ -1619,7 +1671,7 @@ impl OptionalKclType {
 
 /// Get schema type mapping.
 fn get_schema_type_mapping(args: &GetSchemaTypeMappingArgs) -> Result<GetSchemaTypeMappingResult> {
-    let api = kcl_api::API::default();
+    let api = api();
     let result = api.get_schema_type_mapping(&build_get_schema_type_mapping_args(args))?;
     Ok(GetSchemaTypeMappingResult::new(result))
 }
@@ -1657,7 +1709,7 @@ impl GetSchemaTypeMappingUnderPathResult {
 fn get_schema_type_mapping_under_path(
     args: &GetSchemaTypeMappingArgs,
 ) -> Result<GetSchemaTypeMappingUnderPathResult> {
-    let api = kcl_api::API::default();
+    let api = api();
     let result = api.get_schema_type_mapping_under_path(&build_get_schema_type_mapping_args(args))?;
     Ok(GetSchemaTypeMappingUnderPathResult::new(result))
 }
@@ -1679,7 +1731,7 @@ impl FormatCodeResult {
 
 /// Format KCL file or directory path contains KCL files and returns the changed file paths.
 fn format_code(args: &FormatCodeArgs) -> Result<FormatCodeResult> {
-    let api = kcl_api::API::default();
+    let api = api();
     let result = api.format_code(&build_format_code_args(args))?;
     Ok(FormatCodeResult::new(result))
 }
@@ -1702,7 +1754,7 @@ impl FormatPathResult {
 
 /// Format KCL file or directory path contains KCL files and returns the changed file paths.
 fn format_path(args: &FormatPathArgs) -> Result<FormatPathResult> {
-    let api = kcl_api::API::default();
+    let api = api();
     let result = api.format_path(&build_format_path_args(args))?;
     Ok(FormatPathResult::new(result))
 }
@@ -1722,7 +1774,7 @@ impl LintPathResult {
 
 /// Lint files and return error messages including errors and warnings.
 fn lint_path(args: &LintPathArgs) -> Result<LintPathResult> {
-    let api = kcl_api::API::default();
+    let api = api();
     let result = api.lint_path(&build_lint_path_args(args))?;
     Ok(LintPathResult::new(result))
 }
@@ -1781,7 +1833,7 @@ impl OptionalCliConfig {
 
 /// Load the setting file config defined in `kcl.yaml`
 fn load_settings_files(args: &LoadSettingsFilesArgs) -> Result<LoadSettingsFilesResult> {
-    let api = kcl_api::API::default();
+    let api = api();
     let result = api.load_settings_files(&build_load_settings_files_args(args))?;
     Ok(LoadSettingsFilesResult::new(result))
 }
@@ -1807,7 +1859,7 @@ impl RenameResult {
 /// Rename all the occurrences of the target symbol in the files. This API will rewrite files if they contain symbols to be renamed.
 /// Return the file paths that got changed.
 fn rename(args: &RenameArgs) -> Result<RenameResult> {
-    let api = kcl_api::API::default();
+    let api = api();
     let result = api.rename(&build_rename_args(args))?;
     Ok(RenameResult::new(result))
 }
@@ -1844,7 +1896,7 @@ impl RenameCodeResult {
 /// Rename all the occurrences of the target symbol and return the modified code if any code has been changed. This API won't
 /// rewrite files but return the changed code.
 fn rename_code(args: &RenameCodeArgs) -> Result<RenameCodeResult> {
-    let api = kcl_api::API::default();
+    let api = api();
     let result = api.rename_code(&build_rename_code_args(args))?;
     Ok(RenameCodeResult::new(result))
 }
@@ -1955,16 +2007,131 @@ impl TestResult {
     }
 }
 
+/// Convert a caller-supplied test result back into the runtime's message.
+/// The mirror image of `TestResult::new`, needed because the result travels
+/// as a `FormatTestReportArgs` request rather than a response.
+#[inline]
+fn build_test_result(r: &TestResult) -> kcl_api::TestResult {
+    kcl_api::TestResult {
+        info: r
+            .info
+            .iter()
+            .map(|t| kcl_api::TestCaseInfo {
+                name: t.name.clone(),
+                error: t.error.clone(),
+                duration: t.duration,
+                log_message: t.log_message.clone(),
+                line_hits: t
+                    .line_hits
+                    .iter()
+                    .map(|h| (h.key.clone(), h.value))
+                    .collect(),
+            })
+            .collect(),
+        coverage: match r.coverage.has_value {
+            true => Some(build_test_coverage_report(&r.coverage.value)),
+            false => None,
+        },
+    }
+}
+
+#[inline]
+fn build_test_coverage_report(r: &TestCoverageReport) -> kcl_api::TestCoverageReport {
+    kcl_api::TestCoverageReport {
+        files: r
+            .files
+            .iter()
+            .map(|f| (f.key.clone(), build_file_coverage(&f.value)))
+            .collect(),
+        summary: match r.summary.has_value {
+            true => Some(kcl_api::CoverageSummary {
+                covered: r.summary.value.covered,
+                executable: r.summary.value.executable,
+                percent: r.summary.value.percent,
+            }),
+            false => None,
+        },
+    }
+}
+
+#[inline]
+fn build_file_coverage(r: &FileCoverage) -> kcl_api::FileCoverage {
+    kcl_api::FileCoverage {
+        filename: r.filename.clone(),
+        covered_lines: r.covered_lines.clone(),
+        executable_lines: r.executable_lines.clone(),
+        line_hits: r.line_hits.iter().map(|h| (h.key, h.value)).collect(),
+    }
+}
+
 /// Test KCL packages with test arguments.
 fn test(args: &TestArgs) -> Result<TestResult> {
-    let api = kcl_api::API::default();
+    let api = api();
     let result = api.test(&build_test_args(args))?;
     Ok(TestResult::new(result))
 }
 
+/// `FormatTestReportArgs` as declared in `spec.proto`. The `kcl-api`
+/// revision pinned in `Cargo.lock` predates the RPC, so the wrapper has no
+/// generated counterpart to encode with; this is a copy of the proto
+/// definition, so the two can be deleted together once the pin moves.
+#[derive(Clone, PartialEq, ::prost::Message)]
+struct FormatTestReportRequest {
+    #[prost(message, optional, tag = "1")]
+    result: Option<kcl_api::TestResult>,
+}
+
+/// `FormatTestReportResult` as declared in `spec.proto`, re-declared for the
+/// same reason as `FormatTestReportRequest`.
+#[derive(Clone, PartialEq, ::prost::Message)]
+struct FormatTestReportResponse {
+    #[prost(string, tag = "1")]
+    report: String,
+}
+
+impl From<&FormatTestReportArgs> for FormatTestReportRequest {
+    #[inline]
+    fn from(args: &FormatTestReportArgs) -> Self {
+        // An absent result is the same thing to the service as an empty one,
+        // so `value` is read either way and only `has_value` is dropped.
+        Self {
+            result: Some(build_test_result(&args.result.value)),
+        }
+    }
+}
+
+/// Format a test result into a human-readable report.
+///
+/// This goes through the universal `kcl_api::call` dispatcher under the RPC
+/// name rather than `api().format_test_report(..)`, because the `kcl-api`
+/// revision pinned in `Cargo.lock` predates `KclService.FormatTestReport` and
+/// has neither the typed method nor the generated request/response messages.
+/// `list_method` takes the same route for `BuiltinService.ListMethod`. Bumping
+/// the pin collapses this into
+/// `Ok(FormatTestReportResult { report: api().format_test_report(&args.into())?.report })`.
+fn format_test_report(args: &FormatTestReportArgs) -> Result<FormatTestReportResult> {
+    use ::prost::Message;
+
+    let request = FormatTestReportRequest::from(args);
+    let raw = kcl_api::call(
+        b"KclService.FormatTestReport",
+        request.encode_to_vec().as_slice(),
+    )?;
+    // The dispatcher reports failures as a `ERROR:`-prefixed payload rather
+    // than through the `Result`, so translate it here instead of handing
+    // `FormatTestReportResponse` a string to misparse.
+    if let Some(message) = raw.strip_prefix(b"ERROR:") {
+        return Err(anyhow::anyhow!("{}", String::from_utf8_lossy(message)));
+    }
+    let response = FormatTestReportResponse::decode(raw.as_slice())?;
+    Ok(FormatTestReportResult {
+        report: response.report,
+    })
+}
+
 /// Return the KCL service version information.
 fn get_version() -> Result<GetVersionResult> {
-    let api = kcl_api::API::default();
+    let api = api();
     let result = api.get_version(&kcl_api::GetVersionArgs {})?;
     Ok(GetVersionResult {
         version: result.version,
@@ -1976,7 +2143,7 @@ fn get_version() -> Result<GetVersionResult> {
 
 /// Ping the KCL service and echo back the sent value.
 fn ping(args: &PingArgs) -> Result<PingResult> {
-    let api = kcl_api::API::default();
+    let api = api();
     let result = api.ping(&kcl_api::PingArgs {
         value: args.value.clone(),
     })?;

@@ -47,6 +47,7 @@ request through the native dispatcher, and returns the decoded response
 | `rename` | `KclService.Rename` | Rename a symbol across files on disk |
 | `renameCode` | `KclService.RenameCode` | Rename a symbol in source strings |
 | `@"test"` | `KclService.Test` | Run KCL unit tests (`test` is a Zig keyword) |
+| `formatTestReport` | `KclService.FormatTestReport` | Render a `TestResult` as a text report |
 | `updateDependencies` | `KclService.UpdateDependencies` | Resolve `kcl.mod` dependencies |
 | `listMethod` | `BuiltinService.ListMethod` | List dispatcher RPCs |
 
@@ -117,6 +118,64 @@ round-trips `test_data/ast_alignment/main.k` through the typed AST and
 compares it against the runtime-emitted JSON, matching the
 `AstJsonAlignmentTest` suites of the other bindings.
 
+## Plugins
+
+A plugin exposes host functions to KCL code. The program imports the
+plugin module and then calls the method unqualified:
+
+```kcl
+import kcl_plugin.strings
+
+result = strings.join("KCL", "KCL", 123)
+```
+
+The runtime resolves that to a `kcl_plugin.strings.join` call into the
+host, so `register` only ever sees the two halves (`"strings"`,
+`"join"`).
+
+```zig
+const plugin = @import("plugin.zig");
+
+fn stringsJoin(method: []const u8, args: []const u8, kwargs: []const u8) []const u8 {
+    _ = method;
+    _ = args;
+    _ = kwargs;
+    return "\"KCL.KCL.123\"";
+}
+
+try plugin.register(gpa, "strings", "join", stringsJoin);
+defer plugin.disable(gpa);
+// ... evaluate KCL here ...
+```
+
+| Function | Purpose |
+| --- | --- |
+| `register(gpa, plugin, method, fn_ptr)` | Adds or replaces one method. Binds the KCL service handle on the first call. |
+| `registered(plugin, method)` | Whether the method is currently in the registry. |
+| `disable(gpa)` | Unbinds the handle, empties the registry, and returns the binding to the stateless `call_native` path. |
+| `serviceHandle()` | The bound handle, or `null` when nothing is registered. |
+
+Register methods at start-up — nothing evaluated before the first
+registration can reach the plugin. `disable` takes the allocator rather
+than relying on the one passed to `register`, so it is symmetric with
+every other explicit-allocator API here.
+
+Two properties are worth calling out:
+
+* **No JSON dependency.** Arguments arrive as raw JSON and the result
+  must be JSON-encoded, so a method that ignores its arguments needs no
+  parser at all. One that inspects them can use `std.json`.
+* **Errors are data, not crashes.** Calling a method that was never
+  registered yields a `{"__kcl_PanicInfo__": "..."}` object, matching
+  what Go's `plugin.JSONError` and Python's `_call_py_method` return, so
+  an unknown method surfaces as a KCL-level diagnostic.
+
+Under the hood, registration creates a service handle
+(`kcl_service_new(agent)`) and `root.call` dispatches through it, because
+`call_native` is stateless and cannot carry the plugin agent
+(docs/abi.md §6). Both entry points decode the same protobuf payloads,
+so the reply is identical either way.
+
 ### Notes
 
 + The bindings cover the full 20-RPC `KclService` surface from
@@ -126,4 +185,7 @@ compares it against the runtime-emitted JSON, matching the
   registration: `listMethod` returns an empty result on it (the corresponding
   unit test therefore tolerates both the empty and the populated result).
 + `execProgram`, `validateCode`, and the `KclService.Test` wrapper
-  (`@"test"`) are not thread safe, mirroring the spec.
+  (`@"test"`) are not thread safe, mirroring the spec. The plugin
+  registry is process-wide for the same reason; the runtime releases its
+  own dispatch lock before calling a handler, so a plugin method may
+  still trigger nested KCL evaluation.

@@ -146,6 +146,59 @@ local result = raw_api:exec_program({
 print("Configuration result", result.yaml_result)
 ```
 
+### Plugins
+
+A plugin exposes Lua functions to KCL code. The program imports the plugin
+module and then calls the method unqualified:
+
+```kcl
+import kcl_plugin.strings
+
+result = strings.join("KCL", "KCL", 123)
+```
+
+The runtime resolves that to a `kcl_plugin.strings.join` call into the
+host, so `register_plugin` only ever sees the two halves.
+
+```lua
+local json = require("dkjson")
+local kcl_lib = require("kcl_lib")
+local api = require("kcl_lib.api")
+
+kcl_lib.register_plugin("strings", "join", function(args, kwargs)
+  return json.encode("KCL.KCL.123")
+end)
+
+print(api:run([[import kcl_plugin.strings
+result = strings.join("KCL", "KCL", 123)]]):get("result"))
+```
+
+| Function | Purpose |
+| --- | --- |
+| `kcl_lib.register_plugin(plugin, method, fn)` | Adds or replaces one method. |
+| `kcl_lib.disable_plugins()` | Empties the registry and returns the client to the stateless `kcl_api::call` path. |
+
+Register methods at start-up — nothing evaluated before the first
+registration can reach the plugin.
+
+Two properties are worth calling out:
+
++ **No JSON dependency.** Arguments arrive as raw JSON strings and the
+  result must be JSON-encoded, so a method that ignores its arguments
+  needs no parser at all. One that inspects them can use `dkjson`, which
+  the binding already depends on.
++ **Errors are data, not crashes.** Calling a method that was never
+  registered — or one that raised — yields a
+  `{"__kcl_PanicInfo__": "..."}` object, matching what Go's
+  `plugin.JSONError` and Python's `_call_py_method` return, so it
+  surfaces through the normal `err_message` path rather than as a native
+  crash.
+
+Under the hood, registration hands the interpreter to the KCL runtime as
+a plugin agent, and `NativeServiceClient:call` switches from
+`kcl_api::call` to `kcl_api::call_with_plugin_agent`. Both decode the same
+protobuf payloads, so the reply is identical either way.
+
 ## Development
 
 ### Running Tests

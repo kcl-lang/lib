@@ -22,10 +22,9 @@ public class GetSchemaTypeUnderPathTest {
 
     @Test
     public void testGetSchemaTypeUnderPathApi() throws Exception {
-        ExecProgramArgs execArgs = ExecProgramArgs.newBuilder()
-                .addKFilenameList(ROOT.resolve("aaa").toString())
-                .addExternalPkgs(ExternalPkg.newBuilder().setPkgName("bbb")
-                        .setPkgPath(ROOT.resolve("bbb").toString()).build())
+        ExecProgramArgs execArgs = ExecProgramArgs.newBuilder().addKFilenameList(ROOT.resolve("aaa").toString())
+                .addExternalPkgs(
+                        ExternalPkg.newBuilder().setPkgName("bbb").setPkgPath(ROOT.resolve("bbb").toString()).build())
                 .build();
 
         GetSchemaTypeMappingArgs args = GetSchemaTypeMappingArgs.newBuilder().setExecArgs(execArgs).build();
@@ -45,8 +44,7 @@ public class GetSchemaTypeUnderPathTest {
         // Regression for https://github.com/kcl-lang/kcl/issues/1546.
         Assert.assertEquals("bbb", base.getPkgPath());
         Assert.assertEquals("bbb", b.getPkgPath());
-        Assert.assertTrue("B.base_schema must be resolved across the package boundary",
-                b.hasBaseSchema());
+        Assert.assertTrue("B.base_schema must be resolved across the package boundary", b.hasBaseSchema());
         Assert.assertEquals("Base", b.getBaseSchema().getSchemaName());
         Assert.assertEquals("bbb", b.getBaseSchema().getPkgPath());
 

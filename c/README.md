@@ -44,10 +44,12 @@ the matching binary from the `c/` directory.
 | Binary                          | Wrapper                  | Fixture                      |
 |---------------------------------|--------------------------|------------------------------|
 | `ast_alignment`                 | raw protobuf             | `test_data/ast_alignment/`   |
+| `ast_contract`                  | `kcl_ast_parse_module`   | `../testdata/ast/alignment.json` |
 | `exec_api`                      | `kcl_exec_program`       | `test_data/schema.k`         |
 | `exec_api_format`               | `kcl_exec_program`       | (round-trip format/sourcemap)|
 | `exec_api_format_runtime`       | `kcl_exec_program`       | (runtime sourcemap)          |
 | `format_path_api`               | `kcl_format_path`        | `test_data/format_api_tmp.k` |
+| `format_test_report_api`        | `kcl_test` / `kcl_format_test_report` | `test_data/testing_report/` |
 | `get_schema_type_mapping_api`   | `kcl_get_schema_type_mapping` | `test_data/schema_ty/` |
 | `get_schema_type_mapping_under_path_api` | `kcl_get_schema_type_mapping_under_path` | `test_data/schema_ty/` |
 | `list_method_api`               | `kcl_list_method`        | —                            |
@@ -146,6 +148,7 @@ supplied.
 | `kcl_rename`                         | Rename a symbol across files on disk                                    |
 | `kcl_rename_code`                    | Rename a symbol inside an in-memory code snippet                        |
 | `kcl_test`                           | Run the `*_test.k` test cases under a work dir                          |
+| `kcl_format_test_report`             | Render a test case list as a `PrettyReporter`-style report              |
 | `kcl_update_dependencies`            | Refresh an external-package manifest (`vendor` mode supported)         |
 
 ### Example: wiring multiple wrappers
@@ -213,6 +216,71 @@ int main()
 }
 ```
 
+## Plugins
+
+A plugin exposes host functions to KCL code. The program imports the plugin
+module and then calls the method unqualified:
+
+```kcl
+import kcl_plugin.strings
+
+result = strings.join("KCL", "KCL", 123)
+```
+
+The runtime resolves that to a `kcl_plugin.strings.join` call into the host,
+so a plugin author only has to register `("strings", "join")`.
+
+```c
+#include "kcl_lib.h"
+#include "kcl_lib_plugin.h"
+
+/* Arguments arrive as raw JSON and the result is JSON-encoded. Returning NULL
+ * (or "") yields an empty result. */
+static const char* strings_join(const char* method,
+                                const char* args_json,
+                                const char* kwargs_json)
+{
+    return "\"KCL.KCL.123\"";
+}
+
+int main(void)
+{
+    kcl_plugin_register("strings", "join", strings_join);
+    /* ... run KCL here ... */
+    kcl_plugin_disable();
+    return 0;
+}
+```
+
+| Function | Purpose |
+| --- | --- |
+| `kcl_plugin_register(plugin, method, fn)` | Adds or replaces one method. Binds the plugin agent on the first call. |
+| `kcl_plugin_registered(plugin, method)` | Whether the method is currently in the registry. |
+| `kcl_plugin_disable()` | Unbinds the agent, empties the registry, and returns the binding to the stateless `call_native` path. |
+
+Register methods at start-up — like Go's `init()` — before evaluating any
+KCL. Registering later is harmless, but nothing before the first
+registration can reach the plugin.
+
+Two properties are worth calling out:
+
+* **No JSON dependency.** Arguments and results are plain JSON strings, so a
+  method that ignores its arguments needs no parser. A method that inspects
+  them can add whichever library it already uses.
+* **Errors are data, not crashes.** Calling a method that was never
+  registered yields a `{"__kcl_PanicInfo__": "..."}` object, matching what
+  Go's `plugin.JSONError` and Python's `_call_py_method` return, so an
+  unknown method surfaces as a KCL-level diagnostic.
+
+Under the hood, registration creates a service handle
+(`kcl_service_new(agent)`) and `kcl_call` dispatches through it. The
+`kcl_plugin_service_handle()` symbol is declared weak in `kcl_ffi.h`, so
+builds that leave `kcl_lib_plugin.c` out still link and keep using the
+stateless `call_native` entry point.
+
+See `examples/plugin_api.c` for the round trip, including positional vs.
+keyword arguments and the unknown-method path.
+
 ## Raw protobuf API
 
 If a service method is not wrapped yet (or you need to bypass the typed
@@ -230,8 +298,9 @@ that prefix so the caller can print the diagnostic verbatim.
 The build produces two artefacts under `c/`:
 
 * `lib/libkcl_lib_c.a` — the static archive containing the protobuf
-  runtime (`pb_*`), the generated `spec.pb.c` bindings, and the typed
-  wrappers in `kcl_lib_msgs.c`.
+  runtime (`pb_*`), the generated `spec.pb.c` bindings, the typed
+  wrappers in `kcl_lib_msgs.c`, and the plugin registry in
+  `kcl_lib_plugin.c`.
 * `target/release/libkcl_lib_c.so` — the Rust dispatcher that the
   typed wrappers ultimately call into via `kcl_ffi.h`'s `call_native`.
 

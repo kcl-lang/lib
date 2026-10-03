@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import os
 import pathlib
 import tempfile
 
@@ -14,12 +15,21 @@ from kcl_lib import (
     TestOptions as KCLTestOptions,
     format_code,
     format_path,
+    format_test_report,
+    generate_doc,
+    generate_kcl,
+    generate_openapi,
+    generate_proto,
+    generate_toml,
     get_full_schema_type,
     get_full_schema_type_mapping,
     get_full_schema_type_mapping_under_path,
     get_version,
     lint_path,
     list_dep_files,
+    list_downstream_files,
+    list_upstream_files,
+    load_package,
     must_run,
     run,
     test as kcl_test,
@@ -34,7 +44,18 @@ from kcl_lib import (
     with_settings,
     with_work_dir,
 )
-from kcl_lib.api.spec_pb2 import ExternalPkg
+from kcl_lib.api.spec_pb2 import (
+    ExecProgramArgs,
+    ExternalPkg,
+    FormatTestReportArgs,
+    GenerateDocArgs,
+    GenerateKclArgs,
+    GenerateOpenAPIArgs,
+    GenerateProtoArgs,
+    GenerateTomlArgs,
+    LoadPackageArgs,
+    ParseProgramArgs,
+)
 from kcl_lib.kcl import (
     ExecProgramOptions,
     _apply_settings,
@@ -57,6 +78,42 @@ def _yaml_available() -> bool:
         return True
     except ImportError:
         return False
+
+
+# Tests exercising RPCs that are newer than the kcl-api release pinned in
+# python/Cargo.toml. The prebuilt native core predates those RPCs until the
+# dependency is bumped, so they are skipped instead of failing.
+_NEW_CORE_TESTS = {
+    "test_generate_toml",
+    "test_generate_toml_sort_keys",
+    "test_generate_kcl",
+    "test_generate_kcl_infers_format_from_filename",
+    "test_generate_openapi",
+    "test_generate_openapi_v2",
+    "test_generate_proto",
+    "test_generate_doc",
+    "test_format_test_report",
+}
+
+
+def pytest_collection_modifyitems(items):
+    from kcl_lib.api.service import API
+
+    try:
+        methods = set(API().list_method().method_name_list)
+    except Exception:
+        methods = set()
+    if {
+        "KclService.GenerateToml",
+        "KclService.FormatTestReport",
+    } <= methods:
+        return
+    skip = pytest.mark.skip(
+        reason="requires a native core with the Generate*/FormatTestReport RPCs"
+    )
+    for item in items:
+        if item.name in _NEW_CORE_TESTS:
+            item.add_marker(skip)
 
 
 @pytest.fixture
@@ -154,6 +211,106 @@ def test_list_dep_files():
         pathlib.Path(td, "main.k").write_text("x = 1\n", encoding="utf-8")
         result = list_dep_files(td)
     assert isinstance(result, list)
+
+
+# ---------------------------------------------------------------------------
+# load_package info fields (imports / kcl_mod / apps) + dep listing facade
+# ---------------------------------------------------------------------------
+
+
+@pytest.fixture(scope="module")
+def dep_pkg(tmp_path_factory):
+    """A small package whose entry imports ``base.base`` (mirrors the core
+    ``load_pkg_info`` fixture): a ``kcl.mod`` at the root, ``main.k``
+    importing ``base.base`` and a leaf ``base/base.k`` with no imports."""
+    root = tmp_path_factory.mktemp("dep_pkg")
+    (root / "base").mkdir()
+    (root / "kcl.mod").write_text(
+        '[package]\nname = "dep_pkg"\nedition = "0.1.0"\nversion = "0.1.0"\n',
+        encoding="utf-8",
+    )
+    main = root / "main.k"
+    main.write_text(
+        "import base.base\n\n"
+        "schema App:\n"
+        "    name: str = base.app_name\n\n"
+        "app = App {}\n",
+        encoding="utf-8",
+    )
+    base = root / "base" / "base.k"
+    base.write_text('app_name = "dep_pkg_app"\n', encoding="utf-8")
+    return str(root), str(main), str(base)
+
+
+def test_load_package_reports_imports_kcl_mod_and_apps(dep_pkg):
+    """``load_package`` exposes the import graph, manifest and app scan."""
+    root, main, base = dep_pkg
+    result = load_package(LoadPackageArgs(parse_args=ParseProgramArgs(paths=[main])))
+    main_k = os.path.realpath(main)
+    base_k = os.path.realpath(base)
+
+    # main.k directly imports base.base with the resolved dep file path.
+    file_imports = result.imports.get(main_k)
+    assert file_imports is not None, list(result.imports.keys())
+    resolved = [info.resolved for info in file_imports.imports]
+    assert base_k in resolved
+    # base/base.k is part of the program but imports nothing.
+    assert base_k in result.imports
+    assert len(result.imports[base_k].imports) == 0
+
+    # The parsed kcl.mod manifest of the package root.
+    assert result.kcl_mod.package.name == "dep_pkg"
+
+    # The fixture root is reported as an application directory.
+    app_paths = [app.path for app in result.apps]
+    assert os.path.realpath(root) in app_paths
+
+
+def test_list_dep_files_resolves_imports(dep_pkg):
+    """``list_dep_files`` on the entry file lists its deps, not itself."""
+    _, main, base = dep_pkg
+    files = list_dep_files(main)
+    assert os.path.realpath(base) in files
+    assert os.path.realpath(main) not in files
+
+
+def test_list_dep_files_dir_input(dep_pkg):
+    """``list_dep_files`` on the package dir lists every resolved dep."""
+    root, main, base = dep_pkg
+    files = list_dep_files(root)
+    assert os.path.realpath(base) in files
+    assert os.path.realpath(main) not in files
+
+
+def test_list_upstream_files(dep_pkg):
+    """``list_upstream_files`` on the entry file lists its imports."""
+    _, main, base = dep_pkg
+    files = list_upstream_files(main)
+    assert os.path.realpath(base) in files
+    assert os.path.realpath(main) not in files
+
+
+def test_list_upstream_files_dir_input(dep_pkg):
+    """Dir input: union of the closures of the files directly under it."""
+    root, main, base = dep_pkg
+    files = list_upstream_files(root)
+    assert os.path.realpath(base) in files
+    assert os.path.realpath(main) not in files
+
+
+def test_list_downstream_files(dep_pkg):
+    """``list_downstream_files`` walks the import graph backwards."""
+    _, main, base = dep_pkg
+    files = list_downstream_files(base)
+    assert os.path.realpath(main) in files
+    assert os.path.realpath(base) not in files
+
+
+def test_list_dep_listings_not_found():
+    """A path outside any package yields empty lists, not errors."""
+    assert list_dep_files("/nonexistent/kcl/path.k") == []
+    assert list_upstream_files("/nonexistent/kcl/path.k") == []
+    assert list_downstream_files("/nonexistent/kcl/path.k") == []
 
 
 def test_get_version():
@@ -548,3 +705,136 @@ def test_test_accepts_raw_test_args():
 
     result = kcl_test(TestArgs(pkg_list=["./tests/test_data/testing/..."]))
     assert len(result.info) == 2
+
+# ---------------------------------------------------------------------------
+# generate_* / format_test_report pass-through facades
+# ---------------------------------------------------------------------------
+
+
+def test_generate_toml():
+    """``generate_toml`` serializes the evaluated program result to TOML."""
+    result = generate_toml(
+        GenerateTomlArgs(exec_args=ExecProgramArgs(k_code_list=["a = {b = 1, c = [1, 2]}"]))
+    )
+    assert "[a]" in result.toml
+    assert "b = 1" in result.toml
+
+
+def test_generate_toml_sort_keys():
+    """``sort_keys=True`` sorts the TOML keys (source order keeps ``c`` first)."""
+    plain = generate_toml(
+        GenerateTomlArgs(exec_args=ExecProgramArgs(k_code_list=["a = {c = [1, 2], b = 1}"]))
+    )
+    assert plain.toml.index("c") < plain.toml.index("b = 1")
+
+    sorted_result = generate_toml(
+        GenerateTomlArgs(
+            exec_args=ExecProgramArgs(k_code_list=["a = {c = [1, 2], b = 1}"]),
+            sort_keys=True,
+        )
+    )
+    assert sorted_result.toml.index("b = 1") < sorted_result.toml.index("c")
+
+
+def test_generate_kcl():
+    """``generate_kcl`` converts inline JSON data to KCL source."""
+    result = generate_kcl(GenerateKclArgs(source='{"a": {"b": 1}}'))
+    assert "a = {" in result.kcl
+    assert "b = 1" in result.kcl
+
+
+def test_generate_kcl_infers_format_from_filename():
+    """A ``.yaml`` filename selects the YAML parser without an explicit format."""
+    result = generate_kcl(GenerateKclArgs(source="a:\n  b: 1\n", filename="data.yaml"))
+    assert "a = {" in result.kcl
+    assert "b = 1" in result.kcl
+
+
+@pytest.fixture(scope="module")
+def schema_pkg(tmp_path_factory):
+    """Package with two schemas, one referencing the other."""
+    root = tmp_path_factory.mktemp("schema_pkg")
+    (root / "kcl.mod").write_text(
+        '[package]\nname = "schema_pkg"\nedition = "0.1.0"\nversion = "0.1.0"\n',
+        encoding="utf-8",
+    )
+    main = root / "main.k"
+    main.write_text(
+        "schema Container:\n"
+        "    name: str\n"
+        "    image: Image\n"
+        "\n"
+        "schema Image:\n"
+        "    repo: str\n"
+        "    tag: str\n",
+        encoding="utf-8",
+    )
+    return str(root), str(main)
+
+
+def test_generate_openapi(schema_pkg):
+    """``generate_openapi`` exports the package schemas as an OpenAPI v3 spec."""
+    _, main = schema_pkg
+    result = generate_openapi(
+        GenerateOpenAPIArgs(parse_args=ParseProgramArgs(paths=[main]), version="v3")
+    )
+    assert '"openapi": "3.0.0"' in result.spec
+    assert "Container" in result.spec
+    assert "Image" in result.spec
+
+
+def test_generate_openapi_v2(schema_pkg):
+    """``version="v2"`` switches the export to a Swagger 2.0 spec."""
+    _, main = schema_pkg
+    result = generate_openapi(
+        GenerateOpenAPIArgs(parse_args=ParseProgramArgs(paths=[main]), version="v2")
+    )
+    assert '"swagger": "2.0"' in result.spec
+
+
+def test_generate_proto(schema_pkg):
+    """``generate_proto`` exports the package schemas as proto3 messages."""
+    _, main = schema_pkg
+    result = generate_proto(
+        GenerateProtoArgs(
+            parse_args=ParseProgramArgs(paths=[main]), package="example.v1"
+        )
+    )
+    assert 'syntax = "proto3";' in result.proto
+    assert "package example.v1;" in result.proto
+    assert "message Container" in result.proto
+    assert "message Image" in result.proto
+
+
+def test_generate_doc(schema_pkg):
+    """``generate_doc`` renders Markdown documentation for the schemas."""
+    _, main = schema_pkg
+    result = generate_doc(
+        GenerateDocArgs(parse_args=ParseProgramArgs(paths=[main]), format="md")
+    )
+    assert "## " in result.content
+    assert "Container" in result.content
+    assert "Image" in result.content
+
+
+def test_format_test_report():
+    """``format_test_report`` pretty-prints pass/fail cases with summary lines."""
+    from kcl_lib.api.spec_pb2 import TestCaseInfo, TestResult
+
+    result = TestResult(
+        info=[
+            TestCaseInfo(name="test_ok", error="", duration=1500, log_message=""),
+            TestCaseInfo(
+                name="test_bad",
+                error="Error: assert failed",
+                duration=2500,
+                log_message="",
+            ),
+        ]
+    )
+    report = format_test_report(FormatTestReportArgs(result=result)).report
+    assert "test_ok: PASS (1ms)" in report
+    assert "test_bad: FAIL (2ms)" in report
+    assert "PASS: 1/2" in report
+    assert "FAIL: 1/2" in report
+    assert "-" * 80 in report

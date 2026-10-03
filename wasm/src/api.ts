@@ -3,6 +3,7 @@ import {
   boolField,
   bytesField,
   concatBytes,
+  doubleField,
   int64Field,
   stringField,
 } from "./protobuf";
@@ -332,6 +333,14 @@ export interface TestCoverageReport {
   summary?: CoverageSummary;
 }
 
+export interface FormatTestReportArgs {
+  result?: TestResult;
+}
+
+export interface FormatTestReportResult {
+  report: string;
+}
+
 export interface UpdateDependenciesArgs {
   manifestPath?: string;
   vendor?: boolean;
@@ -475,6 +484,59 @@ function encodeExecProgramArgs(args: ExecProgramArgs): Uint8Array {
     stringField(20, args.format),
     boolField(21, args.emitAttributeMetadata ?? false),
     stringField(22, args.sourcemapOutput)
+  );
+}
+
+function encodeTestCaseInfo(info: TestCaseInfo): Uint8Array {
+  return concatBytes(
+    stringField(1, info.name),
+    stringField(2, info.error),
+    int64Field(3, info.duration ?? 0),
+    stringField(4, info.logMessage),
+    // map<string, uint64>: entry key and value are fields 1 and 2.
+    ...Object.entries(info.lineHits ?? {}).map(([k, v]) =>
+      bytesField(5, concatBytes(stringField(1, k), int64Field(2, v)))
+    )
+  );
+}
+
+function encodeUint64List(field: number, values?: number[]): Uint8Array {
+  return concatBytes(...(values ?? []).map((v) => int64Field(field, v)));
+}
+
+function encodeFileCoverage(file: FileCoverage): Uint8Array {
+  return concatBytes(
+    stringField(1, file.filename),
+    encodeUint64List(2, file.coveredLines),
+    encodeUint64List(3, file.executableLines),
+    // map<uint64, uint64>: entry key and value are both varints.
+    ...Object.entries(file.lineHits ?? {}).map(([k, v]) =>
+      bytesField(4, concatBytes(int64Field(1, Number(k)), int64Field(2, v)))
+    )
+  );
+}
+
+function encodeCoverageSummary(summary: CoverageSummary): Uint8Array {
+  return concatBytes(
+    int64Field(1, summary.covered ?? 0),
+    int64Field(2, summary.executable ?? 0),
+    doubleField(3, summary.percent)
+  );
+}
+
+function encodeTestCoverageReport(report: TestCoverageReport): Uint8Array {
+  return concatBytes(
+    ...Object.entries(report.files ?? {}).map(([k, v]) =>
+      bytesField(1, concatBytes(stringField(1, k), bytesField(2, encodeFileCoverage(v))))
+    ),
+    bytesField(2, encodeCoverageSummary(report.summary ?? { covered: 0, executable: 0, percent: 0 }))
+  );
+}
+
+function encodeTestResult(result: TestResult): Uint8Array {
+  return concatBytes(
+    ...(result.info ?? []).map((info) => bytesField(2, encodeTestCaseInfo(info))),
+    bytesField(3, encodeTestCoverageReport(result.coverage ?? { files: {} }))
   );
 }
 
@@ -1858,6 +1920,37 @@ export function decodeTestResult(result: Uint8Array): TestResult {
       default:
         r.skip(tag & 7);
     }
+  }
+  return out;
+}
+
+/**
+ * Format a test result into a human-readable report.
+ *
+ * The report is byte-identical to the kcl-go `PrettyReporter` format and is
+ * deterministic for a given result. Every line, including the last one, ends
+ * with `\n`: one line per case in result order,
+ * `{name}: {STATUS} ({duration_ms}ms)` with the case duration truncated from
+ * microseconds to whole milliseconds, then a separator line of exactly 80
+ * `-` characters, then `PASS: {p}/{total}` / `FAIL: {f}/{total}` /
+ * `SKIPPED: {s}/{total}` for the non-zero counts. An empty result renders
+ * `no test files`.
+ */
+export function formatTestReport(
+  instance: WebAssembly.Instance,
+  args: FormatTestReportArgs
+): FormatTestReportResult {
+  const encoded = bytesField(
+    1,
+    args.result ? encodeTestResult(args.result) : new Uint8Array(0)
+  );
+  const result = callService(instance, "FormatTestReport", encoded);
+  const r = new ProtoReader(result);
+  const out: FormatTestReportResult = { report: "" };
+  while (!r.eof) {
+    const tag = r.readTag();
+    if (tag >>> 3 === 1) out.report = r.readString();
+    else r.skip(tag & 7);
   }
   return out;
 }

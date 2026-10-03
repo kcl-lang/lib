@@ -61,9 +61,9 @@ make -j8
 
 ### Running the tests
 
-The assertion-based test suite in `tests/test_api.cpp` (plain `CHECK` macro, no
-external dependencies) is built and registered with ctest only when
-`KCL_LIB_ENABLE_TESTING` is on:
+The assertion-based test suites in `tests/test_api.cpp` and `tests/test_ast.cpp`
+(plain `CHECK` macro, no external dependencies) are built and registered with
+ctest only when `KCL_LIB_ENABLE_TESTING` is on:
 
 ```shell
 cmake -B build -DKCL_LIB_ENABLE_TESTING=ON
@@ -71,9 +71,17 @@ cmake --build build --parallel
 ctest --test-dir build --output-on-failure
 ```
 
-It covers the core RPCs (get_version, ping, exec_program, parse_file,
-parse_program, format_code, lint_path, validate_code, list_options) plus the
-Test RPC with line coverage enabled.
+`test_api.cpp` covers the core RPCs (get_version, ping, exec_program,
+parse_file, parse_program, format_code, lint_path, validate_code, list_options)
+plus the Test RPC with line coverage enabled. `test_ast.cpp` is the contract
+suite for the typed AST in [`kcl_ast.hpp`](#kcl_asthpp--a-typed-ast-in-c): it
+decodes the shared golden capture at `../testdata/ast/alignment.json`, walks
+every tag in it against the typed tree, and parses a live fixture through the
+cxx bridge.
+
+ctest also runs the `facade` example twice — once with the default JSON backend
+and once against `facade_bundled_json`, which forces the header's bundled parser
+via `-DKCL_LIB_NO_NLOHMANN` — so both backends stay covered.
 
 ## Examples
 
@@ -85,8 +93,15 @@ on failures, and return a `KclResult` with raw `yaml_result`/`json_result` acces
 plus dotted-path `get("a.b.c")` navigation. Options include overrides, selectors,
 external packages, settings files, `-D` args and the `_type` rewriting hook
 (`include_schema_type_path` shortens `_type` to the schema name unless
-`full_type_path` is set). The header is self-contained (a minimal built-in JSON
-parser, no protobuf or third-party dependency).
+`full_type_path` is set).
+
+`KclResult::get` returns a `kcl_lib::JsonValue`, which is
+`nlohmann::ordered_json` when the header is available and a bundled parser
+otherwise. CMake picks nlohmann/json up through `find_package(nlohmann_json)`
+when it is installed, and the header falls back to its own parser when it is
+not, so the build never requires the dependency. Code that must build either
+way should use the portable accessors — `getInt` / `getString` / `getFloat` /
+`getBool` / `getArray` / `getObject` — rather than the raw `get` value.
 
 <details><summary>Example</summary>
 <p>
@@ -101,7 +116,7 @@ int main()
     auto result = kcl_lib::Kcl::run(
         "name = \"kcl\"\n"
         "server = {host = \"localhost\", port = 8080}\n");
-    std::cout << result.get("server.port").as_int() << std::endl; // 8080
+    std::cout << result.getInt("server.port") << std::endl; // 8080
 
     // Files + overrides.
     auto files = kcl_lib::Kcl::run_files({ "../test_data/schema.k" },
@@ -129,6 +144,12 @@ Run the facade example.
 
 ```shell
 ./facade
+```
+
+To check the bundled JSON parser instead of nlohmann/json:
+
+```shell
+./facade_bundled_json
 ```
 
 </p>
@@ -212,6 +233,108 @@ int main()
 
 </p>
 </details>
+
+### ast
+
+`kcl_lib_ast.hpp` is a thin RAII wrapper over the typed AST declared in
+the C binding's `c/include/kcl_lib_ast.h` — that header is the single
+source of truth for both bindings. `kcl::ast::parse_module` and
+`kcl::ast::parse_program` return a `unique_ptr` carrying the matching
+`kcl_module_free` / `kcl_program_free` deleter, so the whole arena is
+released when the pointer goes out of scope; `.get()` hands back the
+underlying C struct for callers who want to walk the AST directly.
+
+The wire shape follows `kcl-lang/kcl crates/ast/src/ast.rs`:
+`Stmt` and `Expr` are `#[serde(tag = "type")]` with the newtype payload
+*flattened into the same object*, `Type` is `#[serde(tag = "type",
+content = "value")]` (so `Any` is a bare `{"type":"Any"}` with no
+`value`), and fields declared as plain structs upstream —
+`SchemaStmt.decorators`, `DictComp.entry`, `Target.paths` — carry no
+tag even inside a tagged node.
+
+Two examples cover it, and they check different things:
+
+- `ast_alignment` parses a live fixture through `parse_file`, proving
+  the parser emits something the loader accepts.
+- `ast_contract` decodes the shared golden capture at
+  `testdata/ast/alignment.json` and asserts that no tag anywhere in the
+  document falls through as unknown. A tag the decoder does not
+  recognise becomes a zero-valued struct rather than an error, so
+  field-by-field assertions on a handful of nodes would sail through a
+  decoder that resolves nothing at all.
+
+<details><summary>Example</summary>
+<p>
+
+```cpp
+#include "kcl_lib.hpp"
+#include "kcl_lib_ast.hpp"
+#include <iostream>
+
+int main()
+{
+    auto parsed = kcl_lib::parse_file({ .path = "../test_data/schema.k" });
+    auto module = kcl::ast::parse_module(parsed.ast_json.c_str());
+    for (size_t i = 0; i < module->body.count; i++) {
+        auto* stmt = static_cast<kcl_stmt_t*>(module->body.items[i].node);
+        if (stmt->kind == KCL_STMT_KIND_SCHEMA)
+            std::cout << stmt->u.schema_stmt.name.node << "\n";
+    }
+    // `module` owns the whole arena; nothing else to free.
+}
+```
+
+</p>
+</details>
+
+#### `kcl_ast.hpp` — a typed AST in C++
+
+`kcl_lib_ast.hpp` above is a C-struct wrapper, useful when you want the `c/`
+binding's arena and nothing else. `kcl_ast.hpp` is a second, independent front
+end over the *same* wire format, and it is the one to reach for when a caller
+wants typed objects rather than tagged unions.
+
+```cpp
+#include "kcl_ast.hpp"
+
+kcl::ast::Module m = kcl::ast::Module::from_json(ast_json, "main.k");
+for (const kcl::ast::SchemaStmt* s : m.schemas()) {
+    std::cout << s->name->node << "\n";
+}
+```
+
+It is header-only, needs nothing but a C++17 toolchain, and does not pull in
+the cxx bridge — `kcl_ast_json.hpp`, a small recursive-descent JSON reader, is
+the whole of its dependency list. (`kcl_facade.hpp` has its own
+nlohmann-aware DOM, but reusing that would drag the bridge in behind it.)
+
+The class names are the Java binding's
+(`java/src/main/java/com/kcl/ast/`), so a table read from one binding is
+readable in the next: `Compare`, `ListComp`, `DictComp`, `NumberLit`,
+`StringLit`, `NameConstantLit`, `JoinedString`, `FormattedValue`, `Subscript`,
+`SchemaExpr`, `CallExpr`, `CheckExpr`, `SchemaConfig`, `Decorator`,
+`SchemaAttr`, `AnyType`, `BasicType`, `NamedType`, `ListType`, `DictType`,
+`UnionType`, `LiteralType`, `FunctionType`, `Module`, `Pos`, `Node`.
+`CheckExpr` and `CompClause` are `Expr` subclasses *and* plain payloads, so
+one class serves the tagged variant and the untagged list it also appears in.
+`CallExpr`/`Decorator` and `SchemaExpr`/`SchemaConfig` are four distinct
+classes for two wire shapes, the same split Java draws.
+
+An unknown `type` tag **raises** `kcl::ast::AstError` rather than degrading, so
+a mistyped tag is a loud failure instead of a zero-valued node. That is a
+deliberate divergence from the Ruby binding, which degrades to `Unknown*` for
+forward compatibility with a newer parser.
+
+Narrow with the free templates:
+
+```cpp
+if (auto* cmp = kcl::ast::as<kcl::ast::Compare>(expr_node)) { /* ... */ }
+if (kcl::ast::is<kcl::ast::Compare>(expr_node)) { /* ... */ }
+```
+
+`tests/test_ast.cpp` (ctest target `kcl_ast_tests`) is the contract suite: it
+decodes the shared golden capture, walks every tag in it against the typed
+tree, and parses a live fixture through the bridge.
 
 ### load_package
 
@@ -712,3 +835,81 @@ int main()
 
 </p>
 </details>
+
+### Plugins
+
+A plugin exposes C++ functions to KCL code. The program imports the plugin
+module and then calls the method unqualified:
+
+```kcl
+import kcl_plugin.strings
+
+result = strings.join("KCL", "KCL", 123)
+```
+
+The runtime resolves that to a `kcl_plugin.strings.join` call into the host,
+so `register_plugin` only ever sees the two halves.
+
+```cpp
+#include "kcl_facade.hpp"
+#include "kcl_plugin.hpp"
+#include <iostream>
+
+int main()
+{
+    kcl_lib::register_plugin("strings", "join",
+        [](const std::string& args, const std::string& kwargs) {
+            // args is `["KCL", "KCL", 123]`, kwargs is `{}`; return JSON.
+            return std::string("\"KCL.KCL.123\"");
+        });
+
+    auto result = kcl_lib::Kcl::run(
+        "import kcl_plugin.strings\n"
+        "result = strings.join(\"KCL\", \"KCL\", 123)\n");
+    std::cout << result.getString("result") << std::endl;  // KCL.KCL.123
+    return 0;
+}
+```
+
+| Function | Purpose |
+| --- | --- |
+| `kcl_lib::register_plugin(plugin, method, fn)` | Adds or replaces one method. |
+| `kcl_lib::plugin_registered(plugin, method)` | Whether a name resolves. |
+| `kcl_lib::disable_plugins()` | Empties the registry and unbinds the runtime. |
+| `kcl_lib::has_plugins()` | Whether anything is registered. |
+
+Register methods at start-up — nothing evaluated before the first
+registration can reach the plugin. A method may throw: the exception is
+caught at the agent boundary and reported to the runtime, so it never
+unwinds into the Rust frames underneath.
+
+Two properties are worth calling out:
+
++ **No JSON dependency.** Arguments arrive as raw JSON strings and the result
+  must be JSON-encoded, so a method that ignores its arguments needs no
+  parser at all. One that inspects them can use `kcl_lib::detail::parse_json_stream`.
++ **Errors are data, not crashes.** Calling a method that was never
+  registered — or one that threw — yields a
+  `{"__kcl_PanicInfo__": "..."}` object, matching what Go's
+  `plugin.JSONError` and Python's `_call_py_method` return, so it surfaces
+  through the normal `err_message` path rather than as a native crash.
+
+Under the hood, `register_plugin` hands the agent to the Rust shim via
+`kcl_lib::set_plugin_agent`, which stores it in the `KclServiceImpl` that
+every RPC builds. With nothing registered that field is `0`, which is exactly
+the stateless service the binding used before.
+
+The example is in [`examples/plugin_api.cpp`](examples/plugin_api.cpp):
+
+```console
+$ ./plugin_api
+join -> result=KCL.KCL.123
+args -> result:
+  args:
+  - a
+  kwargs:
+    b: 2
+unknown method -> EvaluationError
+---> File ./__main__.k:2: invalid method: kcl_plugin.strings.nope is not found
+OK: C++ plugin example passed
+```

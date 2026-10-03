@@ -41,23 +41,13 @@ public class CoverageFieldsTest {
     @Test
     public void testTestResultCoverageAndLineHitsRoundTrip() throws Exception {
         TestResult result = TestResult.newBuilder()
-                .addInfo(TestCaseInfo.newBuilder()
-                        .setName("case-a")
-                        .setDuration(42L)
-                        .putLineHits("main.k:1", 2L)
+                .addInfo(TestCaseInfo.newBuilder().setName("case-a").setDuration(42L).putLineHits("main.k:1", 2L)
                         .putLineHits("main.k:3", 1L))
-                .setCoverage(TestCoverageReport.newBuilder()
-                        .putFiles("main.k", FileCoverage.newBuilder()
-                                .setFilename("main.k")
-                                .addAllCoveredLines(Arrays.asList(1L, 3L))
-                                .addAllExecutableLines(Arrays.asList(1L, 2L, 3L))
-                                .putLineHits(1L, 2L)
-                                .putLineHits(3L, 1L)
-                                .build())
-                        .setSummary(Spec.CoverageSummary.newBuilder()
-                                .setCovered(2L)
-                                .setExecutable(3L)
-                                .setPercent(66.67)
+                .setCoverage(TestCoverageReport.newBuilder().putFiles("main.k",
+                        FileCoverage.newBuilder().setFilename("main.k").addAllCoveredLines(Arrays.asList(1L, 3L))
+                                .addAllExecutableLines(Arrays.asList(1L, 2L, 3L)).putLineHits(1L, 2L)
+                                .putLineHits(3L, 1L).build())
+                        .setSummary(Spec.CoverageSummary.newBuilder().setCovered(2L).setExecutable(3L).setPercent(66.67)
                                 .build()))
                 .build();
         TestResult parsed = TestResult.parseFrom(result.toByteArray());
