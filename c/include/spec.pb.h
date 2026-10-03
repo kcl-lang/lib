@@ -709,6 +709,21 @@ typedef struct _TestResult {
     TestCoverageReport coverage;
 } TestResult;
 
+/* Hand-added, not generated: c/scripts/generate.sh clones nanopb from
+ GitHub, which the build environment cannot reach. */
+/* Message for format test report request arguments. */
+typedef struct _FormatTestReportArgs {
+    /* The test result to format, as returned by the Test RPC. */
+    bool has_result;
+    TestResult result;
+} FormatTestReportArgs;
+
+/* Message for format test report response. */
+typedef struct _FormatTestReportResult {
+    /* The pretty-printed report (see PrettyReporter format docs above). */
+    pb_callback_t report;
+} FormatTestReportResult;
+
 /* Message for update dependencies request arguments. */
 typedef struct _UpdateDependenciesArgs {
     /* Path to the manifest file. */
@@ -935,6 +950,8 @@ extern "C" {
 #define TestCoverageReport_init_default          {{{NULL}, NULL}, false, CoverageSummary_init_default}
 #define TestCoverageReport_FilesEntry_init_default {{{NULL}, NULL}, false, FileCoverage_init_default}
 #define CoverageSummary_init_default             {0, 0, 0}
+#define FormatTestReportArgs_init_default        {false, TestResult_init_default}
+#define FormatTestReportResult_init_default      {{{NULL}, NULL}}
 #define UpdateDependenciesArgs_init_default      {{{NULL}, NULL}, 0}
 #define UpdateDependenciesResult_init_default    {{{NULL}, NULL}}
 #define KclType_init_default                     {{{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}}
@@ -1019,6 +1036,8 @@ extern "C" {
 #define TestCoverageReport_init_zero             {{{NULL}, NULL}, false, CoverageSummary_init_zero}
 #define TestCoverageReport_FilesEntry_init_zero  {{{NULL}, NULL}, false, FileCoverage_init_zero}
 #define CoverageSummary_init_zero                {0, 0, 0}
+#define FormatTestReportArgs_init_zero           {false, TestResult_init_zero}
+#define FormatTestReportResult_init_zero         {{{NULL}, NULL}}
 #define UpdateDependenciesArgs_init_zero         {{{NULL}, NULL}, 0}
 #define UpdateDependenciesResult_init_zero       {{{NULL}, NULL}}
 #define KclType_init_zero                        {{{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}}
@@ -1236,6 +1255,8 @@ extern "C" {
 #define TestCoverageReport_summary_tag           2
 #define TestResult_info_tag                      2
 #define TestResult_coverage_tag                  3
+#define FormatTestReportArgs_result_tag          1
+#define FormatTestReportResult_report_tag        1
 #define UpdateDependenciesArgs_manifest_path_tag 1
 #define UpdateDependenciesArgs_vendor_tag        2
 #define UpdateDependenciesResult_external_pkgs_tag 3
@@ -1856,6 +1877,17 @@ X(a, STATIC,   SINGULAR, DOUBLE,   percent,           3)
 #define CoverageSummary_CALLBACK NULL
 #define CoverageSummary_DEFAULT NULL
 
+#define FormatTestReportArgs_FIELDLIST(X, a) \
+X(a, STATIC,   OPTIONAL, MESSAGE,  result,            1)
+#define FormatTestReportArgs_CALLBACK NULL
+#define FormatTestReportArgs_DEFAULT NULL
+#define FormatTestReportArgs_result_MSGTYPE TestResult
+
+#define FormatTestReportResult_FIELDLIST(X, a) \
+X(a, CALLBACK, SINGULAR, STRING,   report,            1)
+#define FormatTestReportResult_CALLBACK pb_default_field_callback
+#define FormatTestReportResult_DEFAULT NULL
+
 #define UpdateDependenciesArgs_FIELDLIST(X, a) \
 X(a, CALLBACK, SINGULAR, STRING,   manifest_path,     1) \
 X(a, STATIC,   SINGULAR, BOOL,     vendor,            2)
@@ -2032,6 +2064,8 @@ extern const pb_msgdesc_t FileCoverage_LineHitsEntry_msg;
 extern const pb_msgdesc_t TestCoverageReport_msg;
 extern const pb_msgdesc_t TestCoverageReport_FilesEntry_msg;
 extern const pb_msgdesc_t CoverageSummary_msg;
+extern const pb_msgdesc_t FormatTestReportArgs_msg;
+extern const pb_msgdesc_t FormatTestReportResult_msg;
 extern const pb_msgdesc_t UpdateDependenciesArgs_msg;
 extern const pb_msgdesc_t UpdateDependenciesResult_msg;
 extern const pb_msgdesc_t KclType_msg;
@@ -2118,6 +2152,8 @@ extern const pb_msgdesc_t Example_msg;
 #define TestCoverageReport_fields &TestCoverageReport_msg
 #define TestCoverageReport_FilesEntry_fields &TestCoverageReport_FilesEntry_msg
 #define CoverageSummary_fields &CoverageSummary_msg
+#define FormatTestReportArgs_fields &FormatTestReportArgs_msg
+#define FormatTestReportResult_fields &FormatTestReportResult_msg
 #define UpdateDependenciesArgs_fields &UpdateDependenciesArgs_msg
 #define UpdateDependenciesResult_fields &UpdateDependenciesResult_msg
 #define KclType_fields &KclType_msg
@@ -2199,6 +2235,8 @@ extern const pb_msgdesc_t Example_msg;
 /* FileCoverage_size depends on runtime parameters */
 /* TestCoverageReport_size depends on runtime parameters */
 /* TestCoverageReport_FilesEntry_size depends on runtime parameters */
+/* FormatTestReportArgs_size depends on runtime parameters */
+/* FormatTestReportResult_size depends on runtime parameters */
 /* UpdateDependenciesArgs_size depends on runtime parameters */
 /* UpdateDependenciesResult_size depends on runtime parameters */
 /* KclType_size depends on runtime parameters */

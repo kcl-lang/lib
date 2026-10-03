@@ -131,7 +131,7 @@ class LoadPackageArgs(_message.Message):
     def __init__(self, parse_args: _Optional[_Union[ParseProgramArgs, _Mapping]] = ..., resolve_ast: _Optional[bool] = ..., load_builtin: _Optional[bool] = ..., with_ast_index: _Optional[bool] = ...) -> None: ...
 
 class LoadPackageResult(_message.Message):
-    __slots__ = ("program", "paths", "parse_errors", "type_errors", "scopes", "symbols", "node_symbol_map", "symbol_node_map", "fully_qualified_name_map", "pkg_scope_map")
+    __slots__ = ("program", "paths", "parse_errors", "type_errors", "scopes", "symbols", "node_symbol_map", "symbol_node_map", "fully_qualified_name_map", "pkg_scope_map", "imports", "kcl_mod", "apps")
     class ScopesEntry(_message.Message):
         __slots__ = ("key", "value")
         KEY_FIELD_NUMBER: _ClassVar[int]
@@ -174,6 +174,13 @@ class LoadPackageResult(_message.Message):
         key: str
         value: ScopeIndex
         def __init__(self, key: _Optional[str] = ..., value: _Optional[_Union[ScopeIndex, _Mapping]] = ...) -> None: ...
+    class ImportsEntry(_message.Message):
+        __slots__ = ("key", "value")
+        KEY_FIELD_NUMBER: _ClassVar[int]
+        VALUE_FIELD_NUMBER: _ClassVar[int]
+        key: str
+        value: FileImports
+        def __init__(self, key: _Optional[str] = ..., value: _Optional[_Union[FileImports, _Mapping]] = ...) -> None: ...
     PROGRAM_FIELD_NUMBER: _ClassVar[int]
     PATHS_FIELD_NUMBER: _ClassVar[int]
     PARSE_ERRORS_FIELD_NUMBER: _ClassVar[int]
@@ -184,6 +191,9 @@ class LoadPackageResult(_message.Message):
     SYMBOL_NODE_MAP_FIELD_NUMBER: _ClassVar[int]
     FULLY_QUALIFIED_NAME_MAP_FIELD_NUMBER: _ClassVar[int]
     PKG_SCOPE_MAP_FIELD_NUMBER: _ClassVar[int]
+    IMPORTS_FIELD_NUMBER: _ClassVar[int]
+    KCL_MOD_FIELD_NUMBER: _ClassVar[int]
+    APPS_FIELD_NUMBER: _ClassVar[int]
     program: str
     paths: _containers.RepeatedScalarFieldContainer[str]
     parse_errors: _containers.RepeatedCompositeFieldContainer[Error]
@@ -194,7 +204,121 @@ class LoadPackageResult(_message.Message):
     symbol_node_map: _containers.ScalarMap[str, str]
     fully_qualified_name_map: _containers.MessageMap[str, SymbolIndex]
     pkg_scope_map: _containers.MessageMap[str, ScopeIndex]
-    def __init__(self, program: _Optional[str] = ..., paths: _Optional[_Iterable[str]] = ..., parse_errors: _Optional[_Iterable[_Union[Error, _Mapping]]] = ..., type_errors: _Optional[_Iterable[_Union[Error, _Mapping]]] = ..., scopes: _Optional[_Mapping[str, Scope]] = ..., symbols: _Optional[_Mapping[str, Symbol]] = ..., node_symbol_map: _Optional[_Mapping[str, SymbolIndex]] = ..., symbol_node_map: _Optional[_Mapping[str, str]] = ..., fully_qualified_name_map: _Optional[_Mapping[str, SymbolIndex]] = ..., pkg_scope_map: _Optional[_Mapping[str, ScopeIndex]] = ...) -> None: ...
+    imports: _containers.MessageMap[str, FileImports]
+    kcl_mod: KclMod
+    apps: _containers.RepeatedCompositeFieldContainer[AppInfo]
+    def __init__(self, program: _Optional[str] = ..., paths: _Optional[_Iterable[str]] = ..., parse_errors: _Optional[_Iterable[_Union[Error, _Mapping]]] = ..., type_errors: _Optional[_Iterable[_Union[Error, _Mapping]]] = ..., scopes: _Optional[_Mapping[str, Scope]] = ..., symbols: _Optional[_Mapping[str, Symbol]] = ..., node_symbol_map: _Optional[_Mapping[str, SymbolIndex]] = ..., symbol_node_map: _Optional[_Mapping[str, str]] = ..., fully_qualified_name_map: _Optional[_Mapping[str, SymbolIndex]] = ..., pkg_scope_map: _Optional[_Mapping[str, ScopeIndex]] = ..., imports: _Optional[_Mapping[str, FileImports]] = ..., kcl_mod: _Optional[_Union[KclMod, _Mapping]] = ..., apps: _Optional[_Iterable[_Union[AppInfo, _Mapping]]] = ...) -> None: ...
+
+class FileImports(_message.Message):
+    __slots__ = ("imports",)
+    IMPORTS_FIELD_NUMBER: _ClassVar[int]
+    imports: _containers.RepeatedCompositeFieldContainer[ImportInfo]
+    def __init__(self, imports: _Optional[_Iterable[_Union[ImportInfo, _Mapping]]] = ...) -> None: ...
+
+class ImportInfo(_message.Message):
+    __slots__ = ("path", "resolved")
+    PATH_FIELD_NUMBER: _ClassVar[int]
+    RESOLVED_FIELD_NUMBER: _ClassVar[int]
+    path: str
+    resolved: str
+    def __init__(self, path: _Optional[str] = ..., resolved: _Optional[str] = ...) -> None: ...
+
+class KclMod(_message.Message):
+    __slots__ = ("package", "profile", "dependencies")
+    class DependenciesEntry(_message.Message):
+        __slots__ = ("key", "value")
+        KEY_FIELD_NUMBER: _ClassVar[int]
+        VALUE_FIELD_NUMBER: _ClassVar[int]
+        key: str
+        value: KclModDependency
+        def __init__(self, key: _Optional[str] = ..., value: _Optional[_Union[KclModDependency, _Mapping]] = ...) -> None: ...
+    PACKAGE_FIELD_NUMBER: _ClassVar[int]
+    PROFILE_FIELD_NUMBER: _ClassVar[int]
+    DEPENDENCIES_FIELD_NUMBER: _ClassVar[int]
+    package: KclModPackage
+    profile: KclModProfile
+    dependencies: _containers.MessageMap[str, KclModDependency]
+    def __init__(self, package: _Optional[_Union[KclModPackage, _Mapping]] = ..., profile: _Optional[_Union[KclModProfile, _Mapping]] = ..., dependencies: _Optional[_Mapping[str, KclModDependency]] = ...) -> None: ...
+
+class KclModPackage(_message.Message):
+    __slots__ = ("name", "edition", "version", "description", "include", "exclude")
+    NAME_FIELD_NUMBER: _ClassVar[int]
+    EDITION_FIELD_NUMBER: _ClassVar[int]
+    VERSION_FIELD_NUMBER: _ClassVar[int]
+    DESCRIPTION_FIELD_NUMBER: _ClassVar[int]
+    INCLUDE_FIELD_NUMBER: _ClassVar[int]
+    EXCLUDE_FIELD_NUMBER: _ClassVar[int]
+    name: str
+    edition: str
+    version: str
+    description: str
+    include: _containers.RepeatedScalarFieldContainer[str]
+    exclude: _containers.RepeatedScalarFieldContainer[str]
+    def __init__(self, name: _Optional[str] = ..., edition: _Optional[str] = ..., version: _Optional[str] = ..., description: _Optional[str] = ..., include: _Optional[_Iterable[str]] = ..., exclude: _Optional[_Iterable[str]] = ...) -> None: ...
+
+class KclModProfile(_message.Message):
+    __slots__ = ("entries", "disable_none", "sort_keys", "selectors", "overrides", "options")
+    ENTRIES_FIELD_NUMBER: _ClassVar[int]
+    DISABLE_NONE_FIELD_NUMBER: _ClassVar[int]
+    SORT_KEYS_FIELD_NUMBER: _ClassVar[int]
+    SELECTORS_FIELD_NUMBER: _ClassVar[int]
+    OVERRIDES_FIELD_NUMBER: _ClassVar[int]
+    OPTIONS_FIELD_NUMBER: _ClassVar[int]
+    entries: _containers.RepeatedScalarFieldContainer[str]
+    disable_none: bool
+    sort_keys: bool
+    selectors: _containers.RepeatedScalarFieldContainer[str]
+    overrides: _containers.RepeatedScalarFieldContainer[str]
+    options: _containers.RepeatedScalarFieldContainer[str]
+    def __init__(self, entries: _Optional[_Iterable[str]] = ..., disable_none: _Optional[bool] = ..., sort_keys: _Optional[bool] = ..., selectors: _Optional[_Iterable[str]] = ..., overrides: _Optional[_Iterable[str]] = ..., options: _Optional[_Iterable[str]] = ...) -> None: ...
+
+class KclModDependency(_message.Message):
+    __slots__ = ("version", "git", "oci", "local")
+    VERSION_FIELD_NUMBER: _ClassVar[int]
+    GIT_FIELD_NUMBER: _ClassVar[int]
+    OCI_FIELD_NUMBER: _ClassVar[int]
+    LOCAL_FIELD_NUMBER: _ClassVar[int]
+    version: str
+    git: KclModGitSource
+    oci: KclModOciSource
+    local: KclModLocalSource
+    def __init__(self, version: _Optional[str] = ..., git: _Optional[_Union[KclModGitSource, _Mapping]] = ..., oci: _Optional[_Union[KclModOciSource, _Mapping]] = ..., local: _Optional[_Union[KclModLocalSource, _Mapping]] = ...) -> None: ...
+
+class KclModGitSource(_message.Message):
+    __slots__ = ("git", "branch", "commit", "tag", "version")
+    GIT_FIELD_NUMBER: _ClassVar[int]
+    BRANCH_FIELD_NUMBER: _ClassVar[int]
+    COMMIT_FIELD_NUMBER: _ClassVar[int]
+    TAG_FIELD_NUMBER: _ClassVar[int]
+    VERSION_FIELD_NUMBER: _ClassVar[int]
+    git: str
+    branch: str
+    commit: str
+    tag: str
+    version: str
+    def __init__(self, git: _Optional[str] = ..., branch: _Optional[str] = ..., commit: _Optional[str] = ..., tag: _Optional[str] = ..., version: _Optional[str] = ...) -> None: ...
+
+class KclModOciSource(_message.Message):
+    __slots__ = ("oci", "tag")
+    OCI_FIELD_NUMBER: _ClassVar[int]
+    TAG_FIELD_NUMBER: _ClassVar[int]
+    oci: str
+    tag: str
+    def __init__(self, oci: _Optional[str] = ..., tag: _Optional[str] = ...) -> None: ...
+
+class KclModLocalSource(_message.Message):
+    __slots__ = ("path",)
+    PATH_FIELD_NUMBER: _ClassVar[int]
+    path: str
+    def __init__(self, path: _Optional[str] = ...) -> None: ...
+
+class AppInfo(_message.Message):
+    __slots__ = ("path", "has_kcl_mod")
+    PATH_FIELD_NUMBER: _ClassVar[int]
+    HAS_KCL_MOD_FIELD_NUMBER: _ClassVar[int]
+    path: str
+    has_kcl_mod: bool
+    def __init__(self, path: _Optional[str] = ..., has_kcl_mod: _Optional[bool] = ...) -> None: ...
 
 class ListOptionsResult(_message.Message):
     __slots__ = ("options",)
@@ -648,6 +772,13 @@ class TestResult(_message.Message):
 
 class TestCaseInfo(_message.Message):
     __slots__ = ("name", "error", "duration", "log_message", "line_hits")
+    class LineHitsEntry(_message.Message):
+        __slots__ = ("key", "value")
+        KEY_FIELD_NUMBER: _ClassVar[int]
+        VALUE_FIELD_NUMBER: _ClassVar[int]
+        key: str
+        value: int
+        def __init__(self, key: _Optional[str] = ..., value: _Optional[int] = ...) -> None: ...
     NAME_FIELD_NUMBER: _ClassVar[int]
     ERROR_FIELD_NUMBER: _ClassVar[int]
     DURATION_FIELD_NUMBER: _ClassVar[int]
@@ -704,6 +835,18 @@ class CoverageSummary(_message.Message):
     percent: float
     def __init__(self, covered: _Optional[int] = ..., executable: _Optional[int] = ..., percent: _Optional[float] = ...) -> None: ...
 
+class FormatTestReportArgs(_message.Message):
+    __slots__ = ("result",)
+    RESULT_FIELD_NUMBER: _ClassVar[int]
+    result: TestResult
+    def __init__(self, result: _Optional[_Union[TestResult, _Mapping]] = ...) -> None: ...
+
+class FormatTestReportResult(_message.Message):
+    __slots__ = ("report",)
+    REPORT_FIELD_NUMBER: _ClassVar[int]
+    report: str
+    def __init__(self, report: _Optional[str] = ...) -> None: ...
+
 class UpdateDependenciesArgs(_message.Message):
     __slots__ = ("manifest_path", "vendor")
     MANIFEST_PATH_FIELD_NUMBER: _ClassVar[int]
@@ -717,6 +860,78 @@ class UpdateDependenciesResult(_message.Message):
     EXTERNAL_PKGS_FIELD_NUMBER: _ClassVar[int]
     external_pkgs: _containers.RepeatedCompositeFieldContainer[ExternalPkg]
     def __init__(self, external_pkgs: _Optional[_Iterable[_Union[ExternalPkg, _Mapping]]] = ...) -> None: ...
+
+class GenerateTomlArgs(_message.Message):
+    __slots__ = ("exec_args", "sort_keys")
+    EXEC_ARGS_FIELD_NUMBER: _ClassVar[int]
+    SORT_KEYS_FIELD_NUMBER: _ClassVar[int]
+    exec_args: ExecProgramArgs
+    sort_keys: bool
+    def __init__(self, exec_args: _Optional[_Union[ExecProgramArgs, _Mapping]] = ..., sort_keys: _Optional[bool] = ...) -> None: ...
+
+class GenerateTomlResult(_message.Message):
+    __slots__ = ("toml",)
+    TOML_FIELD_NUMBER: _ClassVar[int]
+    toml: str
+    def __init__(self, toml: _Optional[str] = ...) -> None: ...
+
+class GenerateKclArgs(_message.Message):
+    __slots__ = ("source", "filename", "format")
+    SOURCE_FIELD_NUMBER: _ClassVar[int]
+    FILENAME_FIELD_NUMBER: _ClassVar[int]
+    FORMAT_FIELD_NUMBER: _ClassVar[int]
+    source: str
+    filename: str
+    format: str
+    def __init__(self, source: _Optional[str] = ..., filename: _Optional[str] = ..., format: _Optional[str] = ...) -> None: ...
+
+class GenerateKclResult(_message.Message):
+    __slots__ = ("kcl",)
+    KCL_FIELD_NUMBER: _ClassVar[int]
+    kcl: str
+    def __init__(self, kcl: _Optional[str] = ...) -> None: ...
+
+class GenerateOpenAPIArgs(_message.Message):
+    __slots__ = ("parse_args", "version")
+    PARSE_ARGS_FIELD_NUMBER: _ClassVar[int]
+    VERSION_FIELD_NUMBER: _ClassVar[int]
+    parse_args: ParseProgramArgs
+    version: str
+    def __init__(self, parse_args: _Optional[_Union[ParseProgramArgs, _Mapping]] = ..., version: _Optional[str] = ...) -> None: ...
+
+class GenerateOpenAPIResult(_message.Message):
+    __slots__ = ("spec",)
+    SPEC_FIELD_NUMBER: _ClassVar[int]
+    spec: str
+    def __init__(self, spec: _Optional[str] = ...) -> None: ...
+
+class GenerateProtoArgs(_message.Message):
+    __slots__ = ("parse_args", "package")
+    PARSE_ARGS_FIELD_NUMBER: _ClassVar[int]
+    PACKAGE_FIELD_NUMBER: _ClassVar[int]
+    parse_args: ParseProgramArgs
+    package: str
+    def __init__(self, parse_args: _Optional[_Union[ParseProgramArgs, _Mapping]] = ..., package: _Optional[str] = ...) -> None: ...
+
+class GenerateProtoResult(_message.Message):
+    __slots__ = ("proto",)
+    PROTO_FIELD_NUMBER: _ClassVar[int]
+    proto: str
+    def __init__(self, proto: _Optional[str] = ...) -> None: ...
+
+class GenerateDocArgs(_message.Message):
+    __slots__ = ("parse_args", "format")
+    PARSE_ARGS_FIELD_NUMBER: _ClassVar[int]
+    FORMAT_FIELD_NUMBER: _ClassVar[int]
+    parse_args: ParseProgramArgs
+    format: str
+    def __init__(self, parse_args: _Optional[_Union[ParseProgramArgs, _Mapping]] = ..., format: _Optional[str] = ...) -> None: ...
+
+class GenerateDocResult(_message.Message):
+    __slots__ = ("content",)
+    CONTENT_FIELD_NUMBER: _ClassVar[int]
+    content: str
+    def __init__(self, content: _Optional[str] = ...) -> None: ...
 
 class KclType(_message.Message):
     __slots__ = ("type", "union_types", "default", "schema_name", "schema_doc", "properties", "required", "key", "item", "line", "decorators", "filename", "pkg_path", "description", "examples", "base_schema", "function", "index_signature")

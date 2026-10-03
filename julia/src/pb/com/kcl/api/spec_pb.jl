@@ -10,15 +10,16 @@ export OverrideFileArgs, Example, ListMethodArgs, GetVersionArgs, ValidateCodeRe
 export TestCaseInfo, FileCoverage, Argument, ListMethodResult, LintPathResult, SymbolIndex
 export CliConfig, KeyValuePair, PingArgs, ScopeIndex, LintPathArgs, RenameResult
 export UpdateDependenciesArgs, ExternalPkg, FormatCodeResult, FormatCodeArgs
-export LoadSettingsFilesArgs, RenameCodeResult, Position, RenameArgs, CoverageSummary
-export FormatPathResult, OptionHelp, ExecProgramResult, ListVariablesOptions
-export LoadSettingsFilesResult, Scope, ParseFileArgs, ValidateCodeArgs, ExecProgramArgs
-export UpdateDependenciesResult, ParseProgramArgs, Message, TestCoverageReport
-export ListOptionsResult, ListVariablesArgs, GetSchemaTypeMappingArgs, TestArgs
-export LoadPackageArgs, Error, TestResult, OverrideFileResult, ParseProgramResult
-export ParseFileResult, GetSchemaTypeMappingResult, GetSchemaTypeMappingUnderPathResult
-export IndexSignature, ListVariablesResult, LoadPackageResult, MapEntry, Parameter
-export SchemaTypes, Symbol, Variable, VariableList, FunctionType, KclType
+export FormatTestReportResult, LoadSettingsFilesArgs, RenameCodeResult, Position
+export RenameArgs, CoverageSummary, FormatPathResult, OptionHelp, ExecProgramResult
+export ListVariablesOptions, LoadSettingsFilesResult, Scope, ParseFileArgs
+export ValidateCodeArgs, ExecProgramArgs, UpdateDependenciesResult, ParseProgramArgs
+export Message, TestCoverageReport, ListOptionsResult, ListVariablesArgs
+export GetSchemaTypeMappingArgs, TestArgs, LoadPackageArgs, Error, TestResult
+export OverrideFileResult, ParseProgramResult, ParseFileResult, FormatTestReportArgs
+export GetSchemaTypeMappingResult, GetSchemaTypeMappingUnderPathResult, IndexSignature
+export ListVariablesResult, LoadPackageResult, MapEntry, Parameter, SchemaTypes, Symbol
+export Variable, VariableList, FunctionType, KclType
 abstract type var"##Abstract#GetSchemaTypeMappingUnderPathResult" end
 abstract type var"##Abstract#KclType" end
 abstract type var"##Abstract#Symbol" end
@@ -1053,6 +1054,40 @@ end
 function PB._encoded_size(x::FormatCodeArgs)
     encoded_size = 0
     !isempty(x.source) && (encoded_size += PB._encoded_size(x.source, 1))
+    return encoded_size
+end
+
+# Hand-added: `FormatTestReportArgs`/`FormatTestReportResult` were spliced in from
+# a `hack/gen_pb.jl` run limited to that addition, so a plain `make proto` does
+# not drag in the unrelated in-flight spec.proto edits.
+struct FormatTestReportResult
+    report::String
+end
+FormatTestReportResult(;report = "") = FormatTestReportResult(report)
+PB.default_values(::Type{FormatTestReportResult}) = (;report = "")
+PB.field_numbers(::Type{FormatTestReportResult}) = (;report = 1)
+
+function PB.decode(d::PB.AbstractProtoDecoder, ::Type{<:FormatTestReportResult}, _endpos::Int=0, _group::Bool=false)
+    report = ""
+    while !PB.message_done(d, _endpos, _group)
+        field_number, wire_type = PB.decode_tag(d)
+        if field_number == 1
+            report = PB.decode(d, String)
+        else
+            Base.skip(d, wire_type)
+        end
+    end
+    return FormatTestReportResult(report)
+end
+
+function PB.encode(e::PB.AbstractProtoEncoder, x::FormatTestReportResult)
+    initpos = position(e.io)
+    !isempty(x.report) && PB.encode(e, 1, x.report)
+    return position(e.io) - initpos
+end
+function PB._encoded_size(x::FormatTestReportResult)
+    encoded_size = 0
+    !isempty(x.report) && (encoded_size += PB._encoded_size(x.report, 1))
     return encoded_size
 end
 
@@ -2359,6 +2394,37 @@ function PB._encoded_size(x::ParseFileResult)
     !isempty(x.ast_json) && (encoded_size += PB._encoded_size(x.ast_json, 1))
     !isempty(x.deps) && (encoded_size += PB._encoded_size(x.deps, 2))
     !isempty(x.errors) && (encoded_size += PB._encoded_size(x.errors, 3))
+    return encoded_size
+end
+
+struct FormatTestReportArgs
+    result::Union{Nothing,TestResult}
+end
+FormatTestReportArgs(;result = nothing) = FormatTestReportArgs(result)
+PB.default_values(::Type{FormatTestReportArgs}) = (;result = nothing)
+PB.field_numbers(::Type{FormatTestReportArgs}) = (;result = 1)
+
+function PB.decode(d::PB.AbstractProtoDecoder, ::Type{<:FormatTestReportArgs}, _endpos::Int=0, _group::Bool=false)
+    result = Ref{Union{Nothing,TestResult}}(nothing)
+    while !PB.message_done(d, _endpos, _group)
+        field_number, wire_type = PB.decode_tag(d)
+        if field_number == 1
+            PB.decode!(d, result)
+        else
+            Base.skip(d, wire_type)
+        end
+    end
+    return FormatTestReportArgs(result[])
+end
+
+function PB.encode(e::PB.AbstractProtoEncoder, x::FormatTestReportArgs)
+    initpos = position(e.io)
+    !isnothing(x.result) && PB.encode(e, 1, x.result)
+    return position(e.io) - initpos
+end
+function PB._encoded_size(x::FormatTestReportArgs)
+    encoded_size = 0
+    !isnothing(x.result) && (encoded_size += PB._encoded_size(x.result, 1))
     return encoded_size
 end
 
