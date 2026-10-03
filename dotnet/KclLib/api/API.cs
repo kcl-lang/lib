@@ -177,6 +177,11 @@ public class API : IService
         return TestResult.Parser.ParseFrom(Call("KclService.Test", args.ToByteArray()));
     }
 
+    public FormatTestReportResult FormatTestReport(FormatTestReportArgs args)
+    {
+        return FormatTestReportResult.Parser.ParseFrom(Call("KclService.FormatTestReport", args.ToByteArray()));
+    }
+
     public UpdateDependenciesResult UpdateDependencies(UpdateDependenciesArgs args)
     {
         return UpdateDependenciesResult.Parser.ParseFrom(Call("KclService.UpdateDependencies", args.ToByteArray()));

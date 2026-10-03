@@ -7,9 +7,8 @@ import java.util.Optional;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 /**
- * Structured view of one configuration document produced by a KCL run. The
- * parsed value (a {@code Map}, {@code List} or scalar decoded from the
- * runtime JSON stream) plus the raw YAML document the runtime emitted for it.
+ * Structured view of one configuration document produced by a KCL run. The parsed value (a {@code Map}, {@code List} or
+ * scalar decoded from the runtime JSON stream) plus the raw YAML document the runtime emitted for it.
  */
 public final class KCLResult {
     private final Object result;
@@ -21,18 +20,16 @@ public final class KCLResult {
     }
 
     /**
-     * The raw decoded value of this document: a {@code Map<String, Object>},
-     * {@code List<Object>} or scalar ({@code String}, {@code Number},
-     * {@code Boolean}), or {@code null}.
+     * The raw decoded value of this document: a {@code Map<String, Object>}, {@code List<Object>} or scalar
+     * ({@code String}, {@code Number}, {@code Boolean}), or {@code null}.
      */
     public Object getValue() {
         return result;
     }
 
     /**
-     * Look up {@code key} in the parsed value: dotted keys navigate nested
-     * maps and numeric segments index into lists. Returns {@code null} when
-     * the key is absent.
+     * Look up {@code key} in the parsed value: dotted keys navigate nested maps and numeric segments index into lists.
+     * Returns {@code null} when the key is absent.
      */
     public Object get(String key) {
         Object value = result;
@@ -54,13 +51,11 @@ public final class KCLResult {
     }
 
     /**
-     * Typed variant of {@link #get(String)}: the value at {@code key}
-     * converted to {@code target} (numeric widening allowed, everything else
-     * strict). Empty when the key is absent.
+     * Typed variant of {@link #get(String)}: the value at {@code key} converted to {@code target} (numeric widening
+     * allowed, everything else strict). Empty when the key is absent.
      *
      * @throws KclException
-     *             when the value exists but cannot be represented as
-     *             {@code target}
+     *             when the value exists but cannot be represented as {@code target}
      */
     public <T> Optional<T> get(String key, Class<T> target) {
         Object value = get(key);
@@ -141,9 +136,8 @@ public final class KCLResult {
     }
 
     /**
-     * The raw YAML document emitted by the runtime for this result (one
-     * slice of the multi-document {@code yaml_result}), or {@code ""} when
-     * unavailable.
+     * The raw YAML document emitted by the runtime for this result (one slice of the multi-document
+     * {@code yaml_result}), or {@code ""} when unavailable.
      */
     public String yamlString() {
         return yamlDocument == null ? "" : yamlDocument;
@@ -188,7 +182,7 @@ public final class KCLResult {
         if (target == Double.class && value instanceof Number) {
             return target.cast(Double.valueOf(((Number) value).doubleValue()));
         }
-        throw new KclException("failed to convert " + key + " to " + target.getSimpleName()
-                + ": type mismatch, got " + (value == null ? "null" : value.getClass().getSimpleName()));
+        throw new KclException("failed to convert " + key + " to " + target.getSimpleName() + ": type mismatch, got "
+                + (value == null ? "null" : value.getClass().getSimpleName()));
     }
 }

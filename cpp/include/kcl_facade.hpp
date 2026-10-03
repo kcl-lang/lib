@@ -22,9 +22,24 @@
 //     and `full_type_path` is off (the default), `_type` values are shortened
 //     to their last path segment (e.g. `__main__.AppConfig` -> `AppConfig`).
 //
-// Everything is header-only and self-contained: a minimal JSON value/parser
-// (~150 lines, no third-party dependency) backs `get()` and the hook, so the
-// header never requires the C binding's AST parser or protobuf.
+// JSON backing store
+// ------------------
+// `KclResult::get` returns `kcl_lib::JsonValue`, which is
+// `nlohmann::ordered_json` when `<nlohmann/json.hpp>` is on the include path
+// and a bundled hand-rolled `Json` otherwise. `ordered_json` is required
+// rather than plain `nlohmann::json` because the latter stores objects in a
+// `std::map`, which sorts keys and would reorder the runtime's output when
+// the hook re-emits YAML/JSON.
+//
+// The bundled fallback is compiled only when nlohmann/json is absent, which
+// keeps the header usable with nothing but a C++17 toolchain; the CMake build
+// picks nlohmann up through `find_package(nlohmann_json)` when it is
+// installed. Define `KCL_LIB_NO_NLOHMANN` to force the fallback.
+//
+// `KclResult::getInt` / `getString` / `getFloat` / `getBool` / `getObject` /
+// `getArray` are the portable accessors: they behave identically whichever
+// backing store is compiled in, so callers that want to build against both
+// configurations should prefer them over the raw `get` return value.
 
 #include "kcl_lib.hpp"
 
@@ -35,6 +50,15 @@
 #include <string>
 #include <utility>
 #include <vector>
+
+#if !defined(KCL_LIB_NO_NLOHMANN)
+#  if defined(__has_include)
+#    if __has_include(<nlohmann/json.hpp>)
+#      include <nlohmann/json.hpp>
+#      define KCL_LIB_HAS_NLOHMANN 1
+#    endif
+#  endif
+#endif
 
 namespace kcl_lib {
 
@@ -55,12 +79,24 @@ public:
 };
 
 // ---------------------------------------------------------------------------
-// Minimal JSON value + parser
+// JSON value
 // ---------------------------------------------------------------------------
 
+#ifdef KCL_LIB_HAS_NLOHMANN
+/// The JSON value type the facade parses results into and hands back to
+/// callers. `ordered_json` is required rather than plain `nlohmann::json`:
+/// the latter keeps objects in a `std::map`, which sorts keys and would
+/// reorder the runtime's output when the `_type` hook re-emits YAML/JSON.
+using JsonValue = nlohmann::ordered_json;
+#else
 /// A parsed JSON value. Object member order is preserved so re-emitted
 /// YAML/JSON keeps the runtime's key order. Numbers keep their raw token for
 /// lossless re-emission (`1e3` stays `1e3`).
+///
+/// Bundled fallback compiled only when nlohmann/json is not on the include
+/// path, so the header stays dependency-free. The walks in `detail` reach
+/// this class through a handful of small adapters rather than through its
+/// API directly.
 class Json {
 public:
     enum class Kind {
@@ -98,6 +134,17 @@ public:
     bool is_string() const { return kind_ == Kind::String; }
     bool is_array() const { return kind_ == Kind::Array; }
     bool is_object() const { return kind_ == Kind::Object; }
+
+    /// Element / member count, and emptiness for collections. `nlohmann`
+    /// spells both the same way, which is what lets `detail` share its walks.
+    size_t size() const
+    {
+        if (kind_ == Kind::Array) {
+            return array_.size();
+        }
+        return kind_ == Kind::Object ? object_.size() : 0;
+    }
+    bool empty() const { return size() == 0; }
 
     bool as_bool() const
     {
@@ -162,41 +209,6 @@ public:
             }
         }
         return nullptr;
-    }
-
-    /// Dotted-path lookup mirroring kcl-go's `KCLResult.Get("a.b.c")`:
-    /// dots navigate nested objects and integer segments index into arrays.
-    /// Returns a null Json when any segment is missing.
-    Json get(const std::string& dotted_path) const
-    {
-        const Json* current = this;
-        std::string segment;
-        for (size_t i = 0; i <= dotted_path.size(); ++i) {
-            if (i == dotted_path.size() || dotted_path[i] == '.') {
-                if (segment.empty()) {
-                    return Json();
-                }
-                if (current->kind_ == Kind::Object) {
-                    current = current->find(segment);
-                } else if (current->kind_ == Kind::Array) {
-                    bool numeric = !segment.empty() && segment.find_first_not_of("0123456789") == std::string::npos;
-                    size_t index = numeric ? static_cast<size_t>(std::strtoull(segment.c_str(), nullptr, 10)) : 0;
-                    if (!numeric || index >= current->array_.size()) {
-                        return Json();
-                    }
-                    current = &current->array_[index];
-                } else {
-                    return Json();
-                }
-                if (current == nullptr) {
-                    return Json();
-                }
-                segment.clear();
-            } else {
-                segment.push_back(dotted_path[i]);
-            }
-        }
-        return *current;
     }
 
     /// Compact JSON rendering (objects preserve member order).
@@ -299,8 +311,13 @@ private:
     }
 };
 
+/// See the nlohmann branch above for what this alias selects.
+using JsonValue = Json;
+#endif // !KCL_LIB_HAS_NLOHMANN
+
 namespace detail {
 
+#ifndef KCL_LIB_HAS_NLOHMANN
 // Recursive-descent parser for the JSON subset the KCL runtime emits.
 // Supports the full JSON grammar including \uXXXX escapes and surrogate
 // pairs; the stream form (several top-level values separated by whitespace,
@@ -591,10 +608,236 @@ private:
         }
     }
 };
+#endif // !KCL_LIB_HAS_NLOHMANN
 
-inline std::vector<Json> parse_json_stream(const std::string& text)
+// ---------------------------------------------------------------------------
+// Backend adapters
+//
+// Everything below walks `JsonValue` rather than a concrete JSON type. These
+// few adapters are the only code that knows which backend is compiled in; the
+// YAML emitter, the `_type` hook and the dotted-path lookup are written once.
+// ---------------------------------------------------------------------------
+
+/// JSON string escaping (used for both values and object keys).
+inline void json_quote(const std::string& value, std::string& out)
 {
+#ifdef KCL_LIB_HAS_NLOHMANN
+    out += nlohmann::ordered_json(value).dump();
+#else
+    Json::dump_string(value, out);
+#endif
+}
+
+/// Call `fn(key, value)` for every member of an object, in the runtime's
+/// order.
+template <typename F>
+inline void for_each_member(const JsonValue& value, F&& fn)
+{
+#ifdef KCL_LIB_HAS_NLOHMANN
+    for (auto it = value.begin(); it != value.end(); ++it) {
+        fn(it.key(), it.value());
+    }
+#else
+    for (const auto& member : value.as_object()) {
+        fn(member.first, member.second);
+    }
+#endif
+}
+
+/// Mutable variant of {for_each_member}.
+template <typename F>
+inline void for_each_member_mut(JsonValue& value, F&& fn)
+{
+#ifdef KCL_LIB_HAS_NLOHMANN
+    for (auto it = value.begin(); it != value.end(); ++it) {
+        fn(it.key(), it.value());
+    }
+#else
+    for (auto& member : value.as_object()) {
+        fn(member.first, member.second);
+    }
+#endif
+}
+
+/// Call `fn(item)` for every element of an array.
+template <typename F>
+inline void for_each_item(const JsonValue& value, F&& fn)
+{
+#ifdef KCL_LIB_HAS_NLOHMANN
+    for (const auto& item : value) {
+        fn(item);
+    }
+#else
+    for (const auto& item : value.as_array()) {
+        fn(item);
+    }
+#endif
+}
+
+/// Mutable variant of {for_each_item}.
+template <typename F>
+inline void for_each_item_mut(JsonValue& value, F&& fn)
+{
+#ifdef KCL_LIB_HAS_NLOHMANN
+    for (auto& item : value) {
+        fn(item);
+    }
+#else
+    for (auto& item : value.as_array()) {
+        fn(item);
+    }
+#endif
+}
+
+/// Member lookup for objects; nullptr when `value` is not an object or the
+/// key is missing.
+inline const JsonValue* json_find(const JsonValue& value, const std::string& key)
+{
+#ifdef KCL_LIB_HAS_NLOHMANN
+    if (!value.is_object()) {
+        return nullptr;
+    }
+    auto it = value.find(key);
+    return it == value.end() ? nullptr : &(*it);
+#else
+    return value.find(key);
+#endif
+}
+
+/// Array element lookup; nullptr when `value` is not an array or the index is
+/// out of range.
+inline const JsonValue* json_index(const JsonValue& value, size_t index)
+{
+    if (!value.is_array() || index >= value.size()) {
+        return nullptr;
+    }
+#ifdef KCL_LIB_HAS_NLOHMANN
+    return &value[index];
+#else
+    return &value.as_array()[index];
+#endif
+}
+
+/// Render a non-string scalar (null / bool / number) as its JSON literal.
+/// Strings are handled through {json_string}.
+inline void json_scalar_text(const JsonValue& value, std::string& out)
+{
+#ifdef KCL_LIB_HAS_NLOHMANN
+    switch (value.type()) {
+    case nlohmann::ordered_json::value_t::null:
+        out += "null";
+        return;
+    case nlohmann::ordered_json::value_t::boolean:
+        out += value.get<bool>() ? "true" : "false";
+        return;
+    case nlohmann::ordered_json::value_t::number_integer:
+        out += std::to_string(value.get<nlohmann::ordered_json::number_integer_t>());
+        return;
+    case nlohmann::ordered_json::value_t::number_unsigned:
+        out += std::to_string(value.get<nlohmann::ordered_json::number_unsigned_t>());
+        return;
+    case nlohmann::ordered_json::value_t::number_float:
+        out += value.dump();
+        return;
+    default:
+        return;
+    }
+#else
+    out += value.dump();
+#endif
+}
+
+/// Copy a string scalar out of `value`; returns false when it holds another
+/// type.
+inline bool json_string(const JsonValue& value, std::string& out)
+{
+#ifdef KCL_LIB_HAS_NLOHMANN
+    if (!value.is_string()) {
+        return false;
+    }
+    out = value.get<std::string>();
+    return true;
+#else
+    if (!value.is_string()) {
+        return false;
+    }
+    out = value.as_string();
+    return true;
+#endif
+}
+
+/// Replace `target` with a string scalar.
+inline void json_set_string(JsonValue& target, std::string value)
+{
+#ifdef KCL_LIB_HAS_NLOHMANN
+    target = std::move(value);
+#else
+    target = Json::string(std::move(value));
+#endif
+}
+
+/// Parse the runtime's JSON *stream* into one value per document.
+inline std::vector<JsonValue> parse_json_stream(const std::string& text)
+{
+#ifdef KCL_LIB_HAS_NLOHMANN
+    // The runtime emits one compact JSON value per line, and serde_json never
+    // emits a literal newline inside a string, so line splitting is safe.
+    std::vector<JsonValue> docs;
+    size_t start = 0;
+    while (start <= text.size()) {
+        size_t end = text.find('\n', start);
+        const bool last = end == std::string::npos;
+        const std::string line = text.substr(start, last ? std::string::npos : end - start);
+        if (!line.empty() && line.find_first_not_of(" \t\r") != std::string::npos) {
+            // `allow_exceptions = false` keeps a malformed payload from
+            // throwing nlohmann's own exception type past the facade.
+            auto parsed = nlohmann::ordered_json::parse(line, nullptr, false);
+            if (parsed.is_discarded()) {
+                throw KclError("kcl: invalid JSON result: " + line);
+            }
+            docs.push_back(std::move(parsed));
+        }
+        if (last) {
+            break;
+        }
+        start = end + 1;
+    }
+    return docs;
+#else
     return JsonParser(text.data(), text.data() + text.size()).parse_stream();
+#endif
+}
+
+/// Dotted-path lookup mirroring kcl-go's `KCLResult.Get("a.b.c")`: dots
+/// navigate nested objects and integer segments index into arrays. Returns a
+/// null value when any segment is missing.
+inline JsonValue json_get_path(const JsonValue& root, const std::string& dotted_path)
+{
+    const JsonValue* current = &root;
+    std::string segment;
+    for (size_t i = 0; i <= dotted_path.size(); ++i) {
+        if (i != dotted_path.size() && dotted_path[i] != '.') {
+            segment.push_back(dotted_path[i]);
+            continue;
+        }
+        if (segment.empty()) {
+            return JsonValue();
+        }
+        if (current->is_object()) {
+            current = json_find(*current, segment);
+        } else if (current->is_array()) {
+            const bool numeric = segment.find_first_not_of("0123456789") == std::string::npos;
+            const size_t index = static_cast<size_t>(std::strtoull(segment.c_str(), nullptr, 10));
+            current = numeric ? json_index(*current, index) : nullptr;
+        } else {
+            current = nullptr;
+        }
+        if (current == nullptr) {
+            return JsonValue();
+        }
+        segment.clear();
+    }
+    return *current;
 }
 
 // kcl-go hook.go's resultTypeAttributeHook: when the runtime was asked to
@@ -602,24 +845,22 @@ inline std::vector<Json> parse_json_stream(const std::string& text)
 // rewrite every `_type` value to its last segment (`pkg.Sub` -> `Sub`). The
 // Go walk only descends into objects; this one also descends into arrays so
 // schema instances nested in lists are rewritten consistently.
-inline void rewrite_type_attribute(Json& value)
+inline void rewrite_type_attribute(JsonValue& value)
 {
     if (value.is_object()) {
-        for (auto& member : value.as_object()) {
-            if (member.first == "_type" && member.second.is_string()) {
-                const std::string& full = member.second.as_string();
-                size_t dot = full.rfind('.');
+        for_each_member_mut(value, [](const std::string& key, JsonValue& child) {
+            std::string full;
+            if (key == "_type" && json_string(child, full)) {
+                const size_t dot = full.rfind('.');
                 if (dot != std::string::npos) {
-                    member.second = Json::string(full.substr(dot + 1));
+                    json_set_string(child, full.substr(dot + 1));
                 }
-                continue;
+                return;
             }
-            rewrite_type_attribute(member.second);
-        }
+            rewrite_type_attribute(child);
+        });
     } else if (value.is_array()) {
-        for (auto& item : value.as_array()) {
-            rewrite_type_attribute(item);
-        }
+        for_each_item_mut(value, [](JsonValue& item) { rewrite_type_attribute(item); });
     }
 }
 
@@ -647,123 +888,76 @@ inline bool yaml_needs_quotes(const std::string& value)
     return value.find_first_of(":#{}[],&*?|>%@!\"'\n\r\t") != std::string::npos;
 }
 
-inline void yaml_emit_scalar(const Json& value, std::string& out)
+inline void yaml_emit_scalar(const JsonValue& value, std::string& out)
 {
-    switch (value.kind()) {
-    case Json::Kind::Null:
-        out += "null";
-        break;
-    case Json::Kind::Bool:
-    case Json::Kind::Number:
-        out += value.dump();
-        break;
-    case Json::Kind::String:
-        if (yaml_needs_quotes(value.as_string())) {
-            std::string encoded;
-            Json::dump_string(value.as_string(), encoded);
-            out += encoded;
+    std::string text;
+    if (json_string(value, text)) {
+        if (yaml_needs_quotes(text)) {
+            json_quote(text, out);
         } else {
-            out += value.as_string();
-        }
-        break;
-    default:
-        break;
-    }
-}
-
-inline void yaml_emit(const Json& value, size_t indent, std::string& out)
-{
-    std::string pad(indent, ' ');
-    if (value.is_object()) {
-        const auto& members = value.as_object();
-        if (members.empty()) {
-            out += pad + "{}\n";
-            return;
-        }
-        for (const auto& member : members) {
-            out += pad;
-            if (yaml_needs_quotes(member.first)) {
-                std::string encoded;
-                Json::dump_string(member.first, encoded);
-                out += encoded;
-            } else {
-                out += member.first;
-            }
-            const Json& child = member.second;
-            if (child.is_object() || child.is_array()) {
-                bool empty = child.is_object() ? child.as_object().empty() : child.as_array().empty();
-                if (empty) {
-                    out += child.is_object() ? ": {}\n" : ": []\n";
-                } else {
-                    out += ":\n";
-                    yaml_emit(child, indent + 2, out);
-                }
-            } else {
-                out += ": ";
-                yaml_emit_scalar(child, out);
-                out.push_back('\n');
-            }
+            out += text;
         }
         return;
     }
+    json_scalar_text(value, out);
+}
+
+inline void yaml_emit(const JsonValue& value, size_t indent, std::string& out);
+
+/// Write `key: <value>`. Nested collections start on the next line indented by
+/// `child_indent`; empty ones collapse to `{}` / `[]`.
+inline void yaml_emit_member(const std::string& key, const JsonValue& child, size_t child_indent, std::string& out)
+{
+    if (yaml_needs_quotes(key)) {
+        json_quote(key, out);
+    } else {
+        out += key;
+    }
+    if (child.is_object() || child.is_array()) {
+        if (child.empty()) {
+            out += child.is_object() ? ": {}\n" : ": []\n";
+        } else {
+            out += ":\n";
+            yaml_emit(child, child_indent, out);
+        }
+    } else {
+        out += ": ";
+        yaml_emit_scalar(child, out);
+        out.push_back('\n');
+    }
+}
+
+inline void yaml_emit(const JsonValue& value, size_t indent, std::string& out)
+{
+    const std::string pad(indent, ' ');
+    if (value.is_object()) {
+        if (value.empty()) {
+            out += pad + "{}\n";
+            return;
+        }
+        for_each_member(value, [&](const std::string& key, const JsonValue& child) {
+            out += pad;
+            yaml_emit_member(key, child, indent + 2, out);
+        });
+        return;
+    }
     if (value.is_array()) {
-        const auto& items = value.as_array();
-        if (items.empty()) {
+        if (value.empty()) {
             out += pad + "[]\n";
             return;
         }
-        for (const auto& item : items) {
+        for_each_item(value, [&](const JsonValue& item) {
             out += pad + "-";
-            if (item.is_object() && !item.as_object().empty()) {
-                out.push_back(' ');
-                // Emit the first member on the dash line, the rest indented.
-                const auto& members = item.as_object();
-                const Json& first_value = members.front().second;
-                if (yaml_needs_quotes(members.front().first)) {
-                    std::string encoded;
-                    Json::dump_string(members.front().first, encoded);
-                    out += encoded;
-                } else {
-                    out += members.front().first;
-                }
-                if (first_value.is_object() || first_value.is_array()) {
-                    bool empty = first_value.is_object() ? first_value.as_object().empty() : first_value.as_array().empty();
-                    if (empty) {
-                        out += first_value.is_object() ? ": {}\n" : ": []\n";
-                    } else {
-                        out += ":\n";
-                        yaml_emit(first_value, indent + 4, out);
-                    }
-                } else {
-                    out += ": ";
-                    yaml_emit_scalar(first_value, out);
-                    out.push_back('\n');
-                }
-                for (size_t i = 1; i < members.size(); ++i) {
-                    out += std::string(indent + 2, ' ');
-                    const Json& child = members[i].second;
-                    if (yaml_needs_quotes(members[i].first)) {
-                        std::string encoded;
-                        Json::dump_string(members[i].first, encoded);
-                        out += encoded;
-                    } else {
-                        out += members[i].first;
-                    }
-                    if (child.is_object() || child.is_array()) {
-                        bool empty = child.is_object() ? child.as_object().empty() : child.as_array().empty();
-                        if (empty) {
-                            out += child.is_object() ? ": {}\n" : ": []\n";
-                        } else {
-                            out += ":\n";
-                            yaml_emit(child, indent + 4, out);
-                        }
-                    } else {
-                        out += ": ";
-                        yaml_emit_scalar(child, out);
-                        out.push_back('\n');
-                    }
-                }
-            } else if (item.is_array() && !item.as_array().empty()) {
+            if (item.is_object() && !item.empty()) {
+                // The first member sits on the dash line, the rest are
+                // indented to line up underneath it.
+                bool first = true;
+                for_each_member(item, [&](const std::string& key, const JsonValue& child) {
+                    out += first ? " " : std::string(indent + 2, ' ');
+                    first = false;
+                    yaml_emit_member(key, child, indent + 4, out);
+                });
+            } else if (item.is_array() && !item.empty()) {
                 out.push_back('\n');
                 yaml_emit(item, indent + 2, out);
             } else {
@@ -771,7 +965,7 @@ inline void yaml_emit(const Json& value, size_t indent, std::string& out)
                 yaml_emit_scalar(item, out);
                 out.push_back('\n');
             }
-        }
+        });
         return;
     }
     out += pad;
@@ -871,7 +1065,7 @@ public:
         if (!shorten_type_paths || raw_json_.empty()) {
             return;
         }
-        std::vector<Json> docs;
+        std::vector<JsonValue> docs;
         try {
             docs = detail::parse_json_stream(raw_json_);
         } catch (const KclError&) {
@@ -920,16 +1114,120 @@ public:
 
     /// Dotted-path lookup over the parsed JSON document
     /// (`get("a.b.c")`, integer segments index into lists), mirroring
-    /// kcl-go's `KCLResult.Get`. Returns a null Json when the path does not
+    /// kcl-go's `KCLResult.Get`. Returns a null value when the path does not
     /// resolve or when the runtime emitted no JSON for this run (e.g.
     /// `format = "yaml"` was forced).
-    Json get(const std::string& dotted_path, size_t document = 0) const
+    ///
+    /// The return type is the active {JsonValue} backend. Prefer the typed
+    /// accessors below when the code has to build both with and without
+    /// nlohmann/json.
+    JsonValue get(const std::string& dotted_path, size_t document = 0) const
     {
         ensure_parsed();
         if (document >= docs_.size()) {
-            return Json();
+            return JsonValue();
         }
-        return docs_[document].get(dotted_path);
+        return detail::json_get_path(docs_[document], dotted_path);
+    }
+
+    // -- portable typed accessors ------------------------------------------
+    //
+    // These behave identically on either backend, so callers that do not care
+    // which one is compiled in can use them instead of `get`'s raw value.
+    // A missing path or a type mismatch throws KclError, mirroring kcl-go's
+    // strict `KCLResult.Get(key, &target)`.
+
+    /// Integer view of the value at `path`; floats truncate towards zero.
+    long long getInt(const std::string& path, size_t document = 0) const
+    {
+        const JsonValue value = get(path, document);
+#ifdef KCL_LIB_HAS_NLOHMANN
+        if (value.is_number_integer()) {
+            return value.get<long long>();
+        }
+        if (value.is_number_unsigned()) {
+            return static_cast<long long>(value.get<nlohmann::ordered_json::number_unsigned_t>());
+        }
+        if (value.is_number_float()) {
+            return static_cast<long long>(value.get<double>());
+        }
+#else
+        if (value.is_number()) {
+            return value.as_int();
+        }
+#endif
+        throw KclError("kcl: " + path + " is not an integer");
+    }
+
+    /// Floating-point view of the value at `path`.
+    double getFloat(const std::string& path, size_t document = 0) const
+    {
+        const JsonValue value = get(path, document);
+#ifdef KCL_LIB_HAS_NLOHMANN
+        if (value.is_number()) {
+            return value.get<double>();
+        }
+#else
+        if (value.is_number()) {
+            return value.as_double();
+        }
+#endif
+        throw KclError("kcl: " + path + " is not a number");
+    }
+
+    /// String view of the value at `path`.
+    std::string getString(const std::string& path, size_t document = 0) const
+    {
+        const JsonValue value = get(path, document);
+        std::string text;
+        if (detail::json_string(value, text)) {
+            return text;
+        }
+        throw KclError("kcl: " + path + " is not a string");
+    }
+
+    /// Boolean view of the value at `path`.
+    bool getBool(const std::string& path, size_t document = 0) const
+    {
+        const JsonValue value = get(path, document);
+#ifdef KCL_LIB_HAS_NLOHMANN
+        if (value.is_boolean()) {
+            return value.get<bool>();
+        }
+#else
+        if (value.is_bool()) {
+            return value.as_bool();
+        }
+#endif
+        throw KclError("kcl: " + path + " is not a boolean");
+    }
+
+    /// Elements of the array at `path`.
+    std::vector<JsonValue> getArray(const std::string& path, size_t document = 0) const
+    {
+        const JsonValue value = get(path, document);
+        if (!value.is_array()) {
+            throw KclError("kcl: " + path + " is not an array");
+        }
+        std::vector<JsonValue> items;
+        items.reserve(value.size());
+        detail::for_each_item(value, [&](const JsonValue& item) { items.push_back(item); });
+        return items;
+    }
+
+    /// Members of the object at `path`, in the runtime's key order.
+    std::vector<std::pair<std::string, JsonValue>> getObject(const std::string& path, size_t document = 0) const
+    {
+        const JsonValue value = get(path, document);
+        if (!value.is_object()) {
+            throw KclError("kcl: " + path + " is not an object");
+        }
+        std::vector<std::pair<std::string, JsonValue>> members;
+        members.reserve(value.size());
+        detail::for_each_member(value, [&](const std::string& key, const JsonValue& member) {
+            members.emplace_back(key, member);
+        });
+        return members;
     }
 
 private:
@@ -942,7 +1240,7 @@ private:
     std::string raw_err_;
     std::string yaml_;
     std::string json_;
-    mutable std::vector<Json> docs_;
+    mutable std::vector<JsonValue> docs_;
     mutable bool parsed_ = false;
 
     void ensure_parsed() const

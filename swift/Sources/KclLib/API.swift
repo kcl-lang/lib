@@ -170,6 +170,20 @@ public class API: Service {
       serializedBytes: callNative(name: "KclService.Test", args: try args.serializedBytes()))
   }
 
+  // Formats a test result into a human-readable report.
+  //
+  // The report is byte-identical to the kcl-go `PrettyReporter` format and
+  // deterministic for a given result: one `{name}: {STATUS} ({ms}ms)` line per
+  // case in result order (duration truncated from microseconds to whole
+  // milliseconds), an 80-character `-` separator, then the non-zero
+  // `PASS`/`FAIL`/`SKIPPED` summary lines. An empty result renders as
+  // `no test files\n`.
+  public func formatTestReport(_ args: FormatTestReportArgs) throws -> FormatTestReportResult {
+    return try FormatTestReportResult(
+      serializedBytes: callNative(
+        name: "KclService.FormatTestReport", args: try args.serializedBytes()))
+  }
+
   // Updates dependencies for a KCL project based on defined specifications.
   public func updateDependencies(_ args: UpdateDependenciesArgs) throws
     -> UpdateDependenciesResult

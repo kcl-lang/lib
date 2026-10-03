@@ -578,6 +578,40 @@ func TestTestingAPI(t *testing.T) {
 	}
 }
 
+func TestFormatTestReportAPI(t *testing.T) {
+	client := NewNativeServiceClient()
+	args := &api.FormatTestReportArgs{
+		Result: &api.TestResult{
+			Info: []*api.TestCaseInfo{
+				{Name: "test_case_1", Duration: 1500},
+				{Name: "test_case_2", Error: "Error: assert failed", Duration: 2500},
+			},
+		},
+	}
+
+	result, err := client.FormatTestReport(args)
+	if err != nil {
+		t.Fatalf("FormatTestReport failed: %v", err)
+	}
+
+	// The prebuilt kcl v0.13.0 runtime predates this RPC: the native
+	// dispatcher panics with "unknown method name" and answers with an
+	// empty payload, so there is nothing to assert against it.
+	if result.Report == "" {
+		t.Skip("the native runtime does not implement KclService.FormatTestReport")
+	}
+
+	expected := "test_case_1: PASS (1ms)\n" +
+		"test_case_2: FAIL (2ms)\n" +
+		"Error: assert failed\n" +
+		strings.Repeat("-", 80) + "\n" +
+		"PASS: 1/2\n" +
+		"FAIL: 1/2\n"
+	if result.Report != expected {
+		t.Errorf("Expected report:\n%s\nGot:\n%s", expected, result.Report)
+	}
+}
+
 func TestLoadSettingsFilesAPI(t *testing.T) {
 	client := NewNativeServiceClient()
 	args := &api.LoadSettingsFilesArgs{

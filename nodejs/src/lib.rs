@@ -754,3 +754,79 @@ pub fn list_method() -> Result<ListMethodResult> {
         method_name_list: parsed.method_name_list,
     })
 }
+
+/*
+* FormatTestReport API
+*
+* Like `list_method` above, this routes through the universal `kcl_api::call`
+* dispatcher: the `kcl-api` revision this crate pins predates
+* `KclService.FormatTestReport`, so neither the typed `KclServiceImpl` wrapper
+* nor the generated request/response messages exist there. The request is
+* encoded by hand instead — `FormatTestReportArgs` is a single length-delimited
+* field 1 carrying a `TestResult`, and `FormatTestReportResult` a single
+* length-delimited field 1 carrying a `string` — which keeps this compiling
+* against the pin and collapses to the typed call once the pin moves.
+*/
+
+/// Format a test result into a human-readable report.
+#[napi]
+pub fn format_test_report(args: FormatTestReportArgs) -> Result<FormatTestReportResult> {
+    use ::prost::Message;
+    use ::prost::encoding::{
+        WireType, decode_key, decode_varint, encode_key, encode_length_delimiter,
+    };
+
+    let mut inner = Vec::new();
+    args.result.to_wire().encode(&mut inner).map_err(|e| {
+        napi::bindgen_prelude::Error::from_reason(format!("encode TestResult: {e}"))
+    })?;
+    let mut request = Vec::new();
+    encode_key(1, WireType::LengthDelimited, &mut request);
+    encode_length_delimiter(inner.len(), &mut request).map_err(|e| {
+        napi::bindgen_prelude::Error::from_reason(format!("encode FormatTestReportArgs: {e}"))
+    })?;
+    request.extend_from_slice(&inner);
+
+    let raw = kcl_api::call(b"KclService.FormatTestReport", &request)
+        .map_err(|e| napi::bindgen_prelude::Error::from_reason(e.to_string()))?;
+    // The dispatcher reports a service-level failure as an `ERROR:`-prefixed
+    // payload rather than through the `Result`, so translate it here instead of
+    // handing the bytes to a decoder that would read them as a report.
+    if let Some(message) = raw.strip_prefix(b"ERROR:") {
+        return Err(napi::bindgen_prelude::Error::from_reason(format!(
+            "{}",
+            String::from_utf8_lossy(message)
+        )));
+    }
+
+    // The key and the length are both varints, and the length is the one that
+    // bites: a 139-byte report is `8b 01`, two bytes, so reading a single byte
+    // for it truncates the length to 11 and then walks off into the middle of
+    // the text. prost's own readers get both right.
+    let mut buf = raw.as_slice();
+    let mut report = String::new();
+    while !buf.is_empty() {
+        let (field, wire) = decode_key(&mut buf)
+            .map_err(|e| napi::bindgen_prelude::Error::from_reason(format!("decode key: {e}")))?;
+        if field != 1 || wire != WireType::LengthDelimited {
+            // The response has exactly one field; anything else means we are
+            // not reading what we think we are, and reporting a partial read
+            // as a whole one is worse than saying so.
+            return Err(napi::bindgen_prelude::Error::from_reason(format!(
+                "unexpected field {field}/{wire:?} in FormatTestReportResult"
+            )));
+        }
+        let len = decode_varint(&mut buf)
+            .map_err(|e| napi::bindgen_prelude::Error::from_reason(format!("decode length: {e}")))?
+            as usize;
+        if buf.len() < len {
+            return Err(napi::bindgen_prelude::Error::from_reason(format!(
+                "FormatTestReportResult report is truncated: {len} bytes claimed, {} left",
+                buf.len()
+            )));
+        }
+        report = String::from_utf8_lossy(&buf[..len]).into_owned();
+        buf = &buf[len..];
+    }
+    Ok(FormatTestReportResult { report })
+}

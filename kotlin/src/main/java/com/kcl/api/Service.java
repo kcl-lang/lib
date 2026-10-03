@@ -59,6 +59,9 @@ public interface Service {
     // Service for the testing tool
     TestResult test(TestArgs args) throws Exception;
 
+    // Service for formatting a test result into a human-readable report
+    FormatTestReportResult formatTestReport(FormatTestReportArgs args) throws Exception;
+
     // Service for the dependency updating
     UpdateDependenciesResult updateDependencies(UpdateDependenciesArgs args) throws Exception;
 

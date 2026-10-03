@@ -31,16 +31,11 @@ public class UpdateDependenciesTest {
         // (it ignores the `path` directive), so we hand-build `external_pkgs`
         // pointing at the actual mock locations.
         ExecProgramArgs execArgs = ExecProgramArgs.newBuilder()
-                .addExternalPkgs(ExternalPkg.newBuilder()
-                        .setPkgName("helloworld")
-                        .setPkgPath("./src/test_data/_mocks/helloworld")
-                        .build())
-                .addExternalPkgs(ExternalPkg.newBuilder()
-                        .setPkgName("flask")
-                        .setPkgPath("./src/test_data/_mocks/flask")
-                        .build())
-                .addKFilenameList("./src/test_data/update_dependencies/main.k")
-                .build();
+                .addExternalPkgs(ExternalPkg.newBuilder().setPkgName("helloworld")
+                        .setPkgPath("./src/test_data/_mocks/helloworld").build())
+                .addExternalPkgs(
+                        ExternalPkg.newBuilder().setPkgName("flask").setPkgPath("./src/test_data/_mocks/flask").build())
+                .addKFilenameList("./src/test_data/update_dependencies/main.k").build();
 
         ExecProgramResult execResult = api.execProgram(execArgs);
         Assert.assertEquals(execResult.getYamlResult(), "a: Hello World!");

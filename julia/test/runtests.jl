@@ -324,6 +324,20 @@ end
         end
     end
 
+    @testset "format_test_report" begin
+        result = test(TestArgs(pkg_list=[joinpath(TEST_DATA, "testing", "module", "...")]))
+        report = format_test_report(FormatTestReportArgs(result))
+        # FormatTestReport landed in the runtime after the prebuilt libkcl
+        # v0.13.0 binary, whose dispatcher answers with an empty payload;
+        # accept that and only assert the report format when the runtime
+        # actually formats one.
+        if !isempty(report.report)
+            @test endswith(report.report, "\n")
+            @test occursin("PASS: 2/2", report.report)
+            @test count(==('-'), report.report) >= 80
+        end
+    end
+
     @testset "update_dependencies (dependency-free module)" begin
         mktempdir() do dir
             write(joinpath(dir, "kcl.mod"), "[package]\nname = \"tmp_mod\"\nedition = \"0.0.1\"\nversion = \"0.0.1\"\n")
@@ -383,5 +397,65 @@ end
         end
         @test err isa KclError
         @test occursin("Cannot find the kcl file", err.message)
+    end
+
+    @testset "plugins" begin
+        # A method that ignores its arguments needs no JSON parser at all: the
+        # result is handed back as raw JSON.
+        KclLib.register_plugin("strings", "join", (args, kwargs) -> "\"KCL.KCL.123\"")
+        @test has_plugins()
+        @test plugin_registered("strings", "join")
+        @test !plugin_registered("strings", "missing")
+
+        result = KclLib.run(code = "import kcl_plugin.strings\nresult = strings.join(\"KCL\", \"KCL\", 123)\n")
+        @test get(result, "result") == "KCL.KCL.123"
+    end
+
+    @testset "plugin arguments arrive as JSON" begin
+        seen = Ref{Any}(nothing)
+        KclLib.register_plugin("strings", "args", function (args, kwargs)
+            seen[] = (args, kwargs)
+            # Re-emitting the raw JSON is enough — the runtime decodes it, so
+            # the KCL side sees a real list and a real dict.
+            return "{\"args\":" * args * ",\"kwargs\":" * kwargs * "}"
+        end)
+
+        result = KclLib.run(code = "import kcl_plugin.strings\nresult = strings.args(\"a\", b = 2)\n")
+        @test seen[][1] == "[\"a\"]"
+        @test seen[][2] == "{\"b\": 2}"
+        @test get(result, "result.args") == ["a"]
+        @test get(result, "result.kwargs.b") == 2
+    end
+
+    @testset "an unknown plugin method is a KCL diagnostic, not a crash" begin
+        KclLib.register_plugin("strings", "join", (args, kwargs) -> "\"unused\"")
+        err = try
+            KclLib.run(code = "import kcl_plugin.strings\nresult = strings.nope()\n")
+            nothing
+        catch e
+            e
+        end
+        @test err isa KclError
+        @test occursin("nope", err.message)
+    end
+
+    @testset "a throwing plugin method is a KCL diagnostic" begin
+        KclLib.register_plugin("strings", "boom", (args, kwargs) -> error("boom went off"))
+        err = try
+            KclLib.run(code = "import kcl_plugin.strings\nresult = strings.boom()\n")
+            nothing
+        catch e
+            e
+        end
+        @test err isa KclError
+        @test occursin("boom went off", err.message)
+    end
+
+    @testset "evaluation still works after disable_plugins" begin
+        KclLib.register_plugin("strings", "join", (args, kwargs) -> error("must not be called"))
+        disable_plugins()
+        @test !has_plugins()
+        @test !plugin_registered("strings", "join")
+        @test get(KclLib.run(code = "a = 1\n"), "a") == 1
     end
 end

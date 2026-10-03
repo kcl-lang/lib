@@ -158,7 +158,16 @@ function _symbol()::Ptr{Cvoid}
     return _call_native_sym[]
 end
 
+include("plugin.jl")
+
 function call_native(name::Vector{UInt8}, args::Vector{UInt8})::Vector{UInt8}
+    # A bound plugin agent can only travel with a service handle, so once one
+    # is registered every call routes through it. `plugin_call` returns
+    # `nothing` while nothing is bound, which keeps the stateless path intact
+    # for programs that do not use plugins.
+    routed = plugin_call(name, args)
+    routed === nothing || return routed
+
     buf = Vector{UInt8}(undef, CALL_BUFFER_SIZE)
     written = ccall(_symbol(), UInt,
                     (Ptr{UInt8}, UInt, Ptr{UInt8}, UInt, Ptr{UInt8}),
@@ -169,6 +178,14 @@ function call_native(name::Vector{UInt8}, args::Vector{UInt8})::Vector{UInt8}
 end
 
 end # module LibKcl
+
+# The plugin registry lives inside `LibKcl` next to the FFI declarations it
+# depends on; these are the names callers use.
+const register_plugin = LibKcl.register_plugin
+const plugin_registered = LibKcl.plugin_registered
+const disable_plugins = LibKcl.disable_plugins
+const has_plugins = LibKcl.has_plugins
+const PluginMethod = LibKcl.PluginMethod
 
 # ---------------------------------------------------------------------------
 # Universal dispatcher escape hatch
@@ -372,6 +389,29 @@ Run the KCL unit tests of the given packages. Equivalent to
 `call("KclService.Test", bytes)`.
 """
 test(args::TestArgs) = _rpc("KclService.Test", args, TestResult)
+
+"""
+    format_test_report(args::FormatTestReportArgs) -> FormatTestReportResult
+
+Format a test result into a human-readable report. Equivalent to
+`call("KclService.FormatTestReport", bytes)`.
+
+The report is byte-identical to the kcl-go `PrettyReporter` format and is
+deterministic for a given result. Every line, including the last one, ends
+with `\\n`:
+
+- One line per case in result order: `{name}: {STATUS} ({duration_ms}ms)` where
+  STATUS is `PASS` or `FAIL` and the duration is the case duration in
+  microseconds truncated to whole milliseconds (integer division, so 1500µs
+  renders as `1ms`). A case with a non-empty log message gets the log on the
+  next line; otherwise a failed case appends its error string as-is.
+- A separator line of exactly 80 `-` characters.
+- Only for non-zero counts, in this order: `PASS: {p}/{total}`,
+  `FAIL: {f}/{total}`, `SKIPPED: {s}/{total}`.
+- An empty result (no cases, no coverage) renders exactly `no test files`.
+"""
+format_test_report(args::FormatTestReportArgs) =
+    _rpc("KclService.FormatTestReport", args, FormatTestReportResult)
 
 """
     update_dependencies(args::UpdateDependenciesArgs) -> UpdateDependenciesResult
@@ -801,7 +841,9 @@ export call, KclError,
     list_variables, exec_program, override_file, get_schema_type_mapping,
     get_schema_type_mapping_under_path, format_code, format_path, lint_path,
     validate_code, load_settings_files, rename, rename_code, test,
-    update_dependencies, list_method,
+    format_test_report, update_dependencies, list_method,
+    register_plugin, plugin_registered, disable_plugins, has_plugins,
+    PluginMethod,
     KCLResult, yaml_string, json_string, to_dict
 
 # NB: the `run`/`run_files`/`must_run` facade entry points are intentionally

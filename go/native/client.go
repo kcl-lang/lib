@@ -147,6 +147,10 @@ func (c *NativeServiceClient) Test(in *api.TestArgs) (*api.TestResult, error) {
 	return cApiCall[*api.TestArgs, *api.TestResult](c, "KclService.Test", in)
 }
 
+func (c *NativeServiceClient) FormatTestReport(in *api.FormatTestReportArgs) (*api.FormatTestReportResult, error) {
+	return cApiCall[*api.FormatTestReportArgs, *api.FormatTestReportResult](c, "KclService.FormatTestReport", in)
+}
+
 func (c *NativeServiceClient) UpdateDependencies(in *api.UpdateDependenciesArgs) (*api.UpdateDependenciesResult, error) {
 	return cApiCall[*api.UpdateDependenciesArgs, *api.UpdateDependenciesResult](c, "KclService.UpdateDependencies", in)
 }

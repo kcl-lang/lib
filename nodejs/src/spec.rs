@@ -678,6 +678,42 @@ impl TestResult {
                 .collect(),
         }
     }
+
+    /// The `kcl_api` message this mirrors, for the RPCs that take a test
+    /// result back as a *request* — `KclService.FormatTestReport` is the one
+    /// today. `coverage` is not carried across: the napi `TestResult` has no
+    /// such field to carry it in, so a result that went through JavaScript is
+    /// a per-case result and nothing more.
+    pub fn to_wire(&self) -> kcl_api::TestResult {
+        kcl_api::TestResult {
+            info: self
+                .info
+                .iter()
+                .map(|r| kcl_api::TestCaseInfo {
+                    name: r.name.clone(),
+                    error: r.error.clone(),
+                    duration: r.duration as u64,
+                    log_message: r.log_message.clone(),
+                    ..Default::default()
+                })
+                .collect(),
+            coverage: None,
+        }
+    }
+}
+
+/// Message for format test report request arguments.
+#[napi(object)]
+pub struct FormatTestReportArgs {
+    /// The test result to format, as returned by the `test` API.
+    pub result: TestResult,
+}
+
+/// Message for format test report response.
+#[napi(object)]
+pub struct FormatTestReportResult {
+    /// The pretty-printed report.
+    pub report: String,
 }
 
 /// Message representing information about a single test case.

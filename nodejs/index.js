@@ -325,6 +325,7 @@ const {
   PingArgs,
   ping,
   listMethod,
+  formatTestReport,
 } = nativeBinding
 
 module.exports.registerPlugin = registerPlugin
@@ -367,3 +368,4 @@ module.exports.getVersion = getVersion
 module.exports.PingArgs = PingArgs
 module.exports.ping = ping
 module.exports.listMethod = listMethod
+module.exports.formatTestReport = formatTestReport

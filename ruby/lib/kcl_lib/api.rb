@@ -176,6 +176,25 @@ module KclLib
       call("KclService.Test", args)
     end
 
+    # Format a test result into a human-readable report.
+    #
+    # The report is byte-identical to the kcl-go `PrettyReporter` format and
+    # is deterministic for a given result. Every line, including the last
+    # one, ends with "\n":
+    #
+    # - One line per case in result order: `{name}: {STATUS} ({duration_ms}ms)`
+    #   where STATUS is PASS or FAIL and the duration is the case duration
+    #   in microseconds truncated to whole milliseconds, so 1500us renders as
+    #   `1ms`. A case with a non-empty log message gets the log on the next
+    #   line; otherwise a failed case appends its error string as-is.
+    # - A separator line of exactly 80 `-` characters.
+    # - Only for non-zero counts, in this order: `PASS: {p}/{total}`,
+    #   `FAIL: {f}/{total}`, `SKIPPED: {s}/{total}`.
+    # - An empty result (no cases, no coverage) renders `no test files`.
+    def format_test_report(args)
+      call("KclService.FormatTestReport", args)
+    end
+
     # Download and update dependencies defined in the `kcl.mod` file and
     # return the external package name and location list.
     def update_dependencies(args)
@@ -226,6 +245,7 @@ module KclLib
         "Rename" => Com::Kcl::Api::RenameArgs,
         "RenameCode" => Com::Kcl::Api::RenameCodeArgs,
         "Test" => Com::Kcl::Api::TestArgs,
+        "FormatTestReport" => Com::Kcl::Api::FormatTestReportArgs,
         "UpdateDependencies" => Com::Kcl::Api::UpdateDependenciesArgs,
         "GetVersion" => Com::Kcl::Api::GetVersionArgs,
       }
@@ -256,6 +276,7 @@ module KclLib
         "Rename" => Com::Kcl::Api::RenameResult,
         "RenameCode" => Com::Kcl::Api::RenameCodeResult,
         "Test" => Com::Kcl::Api::TestResult,
+        "FormatTestReport" => Com::Kcl::Api::FormatTestReportResult,
         "UpdateDependencies" => Com::Kcl::Api::UpdateDependenciesResult,
         "GetVersion" => Com::Kcl::Api::GetVersionResult,
         "ListMethod" => Com::Kcl::Api::ListMethodResult,
