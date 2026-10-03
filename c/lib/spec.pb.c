@@ -225,6 +225,13 @@ PB_BIND(TestCoverageReport_FilesEntry, TestCoverageReport_FilesEntry, AUTO)
 PB_BIND(CoverageSummary, CoverageSummary, AUTO)
 
 
+/* Hand-added, not generated: see the note in spec.pb.h. */
+PB_BIND(FormatTestReportArgs, FormatTestReportArgs, AUTO)
+
+
+PB_BIND(FormatTestReportResult, FormatTestReportResult, AUTO)
+
+
 PB_BIND(UpdateDependenciesArgs, UpdateDependenciesArgs, AUTO)
 
 
