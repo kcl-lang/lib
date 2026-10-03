@@ -51,6 +51,23 @@ jobs:
       - name: Check format
         run: pnpm exec prettier --check .
 
+      # The AST loaders are the only hand-written, hand-published AST in this
+      # repo, and there are three descriptions of them: src/ast/index.d.mts,
+      # the JSDoc in src/ast/*.mjs, and the code itself. `prettier` and `ava`
+      # cover none of the pairs. This is the JSDoc-vs-code leg — without it a
+      # renamed field in a loader's returned literal is invisible, because the
+      # `@property` line above it still says the old name and
+      # hack/check_ast_decl_drift.rb compares the declaration against the JSDoc
+      # rather than against the code. The flags are passed on the command line
+      # rather than through tsconfig.json because the repo's tsconfig is shared
+      # with the napi build and includes `.` with the default extensions, which
+      # does not reach src/ast/*.mjs at all.
+      - name: Typecheck the AST JSDoc
+        run: >-
+          pnpm exec tsc --noEmit --allowJs --checkJs --strict
+          --module node16 --moduleResolution node16 --target es2022
+          src/ast/*.mjs
+
       - name: Check diff
         run: git diff --exit-code
 

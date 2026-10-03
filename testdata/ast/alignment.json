@@ -1,0 +1,6267 @@
+{
+  "filename": "testdata/ast/alignment.k",
+  "doc": null,
+  "body": [
+    {
+      "node": {
+        "type": "Import",
+        "path": {
+          "node": "data.cloud",
+          "filename": "testdata/ast/alignment.k",
+          "line": 16,
+          "column": 7,
+          "end_line": 16,
+          "end_column": 17
+        },
+        "rawpath": "data.cloud",
+        "name": "cloud",
+        "asname": null,
+        "pkg_name": "__main__"
+      },
+      "filename": "testdata/ast/alignment.k",
+      "line": 16,
+      "column": 0,
+      "end_line": 16,
+      "end_column": 17
+    },
+    {
+      "node": {
+        "type": "Import",
+        "path": {
+          "node": "foo.bar",
+          "filename": "testdata/ast/alignment.k",
+          "line": 17,
+          "column": 7,
+          "end_line": 17,
+          "end_column": 14
+        },
+        "rawpath": "foo.bar",
+        "name": "fb",
+        "asname": {
+          "node": "fb",
+          "filename": "testdata/ast/alignment.k",
+          "line": 17,
+          "column": 18,
+          "end_line": 17,
+          "end_column": 20
+        },
+        "pkg_name": "__main__"
+      },
+      "filename": "testdata/ast/alignment.k",
+      "line": 17,
+      "column": 0,
+      "end_line": 17,
+      "end_column": 20
+    },
+    {
+      "node": {
+        "type": "TypeAlias",
+        "type_name": {
+          "node": {
+            "names": [
+              {
+                "node": "TAny",
+                "filename": "testdata/ast/alignment.k",
+                "line": 20,
+                "column": 5,
+                "end_line": 20,
+                "end_column": 9
+              }
+            ],
+            "pkgpath": "",
+            "ctx": "Load"
+          },
+          "filename": "testdata/ast/alignment.k",
+          "line": 20,
+          "column": 5,
+          "end_line": 20,
+          "end_column": 9
+        },
+        "type_value": {
+          "node": "any",
+          "filename": "testdata/ast/alignment.k",
+          "line": 20,
+          "column": 12,
+          "end_line": 20,
+          "end_column": 15
+        },
+        "ty": {
+          "node": {
+            "type": "Any"
+          },
+          "filename": "testdata/ast/alignment.k",
+          "line": 20,
+          "column": 12,
+          "end_line": 20,
+          "end_column": 15
+        }
+      },
+      "filename": "testdata/ast/alignment.k",
+      "line": 20,
+      "column": 5,
+      "end_line": 20,
+      "end_column": 15
+    },
+    {
+      "node": {
+        "type": "TypeAlias",
+        "type_name": {
+          "node": {
+            "names": [
+              {
+                "node": "TBasic",
+                "filename": "testdata/ast/alignment.k",
+                "line": 21,
+                "column": 5,
+                "end_line": 21,
+                "end_column": 11
+              }
+            ],
+            "pkgpath": "",
+            "ctx": "Load"
+          },
+          "filename": "testdata/ast/alignment.k",
+          "line": 21,
+          "column": 5,
+          "end_line": 21,
+          "end_column": 11
+        },
+        "type_value": {
+          "node": "str",
+          "filename": "testdata/ast/alignment.k",
+          "line": 21,
+          "column": 14,
+          "end_line": 21,
+          "end_column": 17
+        },
+        "ty": {
+          "node": {
+            "type": "Basic",
+            "value": "Str"
+          },
+          "filename": "testdata/ast/alignment.k",
+          "line": 21,
+          "column": 14,
+          "end_line": 21,
+          "end_column": 17
+        }
+      },
+      "filename": "testdata/ast/alignment.k",
+      "line": 21,
+      "column": 5,
+      "end_line": 21,
+      "end_column": 17
+    },
+    {
+      "node": {
+        "type": "TypeAlias",
+        "type_name": {
+          "node": {
+            "names": [
+              {
+                "node": "TList",
+                "filename": "testdata/ast/alignment.k",
+                "line": 22,
+                "column": 5,
+                "end_line": 22,
+                "end_column": 10
+              }
+            ],
+            "pkgpath": "",
+            "ctx": "Load"
+          },
+          "filename": "testdata/ast/alignment.k",
+          "line": 22,
+          "column": 5,
+          "end_line": 22,
+          "end_column": 10
+        },
+        "type_value": {
+          "node": "[int]",
+          "filename": "testdata/ast/alignment.k",
+          "line": 22,
+          "column": 13,
+          "end_line": 22,
+          "end_column": 18
+        },
+        "ty": {
+          "node": {
+            "type": "List",
+            "value": {
+              "inner_type": {
+                "node": {
+                  "type": "Basic",
+                  "value": "Int"
+                },
+                "filename": "testdata/ast/alignment.k",
+                "line": 22,
+                "column": 14,
+                "end_line": 22,
+                "end_column": 17
+              }
+            }
+          },
+          "filename": "testdata/ast/alignment.k",
+          "line": 22,
+          "column": 13,
+          "end_line": 22,
+          "end_column": 18
+        }
+      },
+      "filename": "testdata/ast/alignment.k",
+      "line": 22,
+      "column": 5,
+      "end_line": 22,
+      "end_column": 18
+    },
+    {
+      "node": {
+        "type": "TypeAlias",
+        "type_name": {
+          "node": {
+            "names": [
+              {
+                "node": "TDict",
+                "filename": "testdata/ast/alignment.k",
+                "line": 23,
+                "column": 5,
+                "end_line": 23,
+                "end_column": 10
+              }
+            ],
+            "pkgpath": "",
+            "ctx": "Load"
+          },
+          "filename": "testdata/ast/alignment.k",
+          "line": 23,
+          "column": 5,
+          "end_line": 23,
+          "end_column": 10
+        },
+        "type_value": {
+          "node": "{str:int}",
+          "filename": "testdata/ast/alignment.k",
+          "line": 23,
+          "column": 13,
+          "end_line": 23,
+          "end_column": 23
+        },
+        "ty": {
+          "node": {
+            "type": "Dict",
+            "value": {
+              "key_type": {
+                "node": {
+                  "type": "Basic",
+                  "value": "Str"
+                },
+                "filename": "testdata/ast/alignment.k",
+                "line": 23,
+                "column": 14,
+                "end_line": 23,
+                "end_column": 17
+              },
+              "value_type": {
+                "node": {
+                  "type": "Basic",
+                  "value": "Int"
+                },
+                "filename": "testdata/ast/alignment.k",
+                "line": 23,
+                "column": 19,
+                "end_line": 23,
+                "end_column": 22
+              }
+            }
+          },
+          "filename": "testdata/ast/alignment.k",
+          "line": 23,
+          "column": 13,
+          "end_line": 23,
+          "end_column": 23
+        }
+      },
+      "filename": "testdata/ast/alignment.k",
+      "line": 23,
+      "column": 5,
+      "end_line": 23,
+      "end_column": 23
+    },
+    {
+      "node": {
+        "type": "TypeAlias",
+        "type_name": {
+          "node": {
+            "names": [
+              {
+                "node": "TUnion",
+                "filename": "testdata/ast/alignment.k",
+                "line": 24,
+                "column": 5,
+                "end_line": 24,
+                "end_column": 11
+              }
+            ],
+            "pkgpath": "",
+            "ctx": "Load"
+          },
+          "filename": "testdata/ast/alignment.k",
+          "line": 24,
+          "column": 5,
+          "end_line": 24,
+          "end_column": 11
+        },
+        "type_value": {
+          "node": "int | str",
+          "filename": "testdata/ast/alignment.k",
+          "line": 24,
+          "column": 14,
+          "end_line": 24,
+          "end_column": 23
+        },
+        "ty": {
+          "node": {
+            "type": "Union",
+            "value": {
+              "type_elements": [
+                {
+                  "node": {
+                    "type": "Basic",
+                    "value": "Int"
+                  },
+                  "filename": "testdata/ast/alignment.k",
+                  "line": 24,
+                  "column": 14,
+                  "end_line": 24,
+                  "end_column": 17
+                },
+                {
+                  "node": {
+                    "type": "Basic",
+                    "value": "Str"
+                  },
+                  "filename": "testdata/ast/alignment.k",
+                  "line": 24,
+                  "column": 20,
+                  "end_line": 24,
+                  "end_column": 23
+                }
+              ]
+            }
+          },
+          "filename": "testdata/ast/alignment.k",
+          "line": 24,
+          "column": 14,
+          "end_line": 24,
+          "end_column": 23
+        }
+      },
+      "filename": "testdata/ast/alignment.k",
+      "line": 24,
+      "column": 5,
+      "end_line": 24,
+      "end_column": 23
+    },
+    {
+      "node": {
+        "type": "TypeAlias",
+        "type_name": {
+          "node": {
+            "names": [
+              {
+                "node": "TFunc",
+                "filename": "testdata/ast/alignment.k",
+                "line": 25,
+                "column": 5,
+                "end_line": 25,
+                "end_column": 10
+              }
+            ],
+            "pkgpath": "",
+            "ctx": "Load"
+          },
+          "filename": "testdata/ast/alignment.k",
+          "line": 25,
+          "column": 5,
+          "end_line": 25,
+          "end_column": 10
+        },
+        "type_value": {
+          "node": "(int, str) -> bool",
+          "filename": "testdata/ast/alignment.k",
+          "line": 25,
+          "column": 13,
+          "end_line": 25,
+          "end_column": 31
+        },
+        "ty": {
+          "node": {
+            "type": "Function",
+            "value": {
+              "params_ty": [
+                {
+                  "node": {
+                    "type": "Basic",
+                    "value": "Int"
+                  },
+                  "filename": "testdata/ast/alignment.k",
+                  "line": 25,
+                  "column": 14,
+                  "end_line": 25,
+                  "end_column": 17
+                },
+                {
+                  "node": {
+                    "type": "Basic",
+                    "value": "Str"
+                  },
+                  "filename": "testdata/ast/alignment.k",
+                  "line": 25,
+                  "column": 19,
+                  "end_line": 25,
+                  "end_column": 22
+                }
+              ],
+              "ret_ty": {
+                "node": {
+                  "type": "Basic",
+                  "value": "Bool"
+                },
+                "filename": "testdata/ast/alignment.k",
+                "line": 25,
+                "column": 27,
+                "end_line": 25,
+                "end_column": 31
+              }
+            }
+          },
+          "filename": "testdata/ast/alignment.k",
+          "line": 25,
+          "column": 13,
+          "end_line": 25,
+          "end_column": 31
+        }
+      },
+      "filename": "testdata/ast/alignment.k",
+      "line": 25,
+      "column": 5,
+      "end_line": 25,
+      "end_column": 31
+    },
+    {
+      "node": {
+        "type": "TypeAlias",
+        "type_name": {
+          "node": {
+            "names": [
+              {
+                "node": "TNamed",
+                "filename": "testdata/ast/alignment.k",
+                "line": 26,
+                "column": 5,
+                "end_line": 26,
+                "end_column": 11
+              }
+            ],
+            "pkgpath": "",
+            "ctx": "Load"
+          },
+          "filename": "testdata/ast/alignment.k",
+          "line": 26,
+          "column": 5,
+          "end_line": 26,
+          "end_column": 11
+        },
+        "type_value": {
+          "node": "Cloud",
+          "filename": "testdata/ast/alignment.k",
+          "line": 26,
+          "column": 14,
+          "end_line": 26,
+          "end_column": 19
+        },
+        "ty": {
+          "node": {
+            "type": "Named",
+            "value": {
+              "names": [
+                {
+                  "node": "Cloud",
+                  "filename": "testdata/ast/alignment.k",
+                  "line": 26,
+                  "column": 14,
+                  "end_line": 26,
+                  "end_column": 19
+                }
+              ],
+              "pkgpath": "",
+              "ctx": "Load"
+            }
+          },
+          "filename": "testdata/ast/alignment.k",
+          "line": 26,
+          "column": 14,
+          "end_line": 26,
+          "end_column": 19
+        }
+      },
+      "filename": "testdata/ast/alignment.k",
+      "line": 26,
+      "column": 5,
+      "end_line": 26,
+      "end_column": 19
+    },
+    {
+      "node": {
+        "type": "TypeAlias",
+        "type_name": {
+          "node": {
+            "names": [
+              {
+                "node": "TLitInt",
+                "filename": "testdata/ast/alignment.k",
+                "line": 27,
+                "column": 5,
+                "end_line": 27,
+                "end_column": 12
+              }
+            ],
+            "pkgpath": "",
+            "ctx": "Load"
+          },
+          "filename": "testdata/ast/alignment.k",
+          "line": 27,
+          "column": 5,
+          "end_line": 27,
+          "end_column": 12
+        },
+        "type_value": {
+          "node": "1",
+          "filename": "testdata/ast/alignment.k",
+          "line": 27,
+          "column": 15,
+          "end_line": 27,
+          "end_column": 16
+        },
+        "ty": {
+          "node": {
+            "type": "Literal",
+            "value": {
+              "type": "Int",
+              "value": {
+                "value": 1,
+                "suffix": null
+              }
+            }
+          },
+          "filename": "testdata/ast/alignment.k",
+          "line": 27,
+          "column": 15,
+          "end_line": 27,
+          "end_column": 16
+        }
+      },
+      "filename": "testdata/ast/alignment.k",
+      "line": 27,
+      "column": 5,
+      "end_line": 27,
+      "end_column": 16
+    },
+    {
+      "node": {
+        "type": "TypeAlias",
+        "type_name": {
+          "node": {
+            "names": [
+              {
+                "node": "TLitStr",
+                "filename": "testdata/ast/alignment.k",
+                "line": 28,
+                "column": 5,
+                "end_line": 28,
+                "end_column": 12
+              }
+            ],
+            "pkgpath": "",
+            "ctx": "Load"
+          },
+          "filename": "testdata/ast/alignment.k",
+          "line": 28,
+          "column": 5,
+          "end_line": 28,
+          "end_column": 12
+        },
+        "type_value": {
+          "node": "\"s\"",
+          "filename": "testdata/ast/alignment.k",
+          "line": 28,
+          "column": 15,
+          "end_line": 28,
+          "end_column": 18
+        },
+        "ty": {
+          "node": {
+            "type": "Literal",
+            "value": {
+              "type": "Str",
+              "value": "s"
+            }
+          },
+          "filename": "testdata/ast/alignment.k",
+          "line": 28,
+          "column": 15,
+          "end_line": 28,
+          "end_column": 18
+        }
+      },
+      "filename": "testdata/ast/alignment.k",
+      "line": 28,
+      "column": 5,
+      "end_line": 28,
+      "end_column": 18
+    },
+    {
+      "node": {
+        "type": "TypeAlias",
+        "type_name": {
+          "node": {
+            "names": [
+              {
+                "node": "TLitBool",
+                "filename": "testdata/ast/alignment.k",
+                "line": 29,
+                "column": 5,
+                "end_line": 29,
+                "end_column": 13
+              }
+            ],
+            "pkgpath": "",
+            "ctx": "Load"
+          },
+          "filename": "testdata/ast/alignment.k",
+          "line": 29,
+          "column": 5,
+          "end_line": 29,
+          "end_column": 13
+        },
+        "type_value": {
+          "node": "True",
+          "filename": "testdata/ast/alignment.k",
+          "line": 29,
+          "column": 16,
+          "end_line": 29,
+          "end_column": 20
+        },
+        "ty": {
+          "node": {
+            "type": "Literal",
+            "value": {
+              "type": "Bool",
+              "value": true
+            }
+          },
+          "filename": "testdata/ast/alignment.k",
+          "line": 29,
+          "column": 16,
+          "end_line": 29,
+          "end_column": 20
+        }
+      },
+      "filename": "testdata/ast/alignment.k",
+      "line": 29,
+      "column": 5,
+      "end_line": 29,
+      "end_column": 20
+    },
+    {
+      "node": {
+        "type": "TypeAlias",
+        "type_name": {
+          "node": {
+            "names": [
+              {
+                "node": "TLitFloat",
+                "filename": "testdata/ast/alignment.k",
+                "line": 30,
+                "column": 5,
+                "end_line": 30,
+                "end_column": 14
+              }
+            ],
+            "pkgpath": "",
+            "ctx": "Load"
+          },
+          "filename": "testdata/ast/alignment.k",
+          "line": 30,
+          "column": 5,
+          "end_line": 30,
+          "end_column": 14
+        },
+        "type_value": {
+          "node": "1.5",
+          "filename": "testdata/ast/alignment.k",
+          "line": 30,
+          "column": 17,
+          "end_line": 30,
+          "end_column": 20
+        },
+        "ty": {
+          "node": {
+            "type": "Literal",
+            "value": {
+              "type": "Float",
+              "value": 1.5
+            }
+          },
+          "filename": "testdata/ast/alignment.k",
+          "line": 30,
+          "column": 17,
+          "end_line": 30,
+          "end_column": 20
+        }
+      },
+      "filename": "testdata/ast/alignment.k",
+      "line": 30,
+      "column": 5,
+      "end_line": 30,
+      "end_column": 20
+    },
+    {
+      "node": {
+        "type": "Schema",
+        "doc": {
+          "node": "\"\"\"A person.\"\"\"",
+          "filename": "testdata/ast/alignment.k",
+          "line": 33,
+          "column": 4,
+          "end_line": 33,
+          "end_column": 19
+        },
+        "name": {
+          "node": "Person",
+          "filename": "testdata/ast/alignment.k",
+          "line": 32,
+          "column": 7,
+          "end_line": 32,
+          "end_column": 13
+        },
+        "parent_name": null,
+        "for_host_name": null,
+        "is_mixin": false,
+        "is_protocol": false,
+        "args": null,
+        "mixins": [],
+        "body": [
+          {
+            "node": {
+              "type": "SchemaAttr",
+              "doc": "",
+              "name": {
+                "node": "name",
+                "filename": "testdata/ast/alignment.k",
+                "line": 37,
+                "column": 4,
+                "end_line": 37,
+                "end_column": 8
+              },
+              "op": "Assign",
+              "value": {
+                "node": {
+                  "type": "StringLit",
+                  "is_long_string": false,
+                  "raw_value": "\"anonymous\"",
+                  "value": "anonymous"
+                },
+                "filename": "testdata/ast/alignment.k",
+                "line": 37,
+                "column": 16,
+                "end_line": 37,
+                "end_column": 27
+              },
+              "is_optional": false,
+              "decorators": [
+                {
+                  "node": {
+                    "func": {
+                      "node": {
+                        "type": "Identifier",
+                        "names": [
+                          {
+                            "node": "deprecated",
+                            "filename": "testdata/ast/alignment.k",
+                            "line": 35,
+                            "column": 5,
+                            "end_line": 35,
+                            "end_column": 15
+                          }
+                        ],
+                        "pkgpath": "",
+                        "ctx": "Load"
+                      },
+                      "filename": "testdata/ast/alignment.k",
+                      "line": 35,
+                      "column": 5,
+                      "end_line": 35,
+                      "end_column": 15
+                    },
+                    "args": [],
+                    "keywords": []
+                  },
+                  "filename": "testdata/ast/alignment.k",
+                  "line": 35,
+                  "column": 5,
+                  "end_line": 35,
+                  "end_column": 15
+                },
+                {
+                  "node": {
+                    "func": {
+                      "node": {
+                        "type": "Identifier",
+                        "names": [
+                          {
+                            "node": "info",
+                            "filename": "testdata/ast/alignment.k",
+                            "line": 36,
+                            "column": 5,
+                            "end_line": 36,
+                            "end_column": 9
+                          }
+                        ],
+                        "pkgpath": "",
+                        "ctx": "Load"
+                      },
+                      "filename": "testdata/ast/alignment.k",
+                      "line": 36,
+                      "column": 5,
+                      "end_line": 36,
+                      "end_column": 9
+                    },
+                    "args": [],
+                    "keywords": [
+                      {
+                        "node": {
+                          "arg": {
+                            "node": {
+                              "names": [
+                                {
+                                  "node": "kwargs",
+                                  "filename": "testdata/ast/alignment.k",
+                                  "line": 36,
+                                  "column": 10,
+                                  "end_line": 36,
+                                  "end_column": 16
+                                }
+                              ],
+                              "pkgpath": "",
+                              "ctx": "Load"
+                            },
+                            "filename": "testdata/ast/alignment.k",
+                            "line": 36,
+                            "column": 10,
+                            "end_line": 36,
+                            "end_column": 16
+                          },
+                          "value": {
+                            "node": {
+                              "type": "Config",
+                              "items": [
+                                {
+                                  "node": {
+                                    "key": {
+                                      "node": {
+                                        "type": "StringLit",
+                                        "is_long_string": false,
+                                        "raw_value": "\"tag\"",
+                                        "value": "tag"
+                                      },
+                                      "filename": "testdata/ast/alignment.k",
+                                      "line": 36,
+                                      "column": 20,
+                                      "end_line": 36,
+                                      "end_column": 25
+                                    },
+                                    "value": {
+                                      "node": {
+                                        "type": "StringLit",
+                                        "is_long_string": false,
+                                        "raw_value": "\"v\"",
+                                        "value": "v"
+                                      },
+                                      "filename": "testdata/ast/alignment.k",
+                                      "line": 36,
+                                      "column": 27,
+                                      "end_line": 36,
+                                      "end_column": 30
+                                    },
+                                    "operation": "Union"
+                                  },
+                                  "filename": "testdata/ast/alignment.k",
+                                  "line": 36,
+                                  "column": 20,
+                                  "end_line": 36,
+                                  "end_column": 30
+                                }
+                              ]
+                            },
+                            "filename": "testdata/ast/alignment.k",
+                            "line": 36,
+                            "column": 19,
+                            "end_line": 36,
+                            "end_column": 31
+                          }
+                        },
+                        "filename": "testdata/ast/alignment.k",
+                        "line": 36,
+                        "column": 10,
+                        "end_line": 36,
+                        "end_column": 31
+                      }
+                    ]
+                  },
+                  "filename": "testdata/ast/alignment.k",
+                  "line": 36,
+                  "column": 5,
+                  "end_line": 36,
+                  "end_column": 32
+                }
+              ],
+              "ty": {
+                "node": {
+                  "type": "Basic",
+                  "value": "Str"
+                },
+                "filename": "testdata/ast/alignment.k",
+                "line": 37,
+                "column": 10,
+                "end_line": 37,
+                "end_column": 13
+              }
+            },
+            "filename": "testdata/ast/alignment.k",
+            "line": 35,
+            "column": 4,
+            "end_line": 39,
+            "end_column": 0
+          },
+          {
+            "node": {
+              "type": "SchemaAttr",
+              "doc": "",
+              "name": {
+                "node": "age",
+                "filename": "testdata/ast/alignment.k",
+                "line": 39,
+                "column": 4,
+                "end_line": 39,
+                "end_column": 7
+              },
+              "op": "Assign",
+              "value": {
+                "node": {
+                  "type": "NumberLit",
+                  "binary_suffix": null,
+                  "value": {
+                    "type": "Int",
+                    "value": 0
+                  }
+                },
+                "filename": "testdata/ast/alignment.k",
+                "line": 39,
+                "column": 16,
+                "end_line": 39,
+                "end_column": 17
+              },
+              "is_optional": true,
+              "decorators": [],
+              "ty": {
+                "node": {
+                  "type": "Basic",
+                  "value": "Int"
+                },
+                "filename": "testdata/ast/alignment.k",
+                "line": 39,
+                "column": 10,
+                "end_line": 39,
+                "end_column": 13
+              }
+            },
+            "filename": "testdata/ast/alignment.k",
+            "line": 39,
+            "column": 4,
+            "end_line": 41,
+            "end_column": 0
+          }
+        ],
+        "decorators": [],
+        "checks": [
+          {
+            "node": {
+              "test": {
+                "node": {
+                  "type": "Compare",
+                  "left": {
+                    "node": {
+                      "type": "Identifier",
+                      "names": [
+                        {
+                          "node": "age",
+                          "filename": "testdata/ast/alignment.k",
+                          "line": 42,
+                          "column": 8,
+                          "end_line": 42,
+                          "end_column": 11
+                        }
+                      ],
+                      "pkgpath": "",
+                      "ctx": "Load"
+                    },
+                    "filename": "testdata/ast/alignment.k",
+                    "line": 42,
+                    "column": 8,
+                    "end_line": 42,
+                    "end_column": 11
+                  },
+                  "ops": [
+                    "GtE"
+                  ],
+                  "comparators": [
+                    {
+                      "node": {
+                        "type": "NumberLit",
+                        "binary_suffix": null,
+                        "value": {
+                          "type": "Int",
+                          "value": 0
+                        }
+                      },
+                      "filename": "testdata/ast/alignment.k",
+                      "line": 42,
+                      "column": 15,
+                      "end_line": 42,
+                      "end_column": 16
+                    }
+                  ]
+                },
+                "filename": "testdata/ast/alignment.k",
+                "line": 42,
+                "column": 8,
+                "end_line": 42,
+                "end_column": 16
+              },
+              "if_cond": null,
+              "msg": {
+                "node": {
+                  "type": "StringLit",
+                  "is_long_string": false,
+                  "raw_value": "\"age must be non-negative\"",
+                  "value": "age must be non-negative"
+                },
+                "filename": "testdata/ast/alignment.k",
+                "line": 42,
+                "column": 18,
+                "end_line": 42,
+                "end_column": 44
+              }
+            },
+            "filename": "testdata/ast/alignment.k",
+            "line": 42,
+            "column": 8,
+            "end_line": 42,
+            "end_column": 44
+          },
+          {
+            "node": {
+              "test": {
+                "node": {
+                  "type": "Compare",
+                  "left": {
+                    "node": {
+                      "type": "Identifier",
+                      "names": [
+                        {
+                          "node": "age",
+                          "filename": "testdata/ast/alignment.k",
+                          "line": 43,
+                          "column": 8,
+                          "end_line": 43,
+                          "end_column": 11
+                        }
+                      ],
+                      "pkgpath": "",
+                      "ctx": "Load"
+                    },
+                    "filename": "testdata/ast/alignment.k",
+                    "line": 43,
+                    "column": 8,
+                    "end_line": 43,
+                    "end_column": 11
+                  },
+                  "ops": [
+                    "Lt"
+                  ],
+                  "comparators": [
+                    {
+                      "node": {
+                        "type": "NumberLit",
+                        "binary_suffix": null,
+                        "value": {
+                          "type": "Int",
+                          "value": 200
+                        }
+                      },
+                      "filename": "testdata/ast/alignment.k",
+                      "line": 43,
+                      "column": 14,
+                      "end_line": 43,
+                      "end_column": 17
+                    }
+                  ]
+                },
+                "filename": "testdata/ast/alignment.k",
+                "line": 43,
+                "column": 8,
+                "end_line": 43,
+                "end_column": 17
+              },
+              "if_cond": {
+                "node": {
+                  "type": "Identifier",
+                  "names": [
+                    {
+                      "node": "age",
+                      "filename": "testdata/ast/alignment.k",
+                      "line": 43,
+                      "column": 21,
+                      "end_line": 43,
+                      "end_column": 24
+                    }
+                  ],
+                  "pkgpath": "",
+                  "ctx": "Load"
+                },
+                "filename": "testdata/ast/alignment.k",
+                "line": 43,
+                "column": 21,
+                "end_line": 43,
+                "end_column": 24
+              },
+              "msg": {
+                "node": {
+                  "type": "StringLit",
+                  "is_long_string": false,
+                  "raw_value": "\"age must be a sane number\"",
+                  "value": "age must be a sane number"
+                },
+                "filename": "testdata/ast/alignment.k",
+                "line": 43,
+                "column": 26,
+                "end_line": 43,
+                "end_column": 53
+              }
+            },
+            "filename": "testdata/ast/alignment.k",
+            "line": 43,
+            "column": 8,
+            "end_line": 43,
+            "end_column": 53
+          }
+        ],
+        "index_signature": null
+      },
+      "filename": "testdata/ast/alignment.k",
+      "line": 32,
+      "column": 0,
+      "end_line": 48,
+      "end_column": 0
+    },
+    {
+      "node": {
+        "type": "Schema",
+        "doc": null,
+        "name": {
+          "node": "Bag",
+          "filename": "testdata/ast/alignment.k",
+          "line": 48,
+          "column": 7,
+          "end_line": 48,
+          "end_column": 10
+        },
+        "parent_name": null,
+        "for_host_name": null,
+        "is_mixin": false,
+        "is_protocol": false,
+        "args": null,
+        "mixins": [],
+        "body": [],
+        "decorators": [],
+        "checks": [],
+        "index_signature": {
+          "node": {
+            "key_name": {
+              "node": "k",
+              "filename": "testdata/ast/alignment.k",
+              "line": 49,
+              "column": 5,
+              "end_line": 49,
+              "end_column": 6
+            },
+            "value": {
+              "node": {
+                "type": "NumberLit",
+                "binary_suffix": null,
+                "value": {
+                  "type": "Int",
+                  "value": 0
+                }
+              },
+              "filename": "testdata/ast/alignment.k",
+              "line": 49,
+              "column": 20,
+              "end_line": 49,
+              "end_column": 21
+            },
+            "any_other": false,
+            "key_ty": {
+              "node": {
+                "type": "Basic",
+                "value": "Str"
+              },
+              "filename": "testdata/ast/alignment.k",
+              "line": 49,
+              "column": 8,
+              "end_line": 49,
+              "end_column": 11
+            },
+            "value_ty": {
+              "node": {
+                "type": "Basic",
+                "value": "Int"
+              },
+              "filename": "testdata/ast/alignment.k",
+              "line": 49,
+              "column": 14,
+              "end_line": 49,
+              "end_column": 17
+            }
+          },
+          "filename": "testdata/ast/alignment.k",
+          "line": 49,
+          "column": 4,
+          "end_line": 52,
+          "end_column": 0
+        }
+      },
+      "filename": "testdata/ast/alignment.k",
+      "line": 48,
+      "column": 0,
+      "end_line": 52,
+      "end_column": 0
+    },
+    {
+      "node": {
+        "type": "Assign",
+        "targets": [
+          {
+            "node": {
+              "name": {
+                "node": "x",
+                "filename": "testdata/ast/alignment.k",
+                "line": 52,
+                "column": 0,
+                "end_line": 52,
+                "end_column": 1
+              },
+              "paths": [],
+              "pkgpath": ""
+            },
+            "filename": "testdata/ast/alignment.k",
+            "line": 52,
+            "column": 0,
+            "end_line": 52,
+            "end_column": 1
+          }
+        ],
+        "value": {
+          "node": {
+            "type": "Schema",
+            "name": {
+              "node": {
+                "names": [
+                  {
+                    "node": "Person",
+                    "filename": "testdata/ast/alignment.k",
+                    "line": 52,
+                    "column": 4,
+                    "end_line": 52,
+                    "end_column": 10
+                  }
+                ],
+                "pkgpath": "",
+                "ctx": "Load"
+              },
+              "filename": "testdata/ast/alignment.k",
+              "line": 52,
+              "column": 4,
+              "end_line": 52,
+              "end_column": 10
+            },
+            "args": [],
+            "kwargs": [],
+            "config": {
+              "node": {
+                "type": "Config",
+                "items": [
+                  {
+                    "node": {
+                      "key": {
+                        "node": {
+                          "type": "Identifier",
+                          "names": [
+                            {
+                              "node": "name",
+                              "filename": "testdata/ast/alignment.k",
+                              "line": 52,
+                              "column": 12,
+                              "end_line": 52,
+                              "end_column": 16
+                            }
+                          ],
+                          "pkgpath": "",
+                          "ctx": "Load"
+                        },
+                        "filename": "testdata/ast/alignment.k",
+                        "line": 52,
+                        "column": 12,
+                        "end_line": 52,
+                        "end_column": 16
+                      },
+                      "value": {
+                        "node": {
+                          "type": "StringLit",
+                          "is_long_string": false,
+                          "raw_value": "\"Alice\"",
+                          "value": "Alice"
+                        },
+                        "filename": "testdata/ast/alignment.k",
+                        "line": 52,
+                        "column": 19,
+                        "end_line": 52,
+                        "end_column": 26
+                      },
+                      "operation": "Override"
+                    },
+                    "filename": "testdata/ast/alignment.k",
+                    "line": 52,
+                    "column": 12,
+                    "end_line": 52,
+                    "end_column": 26
+                  },
+                  {
+                    "node": {
+                      "key": {
+                        "node": {
+                          "type": "Identifier",
+                          "names": [
+                            {
+                              "node": "age",
+                              "filename": "testdata/ast/alignment.k",
+                              "line": 52,
+                              "column": 28,
+                              "end_line": 52,
+                              "end_column": 31
+                            }
+                          ],
+                          "pkgpath": "",
+                          "ctx": "Load"
+                        },
+                        "filename": "testdata/ast/alignment.k",
+                        "line": 52,
+                        "column": 28,
+                        "end_line": 52,
+                        "end_column": 31
+                      },
+                      "value": {
+                        "node": {
+                          "type": "NumberLit",
+                          "binary_suffix": null,
+                          "value": {
+                            "type": "Int",
+                            "value": 30
+                          }
+                        },
+                        "filename": "testdata/ast/alignment.k",
+                        "line": 52,
+                        "column": 34,
+                        "end_line": 52,
+                        "end_column": 36
+                      },
+                      "operation": "Override"
+                    },
+                    "filename": "testdata/ast/alignment.k",
+                    "line": 52,
+                    "column": 28,
+                    "end_line": 52,
+                    "end_column": 36
+                  }
+                ]
+              },
+              "filename": "testdata/ast/alignment.k",
+              "line": 52,
+              "column": 11,
+              "end_line": 52,
+              "end_column": 37
+            }
+          },
+          "filename": "testdata/ast/alignment.k",
+          "line": 52,
+          "column": 4,
+          "end_line": 52,
+          "end_column": 37
+        },
+        "ty": null
+      },
+      "filename": "testdata/ast/alignment.k",
+      "line": 52,
+      "column": 0,
+      "end_line": 52,
+      "end_column": 37
+    },
+    {
+      "node": {
+        "type": "Assign",
+        "targets": [
+          {
+            "node": {
+              "name": {
+                "node": "y",
+                "filename": "testdata/ast/alignment.k",
+                "line": 53,
+                "column": 0,
+                "end_line": 53,
+                "end_column": 1
+              },
+              "paths": [],
+              "pkgpath": ""
+            },
+            "filename": "testdata/ast/alignment.k",
+            "line": 53,
+            "column": 0,
+            "end_line": 53,
+            "end_column": 1
+          }
+        ],
+        "value": {
+          "node": {
+            "type": "Call",
+            "func": {
+              "node": {
+                "type": "Identifier",
+                "names": [
+                  {
+                    "node": "Person",
+                    "filename": "testdata/ast/alignment.k",
+                    "line": 53,
+                    "column": 4,
+                    "end_line": 53,
+                    "end_column": 10
+                  }
+                ],
+                "pkgpath": "",
+                "ctx": "Load"
+              },
+              "filename": "testdata/ast/alignment.k",
+              "line": 53,
+              "column": 4,
+              "end_line": 53,
+              "end_column": 10
+            },
+            "args": [
+              {
+                "node": {
+                  "type": "NumberLit",
+                  "binary_suffix": null,
+                  "value": {
+                    "type": "Int",
+                    "value": 1
+                  }
+                },
+                "filename": "testdata/ast/alignment.k",
+                "line": 53,
+                "column": 11,
+                "end_line": 53,
+                "end_column": 12
+              }
+            ],
+            "keywords": [
+              {
+                "node": {
+                  "arg": {
+                    "node": {
+                      "names": [
+                        {
+                          "node": "name",
+                          "filename": "testdata/ast/alignment.k",
+                          "line": 53,
+                          "column": 14,
+                          "end_line": 53,
+                          "end_column": 18
+                        }
+                      ],
+                      "pkgpath": "",
+                      "ctx": "Load"
+                    },
+                    "filename": "testdata/ast/alignment.k",
+                    "line": 53,
+                    "column": 14,
+                    "end_line": 53,
+                    "end_column": 18
+                  },
+                  "value": {
+                    "node": {
+                      "type": "StringLit",
+                      "is_long_string": false,
+                      "raw_value": "\"Bob\"",
+                      "value": "Bob"
+                    },
+                    "filename": "testdata/ast/alignment.k",
+                    "line": 53,
+                    "column": 21,
+                    "end_line": 53,
+                    "end_column": 26
+                  }
+                },
+                "filename": "testdata/ast/alignment.k",
+                "line": 53,
+                "column": 14,
+                "end_line": 53,
+                "end_column": 26
+              }
+            ]
+          },
+          "filename": "testdata/ast/alignment.k",
+          "line": 53,
+          "column": 4,
+          "end_line": 53,
+          "end_column": 27
+        },
+        "ty": null
+      },
+      "filename": "testdata/ast/alignment.k",
+      "line": 53,
+      "column": 0,
+      "end_line": 53,
+      "end_column": 27
+    },
+    {
+      "node": {
+        "type": "Assign",
+        "targets": [
+          {
+            "node": {
+              "name": {
+                "node": "z",
+                "filename": "testdata/ast/alignment.k",
+                "line": 54,
+                "column": 0,
+                "end_line": 54,
+                "end_column": 1
+              },
+              "paths": [],
+              "pkgpath": ""
+            },
+            "filename": "testdata/ast/alignment.k",
+            "line": 54,
+            "column": 0,
+            "end_line": 54,
+            "end_column": 1
+          }
+        ],
+        "value": {
+          "node": {
+            "type": "Identifier",
+            "names": [
+              {
+                "node": "fb",
+                "filename": "testdata/ast/alignment.k",
+                "line": 54,
+                "column": 4,
+                "end_line": 54,
+                "end_column": 6
+              }
+            ],
+            "pkgpath": "",
+            "ctx": "Load"
+          },
+          "filename": "testdata/ast/alignment.k",
+          "line": 54,
+          "column": 4,
+          "end_line": 54,
+          "end_column": 6
+        },
+        "ty": null
+      },
+      "filename": "testdata/ast/alignment.k",
+      "line": 54,
+      "column": 0,
+      "end_line": 54,
+      "end_column": 6
+    },
+    {
+      "node": {
+        "type": "Unification",
+        "target": {
+          "node": {
+            "names": [
+              {
+                "node": "u",
+                "filename": "testdata/ast/alignment.k",
+                "line": 55,
+                "column": 0,
+                "end_line": 55,
+                "end_column": 1
+              }
+            ],
+            "pkgpath": "",
+            "ctx": "Store"
+          },
+          "filename": "testdata/ast/alignment.k",
+          "line": 55,
+          "column": 0,
+          "end_line": 55,
+          "end_column": 1
+        },
+        "value": {
+          "node": {
+            "name": {
+              "node": {
+                "names": [
+                  {
+                    "node": "Person",
+                    "filename": "testdata/ast/alignment.k",
+                    "line": 55,
+                    "column": 3,
+                    "end_line": 55,
+                    "end_column": 9
+                  }
+                ],
+                "pkgpath": "",
+                "ctx": "Load"
+              },
+              "filename": "testdata/ast/alignment.k",
+              "line": 55,
+              "column": 3,
+              "end_line": 55,
+              "end_column": 9
+            },
+            "args": [],
+            "kwargs": [],
+            "config": {
+              "node": {
+                "type": "Config",
+                "items": [
+                  {
+                    "node": {
+                      "key": {
+                        "node": {
+                          "type": "Identifier",
+                          "names": [
+                            {
+                              "node": "name",
+                              "filename": "testdata/ast/alignment.k",
+                              "line": 55,
+                              "column": 11,
+                              "end_line": 55,
+                              "end_column": 15
+                            }
+                          ],
+                          "pkgpath": "",
+                          "ctx": "Load"
+                        },
+                        "filename": "testdata/ast/alignment.k",
+                        "line": 55,
+                        "column": 11,
+                        "end_line": 55,
+                        "end_column": 15
+                      },
+                      "value": {
+                        "node": {
+                          "type": "StringLit",
+                          "is_long_string": false,
+                          "raw_value": "\"Carol\"",
+                          "value": "Carol"
+                        },
+                        "filename": "testdata/ast/alignment.k",
+                        "line": 55,
+                        "column": 18,
+                        "end_line": 55,
+                        "end_column": 25
+                      },
+                      "operation": "Override"
+                    },
+                    "filename": "testdata/ast/alignment.k",
+                    "line": 55,
+                    "column": 11,
+                    "end_line": 55,
+                    "end_column": 25
+                  }
+                ]
+              },
+              "filename": "testdata/ast/alignment.k",
+              "line": 55,
+              "column": 10,
+              "end_line": 55,
+              "end_column": 26
+            }
+          },
+          "filename": "testdata/ast/alignment.k",
+          "line": 55,
+          "column": 0,
+          "end_line": 55,
+          "end_column": 26
+        }
+      },
+      "filename": "testdata/ast/alignment.k",
+      "line": 55,
+      "column": 0,
+      "end_line": 58,
+      "end_column": 0
+    },
+    {
+      "node": {
+        "type": "Rule",
+        "doc": null,
+        "name": {
+          "node": "R",
+          "filename": "testdata/ast/alignment.k",
+          "line": 58,
+          "column": 5,
+          "end_line": 58,
+          "end_column": 6
+        },
+        "parent_rules": [],
+        "decorators": [],
+        "checks": [
+          {
+            "node": {
+              "test": {
+                "node": {
+                  "type": "Compare",
+                  "left": {
+                    "node": {
+                      "type": "Identifier",
+                      "names": [
+                        {
+                          "node": "a",
+                          "filename": "testdata/ast/alignment.k",
+                          "line": 59,
+                          "column": 4,
+                          "end_line": 59,
+                          "end_column": 5
+                        }
+                      ],
+                      "pkgpath": "",
+                      "ctx": "Load"
+                    },
+                    "filename": "testdata/ast/alignment.k",
+                    "line": 59,
+                    "column": 4,
+                    "end_line": 59,
+                    "end_column": 5
+                  },
+                  "ops": [
+                    "Gt"
+                  ],
+                  "comparators": [
+                    {
+                      "node": {
+                        "type": "NumberLit",
+                        "binary_suffix": null,
+                        "value": {
+                          "type": "Int",
+                          "value": 0
+                        }
+                      },
+                      "filename": "testdata/ast/alignment.k",
+                      "line": 59,
+                      "column": 8,
+                      "end_line": 59,
+                      "end_column": 9
+                    }
+                  ]
+                },
+                "filename": "testdata/ast/alignment.k",
+                "line": 59,
+                "column": 4,
+                "end_line": 59,
+                "end_column": 9
+              },
+              "if_cond": null,
+              "msg": {
+                "node": {
+                  "type": "StringLit",
+                  "is_long_string": false,
+                  "raw_value": "\"a must be positive\"",
+                  "value": "a must be positive"
+                },
+                "filename": "testdata/ast/alignment.k",
+                "line": 59,
+                "column": 11,
+                "end_line": 59,
+                "end_column": 31
+              }
+            },
+            "filename": "testdata/ast/alignment.k",
+            "line": 59,
+            "column": 4,
+            "end_line": 59,
+            "end_column": 31
+          }
+        ],
+        "args": null,
+        "for_host_name": null
+      },
+      "filename": "testdata/ast/alignment.k",
+      "line": 58,
+      "column": 0,
+      "end_line": 62,
+      "end_column": 0
+    },
+    {
+      "node": {
+        "type": "Assign",
+        "targets": [
+          {
+            "node": {
+              "name": {
+                "node": "a",
+                "filename": "testdata/ast/alignment.k",
+                "line": 62,
+                "column": 0,
+                "end_line": 62,
+                "end_column": 1
+              },
+              "paths": [],
+              "pkgpath": ""
+            },
+            "filename": "testdata/ast/alignment.k",
+            "line": 62,
+            "column": 0,
+            "end_line": 62,
+            "end_column": 1
+          }
+        ],
+        "value": {
+          "node": {
+            "type": "NumberLit",
+            "binary_suffix": null,
+            "value": {
+              "type": "Int",
+              "value": 1
+            }
+          },
+          "filename": "testdata/ast/alignment.k",
+          "line": 62,
+          "column": 4,
+          "end_line": 62,
+          "end_column": 5
+        },
+        "ty": null
+      },
+      "filename": "testdata/ast/alignment.k",
+      "line": 62,
+      "column": 0,
+      "end_line": 62,
+      "end_column": 5
+    },
+    {
+      "node": {
+        "type": "AugAssign",
+        "target": {
+          "node": {
+            "name": {
+              "node": "a",
+              "filename": "testdata/ast/alignment.k",
+              "line": 63,
+              "column": 0,
+              "end_line": 63,
+              "end_column": 1
+            },
+            "paths": [],
+            "pkgpath": ""
+          },
+          "filename": "testdata/ast/alignment.k",
+          "line": 63,
+          "column": 0,
+          "end_line": 63,
+          "end_column": 1
+        },
+        "value": {
+          "node": {
+            "type": "NumberLit",
+            "binary_suffix": null,
+            "value": {
+              "type": "Int",
+              "value": 2
+            }
+          },
+          "filename": "testdata/ast/alignment.k",
+          "line": 63,
+          "column": 5,
+          "end_line": 63,
+          "end_column": 6
+        },
+        "op": "Add"
+      },
+      "filename": "testdata/ast/alignment.k",
+      "line": 63,
+      "column": 0,
+      "end_line": 63,
+      "end_column": 6
+    },
+    {
+      "node": {
+        "type": "Assign",
+        "targets": [
+          {
+            "node": {
+              "name": {
+                "node": "a",
+                "filename": "testdata/ast/alignment.k",
+                "line": 64,
+                "column": 0,
+                "end_line": 64,
+                "end_column": 1
+              },
+              "paths": [],
+              "pkgpath": ""
+            },
+            "filename": "testdata/ast/alignment.k",
+            "line": 64,
+            "column": 0,
+            "end_line": 64,
+            "end_column": 1
+          }
+        ],
+        "value": {
+          "node": {
+            "type": "NumberLit",
+            "binary_suffix": null,
+            "value": {
+              "type": "Int",
+              "value": 3
+            }
+          },
+          "filename": "testdata/ast/alignment.k",
+          "line": 64,
+          "column": 9,
+          "end_line": 64,
+          "end_column": 10
+        },
+        "ty": {
+          "node": {
+            "type": "Basic",
+            "value": "Int"
+          },
+          "filename": "testdata/ast/alignment.k",
+          "line": 64,
+          "column": 3,
+          "end_line": 64,
+          "end_column": 6
+        }
+      },
+      "filename": "testdata/ast/alignment.k",
+      "line": 64,
+      "column": 0,
+      "end_line": 64,
+      "end_column": 10
+    },
+    {
+      "node": {
+        "type": "Assign",
+        "targets": [
+          {
+            "node": {
+              "name": {
+                "node": "x",
+                "filename": "testdata/ast/alignment.k",
+                "line": 66,
+                "column": 0,
+                "end_line": 66,
+                "end_column": 1
+              },
+              "paths": [
+                {
+                  "type": "Member",
+                  "value": {
+                    "node": "name",
+                    "filename": "testdata/ast/alignment.k",
+                    "line": 66,
+                    "column": 2,
+                    "end_line": 66,
+                    "end_column": 6
+                  }
+                },
+                {
+                  "type": "Member",
+                  "value": {
+                    "node": "deep",
+                    "filename": "testdata/ast/alignment.k",
+                    "line": 66,
+                    "column": 7,
+                    "end_line": 66,
+                    "end_column": 11
+                  }
+                }
+              ],
+              "pkgpath": ""
+            },
+            "filename": "testdata/ast/alignment.k",
+            "line": 66,
+            "column": 0,
+            "end_line": 66,
+            "end_column": 11
+          }
+        ],
+        "value": {
+          "node": {
+            "type": "StringLit",
+            "is_long_string": false,
+            "raw_value": "\"dotted\"",
+            "value": "dotted"
+          },
+          "filename": "testdata/ast/alignment.k",
+          "line": 66,
+          "column": 14,
+          "end_line": 66,
+          "end_column": 22
+        },
+        "ty": null
+      },
+      "filename": "testdata/ast/alignment.k",
+      "line": 66,
+      "column": 0,
+      "end_line": 66,
+      "end_column": 22
+    },
+    {
+      "node": {
+        "type": "Assign",
+        "targets": [
+          {
+            "node": {
+              "name": {
+                "node": "x",
+                "filename": "testdata/ast/alignment.k",
+                "line": 67,
+                "column": 0,
+                "end_line": 67,
+                "end_column": 1
+              },
+              "paths": [
+                {
+                  "type": "Index",
+                  "value": {
+                    "node": {
+                      "type": "NumberLit",
+                      "binary_suffix": null,
+                      "value": {
+                        "type": "Int",
+                        "value": 0
+                      }
+                    },
+                    "filename": "testdata/ast/alignment.k",
+                    "line": 67,
+                    "column": 2,
+                    "end_line": 67,
+                    "end_column": 3
+                  }
+                }
+              ],
+              "pkgpath": ""
+            },
+            "filename": "testdata/ast/alignment.k",
+            "line": 67,
+            "column": 0,
+            "end_line": 67,
+            "end_column": 4
+          }
+        ],
+        "value": {
+          "node": {
+            "type": "StringLit",
+            "is_long_string": false,
+            "raw_value": "\"indexed\"",
+            "value": "indexed"
+          },
+          "filename": "testdata/ast/alignment.k",
+          "line": 67,
+          "column": 7,
+          "end_line": 67,
+          "end_column": 16
+        },
+        "ty": null
+      },
+      "filename": "testdata/ast/alignment.k",
+      "line": 67,
+      "column": 0,
+      "end_line": 67,
+      "end_column": 16
+    },
+    {
+      "node": {
+        "type": "Assert",
+        "test": {
+          "node": {
+            "type": "Compare",
+            "left": {
+              "node": {
+                "type": "Identifier",
+                "names": [
+                  {
+                    "node": "a",
+                    "filename": "testdata/ast/alignment.k",
+                    "line": 68,
+                    "column": 7,
+                    "end_line": 68,
+                    "end_column": 8
+                  }
+                ],
+                "pkgpath": "",
+                "ctx": "Load"
+              },
+              "filename": "testdata/ast/alignment.k",
+              "line": 68,
+              "column": 7,
+              "end_line": 68,
+              "end_column": 8
+            },
+            "ops": [
+              "Gt"
+            ],
+            "comparators": [
+              {
+                "node": {
+                  "type": "NumberLit",
+                  "binary_suffix": null,
+                  "value": {
+                    "type": "Int",
+                    "value": 0
+                  }
+                },
+                "filename": "testdata/ast/alignment.k",
+                "line": 68,
+                "column": 11,
+                "end_line": 68,
+                "end_column": 12
+              }
+            ]
+          },
+          "filename": "testdata/ast/alignment.k",
+          "line": 68,
+          "column": 7,
+          "end_line": 68,
+          "end_column": 12
+        },
+        "if_cond": null,
+        "msg": null
+      },
+      "filename": "testdata/ast/alignment.k",
+      "line": 68,
+      "column": 0,
+      "end_line": 68,
+      "end_column": 12
+    },
+    {
+      "node": {
+        "type": "Assert",
+        "test": {
+          "node": {
+            "type": "Compare",
+            "left": {
+              "node": {
+                "type": "Identifier",
+                "names": [
+                  {
+                    "node": "a",
+                    "filename": "testdata/ast/alignment.k",
+                    "line": 69,
+                    "column": 7,
+                    "end_line": 69,
+                    "end_column": 8
+                  }
+                ],
+                "pkgpath": "",
+                "ctx": "Load"
+              },
+              "filename": "testdata/ast/alignment.k",
+              "line": 69,
+              "column": 7,
+              "end_line": 69,
+              "end_column": 8
+            },
+            "ops": [
+              "Gt"
+            ],
+            "comparators": [
+              {
+                "node": {
+                  "type": "NumberLit",
+                  "binary_suffix": null,
+                  "value": {
+                    "type": "Int",
+                    "value": 0
+                  }
+                },
+                "filename": "testdata/ast/alignment.k",
+                "line": 69,
+                "column": 11,
+                "end_line": 69,
+                "end_column": 12
+              }
+            ]
+          },
+          "filename": "testdata/ast/alignment.k",
+          "line": 69,
+          "column": 7,
+          "end_line": 69,
+          "end_column": 12
+        },
+        "if_cond": {
+          "node": {
+            "type": "Identifier",
+            "names": [
+              {
+                "node": "a",
+                "filename": "testdata/ast/alignment.k",
+                "line": 69,
+                "column": 16,
+                "end_line": 69,
+                "end_column": 17
+              }
+            ],
+            "pkgpath": "",
+            "ctx": "Load"
+          },
+          "filename": "testdata/ast/alignment.k",
+          "line": 69,
+          "column": 16,
+          "end_line": 69,
+          "end_column": 17
+        },
+        "msg": {
+          "node": {
+            "type": "StringLit",
+            "is_long_string": false,
+            "raw_value": "\"a must be positive\"",
+            "value": "a must be positive"
+          },
+          "filename": "testdata/ast/alignment.k",
+          "line": 69,
+          "column": 19,
+          "end_line": 69,
+          "end_column": 39
+        }
+      },
+      "filename": "testdata/ast/alignment.k",
+      "line": 69,
+      "column": 0,
+      "end_line": 69,
+      "end_column": 39
+    },
+    {
+      "node": {
+        "type": "If",
+        "body": [
+          {
+            "node": {
+              "type": "Assign",
+              "targets": [
+                {
+                  "node": {
+                    "name": {
+                      "node": "b",
+                      "filename": "testdata/ast/alignment.k",
+                      "line": 71,
+                      "column": 4,
+                      "end_line": 71,
+                      "end_column": 5
+                    },
+                    "paths": [],
+                    "pkgpath": ""
+                  },
+                  "filename": "testdata/ast/alignment.k",
+                  "line": 71,
+                  "column": 4,
+                  "end_line": 71,
+                  "end_column": 5
+                }
+              ],
+              "value": {
+                "node": {
+                  "type": "NumberLit",
+                  "binary_suffix": null,
+                  "value": {
+                    "type": "Int",
+                    "value": 1
+                  }
+                },
+                "filename": "testdata/ast/alignment.k",
+                "line": 71,
+                "column": 8,
+                "end_line": 71,
+                "end_column": 9
+              },
+              "ty": null
+            },
+            "filename": "testdata/ast/alignment.k",
+            "line": 71,
+            "column": 4,
+            "end_line": 71,
+            "end_column": 9
+          }
+        ],
+        "cond": {
+          "node": {
+            "type": "Identifier",
+            "names": [
+              {
+                "node": "a",
+                "filename": "testdata/ast/alignment.k",
+                "line": 70,
+                "column": 3,
+                "end_line": 70,
+                "end_column": 4
+              }
+            ],
+            "pkgpath": "",
+            "ctx": "Load"
+          },
+          "filename": "testdata/ast/alignment.k",
+          "line": 70,
+          "column": 3,
+          "end_line": 70,
+          "end_column": 4
+        },
+        "orelse": [
+          {
+            "node": {
+              "type": "Assign",
+              "targets": [
+                {
+                  "node": {
+                    "name": {
+                      "node": "b",
+                      "filename": "testdata/ast/alignment.k",
+                      "line": 73,
+                      "column": 4,
+                      "end_line": 73,
+                      "end_column": 5
+                    },
+                    "paths": [],
+                    "pkgpath": ""
+                  },
+                  "filename": "testdata/ast/alignment.k",
+                  "line": 73,
+                  "column": 4,
+                  "end_line": 73,
+                  "end_column": 5
+                }
+              ],
+              "value": {
+                "node": {
+                  "type": "NumberLit",
+                  "binary_suffix": null,
+                  "value": {
+                    "type": "Int",
+                    "value": 2
+                  }
+                },
+                "filename": "testdata/ast/alignment.k",
+                "line": 73,
+                "column": 8,
+                "end_line": 73,
+                "end_column": 9
+              },
+              "ty": null
+            },
+            "filename": "testdata/ast/alignment.k",
+            "line": 73,
+            "column": 4,
+            "end_line": 73,
+            "end_column": 9
+          }
+        ]
+      },
+      "filename": "testdata/ast/alignment.k",
+      "line": 70,
+      "column": 0,
+      "end_line": 76,
+      "end_column": 0
+    },
+    {
+      "node": {
+        "type": "Assign",
+        "targets": [
+          {
+            "node": {
+              "name": {
+                "node": "lit_int",
+                "filename": "testdata/ast/alignment.k",
+                "line": 76,
+                "column": 0,
+                "end_line": 76,
+                "end_column": 7
+              },
+              "paths": [],
+              "pkgpath": ""
+            },
+            "filename": "testdata/ast/alignment.k",
+            "line": 76,
+            "column": 0,
+            "end_line": 76,
+            "end_column": 7
+          }
+        ],
+        "value": {
+          "node": {
+            "type": "NumberLit",
+            "binary_suffix": null,
+            "value": {
+              "type": "Int",
+              "value": 1
+            }
+          },
+          "filename": "testdata/ast/alignment.k",
+          "line": 76,
+          "column": 10,
+          "end_line": 76,
+          "end_column": 11
+        },
+        "ty": null
+      },
+      "filename": "testdata/ast/alignment.k",
+      "line": 76,
+      "column": 0,
+      "end_line": 76,
+      "end_column": 11
+    },
+    {
+      "node": {
+        "type": "Assign",
+        "targets": [
+          {
+            "node": {
+              "name": {
+                "node": "lit_float",
+                "filename": "testdata/ast/alignment.k",
+                "line": 77,
+                "column": 0,
+                "end_line": 77,
+                "end_column": 9
+              },
+              "paths": [],
+              "pkgpath": ""
+            },
+            "filename": "testdata/ast/alignment.k",
+            "line": 77,
+            "column": 0,
+            "end_line": 77,
+            "end_column": 9
+          }
+        ],
+        "value": {
+          "node": {
+            "type": "NumberLit",
+            "binary_suffix": null,
+            "value": {
+              "type": "Float",
+              "value": 1.5
+            }
+          },
+          "filename": "testdata/ast/alignment.k",
+          "line": 77,
+          "column": 12,
+          "end_line": 77,
+          "end_column": 15
+        },
+        "ty": null
+      },
+      "filename": "testdata/ast/alignment.k",
+      "line": 77,
+      "column": 0,
+      "end_line": 77,
+      "end_column": 15
+    },
+    {
+      "node": {
+        "type": "Assign",
+        "targets": [
+          {
+            "node": {
+              "name": {
+                "node": "lit_str",
+                "filename": "testdata/ast/alignment.k",
+                "line": 78,
+                "column": 0,
+                "end_line": 78,
+                "end_column": 7
+              },
+              "paths": [],
+              "pkgpath": ""
+            },
+            "filename": "testdata/ast/alignment.k",
+            "line": 78,
+            "column": 0,
+            "end_line": 78,
+            "end_column": 7
+          }
+        ],
+        "value": {
+          "node": {
+            "type": "StringLit",
+            "is_long_string": false,
+            "raw_value": "\"s\"",
+            "value": "s"
+          },
+          "filename": "testdata/ast/alignment.k",
+          "line": 78,
+          "column": 10,
+          "end_line": 78,
+          "end_column": 13
+        },
+        "ty": null
+      },
+      "filename": "testdata/ast/alignment.k",
+      "line": 78,
+      "column": 0,
+      "end_line": 78,
+      "end_column": 13
+    },
+    {
+      "node": {
+        "type": "Assign",
+        "targets": [
+          {
+            "node": {
+              "name": {
+                "node": "lit_long",
+                "filename": "testdata/ast/alignment.k",
+                "line": 79,
+                "column": 0,
+                "end_line": 79,
+                "end_column": 8
+              },
+              "paths": [],
+              "pkgpath": ""
+            },
+            "filename": "testdata/ast/alignment.k",
+            "line": 79,
+            "column": 0,
+            "end_line": 79,
+            "end_column": 8
+          }
+        ],
+        "value": {
+          "node": {
+            "type": "StringLit",
+            "is_long_string": true,
+            "raw_value": "\"\"\"\nlong\n\"\"\"",
+            "value": "long\n"
+          },
+          "filename": "testdata/ast/alignment.k",
+          "line": 79,
+          "column": 11,
+          "end_line": 81,
+          "end_column": 3
+        },
+        "ty": null
+      },
+      "filename": "testdata/ast/alignment.k",
+      "line": 79,
+      "column": 0,
+      "end_line": 81,
+      "end_column": 3
+    },
+    {
+      "node": {
+        "type": "Assign",
+        "targets": [
+          {
+            "node": {
+              "name": {
+                "node": "lit_name",
+                "filename": "testdata/ast/alignment.k",
+                "line": 82,
+                "column": 0,
+                "end_line": 82,
+                "end_column": 8
+              },
+              "paths": [],
+              "pkgpath": ""
+            },
+            "filename": "testdata/ast/alignment.k",
+            "line": 82,
+            "column": 0,
+            "end_line": 82,
+            "end_column": 8
+          }
+        ],
+        "value": {
+          "node": {
+            "type": "NameConstantLit",
+            "value": "True"
+          },
+          "filename": "testdata/ast/alignment.k",
+          "line": 82,
+          "column": 11,
+          "end_line": 82,
+          "end_column": 15
+        },
+        "ty": null
+      },
+      "filename": "testdata/ast/alignment.k",
+      "line": 82,
+      "column": 0,
+      "end_line": 82,
+      "end_column": 15
+    },
+    {
+      "node": {
+        "type": "Assign",
+        "targets": [
+          {
+            "node": {
+              "name": {
+                "node": "joined",
+                "filename": "testdata/ast/alignment.k",
+                "line": 83,
+                "column": 0,
+                "end_line": 83,
+                "end_column": 6
+              },
+              "paths": [],
+              "pkgpath": ""
+            },
+            "filename": "testdata/ast/alignment.k",
+            "line": 83,
+            "column": 0,
+            "end_line": 83,
+            "end_column": 6
+          }
+        ],
+        "value": {
+          "node": {
+            "type": "JoinedString",
+            "is_long_string": false,
+            "values": [
+              {
+                "node": {
+                  "type": "StringLit",
+                  "is_long_string": false,
+                  "raw_value": "hi ",
+                  "value": "hi "
+                },
+                "filename": "",
+                "line": 1,
+                "column": 1,
+                "end_line": 1,
+                "end_column": 1
+              },
+              {
+                "node": {
+                  "type": "FormattedValue",
+                  "is_long_string": false,
+                  "value": {
+                    "node": {
+                      "type": "Identifier",
+                      "names": [
+                        {
+                          "node": "x",
+                          "filename": "testdata/ast/alignment.k",
+                          "line": 83,
+                          "column": 15,
+                          "end_line": 83,
+                          "end_column": 16
+                        },
+                        {
+                          "node": "name",
+                          "filename": "testdata/ast/alignment.k",
+                          "line": 83,
+                          "column": 17,
+                          "end_line": 83,
+                          "end_column": 21
+                        }
+                      ],
+                      "pkgpath": "",
+                      "ctx": "Load"
+                    },
+                    "filename": "testdata/ast/alignment.k",
+                    "line": 83,
+                    "column": 15,
+                    "end_line": 83,
+                    "end_column": 21
+                  },
+                  "format_spec": null
+                },
+                "filename": "testdata/ast/alignment.k",
+                "line": 83,
+                "column": 15,
+                "end_line": 83,
+                "end_column": 21
+              }
+            ],
+            "raw_value": "\"hi ${x.name}\""
+          },
+          "filename": "testdata/ast/alignment.k",
+          "line": 83,
+          "column": 9,
+          "end_line": 83,
+          "end_column": 23
+        },
+        "ty": null
+      },
+      "filename": "testdata/ast/alignment.k",
+      "line": 83,
+      "column": 0,
+      "end_line": 83,
+      "end_column": 23
+    },
+    {
+      "node": {
+        "type": "Assign",
+        "targets": [
+          {
+            "node": {
+              "name": {
+                "node": "subscript",
+                "filename": "testdata/ast/alignment.k",
+                "line": 84,
+                "column": 0,
+                "end_line": 84,
+                "end_column": 9
+              },
+              "paths": [],
+              "pkgpath": ""
+            },
+            "filename": "testdata/ast/alignment.k",
+            "line": 84,
+            "column": 0,
+            "end_line": 84,
+            "end_column": 9
+          }
+        ],
+        "value": {
+          "node": {
+            "type": "Subscript",
+            "value": {
+              "node": {
+                "type": "Identifier",
+                "names": [
+                  {
+                    "node": "x",
+                    "filename": "testdata/ast/alignment.k",
+                    "line": 84,
+                    "column": 12,
+                    "end_line": 84,
+                    "end_column": 13
+                  }
+                ],
+                "pkgpath": "",
+                "ctx": "Load"
+              },
+              "filename": "testdata/ast/alignment.k",
+              "line": 84,
+              "column": 12,
+              "end_line": 84,
+              "end_column": 13
+            },
+            "index": {
+              "node": {
+                "type": "NumberLit",
+                "binary_suffix": null,
+                "value": {
+                  "type": "Int",
+                  "value": 0
+                }
+              },
+              "filename": "testdata/ast/alignment.k",
+              "line": 84,
+              "column": 14,
+              "end_line": 84,
+              "end_column": 15
+            },
+            "lower": null,
+            "upper": null,
+            "step": null,
+            "ctx": "Load",
+            "has_question": false
+          },
+          "filename": "testdata/ast/alignment.k",
+          "line": 84,
+          "column": 12,
+          "end_line": 84,
+          "end_column": 16
+        },
+        "ty": null
+      },
+      "filename": "testdata/ast/alignment.k",
+      "line": 84,
+      "column": 0,
+      "end_line": 84,
+      "end_column": 16
+    },
+    {
+      "node": {
+        "type": "Assign",
+        "targets": [
+          {
+            "node": {
+              "name": {
+                "node": "subscript_slice",
+                "filename": "testdata/ast/alignment.k",
+                "line": 85,
+                "column": 0,
+                "end_line": 85,
+                "end_column": 15
+              },
+              "paths": [],
+              "pkgpath": ""
+            },
+            "filename": "testdata/ast/alignment.k",
+            "line": 85,
+            "column": 0,
+            "end_line": 85,
+            "end_column": 15
+          }
+        ],
+        "value": {
+          "node": {
+            "type": "Subscript",
+            "value": {
+              "node": {
+                "type": "Identifier",
+                "names": [
+                  {
+                    "node": "x",
+                    "filename": "testdata/ast/alignment.k",
+                    "line": 85,
+                    "column": 18,
+                    "end_line": 85,
+                    "end_column": 19
+                  }
+                ],
+                "pkgpath": "",
+                "ctx": "Load"
+              },
+              "filename": "testdata/ast/alignment.k",
+              "line": 85,
+              "column": 18,
+              "end_line": 85,
+              "end_column": 19
+            },
+            "index": null,
+            "lower": {
+              "node": {
+                "type": "NumberLit",
+                "binary_suffix": null,
+                "value": {
+                  "type": "Int",
+                  "value": 0
+                }
+              },
+              "filename": "testdata/ast/alignment.k",
+              "line": 85,
+              "column": 20,
+              "end_line": 85,
+              "end_column": 21
+            },
+            "upper": {
+              "node": {
+                "type": "NumberLit",
+                "binary_suffix": null,
+                "value": {
+                  "type": "Int",
+                  "value": 2
+                }
+              },
+              "filename": "testdata/ast/alignment.k",
+              "line": 85,
+              "column": 22,
+              "end_line": 85,
+              "end_column": 23
+            },
+            "step": null,
+            "ctx": "Load",
+            "has_question": false
+          },
+          "filename": "testdata/ast/alignment.k",
+          "line": 85,
+          "column": 18,
+          "end_line": 85,
+          "end_column": 24
+        },
+        "ty": null
+      },
+      "filename": "testdata/ast/alignment.k",
+      "line": 85,
+      "column": 0,
+      "end_line": 85,
+      "end_column": 24
+    },
+    {
+      "node": {
+        "type": "Assign",
+        "targets": [
+          {
+            "node": {
+              "name": {
+                "node": "subscript_step",
+                "filename": "testdata/ast/alignment.k",
+                "line": 86,
+                "column": 0,
+                "end_line": 86,
+                "end_column": 14
+              },
+              "paths": [],
+              "pkgpath": ""
+            },
+            "filename": "testdata/ast/alignment.k",
+            "line": 86,
+            "column": 0,
+            "end_line": 86,
+            "end_column": 14
+          }
+        ],
+        "value": {
+          "node": {
+            "type": "Subscript",
+            "value": {
+              "node": {
+                "type": "Identifier",
+                "names": [
+                  {
+                    "node": "x",
+                    "filename": "testdata/ast/alignment.k",
+                    "line": 86,
+                    "column": 17,
+                    "end_line": 86,
+                    "end_column": 18
+                  }
+                ],
+                "pkgpath": "",
+                "ctx": "Load"
+              },
+              "filename": "testdata/ast/alignment.k",
+              "line": 86,
+              "column": 17,
+              "end_line": 86,
+              "end_column": 18
+            },
+            "index": null,
+            "lower": {
+              "node": {
+                "type": "NumberLit",
+                "binary_suffix": null,
+                "value": {
+                  "type": "Int",
+                  "value": 0
+                }
+              },
+              "filename": "testdata/ast/alignment.k",
+              "line": 86,
+              "column": 19,
+              "end_line": 86,
+              "end_column": 20
+            },
+            "upper": {
+              "node": {
+                "type": "NumberLit",
+                "binary_suffix": null,
+                "value": {
+                  "type": "Int",
+                  "value": 2
+                }
+              },
+              "filename": "testdata/ast/alignment.k",
+              "line": 86,
+              "column": 21,
+              "end_line": 86,
+              "end_column": 22
+            },
+            "step": {
+              "node": {
+                "type": "NumberLit",
+                "binary_suffix": null,
+                "value": {
+                  "type": "Int",
+                  "value": 1
+                }
+              },
+              "filename": "testdata/ast/alignment.k",
+              "line": 86,
+              "column": 23,
+              "end_line": 86,
+              "end_column": 24
+            },
+            "ctx": "Load",
+            "has_question": false
+          },
+          "filename": "testdata/ast/alignment.k",
+          "line": 86,
+          "column": 17,
+          "end_line": 86,
+          "end_column": 25
+        },
+        "ty": null
+      },
+      "filename": "testdata/ast/alignment.k",
+      "line": 86,
+      "column": 0,
+      "end_line": 86,
+      "end_column": 25
+    },
+    {
+      "node": {
+        "type": "Assign",
+        "targets": [
+          {
+            "node": {
+              "name": {
+                "node": "subscript_q",
+                "filename": "testdata/ast/alignment.k",
+                "line": 87,
+                "column": 0,
+                "end_line": 87,
+                "end_column": 11
+              },
+              "paths": [],
+              "pkgpath": ""
+            },
+            "filename": "testdata/ast/alignment.k",
+            "line": 87,
+            "column": 0,
+            "end_line": 87,
+            "end_column": 11
+          }
+        ],
+        "value": {
+          "node": {
+            "type": "Selector",
+            "value": {
+              "node": {
+                "type": "Identifier",
+                "names": [
+                  {
+                    "node": "x",
+                    "filename": "testdata/ast/alignment.k",
+                    "line": 87,
+                    "column": 14,
+                    "end_line": 87,
+                    "end_column": 15
+                  }
+                ],
+                "pkgpath": "",
+                "ctx": "Load"
+              },
+              "filename": "testdata/ast/alignment.k",
+              "line": 87,
+              "column": 14,
+              "end_line": 87,
+              "end_column": 15
+            },
+            "attr": {
+              "node": {
+                "names": [
+                  {
+                    "node": "name",
+                    "filename": "testdata/ast/alignment.k",
+                    "line": 87,
+                    "column": 17,
+                    "end_line": 87,
+                    "end_column": 21
+                  }
+                ],
+                "pkgpath": "",
+                "ctx": "Load"
+              },
+              "filename": "testdata/ast/alignment.k",
+              "line": 87,
+              "column": 17,
+              "end_line": 87,
+              "end_column": 21
+            },
+            "ctx": "Load",
+            "has_question": true
+          },
+          "filename": "testdata/ast/alignment.k",
+          "line": 87,
+          "column": 14,
+          "end_line": 87,
+          "end_column": 21
+        },
+        "ty": null
+      },
+      "filename": "testdata/ast/alignment.k",
+      "line": 87,
+      "column": 0,
+      "end_line": 87,
+      "end_column": 21
+    },
+    {
+      "node": {
+        "type": "Assign",
+        "targets": [
+          {
+            "node": {
+              "name": {
+                "node": "call",
+                "filename": "testdata/ast/alignment.k",
+                "line": 88,
+                "column": 0,
+                "end_line": 88,
+                "end_column": 4
+              },
+              "paths": [],
+              "pkgpath": ""
+            },
+            "filename": "testdata/ast/alignment.k",
+            "line": 88,
+            "column": 0,
+            "end_line": 88,
+            "end_column": 4
+          }
+        ],
+        "value": {
+          "node": {
+            "type": "Call",
+            "func": {
+              "node": {
+                "type": "Identifier",
+                "names": [
+                  {
+                    "node": "f",
+                    "filename": "testdata/ast/alignment.k",
+                    "line": 88,
+                    "column": 7,
+                    "end_line": 88,
+                    "end_column": 8
+                  }
+                ],
+                "pkgpath": "",
+                "ctx": "Load"
+              },
+              "filename": "testdata/ast/alignment.k",
+              "line": 88,
+              "column": 7,
+              "end_line": 88,
+              "end_column": 8
+            },
+            "args": [
+              {
+                "node": {
+                  "type": "NumberLit",
+                  "binary_suffix": null,
+                  "value": {
+                    "type": "Int",
+                    "value": 1
+                  }
+                },
+                "filename": "testdata/ast/alignment.k",
+                "line": 88,
+                "column": 9,
+                "end_line": 88,
+                "end_column": 10
+              },
+              {
+                "node": {
+                  "type": "NumberLit",
+                  "binary_suffix": null,
+                  "value": {
+                    "type": "Int",
+                    "value": 2
+                  }
+                },
+                "filename": "testdata/ast/alignment.k",
+                "line": 88,
+                "column": 12,
+                "end_line": 88,
+                "end_column": 13
+              }
+            ],
+            "keywords": [
+              {
+                "node": {
+                  "arg": {
+                    "node": {
+                      "names": [
+                        {
+                          "node": "k",
+                          "filename": "testdata/ast/alignment.k",
+                          "line": 88,
+                          "column": 15,
+                          "end_line": 88,
+                          "end_column": 16
+                        }
+                      ],
+                      "pkgpath": "",
+                      "ctx": "Load"
+                    },
+                    "filename": "testdata/ast/alignment.k",
+                    "line": 88,
+                    "column": 15,
+                    "end_line": 88,
+                    "end_column": 16
+                  },
+                  "value": {
+                    "node": {
+                      "type": "NumberLit",
+                      "binary_suffix": null,
+                      "value": {
+                        "type": "Int",
+                        "value": 3
+                      }
+                    },
+                    "filename": "testdata/ast/alignment.k",
+                    "line": 88,
+                    "column": 19,
+                    "end_line": 88,
+                    "end_column": 20
+                  }
+                },
+                "filename": "testdata/ast/alignment.k",
+                "line": 88,
+                "column": 15,
+                "end_line": 88,
+                "end_column": 20
+              }
+            ]
+          },
+          "filename": "testdata/ast/alignment.k",
+          "line": 88,
+          "column": 7,
+          "end_line": 88,
+          "end_column": 21
+        },
+        "ty": null
+      },
+      "filename": "testdata/ast/alignment.k",
+      "line": 88,
+      "column": 0,
+      "end_line": 88,
+      "end_column": 21
+    },
+    {
+      "node": {
+        "type": "Assign",
+        "targets": [
+          {
+            "node": {
+              "name": {
+                "node": "paren",
+                "filename": "testdata/ast/alignment.k",
+                "line": 89,
+                "column": 0,
+                "end_line": 89,
+                "end_column": 5
+              },
+              "paths": [],
+              "pkgpath": ""
+            },
+            "filename": "testdata/ast/alignment.k",
+            "line": 89,
+            "column": 0,
+            "end_line": 89,
+            "end_column": 5
+          }
+        ],
+        "value": {
+          "node": {
+            "type": "Paren",
+            "expr": {
+              "node": {
+                "type": "Identifier",
+                "names": [
+                  {
+                    "node": "a",
+                    "filename": "testdata/ast/alignment.k",
+                    "line": 89,
+                    "column": 9,
+                    "end_line": 89,
+                    "end_column": 10
+                  }
+                ],
+                "pkgpath": "",
+                "ctx": "Load"
+              },
+              "filename": "testdata/ast/alignment.k",
+              "line": 89,
+              "column": 9,
+              "end_line": 89,
+              "end_column": 10
+            }
+          },
+          "filename": "testdata/ast/alignment.k",
+          "line": 89,
+          "column": 8,
+          "end_line": 89,
+          "end_column": 11
+        },
+        "ty": null
+      },
+      "filename": "testdata/ast/alignment.k",
+      "line": 89,
+      "column": 0,
+      "end_line": 89,
+      "end_column": 11
+    },
+    {
+      "node": {
+        "type": "Assign",
+        "targets": [
+          {
+            "node": {
+              "name": {
+                "node": "unary",
+                "filename": "testdata/ast/alignment.k",
+                "line": 90,
+                "column": 0,
+                "end_line": 90,
+                "end_column": 5
+              },
+              "paths": [],
+              "pkgpath": ""
+            },
+            "filename": "testdata/ast/alignment.k",
+            "line": 90,
+            "column": 0,
+            "end_line": 90,
+            "end_column": 5
+          }
+        ],
+        "value": {
+          "node": {
+            "type": "Unary",
+            "op": "USub",
+            "operand": {
+              "node": {
+                "type": "Identifier",
+                "names": [
+                  {
+                    "node": "a",
+                    "filename": "testdata/ast/alignment.k",
+                    "line": 90,
+                    "column": 9,
+                    "end_line": 90,
+                    "end_column": 10
+                  }
+                ],
+                "pkgpath": "",
+                "ctx": "Load"
+              },
+              "filename": "testdata/ast/alignment.k",
+              "line": 90,
+              "column": 9,
+              "end_line": 90,
+              "end_column": 10
+            }
+          },
+          "filename": "testdata/ast/alignment.k",
+          "line": 90,
+          "column": 8,
+          "end_line": 90,
+          "end_column": 10
+        },
+        "ty": null
+      },
+      "filename": "testdata/ast/alignment.k",
+      "line": 90,
+      "column": 0,
+      "end_line": 90,
+      "end_column": 10
+    },
+    {
+      "node": {
+        "type": "Assign",
+        "targets": [
+          {
+            "node": {
+              "name": {
+                "node": "unary_not",
+                "filename": "testdata/ast/alignment.k",
+                "line": 91,
+                "column": 0,
+                "end_line": 91,
+                "end_column": 9
+              },
+              "paths": [],
+              "pkgpath": ""
+            },
+            "filename": "testdata/ast/alignment.k",
+            "line": 91,
+            "column": 0,
+            "end_line": 91,
+            "end_column": 9
+          }
+        ],
+        "value": {
+          "node": {
+            "type": "Unary",
+            "op": "Not",
+            "operand": {
+              "node": {
+                "type": "Identifier",
+                "names": [
+                  {
+                    "node": "lit_name",
+                    "filename": "testdata/ast/alignment.k",
+                    "line": 91,
+                    "column": 16,
+                    "end_line": 91,
+                    "end_column": 24
+                  }
+                ],
+                "pkgpath": "",
+                "ctx": "Load"
+              },
+              "filename": "testdata/ast/alignment.k",
+              "line": 91,
+              "column": 16,
+              "end_line": 91,
+              "end_column": 24
+            }
+          },
+          "filename": "testdata/ast/alignment.k",
+          "line": 91,
+          "column": 12,
+          "end_line": 91,
+          "end_column": 24
+        },
+        "ty": null
+      },
+      "filename": "testdata/ast/alignment.k",
+      "line": 91,
+      "column": 0,
+      "end_line": 91,
+      "end_column": 24
+    },
+    {
+      "node": {
+        "type": "Assign",
+        "targets": [
+          {
+            "node": {
+              "name": {
+                "node": "binary",
+                "filename": "testdata/ast/alignment.k",
+                "line": 92,
+                "column": 0,
+                "end_line": 92,
+                "end_column": 6
+              },
+              "paths": [],
+              "pkgpath": ""
+            },
+            "filename": "testdata/ast/alignment.k",
+            "line": 92,
+            "column": 0,
+            "end_line": 92,
+            "end_column": 6
+          }
+        ],
+        "value": {
+          "node": {
+            "type": "Binary",
+            "left": {
+              "node": {
+                "type": "Identifier",
+                "names": [
+                  {
+                    "node": "a",
+                    "filename": "testdata/ast/alignment.k",
+                    "line": 92,
+                    "column": 9,
+                    "end_line": 92,
+                    "end_column": 10
+                  }
+                ],
+                "pkgpath": "",
+                "ctx": "Load"
+              },
+              "filename": "testdata/ast/alignment.k",
+              "line": 92,
+              "column": 9,
+              "end_line": 92,
+              "end_column": 10
+            },
+            "op": "Add",
+            "right": {
+              "node": {
+                "type": "NumberLit",
+                "binary_suffix": null,
+                "value": {
+                  "type": "Int",
+                  "value": 2
+                }
+              },
+              "filename": "testdata/ast/alignment.k",
+              "line": 92,
+              "column": 13,
+              "end_line": 92,
+              "end_column": 14
+            }
+          },
+          "filename": "testdata/ast/alignment.k",
+          "line": 92,
+          "column": 9,
+          "end_line": 92,
+          "end_column": 14
+        },
+        "ty": null
+      },
+      "filename": "testdata/ast/alignment.k",
+      "line": 92,
+      "column": 0,
+      "end_line": 92,
+      "end_column": 14
+    },
+    {
+      "node": {
+        "type": "Assign",
+        "targets": [
+          {
+            "node": {
+              "name": {
+                "node": "compare",
+                "filename": "testdata/ast/alignment.k",
+                "line": 93,
+                "column": 0,
+                "end_line": 93,
+                "end_column": 7
+              },
+              "paths": [],
+              "pkgpath": ""
+            },
+            "filename": "testdata/ast/alignment.k",
+            "line": 93,
+            "column": 0,
+            "end_line": 93,
+            "end_column": 7
+          }
+        ],
+        "value": {
+          "node": {
+            "type": "Compare",
+            "left": {
+              "node": {
+                "type": "Identifier",
+                "names": [
+                  {
+                    "node": "a",
+                    "filename": "testdata/ast/alignment.k",
+                    "line": 93,
+                    "column": 10,
+                    "end_line": 93,
+                    "end_column": 11
+                  }
+                ],
+                "pkgpath": "",
+                "ctx": "Load"
+              },
+              "filename": "testdata/ast/alignment.k",
+              "line": 93,
+              "column": 10,
+              "end_line": 93,
+              "end_column": 11
+            },
+            "ops": [
+              "Gt"
+            ],
+            "comparators": [
+              {
+                "node": {
+                  "type": "NumberLit",
+                  "binary_suffix": null,
+                  "value": {
+                    "type": "Int",
+                    "value": 1
+                  }
+                },
+                "filename": "testdata/ast/alignment.k",
+                "line": 93,
+                "column": 14,
+                "end_line": 93,
+                "end_column": 15
+              }
+            ]
+          },
+          "filename": "testdata/ast/alignment.k",
+          "line": 93,
+          "column": 10,
+          "end_line": 93,
+          "end_column": 15
+        },
+        "ty": null
+      },
+      "filename": "testdata/ast/alignment.k",
+      "line": 93,
+      "column": 0,
+      "end_line": 93,
+      "end_column": 15
+    },
+    {
+      "node": {
+        "type": "Assign",
+        "targets": [
+          {
+            "node": {
+              "name": {
+                "node": "compare_chain",
+                "filename": "testdata/ast/alignment.k",
+                "line": 94,
+                "column": 0,
+                "end_line": 94,
+                "end_column": 13
+              },
+              "paths": [],
+              "pkgpath": ""
+            },
+            "filename": "testdata/ast/alignment.k",
+            "line": 94,
+            "column": 0,
+            "end_line": 94,
+            "end_column": 13
+          }
+        ],
+        "value": {
+          "node": {
+            "type": "Compare",
+            "left": {
+              "node": {
+                "type": "NumberLit",
+                "binary_suffix": null,
+                "value": {
+                  "type": "Int",
+                  "value": 0
+                }
+              },
+              "filename": "testdata/ast/alignment.k",
+              "line": 94,
+              "column": 16,
+              "end_line": 94,
+              "end_column": 17
+            },
+            "ops": [
+              "Lt",
+              "LtE"
+            ],
+            "comparators": [
+              {
+                "node": {
+                  "type": "Identifier",
+                  "names": [
+                    {
+                      "node": "a",
+                      "filename": "testdata/ast/alignment.k",
+                      "line": 94,
+                      "column": 20,
+                      "end_line": 94,
+                      "end_column": 21
+                    }
+                  ],
+                  "pkgpath": "",
+                  "ctx": "Load"
+                },
+                "filename": "testdata/ast/alignment.k",
+                "line": 94,
+                "column": 20,
+                "end_line": 94,
+                "end_column": 21
+              },
+              {
+                "node": {
+                  "type": "NumberLit",
+                  "binary_suffix": null,
+                  "value": {
+                    "type": "Int",
+                    "value": 10
+                  }
+                },
+                "filename": "testdata/ast/alignment.k",
+                "line": 94,
+                "column": 25,
+                "end_line": 94,
+                "end_column": 27
+              }
+            ]
+          },
+          "filename": "testdata/ast/alignment.k",
+          "line": 94,
+          "column": 16,
+          "end_line": 94,
+          "end_column": 27
+        },
+        "ty": null
+      },
+      "filename": "testdata/ast/alignment.k",
+      "line": 94,
+      "column": 0,
+      "end_line": 94,
+      "end_column": 27
+    },
+    {
+      "node": {
+        "type": "Assign",
+        "targets": [
+          {
+            "node": {
+              "name": {
+                "node": "tern",
+                "filename": "testdata/ast/alignment.k",
+                "line": 95,
+                "column": 0,
+                "end_line": 95,
+                "end_column": 4
+              },
+              "paths": [],
+              "pkgpath": ""
+            },
+            "filename": "testdata/ast/alignment.k",
+            "line": 95,
+            "column": 0,
+            "end_line": 95,
+            "end_column": 4
+          }
+        ],
+        "value": {
+          "node": {
+            "type": "If",
+            "body": {
+              "node": {
+                "type": "Identifier",
+                "names": [
+                  {
+                    "node": "a",
+                    "filename": "testdata/ast/alignment.k",
+                    "line": 95,
+                    "column": 7,
+                    "end_line": 95,
+                    "end_column": 8
+                  }
+                ],
+                "pkgpath": "",
+                "ctx": "Load"
+              },
+              "filename": "testdata/ast/alignment.k",
+              "line": 95,
+              "column": 7,
+              "end_line": 95,
+              "end_column": 8
+            },
+            "cond": {
+              "node": {
+                "type": "Identifier",
+                "names": [
+                  {
+                    "node": "a",
+                    "filename": "testdata/ast/alignment.k",
+                    "line": 95,
+                    "column": 12,
+                    "end_line": 95,
+                    "end_column": 13
+                  }
+                ],
+                "pkgpath": "",
+                "ctx": "Load"
+              },
+              "filename": "testdata/ast/alignment.k",
+              "line": 95,
+              "column": 12,
+              "end_line": 95,
+              "end_column": 13
+            },
+            "orelse": {
+              "node": {
+                "type": "NumberLit",
+                "binary_suffix": null,
+                "value": {
+                  "type": "Int",
+                  "value": 2
+                }
+              },
+              "filename": "testdata/ast/alignment.k",
+              "line": 95,
+              "column": 19,
+              "end_line": 95,
+              "end_column": 20
+            }
+          },
+          "filename": "testdata/ast/alignment.k",
+          "line": 95,
+          "column": 7,
+          "end_line": 95,
+          "end_column": 20
+        },
+        "ty": null
+      },
+      "filename": "testdata/ast/alignment.k",
+      "line": 95,
+      "column": 0,
+      "end_line": 95,
+      "end_column": 20
+    },
+    {
+      "node": {
+        "type": "Assign",
+        "targets": [
+          {
+            "node": {
+              "name": {
+                "node": "selector",
+                "filename": "testdata/ast/alignment.k",
+                "line": 98,
+                "column": 0,
+                "end_line": 98,
+                "end_column": 8
+              },
+              "paths": [],
+              "pkgpath": ""
+            },
+            "filename": "testdata/ast/alignment.k",
+            "line": 98,
+            "column": 0,
+            "end_line": 98,
+            "end_column": 8
+          }
+        ],
+        "value": {
+          "node": {
+            "type": "Selector",
+            "value": {
+              "node": {
+                "type": "Subscript",
+                "value": {
+                  "node": {
+                    "type": "Identifier",
+                    "names": [
+                      {
+                        "node": "list_lit",
+                        "filename": "testdata/ast/alignment.k",
+                        "line": 98,
+                        "column": 11,
+                        "end_line": 98,
+                        "end_column": 19
+                      }
+                    ],
+                    "pkgpath": "",
+                    "ctx": "Load"
+                  },
+                  "filename": "testdata/ast/alignment.k",
+                  "line": 98,
+                  "column": 11,
+                  "end_line": 98,
+                  "end_column": 19
+                },
+                "index": {
+                  "node": {
+                    "type": "NumberLit",
+                    "binary_suffix": null,
+                    "value": {
+                      "type": "Int",
+                      "value": 0
+                    }
+                  },
+                  "filename": "testdata/ast/alignment.k",
+                  "line": 98,
+                  "column": 20,
+                  "end_line": 98,
+                  "end_column": 21
+                },
+                "lower": null,
+                "upper": null,
+                "step": null,
+                "ctx": "Load",
+                "has_question": false
+              },
+              "filename": "testdata/ast/alignment.k",
+              "line": 98,
+              "column": 11,
+              "end_line": 98,
+              "end_column": 22
+            },
+            "attr": {
+              "node": {
+                "names": [
+                  {
+                    "node": "name",
+                    "filename": "testdata/ast/alignment.k",
+                    "line": 98,
+                    "column": 23,
+                    "end_line": 98,
+                    "end_column": 27
+                  }
+                ],
+                "pkgpath": "",
+                "ctx": "Load"
+              },
+              "filename": "testdata/ast/alignment.k",
+              "line": 98,
+              "column": 23,
+              "end_line": 98,
+              "end_column": 27
+            },
+            "ctx": "Load",
+            "has_question": false
+          },
+          "filename": "testdata/ast/alignment.k",
+          "line": 98,
+          "column": 11,
+          "end_line": 98,
+          "end_column": 27
+        },
+        "ty": null
+      },
+      "filename": "testdata/ast/alignment.k",
+      "line": 98,
+      "column": 0,
+      "end_line": 98,
+      "end_column": 27
+    },
+    {
+      "node": {
+        "type": "Assign",
+        "targets": [
+          {
+            "node": {
+              "name": {
+                "node": "optional",
+                "filename": "testdata/ast/alignment.k",
+                "line": 99,
+                "column": 0,
+                "end_line": 99,
+                "end_column": 8
+              },
+              "paths": [],
+              "pkgpath": ""
+            },
+            "filename": "testdata/ast/alignment.k",
+            "line": 99,
+            "column": 0,
+            "end_line": 99,
+            "end_column": 8
+          }
+        ],
+        "value": {
+          "node": {
+            "type": "Selector",
+            "value": {
+              "node": {
+                "type": "Identifier",
+                "names": [
+                  {
+                    "node": "x",
+                    "filename": "testdata/ast/alignment.k",
+                    "line": 99,
+                    "column": 11,
+                    "end_line": 99,
+                    "end_column": 12
+                  }
+                ],
+                "pkgpath": "",
+                "ctx": "Load"
+              },
+              "filename": "testdata/ast/alignment.k",
+              "line": 99,
+              "column": 11,
+              "end_line": 99,
+              "end_column": 12
+            },
+            "attr": {
+              "node": {
+                "names": [
+                  {
+                    "node": "name",
+                    "filename": "testdata/ast/alignment.k",
+                    "line": 99,
+                    "column": 14,
+                    "end_line": 99,
+                    "end_column": 18
+                  }
+                ],
+                "pkgpath": "",
+                "ctx": "Load"
+              },
+              "filename": "testdata/ast/alignment.k",
+              "line": 99,
+              "column": 14,
+              "end_line": 99,
+              "end_column": 18
+            },
+            "ctx": "Load",
+            "has_question": true
+          },
+          "filename": "testdata/ast/alignment.k",
+          "line": 99,
+          "column": 11,
+          "end_line": 99,
+          "end_column": 18
+        },
+        "ty": null
+      },
+      "filename": "testdata/ast/alignment.k",
+      "line": 99,
+      "column": 0,
+      "end_line": 99,
+      "end_column": 18
+    },
+    {
+      "node": {
+        "type": "Assign",
+        "targets": [
+          {
+            "node": {
+              "name": {
+                "node": "list_lit",
+                "filename": "testdata/ast/alignment.k",
+                "line": 100,
+                "column": 0,
+                "end_line": 100,
+                "end_column": 8
+              },
+              "paths": [],
+              "pkgpath": ""
+            },
+            "filename": "testdata/ast/alignment.k",
+            "line": 100,
+            "column": 0,
+            "end_line": 100,
+            "end_column": 8
+          }
+        ],
+        "value": {
+          "node": {
+            "type": "List",
+            "elts": [
+              {
+                "node": {
+                  "type": "NumberLit",
+                  "binary_suffix": null,
+                  "value": {
+                    "type": "Int",
+                    "value": 1
+                  }
+                },
+                "filename": "testdata/ast/alignment.k",
+                "line": 100,
+                "column": 12,
+                "end_line": 100,
+                "end_column": 13
+              },
+              {
+                "node": {
+                  "type": "NumberLit",
+                  "binary_suffix": null,
+                  "value": {
+                    "type": "Int",
+                    "value": 2
+                  }
+                },
+                "filename": "testdata/ast/alignment.k",
+                "line": 100,
+                "column": 15,
+                "end_line": 100,
+                "end_column": 16
+              },
+              {
+                "node": {
+                  "type": "NumberLit",
+                  "binary_suffix": null,
+                  "value": {
+                    "type": "Int",
+                    "value": 3
+                  }
+                },
+                "filename": "testdata/ast/alignment.k",
+                "line": 100,
+                "column": 18,
+                "end_line": 100,
+                "end_column": 19
+              }
+            ],
+            "ctx": "Load"
+          },
+          "filename": "testdata/ast/alignment.k",
+          "line": 100,
+          "column": 11,
+          "end_line": 100,
+          "end_column": 20
+        },
+        "ty": null
+      },
+      "filename": "testdata/ast/alignment.k",
+      "line": 100,
+      "column": 0,
+      "end_line": 100,
+      "end_column": 20
+    },
+    {
+      "node": {
+        "type": "Assign",
+        "targets": [
+          {
+            "node": {
+              "name": {
+                "node": "list_if",
+                "filename": "testdata/ast/alignment.k",
+                "line": 101,
+                "column": 0,
+                "end_line": 101,
+                "end_column": 7
+              },
+              "paths": [],
+              "pkgpath": ""
+            },
+            "filename": "testdata/ast/alignment.k",
+            "line": 101,
+            "column": 0,
+            "end_line": 101,
+            "end_column": 7
+          }
+        ],
+        "value": {
+          "node": {
+            "type": "ListComp",
+            "elt": {
+              "node": {
+                "type": "Identifier",
+                "names": [
+                  {
+                    "node": "i",
+                    "filename": "testdata/ast/alignment.k",
+                    "line": 101,
+                    "column": 11,
+                    "end_line": 101,
+                    "end_column": 12
+                  }
+                ],
+                "pkgpath": "",
+                "ctx": "Load"
+              },
+              "filename": "testdata/ast/alignment.k",
+              "line": 101,
+              "column": 11,
+              "end_line": 101,
+              "end_column": 12
+            },
+            "generators": [
+              {
+                "node": {
+                  "targets": [
+                    {
+                      "node": {
+                        "names": [
+                          {
+                            "node": "i",
+                            "filename": "testdata/ast/alignment.k",
+                            "line": 101,
+                            "column": 17,
+                            "end_line": 101,
+                            "end_column": 18
+                          }
+                        ],
+                        "pkgpath": "",
+                        "ctx": "Load"
+                      },
+                      "filename": "testdata/ast/alignment.k",
+                      "line": 101,
+                      "column": 17,
+                      "end_line": 101,
+                      "end_column": 18
+                    }
+                  ],
+                  "iter": {
+                    "node": {
+                      "type": "Identifier",
+                      "names": [
+                        {
+                          "node": "list_lit",
+                          "filename": "testdata/ast/alignment.k",
+                          "line": 101,
+                          "column": 22,
+                          "end_line": 101,
+                          "end_column": 30
+                        }
+                      ],
+                      "pkgpath": "",
+                      "ctx": "Load"
+                    },
+                    "filename": "testdata/ast/alignment.k",
+                    "line": 101,
+                    "column": 22,
+                    "end_line": 101,
+                    "end_column": 30
+                  },
+                  "ifs": [
+                    {
+                      "node": {
+                        "type": "Compare",
+                        "left": {
+                          "node": {
+                            "type": "Identifier",
+                            "names": [
+                              {
+                                "node": "i",
+                                "filename": "testdata/ast/alignment.k",
+                                "line": 101,
+                                "column": 34,
+                                "end_line": 101,
+                                "end_column": 35
+                              }
+                            ],
+                            "pkgpath": "",
+                            "ctx": "Load"
+                          },
+                          "filename": "testdata/ast/alignment.k",
+                          "line": 101,
+                          "column": 34,
+                          "end_line": 101,
+                          "end_column": 35
+                        },
+                        "ops": [
+                          "Gt"
+                        ],
+                        "comparators": [
+                          {
+                            "node": {
+                              "type": "NumberLit",
+                              "binary_suffix": null,
+                              "value": {
+                                "type": "Int",
+                                "value": 1
+                              }
+                            },
+                            "filename": "testdata/ast/alignment.k",
+                            "line": 101,
+                            "column": 38,
+                            "end_line": 101,
+                            "end_column": 39
+                          }
+                        ]
+                      },
+                      "filename": "testdata/ast/alignment.k",
+                      "line": 101,
+                      "column": 34,
+                      "end_line": 101,
+                      "end_column": 39
+                    }
+                  ]
+                },
+                "filename": "testdata/ast/alignment.k",
+                "line": 101,
+                "column": 13,
+                "end_line": 101,
+                "end_column": 39
+              }
+            ]
+          },
+          "filename": "testdata/ast/alignment.k",
+          "line": 101,
+          "column": 10,
+          "end_line": 101,
+          "end_column": 40
+        },
+        "ty": null
+      },
+      "filename": "testdata/ast/alignment.k",
+      "line": 101,
+      "column": 0,
+      "end_line": 101,
+      "end_column": 40
+    },
+    {
+      "node": {
+        "type": "Assign",
+        "targets": [
+          {
+            "node": {
+              "name": {
+                "node": "list_if_item",
+                "filename": "testdata/ast/alignment.k",
+                "line": 102,
+                "column": 0,
+                "end_line": 102,
+                "end_column": 12
+              },
+              "paths": [],
+              "pkgpath": ""
+            },
+            "filename": "testdata/ast/alignment.k",
+            "line": 102,
+            "column": 0,
+            "end_line": 102,
+            "end_column": 12
+          }
+        ],
+        "value": {
+          "node": {
+            "type": "ListComp",
+            "elt": {
+              "node": {
+                "type": "If",
+                "body": {
+                  "node": {
+                    "type": "Identifier",
+                    "names": [
+                      {
+                        "node": "i",
+                        "filename": "testdata/ast/alignment.k",
+                        "line": 102,
+                        "column": 16,
+                        "end_line": 102,
+                        "end_column": 17
+                      }
+                    ],
+                    "pkgpath": "",
+                    "ctx": "Load"
+                  },
+                  "filename": "testdata/ast/alignment.k",
+                  "line": 102,
+                  "column": 16,
+                  "end_line": 102,
+                  "end_column": 17
+                },
+                "cond": {
+                  "node": {
+                    "type": "Identifier",
+                    "names": [
+                      {
+                        "node": "i",
+                        "filename": "testdata/ast/alignment.k",
+                        "line": 102,
+                        "column": 21,
+                        "end_line": 102,
+                        "end_column": 22
+                      }
+                    ],
+                    "pkgpath": "",
+                    "ctx": "Load"
+                  },
+                  "filename": "testdata/ast/alignment.k",
+                  "line": 102,
+                  "column": 21,
+                  "end_line": 102,
+                  "end_column": 22
+                },
+                "orelse": {
+                  "node": {
+                    "type": "NumberLit",
+                    "binary_suffix": null,
+                    "value": {
+                      "type": "Int",
+                      "value": 0
+                    }
+                  },
+                  "filename": "testdata/ast/alignment.k",
+                  "line": 102,
+                  "column": 28,
+                  "end_line": 102,
+                  "end_column": 29
+                }
+              },
+              "filename": "testdata/ast/alignment.k",
+              "line": 102,
+              "column": 16,
+              "end_line": 102,
+              "end_column": 29
+            },
+            "generators": [
+              {
+                "node": {
+                  "targets": [
+                    {
+                      "node": {
+                        "names": [
+                          {
+                            "node": "i",
+                            "filename": "testdata/ast/alignment.k",
+                            "line": 102,
+                            "column": 34,
+                            "end_line": 102,
+                            "end_column": 35
+                          }
+                        ],
+                        "pkgpath": "",
+                        "ctx": "Load"
+                      },
+                      "filename": "testdata/ast/alignment.k",
+                      "line": 102,
+                      "column": 34,
+                      "end_line": 102,
+                      "end_column": 35
+                    }
+                  ],
+                  "iter": {
+                    "node": {
+                      "type": "Identifier",
+                      "names": [
+                        {
+                          "node": "list_lit",
+                          "filename": "testdata/ast/alignment.k",
+                          "line": 102,
+                          "column": 39,
+                          "end_line": 102,
+                          "end_column": 47
+                        }
+                      ],
+                      "pkgpath": "",
+                      "ctx": "Load"
+                    },
+                    "filename": "testdata/ast/alignment.k",
+                    "line": 102,
+                    "column": 39,
+                    "end_line": 102,
+                    "end_column": 47
+                  },
+                  "ifs": []
+                },
+                "filename": "testdata/ast/alignment.k",
+                "line": 102,
+                "column": 30,
+                "end_line": 102,
+                "end_column": 47
+              }
+            ]
+          },
+          "filename": "testdata/ast/alignment.k",
+          "line": 102,
+          "column": 15,
+          "end_line": 102,
+          "end_column": 48
+        },
+        "ty": null
+      },
+      "filename": "testdata/ast/alignment.k",
+      "line": 102,
+      "column": 0,
+      "end_line": 102,
+      "end_column": 48
+    },
+    {
+      "node": {
+        "type": "Assign",
+        "targets": [
+          {
+            "node": {
+              "name": {
+                "node": "list_if_entry",
+                "filename": "testdata/ast/alignment.k",
+                "line": 103,
+                "column": 0,
+                "end_line": 103,
+                "end_column": 13
+              },
+              "paths": [],
+              "pkgpath": ""
+            },
+            "filename": "testdata/ast/alignment.k",
+            "line": 103,
+            "column": 0,
+            "end_line": 103,
+            "end_column": 13
+          }
+        ],
+        "value": {
+          "node": {
+            "type": "List",
+            "elts": [
+              {
+                "node": {
+                  "type": "ListIfItem",
+                  "if_cond": {
+                    "node": {
+                      "type": "Identifier",
+                      "names": [
+                        {
+                          "node": "a",
+                          "filename": "testdata/ast/alignment.k",
+                          "line": 103,
+                          "column": 20,
+                          "end_line": 103,
+                          "end_column": 21
+                        }
+                      ],
+                      "pkgpath": "",
+                      "ctx": "Load"
+                    },
+                    "filename": "testdata/ast/alignment.k",
+                    "line": 103,
+                    "column": 20,
+                    "end_line": 103,
+                    "end_column": 21
+                  },
+                  "exprs": [
+                    {
+                      "node": {
+                        "type": "NumberLit",
+                        "binary_suffix": null,
+                        "value": {
+                          "type": "Int",
+                          "value": 1
+                        }
+                      },
+                      "filename": "testdata/ast/alignment.k",
+                      "line": 103,
+                      "column": 23,
+                      "end_line": 103,
+                      "end_column": 24
+                    }
+                  ],
+                  "orelse": {
+                    "node": {
+                      "type": "List",
+                      "elts": [
+                        {
+                          "node": {
+                            "type": "NumberLit",
+                            "binary_suffix": null,
+                            "value": {
+                              "type": "Int",
+                              "value": 2
+                            }
+                          },
+                          "filename": "testdata/ast/alignment.k",
+                          "line": 103,
+                          "column": 31,
+                          "end_line": 103,
+                          "end_column": 32
+                        }
+                      ],
+                      "ctx": "Load"
+                    },
+                    "filename": "testdata/ast/alignment.k",
+                    "line": 103,
+                    "column": 25,
+                    "end_line": 103,
+                    "end_column": 32
+                  }
+                },
+                "filename": "testdata/ast/alignment.k",
+                "line": 103,
+                "column": 17,
+                "end_line": 103,
+                "end_column": 32
+              }
+            ],
+            "ctx": "Load"
+          },
+          "filename": "testdata/ast/alignment.k",
+          "line": 103,
+          "column": 16,
+          "end_line": 103,
+          "end_column": 33
+        },
+        "ty": null
+      },
+      "filename": "testdata/ast/alignment.k",
+      "line": 103,
+      "column": 0,
+      "end_line": 103,
+      "end_column": 33
+    },
+    {
+      "node": {
+        "type": "Assign",
+        "targets": [
+          {
+            "node": {
+              "name": {
+                "node": "quant",
+                "filename": "testdata/ast/alignment.k",
+                "line": 104,
+                "column": 0,
+                "end_line": 104,
+                "end_column": 5
+              },
+              "paths": [],
+              "pkgpath": ""
+            },
+            "filename": "testdata/ast/alignment.k",
+            "line": 104,
+            "column": 0,
+            "end_line": 104,
+            "end_column": 5
+          }
+        ],
+        "value": {
+          "node": {
+            "type": "Quant",
+            "target": {
+              "node": {
+                "type": "Identifier",
+                "names": [
+                  {
+                    "node": "list_lit",
+                    "filename": "testdata/ast/alignment.k",
+                    "line": 104,
+                    "column": 17,
+                    "end_line": 104,
+                    "end_column": 25
+                  }
+                ],
+                "pkgpath": "",
+                "ctx": "Load"
+              },
+              "filename": "testdata/ast/alignment.k",
+              "line": 104,
+              "column": 17,
+              "end_line": 104,
+              "end_column": 25
+            },
+            "variables": [
+              {
+                "node": {
+                  "names": [
+                    {
+                      "node": "v",
+                      "filename": "testdata/ast/alignment.k",
+                      "line": 104,
+                      "column": 12,
+                      "end_line": 104,
+                      "end_column": 13
+                    }
+                  ],
+                  "pkgpath": "",
+                  "ctx": "Load"
+                },
+                "filename": "testdata/ast/alignment.k",
+                "line": 104,
+                "column": 12,
+                "end_line": 104,
+                "end_column": 13
+              }
+            ],
+            "op": "All",
+            "test": {
+              "node": {
+                "type": "Compare",
+                "left": {
+                  "node": {
+                    "type": "Identifier",
+                    "names": [
+                      {
+                        "node": "v",
+                        "filename": "testdata/ast/alignment.k",
+                        "line": 104,
+                        "column": 28,
+                        "end_line": 104,
+                        "end_column": 29
+                      }
+                    ],
+                    "pkgpath": "",
+                    "ctx": "Load"
+                  },
+                  "filename": "testdata/ast/alignment.k",
+                  "line": 104,
+                  "column": 28,
+                  "end_line": 104,
+                  "end_column": 29
+                },
+                "ops": [
+                  "Gt"
+                ],
+                "comparators": [
+                  {
+                    "node": {
+                      "type": "NumberLit",
+                      "binary_suffix": null,
+                      "value": {
+                        "type": "Int",
+                        "value": 0
+                      }
+                    },
+                    "filename": "testdata/ast/alignment.k",
+                    "line": 104,
+                    "column": 32,
+                    "end_line": 104,
+                    "end_column": 33
+                  }
+                ]
+              },
+              "filename": "testdata/ast/alignment.k",
+              "line": 104,
+              "column": 28,
+              "end_line": 104,
+              "end_column": 33
+            },
+            "if_cond": null,
+            "ctx": "Load"
+          },
+          "filename": "testdata/ast/alignment.k",
+          "line": 104,
+          "column": 8,
+          "end_line": 104,
+          "end_column": 35
+        },
+        "ty": null
+      },
+      "filename": "testdata/ast/alignment.k",
+      "line": 104,
+      "column": 0,
+      "end_line": 104,
+      "end_column": 35
+    },
+    {
+      "node": {
+        "type": "Assign",
+        "targets": [
+          {
+            "node": {
+              "name": {
+                "node": "dict_comp",
+                "filename": "testdata/ast/alignment.k",
+                "line": 105,
+                "column": 0,
+                "end_line": 105,
+                "end_column": 9
+              },
+              "paths": [],
+              "pkgpath": ""
+            },
+            "filename": "testdata/ast/alignment.k",
+            "line": 105,
+            "column": 0,
+            "end_line": 105,
+            "end_column": 9
+          }
+        ],
+        "value": {
+          "node": {
+            "type": "DictComp",
+            "entry": {
+              "key": {
+                "node": {
+                  "type": "Identifier",
+                  "names": [
+                    {
+                      "node": "k",
+                      "filename": "testdata/ast/alignment.k",
+                      "line": 105,
+                      "column": 13,
+                      "end_line": 105,
+                      "end_column": 14
+                    }
+                  ],
+                  "pkgpath": "",
+                  "ctx": "Load"
+                },
+                "filename": "testdata/ast/alignment.k",
+                "line": 105,
+                "column": 13,
+                "end_line": 105,
+                "end_column": 14
+              },
+              "value": {
+                "node": {
+                  "type": "Identifier",
+                  "names": [
+                    {
+                      "node": "v",
+                      "filename": "testdata/ast/alignment.k",
+                      "line": 105,
+                      "column": 16,
+                      "end_line": 105,
+                      "end_column": 17
+                    }
+                  ],
+                  "pkgpath": "",
+                  "ctx": "Load"
+                },
+                "filename": "testdata/ast/alignment.k",
+                "line": 105,
+                "column": 16,
+                "end_line": 105,
+                "end_column": 17
+              },
+              "operation": "Union"
+            },
+            "generators": [
+              {
+                "node": {
+                  "targets": [
+                    {
+                      "node": {
+                        "names": [
+                          {
+                            "node": "k",
+                            "filename": "testdata/ast/alignment.k",
+                            "line": 105,
+                            "column": 22,
+                            "end_line": 105,
+                            "end_column": 23
+                          }
+                        ],
+                        "pkgpath": "",
+                        "ctx": "Load"
+                      },
+                      "filename": "testdata/ast/alignment.k",
+                      "line": 105,
+                      "column": 22,
+                      "end_line": 105,
+                      "end_column": 23
+                    },
+                    {
+                      "node": {
+                        "names": [
+                          {
+                            "node": "v",
+                            "filename": "testdata/ast/alignment.k",
+                            "line": 105,
+                            "column": 25,
+                            "end_line": 105,
+                            "end_column": 26
+                          }
+                        ],
+                        "pkgpath": "",
+                        "ctx": "Load"
+                      },
+                      "filename": "testdata/ast/alignment.k",
+                      "line": 105,
+                      "column": 25,
+                      "end_line": 105,
+                      "end_column": 26
+                    }
+                  ],
+                  "iter": {
+                    "node": {
+                      "type": "Call",
+                      "func": {
+                        "node": {
+                          "type": "Selector",
+                          "value": {
+                            "node": {
+                              "type": "Config",
+                              "items": [
+                                {
+                                  "node": {
+                                    "key": {
+                                      "node": {
+                                        "type": "StringLit",
+                                        "is_long_string": false,
+                                        "raw_value": "\"a\"",
+                                        "value": "a"
+                                      },
+                                      "filename": "testdata/ast/alignment.k",
+                                      "line": 105,
+                                      "column": 31,
+                                      "end_line": 105,
+                                      "end_column": 34
+                                    },
+                                    "value": {
+                                      "node": {
+                                        "type": "NumberLit",
+                                        "binary_suffix": null,
+                                        "value": {
+                                          "type": "Int",
+                                          "value": 1
+                                        }
+                                      },
+                                      "filename": "testdata/ast/alignment.k",
+                                      "line": 105,
+                                      "column": 36,
+                                      "end_line": 105,
+                                      "end_column": 37
+                                    },
+                                    "operation": "Union"
+                                  },
+                                  "filename": "testdata/ast/alignment.k",
+                                  "line": 105,
+                                  "column": 31,
+                                  "end_line": 105,
+                                  "end_column": 37
+                                }
+                              ]
+                            },
+                            "filename": "testdata/ast/alignment.k",
+                            "line": 105,
+                            "column": 30,
+                            "end_line": 105,
+                            "end_column": 38
+                          },
+                          "attr": {
+                            "node": {
+                              "names": [
+                                {
+                                  "node": "items",
+                                  "filename": "testdata/ast/alignment.k",
+                                  "line": 105,
+                                  "column": 39,
+                                  "end_line": 105,
+                                  "end_column": 44
+                                }
+                              ],
+                              "pkgpath": "",
+                              "ctx": "Load"
+                            },
+                            "filename": "testdata/ast/alignment.k",
+                            "line": 105,
+                            "column": 39,
+                            "end_line": 105,
+                            "end_column": 44
+                          },
+                          "ctx": "Load",
+                          "has_question": false
+                        },
+                        "filename": "testdata/ast/alignment.k",
+                        "line": 105,
+                        "column": 30,
+                        "end_line": 105,
+                        "end_column": 44
+                      },
+                      "args": [],
+                      "keywords": []
+                    },
+                    "filename": "testdata/ast/alignment.k",
+                    "line": 105,
+                    "column": 30,
+                    "end_line": 105,
+                    "end_column": 46
+                  },
+                  "ifs": []
+                },
+                "filename": "testdata/ast/alignment.k",
+                "line": 105,
+                "column": 18,
+                "end_line": 105,
+                "end_column": 46
+              }
+            ]
+          },
+          "filename": "testdata/ast/alignment.k",
+          "line": 105,
+          "column": 12,
+          "end_line": 105,
+          "end_column": 47
+        },
+        "ty": null
+      },
+      "filename": "testdata/ast/alignment.k",
+      "line": 105,
+      "column": 0,
+      "end_line": 105,
+      "end_column": 47
+    },
+    {
+      "node": {
+        "type": "Assign",
+        "targets": [
+          {
+            "node": {
+              "name": {
+                "node": "config",
+                "filename": "testdata/ast/alignment.k",
+                "line": 106,
+                "column": 0,
+                "end_line": 106,
+                "end_column": 6
+              },
+              "paths": [],
+              "pkgpath": ""
+            },
+            "filename": "testdata/ast/alignment.k",
+            "line": 106,
+            "column": 0,
+            "end_line": 106,
+            "end_column": 6
+          }
+        ],
+        "value": {
+          "node": {
+            "type": "Config",
+            "items": [
+              {
+                "node": {
+                  "key": {
+                    "node": {
+                      "type": "Identifier",
+                      "names": [
+                        {
+                          "node": "a",
+                          "filename": "testdata/ast/alignment.k",
+                          "line": 106,
+                          "column": 10,
+                          "end_line": 106,
+                          "end_column": 11
+                        }
+                      ],
+                      "pkgpath": "",
+                      "ctx": "Load"
+                    },
+                    "filename": "testdata/ast/alignment.k",
+                    "line": 106,
+                    "column": 10,
+                    "end_line": 106,
+                    "end_column": 11
+                  },
+                  "value": {
+                    "node": {
+                      "type": "NumberLit",
+                      "binary_suffix": null,
+                      "value": {
+                        "type": "Int",
+                        "value": 1
+                      }
+                    },
+                    "filename": "testdata/ast/alignment.k",
+                    "line": 106,
+                    "column": 14,
+                    "end_line": 106,
+                    "end_column": 15
+                  },
+                  "operation": "Override"
+                },
+                "filename": "testdata/ast/alignment.k",
+                "line": 106,
+                "column": 10,
+                "end_line": 106,
+                "end_column": 15
+              },
+              {
+                "node": {
+                  "key": {
+                    "node": {
+                      "type": "Identifier",
+                      "names": [
+                        {
+                          "node": "b",
+                          "filename": "testdata/ast/alignment.k",
+                          "line": 106,
+                          "column": 17,
+                          "end_line": 106,
+                          "end_column": 18
+                        }
+                      ],
+                      "pkgpath": "",
+                      "ctx": "Load"
+                    },
+                    "filename": "testdata/ast/alignment.k",
+                    "line": 106,
+                    "column": 17,
+                    "end_line": 106,
+                    "end_column": 18
+                  },
+                  "value": {
+                    "node": {
+                      "type": "NumberLit",
+                      "binary_suffix": null,
+                      "value": {
+                        "type": "Int",
+                        "value": 2
+                      }
+                    },
+                    "filename": "testdata/ast/alignment.k",
+                    "line": 106,
+                    "column": 20,
+                    "end_line": 106,
+                    "end_column": 21
+                  },
+                  "operation": "Union"
+                },
+                "filename": "testdata/ast/alignment.k",
+                "line": 106,
+                "column": 17,
+                "end_line": 106,
+                "end_column": 21
+              }
+            ]
+          },
+          "filename": "testdata/ast/alignment.k",
+          "line": 106,
+          "column": 9,
+          "end_line": 106,
+          "end_column": 22
+        },
+        "ty": null
+      },
+      "filename": "testdata/ast/alignment.k",
+      "line": 106,
+      "column": 0,
+      "end_line": 106,
+      "end_column": 22
+    },
+    {
+      "node": {
+        "type": "Assign",
+        "targets": [
+          {
+            "node": {
+              "name": {
+                "node": "config_shorthand",
+                "filename": "testdata/ast/alignment.k",
+                "line": 107,
+                "column": 0,
+                "end_line": 107,
+                "end_column": 16
+              },
+              "paths": [],
+              "pkgpath": ""
+            },
+            "filename": "testdata/ast/alignment.k",
+            "line": 107,
+            "column": 0,
+            "end_line": 107,
+            "end_column": 16
+          }
+        ],
+        "value": {
+          "node": {
+            "type": "Config",
+            "items": [
+              {
+                "node": {
+                  "key": {
+                    "node": {
+                      "type": "Identifier",
+                      "names": [
+                        {
+                          "node": "lit_int",
+                          "filename": "testdata/ast/alignment.k",
+                          "line": 107,
+                          "column": 20,
+                          "end_line": 107,
+                          "end_column": 27
+                        }
+                      ],
+                      "pkgpath": "",
+                      "ctx": "Load"
+                    },
+                    "filename": "testdata/ast/alignment.k",
+                    "line": 107,
+                    "column": 20,
+                    "end_line": 107,
+                    "end_column": 27
+                  },
+                  "value": {
+                    "node": {
+                      "type": "Identifier",
+                      "names": [
+                        {
+                          "node": "lit_int",
+                          "filename": "testdata/ast/alignment.k",
+                          "line": 107,
+                          "column": 20,
+                          "end_line": 107,
+                          "end_column": 27
+                        }
+                      ],
+                      "pkgpath": "",
+                      "ctx": "Load"
+                    },
+                    "filename": "testdata/ast/alignment.k",
+                    "line": 107,
+                    "column": 20,
+                    "end_line": 107,
+                    "end_column": 27
+                  },
+                  "operation": "Override",
+                  "is_shorthand": true
+                },
+                "filename": "testdata/ast/alignment.k",
+                "line": 107,
+                "column": 20,
+                "end_line": 107,
+                "end_column": 27
+              },
+              {
+                "node": {
+                  "key": {
+                    "node": {
+                      "type": "Identifier",
+                      "names": [
+                        {
+                          "node": "lit_str",
+                          "filename": "testdata/ast/alignment.k",
+                          "line": 107,
+                          "column": 29,
+                          "end_line": 107,
+                          "end_column": 36
+                        }
+                      ],
+                      "pkgpath": "",
+                      "ctx": "Load"
+                    },
+                    "filename": "testdata/ast/alignment.k",
+                    "line": 107,
+                    "column": 29,
+                    "end_line": 107,
+                    "end_column": 36
+                  },
+                  "value": {
+                    "node": {
+                      "type": "Identifier",
+                      "names": [
+                        {
+                          "node": "lit_str",
+                          "filename": "testdata/ast/alignment.k",
+                          "line": 107,
+                          "column": 29,
+                          "end_line": 107,
+                          "end_column": 36
+                        }
+                      ],
+                      "pkgpath": "",
+                      "ctx": "Load"
+                    },
+                    "filename": "testdata/ast/alignment.k",
+                    "line": 107,
+                    "column": 29,
+                    "end_line": 107,
+                    "end_column": 36
+                  },
+                  "operation": "Override",
+                  "is_shorthand": true
+                },
+                "filename": "testdata/ast/alignment.k",
+                "line": 107,
+                "column": 29,
+                "end_line": 107,
+                "end_column": 36
+              }
+            ]
+          },
+          "filename": "testdata/ast/alignment.k",
+          "line": 107,
+          "column": 19,
+          "end_line": 107,
+          "end_column": 37
+        },
+        "ty": null
+      },
+      "filename": "testdata/ast/alignment.k",
+      "line": 107,
+      "column": 0,
+      "end_line": 107,
+      "end_column": 37
+    },
+    {
+      "node": {
+        "type": "Assign",
+        "targets": [
+          {
+            "node": {
+              "name": {
+                "node": "config_if",
+                "filename": "testdata/ast/alignment.k",
+                "line": 108,
+                "column": 0,
+                "end_line": 108,
+                "end_column": 9
+              },
+              "paths": [],
+              "pkgpath": ""
+            },
+            "filename": "testdata/ast/alignment.k",
+            "line": 108,
+            "column": 0,
+            "end_line": 108,
+            "end_column": 9
+          }
+        ],
+        "value": {
+          "node": {
+            "type": "Config",
+            "items": [
+              {
+                "node": {
+                  "key": null,
+                  "value": {
+                    "node": {
+                      "type": "ConfigIfEntry",
+                      "if_cond": {
+                        "node": {
+                          "type": "Identifier",
+                          "names": [
+                            {
+                              "node": "a",
+                              "filename": "testdata/ast/alignment.k",
+                              "line": 109,
+                              "column": 7,
+                              "end_line": 109,
+                              "end_column": 8
+                            }
+                          ],
+                          "pkgpath": "",
+                          "ctx": "Load"
+                        },
+                        "filename": "testdata/ast/alignment.k",
+                        "line": 109,
+                        "column": 7,
+                        "end_line": 109,
+                        "end_column": 8
+                      },
+                      "items": [
+                        {
+                          "node": {
+                            "key": {
+                              "node": {
+                                "type": "Identifier",
+                                "names": [
+                                  {
+                                    "node": "c",
+                                    "filename": "testdata/ast/alignment.k",
+                                    "line": 110,
+                                    "column": 8,
+                                    "end_line": 110,
+                                    "end_column": 9
+                                  }
+                                ],
+                                "pkgpath": "",
+                                "ctx": "Load"
+                              },
+                              "filename": "testdata/ast/alignment.k",
+                              "line": 110,
+                              "column": 8,
+                              "end_line": 110,
+                              "end_column": 9
+                            },
+                            "value": {
+                              "node": {
+                                "type": "NumberLit",
+                                "binary_suffix": null,
+                                "value": {
+                                  "type": "Int",
+                                  "value": 1
+                                }
+                              },
+                              "filename": "testdata/ast/alignment.k",
+                              "line": 110,
+                              "column": 12,
+                              "end_line": 110,
+                              "end_column": 13
+                            },
+                            "operation": "Override"
+                          },
+                          "filename": "testdata/ast/alignment.k",
+                          "line": 110,
+                          "column": 8,
+                          "end_line": 110,
+                          "end_column": 13
+                        }
+                      ],
+                      "orelse": {
+                        "node": {
+                          "type": "Config",
+                          "items": [
+                            {
+                              "node": {
+                                "key": {
+                                  "node": {
+                                    "type": "Identifier",
+                                    "names": [
+                                      {
+                                        "node": "c",
+                                        "filename": "testdata/ast/alignment.k",
+                                        "line": 112,
+                                        "column": 8,
+                                        "end_line": 112,
+                                        "end_column": 9
+                                      }
+                                    ],
+                                    "pkgpath": "",
+                                    "ctx": "Load"
+                                  },
+                                  "filename": "testdata/ast/alignment.k",
+                                  "line": 112,
+                                  "column": 8,
+                                  "end_line": 112,
+                                  "end_column": 9
+                                },
+                                "value": {
+                                  "node": {
+                                    "type": "NumberLit",
+                                    "binary_suffix": null,
+                                    "value": {
+                                      "type": "Int",
+                                      "value": 2
+                                    }
+                                  },
+                                  "filename": "testdata/ast/alignment.k",
+                                  "line": 112,
+                                  "column": 12,
+                                  "end_line": 112,
+                                  "end_column": 13
+                                },
+                                "operation": "Override"
+                              },
+                              "filename": "testdata/ast/alignment.k",
+                              "line": 112,
+                              "column": 8,
+                              "end_line": 112,
+                              "end_column": 13
+                            }
+                          ]
+                        },
+                        "filename": "testdata/ast/alignment.k",
+                        "line": 111,
+                        "column": 4,
+                        "end_line": 113,
+                        "end_column": 0
+                      }
+                    },
+                    "filename": "testdata/ast/alignment.k",
+                    "line": 109,
+                    "column": 4,
+                    "end_line": 113,
+                    "end_column": 0
+                  },
+                  "operation": "Union"
+                },
+                "filename": "testdata/ast/alignment.k",
+                "line": 109,
+                "column": 4,
+                "end_line": 113,
+                "end_column": 0
+              }
+            ]
+          },
+          "filename": "testdata/ast/alignment.k",
+          "line": 108,
+          "column": 12,
+          "end_line": 113,
+          "end_column": 1
+        },
+        "ty": null
+      },
+      "filename": "testdata/ast/alignment.k",
+      "line": 108,
+      "column": 0,
+      "end_line": 113,
+      "end_column": 1
+    },
+    {
+      "node": {
+        "type": "Assign",
+        "targets": [
+          {
+            "node": {
+              "name": {
+                "node": "starred",
+                "filename": "testdata/ast/alignment.k",
+                "line": 114,
+                "column": 0,
+                "end_line": 114,
+                "end_column": 7
+              },
+              "paths": [],
+              "pkgpath": ""
+            },
+            "filename": "testdata/ast/alignment.k",
+            "line": 114,
+            "column": 0,
+            "end_line": 114,
+            "end_column": 7
+          }
+        ],
+        "value": {
+          "node": {
+            "type": "List",
+            "elts": [
+              {
+                "node": {
+                  "type": "Starred",
+                  "value": {
+                    "node": {
+                      "type": "Identifier",
+                      "names": [
+                        {
+                          "node": "list_lit",
+                          "filename": "testdata/ast/alignment.k",
+                          "line": 114,
+                          "column": 12,
+                          "end_line": 114,
+                          "end_column": 20
+                        }
+                      ],
+                      "pkgpath": "",
+                      "ctx": "Load"
+                    },
+                    "filename": "testdata/ast/alignment.k",
+                    "line": 114,
+                    "column": 12,
+                    "end_line": 114,
+                    "end_column": 20
+                  },
+                  "ctx": "Load"
+                },
+                "filename": "testdata/ast/alignment.k",
+                "line": 114,
+                "column": 11,
+                "end_line": 114,
+                "end_column": 20
+              },
+              {
+                "node": {
+                  "type": "Identifier",
+                  "names": [
+                    {
+                      "node": "a",
+                      "filename": "testdata/ast/alignment.k",
+                      "line": 114,
+                      "column": 22,
+                      "end_line": 114,
+                      "end_column": 23
+                    }
+                  ],
+                  "pkgpath": "",
+                  "ctx": "Load"
+                },
+                "filename": "testdata/ast/alignment.k",
+                "line": 114,
+                "column": 22,
+                "end_line": 114,
+                "end_column": 23
+              }
+            ],
+            "ctx": "Load"
+          },
+          "filename": "testdata/ast/alignment.k",
+          "line": 114,
+          "column": 10,
+          "end_line": 114,
+          "end_column": 24
+        },
+        "ty": null
+      },
+      "filename": "testdata/ast/alignment.k",
+      "line": 114,
+      "column": 0,
+      "end_line": 114,
+      "end_column": 24
+    },
+    {
+      "node": {
+        "type": "Assign",
+        "targets": [
+          {
+            "node": {
+              "name": {
+                "node": "lambda_expr",
+                "filename": "testdata/ast/alignment.k",
+                "line": 115,
+                "column": 0,
+                "end_line": 115,
+                "end_column": 11
+              },
+              "paths": [],
+              "pkgpath": ""
+            },
+            "filename": "testdata/ast/alignment.k",
+            "line": 115,
+            "column": 0,
+            "end_line": 115,
+            "end_column": 11
+          }
+        ],
+        "value": {
+          "node": {
+            "type": "Lambda",
+            "args": {
+              "node": {
+                "args": [
+                  {
+                    "node": {
+                      "names": [
+                        {
+                          "node": "p",
+                          "filename": "testdata/ast/alignment.k",
+                          "line": 115,
+                          "column": 21,
+                          "end_line": 115,
+                          "end_column": 22
+                        }
+                      ],
+                      "pkgpath": "",
+                      "ctx": "Load"
+                    },
+                    "filename": "testdata/ast/alignment.k",
+                    "line": 115,
+                    "column": 21,
+                    "end_line": 115,
+                    "end_column": 22
+                  }
+                ],
+                "defaults": [
+                  null
+                ],
+                "ty_list": [
+                  {
+                    "node": {
+                      "type": "Basic",
+                      "value": "Int"
+                    },
+                    "filename": "testdata/ast/alignment.k",
+                    "line": 115,
+                    "column": 24,
+                    "end_line": 115,
+                    "end_column": 27
+                  }
+                ]
+              },
+              "filename": "testdata/ast/alignment.k",
+              "line": 115,
+              "column": 21,
+              "end_line": 115,
+              "end_column": 27
+            },
+            "body": [
+              {
+                "node": {
+                  "type": "Expr",
+                  "exprs": [
+                    {
+                      "node": {
+                        "type": "Identifier",
+                        "names": [
+                          {
+                            "node": "p",
+                            "filename": "testdata/ast/alignment.k",
+                            "line": 115,
+                            "column": 37,
+                            "end_line": 115,
+                            "end_column": 38
+                          }
+                        ],
+                        "pkgpath": "",
+                        "ctx": "Load"
+                      },
+                      "filename": "testdata/ast/alignment.k",
+                      "line": 115,
+                      "column": 37,
+                      "end_line": 115,
+                      "end_column": 38
+                    }
+                  ]
+                },
+                "filename": "testdata/ast/alignment.k",
+                "line": 115,
+                "column": 37,
+                "end_line": 115,
+                "end_column": 38
+              }
+            ],
+            "return_ty": {
+              "node": {
+                "type": "Basic",
+                "value": "Int"
+              },
+              "filename": "testdata/ast/alignment.k",
+              "line": 115,
+              "column": 31,
+              "end_line": 115,
+              "end_column": 34
+            }
+          },
+          "filename": "testdata/ast/alignment.k",
+          "line": 115,
+          "column": 14,
+          "end_line": 115,
+          "end_column": 40
+        },
+        "ty": null
+      },
+      "filename": "testdata/ast/alignment.k",
+      "line": 115,
+      "column": 0,
+      "end_line": 115,
+      "end_column": 40
+    },
+    {
+      "node": {
+        "type": "Assign",
+        "targets": [
+          {
+            "node": {
+              "name": {
+                "node": "lambda_plain",
+                "filename": "testdata/ast/alignment.k",
+                "line": 116,
+                "column": 0,
+                "end_line": 116,
+                "end_column": 12
+              },
+              "paths": [],
+              "pkgpath": ""
+            },
+            "filename": "testdata/ast/alignment.k",
+            "line": 116,
+            "column": 0,
+            "end_line": 116,
+            "end_column": 12
+          }
+        ],
+        "value": {
+          "node": {
+            "type": "Lambda",
+            "args": null,
+            "body": [
+              {
+                "node": {
+                  "type": "Expr",
+                  "exprs": [
+                    {
+                      "node": {
+                        "type": "Identifier",
+                        "names": [
+                          {
+                            "node": "a",
+                            "filename": "testdata/ast/alignment.k",
+                            "line": 116,
+                            "column": 24,
+                            "end_line": 116,
+                            "end_column": 25
+                          }
+                        ],
+                        "pkgpath": "",
+                        "ctx": "Load"
+                      },
+                      "filename": "testdata/ast/alignment.k",
+                      "line": 116,
+                      "column": 24,
+                      "end_line": 116,
+                      "end_column": 25
+                    }
+                  ]
+                },
+                "filename": "testdata/ast/alignment.k",
+                "line": 116,
+                "column": 24,
+                "end_line": 116,
+                "end_column": 25
+              }
+            ],
+            "return_ty": null
+          },
+          "filename": "testdata/ast/alignment.k",
+          "line": 116,
+          "column": 15,
+          "end_line": 116,
+          "end_column": 27
+        },
+        "ty": null
+      },
+      "filename": "testdata/ast/alignment.k",
+      "line": 116,
+      "column": 0,
+      "end_line": 116,
+      "end_column": 27
+    },
+    {
+      "node": {
+        "type": "Assign",
+        "targets": [
+          {
+            "node": {
+              "name": {
+                "node": "missing_expr",
+                "filename": "testdata/ast/alignment.k",
+                "line": 117,
+                "column": 0,
+                "end_line": 117,
+                "end_column": 12
+              },
+              "paths": [],
+              "pkgpath": ""
+            },
+            "filename": "testdata/ast/alignment.k",
+            "line": 117,
+            "column": 0,
+            "end_line": 117,
+            "end_column": 12
+          }
+        ],
+        "value": {
+          "node": {
+            "type": "Identifier",
+            "names": [
+              {
+                "node": "missing",
+                "filename": "testdata/ast/alignment.k",
+                "line": 117,
+                "column": 15,
+                "end_line": 117,
+                "end_column": 22
+              }
+            ],
+            "pkgpath": "",
+            "ctx": "Load"
+          },
+          "filename": "testdata/ast/alignment.k",
+          "line": 117,
+          "column": 15,
+          "end_line": 117,
+          "end_column": 22
+        },
+        "ty": null
+      },
+      "filename": "testdata/ast/alignment.k",
+      "line": 117,
+      "column": 0,
+      "end_line": 117,
+      "end_column": 22
+    },
+    {
+      "node": {
+        "type": "Expr",
+        "exprs": [
+          {
+            "node": {
+              "type": "Binary",
+              "left": {
+                "node": {
+                  "type": "Identifier",
+                  "names": [
+                    {
+                      "node": "a",
+                      "filename": "testdata/ast/alignment.k",
+                      "line": 121,
+                      "column": 0,
+                      "end_line": 121,
+                      "end_column": 1
+                    }
+                  ],
+                  "pkgpath": "",
+                  "ctx": "Load"
+                },
+                "filename": "testdata/ast/alignment.k",
+                "line": 121,
+                "column": 0,
+                "end_line": 121,
+                "end_column": 1
+              },
+              "op": "Add",
+              "right": {
+                "node": {
+                  "type": "NumberLit",
+                  "binary_suffix": null,
+                  "value": {
+                    "type": "Int",
+                    "value": 1
+                  }
+                },
+                "filename": "testdata/ast/alignment.k",
+                "line": 121,
+                "column": 4,
+                "end_line": 121,
+                "end_column": 5
+              }
+            },
+            "filename": "testdata/ast/alignment.k",
+            "line": 121,
+            "column": 0,
+            "end_line": 121,
+            "end_column": 5
+          }
+        ]
+      },
+      "filename": "testdata/ast/alignment.k",
+      "line": 121,
+      "column": 0,
+      "end_line": 121,
+      "end_column": 5
+    },
+    {
+      "node": {
+        "type": "TypeAlias",
+        "type_name": {
+          "node": {
+            "names": [
+              {
+                "node": "TFuncNoArgs",
+                "filename": "testdata/ast/alignment.k",
+                "line": 129,
+                "column": 5,
+                "end_line": 129,
+                "end_column": 16
+              }
+            ],
+            "pkgpath": "",
+            "ctx": "Load"
+          },
+          "filename": "testdata/ast/alignment.k",
+          "line": 129,
+          "column": 5,
+          "end_line": 129,
+          "end_column": 16
+        },
+        "type_value": {
+          "node": "() -> bool",
+          "filename": "testdata/ast/alignment.k",
+          "line": 129,
+          "column": 19,
+          "end_line": 129,
+          "end_column": 29
+        },
+        "ty": {
+          "node": {
+            "type": "Function",
+            "value": {
+              "params_ty": null,
+              "ret_ty": {
+                "node": {
+                  "type": "Basic",
+                  "value": "Bool"
+                },
+                "filename": "testdata/ast/alignment.k",
+                "line": 129,
+                "column": 25,
+                "end_line": 129,
+                "end_column": 29
+              }
+            }
+          },
+          "filename": "testdata/ast/alignment.k",
+          "line": 129,
+          "column": 19,
+          "end_line": 129,
+          "end_column": 29
+        }
+      },
+      "filename": "testdata/ast/alignment.k",
+      "line": 129,
+      "column": 5,
+      "end_line": 129,
+      "end_column": 29
+    }
+  ],
+  "comments": [
+    {
+      "node": {
+        "text": "# Every AST node shape the language bindings model, in one file."
+      },
+      "filename": "testdata/ast/alignment.k",
+      "line": 1,
+      "column": 0,
+      "end_line": 1,
+      "end_column": 64
+    },
+    {
+      "node": {
+        "text": "#"
+      },
+      "filename": "testdata/ast/alignment.k",
+      "line": 2,
+      "column": 0,
+      "end_line": 2,
+      "end_column": 1
+    },
+    {
+      "node": {
+        "text": "# Each binding's alignment test parses this fixture through the real parser"
+      },
+      "filename": "testdata/ast/alignment.k",
+      "line": 3,
+      "column": 0,
+      "end_line": 3,
+      "end_column": 75
+    },
+    {
+      "node": {
+        "text": "# and asserts the resulting `ast_json` against `alignment.json`, the golden"
+      },
+      "filename": "testdata/ast/alignment.k",
+      "line": 4,
+      "column": 0,
+      "end_line": 4,
+      "end_column": 75
+    },
+    {
+      "node": {
+        "text": "# capture next to it. The point is to pin the *wire contract* — which nodes"
+      },
+      "filename": "testdata/ast/alignment.k",
+      "line": 5,
+      "column": 0,
+      "end_line": 5,
+      "end_column": 75
+    },
+    {
+      "node": {
+        "text": "# carry a `type` discriminator, what the `Type` enum actually serializes to,"
+      },
+      "filename": "testdata/ast/alignment.k",
+      "line": 6,
+      "column": 0,
+      "end_line": 6,
+      "end_column": 76
+    },
+    {
+      "node": {
+        "text": "# and whether serde flattens a newtype variant's fields — because those are"
+      },
+      "filename": "testdata/ast/alignment.k",
+      "line": 7,
+      "column": 0,
+      "end_line": 7,
+      "end_column": 75
+    },
+    {
+      "node": {
+        "text": "# the details that are easiest to get wrong and that fail silently (an"
+      },
+      "filename": "testdata/ast/alignment.k",
+      "line": 8,
+      "column": 0,
+      "end_line": 8,
+      "end_column": 70
+    },
+    {
+      "node": {
+        "text": "# unknown tag decodes to null rather than throwing)."
+      },
+      "filename": "testdata/ast/alignment.k",
+      "line": 9,
+      "column": 0,
+      "end_line": 9,
+      "end_column": 52
+    },
+    {
+      "node": {
+        "text": "#"
+      },
+      "filename": "testdata/ast/alignment.k",
+      "line": 10,
+      "column": 0,
+      "end_line": 10,
+      "end_column": 1
+    },
+    {
+      "node": {
+        "text": "# Keep it syntactically valid. A diagnostic here means the fixture is wrong,"
+      },
+      "filename": "testdata/ast/alignment.k",
+      "line": 11,
+      "column": 0,
+      "end_line": 11,
+      "end_column": 76
+    },
+    {
+      "node": {
+        "text": "# not the binding. The `data/cloud` and `foo/bar` packages next to this file"
+      },
+      "filename": "testdata/ast/alignment.k",
+      "line": 12,
+      "column": 0,
+      "end_line": 12,
+      "end_column": 76
+    },
+    {
+      "node": {
+        "text": "# exist so the imports resolve; see `README.md` for how to regenerate"
+      },
+      "filename": "testdata/ast/alignment.k",
+      "line": 13,
+      "column": 0,
+      "end_line": 13,
+      "end_column": 69
+    },
+    {
+      "node": {
+        "text": "# `alignment.json`."
+      },
+      "filename": "testdata/ast/alignment.k",
+      "line": 14,
+      "column": 0,
+      "end_line": 14,
+      "end_column": 19
+    },
+    {
+      "node": {
+        "text": "# --- Type variants -------------------------------------------------------"
+      },
+      "filename": "testdata/ast/alignment.k",
+      "line": 19,
+      "column": 0,
+      "end_line": 19,
+      "end_column": 75
+    },
+    {
+      "node": {
+        "text": "# A schema with an index signature exercises `SchemaIndexSignature`. Note the"
+      },
+      "filename": "testdata/ast/alignment.k",
+      "line": 45,
+      "column": 0,
+      "end_line": 45,
+      "end_column": 77
+    },
+    {
+      "node": {
+        "text": "# signature is a statement in the schema *body*, not part of the `schema`"
+      },
+      "filename": "testdata/ast/alignment.k",
+      "line": 46,
+      "column": 0,
+      "end_line": 46,
+      "end_column": 73
+    },
+    {
+      "node": {
+        "text": "# header — `schema Bag[k: str]` is a generic schema with an `args` list."
+      },
+      "filename": "testdata/ast/alignment.k",
+      "line": 47,
+      "column": 0,
+      "end_line": 47,
+      "end_column": 72
+    },
+    {
+      "node": {
+        "text": "# --- Schema instantiation, config, keyword and positional args -----------"
+      },
+      "filename": "testdata/ast/alignment.k",
+      "line": 51,
+      "column": 0,
+      "end_line": 51,
+      "end_column": 75
+    },
+    {
+      "node": {
+        "text": "# --- Rules ---------------------------------------------------------------"
+      },
+      "filename": "testdata/ast/alignment.k",
+      "line": 57,
+      "column": 0,
+      "end_line": 57,
+      "end_column": 75
+    },
+    {
+      "node": {
+        "text": "# --- Assignment, aug-assign, unification, assert, if --------------------"
+      },
+      "filename": "testdata/ast/alignment.k",
+      "line": 61,
+      "column": 0,
+      "end_line": 61,
+      "end_column": 74
+    },
+    {
+      "node": {
+        "text": "# Member and index paths on an assignment target."
+      },
+      "filename": "testdata/ast/alignment.k",
+      "line": 65,
+      "column": 0,
+      "end_line": 65,
+      "end_column": 49
+    },
+    {
+      "node": {
+        "text": "# --- Expressions ---------------------------------------------------------"
+      },
+      "filename": "testdata/ast/alignment.k",
+      "line": 75,
+      "column": 0,
+      "end_line": 75,
+      "end_column": 75
+    },
+    {
+      "node": {
+        "text": "# A dotted *name* is a single Identifier with several names; a Selector only"
+      },
+      "filename": "testdata/ast/alignment.k",
+      "line": 96,
+      "column": 0,
+      "end_line": 96,
+      "end_column": 76
+    },
+    {
+      "node": {
+        "text": "# appears once there is a subscript or a `?` in the chain."
+      },
+      "filename": "testdata/ast/alignment.k",
+      "line": 97,
+      "column": 0,
+      "end_line": 97,
+      "end_column": 58
+    },
+    {
+      "node": {
+        "text": "# A bare expression statement: `Stmt::Expr`. The check block and the lambda"
+      },
+      "filename": "testdata/ast/alignment.k",
+      "line": 119,
+      "column": 0,
+      "end_line": 119,
+      "end_column": 75
+    },
+    {
+      "node": {
+        "text": "# bodies produce these too, but only nested."
+      },
+      "filename": "testdata/ast/alignment.k",
+      "line": 120,
+      "column": 0,
+      "end_line": 120,
+      "end_column": 44
+    },
+    {
+      "node": {
+        "text": "# --- Zero-parameter function type -----------------------------------------"
+      },
+      "filename": "testdata/ast/alignment.k",
+      "line": 123,
+      "column": 0,
+      "end_line": 123,
+      "end_column": 76
+    },
+    {
+      "node": {
+        "text": "# `ast::FunctionType.params_ty` is `Option<Vec<NodeRef<Type>>>`, which looks"
+      },
+      "filename": "testdata/ast/alignment.k",
+      "line": 124,
+      "column": 0,
+      "end_line": 124,
+      "end_column": 76
+    },
+    {
+      "node": {
+        "text": "# three-state. It is not: `crates/parser/src/parser/ty.rs` only ever builds"
+      },
+      "filename": "testdata/ast/alignment.k",
+      "line": 125,
+      "column": 0,
+      "end_line": 125,
+      "end_column": 75
+    },
+    {
+      "node": {
+        "text": "# `None` or `Some(non-empty)`, so the wire carries `params_ty: null` and never"
+      },
+      "filename": "testdata/ast/alignment.k",
+      "line": 126,
+      "column": 0,
+      "end_line": 126,
+      "end_column": 78
+    },
+    {
+      "node": {
+        "text": "# `[]`. A binding that maps `null` to `[]` is therefore normalising, not"
+      },
+      "filename": "testdata/ast/alignment.k",
+      "line": 127,
+      "column": 0,
+      "end_line": 127,
+      "end_column": 72
+    },
+    {
+      "node": {
+        "text": "# losing information — but nothing else pins that, so this does."
+      },
+      "filename": "testdata/ast/alignment.k",
+      "line": 128,
+      "column": 0,
+      "end_line": 128,
+      "end_column": 64
+    }
+  ]
+}

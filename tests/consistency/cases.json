@@ -1,0 +1,231 @@
+{
+  "version": 1,
+  "generated_by": "tests/consistency/generate_cases.py",
+  "cases": [
+    {
+      "name": "ping",
+      "rpc": "KclService.Ping",
+      "new_core": false,
+      "args": {
+        "value": "consistency"
+      },
+      "expect": {
+        "value": "consistency"
+      }
+    },
+    {
+      "name": "exec_program_basic",
+      "rpc": "KclService.ExecProgram",
+      "new_core": false,
+      "args": {
+        "k_code_list": [
+          "alice = {age = 18}"
+        ],
+        "work_dir": "",
+        "k_filename_list": [],
+        "args": [],
+        "overrides": [],
+        "disable_yaml_result": false,
+        "print_override_ast": false,
+        "strict_range_check": false,
+        "disable_none": false,
+        "verbose": 0,
+        "debug": 0,
+        "sort_keys": false,
+        "external_pkgs": [],
+        "include_schema_type_path": false,
+        "compile_only": false,
+        "show_hidden": false,
+        "path_selector": [],
+        "fast_eval": false,
+        "error_format": "",
+        "format": "",
+        "emit_attribute_metadata": false
+      },
+      "expect": {
+        "yaml_result": "alice:\n  age: 18",
+        "json_result": "{\"alice\": {\"age\": 18}}"
+      }
+    },
+    {
+      "name": "exec_program_overrides",
+      "rpc": "KclService.ExecProgram",
+      "new_core": false,
+      "args": {
+        "k_code_list": [
+          "alice = {age = 1}"
+        ],
+        "overrides": [
+          "alice.age=18"
+        ],
+        "work_dir": "",
+        "k_filename_list": [],
+        "args": [],
+        "disable_yaml_result": false,
+        "print_override_ast": false,
+        "strict_range_check": false,
+        "disable_none": false,
+        "verbose": 0,
+        "debug": 0,
+        "sort_keys": false,
+        "external_pkgs": [],
+        "include_schema_type_path": false,
+        "compile_only": false,
+        "show_hidden": false,
+        "path_selector": [],
+        "fast_eval": false,
+        "error_format": "",
+        "format": "",
+        "emit_attribute_metadata": false
+      },
+      "expect": {
+        "yaml_result": "alice:\n  age: 18"
+      }
+    },
+    {
+      "name": "format_code",
+      "rpc": "KclService.FormatCode",
+      "new_core": false,
+      "args": {
+        "source": "a=1\n"
+      },
+      "expect": {
+        "formatted": "a = 1\n"
+      }
+    },
+    {
+      "name": "validate_code_ok",
+      "rpc": "KclService.ValidateCode",
+      "new_core": false,
+      "args": {
+        "data": "{\"name\": \"Alice\"}",
+        "code": "schema Person:\n    name: str\n    check:\n        len(name) > 0",
+        "datafile": "",
+        "file": "",
+        "schema": "",
+        "attribute_name": "",
+        "format": "",
+        "external_pkgs": []
+      },
+      "expect": {
+        "success": true,
+        "err_message": ""
+      }
+    },
+    {
+      "name": "validate_code_invalid",
+      "rpc": "KclService.ValidateCode",
+      "new_core": false,
+      "args": {
+        "data": "{\"name\": \"\"}",
+        "code": "schema Person:\n    name: str\n    check:\n        len(name) > 0",
+        "datafile": "",
+        "file": "",
+        "schema": "",
+        "attribute_name": "",
+        "format": "",
+        "external_pkgs": []
+      },
+      "expect": {
+        "success": false
+      }
+    },
+    {
+      "name": "generate_kcl_json",
+      "rpc": "KclService.GenerateKcl",
+      "new_core": true,
+      "args": {
+        "source": "{\"a\": {\"b\": 1}, \"c\": [1, 2.5, true, null], \"d-e\": \"x\"}",
+        "filename": "data.json",
+        "format": ""
+      },
+      "expect": {
+        "kcl": "a = {\n    b = 1\n}\nc = [1, 2.5, true, None]\n\"d-e\" = \"x\"\n"
+      }
+    },
+    {
+      "name": "generate_kcl_yaml",
+      "rpc": "KclService.GenerateKcl",
+      "new_core": true,
+      "args": {
+        "source": "a: 1\nb:\n  - x\n  - y\n",
+        "filename": "data.yaml",
+        "format": ""
+      },
+      "expect": {
+        "kcl": "a = 1\nb = [\"x\", \"y\"]\n"
+      }
+    },
+    {
+      "name": "generate_toml",
+      "rpc": "KclService.GenerateToml",
+      "new_core": true,
+      "args": {
+        "exec_args": {
+          "k_code_list": [
+            "app = {name = \"demo\", ports = [80, 443], tls = {enabled = True}}"
+          ],
+          "work_dir": "",
+          "k_filename_list": [],
+          "args": [],
+          "overrides": [],
+          "disable_yaml_result": false,
+          "print_override_ast": false,
+          "strict_range_check": false,
+          "disable_none": false,
+          "verbose": 0,
+          "debug": 0,
+          "sort_keys": false,
+          "external_pkgs": [],
+          "include_schema_type_path": false,
+          "compile_only": false,
+          "show_hidden": false,
+          "path_selector": [],
+          "fast_eval": false,
+          "error_format": "",
+          "format": "",
+          "emit_attribute_metadata": false
+        },
+        "sort_keys": false
+      },
+      "expect": {
+        "toml": "[app]\nname = \"demo\"\nports = [80, 443]\n\n[app.tls]\nenabled = true\n"
+      }
+    },
+    {
+      "name": "format_test_report",
+      "rpc": "KclService.FormatTestReport",
+      "new_core": true,
+      "args": {
+        "result": {
+          "info": [
+            {
+              "name": "test_pass",
+              "duration": "1500",
+              "error": "",
+              "log_message": "",
+              "line_hits": {}
+            },
+            {
+              "name": "test_log",
+              "duration": "2500",
+              "log_message": "hello log",
+              "error": "",
+              "line_hits": {}
+            },
+            {
+              "name": "test_fail",
+              "error": "Error: assert failed",
+              "duration": "1000",
+              "log_message": "",
+              "line_hits": {}
+            }
+          ]
+        }
+      },
+      "expect": {
+        "report": "test_pass: PASS (1ms)\ntest_log: PASS (2ms)\nhello log\ntest_fail: FAIL (1ms)\nError: assert failed\n--------------------------------------------------------------------------------\nPASS: 2/3\nFAIL: 1/3\n"
+      }
+    }
+  ]
+}

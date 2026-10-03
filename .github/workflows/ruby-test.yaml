@@ -12,6 +12,9 @@ on:
       - main
     paths:
       - "ruby/**"
+      # ast_contract_test decodes the captured parser output as its fixture, so
+      # regenerating the golden file must re-run this workflow.
+      - "testdata/ast/**"
       - ".github/workflows/ruby-test.yaml"
   workflow_dispatch:
 
