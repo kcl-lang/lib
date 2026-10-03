@@ -39,8 +39,20 @@ from .spec_pb2 import (
     RenameCodeResult,
     TestArgs,
     TestResult,
+    FormatTestReportArgs,
+    FormatTestReportResult,
     UpdateDependenciesArgs,
     UpdateDependenciesResult,
+    GenerateTomlArgs,
+    GenerateTomlResult,
+    GenerateKclArgs,
+    GenerateKclResult,
+    GenerateOpenAPIArgs,
+    GenerateOpenAPIResult,
+    GenerateProtoArgs,
+    GenerateProtoResult,
+    GenerateDocArgs,
+    GenerateDocResult,
 )
 from google.protobuf import message as _message
 
@@ -563,6 +575,33 @@ class API:
         """
         return self.call("KclService.Test", args)
 
+    def format_test_report(
+        self, args: FormatTestReportArgs
+    ) -> FormatTestReportResult:
+        """Format a test result into a human-readable report.
+
+        The output is byte-identical to the kcl-go `PrettyReporter` format and
+        is deterministic for a given result. Every line, including the last
+        one, ends with a newline.
+
+        ## Example
+
+        Python Code
+
+        ```python
+        import kcl_lib.api as api
+        args = api.FormatTestReportArgs(
+            result=api.TestResult(
+                info=[api.TestCaseInfo(name="test_case_1", error="", duration=1500, log_message="")],
+            ),
+        )
+        api_instance = api.API()
+        result = api_instance.format_test_report(args)
+        assert result.report.decode() == "test_case_1: PASS (1ms)\\n", result.report
+        ```
+        """
+        return self.call("KclService.FormatTestReport", args)
+
     def update_dependencies(
         self, args: UpdateDependenciesArgs
     ) -> UpdateDependenciesResult:
@@ -639,6 +678,92 @@ class API:
         ```
         """
         return self.call("KclService.UpdateDependencies", args)
+
+    def generate_toml(self, args: GenerateTomlArgs) -> GenerateTomlResult:
+        """Serialize the evaluated result of a KCL program to TOML.
+
+        ## Example
+
+        ```python
+        import kcl_lib.api as api
+        args = api.GenerateTomlArgs(
+            exec_args=api.ExecProgramArgs(k_code_list=["a = {b = 1, c = [1, 2]}"]),
+        )
+        api_instance = api.API()
+        result = api_instance.generate_toml(args)
+        assert result.toml == "[a]\\nb = 1\\nc = [1, 2]\\n"
+        ```
+        """
+        return self.call("KclService.GenerateToml", args)
+
+    def generate_kcl(self, args: GenerateKclArgs) -> GenerateKclResult:
+        """Generate KCL source from data content (JSON, YAML or TOML).
+
+        ## Example
+
+        ```python
+        import kcl_lib.api as api
+        args = api.GenerateKclArgs(source="{\\"a\\": {\\"b\\": 1}}", filename="data.json")
+        api_instance = api.API()
+        result = api_instance.generate_kcl(args)
+        assert result.kcl == "a = {\\n    b = 1\\n}\\n"
+        ```
+        """
+        return self.call("KclService.GenerateKcl", args)
+
+    def generate_openapi(self, args: GenerateOpenAPIArgs) -> GenerateOpenAPIResult:
+        """Generate an OpenAPI spec from the schemas of a KCL package.
+
+        ## Example
+
+        ```python
+        import kcl_lib.api as api
+        args = api.GenerateOpenAPIArgs(
+            parse_args=api.ParseProgramArgs(paths=["./src/testdata/gen_openapi/main.k"]),
+            version="v3",
+        )
+        api_instance = api.API()
+        result = api_instance.generate_openapi(args)
+        assert "\\"openapi\\": \\"3.0.0\\"" in result.spec
+        ```
+        """
+        return self.call("KclService.GenerateOpenAPI", args)
+
+    def generate_proto(self, args: GenerateProtoArgs) -> GenerateProtoResult:
+        """Generate proto3 definitions from the schemas of a KCL package.
+
+        ## Example
+
+        ```python
+        import kcl_lib.api as api
+        args = api.GenerateProtoArgs(
+            parse_args=api.ParseProgramArgs(paths=["./src/testdata/gen_openapi/main.k"]),
+            package="example.v1",
+        )
+        api_instance = api.API()
+        result = api_instance.generate_proto(args)
+        assert result.proto.startswith('syntax = "proto3";')
+        ```
+        """
+        return self.call("KclService.GenerateProto", args)
+
+    def generate_doc(self, args: GenerateDocArgs) -> GenerateDocResult:
+        """Generate documentation from the schemas of a KCL package.
+
+        ## Example
+
+        ```python
+        import kcl_lib.api as api
+        args = api.GenerateDocArgs(
+            parse_args=api.ParseProgramArgs(paths=["./src/testdata/gen_openapi/main.k"]),
+            format="md",
+        )
+        api_instance = api.API()
+        result = api_instance.generate_doc(args)
+        assert result.content.startswith("# Schemas")
+        ```
+        """
+        return self.call("KclService.GenerateDoc", args)
 
     def get_version(self) -> GetVersionResult:
         """Return the KCL service version information.
@@ -732,8 +857,20 @@ class API:
             return RenameCodeArgs()
         elif method in ["Test", "KclService.Test"]:
             return TestArgs()
+        elif method in ["FormatTestReport", "KclService.FormatTestReport"]:
+            return FormatTestReportArgs()
         elif method in ["UpdateDependencies", "KclService.UpdateDependencies"]:
             return UpdateDependenciesArgs()
+        elif method in ["GenerateToml", "KclService.GenerateToml"]:
+            return GenerateTomlArgs()
+        elif method in ["GenerateKcl", "KclService.GenerateKcl"]:
+            return GenerateKclArgs()
+        elif method in ["GenerateOpenAPI", "KclService.GenerateOpenAPI"]:
+            return GenerateOpenAPIArgs()
+        elif method in ["GenerateProto", "KclService.GenerateProto"]:
+            return GenerateProtoArgs()
+        elif method in ["GenerateDoc", "KclService.GenerateDoc"]:
+            return GenerateDocArgs()
         elif method in ["GetVersion", "KclService.GetVersion"]:
             return GetVersionArgs()
         raise Exception(f"unknown method: {method}")
@@ -775,8 +912,20 @@ class API:
             return RenameCodeResult()
         elif method in ["Test", "KclService.Test"]:
             return TestResult()
+        elif method in ["FormatTestReport", "KclService.FormatTestReport"]:
+            return FormatTestReportResult()
         elif method in ["UpdateDependencies", "KclService.UpdateDependencies"]:
             return UpdateDependenciesResult()
+        elif method in ["GenerateToml", "KclService.GenerateToml"]:
+            return GenerateTomlResult()
+        elif method in ["GenerateKcl", "KclService.GenerateKcl"]:
+            return GenerateKclResult()
+        elif method in ["GenerateOpenAPI", "KclService.GenerateOpenAPI"]:
+            return GenerateOpenAPIResult()
+        elif method in ["GenerateProto", "KclService.GenerateProto"]:
+            return GenerateProtoResult()
+        elif method in ["GenerateDoc", "KclService.GenerateDoc"]:
+            return GenerateDocResult()
         elif method in ["GetVersion", "KclService.GetVersion"]:
             return GetVersionResult()
         elif method in ["ListMethod", "BuiltinService.ListMethod"]:

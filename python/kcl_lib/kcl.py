@@ -21,6 +21,7 @@ underlying pyo3 runtime; the only existing third-party dependency is
 from __future__ import annotations
 
 import json as _json
+import os
 import pathlib
 from dataclasses import dataclass, field
 from typing import Any, Dict, List, Optional, Sequence, Tuple, Union
@@ -33,6 +34,18 @@ from .api.spec_pb2 import (
     ExternalPkg,
     FormatCodeArgs,
     FormatPathArgs,
+    FormatTestReportArgs,
+    FormatTestReportResult,
+    GenerateDocArgs,
+    GenerateDocResult,
+    GenerateKclArgs,
+    GenerateKclResult,
+    GenerateOpenAPIArgs,
+    GenerateOpenAPIResult,
+    GenerateProtoArgs,
+    GenerateProtoResult,
+    GenerateTomlArgs,
+    GenerateTomlResult,
     GetSchemaTypeMappingArgs,
     GetVersionArgs,
     GetVersionResult,
@@ -88,6 +101,12 @@ __all__ = [
     "must_run",
     "format_code",
     "format_path",
+    "format_test_report",
+    "generate_doc",
+    "generate_kcl",
+    "generate_openapi",
+    "generate_proto",
+    "generate_toml",
     "lint_path",
     "override_file",
     "validate_code",
@@ -1057,6 +1076,12 @@ def test(
     return api.test(args)
 
 
+def format_test_report(args: FormatTestReportArgs) -> FormatTestReportResult:
+    """Format a :class:`TestResult` into a human-readable report."""
+    api = API(plugin_agent=_plugin.plugin_agent_addr)
+    return api.format_test_report(args)
+
+
 def get_schema_type(filename: str, src: Union[bytes, bytearray, str], schema_name: str):
     """Return schema types from a KCL file or in-memory source."""
     api = API(plugin_agent=_plugin.plugin_agent_addr)
@@ -1131,38 +1156,151 @@ def get_full_schema_type_mapping_under_path(
     return dict(resp.schema_type_mapping)
 
 
+def _canonical_path(path: str) -> str:
+    """Normalize ``path`` the way the runtime canonicalizes RPC paths.
+
+    ``LoadPackage`` keys its ``imports`` map by absolute, symlink-resolved
+    paths (``adjust_canonicalization`` on the Rust side, which collapses
+    macOS ``/var`` → ``/private/var`` among others). ``os.path.realpath``
+    performs the same normalization so caller-supplied paths line up with
+    the graph keys.
+    """
+    return os.path.realpath(path)
+
+
+def _dep_graph(path: str) -> Dict[str, List[str]]:
+    """Load the package at ``path`` and return its direct-import graph.
+
+    Performs a single ``LoadPackage`` RPC and maps each importing file's
+    absolute path to the sorted list of absolute paths it directly imports.
+    Import entries without a resolved path (builtins, unresolvable
+    specifiers) are dropped. Returns an empty graph when the RPC fails.
+    """
+    api = API(plugin_agent=_plugin.plugin_agent_addr)
+    args = LoadPackageArgs(parse_args=ParseProgramArgs(paths=[path]))
+    try:
+        result = api.load_package(args)
+    except Exception:
+        return {}
+    graph: Dict[str, List[str]] = {}
+    for importer, file_imports in result.imports.items():
+        resolved = sorted({info.resolved for info in file_imports.imports if info.resolved})
+        graph[importer] = resolved
+    return graph
+
+
+def _transitive_closure(
+    starts: List[str], adjacency: Dict[str, List[str]]
+) -> set:
+    """Files reachable from ``starts`` following ``adjacency`` edges.
+
+    Plain iterative DFS; the start nodes themselves are not included in the
+    returned set (callers subtract them explicitly when a start can be
+    re-reached through a cycle).
+    """
+    seen: set = set()
+    stack = list(starts)
+    while stack:
+        node = stack.pop()
+        for nxt in adjacency.get(node, ()):
+            if nxt not in seen:
+                seen.add(nxt)
+                stack.append(nxt)
+    return seen
+
+
+def _graph_entries_under(graph: Dict[str, List[str]], directory: str) -> List[str]:
+    """Graph keys that are files located directly under ``directory``."""
+    return sorted(k for k in graph if os.path.dirname(k) == directory)
+
+
+def _reverse_graph(graph: Dict[str, List[str]]) -> Dict[str, List[str]]:
+    """Flip the import edges: importer-of -> imported-by."""
+    reverse: Dict[str, List[str]] = {}
+    for importer, targets in graph.items():
+        for target in targets:
+            reverse.setdefault(target, []).append(importer)
+    return {target: sorted(importers) for target, importers in reverse.items()}
+
+
 def list_dep_files(path: str) -> List[str]:
     """List dependency files reachable from ``path``.
 
-    Mirrors kcl-go's :func:`ListDepFiles` by invoking the runtime with
-    the ``kcl_cli`` argument and reading back ``log_message``.
+    For a file input this is the transitive closure of the file's resolved
+    imports (the entry itself excluded). For a directory input (or a file
+    that is not part of the loaded program's import graph) it falls back to
+    every resolved dependency target of the loaded program. Results are
+    sorted; an empty graph yields ``[]``.
     """
-    return _run_cli_listing(path, "list_dep_files")
+    graph = _dep_graph(path)
+    if not graph:
+        return []
+    key = _canonical_path(path)
+    if key in graph:
+        return sorted(_transitive_closure([key], graph) - {key})
+    return sorted({target for targets in graph.values() for target in targets})
 
 
 def list_upstream_files(path: str) -> List[str]:
-    """List upstream (imported) files reachable from ``path``."""
-    return _run_cli_listing(path, "list_upstream_files")
+    """List upstream (imported) files reachable from ``path``.
+
+    For a file input this is the transitive closure of the file's resolved
+    imports (the entry itself excluded). For a directory input it is the
+    union of the closures of the files located directly under the directory
+    that appear in the import graph. Not found yields ``[]``.
+    """
+    graph = _dep_graph(path)
+    if not graph:
+        return []
+    key = _canonical_path(path)
+    if key in graph:
+        return sorted(_transitive_closure([key], graph) - {key})
+    if os.path.isdir(key):
+        starts = _graph_entries_under(graph, key)
+        return sorted(_transitive_closure(starts, graph) - set(starts))
+    return []
+
+
+def _package_root(path: str) -> str:
+    """Scope for downstream lookups of file ``path``: the nearest ancestor
+    directory holding a ``kcl.mod`` manifest, falling back to the file's own
+    directory (the innermost application directory) when none exists.
+
+    ``LoadPackage`` only loads the queried file's own import closure, which
+    by definition contains no importers of the file — so a downstream search
+    rooted at the file itself could never find anything. Rooting at the
+    package makes the whole import graph of the enclosing package visible.
+    """
+    directory = os.path.dirname(_canonical_path(path))
+    current = directory
+    while True:
+        if os.path.exists(os.path.join(current, "kcl.mod")):
+            return current
+        parent = os.path.dirname(current)
+        if parent == current:
+            return directory
+        current = parent
 
 
 def list_downstream_files(path: str) -> List[str]:
-    """List downstream files that import ``path``."""
-    return _run_cli_listing(path, "list_downstream_files")
+    """List downstream files that (transitively) import ``path``.
 
-
-def _run_cli_listing(path: str, subcommand: str) -> List[str]:
-    """Run ``kcl --kcl_cli <subcommand>`` against ``path`` and parse the log."""
-    api = API(plugin_agent=_plugin.plugin_agent_addr)
-    args = ExecProgramArgs(k_filename_list=[path])
-    arg = args.args.add()
-    arg.name = "kcl_cli"
-    arg.value = subcommand
-    try:
-        resp = api.exec_program(args)
-    except Exception:
+    The package containing ``path`` is loaded (see :func:`_package_root`)
+    and its import graph is walked backwards from the entry file. For a
+    directory input the reverse closures of the files located directly
+    under the directory are unioned. The queried entry itself is never
+    included. Not found yields ``[]``.
+    """
+    key = _canonical_path(path)
+    root = key if os.path.isdir(key) else _package_root(key)
+    graph = _dep_graph(root)
+    if not graph:
         return []
-    files = [line.strip() for line in (resp.log_message or "").splitlines() if line.strip()]
-    return files
+    reverse = _reverse_graph(graph)
+    if os.path.isdir(key):
+        starts = _graph_entries_under(graph, key)
+        return sorted(_transitive_closure(starts, reverse) - set(starts))
+    return sorted(_transitive_closure([key], reverse) - {key})
 
 
 def get_version() -> GetVersionResult:
@@ -1214,6 +1352,36 @@ def update_dependencies(args: UpdateDependenciesArgs) -> UpdateDependenciesResul
     """Download and update dependencies declared in ``kcl.mod``."""
     api = API(plugin_agent=_plugin.plugin_agent_addr)
     return api.update_dependencies(args)
+
+
+def generate_toml(args: GenerateTomlArgs) -> GenerateTomlResult:
+    """Serialize the evaluated result of a KCL program to TOML."""
+    api = API(plugin_agent=_plugin.plugin_agent_addr)
+    return api.generate_toml(args)
+
+
+def generate_kcl(args: GenerateKclArgs) -> GenerateKclResult:
+    """Generate KCL source from data content (JSON, YAML or TOML)."""
+    api = API(plugin_agent=_plugin.plugin_agent_addr)
+    return api.generate_kcl(args)
+
+
+def generate_openapi(args: GenerateOpenAPIArgs) -> GenerateOpenAPIResult:
+    """Generate an OpenAPI spec from the schemas of a KCL package."""
+    api = API(plugin_agent=_plugin.plugin_agent_addr)
+    return api.generate_openapi(args)
+
+
+def generate_proto(args: GenerateProtoArgs) -> GenerateProtoResult:
+    """Generate proto3 definitions from the schemas of a KCL package."""
+    api = API(plugin_agent=_plugin.plugin_agent_addr)
+    return api.generate_proto(args)
+
+
+def generate_doc(args: GenerateDocArgs) -> GenerateDocResult:
+    """Generate documentation from the schemas of a KCL package."""
+    api = API(plugin_agent=_plugin.plugin_agent_addr)
+    return api.generate_doc(args)
 
 
 def rename(
