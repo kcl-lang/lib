@@ -99,6 +99,14 @@
             <artifactId>jackson-dataformat-yaml</artifactId>
             <version>${jackson.version}</version>
         </dependency>
+        <!-- The AST declares Rust's Option<T> as java.util.Optional, which only
+             Jackson can construct with the Jdk8 module registered. Without it
+             every Optional field raises InvalidDefinitionException. -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jdk8</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>

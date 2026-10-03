@@ -11,9 +11,9 @@ import { stmtFromWire } from './_stmt.mjs'
  * Top-level AST node for a single KCL file.
  * @typedef {Object} Module
  * @property {string} filename
- * @property {Node<string>} [doc]
- * @property {Array<Node<Stmt>>} [body]
- * @property {Array<Comment>} [comments]
+ * @property {MaybeNode<string>|undefined} doc
+ * @property {Array<MaybeNode<Stmt>>|undefined} body
+ * @property {Array<Comment>|undefined} comments
  */
 
 /**
@@ -24,7 +24,7 @@ export function moduleFromWire(w) {
   return {
     filename: w.filename || '',
     doc: nodeFromWire(w.doc, (x) => /** @type {string} */ x),
-    body: (w.body || []).map((b) => nodeFromWire(b, stmtFromWire)),
+    body: (w.body || []).map((/** @type {any} */ b) => nodeFromWire(b, stmtFromWire)),
     comments: (w.comments || []).map(commentFromWire),
   }
 }
@@ -52,3 +52,10 @@ export function parseProgram(programJson) {
   const main = (env.pkgs && env.pkgs.__main__) || []
   return main.map(moduleFromWire)
 }
+
+/**
+ * @template T
+ * @typedef {import('./_base.mjs').Node<T>} Node
+ */
+/** @template T @typedef {import('./_base.mjs').MaybeNode<T>} MaybeNode */
+/** @typedef {import('./_stmt.mjs').Stmt} Stmt */

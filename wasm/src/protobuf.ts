@@ -51,6 +51,19 @@ export function bytesField(field: number, value: Uint8Array): Uint8Array {
   return concatBytes(tag(field, 2), encodeVarint(BigInt(value.length)), value);
 }
 
+export function doubleField(
+  field: number,
+  value: number | undefined
+): Uint8Array {
+  if (!value) {
+    return new Uint8Array(0);
+  }
+  // Fixed-width 64-bit field (wire type 1), little-endian IEEE 754.
+  const buf = new ArrayBuffer(8);
+  new DataView(buf).setFloat64(0, value, true);
+  return concatBytes(tag(field, 1), new Uint8Array(buf));
+}
+
 export function concatBytes(...parts: Uint8Array[]): Uint8Array {
   const total = parts.reduce((n, p) => n + p.length, 0);
   const out = new Uint8Array(total);

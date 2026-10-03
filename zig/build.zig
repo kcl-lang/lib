@@ -50,6 +50,15 @@ pub fn build(b: *std.Build) void {
         "ast_alignment_fixture",
         b.pathResolve(&.{ b.build_root.path orelse ".", "test_data", "ast_alignment", "main.k" }),
     );
+    // The captured parser output for `testdata/ast/alignment.k`, shared by
+    // every binding's contract test. Decoding it directly keeps the test a
+    // pure function of the loader: no native runtime, no dependency on the
+    // parser staying byte-identical.
+    test_options.addOption(
+        []const u8,
+        "ast_contract_golden",
+        b.pathResolve(&.{ b.build_root.path orelse ".", "..", "testdata", "ast", "alignment.json" }),
+    );
 
     // This declares intent for the library to be installed into the standard
     // location when the user invokes the "install" step (the default step when
@@ -103,15 +112,43 @@ pub fn build(b: *std.Build) void {
     ast_alignment_tests.root_module.addOptions("test_options", test_options);
     ast_alignment_tests.step.dependOn(gen_spec_step);
 
+    // The AST wire contract (src/ast_contract_test.zig). Decodes the
+    // captured `testdata/ast/alignment.json`, so it needs no native runtime.
+    const ast_contract_tests = b.addTest(.{
+        .root_module = b.createModule(.{
+            .root_source_file = b.path("src/ast_contract_test.zig"),
+            .target = b.graph.host,
+            .optimize = optimize,
+        }),
+    });
+    ast_contract_tests.root_module.addOptions("test_options", test_options);
+
+    // Plugin round trip (src/plugin.zig): binds a KCL service handle and
+    // evaluates KCL that calls back into the host.
+    const plugin_unit_tests = b.addTest(.{
+        .root_module = b.createModule(.{
+            .root_source_file = b.path("src/plugin.zig"),
+            .target = b.graph.host,
+            .optimize = optimize,
+        }),
+    });
+    linkNativeKcl(b, plugin_unit_tests.root_module, &target);
+    plugin_unit_tests.root_module.addImport("spec", spec_module);
+    plugin_unit_tests.step.dependOn(gen_spec_step);
+
     const run_lib_unit_tests = b.addRunArtifact(lib_unit_tests);
     const run_kcl_unit_tests = b.addRunArtifact(kcl_unit_tests);
     const run_ast_unit_tests = b.addRunArtifact(ast_unit_tests);
     const run_ast_alignment_tests = b.addRunArtifact(ast_alignment_tests);
+    const run_ast_contract_tests = b.addRunArtifact(ast_contract_tests);
+    const run_plugin_unit_tests = b.addRunArtifact(plugin_unit_tests);
     const test_step = b.step("test", "Run unit tests");
     test_step.dependOn(&run_lib_unit_tests.step);
     test_step.dependOn(&run_kcl_unit_tests.step);
     test_step.dependOn(&run_ast_unit_tests.step);
     test_step.dependOn(&run_ast_alignment_tests.step);
+    test_step.dependOn(&run_ast_contract_tests.step);
+    test_step.dependOn(&run_plugin_unit_tests.step);
 }
 
 /// Wires a module so it can link the prebuilt native `libkcl` and call the

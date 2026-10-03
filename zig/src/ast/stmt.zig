@@ -17,10 +17,12 @@ pub const StmtNode = base.Node(Stmt);
 pub const ExprNode = base.Node(expr.Expr);
 pub const TypeNode = base.Node(types.Type);
 pub const IdentifierNode = dto.IdentifierNode;
-pub const DecoratorNode = dto.DecoratorNode;
+/// A decorator is an `ast::CallExpr`, not a bespoke DTO (see `dto.zig`).
+pub const DecoratorNode = dto.CallExprNode;
 pub const TargetNode = dto.TargetNode;
 pub const ArgumentsNode = dto.ArgumentsNode;
-pub const SchemaConfigNode = dto.SchemaConfigNode;
+/// `UnificationStmt.value` is a `NodeRef<SchemaExpr>`, not a bespoke DTO.
+pub const SchemaConfigNode = dto.SchemaExprNode;
 pub const SchemaIndexSignatureNode = dto.SchemaIndexSignatureNode;
 
 pub const Stmt = union(enum) {
@@ -66,14 +68,14 @@ pub const UnificationStmt = struct {
     fn parse(alloc: Allocator, v: Value) Error!UnificationStmt {
         return .{
             .target = try base.parseOptionalNodeRef(alloc, base.getField(v, "target") orelse .null, dto.Identifier, dto.Identifier.parse),
-            .value = try base.parseOptionalNodeRef(alloc, base.getField(v, "value") orelse .null, dto.SchemaConfig, dto.SchemaConfig.parse),
+            .value = try base.parseOptionalNodeRef(alloc, base.getField(v, "value") orelse .null, dto.SchemaExpr, dto.parseSchemaExprPayload),
         };
     }
 
     fn dump(alloc: Allocator, s: UnificationStmt) Error!Value {
         var obj: std.json.ObjectMap = .empty;
         try obj.put(alloc, "target", try base.dumpOptionalNodeRef(alloc, s.target, dto.Identifier.dump));
-        try obj.put(alloc, "value", try base.dumpOptionalNodeRef(alloc, s.value, dto.SchemaConfig.dump));
+        try obj.put(alloc, "value", try base.dumpOptionalNodeRef(alloc, s.value, dto.dumpSchemaExprPayload));
         return .{ .object = obj };
     }
 };
@@ -129,7 +131,7 @@ pub const SchemaStmt = struct {
             .args = try base.parseOptionalNodeRef(alloc, base.getField(v, "args") orelse .null, dto.Arguments, dto.Arguments.parse),
             .mixins = try base.parseNodeRefList(alloc, base.getField(v, "mixins") orelse .null, dto.Identifier, dto.Identifier.parse),
             .body = try base.parseNodeRefList(alloc, base.getField(v, "body") orelse .null, Stmt, parseStmtPayload),
-            .decorators = try base.parseNodeRefList(alloc, base.getField(v, "decorators") orelse .null, dto.Decorator, dto.parseDecoratorPayload),
+            .decorators = try base.parseNodeRefList(alloc, base.getField(v, "decorators") orelse .null, dto.CallExpr, dto.parseCallExprPayload),
             .checks = try base.parseNodeRefList(alloc, base.getField(v, "checks") orelse .null, expr.CheckExpr, expr.parseCheckExprPayload),
             .index_signature = try base.parseOptionalNodeRef(alloc, base.getField(v, "index_signature") orelse .null, dto.SchemaIndexSignature, dto.SchemaIndexSignature.parse),
         };
@@ -156,7 +158,7 @@ pub const SchemaStmt = struct {
         try obj.put(alloc, "body", .{ .array = body });
         var decorators: std.json.Array = std.json.Array.init(alloc);
         for (s.decorators.items) |n| {
-            try decorators.append(try base.dumpNodeRef(alloc, n, dto.dumpDecoratorPayload));
+            try decorators.append(try base.dumpNodeRef(alloc, n, dto.dumpCallExprPayload));
         }
         try obj.put(alloc, "decorators", .{ .array = decorators });
         var checks: std.json.Array = std.json.Array.init(alloc);
@@ -185,7 +187,7 @@ pub const SchemaAttr = struct {
             .op = if (base.getString(v, "op")) |s| try base.dupeString(alloc, s) else null,
             .value = try base.parseOptionalNodeRef(alloc, base.getField(v, "value") orelse .null, expr.Expr, expr.parseExprPayload),
             .is_optional = base.getBool(v, "is_optional") orelse false,
-            .decorators = try base.parseNodeRefList(alloc, base.getField(v, "decorators") orelse .null, dto.Decorator, dto.parseDecoratorPayload),
+            .decorators = try base.parseNodeRefList(alloc, base.getField(v, "decorators") orelse .null, dto.CallExpr, dto.parseCallExprPayload),
             .ty = try base.parseOptionalNodeRef(alloc, base.getField(v, "ty") orelse .null, types.Type, types.parseTypePayload),
         };
     }
@@ -203,7 +205,7 @@ pub const SchemaAttr = struct {
         try obj.put(alloc, "is_optional", .{ .bool = s.is_optional });
         var decorators: std.json.Array = std.json.Array.init(alloc);
         for (s.decorators.items) |n| {
-            try decorators.append(try base.dumpNodeRef(alloc, n, dto.dumpDecoratorPayload));
+            try decorators.append(try base.dumpNodeRef(alloc, n, dto.dumpCallExprPayload));
         }
         try obj.put(alloc, "decorators", .{ .array = decorators });
         try obj.put(alloc, "ty", try base.dumpOptionalNodeRef(alloc, s.ty, types.dumpTypePayload));
@@ -225,7 +227,7 @@ pub const RuleStmt = struct {
             .doc = try base.parseOptionalNodeRef(alloc, base.getField(v, "doc") orelse .null, []const u8, dto.parseStringPayload),
             .name = try base.parseOptionalNodeRef(alloc, base.getField(v, "name") orelse .null, []const u8, dto.parseStringPayload),
             .parent_rules = try base.parseNodeRefList(alloc, base.getField(v, "parent_rules") orelse .null, dto.Identifier, dto.Identifier.parse),
-            .decorators = try base.parseNodeRefList(alloc, base.getField(v, "decorators") orelse .null, dto.Decorator, dto.parseDecoratorPayload),
+            .decorators = try base.parseNodeRefList(alloc, base.getField(v, "decorators") orelse .null, dto.CallExpr, dto.parseCallExprPayload),
             .checks = try base.parseNodeRefList(alloc, base.getField(v, "checks") orelse .null, expr.CheckExpr, expr.parseCheckExprPayload),
             .args = try base.parseOptionalNodeRef(alloc, base.getField(v, "args") orelse .null, dto.Arguments, dto.Arguments.parse),
             .for_host_name = try base.parseOptionalNodeRef(alloc, base.getField(v, "for_host_name") orelse .null, dto.Identifier, dto.Identifier.parse),
@@ -243,7 +245,7 @@ pub const RuleStmt = struct {
         try obj.put(alloc, "parent_rules", .{ .array = parents });
         var decorators: std.json.Array = std.json.Array.init(alloc);
         for (s.decorators.items) |n| {
-            try decorators.append(try base.dumpNodeRef(alloc, n, dto.dumpDecoratorPayload));
+            try decorators.append(try base.dumpNodeRef(alloc, n, dto.dumpCallExprPayload));
         }
         try obj.put(alloc, "decorators", .{ .array = decorators });
         var checks: std.json.Array = std.json.Array.init(alloc);
@@ -261,7 +263,9 @@ pub const ImportStmt = struct {
     path: ?*StringNode,
     rawpath: []const u8,
     name: []const u8,
-    asname: ?[]const u8,
+    /// `Option<Node<String>>` in Rust, like `path` — an alias still carries
+    /// its own position, so it is a `NodeRef` and not a bare string.
+    asname: ?*StringNode,
     pkg_name: []const u8,
 
     fn parse(alloc: Allocator, v: Value) Error!ImportStmt {
@@ -269,7 +273,7 @@ pub const ImportStmt = struct {
             .path = try base.parseOptionalNodeRef(alloc, base.getField(v, "path") orelse .null, []const u8, dto.parseStringPayload),
             .rawpath = try base.dupeString(alloc, base.getString(v, "rawpath") orelse ""),
             .name = try base.dupeString(alloc, base.getString(v, "name") orelse ""),
-            .asname = if (base.getString(v, "asname")) |s| try base.dupeString(alloc, s) else null,
+            .asname = try base.parseOptionalNodeRef(alloc, base.getField(v, "asname") orelse .null, []const u8, dto.parseStringPayload),
             .pkg_name = try base.dupeString(alloc, base.getString(v, "pkg_name") orelse ""),
         };
     }
@@ -279,11 +283,7 @@ pub const ImportStmt = struct {
         try obj.put(alloc, "path", try base.dumpOptionalNodeRef(alloc, s.path, dto.dumpStringPayload));
         try obj.put(alloc, "rawpath", .{ .string = s.rawpath });
         try obj.put(alloc, "name", .{ .string = s.name });
-        if (s.asname) |a| {
-            try obj.put(alloc, "asname", .{ .string = a });
-        } else {
-            try obj.put(alloc, "asname", .null);
-        }
+        try obj.put(alloc, "asname", try base.dumpOptionalNodeRef(alloc, s.asname, dto.dumpStringPayload));
         try obj.put(alloc, "pkg_name", .{ .string = s.pkg_name });
         return .{ .object = obj };
     }

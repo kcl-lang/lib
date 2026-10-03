@@ -1,34 +1,35 @@
 // AstJson.swift — Parser for the typed AST JSON shape.
 //
-// Parses the `ast_json` string returned by `ParseFileResult.astJson` /
-// `ParseProgramResult.astJson` into the typed AST structs defined in
-// `Pos.swift`. Wire shape follows `kcl-lang/kcl crates/ast/src/ast.rs`
-// plus the flat DTOs (`Decorator`, `SchemaConfig`, `ConfigEntry`,
-// `Keyword`, `Arguments`, `MemberOrIndex`, `Target`) where the
-// `NodeRef<T>` payload lacks the polymorphic `"type"` discriminator
-// (see AST_DRIFT.md note A).
+// Parses the `astJson` string returned by `ParseFileResult` /
+// `ParseProgramResult` into the typed AST in `Pos.swift`. The wire contract
+// and the three serde shapes it comes from are documented at the top of
+// `Pos.swift`; the short version is:
 //
-// We parse with `JSONSerialization` into `[String: Any]` and then walk
-// the dict tree, dispatching each `Stmt` / `Expr` / `Type` on its
-// `"type"` discriminator. This avoids the heavyweight alternative of
-// writing a custom `Codable` polymorphic decoder for Rust-style tagged
-// enums — the same approach Swift's serde bridges tend to take.
+//   * `Stmt` / `Expr` — `#[serde(tag = "type")]`. Read the tag, then hand
+//     the **same object** to the variant: the newtype variant's struct
+//     fields are flattened next to the tag, not nested under a key.
+//   * `Type` — `#[serde(tag = "type", content = "value")]`. Read the tag,
+//     then hand `dict["value"]` to the variant. `Any` is the one variant
+//     with no `value` key at all.
+//   * `MemberOrIndex`, `NumberLitValue` and `LiteralType` are themselves
+//     adjacently tagged, the last one nested inside `Type::Literal`.
+//
+// We parse with `JSONSerialization` into `[String: Any]` and walk the dict
+// tree by hand rather than writing a custom `Codable` polymorphic decoder —
+// Rust-style internally tagged enums have no `Codable` equivalent, so any
+// approach ends up hand-writing the same dispatch.
+//
+// An unrecognised tag decodes to `.unknown(type:)` rather than throwing.
+// That is deliberate: a newer parser emitting a variant this build predates
+// would otherwise fail to load the whole module. It does mean a *typo'd*
+// tag fails silently, which is why `AstContractTests` walks the tree and
+// asserts nothing is left unresolved.
 
 import Foundation
 
-// AstJsonError is declared as a plain enum (no raw type, no protocol
-// conformances inline) because the Swift compiler interprets
-// `enum X: Error` as trying to make `Error` a raw type when case
-// payloads carry associated values — declaring the conformances via
-// extensions below avoids the "raw type 'Error' is not expressible
-// by a string, integer, or floating-point literal" error.
 public enum AstJsonError {
     case notADictionary(String)
     case missingField(field: String, container: String)
-    case wrongType(field: String, expected: String, got: String)
-    case unknownStmtType(String)
-    case unknownExprType(String)
-    case unknownTypeKind(String)
     case invalidJSON(String)
 }
 
@@ -41,775 +42,553 @@ extension AstJsonError: CustomStringConvertible {
             return "expected JSON object at \(container)"
         case .missingField(let field, let container):
             return "missing field `\(field)` in \(container)"
-        case .wrongType(let field, let expected, let got):
-            return "field `\(field)` expected \(expected), got \(got)"
-        case .unknownStmtType(let t):
-            return "unknown stmt type: \(t)"
-        case .unknownExprType(let t):
-            return "unknown expr type: \(t)"
-        case .unknownTypeKind(let t):
-            return "unknown type kind: \(t)"
-        case .invalidJSON(let msg):
-            return "invalid JSON: \(msg)"
+        case .invalidJSON(let message):
+            return "invalid JSON: \(message)"
         }
     }
 }
 
-/// Parse the `ast_json` field of `ParseFileResult` into a typed `Module`.
+// MARK: - Entry points
+
+/// Parse the `astJson` field of a `ParseFileResult` into a typed `Module`.
 public func parseModule(_ astJson: String) throws -> Module {
-    let data = Data(astJson.utf8)
-    let root: Any
-    do {
-        root = try JSONSerialization.jsonObject(with: data, options: [])
-    } catch {
-        throw AstJsonError.invalidJSON("\(error)")
-    }
-    guard let dict = root as? [String: Any] else {
+    guard let dict = try jsonObject(astJson) as? [String: Any] else {
         throw AstJsonError.notADictionary("ast_json root")
     }
-    return try parseModule(dict)
+    return try parseModuleObject(dict)
 }
 
-/// Parse the `ast_json` field of `ParseProgramResult` into a list of
-/// typed `Module`s. The wire shape is either `[Module, …]` (older
-/// rustc ABI) or `{"root": ".", "pkgs": {"__main__": [Module, …]}}`.
-/// We read both shapes and return the `__main__` package's modules.
+/// Parse the `astJson` field of a `ParseProgramResult`.
+///
+/// The wire is `{"root": ".", "pkgs": {"__main__": [Module, …]}}`; an older
+/// Rust ABI emitted a bare `[Module, …]`, so both are accepted. Only the
+/// `__main__` package is returned — use `parseProgramEnvelope` to reach the
+/// imported packages.
 public func parseProgram(_ astJson: String) throws -> [Module] {
-    let data = Data(astJson.utf8)
-    let root: Any
-    do {
-        root = try JSONSerialization.jsonObject(with: data, options: [])
-    } catch {
-        throw AstJsonError.invalidJSON("\(error)")
-    }
+    try parseProgramEnvelope(astJson).mainPackage
+}
+
+/// As `parseProgram`, but keeping the package map for callers that care
+/// about the imported packages.
+public func parseProgramEnvelope(_ astJson: String) throws -> Program {
+    let root = try jsonObject(astJson)
     if let modules = root as? [[String: Any]] {
-        return try modules.map { try parseModule($0) }
+        let parsed = try modules.map(parseModuleObject)
+        return Program(root: ".", mainPackage: parsed, pkgs: ["__main__": parsed])
     }
     guard let dict = root as? [String: Any] else {
         throw AstJsonError.notADictionary("ast_json root")
     }
-    guard let pkgs = dict["pkgs"] as? [String: [[String: Any]]] else {
+    guard let pkgs = dict["pkgs"] as? [String: Any] else {
         throw AstJsonError.missingField(field: "pkgs", container: "program envelope")
     }
-    let mainModules = pkgs["__main__"] ?? []
-    return try mainModules.map { try parseModule($0) }
-}
-
-// MARK: - Parsing helpers
-
-/// Parse a `Module` from a `[String: Any]`. Mirror of the Python
-/// `moduleFromWire`, Node.js `moduleFromWire`, .NET `Module.FromWire`,
-/// WASM `moduleFromWire`.
-func parseModule(_ dict: [String: Any]) throws -> Module {
-    let filename = try requireString(dict, "filename", container: "module")
-    let doc = dict["doc"].flatMap { parseNodeRef($0, load: parseStringNode, label: "doc") }
-    let body = (dict["body"] as? [[String: Any]] ?? []).map { item in
-        parseNodeRef(item, load: parseStmt, label: "body")!
+    var parsed: [String: [Module]] = [:]
+    for (name, value) in pkgs {
+        guard let list = value as? [[String: Any]] else { continue }
+        parsed[name] = try list.map(parseModuleObject)
     }
-    let comments = (dict["comments"] as? [[String: Any]] ?? []).map { item in
-        parseNodeRef(item, load: parseComment, label: "comments")!
-    }
-    return Module(filename: filename, doc: doc, body: body, comments: comments)
-}
-
-func parsePos(_ dict: [String: Any]) throws -> Pos {
-    return Pos(
-        filename: try requireString(dict, "filename", container: "Pos"),
-        line: try requireInt(dict, "line", container: "Pos"),
-        column: try requireInt(dict, "column", container: "Pos"),
-        endLine: try requireInt(dict, "end_line", container: "Pos"),
-        endColumn: try requireInt(dict, "end_column", container: "Pos")
+    return Program(
+        root: dict["root"] as? String ?? ".",
+        mainPackage: parsed["__main__"] ?? [],
+        pkgs: parsed
     )
 }
 
-func parseStringNode(_ dict: [String: Any]) -> String {
-    return (dict["node"] as? String) ?? ""
-}
-
-func parseComment(_ dict: [String: Any]) -> Comment {
-    let text = (dict["node"] as? String) ?? ""
-    let pos = (dict["filename"] as? String).flatMap { _ in try? parsePos(dict) }
-    return Comment(node: text, position: pos)
-}
-
-func parseNodeRef<T>(_ any: Any, load: ([String: Any]) -> T, label: String) -> NodeRef<T>? {
-    guard let dict = any as? [String: Any] else { return nil }
-    // The NodeRef wrapper looks like `{node: <T>, filename, line, ...}`.
-    // For polymorphic payloads (Stmt / Expr / KclTypeNode), `node` is a
-    // dict carrying the `"type"` discriminator — unwrap one level so the
-    // loader sees the type tag at the top. For primitive payloads
-    // (String, Int, …), `node` is the value itself — pass the outer
-    // dict so loaders like `parseStringNode` can pull `dict["node"]`.
-    let payload: [String: Any]
-    if let inner = dict["node"] as? [String: Any] {
-        payload = inner
-    } else {
-        payload = dict
+private func jsonObject(_ json: String) throws -> Any {
+    do {
+        return try JSONSerialization.jsonObject(with: Data(json.utf8), options: [])
+    } catch {
+        throw AstJsonError.invalidJSON("\(error)")
     }
-    let node = load(payload)
-    let pos = (dict["filename"] as? String).flatMap { _ in try? parsePos(dict) }
-    let id = dict["id"] as? String
-    return NodeRef(node: node, position: pos, id: id)
 }
 
-func parseNodeRefList<T>(_ any: Any, load: ([String: Any]) -> T, label: String) -> [NodeRef<T>] {
-    guard let arr = any as? [[String: Any]] else { return [] }
-    return arr.compactMap { parseNodeRef($0, load: load, label: label) }
+// MARK: - Primitives
+
+private func parseModuleObject(_ dict: [String: Any]) throws -> Module {
+    let filename = try string(dict, "filename", "module")
+    return Module(
+        filename: filename,
+        doc: dict["doc"].flatMap(stringNode),
+        body: nodeRefList(dict["body"], stmt),
+        comments: nodeRefList(dict["comments"], comment)
+    )
 }
 
-func parseNodeRefDict<T>(_ any: Any, load: ([String: Any]) -> T, label: String) -> [String: NodeRef<T>] {
-    guard let dict = any as? [String: [String: Any]] else { return [:] }
-    var out: [String: NodeRef<T>] = [:]
-    for (k, v) in dict {
-        if let ref = parseNodeRef(v, load: load, label: label) { out[k] = ref }
-    }
-    return out
-}
-
-func requireString(_ dict: [String: Any], _ key: String, container: String) throws -> String {
-    guard let v = dict[key] as? String else {
+private func string(_ dict: [String: Any], _ key: String, _ container: String) throws -> String {
+    guard let value = dict[key] as? String else {
         throw AstJsonError.missingField(field: key, container: container)
     }
-    return v
+    return value
 }
 
-func requireBool(_ dict: [String: Any], _ key: String, container: String = "", default defaultValue: Bool = false) -> Bool {
-    if let v = dict[key] as? Bool { return v }
-    return defaultValue
+private func bool(_ value: Any?, _ fallback: Bool = false) -> Bool {
+    (value as? Bool) ?? fallback
 }
 
-func requireInt(_ dict: [String: Any], _ key: String, container: String) throws -> Int64 {
-    if let v = dict[key] as? Int64 { return v }
-    if let v = dict[key] as? Int { return Int64(v) }
-    if let v = dict[key] as? Double { return Int64(v) }
-    if let v = dict[key] as? NSNumber { return v.int64Value }
-    throw AstJsonError.missingField(field: key, container: container)
-}
-
-func requireDouble(_ dict: [String: Any], _ key: String, container: String) throws -> Double {
-    if let v = dict[key] as? Double { return v }
-    if let v = dict[key] as? Int { return Double(v) }
-    if let v = dict[key] as? Int64 { return Double(v) }
-    if let v = dict[key] as? NSNumber { return v.doubleValue }
-    throw AstJsonError.missingField(field: key, container: container)
-}
-
-func optionalInt(_ dict: [String: Any], _ key: String) -> Int64? {
-    if let v = dict[key] as? Int64 { return v }
-    if let v = dict[key] as? Int { return Int64(v) }
-    if let v = dict[key] as? NSNumber { return v.int64Value }
+private func int(_ value: Any?) -> Int64? {
+    if let number = value as? NSNumber { return number.int64Value }
     return nil
+}
+
+private func double(_ value: Any?) -> Double? {
+    if let number = value as? NSNumber { return number.doubleValue }
+    return nil
+}
+
+/// `NodeRef<T>` — a `{"node": …, filename, line, …}` wrapper.
+///
+/// The loader is handed the *unwrapped* `node` payload, so a polymorphic
+/// payload reaches `stmt` / `expr` / `kclType` with its `"type"` tag at the
+/// top level. Primitive payloads use `stringNode` below instead, because
+/// there the `node` key holds a bare string rather than an object.
+private func nodeRef<T>(_ any: Any?, _ load: ([String: Any]) -> T) -> NodeRef<T>? {
+    guard let wrapper = any as? [String: Any],
+          let payload = wrapper["node"] as? [String: Any]
+    else { return nil }
+    return NodeRef(node: load(payload), position: position(wrapper), id: identifier(wrapper))
+}
+
+/// `Vec<Node<String>>` — a list of string nodes, e.g. the segments of
+/// `Identifier.names`. Each element still carries its own position, so this
+/// cannot go through `nodeRefList`, whose loader expects a dictionary.
+private func stringNodeList(_ any: Any?) -> [NodeRef<String>] {
+    guard let array = any as? [Any] else { return [] }
+    return array.compactMap(stringNode)
+}
+
+/// A `NodeRef<String>` — `Node<String>` holds a bare string in `node`.
+private func stringNode(_ any: Any?) -> NodeRef<String>? {
+    guard let wrapper = any as? [String: Any],
+          let text = wrapper["node"] as? String
+    else { return nil }
+    return NodeRef(node: text, position: position(wrapper), id: identifier(wrapper))
+}
+
+private func nodeRefList<T>(_ any: Any?, _ load: ([String: Any]) -> T) -> [NodeRef<T>] {
+    guard let array = any as? [Any] else { return [] }
+    return array.compactMap { nodeRef($0, load) }
+}
+
+/// `Vec<Option<NodeRef<T>>>` — used for `Arguments.defaults` and
+/// `Arguments.tyList`, both index-aligned with `Arguments.args`. Dropping a
+/// positional null would shift every later annotation onto the wrong
+/// parameter, so the nulls have to survive as `nil` entries.
+private func optionalNodeRefList<T>(_ any: Any?, _ load: ([String: Any]) -> T) -> [NodeRef<T>?] {
+    guard let array = any as? [Any] else { return [] }
+    return array.map { nodeRef($0, load) }
+}
+
+/// The five `Pos` fields sit directly on the wrapper, not under a
+/// `"position"` key.
+private func position(_ wrapper: [String: Any]) -> Pos? {
+    guard wrapper["filename"] is String else { return nil }
+    return Pos(
+        filename: wrapper["filename"] as? String ?? "",
+        line: int(wrapper["line"]) ?? 0,
+        column: int(wrapper["column"]) ?? 0,
+        endLine: int(wrapper["end_line"]) ?? 0,
+        endColumn: int(wrapper["end_column"]) ?? 0
+    )
+}
+
+private func identifier(_ wrapper: [String: Any]) -> String? {
+    if let text = wrapper["id"] as? String { return text }
+    if let number = int(wrapper["id"]) { return String(number) }
+    return nil
+}
+
+/// A wire string → one of the Rust enums, falling back when the key is
+/// absent or carries a spelling this build doesn't know. Every operator and
+/// context field on the wire is a bare variant name, so this is the single
+/// place that conversion happens.
+private func enumValue<T: RawRepresentable>(_ value: Any?, _ fallback: T) -> T where T.RawValue == String {
+    (value as? String).flatMap(T.init(rawValue:)) ?? fallback
+}
+
+private func comment(_ dict: [String: Any]) -> Comment {
+    Comment(text: dict["text"] as? String ?? "")
+}
+
+// MARK: - Shared DTOs
+
+private func identifierFrom(_ dict: [String: Any]) -> Identifier {
+    Identifier(
+        names: stringNodeList(dict["names"]),
+        pkgpath: dict["pkgpath"] as? String ?? "",
+        ctx: enumValue(dict["ctx"], ExprContext.load)
+    )
+}
+
+private func target(_ dict: [String: Any]) -> Target {
+    Target(
+        name: stringNode(dict["name"]) ?? NodeRef(node: ""),
+        paths: (dict["paths"] as? [Any] ?? []).compactMap(memberOrIndex),
+        pkgpath: dict["pkgpath"] as? String ?? ""
+    )
+}
+
+private func memberOrIndex(_ any: Any) -> MemberOrIndex? {
+    guard let dict = any as? [String: Any], let tag = dict["type"] as? String else { return nil }
+    switch tag {
+    case "Member": return .member(stringNode(dict["value"]) ?? NodeRef(node: ""))
+    case "Index": return .index(nodeRef(dict["value"], expr) ?? NodeRef(node: .missing(MissingExpr())))
+    default: return nil
+    }
+}
+
+private func keyword(_ dict: [String: Any]) -> Keyword {
+    Keyword(
+        arg: nodeRef(dict["arg"], identifierFrom) ?? NodeRef(node: Identifier(names: [])),
+        value: dict["value"].flatMap { nodeRef($0, expr) }
+    )
+}
+
+private func arguments(_ dict: [String: Any]) -> Arguments {
+    Arguments(
+        args: nodeRefList(dict["args"], identifierFrom),
+        defaults: optionalNodeRefList(dict["defaults"], expr),
+        tyList: optionalNodeRefList(dict["ty_list"], kclType)
+    )
+}
+
+private func checkExpr(_ dict: [String: Any]) -> CheckExpr {
+    CheckExpr(
+        test: nodeRef(dict["test"], expr) ?? NodeRef(node: .missing(MissingExpr())),
+        ifCond: dict["if_cond"].flatMap { nodeRef($0, expr) },
+        msg: dict["msg"].flatMap { nodeRef($0, expr) }
+    )
+}
+
+private func compClause(_ dict: [String: Any]) -> CompClause {
+    CompClause(
+        targets: nodeRefList(dict["targets"], identifierFrom),
+        iter: nodeRef(dict["iter"], expr) ?? NodeRef(node: .missing(MissingExpr())),
+        ifs: nodeRefList(dict["ifs"], expr)
+    )
+}
+
+private func callExpr(_ dict: [String: Any]) -> CallExpr {
+    CallExpr(
+        func: nodeRef(dict["func"], expr) ?? NodeRef(node: .missing(MissingExpr())),
+        args: nodeRefList(dict["args"], expr),
+        keywords: nodeRefList(dict["keywords"], keyword)
+    )
+}
+
+private func configEntry(_ dict: [String: Any]) -> ConfigEntry {
+    ConfigEntry(
+        key: dict["key"].flatMap { nodeRef($0, expr) },
+        value: nodeRef(dict["value"], expr) ?? NodeRef(node: .missing(MissingExpr())),
+        operation: enumValue(dict["operation"], ConfigEntryOperation.union),
+        isShorthand: bool(dict["is_shorthand"])
+    )
+}
+
+private func schemaExpr(_ dict: [String: Any]) -> SchemaExpr {
+    SchemaExpr(
+        name: nodeRef(dict["name"], identifierFrom) ?? NodeRef(node: Identifier(names: [])),
+        args: nodeRefList(dict["args"], expr),
+        keywords: nodeRefList(dict["kwargs"], keyword),
+        config: nodeRef(dict["config"], expr) ?? NodeRef(node: .config(ConfigExpr(items: [])))
+    )
+}
+
+private func schemaIndexSignature(_ dict: [String: Any]) -> SchemaIndexSignature {
+    SchemaIndexSignature(
+        keyName: dict["key_name"].flatMap(stringNode),
+        value: dict["value"].flatMap { nodeRef($0, expr) },
+        anyOther: bool(dict["any_other"]),
+        keyTy: nodeRef(dict["key_ty"], kclType) ?? NodeRef(node: .any(AnyType())),
+        valueTy: nodeRef(dict["value_ty"], kclType) ?? NodeRef(node: .any(AnyType()))
+    )
 }
 
 // MARK: - Stmt dispatch
 
-func parseStmt(_ dict: [String: Any]) -> Stmt {
-    guard let t = dict["type"] as? String else { return .unknown(type: "") }
-    do {
-        switch t {
-        case "Expr":        return .expr(try parseExprStmt(dict))
-        case "Unification": return .unification(try parseUnificationStmt(dict))
-        case "Assign":      return .assign(try parseAssignStmt(dict))
-        case "Schema":      return .schema(try parseSchemaStmt(dict))
-        case "SchemaAttr":  return .schemaAttr(try parseSchemaAttr(dict))
-        case "Rule":        return .rule(try parseRuleStmt(dict))
-        case "Import":      return .import(try parseImportStmt(dict))
-        case "TypeAlias":   return .typeAlias(try parseTypeAliasStmt(dict))
-        case "Assert":      return .assert(try parseAssertStmt(dict))
-        case "If":          return .if(try parseIfStmt(dict))
-        default:            return .unknown(type: t)
-        }
-    } catch {
-        return .unknown(type: t)
+func stmt(_ dict: [String: Any]) -> Stmt {
+    guard let tag = dict["type"] as? String else { return .unknown(type: "") }
+    switch tag {
+    case "TypeAlias":
+        return .typeAlias(TypeAliasStmt(
+            typeName: nodeRef(dict["type_name"], identifierFrom) ?? NodeRef(node: Identifier(names: [])),
+            typeValue: stringNode(dict["type_value"]) ?? NodeRef(node: ""),
+            ty: nodeRef(dict["ty"], kclType) ?? NodeRef(node: .any(AnyType()))
+        ))
+    case "Expr":
+        return .expr(ExprStmt(exprs: nodeRefList(dict["exprs"], expr)))
+    case "Unification":
+        return .unification(UnificationStmt(
+            target: nodeRef(dict["target"], identifierFrom) ?? NodeRef(node: Identifier(names: [])),
+            value: nodeRef(dict["value"], schemaExpr) ?? NodeRef(node: schemaExpr([:]))
+        ))
+    case "Assign":
+        return .assign(AssignStmt(
+            targets: nodeRefList(dict["targets"], target),
+            value: nodeRef(dict["value"], expr) ?? NodeRef(node: .missing(MissingExpr())),
+            ty: dict["ty"].flatMap { nodeRef($0, kclType) }
+        ))
+    case "AugAssign":
+        return .augAssign(AugAssignStmt(
+            target: nodeRef(dict["target"], target) ?? NodeRef(node: target([:])),
+            value: nodeRef(dict["value"], expr) ?? NodeRef(node: .missing(MissingExpr())),
+            op: enumValue(dict["op"], AugOp.assign)
+        ))
+    case "Assert":
+        return .assert(AssertStmt(
+            test: nodeRef(dict["test"], expr) ?? NodeRef(node: .missing(MissingExpr())),
+            ifCond: dict["if_cond"].flatMap { nodeRef($0, expr) },
+            msg: dict["msg"].flatMap { nodeRef($0, expr) }
+        ))
+    case "If":
+        return .if(IfStmt(
+            body: nodeRefList(dict["body"], stmt),
+            cond: nodeRef(dict["cond"], expr) ?? NodeRef(node: .missing(MissingExpr())),
+            orelse: nodeRefList(dict["orelse"], stmt)
+        ))
+    case "Import":
+        return .import(ImportStmt(
+            path: stringNode(dict["path"]) ?? NodeRef(node: ""),
+            rawpath: dict["rawpath"] as? String ?? "",
+            name: dict["name"] as? String ?? "",
+            asname: dict["asname"].flatMap(stringNode),
+            pkgName: dict["pkg_name"] as? String ?? ""
+        ))
+    case "SchemaAttr":
+        return .schemaAttr(SchemaAttr(
+            doc: dict["doc"] as? String ?? "",
+            name: stringNode(dict["name"]) ?? NodeRef(node: ""),
+            op: enumValue(dict["op"], AugOp.assign),
+            value: dict["value"].flatMap { nodeRef($0, expr) },
+            isOptional: bool(dict["is_optional"]),
+            decorators: nodeRefList(dict["decorators"], callExpr),
+            ty: nodeRef(dict["ty"], kclType) ?? NodeRef(node: .any(AnyType()))
+        ))
+    case "Schema":
+        return .schema(SchemaStmt(
+            doc: dict["doc"].flatMap(stringNode),
+            name: stringNode(dict["name"]) ?? NodeRef(node: ""),
+            parentName: dict["parent_name"].flatMap { nodeRef($0, identifierFrom) },
+            forHostName: dict["for_host_name"].flatMap { nodeRef($0, identifierFrom) },
+            isMixin: bool(dict["is_mixin"]),
+            isProtocol: bool(dict["is_protocol"]),
+            args: dict["args"].flatMap { nodeRef($0, arguments) },
+            mixins: nodeRefList(dict["mixins"], identifierFrom),
+            body: nodeRefList(dict["body"], stmt),
+            decorators: nodeRefList(dict["decorators"], callExpr),
+            checks: nodeRefList(dict["checks"], checkExpr),
+            indexSignature: dict["index_signature"].flatMap { nodeRef($0, schemaIndexSignature) }
+        ))
+    case "Rule":
+        return .rule(RuleStmt(
+            doc: dict["doc"].flatMap(stringNode),
+            name: stringNode(dict["name"]) ?? NodeRef(node: ""),
+            parentRules: nodeRefList(dict["parent_rules"], identifierFrom),
+            decorators: nodeRefList(dict["decorators"], callExpr),
+            checks: nodeRefList(dict["checks"], checkExpr),
+            args: dict["args"].flatMap { nodeRef($0, arguments) },
+            forHostName: dict["for_host_name"].flatMap { nodeRef($0, identifierFrom) }
+        ))
+    default:
+        return .unknown(type: tag)
     }
-}
-
-func parseExprStmt(_ dict: [String: Any]) throws -> ExprStmt {
-    return ExprStmt(exprs: parseNodeRefList(dict["exprs"], load: parseExpr, label: "ExprStmt.exprs"))
-}
-
-func parseUnificationStmt(_ dict: [String: Any]) throws -> UnificationStmt {
-    let target: NodeRef<Target> = parseNodeRef(dict["target"], load: parseTarget, label: "UnificationStmt.target")!
-    let value: NodeRef<SchemaConfig> = parseNodeRef(dict["value"], load: parseSchemaConfig, label: "UnificationStmt.value")!
-    return UnificationStmt(target: target, value: value)
-}
-
-func parseAssignStmt(_ dict: [String: Any]) throws -> AssignStmt {
-    return AssignStmt(
-        targets: parseNodeRefList(dict["targets"], load: parseTarget, label: "AssignStmt.targets"),
-        ty: parseNodeRef(dict["ty"], load: parseKclTypeNode, label: "AssignStmt.ty"),
-        value: parseNodeRef(dict["value"], load: parseExpr, label: "AssignStmt.value")!
-    )
-}
-
-func parseSchemaStmt(_ dict: [String: Any]) throws -> SchemaStmt {
-    return SchemaStmt(
-        doc: parseNodeRef(dict["doc"], load: parseStringNode, label: "SchemaStmt.doc"),
-        name: parseNodeRef(dict["name"], load: parseStringNode, label: "SchemaStmt.name")!,
-        parentName: parseNodeRef(dict["parent_name"], load: parseIdentifier, label: "SchemaStmt.parent_name"),
-        forHostName: parseNodeRef(dict["for_host_name"], load: parseIdentifier, label: "SchemaStmt.for_host_name"),
-        isMixin: requireBool(dict, "is_mixin"),
-        isProtocol: requireBool(dict, "is_protocol"),
-        args: parseNodeRef(dict["args"], load: parseArguments, label: "SchemaStmt.args"),
-        mixins: parseNodeRefList(dict["mixins"], load: parseIdentifier, label: "SchemaStmt.mixins"),
-        body: parseNodeRefList(dict["body"], load: parseStmt, label: "SchemaStmt.body"),
-        decorators: parseNodeRefList(dict["decorators"], load: parseDecorator, label: "SchemaStmt.decorators"),
-        checks: parseNodeRefList(dict["checks"], load: parseCheckExpr, label: "SchemaStmt.checks"),
-        indexSignature: parseNodeRef(dict["index_signature"], load: parseSchemaIndexSignature, label: "SchemaStmt.index_signature")
-    )
-}
-
-func parseSchemaAttr(_ dict: [String: Any]) throws -> SchemaAttr {
-    return SchemaAttr(
-        doc: (dict["doc"] as? String) ?? "",
-        name: parseNodeRef(dict["name"], load: parseStringNode, label: "SchemaAttr.name")!,
-        op: parseAugOp(dict["op"]),
-        value: parseNodeRef(dict["value"], load: parseExpr, label: "SchemaAttr.value"),
-        isOptional: requireBool(dict, "is_optional"),
-        decorators: parseNodeRefList(dict["decorators"], load: parseDecorator, label: "SchemaAttr.decorators"),
-        ty: parseNodeRef(dict["ty"], load: parseKclTypeNode, label: "SchemaAttr.ty")
-    )
-}
-
-func parseRuleStmt(_ dict: [String: Any]) throws -> RuleStmt {
-    return RuleStmt(
-        doc: parseNodeRef(dict["doc"], load: parseStringNode, label: "RuleStmt.doc"),
-        name: parseNodeRef(dict["name"], load: parseStringNode, label: "RuleStmt.name")!,
-        parentRules: parseNodeRefList(dict["parent_rules"], load: parseIdentifier, label: "RuleStmt.parent_rules"),
-        decorators: parseNodeRefList(dict["decorators"], load: parseDecorator, label: "RuleStmt.decorators"),
-        checks: parseNodeRefList(dict["checks"], load: parseCheckExpr, label: "RuleStmt.checks"),
-        args: parseNodeRef(dict["args"], load: parseArguments, label: "RuleStmt.args"),
-        forHostName: parseNodeRef(dict["for_host_name"], load: parseIdentifier, label: "RuleStmt.for_host_name")
-    )
-}
-
-func parseImportStmt(_ dict: [String: Any]) throws -> ImportStmt {
-    guard let node = dict["node"] as? [String: Any] else {
-        return ImportStmt(path: "", asName: nil, pkgName: nil, pkgRoot: nil)
-    }
-    return ImportStmt(
-        path: (node["path"] as? String) ?? "",
-        asName: node["as_name"] as? String,
-        pkgName: node["pkg_name"] as? String,
-        pkgRoot: node["pkg_root"] as? String
-    )
-}
-
-func parseTypeAliasStmt(_ dict: [String: Any]) throws -> TypeAliasStmt {
-    return TypeAliasStmt(
-        name: parseNodeRef(dict["name"], load: parseStringNode, label: "TypeAliasStmt.name")!,
-        ty: parseNodeRef(dict["ty"], load: parseKclTypeNode, label: "TypeAliasStmt.ty")!
-    )
-}
-
-func parseAssertStmt(_ dict: [String: Any]) throws -> AssertStmt {
-    return AssertStmt(
-        source: parseNodeRef(dict["source"], load: parseExpr, label: "AssertStmt.source")!,
-        assertMsg: parseNodeRef(dict["assert_msg"], load: parseStringNode, label: "AssertStmt.assert_msg")
-    )
-}
-
-func parseIfStmt(_ dict: [String: Any]) throws -> IfStmt {
-    return IfStmt(
-        cond: parseNodeRef(dict["cond"], load: parseExpr, label: "IfStmt.cond")!,
-        body: parseNodeRefList(dict["body"], load: parseStmt, label: "IfStmt.body"),
-        orElse: parseNodeRef(dict["or_else"], load: parseExpr, label: "IfStmt.or_else")
-    )
 }
 
 // MARK: - Expr dispatch
 
-func parseExpr(_ dict: [String: Any]) -> Expr {
-    guard let t = dict["type"] as? String else { return .unknown(type: "") }
-    do {
-        switch t {
-        case "Target":          return .target(try parseTargetExpr(dict))
-        case "Identifier":      return .identifier(try parseIdentifierExpr(dict))
-        case "Unary":           return .unary(try parseUnaryExpr(dict))
-        case "Binary":          return .binary(try parseBinaryExpr(dict))
-        case "If":              return .ifExpr(try parseIfExpr(dict))
-        case "Selector":        return .selector(try parseSelectorExpr(dict))
-        case "Call":            return .call(try parseCallExpr(dict))
-        case "Paren":           return .paren(try parseParenExpr(dict))
-        case "Quant":           return .quant(try parseQuantExpr(dict))
-        case "List":            return .list(try parseListExpr(dict))
-        case "ListIfItem":      return .listIfItem(try parseListIfItemExpr(dict))
-        case "ListComp":        return .listComp(try parseListComp(dict))
-        case "Starred":         return .starred(try parseStarredExpr(dict))
-        case "DictComp":        return .dictComp(try parseDictComp(dict))
-        case "ConfigIfEntry":   return .configIfEntry(try parseConfigIfEntryExpr(dict))
-        case "CompClause":      return .compClause(try parseCompClause(dict))
-        case "Schema":          return .schema(try parseSchemaExpr(dict))
-        case "Config":          return .config(try parseConfigExpr(dict))
-        case "Lambda":          return .lambda(try parseLambdaExpr(dict))
-        case "Subscript":       return .subscript(try parseSubscript(dict))
-        case "Compare":         return .compare(try parseCompare(dict))
-        case "NumberLit":       return .numberLit(try parseNumberLit(dict))
-        case "StringLit":       return .stringLit(try parseStringLit(dict))
-        case "NameConstantLit": return .nameConstantLit(try parseNameConstantLit(dict))
-        case "JoinedString":    return .joinedString(try parseJoinedString(dict))
-        case "FormattedValue":  return .formattedValue(try parseFormattedValue(dict))
-        case "Missing":         return .missing(MissingExpr())
-        case "CheckExpr":       return .check(try parseCheckExpr(dict))
-        default:                return .unknown(type: t)
-        }
-    } catch {
-        return .unknown(type: t)
+func expr(_ dict: [String: Any]) -> Expr {
+    guard let tag = dict["type"] as? String else { return .unknown(type: "") }
+    switch tag {
+    case "Target": return .target(target(dict))
+    case "Identifier": return .identifier(identifierFrom(dict))
+    case "Unary":
+        return .unary(UnaryExpr(
+            op: enumValue(dict["op"], UnaryOp.uAdd),
+            operand: nodeRef(dict["operand"], expr) ?? NodeRef(node: .missing(MissingExpr()))
+        ))
+    case "Binary":
+        return .binary(BinaryExpr(
+            left: nodeRef(dict["left"], expr) ?? NodeRef(node: .missing(MissingExpr())),
+            op: enumValue(dict["op"], BinOp.add),
+            right: nodeRef(dict["right"], expr) ?? NodeRef(node: .missing(MissingExpr()))
+        ))
+    case "If":
+        return .if(IfExpr(
+            body: nodeRef(dict["body"], expr) ?? NodeRef(node: .missing(MissingExpr())),
+            cond: nodeRef(dict["cond"], expr) ?? NodeRef(node: .missing(MissingExpr())),
+            orelse: nodeRef(dict["orelse"], expr) ?? NodeRef(node: .missing(MissingExpr()))
+        ))
+    case "Selector":
+        return .selector(SelectorExpr(
+            value: nodeRef(dict["value"], expr) ?? NodeRef(node: .missing(MissingExpr())),
+            attr: nodeRef(dict["attr"], identifierFrom) ?? NodeRef(node: Identifier(names: [])),
+            ctx: enumValue(dict["ctx"], ExprContext.load),
+            hasQuestion: bool(dict["has_question"])
+        ))
+    case "Call": return .call(callExpr(dict))
+    case "Paren":
+        return .paren(ParenExpr(expr: nodeRef(dict["expr"], expr) ?? NodeRef(node: .missing(MissingExpr()))))
+    case "Quant":
+        return .quant(QuantExpr(
+            target: nodeRef(dict["target"], expr) ?? NodeRef(node: .missing(MissingExpr())),
+            variables: nodeRefList(dict["variables"], identifierFrom),
+            op: enumValue(dict["op"], QuantOperation.all),
+            test: nodeRef(dict["test"], expr) ?? NodeRef(node: .missing(MissingExpr())),
+            ifCond: dict["if_cond"].flatMap { nodeRef($0, expr) },
+            ctx: enumValue(dict["ctx"], ExprContext.load)
+        ))
+    case "List":
+        return .list(ListExpr(
+            elts: nodeRefList(dict["elts"], expr),
+            ctx: enumValue(dict["ctx"], ExprContext.load)
+        ))
+    case "ListIfItem":
+        return .listIfItem(ListIfItemExpr(
+            ifCond: nodeRef(dict["if_cond"], expr) ?? NodeRef(node: .missing(MissingExpr())),
+            exprs: nodeRefList(dict["exprs"], expr),
+            orelse: dict["orelse"].flatMap { nodeRef($0, expr) }
+        ))
+    case "ListComp":
+        return .listComp(ListComp(
+            elt: nodeRef(dict["elt"], expr) ?? NodeRef(node: .missing(MissingExpr())),
+            generators: nodeRefList(dict["generators"], compClause)
+        ))
+    case "Starred":
+        return .starred(StarredExpr(
+            value: nodeRef(dict["value"], expr) ?? NodeRef(node: .missing(MissingExpr())),
+            ctx: enumValue(dict["ctx"], ExprContext.load)
+        ))
+    case "DictComp":
+        return .dictComp(DictComp(
+            entry: configEntry(dict["entry"] as? [String: Any] ?? [:]),
+            generators: nodeRefList(dict["generators"], compClause)
+        ))
+    case "ConfigIfEntry":
+        return .configIfEntry(ConfigIfEntryExpr(
+            ifCond: nodeRef(dict["if_cond"], expr) ?? NodeRef(node: .missing(MissingExpr())),
+            items: nodeRefList(dict["items"], configEntry),
+            orelse: dict["orelse"].flatMap { nodeRef($0, expr) }
+        ))
+    case "CompClause": return .compClause(compClause(dict))
+    case "Schema": return .schema(schemaExpr(dict))
+    case "Config": return .config(ConfigExpr(items: nodeRefList(dict["items"], configEntry)))
+    case "Check": return .check(checkExpr(dict))
+    case "Lambda":
+        return .lambda(LambdaExpr(
+            args: dict["args"].flatMap { nodeRef($0, arguments) },
+            body: nodeRefList(dict["body"], stmt),
+            returnTy: dict["return_ty"].flatMap { nodeRef($0, kclType) }
+        ))
+    case "Subscript":
+        return .subscript(Subscript(
+            value: nodeRef(dict["value"], expr) ?? NodeRef(node: .missing(MissingExpr())),
+            index: dict["index"].flatMap { nodeRef($0, expr) },
+            lower: dict["lower"].flatMap { nodeRef($0, expr) },
+            upper: dict["upper"].flatMap { nodeRef($0, expr) },
+            step: dict["step"].flatMap { nodeRef($0, expr) },
+            ctx: enumValue(dict["ctx"], ExprContext.load),
+            hasQuestion: bool(dict["has_question"])
+        ))
+    case "Keyword": return .keyword(keyword(dict))
+    case "Arguments": return .arguments(arguments(dict))
+    case "Compare":
+        return .compare(Compare(
+            left: nodeRef(dict["left"], expr) ?? NodeRef(node: .missing(MissingExpr())),
+            ops: (dict["ops"] as? [String] ?? []).compactMap(CmpOp.init(rawValue:)),
+            comparators: nodeRefList(dict["comparators"], expr)
+        ))
+    case "NumberLit":
+        return .numberLit(NumberLit(
+            binarySuffix: (dict["binary_suffix"] as? String).flatMap(NumberBinarySuffix.init(rawValue:)),
+            value: numberLitValue(dict["value"] as? [String: Any] ?? [:])
+        ))
+    case "StringLit":
+        return .stringLit(StringLit(
+            isLongString: bool(dict["is_long_string"]),
+            rawValue: dict["raw_value"] as? String ?? "",
+            value: dict["value"] as? String ?? ""
+        ))
+    case "NameConstantLit":
+        return .nameConstantLit(NameConstantLit(
+            value: enumValue(dict["value"], NameConstant.undefined)
+        ))
+    case "JoinedString":
+        return .joinedString(JoinedString(
+            isLongString: bool(dict["is_long_string"]),
+            values: nodeRefList(dict["values"], expr),
+            rawValue: dict["raw_value"] as? String ?? ""
+        ))
+    case "FormattedValue":
+        return .formattedValue(FormattedValue(
+            isLongString: bool(dict["is_long_string"]),
+            value: nodeRef(dict["value"], expr) ?? NodeRef(node: .missing(MissingExpr())),
+            formatSpec: dict["format_spec"] as? String
+        ))
+    case "Missing": return .missing(MissingExpr())
+    default: return .unknown(type: tag)
     }
 }
 
-func parseTargetExpr(_ dict: [String: Any]) throws -> TargetExpr {
-    return TargetExpr(name: parseNodeRef(dict["name"], load: parseStringNode, label: "TargetExpr.name")!)
-}
-
-func parseIdentifierExpr(_ dict: [String: Any]) throws -> IdentifierExpr {
-    return IdentifierExpr(
-        names: parseNodeRefList(dict["names"], load: parseStringNode, label: "IdentifierExpr.names"),
-        pkgpath: (dict["pkgpath"] as? [String]) ?? []
-    )
-}
-
-func parseUnaryExpr(_ dict: [String: Any]) throws -> UnaryExpr {
-    return UnaryExpr(
-        op: parseUnaryOp(dict["op"]),
-        operand: parseNodeRef(dict["operand"], load: parseExpr, label: "UnaryExpr.operand")!
-    )
-}
-
-func parseBinaryExpr(_ dict: [String: Any]) throws -> BinaryExpr {
-    return BinaryExpr(
-        op: parseBinOp(dict["op"]),
-        left: parseNodeRef(dict["left"], load: parseExpr, label: "BinaryExpr.left")!,
-        right: parseNodeRef(dict["right"], load: parseExpr, label: "BinaryExpr.right")!
-    )
-}
-
-func parseIfExpr(_ dict: [String: Any]) throws -> IfExpr {
-    return IfExpr(
-        cond: parseNodeRef(dict["cond"], load: parseExpr, label: "IfExpr.cond")!,
-        body: parseNodeRef(dict["body"], load: parseExpr, label: "IfExpr.body")!,
-        orElse: parseNodeRef(dict["or_else"], load: parseExpr, label: "IfExpr.or_else")
-    )
-}
-
-func parseSelectorExpr(_ dict: [String: Any]) throws -> SelectorExpr {
-    return SelectorExpr(
-        value: parseNodeRef(dict["value"], load: parseExpr, label: "SelectorExpr.value")!,
-        attrName: parseNodeRef(dict["attr_name"], load: parseStringNode, label: "SelectorExpr.attr_name")!
-    )
-}
-
-func parseCallExpr(_ dict: [String: Any]) throws -> CallExpr {
-    return CallExpr(
-        func: parseNodeRef(dict["func"], load: parseExpr, label: "CallExpr.func")!,
-        args: parseNodeRefList(dict["args"], load: parseExpr, label: "CallExpr.args"),
-        keywords: parseNodeRefList(dict["keywords"], load: parseKeyword, label: "CallExpr.keywords")
-    )
-}
-
-func parseParenExpr(_ dict: [String: Any]) throws -> ParenExpr {
-    return ParenExpr(expr: parseNodeRef(dict["expr"], load: parseExpr, label: "ParenExpr.expr")!)
-}
-
-func parseQuantExpr(_ dict: [String: Any]) throws -> QuantExpr {
-    return QuantExpr(
-        target: parseNodeRef(dict["target"], load: parseTarget, label: "QuantExpr.target")!,
-        variables: parseNodeRefList(dict["variables"], load: parseQuantOperation, label: "QuantExpr.variables"),
-        op: parseQuantOperationAny(dict["op"]),
-        cond: parseNodeRef(dict["cond"], load: parseExpr, label: "QuantExpr.cond")!
-    )
-}
-
-func parseListExpr(_ dict: [String: Any]) throws -> ListExpr {
-    return ListExpr(elts: parseNodeRefList(dict["elts"], load: parseExpr, label: "ListExpr.elts"))
-}
-
-func parseListIfItemExpr(_ dict: [String: Any]) throws -> ListIfItemExpr {
-    return ListIfItemExpr(
-        ifExpr: parseNodeRef(dict["if_expr"], load: parseExpr, label: "ListIfItemExpr.if_expr")!,
-        orElse: parseNodeRef(dict["or_else"], load: parseExpr, label: "ListIfItemExpr.or_else")
-    )
-}
-
-func parseListComp(_ dict: [String: Any]) throws -> ListComp {
-    return ListComp(
-        elt: parseNodeRef(dict["elt"], load: parseExpr, label: "ListComp.elt")!,
-        generators: parseNodeRefList(dict["generators"], load: parseCompClause, label: "ListComp.generators"),
-        cond: parseNodeRef(dict["cond"], load: parseExpr, label: "ListComp.cond")
-    )
-}
-
-func parseStarredExpr(_ dict: [String: Any]) throws -> StarredExpr {
-    return StarredExpr(
-        value: parseNodeRef(dict["value"], load: parseExpr, label: "StarredExpr.value")!,
-        ctx: parseExprContext(dict["ctx"])
-    )
-}
-
-func parseDictComp(_ dict: [String: Any]) throws -> DictComp {
-    return DictComp(
-        key: parseNodeRef(dict["key"], load: parseExpr, label: "DictComp.key")!,
-        value: parseNodeRef(dict["value"], load: parseExpr, label: "DictComp.value")!,
-        generators: parseNodeRefList(dict["generators"], load: parseCompClause, label: "DictComp.generators"),
-        cond: parseNodeRef(dict["cond"], load: parseExpr, label: "DictComp.cond")
-    )
-}
-
-func parseConfigIfEntryExpr(_ dict: [String: Any]) throws -> ConfigIfEntryExpr {
-    return ConfigIfEntryExpr(ifExpr: parseNodeRef(dict["if_expr"], load: parseExpr, label: "ConfigIfEntryExpr.if_expr")!)
-}
-
-// Non-throwing — see `parseCheckExpr` for the same rationale.
-func parseCompClause(_ dict: [String: Any]) -> CompClause {
-    return CompClause(
-        targets: parseNodeRefList(dict["targets"], load: parseTarget, label: "CompClause.targets"),
-        iter: parseNodeRef(dict["iter"], load: parseExpr, label: "CompClause.iter")!,
-        ifs: parseNodeRefList(dict["ifs"], load: parseExpr, label: "CompClause.ifs")
-    )
-}
-
-func parseSchemaExpr(_ dict: [String: Any]) throws -> SchemaExpr {
-    return SchemaExpr(
-        name: parseNodeRef(dict["name"], load: parseExpr, label: "SchemaExpr.name")!,
-        args: parseNodeRefList(dict["args"], load: parseExpr, label: "SchemaExpr.args"),
-        kwargs: parseNodeRefList(dict["kwargs"], load: parseKeyword, label: "SchemaExpr.kwargs"),
-        config: parseNodeRef(dict["config"], load: parseExpr, label: "SchemaExpr.config")!
-    )
-}
-
-func parseConfigExpr(_ dict: [String: Any]) throws -> ConfigExpr {
-    return ConfigExpr(items: parseNodeRefList(dict["items"], load: parseConfigEntry, label: "ConfigExpr.items"))
-}
-
-func parseLambdaExpr(_ dict: [String: Any]) throws -> LambdaExpr {
-    return LambdaExpr(
-        args: parseNodeRef(dict["args"], load: parseArguments, label: "LambdaExpr.args")!,
-        body: parseNodeRefList(dict["body"], load: parseStmt, label: "LambdaExpr.body"),
-        returnTy: parseNodeRef(dict["return_ty"], load: parseKclTypeNode, label: "LambdaExpr.return_ty")
-    )
-}
-
-func parseSubscript(_ dict: [String: Any]) throws -> Subscript {
-    return Subscript(
-        value: parseNodeRef(dict["value"], load: parseExpr, label: "Subscript.value")!,
-        index: parseNodeRef(dict["index"], load: parseExpr, label: "Subscript.index")!
-    )
-}
-
-func parseCompare(_ dict: [String: Any]) throws -> Compare {
-    let ops = (dict["ops"] as? [String])?.map { parseCmpOp($0) } ?? []
-    return Compare(
-        left: parseNodeRef(dict["left"], load: parseExpr, label: "Compare.left")!,
-        ops: ops,
-        comparators: parseNodeRefList(dict["comparators"], load: parseExpr, label: "Compare.comparators")
-    )
-}
-
-func parseNumberLit(_ dict: [String: Any]) throws -> NumberLit {
-    let binarySuffix: NumberBinarySuffix? = (dict["binary_suffix"] as? String).flatMap { parseBinarySuffix($0) }
-    let valueDict = (dict["value"] as? [String: Any]) ?? [:]
-    let rawValue = (valueDict["raw_value"] as? String) ?? ""
-    let value: Double
-    if let v = valueDict["value"] as? Double {
-        value = v
-    } else if let v = valueDict["value"] as? Int {
-        value = Double(v)
-    } else if let v = valueDict["value"] as? Int64 {
-        value = Double(v)
-    } else {
-        value = 0
+private func numberLitValue(_ dict: [String: Any]) -> NumberLitValue {
+    switch dict["type"] as? String {
+    case "Float": return .float(double(dict["value"]) ?? 0)
+    default: return .int(int(dict["value"]) ?? 0)
     }
-    let valueBinarySuffix = (valueDict["binary_suffix"] as? String).flatMap { parseBinarySuffix($0) }
-    return NumberLit(
-        binarySuffix: binarySuffix ?? valueBinarySuffix,
-        value: NumberLitValue(rawValue: rawValue, value: value, binarySuffix: valueBinarySuffix)
-    )
-}
-
-func parseStringLit(_ dict: [String: Any]) throws -> StringLit {
-    return StringLit(
-        isLongString: requireBool(dict, "is_long_string"),
-        rawValue: (dict["raw_value"] as? String) ?? "\"\"",
-        value: (dict["value"] as? String) ?? ""
-    )
-}
-
-func parseNameConstantLit(_ dict: [String: Any]) throws -> NameConstantLit {
-    let raw = (dict["value"] as? String) ?? "Undefined"
-    return NameConstantLit(value: parseNameConstant(raw))
-}
-
-func parseJoinedString(_ dict: [String: Any]) throws -> JoinedString {
-    return JoinedString(
-        values: parseNodeRefList(dict["values"], load: parseExpr, label: "JoinedString.values"),
-        isLongString: requireBool(dict, "is_long_string"),
-        rawValue: (dict["raw_value"] as? String) ?? ""
-    )
-}
-
-func parseFormattedValue(_ dict: [String: Any]) throws -> FormattedValue {
-    return FormattedValue(
-        value: parseNodeRef(dict["value"], load: parseExpr, label: "FormattedValue.value")!,
-        spec: dict["spec"] as? String
-    )
-}
-
-// Non-throwing — all calls go through non-throwing `parseNodeRef`, so the
-// body never actually throws. Marking it `throws` would force the
-// `parseNodeRefList` call sites in `parseSchemaStmt` / `parseRuleStmt`
-// to wrap each element in a do/catch (their `load:` parameter is
-// non-throwing).
-func parseCheckExpr(_ dict: [String: Any]) -> CheckExpr {
-    return CheckExpr(
-        test: parseNodeRef(dict["test"], load: parseExpr, label: "CheckExpr.test")!,
-        ifCond: parseNodeRef(dict["if_cond"], load: parseExpr, label: "CheckExpr.if_cond"),
-        msg: parseNodeRef(dict["msg"], load: parseStringNode, label: "CheckExpr.msg")
-    )
 }
 
 // MARK: - Type dispatch
 
-func parseKclTypeNode(_ dict: [String: Any]) -> KclTypeNode {
-    guard let t = dict["type"] as? String else { return .unknown(type: "") }
-    do {
-        switch t {
-        case "Any":         return .any(try parseAnyType(dict))
-        case "Basic":       return .basic(try parseBasicType(dict))
-        case "List":        return .list(try parseListType(dict))
-        case "Dict":        return .dict(try parseDictType(dict))
-        case "SchemaRef":   return .schemaRef(try parseSchemaRefType(dict))
-        case "Literal":     return .literal(try parseLiteralType(dict))
-        case "Function":    return .function(try parseFunctionType(dict))
-        case "Union":       return .union(try parseUnionType(dict))
-        case "Named":       return .named(try parseNamedType(dict))
-        case "StrLiteral":  return .strLiteral(try parseStrLiteralType(dict))
-        case "IntLiteral":  return .intLiteral(try parseIntLiteralType(dict))
-        case "FloatLiteral":return .floatLiteral(try parseFloatLiteralType(dict))
-        case "BoolLiteral": return .boolLiteral(try parseBoolLiteralType(dict))
-        case "KeyValue":    return .keyValue(try parseKeyValueType(dict))
-        default:            return .unknown(type: t)
-        }
-    } catch {
-        return .unknown(type: t)
-    }
-}
-
-func parseAnyType(_ dict: [String: Any]) throws -> AnyType { return AnyType() }
-
-func parseBasicType(_ dict: [String: Any]) throws -> BasicType {
-    return BasicType(type: "Basic", kind: (dict["kind"] as? String) ?? "")
-}
-
-func parseListType(_ dict: [String: Any]) throws -> ListType {
-    return ListType(innerType: parseNodeRef(dict["inner_type"], load: parseKclTypeNode, label: "ListType.inner_type")!)
-}
-
-func parseDictType(_ dict: [String: Any]) throws -> DictType {
-    return DictType(
-        keyType: parseNodeRef(dict["key_type"], load: parseKclTypeNode, label: "DictType.key_type")!,
-        valueType: parseNodeRef(dict["value_type"], load: parseKclTypeNode, label: "DictType.value_type")!
-    )
-}
-
-func parseSchemaRefType(_ dict: [String: Any]) throws -> SchemaRefType {
-    return SchemaRefType(
-        schemaName: parseNodeRef(dict["schema_name"], load: parseStringNode, label: "SchemaRefType.schema_name")!,
-        pkgpath: (dict["pkgpath"] as? [String]) ?? []
-    )
-}
-
-func parseLiteralType(_ dict: [String: Any]) throws -> LiteralType {
-    let raw = dict["value"] as? [String: Any]
-    let value: LiteralTypeValue
-    if let raw = raw {
-        if let s = raw["string"] as? String { value = .string(s) }
-        else if let i = raw["int"] as? Int64 { value = .int(i) }
-        else if let i = raw["int"] as? Int { value = .int(Int64(i)) }
-        else if let f = raw["float"] as? Double { value = .float(f) }
-        else if let f = raw["float"] as? Int { value = .float(Double(f)) }
-        else if let b = raw["bool"] as? Bool { value = .bool(b) }
-        else { value = .string("") }
-    } else {
-        value = .string("")
-    }
-    return LiteralType(value: value)
-}
-
-func parseFunctionType(_ dict: [String: Any]) throws -> FunctionType {
-    return FunctionType(
-        params: parseNodeRefList(dict["params"], load: parseKclTypeNode, label: "FunctionType.params"),
-        ret: parseNodeRef(dict["ret"], load: parseKclTypeNode, label: "FunctionType.ret")!
-    )
-}
-
-func parseUnionType(_ dict: [String: Any]) throws -> UnionType {
-    return UnionType(
-        any: requireBool(dict, "any"),
-        types: parseNodeRefList(dict["types"], load: parseKclTypeNode, label: "UnionType.types")
-    )
-}
-
-func parseNamedType(_ dict: [String: Any]) throws -> NamedType {
-    return NamedType(name: parseNodeRef(dict["name"], load: parseIdentifier, label: "NamedType.name")!)
-}
-
-func parseStrLiteralType(_ dict: [String: Any]) throws -> StrLiteralType {
-    return StrLiteralType(value: (dict["value"] as? String) ?? "")
-}
-
-func parseIntLiteralType(_ dict: [String: Any]) throws -> IntLiteralType {
-    return IntLiteralType(value: try requireInt(dict, "value", container: "IntLiteralType"))
-}
-
-func parseFloatLiteralType(_ dict: [String: Any]) throws -> FloatLiteralType {
-    return FloatLiteralType(value: try requireDouble(dict, "value", container: "FloatLiteralType"))
-}
-
-func parseBoolLiteralType(_ dict: [String: Any]) throws -> BoolLiteralType {
-    return BoolLiteralType(value: requireBool(dict, "value"))
-}
-
-func parseKeyValueType(_ dict: [String: Any]) throws -> KeyValueType {
-    return KeyValueType(
-        key: parseNodeRef(dict["key"], load: parseKclTypeNode, label: "KeyValueType.key")!,
-        value: parseNodeRef(dict["value"], load: parseKclTypeNode, label: "KeyValueType.value")!
-    )
-}
-
-// MARK: - Flat DTOs
-
-func parseDecorator(_ dict: [String: Any]) -> Decorator {
-    return Decorator(
-        func: parseNodeRef(dict["func"], load: parseExpr, label: "Decorator.func"),
-        args: parseNodeRefList(dict["args"], load: parseExpr, label: "Decorator.args"),
-        keywords: parseNodeRefList(dict["keywords"], load: parseKeyword, label: "Decorator.keywords")
-    )
-}
-
-func parseSchemaConfig(_ dict: [String: Any]) -> SchemaConfig {
-    return SchemaConfig(
-        name: parseNodeRef(dict["name"], load: parseExpr, label: "SchemaConfig.name"),
-        args: parseNodeRefList(dict["args"], load: parseExpr, label: "SchemaConfig.args"),
-        kwargs: parseNodeRefList(dict["kwargs"], load: parseKeyword, label: "SchemaConfig.kwargs"),
-        config: parseNodeRef(dict["config"], load: parseExpr, label: "SchemaConfig.config")
-    )
-}
-
-func parseConfigEntry(_ dict: [String: Any]) -> ConfigEntry {
-    return ConfigEntry(
-        key: parseNodeRef(dict["key"], load: parseExpr, label: "ConfigEntry.key")!,
-        value: parseNodeRef(dict["value"], load: parseExpr, label: "ConfigEntry.value")!,
-        operation: (dict["operation"] as? String).flatMap { parseConfigEntryOperation($0) },
-        isShorthand: requireBool(dict, "is_shorthand")
-    )
-}
-
-func parseKeyword(_ dict: [String: Any]) -> Keyword {
-    return Keyword(
-        arg: parseNodeRef(dict["arg"], load: parseExpr, label: "Keyword.arg"),
-        value: parseNodeRef(dict["value"], load: parseExpr, label: "Keyword.value")!
-    )
-}
-
-func parseArguments(_ dict: [String: Any]) -> Arguments {
-    return Arguments(
-        args: parseNodeRefList(dict["args"], load: parseExpr, label: "Arguments.args"),
-        defaults: parseNodeRefList(dict["defaults"], load: parseExpr, label: "Arguments.defaults"),
-        tyList: parseNodeRefList(dict["ty_list"], load: parseKclTypeNode, label: "Arguments.ty_list")
-    )
-}
-
-func parseMemberOrIndex(_ dict: [String: Any]) -> MemberOrIndex {
-    guard let t = dict["type"] as? String else {
-        // fallback: legacy wire shape with no `type` discriminator
-        if let value = dict["value"] {
-            if let s = value as? String { return .member(NodeRef(node: s)) }
-            return .index(parseNodeRef(value, load: parseExpr, label: "MemberOrIndex.index")!)
-        }
-        return .member(NodeRef(node: ""))
-    }
-    switch t {
-    case "Member":
-        return .member(parseNodeRef(dict["value"], load: parseStringNode, label: "MemberOrIndex.value")!)
-    case "Index":
-        return .index(parseNodeRef(dict["value"], load: parseExpr, label: "MemberOrIndex.value")!)
+/// `Type` is adjacently tagged, so unlike `stmt` / `expr` the payload comes
+/// out of `dict["value"]` rather than off the top level. The payload is
+/// deliberately kept as `Any` rather than forced to a dictionary:
+/// `BasicType` is a fieldless enum, so its payload is the bare string
+/// `"Int"`, and `Any` is a unit variant that has no `value` key at all.
+func kclType(_ dict: [String: Any]) -> KclTypeNode {
+    guard let tag = dict["type"] as? String else { return .unknown(type: "") }
+    guard let raw = dict["value"] else { return .any(AnyType()) }
+    let payload = raw as? [String: Any] ?? [:]
+    switch tag {
+    case "Named":
+        // `Named(Identifier)` is a newtype, so the identifier is inlined
+        // into `value` with no extra wrapper key.
+        return .named(identifierFrom(payload))
+    case "Basic":
+        return .basic(enumValue(raw, BasicType.bool))
+    case "List":
+        return .list(ListType(innerType: payload["inner_type"].flatMap { nodeRef($0, kclType) }))
+    case "Dict":
+        return .dict(DictType(
+            keyType: payload["key_type"].flatMap { nodeRef($0, kclType) },
+            valueType: payload["value_type"].flatMap { nodeRef($0, kclType) }
+        ))
+    case "Union":
+        // The Rust field is `type_elements`, not `types`.
+        return .union(UnionType(typeElements: nodeRefList(payload["type_elements"], kclType)))
+    case "Literal":
+        return .literal(LiteralType(value: literalTypeValue(payload)))
+    case "Function":
+        return .function(FunctionType(
+            paramsTy: payload["params_ty"].flatMap { optionalNodeRefList($0, kclType).compactMap { $0 } },
+            retTy: payload["ret_ty"].flatMap { nodeRef($0, kclType) }
+        ))
     default:
-        return .member(NodeRef(node: ""))
+        return .unknown(type: tag)
     }
 }
 
-func parseTarget(_ dict: [String: Any]) -> Target {
-    return Target(
-        name: parseNodeRef(dict["name"], load: parseStringNode, label: "Target.name")!,
-        paths: (dict["paths"] as? [[String: Any]] ?? []).map { parseMemberOrIndex($0) },
-        pkgpath: (dict["pkgpath"] as? String) ?? ""
-    )
-}
-
-func parseQuantOperation(_ dict: [String: Any]) -> QuantOperation {
-    return QuantOperation(
-        target: parseNodeRef(dict["target"], load: parseTarget, label: "QuantOperation.target")!,
-        op: (dict["op"] as? String) ?? "filter"
-    )
-}
-
-func parseQuantOperationAny(_ any: Any) -> QuantOperation {
-    if let dict = any as? [String: Any] {
-        return parseQuantOperation(dict)
+/// `LiteralType` is itself `tag + content`, so `Type::Literal`'s `value` is
+/// a second tagged document. `Int` is the odd one out: its payload is a
+/// newtype, so it is inlined as `{"value": 1, "suffix": null}` rather than
+/// nested under another key.
+private func literalTypeValue(_ dict: [String: Any]) -> LiteralTypeValue {
+    switch dict["type"] as? String {
+    case "Int":
+        return .int(IntLiteralType(
+            value: int((dict["value"] as? [String: Any])?["value"]) ?? 0,
+            suffix: ((dict["value"] as? [String: Any])?["suffix"] as? String)
+                .flatMap(NumberBinarySuffix.init(rawValue:))
+        ))
+    case "Float": return .float(double(dict["value"]) ?? 0)
+    case "Bool": return .bool((dict["value"] as? NSNumber)?.boolValue ?? false)
+    default: return .str(dict["value"] as? String ?? "")
     }
-    // Some wire shapes encode the op as a plain string (e.g. "all", "filter").
-    let op = (any as? String) ?? "filter"
-    return QuantOperation(target: NodeRef(node: Target(name: NodeRef(node: ""), paths: [], pkgpath: "")), op: op)
-}
-
-func parseSchemaIndexSignature(_ dict: [String: Any]) -> SchemaIndexSignature {
-    return SchemaIndexSignature(
-        keyType: parseNodeRef(dict["key_type"], load: parseKclTypeNode, label: "SchemaIndexSignature.key_type")!,
-        valueType: parseNodeRef(dict["value_type"], load: parseKclTypeNode, label: "SchemaIndexSignature.value_type")!
-    )
-}
-
-func parseIdentifier(_ dict: [String: Any]) -> Identifier {
-    return Identifier(
-        names: (dict["names"] as? [String]) ?? [],
-        pkgpath: (dict["pkgpath"] as? [String]) ?? []
-    )
-}
-
-// MARK: - Operator & context enums
-
-func parseBinOp(_ any: Any) -> BinOp {
-    if let s = any as? String, let op = BinOp(rawValue: s) { return op }
-    return .add
-}
-
-func parseUnaryOp(_ any: Any) -> UnaryOp {
-    if let s = any as? String, let op = UnaryOp(rawValue: s) { return op }
-    return .not
-}
-
-func parseCmpOp(_ s: String) -> CmpOp {
-    return CmpOp(rawValue: s) ?? .eq
-}
-
-func parseAugOp(_ any: Any) -> AugOp? {
-    if let s = any as? String { return AugOp(rawValue: s) }
-    return nil
-}
-
-func parseConfigEntryOperation(_ s: String) -> ConfigEntryOperation? {
-    return ConfigEntryOperation(rawValue: s)
-}
-
-func parseExprContext(_ any: Any) -> ExprContext {
-    if let s = any as? String, let c = ExprContext(rawValue: s) { return c }
-    return .load
-}
-
-func parseNameConstant(_ s: String) -> NameConstant {
-    return NameConstant(rawValue: s) ?? .undefined
-}
-
-func parseBinarySuffix(_ s: String) -> NumberBinarySuffix? {
-    return NumberBinarySuffix(rawValue: s)
 }

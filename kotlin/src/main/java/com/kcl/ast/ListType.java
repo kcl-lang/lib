@@ -1,5 +1,6 @@
 package com.kcl.ast;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import java.util.Optional;
 
@@ -14,6 +15,7 @@ public class ListType extends Type {
             this.innerType = innerType;
         }
 
+        @JsonProperty("inner_type")
         private Optional<NodeRef<Type>> innerType;
     }
 

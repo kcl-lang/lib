@@ -1,5 +1,6 @@
 package com.kcl.ast;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import java.util.List;
 import java.util.Optional;
@@ -16,6 +17,7 @@ public class FunctionType extends Type {
             this.paramsTy = paramsTy;
         }
 
+        @JsonProperty("params_ty")
         private Optional<List<NodeRef<Type>>> paramsTy;
 
         public Optional<NodeRef<Type>> getRetTy() {
@@ -26,6 +28,7 @@ public class FunctionType extends Type {
             this.retTy = retTy;
         }
 
+        @JsonProperty("ret_ty")
         private Optional<NodeRef<Type>> retTy;
     }
 

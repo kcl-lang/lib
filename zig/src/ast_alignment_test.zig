@@ -228,9 +228,11 @@ test "AST alignment: lambda has typed arguments and return type" {
                         try testing.expectEqual(@as(usize, 2), arguments.args.items.len);
                         try testing.expectEqualStrings("x", arguments.args.items[0].node.names.items[0].node);
                         try testing.expectEqualStrings("y", arguments.args.items[1].node.names.items[0].node);
-                        // Both parameters are annotated `int`.
+                        // Both parameters are annotated `int`. `ty_list` is
+                        // `Vec<Option<NodeRef<Type>>>` in Rust, so each slot is
+                        // optional even though the parser always fills it here.
                         try testing.expectEqual(@as(usize, 2), arguments.ty_list.items.len);
-                        try testing.expectEqualStrings("Int", arguments.ty_list.items[0].node.basic.value);
+                        try testing.expectEqualStrings("Int", arguments.ty_list.items[0].?.node.basic.value);
                         // `-> int` return type.
                         try testing.expectEqualStrings("Int", lambda.return_ty.?.node.basic.value);
                         // defaults align positionally with args (null here).

@@ -1,5 +1,6 @@
 package com.kcl.ast;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import java.util.Optional;
 
@@ -7,7 +8,10 @@ import java.util.Optional;
 public class DictType extends Type {
 
     public static class DictTypeValue {
+        @JsonProperty("key_type")
         private Optional<NodeRef<Type>> keyType;
+
+        @JsonProperty("value_type")
         private Optional<NodeRef<Type>> valueType;
 
         public Optional<NodeRef<Type>> getKeyType() {

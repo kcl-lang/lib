@@ -1,7 +1,9 @@
 package com.kcl.ast;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
- * NameConstant, e.g.
+ * NameConstantLit, e.g.
  *
  * <pre>
  * {@code
@@ -11,8 +13,13 @@ package com.kcl.ast;
  * Undefined
  * }
  * </pre>
+ *
+ * The polymorphic discriminator {@code "NameConstantLit"} is registered on the
+ * {@link Expr} base class via {@code @JsonSubTypes}; do NOT add a
+ * {@code @JsonTypeName} here or it will conflict.
  */
-class NameConstantLit extends Expr {
+public class NameConstantLit extends Expr {
+    @JsonProperty("value")
     private NameConstant value;
 
     public NameConstant getValue() {
