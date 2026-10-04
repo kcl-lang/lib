@@ -1626,6 +1626,43 @@ final $typed_data.Uint8List coverageSummaryDescriptor = $convert.base64Decode(
     'Cg9Db3ZlcmFnZVN1bW1hcnkSGAoHY292ZXJlZBgBIAEoBFIHY292ZXJlZBIeCgpleGVjdXRhYm'
     'xlGAIgASgEUgpleGVjdXRhYmxlEhgKB3BlcmNlbnQYAyABKAFSB3BlcmNlbnQ=');
 
+// Hand-added, not generated: see the note on FormatTestReportArgs in
+// spec.pb.dart.
+@$core.Deprecated('Use formatTestReportArgsDescriptor instead')
+const FormatTestReportArgs$json = {
+  '1': 'FormatTestReportArgs',
+  '2': [
+    {
+      '1': 'result',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.com.kcl.api.TestResult',
+      '10': 'result'
+    },
+  ],
+};
+
+/// Descriptor for `FormatTestReportArgs`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List formatTestReportArgsDescriptor = $convert.base64Decode(
+    'ChRGb3JtYXRUZXN0UmVwb3J0QXJncxIvCgZyZXN1bHQYASABKAsyFy5jb20ua2NsLmFwaS5UZX'
+    'N0UmVzdWx0UgZyZXN1bHQ=');
+
+// Hand-added, not generated: see the note on FormatTestReportArgs in
+// spec.pb.dart.
+@$core.Deprecated('Use formatTestReportResultDescriptor instead')
+const FormatTestReportResult$json = {
+  '1': 'FormatTestReportResult',
+  '2': [
+    {'1': 'report', '3': 1, '4': 1, '5': 9, '10': 'report'},
+  ],
+};
+
+/// Descriptor for `FormatTestReportResult`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List formatTestReportResultDescriptor =
+    $convert.base64Decode(
+        'ChZGb3JtYXRUZXN0UmVwb3J0UmVzdWx0EhYKBnJlcG9ydBgBIAEoCVIGcmVwb3J0');
+
 @$core.Deprecated('Use updateDependenciesArgsDescriptor instead')
 const UpdateDependenciesArgs$json = {
   '1': 'UpdateDependenciesArgs',

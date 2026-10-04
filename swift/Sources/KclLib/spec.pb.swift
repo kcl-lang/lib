@@ -1462,6 +1462,47 @@ public struct CoverageSummary: Sendable {
   public init() {}
 }
 
+// Hand-added, not generated: the installed protoc-gen-swift is 1.38.x, whose
+// gencode the pinned SwiftProtobuf 1.27.x runtime cannot build. Regenerate
+// with protoc-gen-swift 1.27.1 to replace it -- see `spec/Makefile`.
+/// Message for format test report request arguments.
+public struct FormatTestReportArgs: Sendable {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  /// The test result to format, as returned by the Test RPC.
+  public var result: TestResult {
+    get {return _result ?? TestResult()}
+    set {_result = newValue}
+  }
+  /// Returns true if `result` has been explicitly set.
+  public var hasResult: Bool {return self._result != nil}
+  /// Clears the value of `result`. Subsequent reads from it will return its default value.
+  public mutating func clearResult() {self._result = nil}
+
+  public var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  public init() {}
+
+  fileprivate var _result: TestResult? = nil
+}
+
+// Hand-added, not generated: see the note on FormatTestReportArgs above.
+/// Message for format test report response.
+public struct FormatTestReportResult: Sendable {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  /// The pretty-printed report (see PrettyReporter format docs above).
+  public var report: String = String()
+
+  public var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  public init() {}
+}
+
 /// Message for update dependencies request arguments.
 public struct UpdateDependenciesArgs: Sendable {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
@@ -4540,6 +4581,76 @@ extension CoverageSummary: SwiftProtobuf.Message, SwiftProtobuf._MessageImplemen
     if lhs.covered != rhs.covered {return false}
     if lhs.executable != rhs.executable {return false}
     if lhs.percent != rhs.percent {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+// Hand-added, not generated: see the note on FormatTestReportArgs above.
+extension FormatTestReportArgs: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = _protobuf_package + ".FormatTestReportArgs"
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .same(proto: "result"),
+  ]
+
+  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeSingularMessageField(value: &self._result) }()
+      default: break
+      }
+    }
+  }
+
+  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
+    try { if let v = self._result {
+      try visitor.visitSingularMessageField(value: v, fieldNumber: 1)
+    } }()
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  public static func ==(lhs: FormatTestReportArgs, rhs: FormatTestReportArgs) -> Bool {
+    if lhs._result != rhs._result {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+// Hand-added, not generated: see the note on FormatTestReportArgs above.
+extension FormatTestReportResult: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = _protobuf_package + ".FormatTestReportResult"
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .same(proto: "report"),
+  ]
+
+  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeSingularStringField(value: &self.report) }()
+      default: break
+      }
+    }
+  }
+
+  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    if !self.report.isEmpty {
+      try visitor.visitSingularStringField(value: self.report, fieldNumber: 1)
+    }
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  public static func ==(lhs: FormatTestReportResult, rhs: FormatTestReportResult) -> Bool {
+    if lhs.report != rhs.report {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }
