@@ -76,7 +76,9 @@ public class CoverageFieldsTest {
     @Test
     public void testCoverageMessagesRegisteredInDescriptor() {
         Descriptors.FileDescriptor descriptor = Spec.getDescriptor();
-        Assert.assertEquals(67, descriptor.getMessageTypes().size());
+        // 89 message types after the spec sync that added the LoadPackage info
+        // fields and the FormatTestReport/Generate* RPC messages (#375).
+        Assert.assertEquals(89, descriptor.getMessageTypes().size());
         Descriptors.Descriptor fileCoverageDesc = descriptor.findMessageTypeByName("FileCoverage");
         Descriptors.Descriptor reportDesc = descriptor.findMessageTypeByName("TestCoverageReport");
         Descriptors.Descriptor summaryDesc = descriptor.findMessageTypeByName("CoverageSummary");
