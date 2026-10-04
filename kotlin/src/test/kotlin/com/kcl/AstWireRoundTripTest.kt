@@ -104,7 +104,9 @@ class AstWireRoundTripTest {
             throw java.io.FileNotFoundException("no testdata/ast/alignment.json above ${Paths.get("").toAbsolutePath()}")
         }
 
-        private fun goldenJson(): String = Files.readString(golden)
+        // Files.readString is a Java 11 API and the CI leg compiles against
+        // JDK 8; readAllBytes + explicit charset is equivalent here.
+        private fun goldenJson(): String = String(Files.readAllBytes(golden), Charsets.UTF_8)
 
         private fun parse(text: String): JsonNode = json.readTree(text)
 
