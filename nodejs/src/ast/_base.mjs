@@ -16,15 +16,35 @@
  * @template T
  * @typedef {Object} Node
  * @property {T} node
- * @property {string} [filename]
- * @property {number} [line]
- * @property {number} [column]
- * @property {number} [endLine]
- * @property {number} [endColumn]
+ * @property {string|undefined} filename
+ * @property {number|undefined} line
+ * @property {number|undefined} column
+ * @property {number|undefined} endLine
+ * @property {number|undefined} endColumn
  */
 
 /**
- * @typedef {Node<string>} Comment
+ * `NodeRef<T>` at both levels of optionality: the wrapper itself may be absent
+ * — an `Option<NodeRef<T>>` field serialises as `null` — and a present wrapper
+ * may still hold no value, since serde emits `"node": null` rather than
+ * dropping the key. `Vec<Option<…>>` fields, `Arguments.defaults` and
+ * `Arguments.ty_list` among them, are the same idea elementwise: the nulls are
+ * meaningful and have to keep their slot.
+ * @template T
+ * @typedef {Node<T|undefined>|undefined} MaybeNode
+ */
+
+/**
+ * `Comment` is a plain struct with one `String` field in Rust, so the object
+ * under `node` is `{"text": "…"}` and not the text itself. Typing it as
+ * `Node<string>` hands every caller an object where it promised a string.
+ * @typedef {Object} Comment
+ * @property {string} text
+ * @property {string|undefined} filename
+ * @property {number|undefined} line
+ * @property {number|undefined} column
+ * @property {number|undefined} endLine
+ * @property {number|undefined} endColumn
  */
 
 /**
@@ -40,11 +60,11 @@
  * @template T
  * @typedef {Object} WireNode
  * @property {T} node
- * @property {string} [filename]
- * @property {number} [line]
- * @property {number} [column]
- * @property {number} [end_line]
- * @property {number} [end_column]
+ * @property {string|undefined} filename
+ * @property {number|undefined} line
+ * @property {number|undefined} column
+ * @property {number|undefined} end_line
+ * @property {number|undefined} end_column
  */
 
 /**
@@ -68,13 +88,16 @@ export function posFromWire(w) {
  * @template T,U
  * @param {WireNode<U>|undefined|null} w
  * @param {(inner: U) => T} load
- * @returns {Node<T>|undefined}
+ * @returns {MaybeNode<T>}
  */
 export function nodeFromWire(w, load) {
   if (!w) return undefined
+  // Not `Node<T>`: serde emits `"node": null` rather than dropping the key, so
+  // a present wrapper can still carry no value. Casting `inner` to `T` here
+  // would be a claim the code below does not make.
   const inner = w.node !== undefined ? load(w.node) : undefined
   return {
-    node: /** @type {T} */ inner,
+    node: inner,
     filename: w.filename,
     line: w.line,
     column: w.column,
@@ -84,9 +107,15 @@ export function nodeFromWire(w, load) {
 }
 
 /**
- * @param {WireNode<string>|undefined|null} w
+ * @param {WireNode<{text?: string}>|undefined|null} w
  * @returns {Comment|undefined}
  */
 export function commentFromWire(w) {
-  return /** @type {Comment|undefined} */ nodeFromWire(w, (x) => /** @type {string} */ x)
+  const n = nodeFromWire(w, (x) => x)
+  if (n === undefined) return undefined
+  // `nodeFromWire` wraps whatever the loader returns, so the struct is still
+  // under `node` — the position keys are the ones worth keeping, and the text
+  // is the one field the struct actually has.
+  const { node, ...pos } = n
+  return { ...pos, text: (node && node.text) || '' }
 }

@@ -1,0 +1,101 @@
+name: ast-shape-test
+
+# Every binding decodes the same parser output, and each one hand-rolls that
+# decoder. A wrong field shape is silent — a list read as a single node yields
+# an empty result, a NodeRef<Identifier> read as a Node<String> yields a
+# zero-valued node — so the language test suites cannot see it. This workflow
+# cross-checks all of them against the Rust struct definitions in one go, which
+# is why it lives apart from any single language's build.
+on:
+  push:
+    branches:
+      - main
+      - master
+    tags:
+      - '*'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "hack/**"
+      # One entry per binding's AST decoder. A new binding means a new entry
+      # here too, or its decoder is only ever checked locally.
+      - "ruby/lib/kcl_lib/ast.rb"
+      - "julia/src/ast.jl"
+      - "lua/kcl_lib/ast.lua"
+      - "dart/lib/src/ast/**"
+      - "python/kcl_lib/ast/**"
+      - "wasm/src/ast/**"
+      - "nodejs/src/ast/**"
+      - "dotnet/KclLib.AST/**"
+      - "zig/src/ast/**"
+      - "swift/Sources/KclLibAST/**"
+      - "java/src/main/java/com/kcl/ast/**"
+      - "kotlin/src/main/java/com/kcl/ast/**"
+      - "c/include/kcl_lib_ast.h"
+      - "c/lib/kcl_lib_ast.c"
+      - "cpp/include/kcl_lib_ast.hpp"
+      - ".github/workflows/ast-shape-test.yaml"
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}-${{ github.event_name }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v7
+      with:
+        path: lib
+    # The Rust struct definitions are the thing everything is checked against,
+    # and they live in the kcl repo rather than here. Checked out next to this
+    # one so the default `../../kcl` path resolves.
+    - name: Checkout kcl
+      uses: actions/checkout@v7
+      with:
+        repository: kcl-lang/kcl
+        path: kcl
+    - name: Setup Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: "3.4"
+    - name: Check every binding against the Rust struct definitions
+      working-directory: "lib"
+      run: ruby hack/check_ast_field_types.rb
+    # The self-test breaks each decoder on purpose and asserts the rules fire.
+    # Without it a collector that matches nothing would report "ok" for every
+    # binding, which is the failure mode this whole setup exists to prevent.
+    - name: Verify the checker still catches a broken decoder
+      working-directory: "lib"
+      run: ruby hack/test_check_ast_field_types.rb
+    # index.d.mts is hand-written and src/ast/*.mjs is hand-written, and a
+    # tsc run cannot compare them: the repo's tsconfig includes `.` with the
+    # default extensions and `.d.mts` is not one of them, so the published
+    # declaration is not in the program. This checker emits a declaration from
+    # the loaders' JSDoc and diffs the two, so it needs a real tsc.
+    - uses: pnpm/action-setup@v6
+      with:
+        version: 10
+    - name: Setup node
+      uses: actions/setup-node@v7
+      with:
+        node-version: '22'
+    - name: Install dependencies
+      working-directory: "lib/nodejs"
+      run: pnpm i
+    - name: Check the published AST declaration against the loaders
+      working-directory: "lib"
+      run: ruby hack/check_ast_decl_drift.rb
+    # Same reasoning as the field-types self-test above, one level up: this
+    # checker emits a declaration with tsc and diffs it, and a mutation that
+    # silently matches nothing would leave it green. Without this step
+    # check_ast_decl_drift.rb runs in CI but is never itself tested, which is
+    # the arrangement that let it pass on a gutted loader.
+    - name: Verify the declaration checker still catches drift
+      working-directory: "lib"
+      run: ruby hack/test_check_ast_decl_drift.rb

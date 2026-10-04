@@ -14,9 +14,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * }
  * </pre>
  *
- * The polymorphic discriminator {@code "NameConstantLit"} is registered on the
- * {@link Expr} base class via {@code @JsonSubTypes}; do NOT add a
- * {@code @JsonTypeName} here or it will conflict.
+ * The polymorphic discriminator {@code "NameConstantLit"} is registered on the {@link Expr} base class via
+ * {@code @JsonSubTypes}; do NOT add a {@code @JsonTypeName} here or it will conflict.
  */
 public class NameConstantLit extends Expr {
     @JsonProperty("value")

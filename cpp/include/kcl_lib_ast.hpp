@@ -9,14 +9,21 @@
  * deserializes cleanly into the typed AST structures declared in
  * `kcl_lib_ast.h`.
  *
- * Wire shape follows `kcl-lang/kcl crates/ast/src/ast.rs`:
+ * Wire shape follows `kcl-lang/kcl crates/ast/src/ast.rs` — see the
+ * contract notes in `kcl_lib_ast.h`, which this header includes and
+ * which remains the single source of truth for both bindings. In short:
  *
- *   - `#[serde(tag = "type")]` polymorphic dispatch — every `Stmt` /
- *     `Expr` / `Type` variant carries a `"type"` discriminator and is
- *     represented as a tagged-union struct in C (`<kind>_t` with a
- *     `kcl_<thing>_kind_t` enum + payload union).
- *   - Flat DTOs (`Decorator`, `SchemaConfig`, `ConfigEntry`, `Keyword`,
- *     `Arguments`, `MemberOrIndex`, `Target`) — see AST_DRIFT.md note A.
+ *   - `Stmt` / `Expr` are `#[serde(tag = "type")]`; a newtype variant
+ *     over a struct flattens that struct into the *same* object, so
+ *     `{"type":"Identifier","names":[…],"pkgpath":"","ctx":"Load"}` is
+ *     one object, not a tag wrapping a nested payload.
+ *   - `Type` is `#[serde(tag = "type", content = "value")]` — adjacently
+ *     tagged. `Type::Any` is the only unit variant, so it is the bare
+ *     `{"type":"Any"}` with no `value` key at all.
+ *   - Fields declared as plain structs upstream (`SchemaStmt.decorators`
+ *     is `Vec<NodeRef<CallExpr>>`, `DictComp.entry` is a bare
+ *     `ConfigEntry`, `Target.paths` is a bare `Vec<MemberOrIndex>`) carry
+ *     no tag even though their parent node is tagged.
  *
  * The C++ wrapper adds RAII smart-pointer wrappers around the C
  * types so callers don't have to remember the matching `*_free`
@@ -26,6 +33,7 @@
  * Build:
  *   $ make cpp
  *   $ ./build/examples/ast_alignment test_data/ast_alignment/main.k
+ *   $ ./build/examples/ast_contract
  */
 
 #pragma once

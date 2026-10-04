@@ -94,7 +94,7 @@ def test_schema_expr_value_in_assign_stmt():
     value = assign.value.node if assign.value else None
     assert isinstance(value, type(assign.value.node))  # noqa: E721
     # The actual variant should be a SchemaExpr.
-    from kcl_lib.ast._expr import SchemaExpr
+    from kcl_lib.ast import SchemaExpr
 
     assert isinstance(value, SchemaExpr)
 
@@ -119,7 +119,7 @@ def test_schema_stmt_decorators_are_flat_decorator_dto():
         assert isinstance(deco.node, Decorator)
         # The Decorator.func payload is a Node wrapping an Identifier
         # expression (no `"type":"Call"` tag in the flat shape).
-        from kcl_lib.ast._expr import expr_from_dict, Identifier
+        from kcl_lib.ast import expr_from_dict, Identifier
 
         assert isinstance(deco.node.func.node, Identifier)
 

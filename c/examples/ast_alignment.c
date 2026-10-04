@@ -155,16 +155,16 @@ static int test_schema_stmt_decorators(const char* ast_json)
     kcl_module_t* module = kcl_ast_parse_module(ast_json);
     const kcl_stmt_t* article = find_schema(module, "Article");
     assert(article != NULL);
-    kcl_decorator_node_list_t* decos = (kcl_decorator_node_list_t*)article->u.schema_stmt.decorators;
-    assert(decos != NULL && decos->count > 0);
-    for (size_t i = 0; i < decos->count; i++) {
-        kcl_decorator_t* d = (kcl_decorator_t*)decos->items[i].node;
+    /* `decorators` is a list of bare `CallExpr`s (no `"type":"Call"` tag
+     * in the flat shape), embedded by value in the schema stmt. */
+    kcl_call_expr_node_list_t decos = article->u.schema_stmt.decorators;
+    assert(decos.count > 0);
+    for (size_t i = 0; i < decos.count; i++) {
+        kcl_call_expr_t* d = (kcl_call_expr_t*)decos.items[i].node;
         assert(d != NULL);
-        assert(d->func != NULL);
-        kcl_expr_t* f = (kcl_expr_t*)d->func->node;
+        kcl_expr_t* f = (kcl_expr_t*)d->func.node;
         assert(f != NULL);
-        /* Decorator.func wraps an Identifier expression — no
-         * `"type":"Call"` tag in the flat shape. */
+        /* Decorator.func wraps an Identifier expression. */
         assert(f->kind == KCL_EXPR_KIND_IDENTIFIER);
     }
     kcl_module_free(module);
@@ -182,8 +182,8 @@ static int test_schema_attr_decorators(const char* ast_json)
         if (inner != NULL && inner->kind == KCL_STMT_KIND_SCHEMA_ATTR
             && inner->u.schema_attr.name.node != NULL
             && strcmp(inner->u.schema_attr.name.node, "name") == 0) {
-            kcl_decorator_node_list_t* decos = (kcl_decorator_node_list_t*)inner->u.schema_attr.decorators;
-            assert(decos != NULL && decos->count == 1);
+            kcl_call_expr_node_list_t decos = inner->u.schema_attr.decorators;
+            assert(decos.count == 1);
             found = 1;
             break;
         }
@@ -201,7 +201,8 @@ static int test_lambda_expr_with_arguments(const char* ast_json)
     kcl_expr_t* value = (kcl_expr_t*)adder->u.assign_stmt.value.node;
     assert(value != NULL);
     assert(value->kind == KCL_EXPR_KIND_LAMBDA);
-    kcl_arguments_t* args = (kcl_arguments_t*)value->u.lambda_expr.args.node;
+    /* `args` is `Option<NodeRef<Arguments>>` — a bare pointer, no `.node`. */
+    kcl_arguments_t* args = (kcl_arguments_t*)value->u.lambda_expr.args->node;
     assert(args != NULL && args->args.count == 2);
     kcl_module_free(module);
     return 0;

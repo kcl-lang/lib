@@ -12,6 +12,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:fixnum/fixnum.dart';
 import 'package:kcl_lib/kcl_lib.dart';
 import 'package:test/test.dart';
 
@@ -304,6 +305,53 @@ void main() {
       expect(result.info.every((i) => i.error.isEmpty), isTrue);
     });
 
+    test('format_test_report', () {
+      // The durations are microseconds; the report truncates them to whole
+      // milliseconds by integer division, so 1500 renders as `1ms`.
+      final report = formatTestReport(FormatTestReportArgs(
+        result: TestResult(info: [
+          TestCaseInfo(name: 'test_case_1', duration: Int64(1500)),
+          TestCaseInfo(
+            name: 'test_case_2',
+            error: 'Error: assert failed',
+            duration: Int64(2500),
+          ),
+        ]),
+      )).report;
+
+      // The prebuilt libkcl v0.13.0 runtime predates this RPC: the native
+      // dispatcher panics with "unknown method name" on a background thread
+      // and answers with an empty payload, so there is nothing to assert
+      // against it.
+      if (report.isEmpty) {
+        markTestSkipped(
+          'the native runtime does not implement KclService.FormatTestReport',
+        );
+        return;
+      }
+
+      expect(
+        report,
+        'test_case_1: PASS (1ms)\n'
+        'test_case_2: FAIL (2ms)\n'
+        'Error: assert failed\n'
+        '${'-' * 80}\n'
+        'PASS: 1/2\n'
+        'FAIL: 1/2\n',
+      );
+    });
+
+    test('format_test_report (empty result)', () {
+      final report = formatTestReport(FormatTestReportArgs()).report;
+      if (report.isEmpty) {
+        markTestSkipped(
+          'the native runtime does not implement KclService.FormatTestReport',
+        );
+        return;
+      }
+      expect(report, 'no test files\n');
+    });
+
     test('update_dependencies (dependency-free module)', () async {
       final dir = await Directory.systemTemp.createTemp('kcl_lib_upd_');
       try {
@@ -363,6 +411,80 @@ void main() {
       expect(caught, isA<KclError>());
       expect((caught as KclError).message,
           contains('Cannot find the kcl file'));
+    });
+  });
+
+  group('plugins', () {
+    tearDown(disablePlugins);
+
+    test('routes a KCL call into a registered Dart function', () {
+      // A method that ignores its arguments needs no JSON parser at all: the
+      // result is handed back as raw JSON.
+      registerPlugin('strings', 'join', (args, kwargs) => '"KCL.KCL.123"');
+      expect(hasPlugins(), isTrue);
+      expect(pluginRegistered('strings', 'join'), isTrue);
+      expect(pluginRegistered('strings', 'missing'), isFalse);
+
+      final result = execProgram(ExecProgramArgs(kCodeList: [
+        'import kcl_plugin.strings\nresult = strings.join("KCL", "KCL", 123)\n'
+      ]));
+      expect(result.errMessage, isEmpty);
+      expect(result.yamlResult, contains('KCL.KCL.123'));
+    });
+
+    test('passes the arguments as JSON strings', () {
+      String? seenArgs, seenKwargs;
+      registerPlugin('strings', 'args', (args, kwargs) {
+        seenArgs = args;
+        seenKwargs = kwargs;
+        // Re-emitting the raw JSON is enough — the runtime decodes it, so the
+        // KCL side sees a real list and a real dict.
+        return '{"args":$args,"kwargs":$kwargs}';
+      });
+
+      final result = execProgram(ExecProgramArgs(kCodeList: [
+        'import kcl_plugin.strings\nresult = strings.args("a", b = 2)\n'
+      ]));
+      expect(seenArgs, '["a"]');
+      expect(seenKwargs, '{"b": 2}');
+      expect(result.errMessage, isEmpty);
+      expect(result.yamlResult, contains('- a'));
+      expect(result.yamlResult, contains('b: 2'));
+    });
+
+    // A missing or throwing method is reported the way every other KCL
+    // evaluation failure is: in `errMessage`, not as a native crash. These
+    // wrappers return the result rather than throwing, so that is where the
+    // diagnostic shows up.
+    test('reports an unknown method as a KCL error rather than crashing', () {
+      registerPlugin('strings', 'join', (args, kwargs) => '"unused"');
+      final result = execProgram(ExecProgramArgs(kCodeList: [
+        'import kcl_plugin.strings\nresult = strings.nope()\n'
+      ]));
+      expect(result.errMessage, contains('nope'));
+      expect(result.yamlResult, isEmpty);
+    });
+
+    test('reports a throwing method as a KCL error', () {
+      registerPlugin('strings', 'boom', (args, kwargs) {
+        throw StateError('boom went off');
+      });
+      final result = execProgram(ExecProgramArgs(kCodeList: [
+        'import kcl_plugin.strings\nresult = strings.boom()\n'
+      ]));
+      expect(result.errMessage, contains('boom went off'));
+      expect(result.yamlResult, isEmpty);
+    });
+
+    test('keeps working after the registry is cleared', () {
+      registerPlugin('strings', 'join', (args, kwargs) {
+        throw StateError('must not be called');
+      });
+      disablePlugins();
+      expect(hasPlugins(), isFalse);
+      final result = execProgram(ExecProgramArgs(kCodeList: ['a = 1\n']));
+      expect(result.errMessage, isEmpty);
+      expect(result.yamlResult, contains('a: 1'));
     });
   });
 }

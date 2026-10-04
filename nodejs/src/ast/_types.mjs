@@ -1,131 +1,180 @@
 // _types.mjs — Type hierarchy. Mirrors `ast::Type` in `crates/ast/src/ast.rs`.
 //
-// Rust uses `#[serde(tag = "type")]` so each variant appears in JSON as
-// `{"type": "<Variant>", ...}`. `typeFromWire` dispatches on that tag.
+// `Type` is declared `#[serde(tag = "type", content = "value")]` — note the
+// `content`. That makes it the one hierarchy in the AST that is *adjacently*
+// tagged rather than internally tagged: every node is a two-key object
+// `{"type": "<Variant>", "value": <payload>}`, and the tag names the shape,
+// not the type. A basic type therefore reads back as
+// `{"type": "Basic", "value": "Int"}` and **not** as `{"type": "Int"}`,
+// because `BasicType` is a fieldless enum with no struct wrapper.
+//
+// There is no `Void`, `Undefined`, `None`, `SchemaRef` or `KeyValue` variant:
+// the eight below are the whole enum. A tag outside this set is returned as
+// `UnknownType` rather than dropped, so a newer parser degrades instead of
+// throwing.
 
 import { nodeFromWire } from './_base.mjs'
 
 /**
+ * `Type::Any` — a bare `{"type": "Any"}` with no payload.
+ * @typedef {Object} AnyType
+ * @property {'Any'} type
+ */
+
+/**
+ * `Type::Basic(BasicType)`. The payload is a bare string, not an object.
  * @typedef {Object} BasicType
- * @property {string} type     "Bool" | "Int" | "Float" | "Str" | "None" | "Any" | "Void" | "Undefined"
- * @property {boolean} [isLiteral]
+ * @property {'Basic'} type
+ * @property {string} name  "Bool" | "Int" | "Float" | "Str"
  */
 
-/** @param {Record<string,any>} w */
-function basicFromWire(w) {
-  return { type: w.type, isLiteral: w.is_literal === true }
-}
+/**
+ * `Type::Named(Identifier)`. The payload is a bare `Identifier`, not a
+ * `NodeRef<Identifier>` — `Type` is adjacently tagged, so the newtype is
+ * inlined into `value` with no position wrapper around it. The loader guards
+ * on a missing payload, so the field can be `undefined` here.
+ * @typedef {Object} NamedType
+ * @property {'Named'} type
+ * @property {Identifier|undefined} identifier  the inlined `Identifier` struct
+ */
 
 /**
+ * `Type::List(ListType)`.
  * @typedef {Object} ListType
- * @property {string} type   "List"
- * @property {*} [innerType]
+ * @property {'List'} type
+ * @property {MaybeNode<Type>|undefined} innerType
  */
 
-/** @param {Record<string,any>} w */
-function listFromWire(w) {
-  return { type: w.type, innerType: w.inner_type }
-}
-
 /**
+ * `Type::Dict(DictType)`.
  * @typedef {Object} DictType
- * @property {string} type   "Dict"
- * @property {*} [keyType]
- * @property {*} [valueType]
+ * @property {'Dict'} type
+ * @property {MaybeNode<Type>|undefined} keyType
+ * @property {MaybeNode<Type>|undefined} valueType
  */
 
-/** @param {Record<string,any>} w */
-function dictFromWire(w) {
-  return { type: w.type, keyType: w.key_type, valueType: w.value_type }
-}
-
 /**
- * @typedef {Object} SchemaRefType
- * @property {string} type   "SchemaRef"
- * @property {string} [schemaName]
- * @property {string} [pkgpath]
- */
-
-/** @param {Record<string,any>} w */
-function schemaRefFromWire(w) {
-  return { type: w.type, schemaName: w.schema_name, pkgpath: w.pkgpath }
-}
-
-/**
- * @typedef {Object} LiteralType
- * @property {string} type   "Literal"
- * @property {*} [value]
- */
-
-/** @param {Record<string,any>} w */
-function literalFromWire(w) {
-  return { type: w.type, value: w.value }
-}
-
-/**
- * @typedef {Object} FunctionType
- * @property {string} type   "Function"
- * @property {*} [params]
- * @property {*} [returnTy]
- */
-
-/** @param {Record<string,any>} w */
-function functionFromWire(w) {
-  return { type: w.type, params: w.params, returnTy: w.return_ty }
-}
-
-/**
+ * `Type::Union(UnionType)`. The Rust field is `type_elements`; it is exposed
+ * as `types` here because `types` is what a caller reaches for.
  * @typedef {Object} UnionType
- * @property {string} type   "Union"
- * @property {Array<*>} [types]
+ * @property {'Union'} type
+ * @property {Array<MaybeNode<Type>>} types
  */
 
-/** @param {Record<string,any>} w */
-function unionFromWire(w) {
-  return { type: w.type, types: w.types }
-}
-
 /**
- * @typedef {Object} KeyValueType
- * @property {string} type   "KeyValue"
- * @property {*} [key]
- * @property {*} [value]
+ * `Type::Literal(LiteralType)`. `LiteralType` is *itself* tagged, so the
+ * payload is doubly nested: `{"type":"Int","value":{"value":1,"suffix":null}}`.
+ * @typedef {Object} LiteralType
+ * @property {'Literal'} type
+ * @property {Record<string,any>} value
+ * @property {string|undefined} innerTag  the inner `LiteralType` tag
  */
 
-/** @param {Record<string,any>} w */
-function keyValueFromWire(w) {
-  return { type: w.type, key: w.key, value: w.value }
-}
-
-const REGISTRY = {
-  Bool: basicFromWire,
-  Int: basicFromWire,
-  Float: basicFromWire,
-  Str: basicFromWire,
-  None: basicFromWire,
-  Any: basicFromWire,
-  Void: basicFromWire,
-  Undefined: basicFromWire,
-  List: listFromWire,
-  Dict: dictFromWire,
-  SchemaRef: schemaRefFromWire,
-  Literal: literalFromWire,
-  Function: functionFromWire,
-  Union: unionFromWire,
-  KeyValue: keyValueFromWire,
-}
+/**
+ * `Type::Function(FunctionType)`.
+ * @typedef {Object} FunctionType
+ * @property {'Function'} type
+ * @property {Array<MaybeNode<Type>>|undefined} paramsTy
+ * @property {MaybeNode<Type>|undefined} retTy
+ */
 
 /**
- * Polymorphic Type loader.
+ * A tag this build does not know about. `value` is the raw payload, so a
+ * caller can still reach the data a future parser emitted.
+ * @typedef {Object} UnknownType
+ * @property {'Unknown'} type
+ * @property {string} tag     the tag the parser actually sent
+ * @property {*} value
+ */
+
+/**
+ * @typedef {AnyType|BasicType|NamedType|ListType|DictType|UnionType|LiteralType|FunctionType|UnknownType} Type
+ */
+
+/**
+ * `ast::Identifier` — `a`, `_c`, `pkg.a`. A plain struct with no tag.
+ * @typedef {Object} Identifier
+ * @property {Array<MaybeNode<string>>} names
+ * @property {string} pkgpath
+ * @property {string|undefined} ctx  "Load" | "Store"
+ */
+
+/**
+ * Build an `Identifier` from the wire object. Exported because the `Type`
+ * and `Expr` hierarchies both embed one inline.
  * @param {Record<string,any>|undefined|null} w
+ * @returns {Identifier|undefined}
+ */
+export function identifierFromWire(w) {
+  if (!w) return undefined
+  return {
+    names: (w.names || []).map((/** @type {any} */ n) => nodeFromWire(n, (x) => /** @type {string} */ x)),
+    pkgpath: w.pkgpath || '',
+    ctx: w.ctx,
+  }
+}
+
+/**
+ * Polymorphic `Type` loader.
+ * @param {Record<string,any>|undefined|null} w
+ * @returns {Type|undefined}
  */
 export function typeFromWire(w) {
   if (!w) return undefined
-  if (!w.type) return undefined
-  const loader = REGISTRY[w.type]
-  if (loader) return loader(w)
-  return { type: w.type }
+  const tag = w.type
+  if (tag === undefined || tag === null) return undefined
+  const value = w.value
+
+  switch (tag) {
+    case 'Any':
+      return { type: 'Any' }
+    case 'Basic':
+      return { type: 'Basic', name: typeof value === 'string' ? value : '' }
+    case 'Named':
+      return { type: 'Named', identifier: identifierFromWire(value) }
+    case 'List': {
+      const list = value || {}
+      return { type: 'List', innerType: nodeFromWire(list.inner_type, typeFromWire) }
+    }
+    case 'Dict': {
+      const dict = value || {}
+      return {
+        type: 'Dict',
+        keyType: nodeFromWire(dict.key_type, typeFromWire),
+        valueType: nodeFromWire(dict.value_type, typeFromWire),
+      }
+    }
+    case 'Union': {
+      const union = value || {}
+      return {
+        type: 'Union',
+        // The Rust field is `type_elements`.
+        types: (union.type_elements || []).map((/** @type {any} */ t) => nodeFromWire(t, typeFromWire)),
+      }
+    }
+    case 'Literal':
+      return {
+        type: 'Literal',
+        value,
+        // `LiteralType` carries its own tag, so record it rather than making
+        // the caller reach into `value` to find out which literal it is.
+        innerTag: value && typeof value === 'object' ? value.type : undefined,
+      }
+    case 'Function': {
+      const fn = value || {}
+      return {
+        type: 'Function',
+        paramsTy: (fn.params_ty || []).map((/** @type {any} */ p) => nodeFromWire(p, typeFromWire)),
+        retTy: nodeFromWire(fn.ret_ty, typeFromWire),
+      }
+    }
+    default:
+      return { type: 'Unknown', tag, value }
+  }
 }
 
-// Re-export the Node helper for callers that want it.
-export { nodeFromWire }
+/**
+ * @template T
+ * @typedef {import('./_base.mjs').Node<T>} Node
+ */
+/** @template T @typedef {import('./_base.mjs').MaybeNode<T>} MaybeNode */

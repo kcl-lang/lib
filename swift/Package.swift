@@ -13,7 +13,7 @@ let package = Package(
         // KclLibAST — typed AST package, mirroring the .NET
         // `KclLib.AST` assembly and the Kotlin `com.kcl.ast.*`
         // package. Lives in its own target so its type names
-        // (`Decorator`, `FunctionType`, …) don't collide with the
+        // (`FunctionType`, `ListType`, …) don't collide with the
         // protobuf-generated structs of the same name in `KclLib`.
         .library(
             name: "KclLibAST",
@@ -53,6 +53,14 @@ let package = Package(
         .testTarget(
             name: "KclLibTests",
             dependencies: ["KclLib", "KclLibAST"]
+        ),
+        // KclLibASTTests decodes the checked-in golden capture at
+        // `testdata/ast/alignment.json`, so it depends on KclLibAST alone
+        // and runs without the cargo-built native library that KclLib links
+        // against.
+        .testTarget(
+            name: "KclLibASTTests",
+            dependencies: ["KclLibAST"]
         ),
     ]
 )

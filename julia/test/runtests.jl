@@ -459,3 +459,276 @@ end
         @test get(KclLib.run(code = "a = 1\n"), "a") == 1
     end
 end
+
+# ---------------------------------------------------------------------------
+# Typed AST. The same fixture the Python, Node.js, .NET, WASM, C, C++, Lua,
+# Zig and Dart bindings use, so the bindings stay comparable.
+#
+# The point of these tests is the *shape*: which nodes carry a `type`
+# discriminator, which arrive untagged, and what the `Type` enum actually
+# serializes to. Those are the details every binding has to get right and the
+# ones most easily guessed wrong, so they are pinned here.
+# ---------------------------------------------------------------------------
+
+const AST_FIXTURE = """
+type StrOrInt = str | int
+
+schema Person:
+    \"\"\"A person.\"\"\"
+
+    @deprecated
+    name: str = "anonymous"
+
+    age: int = 0
+
+    check:
+        age >= 0 if age, "age must be non-negative"
+
+x = Person {name = "Alice", age = 30}
+adder = lambda a: int, b: int -> int {
+    a + b
+}
+nums = [i * 2 for i in range(10) if i > 2]
+greeting = "hi \${x.name}"
+s: str = "a"
+s += "b"
+if s:
+    y = 1
+"""
+
+# An `import` of a package that is not on disk. `parse_file` still produces the
+# AST node for it, which is what this fixture is for.
+const AST_IMPORT_FIXTURE = "import pkg1\n\na = 1\n"
+
+function _ast_module()
+    result = parse_file(ParseFileArgs(path = "main.k", source = AST_FIXTURE))
+    @test isempty(result.errors)
+    return parse_module(result.ast_json)
+end
+
+"""The first top-level statement of type `T`, or `nothing`."""
+function _find_stmt(f::Type{T}, m) where {T <: KclStmt}
+    for ref in m.body
+        ref.node isa T && return ref.node
+    end
+    return nothing
+end
+
+"""The named schema attribute of the `Person` schema in the fixture."""
+function _person_attr(m, attr_name::AbstractString)
+    person = _find_stmt(SchemaStmt, m)
+    person === nothing && error("fixture has no schema")
+    for ref in person.body
+        a = ref.node
+        a isa SchemaAttr && a.name !== nothing && a.name.node == attr_name && return a
+    end
+    error("fixture has no attribute named $attr_name")
+end
+
+"""The value assigned to the top-level variable `name`."""
+function _assigned_value(m, name::AbstractString)
+    for ref in m.body
+        s = ref.node
+        s isa AssignStmt || continue
+        first(s.targets) === nothing && continue
+        t = first(s.targets).node
+        t.name !== nothing && t.name.node == name && return s.value
+    end
+    error("fixture assigns nothing named $name")
+end
+
+@testset "AST" begin
+
+    @testset "module filename and no pkg" begin
+        m = _ast_module()
+        @test endswith(m.filename, "main.k")
+        @test !isempty(m.body)
+        # The Rust `Module` struct has no `pkg` field; the Java and Go bindings
+        # used to expose one and were aligned to drop it.
+        @test !occursin("pkg", sprint(show, m))
+    end
+
+    @testset "every node carries its source position" begin
+        m = _ast_module()
+        for ref in m.body
+            @test ref.pos !== nothing
+            @test ref.pos.filename == "main.k"
+        end
+        schema_ref = first(filter(r -> r.node isa SchemaStmt, m.body))
+        @test schema_ref.pos.line == 3
+        @test _find_stmt(SchemaStmt, m).name.node == "Person"
+    end
+
+    @testset "Type is tagged with the payload in value" begin
+        # This is the shape that differs from what most other bindings assume.
+        # `ast::Type` is `#[serde(tag = "type", content = "value")]` and
+        # `BasicType` is a fieldless enum, so a basic type serializes as
+        # {"type": "Basic", "value": "Int"} - NOT {"type": "Int"}.
+        ty = _person_attr(_ast_module(), "name").ty.node
+        @test ty isa BasicType
+        @test ty.name == "Str"
+    end
+
+    @testset "union type lists its elements under type_elements" begin
+        alias = _find_stmt(TypeAliasStmt, _ast_module())
+        @test alias.type_name.node.names[1].node == "StrOrInt"
+        ty = alias.ty.node
+        @test ty isa UnionType
+        members = [t.node for t in ty.types]
+        @test length(members) == 2
+        @test all(m -> m isa BasicType, members)
+        @test Set(m.name for m in members) == Set(["Str", "Int"])
+    end
+
+    @testset "schema decorators decode to untagged Decorator" begin
+        # `SchemaAttr.decorators` is `Vec<NodeRef<CallExpr>>` and only the
+        # `Expr` enum is `#[serde(tag = "type")]`, so a decorator arrives as a
+        # bare {func, args, keywords} object with no discriminator. The Java
+        # binding gives that untagged shape its own name, and so does this one.
+        name = _person_attr(_ast_module(), "name")
+        @test length(name.decorators) == 1
+        deco = name.decorators[1].node
+        @test deco isa Decorator
+        @test deco.func.node isa IdentifierExpr
+        @test deco.func.node.identifier.names[1].node == "deprecated"
+    end
+
+    @testset "schema checks decode to CheckExpr, the untagged struct" begin
+        person = _find_stmt(SchemaStmt, _ast_module())
+        @test length(person.checks) == 1
+        check = person.checks[1].node
+        # `CheckExpr` is a plain struct, so a `check:` body arrives untagged.
+        # The `Expr::Check` variant is that same struct, so one type serves
+        # both — which is also how the Java binding draws it.
+        @test check isa CheckExpr
+        @test check isa KclExpr
+        @test check.test.node isa Compare
+        @test check.test.node.ops == ["GtE"]
+        @test check.if_cond.node isa IdentifierExpr
+        @test check.msg.node isa StringLit
+        @test check.msg.node.value == "age must be non-negative"
+    end
+
+    @testset "is_optional and doc survive on a schema attribute" begin
+        m = _ast_module()
+        age = _person_attr(m, "age")
+        @test age.is_optional == false
+        @test age.doc == ""
+        # `SchemaAttr.ty` is a non-optional NodeRef<Type> in Rust.
+        @test age.ty !== nothing
+    end
+
+    @testset "number literal carries a nested tagged value" begin
+        # NumberLit.value is a `NumberLitValue`, itself tagged
+        # `#[serde(tag = "type", content = "value")]` - so `0` arrives as
+        # {"type": "Int", "value": 0}.
+        lit = _person_attr(_ast_module(), "age").value.node
+        @test lit isa NumberLit
+        @test lit.value_tag == "Int"
+        @test lit.value == 0
+        @test lit.binary_suffix === nothing
+    end
+
+    @testset "config entries round-trip operation and shorthand" begin
+        schema_expr = _assigned_value(_ast_module(), "x").node
+        @test schema_expr isa SchemaExpr
+        # SchemaExpr.name is a NodeRef<Identifier>, not an expression.
+        @test schema_expr.name.node.names[1].node == "Person"
+
+        config = schema_expr.config.node
+        @test config isa ConfigExpr
+        @test length(config.items) == 2
+        for item in config.items
+            @test item.node.key.node isa IdentifierExpr
+            # `ConfigEntryOperation` is Union | Override | Insert. A plain
+            # `{name = ...}` inside a schema instantiation is an Override; the
+            # Union form comes from a `<<>>`-style merge.
+            @test item.node.operation == "Override"
+            # `skip_serializing_if = "is_false"` - absent on the wire, so false.
+            @test item.node.is_shorthand == false
+        end
+    end
+
+    @testset "lambda args are untagged identifiers with aligned lists" begin
+        args = _assigned_value(_ast_module(), "adder").node.args.node
+        @test length(args.args) == 2
+        @test [a.node.names[1].node for a in args.args] == ["a", "b"]
+        # `defaults` and `ty_list` are Vec<Option<...>> - same length as args.
+        @test length(args.defaults) == 2
+        @test all(isnothing, args.defaults)
+        @test [t.node.name for t in args.ty_list] == ["Int", "Int"]
+    end
+
+    @testset "lambda body holds statements, not expressions" begin
+        lambda = _assigned_value(_ast_module(), "adder").node
+        @test lambda isa LambdaExpr
+        @test length(lambda.body) == 1
+        @test lambda.body[1].node isa ExprStmt
+        binary = lambda.body[1].node.exprs[1].node
+        @test binary isa BinaryExpr
+        @test binary.op == "Add"
+    end
+
+    @testset "list comprehension decodes its CompClause" begin
+        comp = _assigned_value(_ast_module(), "nums").node
+        @test comp isa ListComp
+        @test length(comp.generators) == 1
+        # targets is a Vec<NodeRef<Identifier>> - untagged, like Arguments.args.
+        gen = comp.generators[1].node
+        @test length(gen.targets) == 1
+        @test gen.targets[1].node.names[1].node == "i"
+        @test length(gen.ifs) == 1
+        @test gen.ifs[1].node isa Compare
+    end
+
+    @testset "import is flat, with path and asname as positioned strings" begin
+        # `ImportStmt` is a flat struct: `path` and `asname` are `Node<String>`
+        # with their own positions, while `rawpath`, `name` and `pkg_name` are
+        # plain strings on the same node. Older bindings read them from a
+        # nested `node` object, which the parser does not emit.
+        m = parse_module(parse_file(ParseFileArgs(
+            path = "main.k", source = AST_IMPORT_FIXTURE)).ast_json)
+        imp = _find_stmt(ImportStmt, m)
+        @test imp.rawpath == "pkg1"
+        @test imp.name == "pkg1"
+        @test imp.pkg_name == "__main__"
+        @test imp.path !== nothing
+        @test imp.path.pos !== nothing
+        @test imp.as_name === nothing
+    end
+
+    @testset "aug-assign, if-statement and f-string" begin
+        m = _ast_module()
+        aug = _find_stmt(AugAssignStmt, m)
+        @test aug.op == "Add"
+        @test aug.target.node.name.node == "s"
+
+        if_stmt = _find_stmt(IfStmt, m)
+        @test if_stmt.cond !== nothing
+        @test length(if_stmt.body) == 1
+
+        joined = _assigned_value(m, "greeting").node
+        @test joined isa JoinedString
+        @test !isempty(joined.values)
+    end
+
+    @testset "an unknown tag degrades to a readable node" begin
+        m = parse_module("{\"filename\":\"a.k\",\"body\":[{\"node\":{\"type\":\"Nope\"}}]}")
+        @test m.body[1].node isa UnknownStmt
+        @test node_type(m.body[1].node) == "Nope"
+    end
+
+    @testset "parse_program_ast returns a list of modules" begin
+        result = parse_program(ParseProgramArgs(sources = [AST_FIXTURE]))
+        @test isempty(result.errors)
+        modules = parse_program_ast(result.ast_json)
+        @test !isempty(modules)
+        # parse_program synthesizes `__main__.k` for the entry-point module.
+        @test endswith(modules[1].filename, ".k")
+        @test !isempty(modules[1].body)
+    end
+end
+
+# The other half of the AST contract: the same decoder, run against the golden
+# parser capture in `testdata/ast/alignment.json` rather than a live fixture.
+include("ast_alignment.jl")

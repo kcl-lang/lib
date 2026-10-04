@@ -16,9 +16,8 @@ import java.util.Optional;
  * }
  * </pre>
  *
- * The polymorphic discriminator {@code "NumberLit"} is registered on the
- * {@link Expr} base class via {@code @JsonSubTypes}; do NOT add a
- * {@code @JsonTypeName} here or it will conflict.
+ * The polymorphic discriminator {@code "NumberLit"} is registered on the {@link Expr} base class via
+ * {@code @JsonSubTypes}; do NOT add a {@code @JsonTypeName} here or it will conflict.
  */
 public class NumberLit extends Expr {
     @JsonProperty("binary_suffix")

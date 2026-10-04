@@ -1,29 +1,51 @@
 /*
  * kcl_lib_ast.h — Typed AST package for the C binding.
  *
- * Mirrors the Java `AstJsonAlignmentTest`, Go `TestAstJsonAlignment`,
- * Python `tests/ast_test.py`, Node.js `__test__/ast_alignment.spec.mjs`,
- * .NET `KclLib.Tests/AstAlignmentTest.cs`, WASM
- * `tests/ast_alignment.test.ts`, Lua `spec/kcl_lib_ast_spec.lua`,
- * Swift `Tests/KclLibTests/AstJsonAlignmentTest.swift`, and Kotlin
- * `AstJsonAlignmentTest.kt`: parse a real KCL fixture through the
- * native FFI (`kcl_parse_file` / `kcl_parse_program`) and verify the
- * resulting `ast_json` string deserializes cleanly into the typed AST
- * structures declared here.
+ * Deserializes the `ast_json` string produced by `kcl_parse_file` /
+ * `kcl_parse_program` into typed C structures. The contract is
+ * `kcl-lang/kcl crates/ast/src/ast.rs`, and three serde shapes decide
+ * everything below:
  *
- * Wire shape follows `kcl-lang/kcl crates/ast/src/ast.rs`:
+ *   1. `Stmt` and `Expr` are `#[serde(tag = "type")]` — internally
+ *      tagged with no `rename_all`, so the wire tag is the variant
+ *      name verbatim (`NumberLit`, `ListIfItem`, `ConfigIfEntry`).
+ *      Newtype variants over structs are *flattened* into the same
+ *      object: `{"type":"Identifier","names":[…],"pkgpath":"","ctx":"Load"}`
+ *      — never `{"type":"Identifier","identifier":{…}}`.
  *
- *   - `#[serde(tag = "type")]` polymorphic dispatch — every `Stmt` /
- *     `Expr` / `Type` variant carries a `"type"` discriminator and is
- *     represented as a tagged-union struct in C (`<kind>_t` with a
- *     `kcl_<thing>_kind_t` enum + payload union).
- *   - Flat DTOs (`Decorator`, `SchemaConfig`, `ConfigEntry`, `Keyword`,
- *     `Arguments`, `MemberOrIndex`, `Target`) — see AST_DRIFT.md note A.
+ *   2. `Type` is `#[serde(tag = "type", content = "value")]` —
+ *      adjacently tagged, so the tag names the *shape* and the
+ *      payload sits under `value`: `{"type":"Basic","value":"Int"}`.
+ *      Newtype payloads are inlined into `value`. `Any` is the only
+ *      unit variant, so it is the bare `{"type":"Any"}` with no
+ *      `value` key at all. `MemberOrIndex`, `NumberLitValue` and
+ *      `LiteralType` use the same shape.
  *
- * The header embeds a minimal recursive-descent JSON parser so the
- * binding stays self-contained (no extra vendored dependency). It is
- * deliberately small — it accepts exactly the AST shapes emitted by
- * the Rust `ast::Module` serializer and rejects anything else.
+ *   3. Plain structs carry no discriminator even inside a tagged
+ *      node. `Identifier`, `Target`, `Keyword`, `Arguments`,
+ *      `ConfigEntry`, `CheckExpr`, `CallExpr`, `CompClause`,
+ *      `SchemaExpr`, `SchemaIndexSignature` and `Comment` are all
+ *      declared as structs rather than enum variants, so
+ *      `SchemaStmt.decorators` is a bare `{func,args,keywords}` per
+ *      element and `SchemaStmt.checks` a bare `{test,if_cond,msg}`.
+ *
+ * One more rule matters as much as the shapes: `Node<T>` is flat. The
+ * position fields sit directly on the wrapper — `id`, `node`,
+ * `filename`, `line`, `column`, `end_line`, `end_column` — with no
+ * nested `pos` object.
+ *
+ * `Vec<Option<NodeRef<T>>>` (only `Arguments.defaults` and
+ * `Arguments.ty_list`) is index-aligned, so those are modelled with an
+ * explicit `present` flag: dropping a positional null would shift every
+ * later annotation onto the wrong parameter.
+ *
+ * The header embeds a minimal recursive-descent JSON parser (exposed
+ * via the `kcl_json_*` helpers below) so the binding stays
+ * self-contained with no vendored dependency.
+ *
+ * The declaration order below follows the type graph, not the Rust
+ * source order: `Identifier` and `Type` are declared ahead of the DTOs
+ * that embed them by value.
  */
 
 #ifndef KCL_LIB_AST_H
@@ -38,6 +60,137 @@ extern "C" {
 #endif
 
 /* ---------------------------------------------------------------- *
+ * Scalar enums
+ *
+ * These mirror the Rust enums one-for-one. They are plain C enums
+ * rather than strings so a mismatch shows up as a compile error in a
+ * `switch`, and every value is meaningful — there is no "unknown"
+ * case hiding a typo behind a fallback.
+ * ---------------------------------------------------------------- */
+
+typedef enum {
+    KCL_EXPR_CONTEXT_LOAD = 0,
+    KCL_EXPR_CONTEXT_STORE = 1,
+} kcl_expr_context_t;
+
+typedef enum {
+    KCL_UNARY_OP_UADD = 0,
+    KCL_UNARY_OP_USUB = 1,
+    KCL_UNARY_OP_INVERT = 2,
+    KCL_UNARY_OP_NOT = 3,
+} kcl_unary_op_t;
+
+typedef enum {
+    KCL_BIN_OP_ADD = 0,
+    KCL_BIN_OP_SUB = 1,
+    KCL_BIN_OP_MUL = 2,
+    KCL_BIN_OP_DIV = 3,
+    KCL_BIN_OP_MOD = 4,
+    KCL_BIN_OP_POW = 5,
+    KCL_BIN_OP_FLOOR_DIV = 6,
+    KCL_BIN_OP_LSHIFT = 7,
+    KCL_BIN_OP_RSHIFT = 8,
+    KCL_BIN_OP_BIT_XOR = 9,
+    KCL_BIN_OP_BIT_AND = 10,
+    KCL_BIN_OP_BIT_OR = 11,
+    KCL_BIN_OP_AND = 12,
+    KCL_BIN_OP_OR = 13,
+    KCL_BIN_OP_AS = 14,
+} kcl_bin_op_t;
+
+typedef enum {
+    KCL_CMP_OP_EQ = 0,
+    KCL_CMP_OP_NOT_EQ = 1,
+    KCL_CMP_OP_LT = 2,
+    KCL_CMP_OP_LT_E = 3,
+    KCL_CMP_OP_GT = 4,
+    KCL_CMP_OP_GT_E = 5,
+    KCL_CMP_OP_IS = 6,
+    KCL_CMP_OP_IN = 7,
+    KCL_CMP_OP_NOT_IN = 8,
+    KCL_CMP_OP_NOT = 9,
+    KCL_CMP_OP_IS_NOT = 10,
+} kcl_cmp_op_t;
+
+typedef enum {
+    KCL_AUG_OP_ASSIGN = 0,
+    KCL_AUG_OP_ADD = 1,
+    KCL_AUG_OP_SUB = 2,
+    KCL_AUG_OP_MUL = 3,
+    KCL_AUG_OP_DIV = 4,
+    KCL_AUG_OP_MOD = 5,
+    KCL_AUG_OP_POW = 6,
+    KCL_AUG_OP_FLOOR_DIV = 7,
+    KCL_AUG_OP_LSHIFT = 8,
+    KCL_AUG_OP_RSHIFT = 9,
+    KCL_AUG_OP_BIT_XOR = 10,
+    KCL_AUG_OP_BIT_AND = 11,
+    KCL_AUG_OP_BIT_OR = 12,
+} kcl_aug_op_t;
+
+typedef enum {
+    KCL_QUANT_OPERATION_ALL = 0,
+    KCL_QUANT_OPERATION_ANY = 1,
+    KCL_QUANT_OPERATION_FILTER = 2,
+    KCL_QUANT_OPERATION_MAP = 3,
+} kcl_quant_operation_t;
+
+typedef enum {
+    KCL_CONFIG_ENTRY_OPERATION_UNION = 0,
+    KCL_CONFIG_ENTRY_OPERATION_OVERRIDE = 1,
+    KCL_CONFIG_ENTRY_OPERATION_INSERT = 2,
+} kcl_config_entry_operation_t;
+
+typedef enum {
+    KCL_BASIC_TYPE_BOOL = 0,
+    KCL_BASIC_TYPE_INT = 1,
+    KCL_BASIC_TYPE_FLOAT = 2,
+    KCL_BASIC_TYPE_STR = 3,
+} kcl_basic_type_t;
+
+typedef enum {
+    KCL_NAME_CONSTANT_TRUE = 0,
+    KCL_NAME_CONSTANT_FALSE = 1,
+    KCL_NAME_CONSTANT_NONE = 2,
+    KCL_NAME_CONSTANT_UNDEFINED = 3,
+} kcl_name_constant_t;
+
+/* `k` and `K` (and `m`/`M`) are distinct variants. */
+typedef enum {
+    KCL_NUMBER_BINARY_SUFFIX_N = 0,
+    KCL_NUMBER_BINARY_SUFFIX_U = 1,
+    KCL_NUMBER_BINARY_SUFFIX_M = 2,
+    KCL_NUMBER_BINARY_SUFFIX_K = 3,
+    KCL_NUMBER_BINARY_SUFFIX_K_UPPER = 4,
+    KCL_NUMBER_BINARY_SUFFIX_M_UPPER = 5,
+    KCL_NUMBER_BINARY_SUFFIX_G = 6,
+    KCL_NUMBER_BINARY_SUFFIX_T = 7,
+    KCL_NUMBER_BINARY_SUFFIX_P = 8,
+    KCL_NUMBER_BINARY_SUFFIX_KI = 9,
+    KCL_NUMBER_BINARY_SUFFIX_MI = 10,
+    KCL_NUMBER_BINARY_SUFFIX_GI = 11,
+    KCL_NUMBER_BINARY_SUFFIX_TI = 12,
+    KCL_NUMBER_BINARY_SUFFIX_PI = 13,
+} kcl_number_binary_suffix_t;
+
+typedef enum {
+    KCL_MEMBER_OR_INDEX_MEMBER = 0,
+    KCL_MEMBER_OR_INDEX_INDEX = 1,
+} kcl_member_or_index_kind_t;
+
+typedef enum {
+    KCL_NUMBER_LIT_VALUE_INT = 0,
+    KCL_NUMBER_LIT_VALUE_FLOAT = 1,
+} kcl_number_lit_value_kind_t;
+
+typedef enum {
+    KCL_LITERAL_TYPE_BOOL = 0,
+    KCL_LITERAL_TYPE_INT = 1,
+    KCL_LITERAL_TYPE_FLOAT = 2,
+    KCL_LITERAL_TYPE_STR = 3,
+} kcl_literal_type_kind_t;
+
+/* ---------------------------------------------------------------- *
  * Position
  * ---------------------------------------------------------------- */
 
@@ -50,7 +203,7 @@ typedef struct kcl_pos {
 } kcl_pos_t;
 
 /* ---------------------------------------------------------------- *
- * Minimal JSON parser (private — exposed only via the helpers below)
+ * Minimal JSON parser
  * ---------------------------------------------------------------- */
 
 typedef enum {
@@ -86,33 +239,16 @@ struct kcl_json_value {
 };
 
 /* ---------------------------------------------------------------- *
- * Identifier (flat DTO used inside `NodeRef<Identifier>`).
- * ---------------------------------------------------------------- */
-
-typedef struct kcl_identifier {
-    /* `names` carries the dotted segments, e.g. ["foo", "bar", "baz"]
-     * for `foo.bar.baz`. The wire shape carries full `Node<String>`
-     * entries, so we strip the per-element position wrappers and keep
-     * just the strings here — see AST_DRIFT.md note A. */
-    char** names;
-    size_t names_count;
-    char** pkgpath;
-    size_t pkgpath_count;
-} kcl_identifier_t;
-
-/* ---------------------------------------------------------------- *
- * `NodeRef<T>` helpers.
+ * `NodeRef<T>` wrappers
  *
- * The Rust `NodeRef` is a single struct wrapping `node`, `pos`, `id`.
- * The `node` payload has two wire shapes:
+ * The wire wrapper is flat — `{id, node, filename, line, column,
+ * end_line, end_column}` — so `pos` and `id` are read straight off the
+ * same object as `node`. `node` is a `void*` pointing at the decoded
+ * payload; each payload kind gets its own wrapper struct so callers get
+ * a type to cast to without ambiguity about which list it came from.
  *
- *   1. Polymorphic variants (`Stmt`/`Expr`/`KclTypeNode`) — `node` is a
- *      dict carrying the `"type"` discriminator and variant payload.
- *   2. Primitive wrappers (`Node<String>`, `Node<i64>`) — `node` is the
- *      raw value.
- *
- * We expose one `*_node_t` per variant kind so callers get typed access
- * without `void*` casts.
+ * `Node<String>` is special-cased: its payload is a bare string, so
+ * `kcl_string_node_t` carries it inline instead of behind a pointer.
  * ---------------------------------------------------------------- */
 
 typedef struct kcl_string_node {
@@ -121,676 +257,510 @@ typedef struct kcl_string_node {
     char* id;
 } kcl_string_node_t;
 
-typedef struct kcl_stmt_node {
-    void* node; /* points at a kcl_stmt_t */
-    kcl_pos_t* pos;
-    char* id;
-} kcl_stmt_node_t;
+#define KCL_DECLARE_NODE(name)                                              \
+    typedef struct name {                                                    \
+        void* node;                                                         \
+        kcl_pos_t* pos;                                                     \
+        char* id;                                                           \
+    } name##_t
 
-typedef struct kcl_expr_node {
-    void* node; /* points at a kcl_expr_t */
-    kcl_pos_t* pos;
-    char* id;
-} kcl_expr_node_t;
+KCL_DECLARE_NODE(kcl_stmt_node);
+KCL_DECLARE_NODE(kcl_expr_node);
+KCL_DECLARE_NODE(kcl_type_ref_node);
+KCL_DECLARE_NODE(kcl_target_node);
+KCL_DECLARE_NODE(kcl_identifier_node);
+KCL_DECLARE_NODE(kcl_arguments_node);
+KCL_DECLARE_NODE(kcl_check_expr_node);
+KCL_DECLARE_NODE(kcl_call_expr_node);
+KCL_DECLARE_NODE(kcl_comp_clause_node);
+KCL_DECLARE_NODE(kcl_config_entry_node);
+KCL_DECLARE_NODE(kcl_keyword_node);
+KCL_DECLARE_NODE(kcl_schema_expr_node);
+KCL_DECLARE_NODE(kcl_schema_index_signature_node);
+KCL_DECLARE_NODE(kcl_comment_node);
 
-typedef struct kcl_type_node_node {
-    void* node; /* points at a kcl_type_node_t */
-    kcl_pos_t* pos;
-    char* id;
-} kcl_type_node_node_t;
+#define KCL_DECLARE_NODE_LIST(name)                                         \
+    typedef struct name##_node_list {                                       \
+        name##_node_t* items;                                               \
+        size_t count;                                                       \
+    } name##_node_list_t
 
-typedef struct kcl_target_node {
-    void* node; /* points at a kcl_target_t */
-    kcl_pos_t* pos;
-    char* id;
-} kcl_target_node_t;
+KCL_DECLARE_NODE_LIST(kcl_string);
+KCL_DECLARE_NODE_LIST(kcl_stmt);
+KCL_DECLARE_NODE_LIST(kcl_expr);
+KCL_DECLARE_NODE_LIST(kcl_type_ref);
+KCL_DECLARE_NODE_LIST(kcl_target);
+KCL_DECLARE_NODE_LIST(kcl_identifier);
+KCL_DECLARE_NODE_LIST(kcl_arguments);
+KCL_DECLARE_NODE_LIST(kcl_check_expr);
+KCL_DECLARE_NODE_LIST(kcl_call_expr);
+KCL_DECLARE_NODE_LIST(kcl_comp_clause);
+KCL_DECLARE_NODE_LIST(kcl_config_entry);
+KCL_DECLARE_NODE_LIST(kcl_keyword);
+KCL_DECLARE_NODE_LIST(kcl_comment);
 
-typedef struct kcl_arguments_node {
-    void* node; /* points at a kcl_arguments_t */
-    kcl_pos_t* pos;
-    char* id;
-} kcl_arguments_node_t;
+/*
+ * `Vec<Option<NodeRef<Expr>>>` — `Arguments.defaults`. The `present`
+ * flag is load-bearing: the vec is index-aligned with
+ * `Arguments.args`, so collapsing a positional null to a missing
+ * element would shift every later annotation onto the wrong parameter.
+ */
+typedef struct kcl_opt_expr_node {
+    bool present;
+    kcl_expr_node_t value;
+} kcl_opt_expr_node_t;
 
-typedef struct kcl_identifier_node {
-    void* node; /* points at a kcl_identifier_t */
-    kcl_pos_t* pos;
-    char* id;
-} kcl_identifier_node_t;
-
-typedef struct kcl_schema_index_signature_node {
-    void* node; /* points at a kcl_schema_index_signature_t */
-    kcl_pos_t* pos;
-    char* id;
-} kcl_schema_index_signature_node_t;
-
-/* Generic list-of-nodes helpers. Each variant has its own list type so
- * callers can iterate without casts. */
-typedef struct kcl_stmt_node_list {
-    kcl_stmt_node_t* items;
+typedef struct kcl_opt_expr_node_list {
+    kcl_opt_expr_node_t* items;
     size_t count;
-} kcl_stmt_node_list_t;
-typedef struct kcl_expr_node_list {
-    kcl_expr_node_t* items;
-    size_t count;
-} kcl_expr_node_list_t;
-typedef struct kcl_type_node_node_list {
-    kcl_type_node_node_t* items;
-    size_t count;
-} kcl_type_node_node_list_t;
-typedef struct kcl_target_node_list {
-    kcl_target_node_t* items;
-    size_t count;
-} kcl_target_node_list_t;
-typedef struct kcl_string_node_list {
-    kcl_string_node_t* items;
-    size_t count;
-} kcl_string_node_list_t;
-typedef struct kcl_identifier_node_list {
-    kcl_identifier_node_t* items;
-    size_t count;
-} kcl_identifier_node_list_t;
-typedef struct kcl_arguments_node_list {
-    kcl_arguments_node_t* items;
-    size_t count;
-} kcl_arguments_node_list_t;
+} kcl_opt_expr_node_list_t;
 
 /* ---------------------------------------------------------------- *
- * Stmt enum + variants
+ * `Identifier` — declared ahead of `Type` and the DTOs that embed it
+ * by value. No `"type"` tag: it is a struct, not an enum variant, and
+ * it is *flattened* into the object of the `Expr::Identifier` that
+ * carries it.
+ * ---------------------------------------------------------------- */
+
+typedef struct kcl_identifier {
+    /* `names` is `Vec<Node<String>>`: one positioned string per dotted
+     * segment, e.g. `a.b.c` yields three entries. */
+    kcl_string_node_list_t names;
+    char* pkgpath; /* a single string, not a list */
+    kcl_expr_context_t ctx;
+} kcl_identifier_t;
+
+/* ---------------------------------------------------------------- *
+ * `Type` (`#[serde(tag = "type", content = "value")]`)
+ *
+ * The tag names the *shape*, not the variant payload class, and the
+ * payload is inlined under `value`. `Any` is the only unit variant, so
+ * the wire is the bare `{"type":"Any"}` with no `value` key at all.
+ * ---------------------------------------------------------------- */
+
+typedef enum {
+    KCL_TYPE_KIND_UNKNOWN = 0,
+    KCL_TYPE_KIND_ANY = 1,
+    KCL_TYPE_KIND_NAMED = 2,
+    KCL_TYPE_KIND_BASIC = 3,
+    KCL_TYPE_KIND_LIST = 4,
+    KCL_TYPE_KIND_DICT = 5,
+    KCL_TYPE_KIND_UNION = 6,
+    KCL_TYPE_KIND_LITERAL = 7,
+    KCL_TYPE_KIND_FUNCTION = 8,
+} kcl_type_kind_t;
+
+typedef struct kcl_type_node_data {
+    kcl_type_kind_t kind;
+    char* type_tag; /* the raw `"type"` string, kept for unknown variants */
+    union {
+        struct {
+            /* `Named(Identifier)` inlines the newtype, so this is a
+             * bare `{names, pkgpath, ctx}` object, not a wrapper. */
+            kcl_identifier_t name;
+        } named_type;
+        struct {
+            kcl_basic_type_t basic;
+        } basic_type;
+        struct {
+            kcl_type_ref_node_t* inner_type; /* `Option<NodeRef<Type>>` */
+        } list_type;
+        struct {
+            kcl_type_ref_node_t* key_type;   /* `Option<NodeRef<Type>>` */
+            kcl_type_ref_node_t* value_type; /* `Option<NodeRef<Type>>` */
+        } dict_type;
+        struct {
+            kcl_type_ref_node_list_t type_elements;
+        } union_type;
+        struct {
+            /* `LiteralType` is itself tag+content, so `value` here is a
+             * second tagged document: `{"type":"Int","value":{"value":1}}`. */
+            kcl_literal_type_kind_t kind;
+            bool bool_value;
+            struct {
+                int64_t value;
+                kcl_number_binary_suffix_t suffix;
+                bool has_suffix;
+            } int_value;
+            double float_value;
+            char* str_value;
+        } literal_type;
+        struct {
+            kcl_type_ref_node_list_t* params_ty; /* `Option<Vec<NodeRef<Type>>>` */
+            kcl_type_ref_node_t* ret_ty;          /* `Option<NodeRef<Type>>` */
+        } function_type;
+    } u;
+} kcl_type_node_t;
+
+/* `Vec<Option<NodeRef<Type>>>` — `Arguments.ty_list`. */
+typedef struct kcl_opt_type_node {
+    bool present;
+    kcl_type_ref_node_t value;
+} kcl_opt_type_node_t;
+
+typedef struct kcl_opt_type_node_list {
+    kcl_opt_type_node_t* items;
+    size_t count;
+} kcl_opt_type_node_list_t;
+
+/* ---------------------------------------------------------------- *
+ * Flat DTOs — declared as structs upstream, so no `"type"` tag
+ * ---------------------------------------------------------------- */
+
+typedef struct kcl_member_or_index {
+    kcl_member_or_index_kind_t kind;
+    kcl_string_node_t member;      /* when kind == MEMBER */
+    kcl_expr_node_t* index;        /* when kind == INDEX */
+} kcl_member_or_index_t;
+
+typedef struct kcl_target {
+    kcl_string_node_t name;
+    /* `Vec<MemberOrIndex>`, bare — no `NodeRef` wrapper. */
+    kcl_member_or_index_t* paths;
+    size_t paths_count;
+    char* pkgpath;
+} kcl_target_t;
+
+typedef struct kcl_keyword {
+    kcl_identifier_node_t arg; /* `NodeRef<Identifier>`, not an `Expr` */
+    kcl_expr_node_t* value;   /* `Option<NodeRef<Expr>>` */
+} kcl_keyword_t;
+
+typedef struct kcl_arguments {
+    kcl_identifier_node_list_t args;
+    kcl_opt_expr_node_list_t defaults;
+    kcl_opt_type_node_list_t ty_list;
+} kcl_arguments_t;
+
+typedef struct kcl_call_expr {
+    kcl_expr_node_t func;
+    kcl_expr_node_list_t args;
+    kcl_keyword_node_list_t keywords;
+} kcl_call_expr_t;
+
+typedef struct kcl_check_expr {
+    kcl_expr_node_t test;
+    kcl_expr_node_t* if_cond;
+    kcl_expr_node_t* msg; /* `NodeRef<Expr>` — the wire has no bare-string msg */
+} kcl_check_expr_t;
+
+typedef struct kcl_config_entry {
+    kcl_expr_node_t* key; /* `Option<NodeRef<Expr>>` — null in `config_if` */
+    kcl_expr_node_t value;
+    kcl_config_entry_operation_t operation;
+    /* Rust marks this `skip_serializing_if = "is_false"`, so it is
+     * *absent* rather than `false` on the wire. A missing key decodes
+     * to `false` here. */
+    bool is_shorthand;
+} kcl_config_entry_t;
+
+typedef struct kcl_comp_clause {
+    kcl_identifier_node_list_t targets; /* Identifiers, not Targets */
+    kcl_expr_node_t iter;
+    kcl_expr_node_list_t ifs;
+} kcl_comp_clause_t;
+
+typedef struct kcl_schema_expr {
+    kcl_identifier_node_t name;
+    kcl_expr_node_list_t args;
+    kcl_keyword_node_list_t kwargs;
+    kcl_expr_node_t config;
+} kcl_schema_expr_t;
+
+typedef struct kcl_schema_index_signature {
+    kcl_string_node_t* key_name; /* `Option<NodeRef<String>>` */
+    kcl_expr_node_t* value;      /* `Option<NodeRef<Expr>>` */
+    bool any_other;
+    kcl_type_ref_node_t key_ty;  /* `NodeRef<Type>`, not optional upstream */
+    kcl_type_ref_node_t value_ty;
+} kcl_schema_index_signature_t;
+
+typedef struct kcl_comment {
+    char* text;
+} kcl_comment_t;
+
+/* ---------------------------------------------------------------- *
+ * `Expr` (`#[serde(tag = "type")]`)
+ * ---------------------------------------------------------------- */
+
+typedef enum {
+    KCL_EXPR_KIND_UNKNOWN = 0,
+    KCL_EXPR_KIND_TARGET = 1,
+    KCL_EXPR_KIND_IDENTIFIER = 2,
+    KCL_EXPR_KIND_UNARY = 3,
+    KCL_EXPR_KIND_BINARY = 4,
+    KCL_EXPR_KIND_IF = 5,
+    KCL_EXPR_KIND_SELECTOR = 6,
+    KCL_EXPR_KIND_CALL = 7,
+    KCL_EXPR_KIND_PAREN = 8,
+    KCL_EXPR_KIND_QUANT = 9,
+    KCL_EXPR_KIND_LIST = 10,
+    KCL_EXPR_KIND_LIST_IF_ITEM = 11,
+    KCL_EXPR_KIND_LIST_COMP = 12,
+    KCL_EXPR_KIND_STARRED = 13,
+    KCL_EXPR_KIND_DICT_COMP = 14,
+    KCL_EXPR_KIND_CONFIG_IF_ENTRY = 15,
+    KCL_EXPR_KIND_COMP_CLAUSE = 16,
+    KCL_EXPR_KIND_SCHEMA = 17,
+    KCL_EXPR_KIND_CONFIG = 18,
+    KCL_EXPR_KIND_CHECK = 19,
+    KCL_EXPR_KIND_LAMBDA = 20,
+    KCL_EXPR_KIND_SUBSCRIPT = 21,
+    KCL_EXPR_KIND_KEYWORD = 22,
+    KCL_EXPR_KIND_ARGUMENTS = 23,
+    KCL_EXPR_KIND_COMPARE = 24,
+    KCL_EXPR_KIND_NUMBER_LIT = 25,
+    KCL_EXPR_KIND_STRING_LIT = 26,
+    KCL_EXPR_KIND_NAME_CONSTANT_LIT = 27,
+    KCL_EXPR_KIND_JOINED_STRING = 28,
+    KCL_EXPR_KIND_FORMATTED_VALUE = 29,
+    KCL_EXPR_KIND_MISSING = 30,
+} kcl_expr_kind_t;
+
+typedef struct kcl_expr_data {
+    kcl_expr_kind_t kind;
+    char* type_tag;
+    union {
+        kcl_target_t target;
+        kcl_identifier_t identifier;
+        struct {
+            kcl_unary_op_t op;
+            kcl_expr_node_t operand;
+        } unary_expr;
+        struct {
+            kcl_expr_node_t left;
+            kcl_bin_op_t op;
+            kcl_expr_node_t right;
+        } binary_expr;
+        struct {
+            kcl_expr_node_t body;
+            kcl_expr_node_t cond;
+            kcl_expr_node_t orelse; /* not optional upstream */
+        } if_expr;
+        struct {
+            kcl_expr_node_t value;
+            kcl_identifier_node_t attr;
+            kcl_expr_context_t ctx;
+            bool has_question;
+        } selector_expr;
+        kcl_call_expr_t call_expr;
+        struct {
+            kcl_expr_node_t expr;
+        } paren_expr;
+        struct {
+            kcl_expr_node_t target;
+            kcl_identifier_node_list_t variables;
+            kcl_quant_operation_t op;
+            kcl_expr_node_t test;
+            kcl_expr_node_t* if_cond;
+            kcl_expr_context_t ctx;
+        } quant_expr;
+        struct {
+            kcl_expr_node_list_t elts;
+            kcl_expr_context_t ctx;
+        } list_expr;
+        struct {
+            kcl_expr_node_t if_cond;
+            kcl_expr_node_list_t exprs;
+            kcl_expr_node_t* orelse;
+        } list_if_item_expr;
+        struct {
+            kcl_expr_node_t elt;
+            kcl_comp_clause_node_list_t generators;
+        } list_comp;
+        struct {
+            kcl_expr_node_t value;
+            kcl_expr_context_t ctx;
+        } starred_expr;
+        struct {
+            /* `DictComp.entry` is a bare `ConfigEntry` — no `NodeRef`
+             * wrapper, hence no position of its own. */
+            kcl_config_entry_t entry;
+            kcl_comp_clause_node_list_t generators;
+        } dict_comp;
+        struct {
+            kcl_expr_node_t if_cond;
+            kcl_config_entry_node_list_t items;
+            kcl_expr_node_t* orelse;
+        } config_if_entry_expr;
+        kcl_comp_clause_t comp_clause;
+        kcl_schema_expr_t schema_expr;
+        struct {
+            kcl_config_entry_node_list_t items;
+        } config_expr;
+        kcl_check_expr_t check_expr;
+        struct {
+            kcl_arguments_node_t* args; /* `Option<NodeRef<Arguments>>` */
+            kcl_stmt_node_list_t body;
+            kcl_type_ref_node_t* return_ty; /* `Option<NodeRef<Type>>` */
+        } lambda_expr;
+        struct {
+            kcl_expr_node_t value;
+            kcl_expr_node_t* index;
+            kcl_expr_node_t* lower; /* slices carry bounds, not `index` */
+            kcl_expr_node_t* upper;
+            kcl_expr_node_t* step;
+            kcl_expr_context_t ctx;
+            bool has_question;
+        } subscript_expr;
+        kcl_keyword_t keyword;
+        kcl_arguments_t arguments;
+        struct {
+            kcl_expr_node_t left;
+            kcl_cmp_op_t* ops;
+            size_t ops_count;
+            kcl_expr_node_list_t comparators;
+        } compare_expr;
+        struct {
+            kcl_number_binary_suffix_t binary_suffix;
+            bool has_binary_suffix;
+            kcl_number_lit_value_kind_t value_kind;
+            int64_t int_value;
+            double float_value;
+        } number_lit;
+        struct {
+            bool is_long_string;
+            char* raw_value;
+            char* value;
+        } string_lit;
+        struct {
+            kcl_name_constant_t value;
+        } name_constant_lit;
+        struct {
+            bool is_long_string;
+            kcl_expr_node_list_t values;
+            char* raw_value;
+        } joined_string;
+        struct {
+            bool is_long_string;
+            kcl_expr_node_t value;
+            char* format_spec; /* may be NULL */
+        } formatted_value;
+        struct {
+            int placeholder; /* `MissingExpr` is a unit struct */
+        } missing_expr;
+    } u;
+} kcl_expr_t;
+
+/* ---------------------------------------------------------------- *
+ * `Stmt` (`#[serde(tag = "type")]`)
  * ---------------------------------------------------------------- */
 
 typedef enum {
     KCL_STMT_KIND_UNKNOWN = 0,
-    KCL_STMT_KIND_EXPR,
-    KCL_STMT_KIND_UNIFICATION,
-    KCL_STMT_KIND_ASSIGN,
-    KCL_STMT_KIND_SCHEMA,
-    KCL_STMT_KIND_SCHEMA_ATTR,
-    KCL_STMT_KIND_RULE,
-    KCL_STMT_KIND_IMPORT,
-    KCL_STMT_KIND_TYPE_ALIAS,
-    KCL_STMT_KIND_ASSERT,
-    KCL_STMT_KIND_IF,
+    KCL_STMT_KIND_TYPE_ALIAS = 1,
+    KCL_STMT_KIND_EXPR = 2,
+    KCL_STMT_KIND_UNIFICATION = 3,
+    KCL_STMT_KIND_ASSIGN = 4,
+    KCL_STMT_KIND_AUG_ASSIGN = 5,
+    KCL_STMT_KIND_ASSERT = 6,
+    KCL_STMT_KIND_IF = 7,
+    KCL_STMT_KIND_IMPORT = 8,
+    KCL_STMT_KIND_SCHEMA_ATTR = 9,
+    KCL_STMT_KIND_SCHEMA = 10,
+    KCL_STMT_KIND_RULE = 11,
 } kcl_stmt_kind_t;
+
+typedef struct kcl_type_alias_stmt {
+    kcl_identifier_node_t type_name;
+    kcl_string_node_t type_value;
+    kcl_type_ref_node_t ty;
+} kcl_type_alias_stmt_t;
 
 typedef struct kcl_expr_stmt {
     kcl_expr_node_list_t exprs;
 } kcl_expr_stmt_t;
 
 typedef struct kcl_unification_stmt {
-    kcl_target_node_t target;
-    void* value; /* kcl_schema_config_t* */
+    kcl_identifier_node_t target;
+    kcl_schema_expr_node_t value;
 } kcl_unification_stmt_t;
 
 typedef struct kcl_assign_stmt {
     kcl_target_node_list_t targets;
-    kcl_type_node_node_t* ty; /* may be NULL */
     kcl_expr_node_t value;
+    kcl_type_ref_node_t* ty; /* `Option<NodeRef<Type>>` */
 } kcl_assign_stmt_t;
 
-typedef struct kcl_schema_stmt {
-    kcl_string_node_t* doc; /* may be NULL */
-    kcl_string_node_t name;
-    kcl_identifier_node_t* parent_name; /* may be NULL */
-    kcl_identifier_node_t* for_host_name; /* may be NULL */
-    bool is_mixin;
-    bool is_protocol;
-    kcl_arguments_node_t* args; /* may be NULL */
-    kcl_identifier_node_list_t mixins;
-    kcl_stmt_node_list_t body;
-    /* Decorators carry a flat DTO payload (no polymorphic tag) — see
-     * AST_DRIFT.md note A. We store them as a flat list of
-     * `kcl_decorator_t` structs. */
-    void* decorators; /* kcl_decorator_list_t* — see forward decl below */
-    /* Check expressions are nested in their own NodeRef list — we
-     * store them as `kcl_check_expr_node_list_t`. */
-    void* checks;
-    kcl_schema_index_signature_node_t* index_signature;
-} kcl_schema_stmt_t;
-
-typedef struct kcl_schema_attr {
-    char* doc;
-    kcl_string_node_t name;
-    /* `op` is the wire enum string ("Assign", "Add", "Sub", ...). May
-     * be NULL if the attribute has no augmented assignment. */
-    char* op;
-    kcl_expr_node_t* value;
-    bool is_optional;
-    void* decorators; /* kcl_decorator_list_t* */
-    kcl_type_node_node_t* ty;
-} kcl_schema_attr_t;
-
-typedef struct kcl_rule_stmt {
-    kcl_string_node_t* doc;
-    kcl_string_node_t name;
-    kcl_identifier_node_list_t parent_rules;
-    void* decorators;
-    void* checks;
-    kcl_arguments_node_t* args;
-    kcl_identifier_node_t* for_host_name;
-} kcl_rule_stmt_t;
-
-typedef struct kcl_import_stmt {
-    char* path;
-    char* as_name; /* may be NULL */
-    char* pkg_name; /* may be NULL */
-    char* pkg_root; /* may be NULL */
-} kcl_import_stmt_t;
-
-typedef struct kcl_type_alias_stmt {
-    kcl_string_node_t name;
-    kcl_type_node_node_t ty;
-} kcl_type_alias_stmt_t;
+typedef struct kcl_aug_assign_stmt {
+    kcl_target_node_t target;
+    kcl_expr_node_t value;
+    kcl_aug_op_t op;
+} kcl_aug_assign_stmt_t;
 
 typedef struct kcl_assert_stmt {
-    kcl_expr_node_t source;
-    kcl_string_node_t* assert_msg;
+    kcl_expr_node_t test;
+    kcl_expr_node_t* if_cond;
+    kcl_expr_node_t* msg;
 } kcl_assert_stmt_t;
 
 typedef struct kcl_if_stmt {
     kcl_expr_node_t cond;
     kcl_stmt_node_list_t body;
-    kcl_expr_node_t* or_else;
+    kcl_stmt_node_list_t orelse; /* a statement list, not an expr */
 } kcl_if_stmt_t;
 
-typedef struct kcl_stmt {
+typedef struct kcl_import_stmt {
+    kcl_string_node_t path;
+    char* rawpath;
+    char* name;
+    kcl_string_node_t* asname; /* `Option<Node<String>>` */
+    char* pkg_name;
+} kcl_import_stmt_t;
+
+typedef struct kcl_schema_attr {
+    char* doc; /* a plain `String`, not a `NodeRef<String>` */
+    kcl_string_node_t name;
+    kcl_aug_op_t op;
+    bool has_op;
+    kcl_expr_node_t* value;
+    bool is_optional;
+    kcl_call_expr_node_list_t decorators; /* bare `CallExpr`s */
+    kcl_type_ref_node_t ty;               /* not optional upstream */
+} kcl_schema_attr_t;
+
+typedef struct kcl_schema_stmt {
+    kcl_string_node_t* doc; /* may be NULL */
+    kcl_string_node_t name;
+    kcl_identifier_node_t* parent_name;
+    kcl_identifier_node_t* for_host_name;
+    bool is_mixin;
+    bool is_protocol;
+    kcl_arguments_node_t* args;
+    kcl_identifier_node_list_t mixins;
+    kcl_stmt_node_list_t body;
+    kcl_call_expr_node_list_t decorators;
+    kcl_check_expr_node_list_t checks;
+    kcl_schema_index_signature_node_t* index_signature;
+} kcl_schema_stmt_t;
+
+typedef struct kcl_rule_stmt {
+    kcl_string_node_t* doc;
+    kcl_string_node_t name;
+    kcl_identifier_node_list_t parent_rules;
+    kcl_call_expr_node_list_t decorators;
+    kcl_check_expr_node_list_t checks;
+    kcl_arguments_node_t* args;
+    kcl_identifier_node_t* for_host_name;
+} kcl_rule_stmt_t;
+
+typedef struct kcl_stmt_data {
     kcl_stmt_kind_t kind;
-    char* type_tag; /* raw `"type"` string — useful for unknown variants */
+    char* type_tag;
     union {
+        kcl_type_alias_stmt_t type_alias_stmt;
         kcl_expr_stmt_t expr_stmt;
         kcl_unification_stmt_t unification_stmt;
         kcl_assign_stmt_t assign_stmt;
-        kcl_schema_stmt_t schema_stmt;
-        kcl_schema_attr_t schema_attr;
-        kcl_rule_stmt_t rule_stmt;
-        kcl_import_stmt_t import_stmt;
-        kcl_type_alias_stmt_t type_alias_stmt;
+        kcl_aug_assign_stmt_t aug_assign_stmt;
         kcl_assert_stmt_t assert_stmt;
         kcl_if_stmt_t if_stmt;
+        kcl_import_stmt_t import_stmt;
+        kcl_schema_attr_t schema_attr;
+        kcl_schema_stmt_t schema_stmt;
+        kcl_rule_stmt_t rule_stmt;
     } u;
 } kcl_stmt_t;
-
-/* ---------------------------------------------------------------- *
- * Expr enum + variants
- * ---------------------------------------------------------------- */
-
-typedef enum {
-    KCL_EXPR_KIND_UNKNOWN = 0,
-    KCL_EXPR_KIND_TARGET,
-    KCL_EXPR_KIND_IDENTIFIER,
-    KCL_EXPR_KIND_UNARY,
-    KCL_EXPR_KIND_BINARY,
-    KCL_EXPR_KIND_IF,
-    KCL_EXPR_KIND_SELECTOR,
-    KCL_EXPR_KIND_CALL,
-    KCL_EXPR_KIND_PAREN,
-    KCL_EXPR_KIND_QUANT,
-    KCL_EXPR_KIND_LIST,
-    KCL_EXPR_KIND_LIST_IF_ITEM,
-    KCL_EXPR_KIND_LIST_COMP,
-    KCL_EXPR_KIND_STARRED,
-    KCL_EXPR_KIND_DICT_COMP,
-    KCL_EXPR_KIND_CONFIG_IF_ENTRY,
-    KCL_EXPR_KIND_COMP_CLAUSE,
-    KCL_EXPR_KIND_SCHEMA,
-    KCL_EXPR_KIND_CONFIG,
-    KCL_EXPR_KIND_LAMBDA,
-    KCL_EXPR_KIND_SUBSCRIPT,
-    KCL_EXPR_KIND_COMPARE,
-    KCL_EXPR_KIND_NUMBER_LIT,
-    KCL_EXPR_KIND_STRING_LIT,
-    KCL_EXPR_KIND_NAME_CONSTANT_LIT,
-    KCL_EXPR_KIND_JOINED_STRING,
-    KCL_EXPR_KIND_FORMATTED_VALUE,
-    KCL_EXPR_KIND_MISSING,
-    KCL_EXPR_KIND_CHECK,
-} kcl_expr_kind_t;
-
-typedef struct kcl_target_expr {
-    kcl_string_node_t name;
-} kcl_target_expr_t;
-
-typedef struct kcl_identifier_expr {
-    /* Mirror Rust's `IdentifierExpr { names: Vec<Node<String>>, ... }` —
-     * `names` is an array of `Node<String>` (one element per dotted
-     * segment, e.g. `["foo", "bar", "baz"]` for `foo.bar.baz`). */
-    kcl_string_node_list_t names;
-    char** pkgpath;
-    size_t pkgpath_count;
-} kcl_identifier_expr_t;
-
-typedef struct kcl_unary_expr {
-    char* op; /* "UAdd", "USub", "Invert", "Not" */
-    kcl_expr_node_t operand;
-} kcl_unary_expr_t;
-
-typedef struct kcl_binary_expr {
-    char* op;
-    kcl_expr_node_t left;
-    kcl_expr_node_t right;
-} kcl_binary_expr_t;
-
-typedef struct kcl_if_expr {
-    kcl_expr_node_t cond;
-    kcl_expr_node_t body;
-    kcl_expr_node_t* or_else;
-} kcl_if_expr_t;
-
-typedef struct kcl_selector_expr {
-    kcl_expr_node_t value;
-    kcl_string_node_t attr_name;
-} kcl_selector_expr_t;
-
-typedef struct kcl_call_expr {
-    kcl_expr_node_t func;
-    kcl_expr_node_list_t args;
-    void* keywords; /* kcl_keyword_node_list_t* */
-} kcl_call_expr_t;
-
-typedef struct kcl_paren_expr {
-    kcl_expr_node_t expr;
-} kcl_paren_expr_t;
-
-typedef struct kcl_quant_expr {
-    kcl_target_node_t target;
-    /* `variables` is a list of `NodeRef<QuantOperation>` — flat DTOs. */
-    void* variables; /* kcl_quant_operation_node_list_t* */
-    void* op;       /* kcl_quant_operation_t* (single top-level op) */
-    kcl_expr_node_t cond;
-} kcl_quant_expr_t;
-
-typedef struct kcl_list_expr {
-    kcl_expr_node_list_t elts;
-} kcl_list_expr_t;
-
-typedef struct kcl_list_if_item_expr {
-    kcl_expr_node_t if_expr; /* also exposed as `expr` */
-    kcl_expr_node_t* or_else;
-} kcl_list_if_item_expr_t;
-
-typedef struct kcl_list_comp {
-    kcl_expr_node_t elt;
-    void* generators; /* kcl_comp_clause_node_list_t* */
-    kcl_expr_node_t* cond;
-} kcl_list_comp_t;
-
-typedef struct kcl_starred_expr {
-    kcl_expr_node_t value;
-    char* ctx; /* "Load" | "Store" | "Del" */
-} kcl_starred_expr_t;
-
-typedef struct kcl_dict_comp {
-    kcl_expr_node_t key;
-    kcl_expr_node_t value;
-    void* generators;
-    kcl_expr_node_t* cond;
-} kcl_dict_comp_t;
-
-typedef struct kcl_config_if_entry_expr {
-    kcl_expr_node_t if_expr; /* also exposed as `expr` */
-} kcl_config_if_entry_expr_t;
-
-typedef struct kcl_comp_clause {
-    kcl_target_node_list_t targets;
-    kcl_expr_node_t iter;
-    kcl_expr_node_list_t ifs;
-} kcl_comp_clause_t;
-
-typedef struct kcl_comp_clause_node {
-    void* node; /* kcl_comp_clause_t* */
-    kcl_pos_t* pos;
-    char* id;
-} kcl_comp_clause_node_t;
-
-typedef struct kcl_comp_clause_node_list {
-    kcl_comp_clause_node_t* items;
-    size_t count;
-} kcl_comp_clause_node_list_t;
-
-typedef struct kcl_schema_expr {
-    kcl_expr_node_t name;
-    kcl_expr_node_list_t args;
-    void* kwargs;
-    kcl_expr_node_t config;
-} kcl_schema_expr_t;
-
-typedef struct kcl_config_expr {
-    void* items; /* kcl_config_entry_node_list_t* */
-} kcl_config_expr_t;
-
-typedef struct kcl_lambda_expr {
-    kcl_arguments_node_t args;
-    kcl_stmt_node_list_t body;
-    kcl_type_node_node_t* return_ty;
-} kcl_lambda_expr_t;
-
-typedef struct kcl_subscript_expr {
-    kcl_expr_node_t value;
-    kcl_expr_node_t index;
-} kcl_subscript_expr_t;
-
-typedef struct kcl_compare_expr {
-    kcl_expr_node_t left;
-    char** ops; /* e.g. ["Lt", "LtE"] */
-    size_t ops_count;
-    kcl_expr_node_list_t comparators;
-} kcl_compare_expr_t;
-
-typedef struct kcl_number_lit_value {
-    char* raw_value;
-    double value;
-    char* binary_suffix; /* "" | "I" | "M" | "K" | "Mi" | ... */
-} kcl_number_lit_value_t;
-
-typedef struct kcl_number_lit {
-    char* binary_suffix; /* kept for the deprecated top-level field */
-    kcl_number_lit_value_t value;
-} kcl_number_lit_t;
-
-typedef struct kcl_string_lit {
-    bool is_long_string;
-    char* raw_value;
-    char* value;
-} kcl_string_lit_t;
-
-typedef struct kcl_name_constant_lit {
-    char* value; /* "True" | "False" | "None" | "Undefined" */
-} kcl_name_constant_lit_t;
-
-typedef struct kcl_joined_string {
-    kcl_expr_node_list_t values;
-    bool is_long_string;
-    char* raw_value;
-} kcl_joined_string_t;
-
-typedef struct kcl_formatted_value {
-    kcl_expr_node_t value;
-    char* spec; /* may be NULL */
-} kcl_formatted_value_t;
-
-typedef struct kcl_missing_expr {
-    int placeholder; /* empty struct */
-} kcl_missing_expr_t;
-
-typedef struct kcl_check_expr {
-    /* Wire shape: {test, if_cond, msg} — see `ast::CheckExpr` in
-     * `crates/ast/src/ast.rs`. The "predicate" is `test`, not `cond`;
-     * `if_cond` is the optional `if <expr>` gate. */
-    kcl_expr_node_t test;
-    kcl_expr_node_t* if_cond;
-    kcl_string_node_t* msg;
-} kcl_check_expr_t;
-
-typedef struct kcl_check_expr_node {
-    void* node; /* kcl_check_expr_t* */
-    kcl_pos_t* pos;
-    char* id;
-} kcl_check_expr_node_t;
-
-typedef struct kcl_check_expr_node_list {
-    kcl_check_expr_node_t* items;
-    size_t count;
-} kcl_check_expr_node_list_t;
-
-typedef struct kcl_expr {
-    kcl_expr_kind_t kind;
-    char* type_tag;
-    union {
-        kcl_target_expr_t target_expr;
-        kcl_identifier_expr_t identifier_expr;
-        kcl_unary_expr_t unary_expr;
-        kcl_binary_expr_t binary_expr;
-        kcl_if_expr_t if_expr;
-        kcl_selector_expr_t selector_expr;
-        kcl_call_expr_t call_expr;
-        kcl_paren_expr_t paren_expr;
-        kcl_quant_expr_t quant_expr;
-        kcl_list_expr_t list_expr;
-        kcl_list_if_item_expr_t list_if_item_expr;
-        kcl_list_comp_t list_comp;
-        kcl_starred_expr_t starred_expr;
-        kcl_dict_comp_t dict_comp;
-        kcl_config_if_entry_expr_t config_if_entry_expr;
-        kcl_comp_clause_t comp_clause;
-        kcl_schema_expr_t schema_expr;
-        kcl_config_expr_t config_expr;
-        kcl_lambda_expr_t lambda_expr;
-        kcl_subscript_expr_t subscript_expr;
-        kcl_compare_expr_t compare_expr;
-        kcl_number_lit_t number_lit;
-        kcl_string_lit_t string_lit;
-        kcl_name_constant_lit_t name_constant_lit;
-        kcl_joined_string_t joined_string;
-        kcl_formatted_value_t formatted_value;
-        kcl_missing_expr_t missing_expr;
-        kcl_check_expr_t check_expr;
-    } u;
-} kcl_expr_t;
-
-/* ---------------------------------------------------------------- *
- * KclTypeNode enum + variants
- * ---------------------------------------------------------------- */
-
-typedef enum {
-    KCL_TYPE_KIND_UNKNOWN = 0,
-    KCL_TYPE_KIND_ANY,
-    KCL_TYPE_KIND_BASIC,
-    KCL_TYPE_KIND_LIST,
-    KCL_TYPE_KIND_DICT,
-    KCL_TYPE_KIND_SCHEMA_REF,
-    KCL_TYPE_KIND_LITERAL,
-    KCL_TYPE_KIND_FUNCTION,
-    KCL_TYPE_KIND_UNION,
-    KCL_TYPE_KIND_NAMED,
-    KCL_TYPE_KIND_STR_LITERAL,
-    KCL_TYPE_KIND_INT_LITERAL,
-    KCL_TYPE_KIND_FLOAT_LITERAL,
-    KCL_TYPE_KIND_BOOL_LITERAL,
-    KCL_TYPE_KIND_KEY_VALUE,
-} kcl_type_kind_t;
-
-typedef struct kcl_any_type {
-    int placeholder;
-} kcl_any_type_t;
-
-typedef struct kcl_basic_type {
-    char* type_disc; /* always "Basic" */
-    char* kind; /* e.g. "str", "int", "bool" */
-} kcl_basic_type_t;
-
-typedef struct kcl_list_type {
-    kcl_type_node_node_t inner_type;
-} kcl_list_type_t;
-
-typedef struct kcl_dict_type {
-    kcl_type_node_node_t key_type;
-    kcl_type_node_node_t value_type;
-} kcl_dict_type_t;
-
-typedef struct kcl_schema_ref_type {
-    kcl_string_node_t schema_name;
-    char** pkgpath;
-    size_t pkgpath_count;
-} kcl_schema_ref_type_t;
-
-typedef struct kcl_literal_type {
-    /* The wire shape is `{"type":"Literal","value":<primitive>}`. The
-     * `value` is a tagged union: {String, Int, Float, Bool}. We store
-     * the raw JSON value plus a discriminator. */
-    char* value_kind; /* "String" | "Int" | "Float" | "Bool" */
-    char* string_value; /* may be NULL */
-    int64_t int_value;
-    bool has_int_value;
-    double float_value;
-    bool has_float_value;
-    bool bool_value;
-    bool has_bool_value;
-} kcl_literal_type_t;
-
-typedef struct kcl_function_type {
-    kcl_type_node_node_list_t params;
-    kcl_type_node_node_t ret;
-} kcl_function_type_t;
-
-typedef struct kcl_union_type {
-    bool any;
-    kcl_type_node_node_list_t types;
-} kcl_union_type_t;
-
-typedef struct kcl_named_type {
-    kcl_identifier_node_t name;
-} kcl_named_type_t;
-
-typedef struct kcl_str_literal_type {
-    char* value;
-} kcl_str_literal_type_t;
-
-typedef struct kcl_int_literal_type {
-    int64_t value;
-} kcl_int_literal_type_t;
-
-typedef struct kcl_float_literal_type {
-    double value;
-} kcl_float_literal_type_t;
-
-typedef struct kcl_bool_literal_type {
-    bool value;
-} kcl_bool_literal_type_t;
-
-typedef struct kcl_key_value_type {
-    kcl_type_node_node_t key;
-    kcl_type_node_node_t value;
-} kcl_key_value_type_t;
-
-typedef struct kcl_type_node {
-    kcl_type_kind_t kind;
-    char* type_tag;
-    union {
-        kcl_any_type_t any_type;
-        kcl_basic_type_t basic_type;
-        kcl_list_type_t list_type;
-        kcl_dict_type_t dict_type;
-        kcl_schema_ref_type_t schema_ref_type;
-        kcl_literal_type_t literal_type;
-        kcl_function_type_t function_type;
-        kcl_union_type_t union_type;
-        kcl_named_type_t named_type;
-        kcl_str_literal_type_t str_literal_type;
-        kcl_int_literal_type_t int_literal_type;
-        kcl_float_literal_type_t float_literal_type;
-        kcl_bool_literal_type_t bool_literal_type;
-        kcl_key_value_type_t key_value_type;
-    } u;
-} kcl_type_node_t;
-
-/* ---------------------------------------------------------------- *
- * Flat DTOs (note A)
- * ---------------------------------------------------------------- */
-
-typedef struct kcl_decorator {
-    /* `func` is a `NodeRef<Expr>` that — in the flat shape — lacks the
-     * polymorphic `"type":"Call"` tag. We keep it as `kcl_expr_node_t`
-     * so callers can recursively parse the inner expression. */
-    kcl_expr_node_t* func;
-    kcl_expr_node_list_t args;
-    void* keywords;
-} kcl_decorator_t;
-
-typedef struct kcl_decorator_node {
-    void* node; /* kcl_decorator_t* */
-    kcl_pos_t* pos;
-    char* id;
-} kcl_decorator_node_t;
-
-typedef struct kcl_decorator_node_list {
-    kcl_decorator_node_t* items;
-    size_t count;
-} kcl_decorator_node_list_t;
-
-typedef struct kcl_schema_config {
-    kcl_expr_node_t* name;
-    kcl_expr_node_list_t args;
-    void* kwargs;
-    kcl_expr_node_t* config;
-} kcl_schema_config_t;
-
-typedef struct kcl_config_entry {
-    kcl_expr_node_t key;
-    kcl_expr_node_t value;
-    char* operation; /* "Union" | "Override" — may be NULL */
-    bool is_shorthand;
-} kcl_config_entry_t;
-
-typedef struct kcl_config_entry_node {
-    void* node;
-    kcl_pos_t* pos;
-    char* id;
-} kcl_config_entry_node_t;
-
-typedef struct kcl_config_entry_node_list {
-    kcl_config_entry_node_t* items;
-    size_t count;
-} kcl_config_entry_node_list_t;
-
-typedef struct kcl_keyword {
-    kcl_expr_node_t* arg; /* may be NULL */
-    kcl_expr_node_t value;
-} kcl_keyword_t;
-
-typedef struct kcl_keyword_node {
-    void* node; /* kcl_keyword_t* */
-    kcl_pos_t* pos;
-    char* id;
-} kcl_keyword_node_t;
-
-typedef struct kcl_keyword_node_list {
-    kcl_keyword_node_t* items;
-    size_t count;
-} kcl_keyword_node_list_t;
-
-typedef struct kcl_arguments {
-    kcl_expr_node_list_t args;
-    kcl_expr_node_list_t defaults;
-    kcl_type_node_node_list_t ty_list;
-} kcl_arguments_t;
-
-typedef enum {
-    KCL_MEMBER_OR_INDEX_MEMBER,
-    KCL_MEMBER_OR_INDEX_INDEX,
-} kcl_member_or_index_kind_t;
-
-typedef struct kcl_member_or_index {
-    kcl_member_or_index_kind_t kind;
-    kcl_string_node_t member; /* used when kind == MEMBER */
-    kcl_expr_node_t index;     /* used when kind == INDEX */
-} kcl_member_or_index_t;
-
-typedef struct kcl_target {
-    kcl_string_node_t name;
-    kcl_member_or_index_t* paths;
-    size_t paths_count;
-    char* pkgpath;
-} kcl_target_t;
-
-typedef struct kcl_quant_operation {
-    kcl_target_node_t target;
-    char* op; /* "all" | "any" | "filter" | "map" */
-} kcl_quant_operation_t;
-
-typedef struct kcl_quant_operation_node {
-    void* node; /* kcl_quant_operation_t* */
-    kcl_pos_t* pos;
-    char* id;
-} kcl_quant_operation_node_t;
-
-typedef struct kcl_quant_operation_node_list {
-    kcl_quant_operation_node_t* items;
-    size_t count;
-} kcl_quant_operation_node_list_t;
-
-typedef struct kcl_schema_index_signature {
-    kcl_type_node_node_t key_type;
-    kcl_type_node_node_t value_type;
-} kcl_schema_index_signature_t;
 
 /* ---------------------------------------------------------------- *
  * Module & Program
@@ -800,16 +770,22 @@ typedef struct kcl_module {
     char* filename;
     kcl_string_node_t* doc; /* may be NULL */
     kcl_stmt_node_list_t body;
-    kcl_string_node_list_t comments;
+    kcl_comment_node_list_t comments;
+    /* Internal arena owning every allocation reachable from this
+     * module. Opaque; do not touch. */
+    void* _internals;
 } kcl_module_t;
 
 typedef struct kcl_program {
     char* root;
+    /* The Rust `Program` maps package name → modules. Only the
+     * `__main__` package is surfaced here; `pkgs`, `pkgs_not_imported`,
+     * `modules` and `modules_not_imported` are not modelled. */
     kcl_module_t** main_package;
     size_t main_package_count;
-    /* The wire shape also carries a `pkgs` map of package name →
-     * module list; we only expose the `__main__` package modules
-     * here, matching the Lua / Swift / Kotlin bindings. */
+    /* Internal arena owning every allocation reachable from this
+     * program. Opaque; do not touch. */
+    void* _internals;
 } kcl_program_t;
 
 /* ---------------------------------------------------------------- *
@@ -818,15 +794,15 @@ typedef struct kcl_program {
 
 /**
  * Parse the `ast_json` string emitted by `kcl_parse_file` into a typed
- * `kcl_module_t`. The caller must release the result with
- * `kcl_module_free` when done. Returns NULL on parse failure.
+ * `kcl_module_t`. Release with `kcl_module_free`. Returns NULL on
+ * parse failure.
  */
 kcl_module_t* kcl_ast_parse_module(const char* ast_json);
 
 /**
  * Parse the `ast_json` string emitted by `kcl_parse_program` into a
- * typed `kcl_program_t`. The caller must release the result with
- * `kcl_program_free` when done. Returns NULL on parse failure.
+ * typed `kcl_program_t`. Release with `kcl_program_free`. Returns NULL
+ * on parse failure.
  */
 kcl_program_t* kcl_ast_parse_program(const char* ast_json);
 
@@ -836,12 +812,21 @@ void kcl_module_free(kcl_module_t* module);
 /** Free a program returned by `kcl_ast_parse_program`. */
 void kcl_program_free(kcl_program_t* program);
 
-/* Internal — exposed for testing only. */
+/* The JSON parser is exposed so the AST layer — and the contract
+ * tests that link against it — can walk the document. */
 const kcl_json_value_t* kcl_json_object_get(const kcl_json_value_t* obj, const char* key);
 size_t kcl_json_array_length(const kcl_json_value_t* arr);
 const kcl_json_value_t* kcl_json_array_get(const kcl_json_value_t* arr, size_t i);
 kcl_json_value_t* kcl_json_parse(const char* text);
 void kcl_json_free(kcl_json_value_t* v);
+
+/** The Rust variant name for a scalar enum value, for diagnostics. */
+const char* kcl_unary_op_name(kcl_unary_op_t op);
+const char* kcl_bin_op_name(kcl_bin_op_t op);
+const char* kcl_cmp_op_name(kcl_cmp_op_t op);
+const char* kcl_aug_op_name(kcl_aug_op_t op);
+const char* kcl_expr_context_name(kcl_expr_context_t ctx);
+const char* kcl_number_binary_suffix_name(kcl_number_binary_suffix_t suffix);
 
 #ifdef __cplusplus
 } /* extern "C" */
