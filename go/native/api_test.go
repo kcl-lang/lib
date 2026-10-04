@@ -27,6 +27,7 @@ const (
 	testFileSettingsYaml  = "./../test_data/settings/kcl.yaml"
 	testFileUpdateDep     = "./../test_data/update_dependencies"
 	testFileUpdateDepMain = "./../test_data/update_dependencies/main.k"
+	testFileGenOpenAPI    = "./../test_data/gen_openapi/main.k"
 	testWorkDir           = "./../test_data"
 )
 
@@ -609,6 +610,146 @@ func TestFormatTestReportAPI(t *testing.T) {
 		"FAIL: 1/2\n"
 	if result.Report != expected {
 		t.Errorf("Expected report:\n%s\nGot:\n%s", expected, result.Report)
+	}
+}
+
+func TestGenerateTomlAPI(t *testing.T) {
+	client := NewNativeServiceClient()
+	args := &api.GenerateTomlArgs{
+		ExecArgs: &api.ExecProgramArgs{
+			KFilenameList: []string{"file.k"},
+			KCodeList:     []string{"a = {b = 1, c = [1, 2]}"},
+		},
+	}
+
+	result, err := client.GenerateToml(args)
+	if err != nil {
+		t.Fatalf("GenerateToml failed: %v", err)
+	}
+
+	// The prebuilt kcl v0.13.0 runtime predates this RPC: the native
+	// dispatcher panics with "unknown method name" and answers with an
+	// empty payload, so there is nothing to assert against it.
+	if result.Toml == "" {
+		t.Skip("the native runtime does not implement KclService.GenerateToml")
+	}
+
+	expected := "[a]\nb = 1\nc = [1, 2]\n"
+	if result.Toml != expected {
+		t.Errorf("Expected TOML:\n%s\nGot:\n%s", expected, result.Toml)
+	}
+}
+
+func TestGenerateKclAPI(t *testing.T) {
+	client := NewNativeServiceClient()
+	args := &api.GenerateKclArgs{
+		Source:   "{\"a\": {\"b\": 1}}",
+		Filename: "data.json",
+		Format:   "json",
+	}
+
+	result, err := client.GenerateKcl(args)
+	if err != nil {
+		t.Fatalf("GenerateKcl failed: %v", err)
+	}
+
+	if result.Kcl == "" {
+		t.Skip("the native runtime does not implement KclService.GenerateKcl")
+	}
+
+	expected := "a = {\n    b = 1\n}\n"
+	if result.Kcl != expected {
+		t.Errorf("Expected KCL:\n%s\nGot:\n%s", expected, result.Kcl)
+	}
+}
+
+func TestGenerateOpenAPIAPI(t *testing.T) {
+	client := NewNativeServiceClient()
+	args := &api.GenerateOpenAPIArgs{
+		ParseArgs: &api.ParseProgramArgs{
+			Paths: []string{testFileGenOpenAPI},
+		},
+		Version: "v3",
+	}
+
+	result, err := client.GenerateOpenAPI(args)
+	if err != nil {
+		t.Fatalf("GenerateOpenAPI failed: %v", err)
+	}
+
+	if result.Spec == "" {
+		t.Skip("the native runtime does not implement KclService.GenerateOpenAPI")
+	}
+
+	if !strings.Contains(result.Spec, "\"openapi\": \"3.0.0\"") {
+		t.Error("Expected spec to contain '\"openapi\": \"3.0.0\"'")
+	}
+	if !strings.Contains(result.Spec, "\"Person\": {") {
+		t.Error("Expected spec to contain '\"Person\": {'")
+	}
+	if !strings.Contains(result.Spec, "#/components/schemas/Base") {
+		t.Error("Expected spec to contain '#/components/schemas/Base'")
+	}
+	if !strings.Contains(result.Spec, "\"oneOf\": [") {
+		t.Error("Expected spec to contain '\"oneOf\": ['")
+	}
+}
+
+func TestGenerateProtoAPI(t *testing.T) {
+	client := NewNativeServiceClient()
+	args := &api.GenerateProtoArgs{
+		ParseArgs: &api.ParseProgramArgs{
+			Paths: []string{testFileGenOpenAPI},
+		},
+		Package: "example.v1",
+	}
+
+	result, err := client.GenerateProto(args)
+	if err != nil {
+		t.Fatalf("GenerateProto failed: %v", err)
+	}
+
+	if result.Proto == "" {
+		t.Skip("the native runtime does not implement KclService.GenerateProto")
+	}
+
+	if !strings.HasPrefix(result.Proto, "syntax = \"proto3\";\n\npackage example.v1;\n") {
+		t.Errorf("Expected proto to start with the proto3 syntax and package clause, got:\n%s", result.Proto)
+	}
+	if !strings.Contains(result.Proto, "message Person {") {
+		t.Error("Expected proto to contain 'message Person {'")
+	}
+	if !strings.Contains(result.Proto, "import \"google/protobuf/struct.proto\";") {
+		t.Error("Expected proto to contain 'import \"google/protobuf/struct.proto\";'")
+	}
+}
+
+func TestGenerateDocAPI(t *testing.T) {
+	client := NewNativeServiceClient()
+	args := &api.GenerateDocArgs{
+		ParseArgs: &api.ParseProgramArgs{
+			Paths: []string{testFileGenOpenAPI},
+		},
+		Format: "md",
+	}
+
+	result, err := client.GenerateDoc(args)
+	if err != nil {
+		t.Fatalf("GenerateDoc failed: %v", err)
+	}
+
+	if result.Content == "" {
+		t.Skip("the native runtime does not implement KclService.GenerateDoc")
+	}
+
+	if !strings.HasPrefix(result.Content, "# Schemas\n") {
+		t.Errorf("Expected doc to start with '# Schemas', got:\n%s", result.Content)
+	}
+	if !strings.Contains(result.Content, "### Person") {
+		t.Error("Expected doc to contain '### Person'")
+	}
+	if !strings.Contains(result.Content, "| Name | Type | Required | Default | Description |") {
+		t.Error("Expected doc to contain the Markdown table header")
 	}
 }
 

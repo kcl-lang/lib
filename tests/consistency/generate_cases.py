@@ -12,13 +12,21 @@ Do not hand-edit cases.json; change the case definitions here instead.
 """
 
 import json
+import os
 from pathlib import Path
 
 import kcl_lib.api as api
 
 MANIFEST = Path(__file__).resolve().parent / "cases.json"
+REPO_ROOT = Path(__file__).resolve().parent.parent.parent
 
 PERSON_SCHEMA = "schema Person:\n    name: str\n    check:\n        len(name) > 0"
+
+# Schema fixture shared by the GenerateOpenAPI/GenerateProto/GenerateDoc
+# cases. It is referenced by repo-relative path in the manifest; every
+# runner resolves entries under tests/consistency/ against the repository
+# root (the parent of the directory holding cases.json).
+SCHEMA_FIXTURE = "tests/consistency/testdata/gen_openapi/main.k"
 
 
 def build_cases():
@@ -173,6 +181,44 @@ def build_cases():
         lambda r: {"report": r.report},
     )
 
+    # 11. generate_openapi_v3 — schema fixture: v3 document flavor, Base ref
+    #    through allOf, native oneOf unions.
+    case(
+        "generate_openapi_v3",
+        "KclService.GenerateOpenAPI",
+        True,
+        lambda a: a.GenerateOpenAPIArgs(
+            parse_args=a.ParseProgramArgs(paths=[SCHEMA_FIXTURE]),
+            version="v3",
+        ),
+        lambda r: {"spec": r.spec},
+    )
+
+    # 12. generate_proto — package clause, snake-cased fields, struct.proto
+    #    import for union/any values.
+    case(
+        "generate_proto",
+        "KclService.GenerateProto",
+        True,
+        lambda a: a.GenerateProtoArgs(
+            parse_args=a.ParseProgramArgs(paths=[SCHEMA_FIXTURE]),
+            package="example.v1",
+        ),
+        lambda r: {"proto": r.proto},
+    )
+
+    # 13. generate_doc_md — Markdown document flavor with the table header.
+    case(
+        "generate_doc_md",
+        "KclService.GenerateDoc",
+        True,
+        lambda a: a.GenerateDocArgs(
+            parse_args=a.ParseProgramArgs(paths=[SCHEMA_FIXTURE]),
+            format="md",
+        ),
+        lambda r: {"content": r.content},
+    )
+
     return cases
 
 
@@ -182,14 +228,17 @@ def main():
     manifest_cases = []
     for c in cases:
         args = c["build_args"](api)
-        result = _call(instance, c["rpc"], args)
+        # Serialize the manifest args before resolving repo-relative paths
+        # for the local call, so cases.json stays machine-independent.
+        manifest_args = _args_to_json(args)
+        result = _call(instance, c["rpc"], _resolve_repo_paths(args))
         expect = c["extract"](result)
         manifest_cases.append(
             {
                 "name": c["name"],
                 "rpc": c["rpc"],
                 "new_core": c["new_core"],
-                "args": _args_to_json(args),
+                "args": manifest_args,
                 "expect": expect,
             }
         )
@@ -212,7 +261,25 @@ _METHOD_ATTR = {
     "KclService.GenerateKcl": "generate_kcl",
     "KclService.GenerateToml": "generate_toml",
     "KclService.FormatTestReport": "format_test_report",
+    "KclService.GenerateOpenAPI": "generate_openapi",
+    "KclService.GenerateProto": "generate_proto",
+    "KclService.GenerateDoc": "generate_doc",
 }
+
+
+def _resolve_repo_paths(args):
+    """Resolve repo-relative parse_args.paths for the local call.
+
+    The manifest pins paths relative to the repository root so every runner
+    can resolve them on its own machine; this process runs the cases against
+    the locally built core, which needs absolute paths.
+    """
+    parse_args = getattr(args, "parse_args", None)
+    if parse_args is not None and parse_args.paths:
+        parse_args.paths[:] = [
+            p if os.path.isabs(p) else str(REPO_ROOT / p) for p in parse_args.paths
+        ]
+    return args
 
 
 def _call(instance, rpc, args):

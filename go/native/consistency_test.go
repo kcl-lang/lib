@@ -145,10 +145,42 @@ func buildConsistencyArgs(t *testing.T, c consistencyCase) interface{} {
 			Filename: jsonString(c.Args, "filename"),
 			Format:   jsonString(c.Args, "format"),
 		}
+	case "KclService.GenerateOpenAPI":
+		return &api.GenerateOpenAPIArgs{
+			ParseArgs: consistencyParseArgs(c.Args),
+			Version:   jsonString(c.Args, "version"),
+		}
+	case "KclService.GenerateProto":
+		return &api.GenerateProtoArgs{
+			ParseArgs: consistencyParseArgs(c.Args),
+			Package:   jsonString(c.Args, "package"),
+		}
+	case "KclService.GenerateDoc":
+		return &api.GenerateDocArgs{
+			ParseArgs: consistencyParseArgs(c.Args),
+			Format:    jsonString(c.Args, "format"),
+		}
 	default:
 		t.Fatalf("no args builder for rpc %s", c.RPC)
 		return nil
 	}
+}
+
+// consistencyParseArgs builds the ParseProgramArgs of the schema-driven
+// generation RPCs. Path entries are pinned repo-relative in the manifest
+// (resolved against the repository root, the parent of tests/consistency);
+// absolute entries are kept as-is.
+func consistencyParseArgs(args map[string]interface{}) *api.ParseProgramArgs {
+	raw, _ := args["parse_args"].(map[string]interface{})
+	paths := []string{}
+	for _, p := range jsonStringList(raw, "paths") {
+		if filepath.IsAbs(p) {
+			paths = append(paths, p)
+		} else {
+			paths = append(paths, filepath.Join("..", "..", p))
+		}
+	}
+	return &api.ParseProgramArgs{Paths: paths}
 }
 
 func callConsistencyRPC(client api.ServiceClient, c consistencyCase, args interface{}) (map[string]interface{}, error) {
@@ -201,6 +233,24 @@ func callConsistencyRPC(client api.ServiceClient, c consistencyCase, args interf
 			return nil, err
 		}
 		return map[string]interface{}{"kcl": result.Kcl}, nil
+	case "KclService.GenerateOpenAPI":
+		result, err := client.GenerateOpenAPI(args.(*api.GenerateOpenAPIArgs))
+		if err != nil {
+			return nil, err
+		}
+		return map[string]interface{}{"spec": result.Spec}, nil
+	case "KclService.GenerateProto":
+		result, err := client.GenerateProto(args.(*api.GenerateProtoArgs))
+		if err != nil {
+			return nil, err
+		}
+		return map[string]interface{}{"proto": result.Proto}, nil
+	case "KclService.GenerateDoc":
+		result, err := client.GenerateDoc(args.(*api.GenerateDocArgs))
+		if err != nil {
+			return nil, err
+		}
+		return map[string]interface{}{"content": result.Content}, nil
 	default:
 		return nil, fmt.Errorf("no caller for rpc %s", c.RPC)
 	}
