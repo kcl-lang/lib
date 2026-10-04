@@ -70,9 +70,12 @@ class KclFacadeTest {
 
     @Test
     fun testRunFilesWithExternalPkgs() {
+        // The external package root must live outside the main file's package
+        // tree: mapping a directory inside the current package is rejected as
+        // a current/vendor ambiguity.
         val result = Kcl.runFiles(
-            "./src/test_data/schema.k",
-            Kcl.withExternalPkgs(mapOf("pkg" to "./src/test_data/pkg"))
+            "./src/ext_test_data/main/schema.k",
+            Kcl.withExternalPkgs(mapOf("pkg" to "./src/ext_test_data/pkg"))
         )
         assertEquals(2, result.first()!!.getInt("app.replicas"))
     }

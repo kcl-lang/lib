@@ -830,3 +830,293 @@ pub fn format_test_report(args: FormatTestReportArgs) -> Result<FormatTestReport
     }
     Ok(FormatTestReportResult { report })
 }
+
+/*
+* GenerateToml / GenerateKcl / GenerateOpenAPI / GenerateProto / GenerateDoc APIs
+*
+* Like `format_test_report` above, these route through the universal
+* `kcl_api::call` dispatcher: the `kcl-api` revision this crate pins predates
+* these RPCs, so neither the typed `KclServiceImpl` wrappers nor the generated
+* request/response messages exist there. The request envelopes are encoded by
+* hand -- a leading length-delimited field carrying the nested message for the
+* args that embed one, plain string/bool fields otherwise -- and each response
+* is a single length-delimited string at field 1, decoded with the same strict
+* key/length/truncation checks as `format_test_report`. This collapses to the
+* typed calls once the pin moves.
+*/
+
+use ::prost::encoding::{
+    WireType, decode_key, decode_varint, encode_key, encode_length_delimiter,
+};
+
+fn check_dispatcher_error(raw: &[u8]) -> Result<()> {
+    // The dispatcher reports a service-level failure as an `ERROR:`-prefixed
+    // payload rather than through the `Result`, so translate it here instead
+    // of handing the bytes to a decoder that would read them as a result.
+    if let Some(message) = raw.strip_prefix(b"ERROR:") {
+        return Err(napi::bindgen_prelude::Error::from_reason(format!(
+            "{}",
+            String::from_utf8_lossy(message)
+        )));
+    }
+    Ok(())
+}
+
+/// Decode a response message whose only field is a string at field 1, with
+/// the same strictness as the hand-decoded `FormatTestReportResult` above.
+fn decode_single_string_field(raw: &[u8], result_name: &str) -> Result<String> {
+    let mut buf = raw;
+    let mut value = String::new();
+    while !buf.is_empty() {
+        let (field, wire) = decode_key(&mut buf)
+            .map_err(|e| napi::bindgen_prelude::Error::from_reason(format!("decode key: {e}")))?;
+        if field != 1 || wire != WireType::LengthDelimited {
+            // The response has exactly one field; anything else means we are
+            // not reading what we think we are, and reporting a partial read
+            // as a whole one is worse than saying so.
+            return Err(napi::bindgen_prelude::Error::from_reason(format!(
+                "unexpected field {field}/{wire:?} in {result_name}"
+            )));
+        }
+        let len = decode_varint(&mut buf)
+            .map_err(|e| napi::bindgen_prelude::Error::from_reason(format!("decode length: {e}")))?
+            as usize;
+        if buf.len() < len {
+            return Err(napi::bindgen_prelude::Error::from_reason(format!(
+                "{result_name} value is truncated: {len} bytes claimed, {} left",
+                buf.len()
+            )));
+        }
+        value = String::from_utf8_lossy(&buf[..len]).into_owned();
+        buf = &buf[len..];
+    }
+    Ok(value)
+}
+
+fn encode_nested_message_field(buf: &mut Vec<u8>, field: u32, payload: &[u8]) {
+    encode_key(field, WireType::LengthDelimited, buf);
+    encode_length_delimiter(payload.len(), buf).expect("length delimiter");
+    buf.extend_from_slice(payload);
+}
+
+fn encode_optional_string_field(buf: &mut Vec<u8>, field: u32, value: &str) {
+    if !value.is_empty() {
+        encode_nested_message_field(buf, field, value.as_bytes());
+    }
+}
+
+/// Message for generate TOML request arguments.
+#[napi]
+pub struct GenerateTomlArgs {
+    exec_args: Option<kcl_api::ExecProgramArgs>,
+    sort_keys: bool,
+}
+
+#[napi]
+impl GenerateTomlArgs {
+    #[napi(constructor)]
+    pub fn new(exec_args: Option<&ExecProgramArgs>, sort_keys: Option<bool>) -> Result<Self> {
+        Ok(Self {
+            exec_args: exec_args.map(|e| e.0.clone()),
+            sort_keys: sort_keys.unwrap_or_default(),
+        })
+    }
+}
+
+/// Message for generate TOML response.
+#[napi(object)]
+pub struct GenerateTomlResult {
+    /// The evaluated result serialized as TOML.
+    pub toml: String,
+}
+
+/// Serialize the evaluated result of a KCL program to TOML.
+#[napi]
+pub fn generate_toml(args: &GenerateTomlArgs) -> Result<GenerateTomlResult> {
+    use ::prost::Message;
+    let mut exec_bytes = Vec::new();
+    if let Some(exec_args) = &args.exec_args {
+        exec_args.encode(&mut exec_bytes).map_err(|e| {
+            napi::bindgen_prelude::Error::from_reason(format!("encode ExecProgramArgs: {e}"))
+        })?;
+    }
+    let mut request = Vec::new();
+    encode_nested_message_field(&mut request, 1, &exec_bytes);
+    if args.sort_keys {
+        encode_key(2, WireType::Varint, &mut request);
+        ::prost::encoding::encode_varint(1, &mut request);
+    }
+    let raw = kcl_api::call(b"KclService.GenerateToml", &request)
+        .map_err(|e| napi::bindgen_prelude::Error::from_reason(e.to_string()))?;
+    check_dispatcher_error(&raw)?;
+    Ok(GenerateTomlResult {
+        toml: decode_single_string_field(&raw, "GenerateTomlResult")?,
+    })
+}
+
+/// Message for generate KCL request arguments.
+#[napi]
+pub struct GenerateKclArgs {
+    source: String,
+    filename: String,
+    format: String,
+}
+
+#[napi]
+impl GenerateKclArgs {
+    #[napi(constructor)]
+    pub fn new(source: String, filename: Option<String>, format: Option<String>) -> Result<Self> {
+        Ok(Self {
+            source,
+            filename: filename.unwrap_or_default(),
+            format: format.unwrap_or_default(),
+        })
+    }
+}
+
+/// Message for generate KCL response.
+#[napi(object)]
+pub struct GenerateKclResult {
+    /// The generated KCL source.
+    pub kcl: String,
+}
+
+/// Generate KCL source from data content (JSON, YAML or TOML).
+#[napi]
+pub fn generate_kcl(args: &GenerateKclArgs) -> Result<GenerateKclResult> {
+    let mut request = Vec::new();
+    encode_nested_message_field(&mut request, 1, args.source.as_bytes());
+    encode_optional_string_field(&mut request, 2, &args.filename);
+    encode_optional_string_field(&mut request, 3, &args.format);
+    let raw = kcl_api::call(b"KclService.GenerateKcl", &request)
+        .map_err(|e| napi::bindgen_prelude::Error::from_reason(e.to_string()))?;
+    check_dispatcher_error(&raw)?;
+    Ok(GenerateKclResult {
+        kcl: decode_single_string_field(&raw, "GenerateKclResult")?,
+    })
+}
+
+fn parse_program_args_to_wire(parse_args: &Option<kcl_api::ParseProgramArgs>) -> Vec<u8> {
+    use ::prost::Message;
+    parse_args
+        .as_ref()
+        .map(|p| p.encode_to_vec())
+        .unwrap_or_default()
+}
+
+/// Message for generate OpenAPI request arguments.
+#[napi(js_name = "GenerateOpenAPIArgs")]
+pub struct GenerateOpenAPIArgs {
+    parse_args: Option<kcl_api::ParseProgramArgs>,
+    version: String,
+}
+
+#[napi]
+impl GenerateOpenAPIArgs {
+    #[napi(constructor)]
+    pub fn new(parse_args: Option<&ParseProgramArgs>, version: Option<String>) -> Result<Self> {
+        Ok(Self {
+            parse_args: parse_args.map(|p| p.0.clone()),
+            version: version.unwrap_or_default(),
+        })
+    }
+}
+
+/// Message for generate OpenAPI response.
+#[napi(object)]
+pub struct GenerateOpenAPIResult {
+    /// The generated OpenAPI spec.
+    pub spec: String,
+}
+
+/// Generate an OpenAPI spec from the schemas of a KCL package.
+#[napi(js_name = "generateOpenAPI")]
+pub fn generate_openapi(args: &GenerateOpenAPIArgs) -> Result<GenerateOpenAPIResult> {
+    let mut request = Vec::new();
+    encode_nested_message_field(&mut request, 1, &parse_program_args_to_wire(&args.parse_args));
+    encode_optional_string_field(&mut request, 2, &args.version);
+    let raw = kcl_api::call(b"KclService.GenerateOpenAPI", &request)
+        .map_err(|e| napi::bindgen_prelude::Error::from_reason(e.to_string()))?;
+    check_dispatcher_error(&raw)?;
+    Ok(GenerateOpenAPIResult {
+        spec: decode_single_string_field(&raw, "GenerateOpenAPIResult")?,
+    })
+}
+
+/// Message for generate proto request arguments.
+#[napi]
+pub struct GenerateProtoArgs {
+    parse_args: Option<kcl_api::ParseProgramArgs>,
+    package: String,
+}
+
+#[napi]
+impl GenerateProtoArgs {
+    #[napi(constructor)]
+    pub fn new(parse_args: Option<&ParseProgramArgs>, package_name: Option<String>) -> Result<Self> {
+        Ok(Self {
+            parse_args: parse_args.map(|p| p.0.clone()),
+            package: package_name.unwrap_or_default(),
+        })
+    }
+}
+
+/// Message for generate proto response.
+#[napi(object)]
+pub struct GenerateProtoResult {
+    /// The generated proto3 definitions.
+    pub proto: String,
+}
+
+/// Generate proto3 definitions from the schemas of a KCL package.
+#[napi]
+pub fn generate_proto(args: &GenerateProtoArgs) -> Result<GenerateProtoResult> {
+    let mut request = Vec::new();
+    encode_nested_message_field(&mut request, 1, &parse_program_args_to_wire(&args.parse_args));
+    encode_optional_string_field(&mut request, 2, &args.package);
+    let raw = kcl_api::call(b"KclService.GenerateProto", &request)
+        .map_err(|e| napi::bindgen_prelude::Error::from_reason(e.to_string()))?;
+    check_dispatcher_error(&raw)?;
+    Ok(GenerateProtoResult {
+        proto: decode_single_string_field(&raw, "GenerateProtoResult")?,
+    })
+}
+
+/// Message for generate doc request arguments.
+#[napi]
+pub struct GenerateDocArgs {
+    parse_args: Option<kcl_api::ParseProgramArgs>,
+    format: String,
+}
+
+#[napi]
+impl GenerateDocArgs {
+    #[napi(constructor)]
+    pub fn new(parse_args: Option<&ParseProgramArgs>, format: Option<String>) -> Result<Self> {
+        Ok(Self {
+            parse_args: parse_args.map(|p| p.0.clone()),
+            format: format.unwrap_or_default(),
+        })
+    }
+}
+
+/// Message for generate doc response.
+#[napi(object)]
+pub struct GenerateDocResult {
+    /// The generated documentation.
+    pub content: String,
+}
+
+/// Generate documentation from the schemas of a KCL package.
+#[napi]
+pub fn generate_doc(args: &GenerateDocArgs) -> Result<GenerateDocResult> {
+    let mut request = Vec::new();
+    encode_nested_message_field(&mut request, 1, &parse_program_args_to_wire(&args.parse_args));
+    encode_optional_string_field(&mut request, 2, &args.format);
+    let raw = kcl_api::call(b"KclService.GenerateDoc", &request)
+        .map_err(|e| napi::bindgen_prelude::Error::from_reason(e.to_string()))?;
+    check_dispatcher_error(&raw)?;
+    Ok(GenerateDocResult {
+        content: decode_single_string_field(&raw, "GenerateDocResult")?,
+    })
+}

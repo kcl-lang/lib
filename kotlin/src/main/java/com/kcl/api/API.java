@@ -661,6 +661,71 @@ public class API implements Service {
     }
 
     /**
+     * Serializes the evaluated result of a KCL program to TOML.
+     *
+     * @param args
+     *            the arguments carrying the program to evaluate.
+     * @return the evaluated result serialized as TOML.
+     * @throws Exception if the underlying RPC fails.
+     */
+    @Override
+    public GenerateTomlResult generateToml(GenerateTomlArgs args) throws Exception {
+        return GenerateTomlResult.parseFrom(call("KclService.GenerateToml", args.toByteArray()));
+    }
+
+    /**
+     * Generates KCL source from data content (JSON, YAML or TOML).
+     *
+     * @param args
+     *            the arguments carrying the data content and the format hint.
+     * @return the generated KCL source.
+     * @throws Exception if the underlying RPC fails.
+     */
+    @Override
+    public GenerateKclResult generateKcl(GenerateKclArgs args) throws Exception {
+        return GenerateKclResult.parseFrom(call("KclService.GenerateKcl", args.toByteArray()));
+    }
+
+    /**
+     * Generates an OpenAPI spec from the schemas of a KCL package.
+     *
+     * @param args
+     *            the arguments identifying the package to export.
+     * @return the generated OpenAPI spec.
+     * @throws Exception if the underlying RPC fails.
+     */
+    @Override
+    public GenerateOpenAPIResult generateOpenAPI(GenerateOpenAPIArgs args) throws Exception {
+        return GenerateOpenAPIResult.parseFrom(call("KclService.GenerateOpenAPI", args.toByteArray()));
+    }
+
+    /**
+     * Generates proto3 definitions from the schemas of a KCL package.
+     *
+     * @param args
+     *            the arguments identifying the package to export.
+     * @return the generated proto3 definitions.
+     * @throws Exception if the underlying RPC fails.
+     */
+    @Override
+    public GenerateProtoResult generateProto(GenerateProtoArgs args) throws Exception {
+        return GenerateProtoResult.parseFrom(call("KclService.GenerateProto", args.toByteArray()));
+    }
+
+    /**
+     * Generates documentation from the schemas of a KCL package.
+     *
+     * @param args
+     *            the arguments identifying the package to document.
+     * @return the generated documentation.
+     * @throws Exception if the underlying RPC fails.
+     */
+    @Override
+    public GenerateDocResult generateDoc(GenerateDocArgs args) throws Exception {
+        return GenerateDocResult.parseFrom(call("KclService.GenerateDoc", args.toByteArray()));
+    }
+
+    /**
      * Updates dependencies defined in the kcl.mod file.
      *
      * <p>

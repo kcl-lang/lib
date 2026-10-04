@@ -140,6 +140,41 @@ public interface IService
     FormatTestReportResult FormatTestReport(FormatTestReportArgs args);
 
     /// <summary>
+    /// Serializes the evaluated result of a KCL program to TOML.
+    /// </summary>
+    /// <param name="args">Arguments carrying the program to evaluate.</param>
+    /// <returns>The evaluated result serialized as TOML.</returns>
+    GenerateTomlResult GenerateToml(GenerateTomlArgs args);
+
+    /// <summary>
+    /// Generates KCL source from data content (JSON, YAML or TOML).
+    /// </summary>
+    /// <param name="args">Arguments carrying the data content and format hint.</param>
+    /// <returns>The generated KCL source.</returns>
+    GenerateKclResult GenerateKcl(GenerateKclArgs args);
+
+    /// <summary>
+    /// Generates an OpenAPI spec from the schemas of a KCL package.
+    /// </summary>
+    /// <param name="args">Arguments identifying the package to export.</param>
+    /// <returns>The generated OpenAPI spec.</returns>
+    GenerateOpenAPIResult GenerateOpenAPI(GenerateOpenAPIArgs args);
+
+    /// <summary>
+    /// Generates proto3 definitions from the schemas of a KCL package.
+    /// </summary>
+    /// <param name="args">Arguments identifying the package to export.</param>
+    /// <returns>The generated proto3 definitions.</returns>
+    GenerateProtoResult GenerateProto(GenerateProtoArgs args);
+
+    /// <summary>
+    /// Generates documentation from the schemas of a KCL package.
+    /// </summary>
+    /// <param name="args">Arguments identifying the package to document.</param>
+    /// <returns>The generated documentation.</returns>
+    GenerateDocResult GenerateDoc(GenerateDocArgs args);
+
+    /// <summary>
     /// Updates dependencies for a KCL project based on defined specifications.
     /// </summary>
     /// <param name="args">Arguments for dependency updating.</param>

@@ -147,8 +147,34 @@ func (c *NativeServiceClient) Test(in *api.TestArgs) (*api.TestResult, error) {
 	return cApiCall[*api.TestArgs, *api.TestResult](c, "KclService.Test", in)
 }
 
+// FormatTestReport formats a test result into a human-readable report.
 func (c *NativeServiceClient) FormatTestReport(in *api.FormatTestReportArgs) (*api.FormatTestReportResult, error) {
 	return cApiCall[*api.FormatTestReportArgs, *api.FormatTestReportResult](c, "KclService.FormatTestReport", in)
+}
+
+// GenerateToml serializes the evaluated result of a KCL program to TOML.
+func (c *NativeServiceClient) GenerateToml(in *api.GenerateTomlArgs) (*api.GenerateTomlResult, error) {
+	return cApiCall[*api.GenerateTomlArgs, *api.GenerateTomlResult](c, "KclService.GenerateToml", in)
+}
+
+// GenerateKcl generates KCL source from data content (JSON, YAML or TOML).
+func (c *NativeServiceClient) GenerateKcl(in *api.GenerateKclArgs) (*api.GenerateKclResult, error) {
+	return cApiCall[*api.GenerateKclArgs, *api.GenerateKclResult](c, "KclService.GenerateKcl", in)
+}
+
+// GenerateOpenAPI generates an OpenAPI spec from the schemas of a KCL package.
+func (c *NativeServiceClient) GenerateOpenAPI(in *api.GenerateOpenAPIArgs) (*api.GenerateOpenAPIResult, error) {
+	return cApiCall[*api.GenerateOpenAPIArgs, *api.GenerateOpenAPIResult](c, "KclService.GenerateOpenAPI", in)
+}
+
+// GenerateProto generates proto3 definitions from the schemas of a KCL package.
+func (c *NativeServiceClient) GenerateProto(in *api.GenerateProtoArgs) (*api.GenerateProtoResult, error) {
+	return cApiCall[*api.GenerateProtoArgs, *api.GenerateProtoResult](c, "KclService.GenerateProto", in)
+}
+
+// GenerateDoc generates documentation from the schemas of a KCL package.
+func (c *NativeServiceClient) GenerateDoc(in *api.GenerateDocArgs) (*api.GenerateDocResult, error) {
+	return cApiCall[*api.GenerateDocArgs, *api.GenerateDocResult](c, "KclService.GenerateDoc", in)
 }
 
 func (c *NativeServiceClient) UpdateDependencies(in *api.UpdateDependenciesArgs) (*api.UpdateDependenciesResult, error) {

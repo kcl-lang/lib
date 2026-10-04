@@ -471,6 +471,41 @@ export declare function ping(args: PingArgs): PingResult
 export declare function listMethod(): ListMethodResult
 /** Format a test result into a human-readable report. */
 export declare function formatTestReport(args: FormatTestReportArgs): FormatTestReportResult
+/** Message for generate TOML response. */
+export interface GenerateTomlResult {
+  /** The evaluated result serialized as TOML. */
+  toml: string
+}
+/** Serialize the evaluated result of a KCL program to TOML. */
+export declare function generateToml(args: GenerateTomlArgs): GenerateTomlResult
+/** Message for generate KCL response. */
+export interface GenerateKclResult {
+  /** The generated KCL source. */
+  kcl: string
+}
+/** Generate KCL source from data content (JSON, YAML or TOML). */
+export declare function generateKcl(args: GenerateKclArgs): GenerateKclResult
+/** Message for generate OpenAPI response. */
+export interface GenerateOpenApiResult {
+  /** The generated OpenAPI spec. */
+  spec: string
+}
+/** Generate an OpenAPI spec from the schemas of a KCL package. */
+export declare function generateOpenAPI(args: GenerateOpenAPIArgs): GenerateOpenApiResult
+/** Message for generate proto response. */
+export interface GenerateProtoResult {
+  /** The generated proto3 definitions. */
+  proto: string
+}
+/** Generate proto3 definitions from the schemas of a KCL package. */
+export declare function generateProto(args: GenerateProtoArgs): GenerateProtoResult
+/** Message for generate doc response. */
+export interface GenerateDocResult {
+  /** The generated documentation. */
+  content: string
+}
+/** Generate documentation from the schemas of a KCL package. */
+export declare function generateDoc(args: GenerateDocArgs): GenerateDocResult
 /**
  * Message for load package request arguments.
  * - paths: List of KCL files.
@@ -589,4 +624,24 @@ export declare class UpdateDependenciesArgs {
 export declare class PingArgs {
   /** Create a new `PingArgs` with the value to send to the KCL service. */
   constructor(value: string)
+}
+/** Message for generate TOML request arguments. */
+export declare class GenerateTomlArgs {
+  constructor(execArgs?: ExecProgramArgs | undefined | null, sortKeys?: boolean | undefined | null)
+}
+/** Message for generate KCL request arguments. */
+export declare class GenerateKclArgs {
+  constructor(source: string, filename?: string | undefined | null, format?: string | undefined | null)
+}
+/** Message for generate OpenAPI request arguments. */
+export declare class GenerateOpenAPIArgs {
+  constructor(parseArgs?: ParseProgramArgs | undefined | null, version?: string | undefined | null)
+}
+/** Message for generate proto request arguments. */
+export declare class GenerateProtoArgs {
+  constructor(parseArgs?: ParseProgramArgs | undefined | null, packageName?: string | undefined | null)
+}
+/** Message for generate doc request arguments. */
+export declare class GenerateDocArgs {
+  constructor(parseArgs?: ParseProgramArgs | undefined | null, format?: string | undefined | null)
 }

@@ -68,8 +68,11 @@ public class KclFacadeTest {
     @Test
     public void testRunFilesWithExternalPkgs() {
         Map<String, String> pkgs = new HashMap<String, String>();
-        pkgs.put("pkg", "./src/test_data/pkg");
-        KCLResultList result = Kcl.runFiles("./src/test_data/schema.k", Kcl.withExternalPkgs(pkgs));
+        // The external package root must live outside the main file's package
+        // tree: mapping a directory inside the current package is rejected as
+        // an ambiguity between the current and vendor package.
+        pkgs.put("pkg", "./src/ext_test_data/pkg");
+        KCLResultList result = Kcl.runFiles("./src/ext_test_data/main/schema.k", Kcl.withExternalPkgs(pkgs));
         Assert.assertEquals(Optional.of(2), result.first().getInt("app.replicas"));
     }
 
