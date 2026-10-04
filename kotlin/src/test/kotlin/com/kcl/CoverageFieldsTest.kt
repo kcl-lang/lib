@@ -92,15 +92,34 @@ class CoverageFieldsTest {
     @Test
     fun testCoverageMessagesRegisteredInDescriptor() {
         val descriptor = Spec.getDescriptor()
-        assertEquals(67, descriptor.messageTypes.size)
-        val fileCoverageDesc = descriptor.findMessageTypeByName("FileCoverage")
-        val reportDesc = descriptor.findMessageTypeByName("TestCoverageReport")
-        val summaryDesc = descriptor.findMessageTypeByName("CoverageSummary")
-        assertEquals(4, fileCoverageDesc.fields.size)
-        assertEquals(2, reportDesc.fields.size)
-        assertEquals(3, summaryDesc.fields.size)
-        assertTrue(reportDesc.findFieldByName("files").isMapField)
-        assertTrue(fileCoverageDesc.findFieldByName("line_hits").isMapField)
-        assertTrue(fileCoverageDesc.findFieldByName("covered_lines").isRepeated)
+        assertEquals(4, descriptor.findMessageTypeByName("FileCoverage").fields.size)
+        assertEquals(2, descriptor.findMessageTypeByName("TestCoverageReport").fields.size)
+        assertEquals(3, descriptor.findMessageTypeByName("CoverageSummary").fields.size)
+        assertTrue(descriptor.findMessageTypeByName("TestCoverageReport").findFieldByName("files").isMapField)
+        assertTrue(descriptor.findMessageTypeByName("FileCoverage").findFieldByName("line_hits").isMapField)
+        assertTrue(descriptor.findMessageTypeByName("FileCoverage").findFieldByName("covered_lines").isRepeated)
+    }
+
+    /**
+     * `Spec.java` is a checked-in protoc artifact, so it can silently fall behind
+     * `spec.proto` — and it did: the generated stub was missing every message added
+     * for `LoadPackageResult.imports`/`kcl_mod`/`apps`, so a caller could not read
+     * those fields at all. This used to be guarded by asserting an absolute
+     * `messageTypes.size`, which is the wrong shape for a canary: the stub and the
+     * number were both stale and therefore agreed, so the test passed while the
+     * binding was broken. Asserting that each message the spec declares is present
+     * fails on the real condition instead, and does not need editing when one is added.
+     */
+    @Test
+    fun testGeneratedStubCoversEveryMessageInSpec() {
+        val spec = java.io.File("../spec/spec.proto")
+        assertTrue(spec.isFile, "spec.proto not found at ${spec.absolutePath}")
+        val declared = Regex("(?m)^message (\\w+)").findAll(spec.readText()).map { it.groupValues[1] }.toSet()
+        assertTrue(declared.size > 50, "expected the spec to declare many messages, found ${declared.size}")
+
+        val descriptor = Spec.getDescriptor()
+        val present = descriptor.messageTypes.map { it.name }.toSet()
+        val missing = declared - present
+        assertTrue(missing.isEmpty(), "spec.proto declares messages absent from the generated stub: $missing")
     }
 }

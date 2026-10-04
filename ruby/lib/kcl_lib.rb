@@ -10,6 +10,7 @@ require_relative "kcl_lib/kcl_ruby"
 require_relative "kcl_lib/version"
 require_relative "kcl_lib/spec_pb"
 require_relative "kcl_lib/api"
+require_relative "kcl_lib/facade"
 
 # Re-export the generated protobuf message classes under the KclLib
 # namespace, mirroring how `kcl_lib.api` re-exports them in Python, so both

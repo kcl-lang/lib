@@ -15,19 +15,16 @@ import com.kcl.api.Spec.ExecProgramArgs.Builder;
 import com.kcl.api.Spec.ExternalPkg;
 
 /**
- * Parsed {@code kcl.yaml} settings file, mirroring kcl-go's
- * {@code settings.SettingsFile}: a {@code kcl_cli_configs} mapping plus a
- * {@code kcl_options} list of {@code {key, value}} entries. YAML parsing is
- * done with Jackson (jackson-dataformat-yaml), preserving mapping order so
- * {@code kcl_options} values round-trip like kcl-go's order-aware encoding.
+ * Parsed {@code kcl.yaml} settings file, mirroring kcl-go's {@code settings.SettingsFile}: a {@code kcl_cli_configs}
+ * mapping plus a {@code kcl_options} list of {@code {key, value}} entries. YAML parsing is done with Jackson
+ * (jackson-dataformat-yaml), preserving mapping order so {@code kcl_options} values round-trip like kcl-go's
+ * order-aware encoding.
  *
  * <p>
- * Supported {@code kcl_cli_configs} fields: {@code file}/{@code files},
- * {@code overrides}, {@code path_selector}, {@code strict_range_check},
- * {@code disable_none}, {@code verbose}, {@code debug}, {@code package_maps},
- * {@code sort_keys}, {@code show_hidden} and {@code include_schema_type_path}.
- * The {@code output} field is not supported because the underlying
- * {@code ExecProgramArgs} proto has no output format field.
+ * Supported {@code kcl_cli_configs} fields: {@code file}/{@code files}, {@code overrides}, {@code path_selector},
+ * {@code strict_range_check}, {@code disable_none}, {@code verbose}, {@code debug}, {@code package_maps},
+ * {@code sort_keys}, {@code show_hidden} and {@code include_schema_type_path}. The {@code output} field is not
+ * supported because the underlying {@code ExecProgramArgs} proto has no output format field.
  */
 final class KclSettingsFile {
     private final JsonNode config;
@@ -39,9 +36,8 @@ final class KclSettingsFile {
     }
 
     /**
-     * Load and parse a settings file. Missing or unparsable files raise
-     * {@link KclException}, mirroring kcl-go's {@code WithSettings} error
-     * propagation; empty files yield an empty config.
+     * Load and parse a settings file. Missing or unparsable files raise {@link KclException}, mirroring kcl-go's
+     * {@code WithSettings} error propagation; empty files yield an empty config.
      */
     static KclSettingsFile load(String filename) {
         Path path = Paths.get(filename);
@@ -83,10 +79,8 @@ final class KclSettingsFile {
     }
 
     /**
-     * Populate a proto builder from this file, mirroring kcl-go's
-     * {@code SettingsFile.To_ExecProgramArgs}. Relative input files are
-     * resolved against {@code workDir} with {@code ${PWD}} and
-     * {@code ${KCL_MOD}} expansion.
+     * Populate a proto builder from this file, mirroring kcl-go's {@code SettingsFile.To_ExecProgramArgs}. Relative
+     * input files are resolved against {@code workDir} with {@code ${PWD}} and {@code ${KCL_MOD}} expansion.
      */
     void applyTo(Builder builder, String workDir) {
         if (config == null) {
@@ -184,9 +178,8 @@ final class KclSettingsFile {
     }
 
     /**
-     * Walk up from {@code workDir} looking for a {@code kcl.mod} file,
-     * mirroring kcl-go's {@code tools/list.FindPkgInfo}. Returns the package
-     * root or an empty string when no {@code kcl.mod} is found.
+     * Walk up from {@code workDir} looking for a {@code kcl.mod} file, mirroring kcl-go's
+     * {@code tools/list.FindPkgInfo}. Returns the package root or an empty string when no {@code kcl.mod} is found.
      */
     private static String findPkgRoot(String workDir) {
         Path dir = Paths.get(workDir == null || workDir.isEmpty() ? "." : workDir).toAbsolutePath().normalize();
@@ -200,9 +193,8 @@ final class KclSettingsFile {
     }
 
     /**
-     * Serialise a {@code kcl_options} value like kcl-go: map/list values
-     * become JSON (preserving document order), scalars become their plain
-     * string form, and {@code null} becomes the empty string.
+     * Serialise a {@code kcl_options} value like kcl-go: map/list values become JSON (preserving document order),
+     * scalars become their plain string form, and {@code null} becomes the empty string.
      */
     private static String stringifyValue(JsonNode value) {
         if (value == null || value.isNull()) {

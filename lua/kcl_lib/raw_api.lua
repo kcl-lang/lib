@@ -125,6 +125,20 @@ RawAPI.rename_code =
 
 RawAPI.test = add_method("KclService.Test", "TestArgs", "TestResult")
 
+-- `KclService.FormatTestReport`: renders a `TestResult` — typically the one
+-- `RawAPI.test` just returned — into a human-readable report. The output is
+-- byte-identical to the kcl-go `PrettyReporter` format, deterministic for a
+-- given result, and every line (including the last) ends with a newline:
+-- one `{name}: {PASS|FAIL} ({ms}ms)` line per case in result order, then a
+-- separator of exactly 80 `-`, then the non-zero `PASS:`/`FAIL:`/`SKIPPED:`
+-- counts. An empty result renders as `no test files\n`. The `ms` value is the
+-- case duration in microseconds truncated to whole milliseconds.
+RawAPI.format_test_report = add_method(
+  "KclService.FormatTestReport",
+  "FormatTestReportArgs",
+  "FormatTestReportResult"
+)
+
 RawAPI.update_dependencies = add_method(
   "KclService.UpdateDependencies",
   "UpdateDependenciesArgs",

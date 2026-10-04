@@ -645,6 +645,22 @@ public class API implements Service {
     }
 
     /**
+     * Formats a test result into a human-readable report.
+     *
+     * @param args
+     *            the arguments specifying the test result to format.
+     *
+     * @return the pretty-printed report.
+     *
+     * @throws Exception
+     *             if an error occurs during the remote procedure call.
+     */
+    @Override
+    public FormatTestReportResult formatTestReport(FormatTestReportArgs args) throws Exception {
+        return FormatTestReportResult.parseFrom(call("KclService.FormatTestReport", args.toByteArray()));
+    }
+
+    /**
      * Updates dependencies defined in the kcl.mod file.
      *
      * <p>

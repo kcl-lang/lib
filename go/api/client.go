@@ -40,6 +40,8 @@ type ServiceClient interface {
 	RenameCode(in *RenameCodeArgs) (out *RenameCodeResult, err error)
 	// Test KCL packages with test arguments.
 	Test(in *TestArgs) (out *TestResult, err error)
+	// Format a TestResult into a human-readable report.
+	FormatTestReport(in *FormatTestReportArgs) (out *FormatTestReportResult, err error)
 	// Download and update dependencies defined in the `kcl.mod` file and return the external package name and location list.
 	UpdateDependencies(in *UpdateDependenciesArgs) (out *UpdateDependenciesResult, err error)
 	// GetVersion KclService, return the kcl service version information

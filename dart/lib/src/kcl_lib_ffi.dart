@@ -49,6 +49,35 @@ typedef _CallNativeDart = int Function(
   Pointer<Uint8> resultPtr,
 );
 
+// Service-handle C signatures (docs/abi.md §6). `call_native` is stateless and
+// cannot carry a plugin agent, so a binding that supports plugins has to open a
+// service handle and dispatch through it. The reply is NUL-terminated and owned
+// by the caller, who releases it with `kcl_service_free_string`.
+typedef _ServiceNewC = Pointer<Void> Function(IntPtr pluginAgent);
+typedef _ServiceNewDart = Pointer<Void> Function(int pluginAgent);
+
+typedef _ServiceCallC = Pointer<Utf8> Function(
+  Pointer<Void> service,
+  Pointer<Utf8> method,
+  Pointer<Uint8> args,
+  IntPtr argsLen,
+  Pointer<IntPtr> outLen,
+);
+
+typedef _ServiceCallDart = Pointer<Utf8> Function(
+  Pointer<Void> service,
+  Pointer<Utf8> method,
+  Pointer<Uint8> args,
+  int argsLen,
+  Pointer<IntPtr> outLen,
+);
+
+typedef _ServiceFreeStringC = Void Function(Pointer<Utf8> reply);
+typedef _ServiceFreeStringDart = void Function(Pointer<Utf8> reply);
+
+typedef _ServiceDeleteC = Void Function(Pointer<Void> service);
+typedef _ServiceDeleteDart = void Function(Pointer<Void> service);
+
 /// Thin wrapper over `libkcl`. One instance per process is enough; the library
 /// is stateless.
 class LibKcl {
@@ -106,15 +135,19 @@ class LibKcl {
     return LibKcl._(lib, fn);
   }
 
+  final DynamicLibrary library;
   final _CallNativeDart _call;
   final Pointer<Uint8> _scratch;
 
-  LibKcl._(DynamicLibrary lib, this._call)
-      : _scratch = calloc<Uint8>(kScratchBufferSize) {
-    // lib is closed implicitly on process exit. We don't expose it: nothing
-    // in this binding needs to keep the handle alive separately.
-    lib.toString();
-  }
+  /// Set when a plugin agent is bound; see `kcl_plugin.dart`. While it is
+  /// non-null, [call] dispatches through the handle instead of `call_native`.
+  Pointer<Void>? _service;
+
+  /// Lazily resolved service-handle entry points, keyed by the dlsym name.
+  final _serviceFns = <String, Object>{};
+
+  LibKcl._(this.library, this._call)
+      : _scratch = calloc<Uint8>(kScratchBufferSize);
 
   /// Resets the process-wide singleton. Intended for tests only — the
   /// underlying `DynamicLibrary` cannot be closed on every platform, so
@@ -122,15 +155,116 @@ class LibKcl {
   static void resetForTesting() {
     final cached = _singleton;
     if (cached != null) {
+      if (cached._service != null) {
+        cached._deleteService(cached._service!);
+        cached._service = null;
+      }
       calloc.free(cached._scratch);
     }
     _singleton = null;
+  }
+
+  /// Whether a plugin agent is currently bound, i.e. whether [call] routes
+  /// through a service handle.
+  bool get hasService => _service != null;
+
+  /// Binds `pluginAgent` — the address of the host's plugin callback — and
+  /// starts routing every call through a fresh service handle. The returned
+  /// handle must be passed to [unbindService] (or deleted directly) to release
+  /// the native side.
+  Pointer<Void> bindService(int pluginAgent) {
+    final existing = _service;
+    if (existing != null) {
+      return existing;
+    }
+    final newFn = library
+        .lookup<NativeFunction<_ServiceNewC>>('kcl_service_new')
+        .asFunction<_ServiceNewDart>();
+    _serviceFns['new'] = newFn;
+    return _service = newFn(pluginAgent);
+  }
+
+  /// Stops routing through the service handle, deleting it and returning the
+  /// binding to the stateless `call_native` path.
+  void unbindService() {
+    final svc = _service;
+    if (svc == null) return;
+    _deleteService(svc);
+    _service = null;
+  }
+
+  void _deleteService(Pointer<Void> service) {
+    final fn = _serviceFns['delete'] as _ServiceDeleteDart? ??
+        library
+            .lookup<NativeFunction<_ServiceDeleteC>>('kcl_service_delete')
+            .asFunction<_ServiceDeleteDart>();
+    _serviceFns['delete'] = fn;
+    fn(service);
+  }
+
+  /// Calls the given RPC through the service handle, returning the raw
+  /// response bytes (the `"ERROR:"` prefix is left for `kcl_lib.dart`).
+  Uint8List callWithService(Pointer<Void> service, String rpcName,
+      Uint8List args) {
+    final callFn = _serviceFns['call'] as _ServiceCallDart? ??
+        library
+            .lookup<NativeFunction<_ServiceCallC>>(
+                'kcl_service_call_with_length')
+            .asFunction<_ServiceCallDart>();
+    final freeFn = _serviceFns['free'] as _ServiceFreeStringDart? ??
+        library
+            .lookup<NativeFunction<_ServiceFreeStringC>>(
+                'kcl_service_free_string')
+            .asFunction<_ServiceFreeStringDart>();
+    _serviceFns['call'] = callFn;
+    _serviceFns['free'] = freeFn;
+
+    final namePtr = rpcName.toNativeUtf8();
+    final argsPtr = calloc<Uint8>(args.isEmpty ? 1 : args.length);
+    final outLen = calloc<IntPtr>();
+
+    try {
+      if (args.isNotEmpty) {
+        argsPtr.asTypedList(args.length).setAll(0, args);
+      }
+      final reply = callFn(service, namePtr, argsPtr, args.length, outLen);
+      if (reply == nullptr) {
+        throw StateError(
+          'libkcl returned a null reply for $rpcName through the service handle',
+        );
+      }
+      try {
+        // The reply is always NUL-terminated, but the runtime only writes
+        // `out_len` on the success path — its panic branch returns an
+        // "ERROR:..." string without setting it. Recover the length from the
+        // terminator in that case so the error still reaches the caller.
+        final bytes = reply.toDartString().codeUnits;
+        return Uint8List.fromList(
+          outLen.value == 0 ? bytes : bytes.take(outLen.value).toList(),
+        );
+      } finally {
+        freeFn(reply);
+      }
+    } finally {
+      calloc.free(namePtr);
+      calloc.free(argsPtr);
+      calloc.free(outLen);
+    }
   }
 
   /// Calls `call_native` with the given RPC name and protobuf-encoded `args`.
   /// Returns the raw response bytes (no `ERROR:` decoding here — the public
   /// API in `kcl_lib.dart` does that).
   Uint8List call(String rpcName, Uint8List args) {
+    // A bound plugin agent can only travel with a service handle, so once one
+    // is registered every call routes through it. With nothing bound this is
+    // exactly the stateless path, leaving programs that do not use plugins
+    // untouched.
+    final service = _service;
+    if (service != null) {
+      return callWithService(service, rpcName, args);
+    }
+
     final nameBytes = utf8.encode(rpcName);
     final namePtr = calloc<Uint8>(nameBytes.length + 1);
     final argsPtr = calloc<Uint8>(args.length);

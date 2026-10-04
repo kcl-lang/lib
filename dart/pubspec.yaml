@@ -25,6 +25,9 @@ dependencies:
 dev_dependencies:
   test: ^1.24.0
   lints: ^3.0.0
+  # The int64 fields of the generated messages are `fixnum.Int64`; tests that
+  # build a TestCaseInfo with a `duration` need the constructor directly.
+  fixnum: ^1.1.1
 
 # Vendored protobuf message code lives under lib/src/pb/ and is checked in.
 # Regenerate with `dart run tool/regen_proto.dart` (or `make proto`) — see

@@ -16,7 +16,11 @@ luajit52 = ["mlua", "mlua/luajit52"]
 crate-type = ["cdylib"]
 
 [dependencies]
-mlua = { version = "0.9", features = [
+# 0.12 is required for plugin support: the plugin agent is a bare
+# `extern "C"` callback with no user data, so it has to reach the interpreter
+# through the raw `lua_State` and `Lua::get_or_init_from_ptr`, neither of
+# which is public in 0.9.
+mlua = { version = "0.12", features = [
   "module",
   "macros",
 ], default-features = false, optional = true }
