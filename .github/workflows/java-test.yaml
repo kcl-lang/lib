@@ -186,18 +186,40 @@ jobs:
   # The job is skipped (not failed) when any secret is missing so the
   # workflow can land the scaffold without red builds, and quietly
   # enables Central publishing once the operator fills them in.
+  # The secrets context is unavailable in job-level `if` conditions, so
+  # the presence of the Central Portal credentials is computed here and
+  # consumed by deploy-central through job outputs. Skipped entirely on
+  # non-tag runs.
+  check-central-secrets:
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/')
+    outputs:
+      present: ${{ steps.check.outputs.present }}
+    steps:
+      - id: check
+        env:
+          MAVEN_CENTRAL_USERNAME: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
+          MAVEN_CENTRAL_TOKEN: ${{ secrets.MAVEN_CENTRAL_TOKEN }}
+          MAVEN_CENTRAL_GPG_PRIVATE_KEY: ${{ secrets.MAVEN_CENTRAL_GPG_PRIVATE_KEY }}
+          MAVEN_CENTRAL_GPG_PASSPHRASE: ${{ secrets.MAVEN_CENTRAL_GPG_PASSPHRASE }}
+        run: |
+          if [ -n "$MAVEN_CENTRAL_USERNAME" ] && [ -n "$MAVEN_CENTRAL_TOKEN" ] &&
+             [ -n "$MAVEN_CENTRAL_GPG_PRIVATE_KEY" ] && [ -n "$MAVEN_CENTRAL_GPG_PASSPHRASE" ]; then
+            echo "present=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "Central Portal secrets not configured; skipping the publish job"
+            echo "present=false" >> "$GITHUB_OUTPUT"
+          fi
+
   deploy-central:
     runs-on: ubuntu-latest
 
     permissions:
       contents: read
-    needs: [ test-and-build, build-centos7 ]
+    needs: [ test-and-build, build-centos7, check-central-secrets ]
     if: >-
       startsWith(github.ref, 'refs/tags/') &&
-      secrets.MAVEN_CENTRAL_USERNAME != '' &&
-      secrets.MAVEN_CENTRAL_TOKEN != '' &&
-      secrets.MAVEN_CENTRAL_GPG_PRIVATE_KEY != '' &&
-      secrets.MAVEN_CENTRAL_GPG_PASSPHRASE != ''
+      needs.check-central-secrets.outputs.present == 'true'
     steps:
       - name: Checkout
         uses: actions/checkout@v7
