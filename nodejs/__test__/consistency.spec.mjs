@@ -83,26 +83,17 @@ const CALLS = {
   'KclService.GenerateOpenAPI': {
     fn: () => kcl.generateOpenAPI,
     build: (a) =>
-      new kcl.GenerateOpenAPIArgs(
-        new kcl.ParseProgramArgs(a.parse_args.paths.map(resolvePath)),
-        a.version ?? '',
-      ),
+      new kcl.GenerateOpenAPIArgs(new kcl.ParseProgramArgs(a.parse_args.paths.map(resolvePath)), a.version ?? ''),
   },
   'KclService.GenerateProto': {
     fn: () => kcl.generateProto,
     build: (a) =>
-      new kcl.GenerateProtoArgs(
-        new kcl.ParseProgramArgs(a.parse_args.paths.map(resolvePath)),
-        a.package ?? '',
-      ),
+      new kcl.GenerateProtoArgs(new kcl.ParseProgramArgs(a.parse_args.paths.map(resolvePath)), a.package ?? ''),
   },
   'KclService.GenerateDoc': {
     fn: () => kcl.generateDoc,
     build: (a) =>
-      new kcl.GenerateDocArgs(
-        new kcl.ParseProgramArgs(a.parse_args.paths.map(resolvePath)),
-        a.format ?? '',
-      ),
+      new kcl.GenerateDocArgs(new kcl.ParseProgramArgs(a.parse_args.paths.map(resolvePath)), a.format ?? ''),
   },
 }
 
