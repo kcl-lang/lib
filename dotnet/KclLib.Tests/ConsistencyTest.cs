@@ -199,7 +199,7 @@ public class ConsistencyTest
                 {
                     Skip($"core does not list {rpc} (old core)");
                 }
-                var reportArgs = new FormatTestReportArgs { Result = new TestResult() };
+                var reportArgs = new FormatTestReportArgs { Result = new KclLib.API.TestResult() };
                 foreach (var info in args.GetProperty("result").GetProperty("info").EnumerateArray())
                 {
                     reportArgs.Result.Info.Add(new TestCaseInfo
