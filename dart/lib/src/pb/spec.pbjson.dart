@@ -343,6 +343,30 @@ const LoadPackageResult$json = {
       '6': '.com.kcl.api.LoadPackageResult.PkgScopeMapEntry',
       '10': 'pkgScopeMap'
     },
+    {
+      '1': 'imports',
+      '3': 11,
+      '4': 3,
+      '5': 11,
+      '6': '.com.kcl.api.LoadPackageResult.ImportsEntry',
+      '10': 'imports'
+    },
+    {
+      '1': 'kcl_mod',
+      '3': 12,
+      '4': 1,
+      '5': 11,
+      '6': '.com.kcl.api.KclMod',
+      '10': 'kclMod'
+    },
+    {
+      '1': 'apps',
+      '3': 13,
+      '4': 3,
+      '5': 11,
+      '6': '.com.kcl.api.AppInfo',
+      '10': 'apps'
+    },
   ],
   '3': [
     LoadPackageResult_ScopesEntry$json,
@@ -350,7 +374,8 @@ const LoadPackageResult$json = {
     LoadPackageResult_NodeSymbolMapEntry$json,
     LoadPackageResult_SymbolNodeMapEntry$json,
     LoadPackageResult_FullyQualifiedNameMapEntry$json,
-    LoadPackageResult_PkgScopeMapEntry$json
+    LoadPackageResult_PkgScopeMapEntry$json,
+    LoadPackageResult_ImportsEntry$json
   ],
 };
 
@@ -449,6 +474,23 @@ const LoadPackageResult_PkgScopeMapEntry$json = {
   '7': {'7': true},
 };
 
+@$core.Deprecated('Use loadPackageResultDescriptor instead')
+const LoadPackageResult_ImportsEntry$json = {
+  '1': 'ImportsEntry',
+  '2': [
+    {'1': 'key', '3': 1, '4': 1, '5': 9, '10': 'key'},
+    {
+      '1': 'value',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.com.kcl.api.FileImports',
+      '10': 'value'
+    },
+  ],
+  '7': {'7': true},
+};
+
 /// Descriptor for `LoadPackageResult`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List loadPackageResultDescriptor = $convert.base64Decode(
     'ChFMb2FkUGFja2FnZVJlc3VsdBIYCgdwcm9ncmFtGAEgASgJUgdwcm9ncmFtEhQKBXBhdGhzGA'
@@ -463,16 +505,249 @@ final $typed_data.Uint8List loadPackageResultDescriptor = $convert.base64Decode(
     'hmdWxseV9xdWFsaWZpZWRfbmFtZV9tYXAYCSADKAsyOS5jb20ua2NsLmFwaS5Mb2FkUGFja2Fn'
     'ZVJlc3VsdC5GdWxseVF1YWxpZmllZE5hbWVNYXBFbnRyeVIVZnVsbHlRdWFsaWZpZWROYW1lTW'
     'FwElMKDXBrZ19zY29wZV9tYXAYCiADKAsyLy5jb20ua2NsLmFwaS5Mb2FkUGFja2FnZVJlc3Vs'
-    'dC5Qa2dTY29wZU1hcEVudHJ5Ugtwa2dTY29wZU1hcBpNCgtTY29wZXNFbnRyeRIQCgNrZXkYAS'
-    'ABKAlSA2tleRIoCgV2YWx1ZRgCIAEoCzISLmNvbS5rY2wuYXBpLlNjb3BlUgV2YWx1ZToCOAEa'
-    'TwoMU3ltYm9sc0VudHJ5EhAKA2tleRgBIAEoCVIDa2V5EikKBXZhbHVlGAIgASgLMhMuY29tLm'
-    'tjbC5hcGkuU3ltYm9sUgV2YWx1ZToCOAEaWgoSTm9kZVN5bWJvbE1hcEVudHJ5EhAKA2tleRgB'
-    'IAEoCVIDa2V5Ei4KBXZhbHVlGAIgASgLMhguY29tLmtjbC5hcGkuU3ltYm9sSW5kZXhSBXZhbH'
-    'VlOgI4ARpAChJTeW1ib2xOb2RlTWFwRW50cnkSEAoDa2V5GAEgASgJUgNrZXkSFAoFdmFsdWUY'
-    'AiABKAlSBXZhbHVlOgI4ARpiChpGdWxseVF1YWxpZmllZE5hbWVNYXBFbnRyeRIQCgNrZXkYAS'
-    'ABKAlSA2tleRIuCgV2YWx1ZRgCIAEoCzIYLmNvbS5rY2wuYXBpLlN5bWJvbEluZGV4UgV2YWx1'
-    'ZToCOAEaVwoQUGtnU2NvcGVNYXBFbnRyeRIQCgNrZXkYASABKAlSA2tleRItCgV2YWx1ZRgCIA'
-    'EoCzIXLmNvbS5rY2wuYXBpLlNjb3BlSW5kZXhSBXZhbHVlOgI4AQ==');
+    'dC5Qa2dTY29wZU1hcEVudHJ5Ugtwa2dTY29wZU1hcBJFCgdpbXBvcnRzGAsgAygLMisuY29tLm'
+    'tjbC5hcGkuTG9hZFBhY2thZ2VSZXN1bHQuSW1wb3J0c0VudHJ5UgdpbXBvcnRzEiwKB2tjbF9t'
+    'b2QYDCABKAsyEy5jb20ua2NsLmFwaS5LY2xNb2RSBmtjbE1vZBIoCgRhcHBzGA0gAygLMhQuY2'
+    '9tLmtjbC5hcGkuQXBwSW5mb1IEYXBwcxpNCgtTY29wZXNFbnRyeRIQCgNrZXkYASABKAlSA2tl'
+    'eRIoCgV2YWx1ZRgCIAEoCzISLmNvbS5rY2wuYXBpLlNjb3BlUgV2YWx1ZToCOAEaTwoMU3ltYm'
+    '9sc0VudHJ5EhAKA2tleRgBIAEoCVIDa2V5EikKBXZhbHVlGAIgASgLMhMuY29tLmtjbC5hcGku'
+    'U3ltYm9sUgV2YWx1ZToCOAEaWgoSTm9kZVN5bWJvbE1hcEVudHJ5EhAKA2tleRgBIAEoCVIDa2'
+    'V5Ei4KBXZhbHVlGAIgASgLMhguY29tLmtjbC5hcGkuU3ltYm9sSW5kZXhSBXZhbHVlOgI4ARpA'
+    'ChJTeW1ib2xOb2RlTWFwRW50cnkSEAoDa2V5GAEgASgJUgNrZXkSFAoFdmFsdWUYAiABKAlSBX'
+    'ZhbHVlOgI4ARpiChpGdWxseVF1YWxpZmllZE5hbWVNYXBFbnRyeRIQCgNrZXkYASABKAlSA2tl'
+    'eRIuCgV2YWx1ZRgCIAEoCzIYLmNvbS5rY2wuYXBpLlN5bWJvbEluZGV4UgV2YWx1ZToCOAEaVw'
+    'oQUGtnU2NvcGVNYXBFbnRyeRIQCgNrZXkYASABKAlSA2tleRItCgV2YWx1ZRgCIAEoCzIXLmNv'
+    'bS5rY2wuYXBpLlNjb3BlSW5kZXhSBXZhbHVlOgI4ARpUCgxJbXBvcnRzRW50cnkSEAoDa2V5GA'
+    'EgASgJUgNrZXkSLgoFdmFsdWUYAiABKAsyGC5jb20ua2NsLmFwaS5GaWxlSW1wb3J0c1IFdmFs'
+    'dWU6AjgB');
+
+@$core.Deprecated('Use fileImportsDescriptor instead')
+const FileImports$json = {
+  '1': 'FileImports',
+  '2': [
+    {
+      '1': 'imports',
+      '3': 1,
+      '4': 3,
+      '5': 11,
+      '6': '.com.kcl.api.ImportInfo',
+      '10': 'imports'
+    },
+  ],
+};
+
+/// Descriptor for `FileImports`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List fileImportsDescriptor = $convert.base64Decode(
+    'CgtGaWxlSW1wb3J0cxIxCgdpbXBvcnRzGAEgAygLMhcuY29tLmtjbC5hcGkuSW1wb3J0SW5mb1'
+    'IHaW1wb3J0cw==');
+
+@$core.Deprecated('Use importInfoDescriptor instead')
+const ImportInfo$json = {
+  '1': 'ImportInfo',
+  '2': [
+    {'1': 'path', '3': 1, '4': 1, '5': 9, '10': 'path'},
+    {'1': 'resolved', '3': 2, '4': 1, '5': 9, '10': 'resolved'},
+  ],
+};
+
+/// Descriptor for `ImportInfo`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List importInfoDescriptor = $convert.base64Decode(
+    'CgpJbXBvcnRJbmZvEhIKBHBhdGgYASABKAlSBHBhdGgSGgoIcmVzb2x2ZWQYAiABKAlSCHJlc2'
+    '9sdmVk');
+
+@$core.Deprecated('Use kclModDescriptor instead')
+const KclMod$json = {
+  '1': 'KclMod',
+  '2': [
+    {
+      '1': 'package',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.com.kcl.api.KclModPackage',
+      '10': 'package'
+    },
+    {
+      '1': 'profile',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.com.kcl.api.KclModProfile',
+      '10': 'profile'
+    },
+    {
+      '1': 'dependencies',
+      '3': 3,
+      '4': 3,
+      '5': 11,
+      '6': '.com.kcl.api.KclMod.DependenciesEntry',
+      '10': 'dependencies'
+    },
+  ],
+  '3': [KclMod_DependenciesEntry$json],
+};
+
+@$core.Deprecated('Use kclModDescriptor instead')
+const KclMod_DependenciesEntry$json = {
+  '1': 'DependenciesEntry',
+  '2': [
+    {'1': 'key', '3': 1, '4': 1, '5': 9, '10': 'key'},
+    {
+      '1': 'value',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.com.kcl.api.KclModDependency',
+      '10': 'value'
+    },
+  ],
+  '7': {'7': true},
+};
+
+/// Descriptor for `KclMod`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List kclModDescriptor = $convert.base64Decode(
+    'CgZLY2xNb2QSNAoHcGFja2FnZRgBIAEoCzIaLmNvbS5rY2wuYXBpLktjbE1vZFBhY2thZ2VSB3'
+    'BhY2thZ2USNAoHcHJvZmlsZRgCIAEoCzIaLmNvbS5rY2wuYXBpLktjbE1vZFByb2ZpbGVSB3By'
+    'b2ZpbGUSSQoMZGVwZW5kZW5jaWVzGAMgAygLMiUuY29tLmtjbC5hcGkuS2NsTW9kLkRlcGVuZG'
+    'VuY2llc0VudHJ5UgxkZXBlbmRlbmNpZXMaXgoRRGVwZW5kZW5jaWVzRW50cnkSEAoDa2V5GAEg'
+    'ASgJUgNrZXkSMwoFdmFsdWUYAiABKAsyHS5jb20ua2NsLmFwaS5LY2xNb2REZXBlbmRlbmN5Ug'
+    'V2YWx1ZToCOAE=');
+
+@$core.Deprecated('Use kclModPackageDescriptor instead')
+const KclModPackage$json = {
+  '1': 'KclModPackage',
+  '2': [
+    {'1': 'name', '3': 1, '4': 1, '5': 9, '10': 'name'},
+    {'1': 'edition', '3': 2, '4': 1, '5': 9, '10': 'edition'},
+    {'1': 'version', '3': 3, '4': 1, '5': 9, '10': 'version'},
+    {'1': 'description', '3': 4, '4': 1, '5': 9, '10': 'description'},
+    {'1': 'include', '3': 5, '4': 3, '5': 9, '10': 'include'},
+    {'1': 'exclude', '3': 6, '4': 3, '5': 9, '10': 'exclude'},
+  ],
+};
+
+/// Descriptor for `KclModPackage`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List kclModPackageDescriptor = $convert.base64Decode(
+    'Cg1LY2xNb2RQYWNrYWdlEhIKBG5hbWUYASABKAlSBG5hbWUSGAoHZWRpdGlvbhgCIAEoCVIHZW'
+    'RpdGlvbhIYCgd2ZXJzaW9uGAMgASgJUgd2ZXJzaW9uEiAKC2Rlc2NyaXB0aW9uGAQgASgJUgtk'
+    'ZXNjcmlwdGlvbhIYCgdpbmNsdWRlGAUgAygJUgdpbmNsdWRlEhgKB2V4Y2x1ZGUYBiADKAlSB2'
+    'V4Y2x1ZGU=');
+
+@$core.Deprecated('Use kclModProfileDescriptor instead')
+const KclModProfile$json = {
+  '1': 'KclModProfile',
+  '2': [
+    {'1': 'entries', '3': 1, '4': 3, '5': 9, '10': 'entries'},
+    {'1': 'disable_none', '3': 2, '4': 1, '5': 8, '10': 'disableNone'},
+    {'1': 'sort_keys', '3': 3, '4': 1, '5': 8, '10': 'sortKeys'},
+    {'1': 'selectors', '3': 4, '4': 3, '5': 9, '10': 'selectors'},
+    {'1': 'overrides', '3': 5, '4': 3, '5': 9, '10': 'overrides'},
+    {'1': 'options', '3': 6, '4': 3, '5': 9, '10': 'options'},
+  ],
+};
+
+/// Descriptor for `KclModProfile`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List kclModProfileDescriptor = $convert.base64Decode(
+    'Cg1LY2xNb2RQcm9maWxlEhgKB2VudHJpZXMYASADKAlSB2VudHJpZXMSIQoMZGlzYWJsZV9ub2'
+    '5lGAIgASgIUgtkaXNhYmxlTm9uZRIbCglzb3J0X2tleXMYAyABKAhSCHNvcnRLZXlzEhwKCXNl'
+    'bGVjdG9ycxgEIAMoCVIJc2VsZWN0b3JzEhwKCW92ZXJyaWRlcxgFIAMoCVIJb3ZlcnJpZGVzEh'
+    'gKB29wdGlvbnMYBiADKAlSB29wdGlvbnM=');
+
+@$core.Deprecated('Use kclModDependencyDescriptor instead')
+const KclModDependency$json = {
+  '1': 'KclModDependency',
+  '2': [
+    {'1': 'version', '3': 1, '4': 1, '5': 9, '10': 'version'},
+    {
+      '1': 'git',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.com.kcl.api.KclModGitSource',
+      '10': 'git'
+    },
+    {
+      '1': 'oci',
+      '3': 3,
+      '4': 1,
+      '5': 11,
+      '6': '.com.kcl.api.KclModOciSource',
+      '10': 'oci'
+    },
+    {
+      '1': 'local',
+      '3': 4,
+      '4': 1,
+      '5': 11,
+      '6': '.com.kcl.api.KclModLocalSource',
+      '10': 'local'
+    },
+  ],
+};
+
+/// Descriptor for `KclModDependency`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List kclModDependencyDescriptor = $convert.base64Decode(
+    'ChBLY2xNb2REZXBlbmRlbmN5EhgKB3ZlcnNpb24YASABKAlSB3ZlcnNpb24SLgoDZ2l0GAIgAS'
+    'gLMhwuY29tLmtjbC5hcGkuS2NsTW9kR2l0U291cmNlUgNnaXQSLgoDb2NpGAMgASgLMhwuY29t'
+    'LmtjbC5hcGkuS2NsTW9kT2NpU291cmNlUgNvY2kSNAoFbG9jYWwYBCABKAsyHi5jb20ua2NsLm'
+    'FwaS5LY2xNb2RMb2NhbFNvdXJjZVIFbG9jYWw=');
+
+@$core.Deprecated('Use kclModGitSourceDescriptor instead')
+const KclModGitSource$json = {
+  '1': 'KclModGitSource',
+  '2': [
+    {'1': 'git', '3': 1, '4': 1, '5': 9, '10': 'git'},
+    {'1': 'branch', '3': 2, '4': 1, '5': 9, '10': 'branch'},
+    {'1': 'commit', '3': 3, '4': 1, '5': 9, '10': 'commit'},
+    {'1': 'tag', '3': 4, '4': 1, '5': 9, '10': 'tag'},
+    {'1': 'version', '3': 5, '4': 1, '5': 9, '10': 'version'},
+  ],
+};
+
+/// Descriptor for `KclModGitSource`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List kclModGitSourceDescriptor = $convert.base64Decode(
+    'Cg9LY2xNb2RHaXRTb3VyY2USEAoDZ2l0GAEgASgJUgNnaXQSFgoGYnJhbmNoGAIgASgJUgZicm'
+    'FuY2gSFgoGY29tbWl0GAMgASgJUgZjb21taXQSEAoDdGFnGAQgASgJUgN0YWcSGAoHdmVyc2lv'
+    'bhgFIAEoCVIHdmVyc2lvbg==');
+
+@$core.Deprecated('Use kclModOciSourceDescriptor instead')
+const KclModOciSource$json = {
+  '1': 'KclModOciSource',
+  '2': [
+    {'1': 'oci', '3': 1, '4': 1, '5': 9, '10': 'oci'},
+    {'1': 'tag', '3': 2, '4': 1, '5': 9, '10': 'tag'},
+  ],
+};
+
+/// Descriptor for `KclModOciSource`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List kclModOciSourceDescriptor = $convert.base64Decode(
+    'Cg9LY2xNb2RPY2lTb3VyY2USEAoDb2NpGAEgASgJUgNvY2kSEAoDdGFnGAIgASgJUgN0YWc=');
+
+@$core.Deprecated('Use kclModLocalSourceDescriptor instead')
+const KclModLocalSource$json = {
+  '1': 'KclModLocalSource',
+  '2': [
+    {'1': 'path', '3': 1, '4': 1, '5': 9, '10': 'path'},
+  ],
+};
+
+/// Descriptor for `KclModLocalSource`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List kclModLocalSourceDescriptor = $convert
+    .base64Decode('ChFLY2xNb2RMb2NhbFNvdXJjZRISCgRwYXRoGAEgASgJUgRwYXRo');
+
+@$core.Deprecated('Use appInfoDescriptor instead')
+const AppInfo$json = {
+  '1': 'AppInfo',
+  '2': [
+    {'1': 'path', '3': 1, '4': 1, '5': 9, '10': 'path'},
+    {'1': 'has_kcl_mod', '3': 2, '4': 1, '5': 8, '10': 'hasKclMod'},
+  ],
+};
+
+/// Descriptor for `AppInfo`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List appInfoDescriptor = $convert.base64Decode(
+    'CgdBcHBJbmZvEhIKBHBhdGgYASABKAlSBHBhdGgSHgoLaGFzX2tjbF9tb2QYAiABKAhSCWhhc0'
+    'tjbE1vZA==');
 
 @$core.Deprecated('Use listOptionsResultDescriptor instead')
 const ListOptionsResult$json = {
@@ -1626,8 +1901,6 @@ final $typed_data.Uint8List coverageSummaryDescriptor = $convert.base64Decode(
     'Cg9Db3ZlcmFnZVN1bW1hcnkSGAoHY292ZXJlZBgBIAEoBFIHY292ZXJlZBIeCgpleGVjdXRhYm'
     'xlGAIgASgEUgpleGVjdXRhYmxlEhgKB3BlcmNlbnQYAyABKAFSB3BlcmNlbnQ=');
 
-// Hand-added, not generated: see the note on FormatTestReportArgs in
-// spec.pb.dart.
 @$core.Deprecated('Use formatTestReportArgsDescriptor instead')
 const FormatTestReportArgs$json = {
   '1': 'FormatTestReportArgs',
@@ -1648,8 +1921,6 @@ final $typed_data.Uint8List formatTestReportArgsDescriptor = $convert.base64Deco
     'ChRGb3JtYXRUZXN0UmVwb3J0QXJncxIvCgZyZXN1bHQYASABKAsyFy5jb20ua2NsLmFwaS5UZX'
     'N0UmVzdWx0UgZyZXN1bHQ=');
 
-// Hand-added, not generated: see the note on FormatTestReportArgs in
-// spec.pb.dart.
 @$core.Deprecated('Use formatTestReportResultDescriptor instead')
 const FormatTestReportResult$json = {
   '1': 'FormatTestReportResult',
@@ -1698,6 +1969,167 @@ final $typed_data.Uint8List updateDependenciesResultDescriptor =
     $convert.base64Decode(
         'ChhVcGRhdGVEZXBlbmRlbmNpZXNSZXN1bHQSPQoNZXh0ZXJuYWxfcGtncxgDIAMoCzIYLmNvbS'
         '5rY2wuYXBpLkV4dGVybmFsUGtnUgxleHRlcm5hbFBrZ3M=');
+
+@$core.Deprecated('Use generateTomlArgsDescriptor instead')
+const GenerateTomlArgs$json = {
+  '1': 'GenerateTomlArgs',
+  '2': [
+    {
+      '1': 'exec_args',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.com.kcl.api.ExecProgramArgs',
+      '10': 'execArgs'
+    },
+    {'1': 'sort_keys', '3': 2, '4': 1, '5': 8, '10': 'sortKeys'},
+  ],
+};
+
+/// Descriptor for `GenerateTomlArgs`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List generateTomlArgsDescriptor = $convert.base64Decode(
+    'ChBHZW5lcmF0ZVRvbWxBcmdzEjkKCWV4ZWNfYXJncxgBIAEoCzIcLmNvbS5rY2wuYXBpLkV4ZW'
+    'NQcm9ncmFtQXJnc1IIZXhlY0FyZ3MSGwoJc29ydF9rZXlzGAIgASgIUghzb3J0S2V5cw==');
+
+@$core.Deprecated('Use generateTomlResultDescriptor instead')
+const GenerateTomlResult$json = {
+  '1': 'GenerateTomlResult',
+  '2': [
+    {'1': 'toml', '3': 1, '4': 1, '5': 9, '10': 'toml'},
+  ],
+};
+
+/// Descriptor for `GenerateTomlResult`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List generateTomlResultDescriptor = $convert
+    .base64Decode('ChJHZW5lcmF0ZVRvbWxSZXN1bHQSEgoEdG9tbBgBIAEoCVIEdG9tbA==');
+
+@$core.Deprecated('Use generateKclArgsDescriptor instead')
+const GenerateKclArgs$json = {
+  '1': 'GenerateKclArgs',
+  '2': [
+    {'1': 'source', '3': 1, '4': 1, '5': 9, '10': 'source'},
+    {'1': 'filename', '3': 2, '4': 1, '5': 9, '10': 'filename'},
+    {'1': 'format', '3': 3, '4': 1, '5': 9, '10': 'format'},
+  ],
+};
+
+/// Descriptor for `GenerateKclArgs`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List generateKclArgsDescriptor = $convert.base64Decode(
+    'Cg9HZW5lcmF0ZUtjbEFyZ3MSFgoGc291cmNlGAEgASgJUgZzb3VyY2USGgoIZmlsZW5hbWUYAi'
+    'ABKAlSCGZpbGVuYW1lEhYKBmZvcm1hdBgDIAEoCVIGZm9ybWF0');
+
+@$core.Deprecated('Use generateKclResultDescriptor instead')
+const GenerateKclResult$json = {
+  '1': 'GenerateKclResult',
+  '2': [
+    {'1': 'kcl', '3': 1, '4': 1, '5': 9, '10': 'kcl'},
+  ],
+};
+
+/// Descriptor for `GenerateKclResult`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List generateKclResultDescriptor = $convert
+    .base64Decode('ChFHZW5lcmF0ZUtjbFJlc3VsdBIQCgNrY2wYASABKAlSA2tjbA==');
+
+@$core.Deprecated('Use generateOpenAPIArgsDescriptor instead')
+const GenerateOpenAPIArgs$json = {
+  '1': 'GenerateOpenAPIArgs',
+  '2': [
+    {
+      '1': 'parse_args',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.com.kcl.api.ParseProgramArgs',
+      '10': 'parseArgs'
+    },
+    {'1': 'version', '3': 2, '4': 1, '5': 9, '10': 'version'},
+  ],
+};
+
+/// Descriptor for `GenerateOpenAPIArgs`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List generateOpenAPIArgsDescriptor = $convert.base64Decode(
+    'ChNHZW5lcmF0ZU9wZW5BUElBcmdzEjwKCnBhcnNlX2FyZ3MYASABKAsyHS5jb20ua2NsLmFwaS'
+    '5QYXJzZVByb2dyYW1BcmdzUglwYXJzZUFyZ3MSGAoHdmVyc2lvbhgCIAEoCVIHdmVyc2lvbg==');
+
+@$core.Deprecated('Use generateOpenAPIResultDescriptor instead')
+const GenerateOpenAPIResult$json = {
+  '1': 'GenerateOpenAPIResult',
+  '2': [
+    {'1': 'spec', '3': 1, '4': 1, '5': 9, '10': 'spec'},
+  ],
+};
+
+/// Descriptor for `GenerateOpenAPIResult`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List generateOpenAPIResultDescriptor =
+    $convert.base64Decode(
+        'ChVHZW5lcmF0ZU9wZW5BUElSZXN1bHQSEgoEc3BlYxgBIAEoCVIEc3BlYw==');
+
+@$core.Deprecated('Use generateProtoArgsDescriptor instead')
+const GenerateProtoArgs$json = {
+  '1': 'GenerateProtoArgs',
+  '2': [
+    {
+      '1': 'parse_args',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.com.kcl.api.ParseProgramArgs',
+      '10': 'parseArgs'
+    },
+    {'1': 'package', '3': 2, '4': 1, '5': 9, '10': 'package'},
+  ],
+};
+
+/// Descriptor for `GenerateProtoArgs`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List generateProtoArgsDescriptor = $convert.base64Decode(
+    'ChFHZW5lcmF0ZVByb3RvQXJncxI8CgpwYXJzZV9hcmdzGAEgASgLMh0uY29tLmtjbC5hcGkuUG'
+    'Fyc2VQcm9ncmFtQXJnc1IJcGFyc2VBcmdzEhgKB3BhY2thZ2UYAiABKAlSB3BhY2thZ2U=');
+
+@$core.Deprecated('Use generateProtoResultDescriptor instead')
+const GenerateProtoResult$json = {
+  '1': 'GenerateProtoResult',
+  '2': [
+    {'1': 'proto', '3': 1, '4': 1, '5': 9, '10': 'proto'},
+  ],
+};
+
+/// Descriptor for `GenerateProtoResult`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List generateProtoResultDescriptor =
+    $convert.base64Decode(
+        'ChNHZW5lcmF0ZVByb3RvUmVzdWx0EhQKBXByb3RvGAEgASgJUgVwcm90bw==');
+
+@$core.Deprecated('Use generateDocArgsDescriptor instead')
+const GenerateDocArgs$json = {
+  '1': 'GenerateDocArgs',
+  '2': [
+    {
+      '1': 'parse_args',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.com.kcl.api.ParseProgramArgs',
+      '10': 'parseArgs'
+    },
+    {'1': 'format', '3': 2, '4': 1, '5': 9, '10': 'format'},
+  ],
+};
+
+/// Descriptor for `GenerateDocArgs`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List generateDocArgsDescriptor = $convert.base64Decode(
+    'Cg9HZW5lcmF0ZURvY0FyZ3MSPAoKcGFyc2VfYXJncxgBIAEoCzIdLmNvbS5rY2wuYXBpLlBhcn'
+    'NlUHJvZ3JhbUFyZ3NSCXBhcnNlQXJncxIWCgZmb3JtYXQYAiABKAlSBmZvcm1hdA==');
+
+@$core.Deprecated('Use generateDocResultDescriptor instead')
+const GenerateDocResult$json = {
+  '1': 'GenerateDocResult',
+  '2': [
+    {'1': 'content', '3': 1, '4': 1, '5': 9, '10': 'content'},
+  ],
+};
+
+/// Descriptor for `GenerateDocResult`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List generateDocResultDescriptor = $convert.base64Decode(
+    'ChFHZW5lcmF0ZURvY1Jlc3VsdBIYCgdjb250ZW50GAEgASgJUgdjb250ZW50');
 
 @$core.Deprecated('Use kclTypeDescriptor instead')
 const KclType$json = {
@@ -1993,3 +2425,324 @@ const Example$json = {
 final $typed_data.Uint8List exampleDescriptor = $convert.base64Decode(
     'CgdFeGFtcGxlEhgKB3N1bW1hcnkYASABKAlSB3N1bW1hcnkSIAoLZGVzY3JpcHRpb24YAiABKA'
     'lSC2Rlc2NyaXB0aW9uEhQKBXZhbHVlGAMgASgJUgV2YWx1ZQ==');
+
+const $core.Map<$core.String, $core.dynamic> BuiltinServiceBase$json = {
+  '1': 'BuiltinService',
+  '2': [
+    {'1': 'Ping', '2': '.com.kcl.api.PingArgs', '3': '.com.kcl.api.PingResult'},
+    {
+      '1': 'ListMethod',
+      '2': '.com.kcl.api.ListMethodArgs',
+      '3': '.com.kcl.api.ListMethodResult'
+    },
+  ],
+};
+
+@$core.Deprecated('Use builtinServiceDescriptor instead')
+const $core.Map<$core.String, $core.Map<$core.String, $core.dynamic>>
+    BuiltinServiceBase$messageJson = {
+  '.com.kcl.api.PingArgs': PingArgs$json,
+  '.com.kcl.api.PingResult': PingResult$json,
+  '.com.kcl.api.ListMethodArgs': ListMethodArgs$json,
+  '.com.kcl.api.ListMethodResult': ListMethodResult$json,
+};
+
+/// Descriptor for `BuiltinService`. Decode as a `google.protobuf.ServiceDescriptorProto`.
+final $typed_data.Uint8List builtinServiceDescriptor = $convert.base64Decode(
+    'Cg5CdWlsdGluU2VydmljZRI2CgRQaW5nEhUuY29tLmtjbC5hcGkuUGluZ0FyZ3MaFy5jb20ua2'
+    'NsLmFwaS5QaW5nUmVzdWx0EkgKCkxpc3RNZXRob2QSGy5jb20ua2NsLmFwaS5MaXN0TWV0aG9k'
+    'QXJncxodLmNvbS5rY2wuYXBpLkxpc3RNZXRob2RSZXN1bHQ=');
+
+const $core.Map<$core.String, $core.dynamic> KclServiceBase$json = {
+  '1': 'KclService',
+  '2': [
+    {'1': 'Ping', '2': '.com.kcl.api.PingArgs', '3': '.com.kcl.api.PingResult'},
+    {
+      '1': 'GetVersion',
+      '2': '.com.kcl.api.GetVersionArgs',
+      '3': '.com.kcl.api.GetVersionResult'
+    },
+    {
+      '1': 'ParseProgram',
+      '2': '.com.kcl.api.ParseProgramArgs',
+      '3': '.com.kcl.api.ParseProgramResult'
+    },
+    {
+      '1': 'ParseFile',
+      '2': '.com.kcl.api.ParseFileArgs',
+      '3': '.com.kcl.api.ParseFileResult'
+    },
+    {
+      '1': 'LoadPackage',
+      '2': '.com.kcl.api.LoadPackageArgs',
+      '3': '.com.kcl.api.LoadPackageResult'
+    },
+    {
+      '1': 'ListOptions',
+      '2': '.com.kcl.api.ParseProgramArgs',
+      '3': '.com.kcl.api.ListOptionsResult'
+    },
+    {
+      '1': 'ListVariables',
+      '2': '.com.kcl.api.ListVariablesArgs',
+      '3': '.com.kcl.api.ListVariablesResult'
+    },
+    {
+      '1': 'ExecProgram',
+      '2': '.com.kcl.api.ExecProgramArgs',
+      '3': '.com.kcl.api.ExecProgramResult'
+    },
+    {
+      '1': 'OverrideFile',
+      '2': '.com.kcl.api.OverrideFileArgs',
+      '3': '.com.kcl.api.OverrideFileResult'
+    },
+    {
+      '1': 'GetSchemaTypeMapping',
+      '2': '.com.kcl.api.GetSchemaTypeMappingArgs',
+      '3': '.com.kcl.api.GetSchemaTypeMappingResult'
+    },
+    {
+      '1': 'GetSchemaTypeMappingUnderPath',
+      '2': '.com.kcl.api.GetSchemaTypeMappingArgs',
+      '3': '.com.kcl.api.GetSchemaTypeMappingUnderPathResult'
+    },
+    {
+      '1': 'FormatCode',
+      '2': '.com.kcl.api.FormatCodeArgs',
+      '3': '.com.kcl.api.FormatCodeResult'
+    },
+    {
+      '1': 'FormatPath',
+      '2': '.com.kcl.api.FormatPathArgs',
+      '3': '.com.kcl.api.FormatPathResult'
+    },
+    {
+      '1': 'LintPath',
+      '2': '.com.kcl.api.LintPathArgs',
+      '3': '.com.kcl.api.LintPathResult'
+    },
+    {
+      '1': 'ValidateCode',
+      '2': '.com.kcl.api.ValidateCodeArgs',
+      '3': '.com.kcl.api.ValidateCodeResult'
+    },
+    {
+      '1': 'LoadSettingsFiles',
+      '2': '.com.kcl.api.LoadSettingsFilesArgs',
+      '3': '.com.kcl.api.LoadSettingsFilesResult'
+    },
+    {
+      '1': 'Rename',
+      '2': '.com.kcl.api.RenameArgs',
+      '3': '.com.kcl.api.RenameResult'
+    },
+    {
+      '1': 'RenameCode',
+      '2': '.com.kcl.api.RenameCodeArgs',
+      '3': '.com.kcl.api.RenameCodeResult'
+    },
+    {'1': 'Test', '2': '.com.kcl.api.TestArgs', '3': '.com.kcl.api.TestResult'},
+    {
+      '1': 'FormatTestReport',
+      '2': '.com.kcl.api.FormatTestReportArgs',
+      '3': '.com.kcl.api.FormatTestReportResult'
+    },
+    {
+      '1': 'UpdateDependencies',
+      '2': '.com.kcl.api.UpdateDependenciesArgs',
+      '3': '.com.kcl.api.UpdateDependenciesResult'
+    },
+    {
+      '1': 'GenerateToml',
+      '2': '.com.kcl.api.GenerateTomlArgs',
+      '3': '.com.kcl.api.GenerateTomlResult'
+    },
+    {
+      '1': 'GenerateKcl',
+      '2': '.com.kcl.api.GenerateKclArgs',
+      '3': '.com.kcl.api.GenerateKclResult'
+    },
+    {
+      '1': 'GenerateOpenAPI',
+      '2': '.com.kcl.api.GenerateOpenAPIArgs',
+      '3': '.com.kcl.api.GenerateOpenAPIResult'
+    },
+    {
+      '1': 'GenerateProto',
+      '2': '.com.kcl.api.GenerateProtoArgs',
+      '3': '.com.kcl.api.GenerateProtoResult'
+    },
+    {
+      '1': 'GenerateDoc',
+      '2': '.com.kcl.api.GenerateDocArgs',
+      '3': '.com.kcl.api.GenerateDocResult'
+    },
+  ],
+};
+
+@$core.Deprecated('Use kclServiceDescriptor instead')
+const $core.Map<$core.String, $core.Map<$core.String, $core.dynamic>>
+    KclServiceBase$messageJson = {
+  '.com.kcl.api.PingArgs': PingArgs$json,
+  '.com.kcl.api.PingResult': PingResult$json,
+  '.com.kcl.api.GetVersionArgs': GetVersionArgs$json,
+  '.com.kcl.api.GetVersionResult': GetVersionResult$json,
+  '.com.kcl.api.ParseProgramArgs': ParseProgramArgs$json,
+  '.com.kcl.api.ExternalPkg': ExternalPkg$json,
+  '.com.kcl.api.ParseProgramResult': ParseProgramResult$json,
+  '.com.kcl.api.Error': Error$json,
+  '.com.kcl.api.Message': Message$json,
+  '.com.kcl.api.Position': Position$json,
+  '.com.kcl.api.ParseFileArgs': ParseFileArgs$json,
+  '.com.kcl.api.ParseFileResult': ParseFileResult$json,
+  '.com.kcl.api.LoadPackageArgs': LoadPackageArgs$json,
+  '.com.kcl.api.LoadPackageResult': LoadPackageResult$json,
+  '.com.kcl.api.LoadPackageResult.ScopesEntry':
+      LoadPackageResult_ScopesEntry$json,
+  '.com.kcl.api.Scope': Scope$json,
+  '.com.kcl.api.ScopeIndex': ScopeIndex$json,
+  '.com.kcl.api.SymbolIndex': SymbolIndex$json,
+  '.com.kcl.api.LoadPackageResult.SymbolsEntry':
+      LoadPackageResult_SymbolsEntry$json,
+  '.com.kcl.api.Symbol': Symbol$json,
+  '.com.kcl.api.KclType': KclType$json,
+  '.com.kcl.api.KclType.PropertiesEntry': KclType_PropertiesEntry$json,
+  '.com.kcl.api.Decorator': Decorator$json,
+  '.com.kcl.api.Decorator.KeywordsEntry': Decorator_KeywordsEntry$json,
+  '.com.kcl.api.KclType.ExamplesEntry': KclType_ExamplesEntry$json,
+  '.com.kcl.api.Example': Example$json,
+  '.com.kcl.api.FunctionType': FunctionType$json,
+  '.com.kcl.api.Parameter': Parameter$json,
+  '.com.kcl.api.IndexSignature': IndexSignature$json,
+  '.com.kcl.api.LoadPackageResult.NodeSymbolMapEntry':
+      LoadPackageResult_NodeSymbolMapEntry$json,
+  '.com.kcl.api.LoadPackageResult.SymbolNodeMapEntry':
+      LoadPackageResult_SymbolNodeMapEntry$json,
+  '.com.kcl.api.LoadPackageResult.FullyQualifiedNameMapEntry':
+      LoadPackageResult_FullyQualifiedNameMapEntry$json,
+  '.com.kcl.api.LoadPackageResult.PkgScopeMapEntry':
+      LoadPackageResult_PkgScopeMapEntry$json,
+  '.com.kcl.api.LoadPackageResult.ImportsEntry':
+      LoadPackageResult_ImportsEntry$json,
+  '.com.kcl.api.FileImports': FileImports$json,
+  '.com.kcl.api.ImportInfo': ImportInfo$json,
+  '.com.kcl.api.KclMod': KclMod$json,
+  '.com.kcl.api.KclModPackage': KclModPackage$json,
+  '.com.kcl.api.KclModProfile': KclModProfile$json,
+  '.com.kcl.api.KclMod.DependenciesEntry': KclMod_DependenciesEntry$json,
+  '.com.kcl.api.KclModDependency': KclModDependency$json,
+  '.com.kcl.api.KclModGitSource': KclModGitSource$json,
+  '.com.kcl.api.KclModOciSource': KclModOciSource$json,
+  '.com.kcl.api.KclModLocalSource': KclModLocalSource$json,
+  '.com.kcl.api.AppInfo': AppInfo$json,
+  '.com.kcl.api.ListOptionsResult': ListOptionsResult$json,
+  '.com.kcl.api.OptionHelp': OptionHelp$json,
+  '.com.kcl.api.ListVariablesArgs': ListVariablesArgs$json,
+  '.com.kcl.api.ListVariablesOptions': ListVariablesOptions$json,
+  '.com.kcl.api.ListVariablesResult': ListVariablesResult$json,
+  '.com.kcl.api.ListVariablesResult.VariablesEntry':
+      ListVariablesResult_VariablesEntry$json,
+  '.com.kcl.api.VariableList': VariableList$json,
+  '.com.kcl.api.Variable': Variable$json,
+  '.com.kcl.api.MapEntry': MapEntry$json,
+  '.com.kcl.api.ExecProgramArgs': ExecProgramArgs$json,
+  '.com.kcl.api.Argument': Argument$json,
+  '.com.kcl.api.ExecProgramResult': ExecProgramResult$json,
+  '.com.kcl.api.OverrideFileArgs': OverrideFileArgs$json,
+  '.com.kcl.api.OverrideFileResult': OverrideFileResult$json,
+  '.com.kcl.api.GetSchemaTypeMappingArgs': GetSchemaTypeMappingArgs$json,
+  '.com.kcl.api.GetSchemaTypeMappingResult': GetSchemaTypeMappingResult$json,
+  '.com.kcl.api.GetSchemaTypeMappingResult.SchemaTypeMappingEntry':
+      GetSchemaTypeMappingResult_SchemaTypeMappingEntry$json,
+  '.com.kcl.api.GetSchemaTypeMappingUnderPathResult':
+      GetSchemaTypeMappingUnderPathResult$json,
+  '.com.kcl.api.GetSchemaTypeMappingUnderPathResult.SchemaTypeMappingEntry':
+      GetSchemaTypeMappingUnderPathResult_SchemaTypeMappingEntry$json,
+  '.com.kcl.api.SchemaTypes': SchemaTypes$json,
+  '.com.kcl.api.FormatCodeArgs': FormatCodeArgs$json,
+  '.com.kcl.api.FormatCodeResult': FormatCodeResult$json,
+  '.com.kcl.api.FormatPathArgs': FormatPathArgs$json,
+  '.com.kcl.api.FormatPathResult': FormatPathResult$json,
+  '.com.kcl.api.LintPathArgs': LintPathArgs$json,
+  '.com.kcl.api.LintPathResult': LintPathResult$json,
+  '.com.kcl.api.ValidateCodeArgs': ValidateCodeArgs$json,
+  '.com.kcl.api.ValidateCodeResult': ValidateCodeResult$json,
+  '.com.kcl.api.LoadSettingsFilesArgs': LoadSettingsFilesArgs$json,
+  '.com.kcl.api.LoadSettingsFilesResult': LoadSettingsFilesResult$json,
+  '.com.kcl.api.CliConfig': CliConfig$json,
+  '.com.kcl.api.KeyValuePair': KeyValuePair$json,
+  '.com.kcl.api.RenameArgs': RenameArgs$json,
+  '.com.kcl.api.RenameResult': RenameResult$json,
+  '.com.kcl.api.RenameCodeArgs': RenameCodeArgs$json,
+  '.com.kcl.api.RenameCodeArgs.SourceCodesEntry':
+      RenameCodeArgs_SourceCodesEntry$json,
+  '.com.kcl.api.RenameCodeResult': RenameCodeResult$json,
+  '.com.kcl.api.RenameCodeResult.ChangedCodesEntry':
+      RenameCodeResult_ChangedCodesEntry$json,
+  '.com.kcl.api.TestArgs': TestArgs$json,
+  '.com.kcl.api.TestResult': TestResult$json,
+  '.com.kcl.api.TestCaseInfo': TestCaseInfo$json,
+  '.com.kcl.api.TestCaseInfo.LineHitsEntry': TestCaseInfo_LineHitsEntry$json,
+  '.com.kcl.api.TestCoverageReport': TestCoverageReport$json,
+  '.com.kcl.api.TestCoverageReport.FilesEntry':
+      TestCoverageReport_FilesEntry$json,
+  '.com.kcl.api.FileCoverage': FileCoverage$json,
+  '.com.kcl.api.FileCoverage.LineHitsEntry': FileCoverage_LineHitsEntry$json,
+  '.com.kcl.api.CoverageSummary': CoverageSummary$json,
+  '.com.kcl.api.FormatTestReportArgs': FormatTestReportArgs$json,
+  '.com.kcl.api.FormatTestReportResult': FormatTestReportResult$json,
+  '.com.kcl.api.UpdateDependenciesArgs': UpdateDependenciesArgs$json,
+  '.com.kcl.api.UpdateDependenciesResult': UpdateDependenciesResult$json,
+  '.com.kcl.api.GenerateTomlArgs': GenerateTomlArgs$json,
+  '.com.kcl.api.GenerateTomlResult': GenerateTomlResult$json,
+  '.com.kcl.api.GenerateKclArgs': GenerateKclArgs$json,
+  '.com.kcl.api.GenerateKclResult': GenerateKclResult$json,
+  '.com.kcl.api.GenerateOpenAPIArgs': GenerateOpenAPIArgs$json,
+  '.com.kcl.api.GenerateOpenAPIResult': GenerateOpenAPIResult$json,
+  '.com.kcl.api.GenerateProtoArgs': GenerateProtoArgs$json,
+  '.com.kcl.api.GenerateProtoResult': GenerateProtoResult$json,
+  '.com.kcl.api.GenerateDocArgs': GenerateDocArgs$json,
+  '.com.kcl.api.GenerateDocResult': GenerateDocResult$json,
+};
+
+/// Descriptor for `KclService`. Decode as a `google.protobuf.ServiceDescriptorProto`.
+final $typed_data.Uint8List kclServiceDescriptor = $convert.base64Decode(
+    'CgpLY2xTZXJ2aWNlEjYKBFBpbmcSFS5jb20ua2NsLmFwaS5QaW5nQXJncxoXLmNvbS5rY2wuYX'
+    'BpLlBpbmdSZXN1bHQSSAoKR2V0VmVyc2lvbhIbLmNvbS5rY2wuYXBpLkdldFZlcnNpb25Bcmdz'
+    'Gh0uY29tLmtjbC5hcGkuR2V0VmVyc2lvblJlc3VsdBJOCgxQYXJzZVByb2dyYW0SHS5jb20ua2'
+    'NsLmFwaS5QYXJzZVByb2dyYW1BcmdzGh8uY29tLmtjbC5hcGkuUGFyc2VQcm9ncmFtUmVzdWx0'
+    'EkUKCVBhcnNlRmlsZRIaLmNvbS5rY2wuYXBpLlBhcnNlRmlsZUFyZ3MaHC5jb20ua2NsLmFwaS'
+    '5QYXJzZUZpbGVSZXN1bHQSSwoLTG9hZFBhY2thZ2USHC5jb20ua2NsLmFwaS5Mb2FkUGFja2Fn'
+    'ZUFyZ3MaHi5jb20ua2NsLmFwaS5Mb2FkUGFja2FnZVJlc3VsdBJMCgtMaXN0T3B0aW9ucxIdLm'
+    'NvbS5rY2wuYXBpLlBhcnNlUHJvZ3JhbUFyZ3MaHi5jb20ua2NsLmFwaS5MaXN0T3B0aW9uc1Jl'
+    'c3VsdBJRCg1MaXN0VmFyaWFibGVzEh4uY29tLmtjbC5hcGkuTGlzdFZhcmlhYmxlc0FyZ3MaIC'
+    '5jb20ua2NsLmFwaS5MaXN0VmFyaWFibGVzUmVzdWx0EksKC0V4ZWNQcm9ncmFtEhwuY29tLmtj'
+    'bC5hcGkuRXhlY1Byb2dyYW1BcmdzGh4uY29tLmtjbC5hcGkuRXhlY1Byb2dyYW1SZXN1bHQSTg'
+    'oMT3ZlcnJpZGVGaWxlEh0uY29tLmtjbC5hcGkuT3ZlcnJpZGVGaWxlQXJncxofLmNvbS5rY2wu'
+    'YXBpLk92ZXJyaWRlRmlsZVJlc3VsdBJmChRHZXRTY2hlbWFUeXBlTWFwcGluZxIlLmNvbS5rY2'
+    'wuYXBpLkdldFNjaGVtYVR5cGVNYXBwaW5nQXJncxonLmNvbS5rY2wuYXBpLkdldFNjaGVtYVR5'
+    'cGVNYXBwaW5nUmVzdWx0EngKHUdldFNjaGVtYVR5cGVNYXBwaW5nVW5kZXJQYXRoEiUuY29tLm'
+    'tjbC5hcGkuR2V0U2NoZW1hVHlwZU1hcHBpbmdBcmdzGjAuY29tLmtjbC5hcGkuR2V0U2NoZW1h'
+    'VHlwZU1hcHBpbmdVbmRlclBhdGhSZXN1bHQSSAoKRm9ybWF0Q29kZRIbLmNvbS5rY2wuYXBpLk'
+    'Zvcm1hdENvZGVBcmdzGh0uY29tLmtjbC5hcGkuRm9ybWF0Q29kZVJlc3VsdBJICgpGb3JtYXRQ'
+    'YXRoEhsuY29tLmtjbC5hcGkuRm9ybWF0UGF0aEFyZ3MaHS5jb20ua2NsLmFwaS5Gb3JtYXRQYX'
+    'RoUmVzdWx0EkIKCExpbnRQYXRoEhkuY29tLmtjbC5hcGkuTGludFBhdGhBcmdzGhsuY29tLmtj'
+    'bC5hcGkuTGludFBhdGhSZXN1bHQSTgoMVmFsaWRhdGVDb2RlEh0uY29tLmtjbC5hcGkuVmFsaW'
+    'RhdGVDb2RlQXJncxofLmNvbS5rY2wuYXBpLlZhbGlkYXRlQ29kZVJlc3VsdBJdChFMb2FkU2V0'
+    'dGluZ3NGaWxlcxIiLmNvbS5rY2wuYXBpLkxvYWRTZXR0aW5nc0ZpbGVzQXJncxokLmNvbS5rY2'
+    'wuYXBpLkxvYWRTZXR0aW5nc0ZpbGVzUmVzdWx0EjwKBlJlbmFtZRIXLmNvbS5rY2wuYXBpLlJl'
+    'bmFtZUFyZ3MaGS5jb20ua2NsLmFwaS5SZW5hbWVSZXN1bHQSSAoKUmVuYW1lQ29kZRIbLmNvbS'
+    '5rY2wuYXBpLlJlbmFtZUNvZGVBcmdzGh0uY29tLmtjbC5hcGkuUmVuYW1lQ29kZVJlc3VsdBI2'
+    'CgRUZXN0EhUuY29tLmtjbC5hcGkuVGVzdEFyZ3MaFy5jb20ua2NsLmFwaS5UZXN0UmVzdWx0El'
+    'oKEEZvcm1hdFRlc3RSZXBvcnQSIS5jb20ua2NsLmFwaS5Gb3JtYXRUZXN0UmVwb3J0QXJncxoj'
+    'LmNvbS5rY2wuYXBpLkZvcm1hdFRlc3RSZXBvcnRSZXN1bHQSYAoSVXBkYXRlRGVwZW5kZW5jaW'
+    'VzEiMuY29tLmtjbC5hcGkuVXBkYXRlRGVwZW5kZW5jaWVzQXJncxolLmNvbS5rY2wuYXBpLlVw'
+    'ZGF0ZURlcGVuZGVuY2llc1Jlc3VsdBJOCgxHZW5lcmF0ZVRvbWwSHS5jb20ua2NsLmFwaS5HZW'
+    '5lcmF0ZVRvbWxBcmdzGh8uY29tLmtjbC5hcGkuR2VuZXJhdGVUb21sUmVzdWx0EksKC0dlbmVy'
+    'YXRlS2NsEhwuY29tLmtjbC5hcGkuR2VuZXJhdGVLY2xBcmdzGh4uY29tLmtjbC5hcGkuR2VuZX'
+    'JhdGVLY2xSZXN1bHQSVwoPR2VuZXJhdGVPcGVuQVBJEiAuY29tLmtjbC5hcGkuR2VuZXJhdGVP'
+    'cGVuQVBJQXJncxoiLmNvbS5rY2wuYXBpLkdlbmVyYXRlT3BlbkFQSVJlc3VsdBJRCg1HZW5lcm'
+    'F0ZVByb3RvEh4uY29tLmtjbC5hcGkuR2VuZXJhdGVQcm90b0FyZ3MaIC5jb20ua2NsLmFwaS5H'
+    'ZW5lcmF0ZVByb3RvUmVzdWx0EksKC0dlbmVyYXRlRG9jEhwuY29tLmtjbC5hcGkuR2VuZXJhdG'
+    'VEb2NBcmdzGh4uY29tLmtjbC5hcGkuR2VuZXJhdGVEb2NSZXN1bHQ=');

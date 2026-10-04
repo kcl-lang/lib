@@ -341,6 +341,289 @@ public struct LoadPackageResult: Sendable {
   /// Map of package scope with package path as key.
   public var pkgScopeMap: Dictionary<String,ScopeIndex> = [:]
 
+  /// Map of direct imports, keyed by the importing file's absolute path.
+  /// `path` is the import specifier as written in the source; `resolved` is
+  /// the resolved absolute file path (empty for builtins/unresolved imports).
+  /// Upstream files = transitive closure; downstream = reverse closure; this
+  /// replaces the removed ListDep* RPCs.
+  public var imports: Dictionary<String,FileImports> = [:]
+
+  /// Parsed kcl.mod manifest of the package root. Empty when the root has no
+  /// kcl.mod.
+  public var kclMod: KclMod {
+    get {return _kclMod ?? KclMod()}
+    set {_kclMod = newValue}
+  }
+  /// Returns true if `kclMod` has been explicitly set.
+  public var hasKclMod: Bool {return self._kclMod != nil}
+  /// Clears the value of `kclMod`. Subsequent reads from it will return its default value.
+  public mutating func clearKclMod() {self._kclMod = nil}
+
+  /// Application directories discovered under the package root: every
+  /// directory that directly contains at least one .k file. Sorted by path.
+  public var apps: [AppInfo] = []
+
+  public var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  public init() {}
+
+  fileprivate var _kclMod: KclMod? = nil
+}
+
+// Hand-added, not generated: the installed protoc-gen-swift is 1.38.x, whose
+// gencode the pinned SwiftProtobuf 1.27.x runtime cannot build. Regenerate
+// with protoc-gen-swift 1.27.1 to replace these -- see `spec/Makefile`.
+/// Message representing the direct imports of a single file.
+public struct FileImports: Sendable {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  /// List of direct imports of the file.
+  public var imports: [ImportInfo] = []
+
+  public var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  public init() {}
+}
+
+// Hand-added, not generated: see the note on FileImports above.
+/// Message representing a single direct import of a file.
+public struct ImportInfo: Sendable {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  /// Import specifier as written in the source.
+  public var path: String = String()
+
+  /// Resolved absolute file path of the import.
+  public var resolved: String = String()
+
+  public var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  public init() {}
+}
+
+// Hand-added, not generated: see the note on FileImports above.
+/// Message representing a parsed kcl.mod manifest.
+public struct KclMod: Sendable {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  /// Package section of the manifest.
+  public var `package`: KclModPackage {
+    get {return _package ?? KclModPackage()}
+    set {_package = newValue}
+  }
+  /// Returns true if `package` has been explicitly set.
+  public var hasPackage: Bool {return self._package != nil}
+  /// Clears the value of `package`. Subsequent reads from it will return its default value.
+  public mutating func clearPackage() {self._package = nil}
+
+  /// Profile section of the manifest.
+  public var profile: KclModProfile {
+    get {return _profile ?? KclModProfile()}
+    set {_profile = newValue}
+  }
+  /// Returns true if `profile` has been explicitly set.
+  public var hasProfile: Bool {return self._profile != nil}
+  /// Clears the value of `profile`. Subsequent reads from it will return its default value.
+  public mutating func clearProfile() {self._profile = nil}
+
+  /// Mirrors the untagged toml dependency: exactly one of version/git/oci/local is set.
+  public var dependencies: Dictionary<String,KclModDependency> = [:]
+
+  public var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  public init() {}
+
+  fileprivate var _package: KclModPackage? = nil
+  fileprivate var _profile: KclModProfile? = nil
+}
+
+// Hand-added, not generated: see the note on FileImports above.
+/// Message representing the package section of a kcl.mod manifest.
+public struct KclModPackage: Sendable {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  /// Name of the package.
+  public var name: String = String()
+
+  /// KCL compiler edition of the package.
+  public var edition: String = String()
+
+  /// Version of the package.
+  public var version: String = String()
+
+  /// Description of the package.
+  public var description: String = String()
+
+  /// Files to include when publishing.
+  public var include: [String] = []
+
+  /// Files to exclude when publishing.
+  public var exclude: [String] = []
+
+  public var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  public init() {}
+}
+
+// Hand-added, not generated: see the note on FileImports above.
+/// Message representing the profile section of a kcl.mod manifest.
+public struct KclModProfile: Sendable {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  /// List of entry-point files.
+  public var entries: [String] = []
+
+  /// Flag that, when true, disables the emission of the special 'none' value in the output.
+  public var disableNone: Bool = false
+
+  /// Flag that, when true, ensures keys in maps are sorted.
+  public var sortKeys: Bool = false
+
+  /// List of attribute selectors for conditional compilation.
+  public var selectors: [String] = []
+
+  /// List of override paths.
+  public var overrides: [String] = []
+
+  /// List of additional options for the KCL compiler.
+  public var options: [String] = []
+
+  public var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  public init() {}
+}
+
+// Hand-added, not generated: see the note on FileImports above.
+/// Message representing a single dependency of a kcl.mod manifest.
+public struct KclModDependency: Sendable {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  /// Version of the dependency, e.g. "1.0.0".
+  public var version: String = String()
+
+  /// Git source of the dependency.
+  public var git: KclModGitSource {
+    get {return _git ?? KclModGitSource()}
+    set {_git = newValue}
+  }
+  /// Returns true if `git` has been explicitly set.
+  public var hasGit: Bool {return self._git != nil}
+  /// Clears the value of `git`. Subsequent reads from it will return its default value.
+  public mutating func clearGit() {self._git = nil}
+
+  /// OCI source of the dependency.
+  public var oci: KclModOciSource {
+    get {return _oci ?? KclModOciSource()}
+    set {_oci = newValue}
+  }
+  /// Returns true if `oci` has been explicitly set.
+  public var hasOci: Bool {return self._oci != nil}
+  /// Clears the value of `oci`. Subsequent reads from it will return its default value.
+  public mutating func clearOci() {self._oci = nil}
+
+  /// Local path source of the dependency.
+  public var local: KclModLocalSource {
+    get {return _local ?? KclModLocalSource()}
+    set {_local = newValue}
+  }
+  /// Returns true if `local` has been explicitly set.
+  public var hasLocal: Bool {return self._local != nil}
+  /// Clears the value of `local`. Subsequent reads from it will return its default value.
+  public mutating func clearLocal() {self._local = nil}
+  public var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  public init() {}
+
+  fileprivate var _git: KclModGitSource? = nil
+  fileprivate var _oci: KclModOciSource? = nil
+  fileprivate var _local: KclModLocalSource? = nil
+}
+
+// Hand-added, not generated: see the note on FileImports above.
+/// Message representing a Git source of a kcl.mod dependency.
+public struct KclModGitSource: Sendable {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  /// URL of the Git repository.
+  public var git: String = String()
+
+  /// Optional branch name within the Git repository.
+  public var branch: String = String()
+
+  /// Optional commit hash to check out from the Git repository.
+  public var commit: String = String()
+
+  /// Optional tag name to check out from the Git repository.
+  public var tag: String = String()
+
+  /// Optional version specification associated with the Git source.
+  public var version: String = String()
+
+  public var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  public init() {}
+}
+
+// Hand-added, not generated: see the note on FileImports above.
+/// Message representing an OCI source of a kcl.mod dependency.
+public struct KclModOciSource: Sendable {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  /// URI of the OCI repository.
+  public var oci: String = String()
+
+  /// Optional tag of the OCI package in the registry.
+  public var tag: String = String()
+
+  public var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  public init() {}
+}
+
+// Hand-added, not generated: see the note on FileImports above.
+/// Message representing a local path source of a kcl.mod dependency.
+public struct KclModLocalSource: Sendable {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  /// Path to the local directory or file.
+  public var path: String = String()
+
+  public var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  public init() {}
+}
+
+// Hand-added, not generated: see the note on FileImports above.
+/// Message representing an application directory discovered under a package root.
+public struct AppInfo: Sendable {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  /// Absolute path of the application directory.
+  public var path: String = String()
+
+  /// True when the directory contains a kcl.mod manifest.
+  public var hasKclMod: Bool = false
+
   public var unknownFields = SwiftProtobuf.UnknownStorage()
 
   public init() {}
@@ -1535,6 +1818,210 @@ public struct UpdateDependenciesResult: Sendable {
 }
 
 /// Message representing a KCL type.
+// Hand-added, not generated: see the note on FormatTestReportArgs above.
+/// Message for generate TOML request arguments.
+public struct GenerateTomlArgs: Sendable {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  /// Arguments for executing the program whose result is serialized to TOML.
+  public var execArgs: ExecProgramArgs {
+    get {return _execArgs ?? ExecProgramArgs()}
+    set {_execArgs = newValue}
+  }
+  /// Returns true if `execArgs` has been explicitly set.
+  public var hasExecArgs: Bool {return self._execArgs != nil}
+  /// Clears the value of `execArgs`. Subsequent reads from it will return its default value.
+  public mutating func clearExecArgs() {self._execArgs = nil}
+
+  /// Flag to sort keys in the TOML output. Defaults to false (source order).
+  public var sortKeys: Bool = false
+
+  public var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  public init() {}
+
+  fileprivate var _execArgs: ExecProgramArgs? = nil
+}
+
+// Hand-added, not generated: see the note on FormatTestReportArgs above.
+/// Message for generate TOML response.
+public struct GenerateTomlResult: Sendable {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  /// The evaluated result serialized as TOML.
+  public var toml: String = ""
+
+  public var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  public init() {}
+}
+
+// Hand-added, not generated: see the note on FormatTestReportArgs above.
+/// Message for generate KCL request arguments.
+public struct GenerateKclArgs: Sendable {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  /// The source data content (JSON, YAML or TOML text).
+  public var source: String = ""
+
+  /// File name hint used for error messages and format detection, e.g. "data.json".
+  public var filename: String = ""
+
+  /// Data format: "json", "yaml" or "toml". When empty, inferred from the filename extension, defaulting to "json".
+  public var format: String = ""
+
+  public var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  public init() {}
+}
+
+// Hand-added, not generated: see the note on FormatTestReportArgs above.
+/// Message for generate KCL response.
+public struct GenerateKclResult: Sendable {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  /// The generated KCL source.
+  public var kcl: String = ""
+
+  public var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  public init() {}
+}
+
+// Hand-added, not generated: see the note on FormatTestReportArgs above.
+/// Message for generate OpenAPI request arguments.
+public struct GenerateOpenAPIArgs: Sendable {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  /// Arguments for parsing the program whose schemas are exported.
+  public var parseArgs: ParseProgramArgs {
+    get {return _parseArgs ?? ParseProgramArgs()}
+    set {_parseArgs = newValue}
+  }
+  /// Returns true if `parseArgs` has been explicitly set.
+  public var hasParseArgs: Bool {return self._parseArgs != nil}
+  /// Clears the value of `parseArgs`. Subsequent reads from it will return its default value.
+  public mutating func clearParseArgs() {self._parseArgs = nil}
+
+  /// Spec version: "v3" (default) or "v2" (Swagger 2.0).
+  public var version: String = ""
+
+  public var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  public init() {}
+
+  fileprivate var _parseArgs: ParseProgramArgs? = nil
+}
+
+// Hand-added, not generated: see the note on FormatTestReportArgs above.
+/// Message for generate OpenAPI response.
+public struct GenerateOpenAPIResult: Sendable {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  /// The generated spec as a JSON string.
+  public var spec: String = ""
+
+  public var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  public init() {}
+}
+
+// Hand-added, not generated: see the note on FormatTestReportArgs above.
+/// Message for generate proto request arguments.
+public struct GenerateProtoArgs: Sendable {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  /// Arguments for parsing the program whose schemas are exported.
+  public var parseArgs: ParseProgramArgs {
+    get {return _parseArgs ?? ParseProgramArgs()}
+    set {_parseArgs = newValue}
+  }
+  /// Returns true if `parseArgs` has been explicitly set.
+  public var hasParseArgs: Bool {return self._parseArgs != nil}
+  /// Clears the value of `parseArgs`. Subsequent reads from it will return its default value.
+  public mutating func clearParseArgs() {self._parseArgs = nil}
+
+  /// Proto package name, e.g. "example.v1". Empty means no package clause.
+  public var package: String = ""
+
+  public var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  public init() {}
+
+  fileprivate var _parseArgs: ParseProgramArgs? = nil
+}
+
+// Hand-added, not generated: see the note on FormatTestReportArgs above.
+/// Message for generate proto response.
+public struct GenerateProtoResult: Sendable {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  /// The generated proto3 definitions.
+  public var proto: String = ""
+
+  public var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  public init() {}
+}
+
+// Hand-added, not generated: see the note on FormatTestReportArgs above.
+/// Message for generate doc request arguments.
+public struct GenerateDocArgs: Sendable {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  /// Arguments for parsing the program whose schemas are documented.
+  public var parseArgs: ParseProgramArgs {
+    get {return _parseArgs ?? ParseProgramArgs()}
+    set {_parseArgs = newValue}
+  }
+  /// Returns true if `parseArgs` has been explicitly set.
+  public var hasParseArgs: Bool {return self._parseArgs != nil}
+  /// Clears the value of `parseArgs`. Subsequent reads from it will return its default value.
+  public mutating func clearParseArgs() {self._parseArgs = nil}
+
+  /// Output format: "md" (default, Markdown), "openapi" (Swagger 2.0 spec) or "json-schema" (JSON Schema draft for each schema). "html" is not supported yet.
+  public var format: String = ""
+
+  public var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  public init() {}
+
+  fileprivate var _parseArgs: ParseProgramArgs? = nil
+}
+
+// Hand-added, not generated: see the note on FormatTestReportArgs above.
+/// Message for generate doc response.
+public struct GenerateDocResult: Sendable {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  /// The generated documentation.
+  public var content: String = ""
+
+  public var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  public init() {}
+}
+
 public struct KclType: @unchecked Sendable {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
@@ -4721,6 +5208,412 @@ extension UpdateDependenciesResult: SwiftProtobuf.Message, SwiftProtobuf._Messag
 
   public static func ==(lhs: UpdateDependenciesResult, rhs: UpdateDependenciesResult) -> Bool {
     if lhs.externalPkgs != rhs.externalPkgs {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+// Hand-added, not generated: see the note on FormatTestReportArgs above.
+extension GenerateTomlArgs: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = _protobuf_package + ".GenerateTomlArgs"
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .standard(proto: "exec_args"),
+    2: .standard(proto: "sort_keys"),
+  ]
+
+  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeSingularMessageField(value: &self._execArgs) }()
+      case 2: try { try decoder.decodeSingularBoolField(value: &self.sortKeys) }()
+      default: break
+      }
+    }
+  }
+
+  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations are
+    // enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
+    try { if let v = self._execArgs {
+      try visitor.visitSingularMessageField(value: v, fieldNumber: 1)
+    } }()
+    if self.sortKeys != false {
+      try visitor.visitSingularBoolField(value: self.sortKeys, fieldNumber: 2)
+    }
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  public static func ==(lhs: GenerateTomlArgs, rhs: GenerateTomlArgs) -> Bool {
+    if lhs._execArgs != rhs._execArgs {return false}
+    if lhs.sortKeys != rhs.sortKeys {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+// Hand-added, not generated: see the note on FormatTestReportArgs above.
+extension GenerateTomlResult: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = _protobuf_package + ".GenerateTomlResult"
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .same(proto: "toml"),
+  ]
+
+  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeSingularStringField(value: &self.toml) }()
+      default: break
+      }
+    }
+  }
+
+  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations are
+    // enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
+    if !self.toml.isEmpty {
+      try visitor.visitSingularStringField(value: self.toml, fieldNumber: 1)
+    }
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  public static func ==(lhs: GenerateTomlResult, rhs: GenerateTomlResult) -> Bool {
+    if lhs.toml != rhs.toml {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+// Hand-added, not generated: see the note on FormatTestReportArgs above.
+extension GenerateKclArgs: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = _protobuf_package + ".GenerateKclArgs"
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .same(proto: "source"),
+    2: .same(proto: "filename"),
+    3: .same(proto: "format"),
+  ]
+
+  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeSingularStringField(value: &self.source) }()
+      case 2: try { try decoder.decodeSingularStringField(value: &self.filename) }()
+      case 3: try { try decoder.decodeSingularStringField(value: &self.format) }()
+      default: break
+      }
+    }
+  }
+
+  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations are
+    // enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
+    if !self.source.isEmpty {
+      try visitor.visitSingularStringField(value: self.source, fieldNumber: 1)
+    }
+    if !self.filename.isEmpty {
+      try visitor.visitSingularStringField(value: self.filename, fieldNumber: 2)
+    }
+    if !self.format.isEmpty {
+      try visitor.visitSingularStringField(value: self.format, fieldNumber: 3)
+    }
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  public static func ==(lhs: GenerateKclArgs, rhs: GenerateKclArgs) -> Bool {
+    if lhs.source != rhs.source {return false}
+    if lhs.filename != rhs.filename {return false}
+    if lhs.format != rhs.format {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+// Hand-added, not generated: see the note on FormatTestReportArgs above.
+extension GenerateKclResult: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = _protobuf_package + ".GenerateKclResult"
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .same(proto: "kcl"),
+  ]
+
+  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeSingularStringField(value: &self.kcl) }()
+      default: break
+      }
+    }
+  }
+
+  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations are
+    // enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
+    if !self.kcl.isEmpty {
+      try visitor.visitSingularStringField(value: self.kcl, fieldNumber: 1)
+    }
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  public static func ==(lhs: GenerateKclResult, rhs: GenerateKclResult) -> Bool {
+    if lhs.kcl != rhs.kcl {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+// Hand-added, not generated: see the note on FormatTestReportArgs above.
+extension GenerateOpenAPIArgs: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = _protobuf_package + ".GenerateOpenAPIArgs"
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .standard(proto: "parse_args"),
+    2: .same(proto: "version"),
+  ]
+
+  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeSingularMessageField(value: &self._parseArgs) }()
+      case 2: try { try decoder.decodeSingularStringField(value: &self.version) }()
+      default: break
+      }
+    }
+  }
+
+  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations are
+    // enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
+    try { if let v = self._parseArgs {
+      try visitor.visitSingularMessageField(value: v, fieldNumber: 1)
+    } }()
+    if !self.version.isEmpty {
+      try visitor.visitSingularStringField(value: self.version, fieldNumber: 2)
+    }
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  public static func ==(lhs: GenerateOpenAPIArgs, rhs: GenerateOpenAPIArgs) -> Bool {
+    if lhs._parseArgs != rhs._parseArgs {return false}
+    if lhs.version != rhs.version {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+// Hand-added, not generated: see the note on FormatTestReportArgs above.
+extension GenerateOpenAPIResult: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = _protobuf_package + ".GenerateOpenAPIResult"
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .same(proto: "spec"),
+  ]
+
+  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeSingularStringField(value: &self.spec) }()
+      default: break
+      }
+    }
+  }
+
+  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations are
+    // enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
+    if !self.spec.isEmpty {
+      try visitor.visitSingularStringField(value: self.spec, fieldNumber: 1)
+    }
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  public static func ==(lhs: GenerateOpenAPIResult, rhs: GenerateOpenAPIResult) -> Bool {
+    if lhs.spec != rhs.spec {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+// Hand-added, not generated: see the note on FormatTestReportArgs above.
+extension GenerateProtoArgs: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = _protobuf_package + ".GenerateProtoArgs"
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .standard(proto: "parse_args"),
+    2: .same(proto: "package"),
+  ]
+
+  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeSingularMessageField(value: &self._parseArgs) }()
+      case 2: try { try decoder.decodeSingularStringField(value: &self.package) }()
+      default: break
+      }
+    }
+  }
+
+  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations are
+    // enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
+    try { if let v = self._parseArgs {
+      try visitor.visitSingularMessageField(value: v, fieldNumber: 1)
+    } }()
+    if !self.package.isEmpty {
+      try visitor.visitSingularStringField(value: self.package, fieldNumber: 2)
+    }
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  public static func ==(lhs: GenerateProtoArgs, rhs: GenerateProtoArgs) -> Bool {
+    if lhs._parseArgs != rhs._parseArgs {return false}
+    if lhs.package != rhs.package {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+// Hand-added, not generated: see the note on FormatTestReportArgs above.
+extension GenerateProtoResult: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = _protobuf_package + ".GenerateProtoResult"
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .same(proto: "proto"),
+  ]
+
+  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeSingularStringField(value: &self.proto) }()
+      default: break
+      }
+    }
+  }
+
+  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations are
+    // enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
+    if !self.proto.isEmpty {
+      try visitor.visitSingularStringField(value: self.proto, fieldNumber: 1)
+    }
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  public static func ==(lhs: GenerateProtoResult, rhs: GenerateProtoResult) -> Bool {
+    if lhs.proto != rhs.proto {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+// Hand-added, not generated: see the note on FormatTestReportArgs above.
+extension GenerateDocArgs: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = _protobuf_package + ".GenerateDocArgs"
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .standard(proto: "parse_args"),
+    2: .same(proto: "format"),
+  ]
+
+  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeSingularMessageField(value: &self._parseArgs) }()
+      case 2: try { try decoder.decodeSingularStringField(value: &self.format) }()
+      default: break
+      }
+    }
+  }
+
+  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations are
+    // enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
+    try { if let v = self._parseArgs {
+      try visitor.visitSingularMessageField(value: v, fieldNumber: 1)
+    } }()
+    if !self.format.isEmpty {
+      try visitor.visitSingularStringField(value: self.format, fieldNumber: 2)
+    }
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  public static func ==(lhs: GenerateDocArgs, rhs: GenerateDocArgs) -> Bool {
+    if lhs._parseArgs != rhs._parseArgs {return false}
+    if lhs.format != rhs.format {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+// Hand-added, not generated: see the note on FormatTestReportArgs above.
+extension GenerateDocResult: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = _protobuf_package + ".GenerateDocResult"
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .same(proto: "content"),
+  ]
+
+  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeSingularStringField(value: &self.content) }()
+      default: break
+      }
+    }
+  }
+
+  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations are
+    // enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
+    if !self.content.isEmpty {
+      try visitor.visitSingularStringField(value: self.content, fieldNumber: 1)
+    }
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  public static func ==(lhs: GenerateDocResult, rhs: GenerateDocResult) -> Bool {
+    if lhs.content != rhs.content {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }

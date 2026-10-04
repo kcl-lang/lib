@@ -5,21 +5,25 @@ import ProtoBuf as PB
 using ProtoBuf: OneOf
 using ProtoBuf.EnumX: @enumx
 
-export GetVersionResult, FormatPathArgs, RenameCodeArgs, PingResult, Decorator
-export OverrideFileArgs, Example, ListMethodArgs, GetVersionArgs, ValidateCodeResult
-export TestCaseInfo, FileCoverage, Argument, ListMethodResult, LintPathResult, SymbolIndex
-export CliConfig, KeyValuePair, PingArgs, ScopeIndex, LintPathArgs, RenameResult
-export UpdateDependenciesArgs, ExternalPkg, FormatCodeResult, FormatCodeArgs
-export FormatTestReportResult, LoadSettingsFilesArgs, RenameCodeResult, Position
-export RenameArgs, CoverageSummary, FormatPathResult, OptionHelp, ExecProgramResult
-export ListVariablesOptions, LoadSettingsFilesResult, Scope, ParseFileArgs
-export ValidateCodeArgs, ExecProgramArgs, UpdateDependenciesResult, ParseProgramArgs
-export Message, TestCoverageReport, ListOptionsResult, ListVariablesArgs
-export GetSchemaTypeMappingArgs, TestArgs, LoadPackageArgs, Error, TestResult
-export OverrideFileResult, ParseProgramResult, ParseFileResult, FormatTestReportArgs
-export GetSchemaTypeMappingResult, GetSchemaTypeMappingUnderPathResult, IndexSignature
-export ListVariablesResult, LoadPackageResult, MapEntry, Parameter, SchemaTypes, Symbol
-export Variable, VariableList, FunctionType, KclType
+export GetVersionResult, GenerateTomlResult, FormatPathArgs, RenameCodeArgs, AppInfo
+export PingResult, Decorator, OverrideFileArgs, Example, ListMethodArgs, KclModGitSource
+export KclModOciSource, GetVersionArgs, ValidateCodeResult, TestCaseInfo, GenerateDocResult
+export FileCoverage, Argument, ListMethodResult, LintPathResult, GenerateKclArgs
+export GenerateOpenAPIResult, SymbolIndex, KclModLocalSource, CliConfig, KeyValuePair
+export PingArgs, ScopeIndex, GenerateProtoResult, GenerateKclResult, KclModPackage
+export LintPathArgs, RenameResult, UpdateDependenciesArgs, ExternalPkg, KclModProfile
+export FormatCodeResult, FormatCodeArgs, FormatTestReportResult, LoadSettingsFilesArgs
+export RenameCodeResult, Position, RenameArgs, CoverageSummary, FormatPathResult
+export OptionHelp, ExecProgramResult, ListVariablesOptions, ImportInfo, KclModDependency
+export LoadSettingsFilesResult, Scope, ParseFileArgs, ValidateCodeArgs, ExecProgramArgs
+export UpdateDependenciesResult, ParseProgramArgs, Message, TestCoverageReport
+export ListOptionsResult, ListVariablesArgs, FileImports, KclMod, GetSchemaTypeMappingArgs
+export TestArgs, GenerateTomlArgs, LoadPackageArgs, GenerateDocArgs, GenerateProtoArgs
+export GenerateOpenAPIArgs, Error, TestResult, OverrideFileResult, ParseProgramResult
+export ParseFileResult, FormatTestReportArgs, GetSchemaTypeMappingResult
+export GetSchemaTypeMappingUnderPathResult, IndexSignature, ListVariablesResult
+export LoadPackageResult, MapEntry, Parameter, SchemaTypes, Symbol, Variable, VariableList
+export FunctionType, KclType
 abstract type var"##Abstract#GetSchemaTypeMappingUnderPathResult" end
 abstract type var"##Abstract#KclType" end
 abstract type var"##Abstract#Symbol" end
@@ -81,6 +85,37 @@ function PB._encoded_size(x::GetVersionResult)
     !isempty(x.checksum) && (encoded_size += PB._encoded_size(x.checksum, 2))
     !isempty(x.git_sha) && (encoded_size += PB._encoded_size(x.git_sha, 3))
     !isempty(x.version_info) && (encoded_size += PB._encoded_size(x.version_info, 4))
+    return encoded_size
+end
+
+struct GenerateTomlResult
+    toml::String
+end
+GenerateTomlResult(;toml = "") = GenerateTomlResult(toml)
+PB.default_values(::Type{GenerateTomlResult}) = (;toml = "")
+PB.field_numbers(::Type{GenerateTomlResult}) = (;toml = 1)
+
+function PB.decode(d::PB.AbstractProtoDecoder, ::Type{<:GenerateTomlResult}, _endpos::Int=0, _group::Bool=false)
+    toml = ""
+    while !PB.message_done(d, _endpos, _group)
+        field_number, wire_type = PB.decode_tag(d)
+        if field_number == 1
+            toml = PB.decode(d, String)
+        else
+            Base.skip(d, wire_type)
+        end
+    end
+    return GenerateTomlResult(toml)
+end
+
+function PB.encode(e::PB.AbstractProtoEncoder, x::GenerateTomlResult)
+    initpos = position(e.io)
+    !isempty(x.toml) && PB.encode(e, 1, x.toml)
+    return position(e.io) - initpos
+end
+function PB._encoded_size(x::GenerateTomlResult)
+    encoded_size = 0
+    !isempty(x.toml) && (encoded_size += PB._encoded_size(x.toml, 1))
     return encoded_size
 end
 
@@ -167,6 +202,43 @@ function PB._encoded_size(x::RenameCodeArgs)
     !isempty(x.symbol_path) && (encoded_size += PB._encoded_size(x.symbol_path, 2))
     !isempty(x.source_codes) && (encoded_size += PB._encoded_size(x.source_codes, 3))
     !isempty(x.new_name) && (encoded_size += PB._encoded_size(x.new_name, 4))
+    return encoded_size
+end
+
+struct AppInfo
+    path::String
+    has_kcl_mod::Bool
+end
+AppInfo(;path = "", has_kcl_mod = false) = AppInfo(path, has_kcl_mod)
+PB.default_values(::Type{AppInfo}) = (;path = "", has_kcl_mod = false)
+PB.field_numbers(::Type{AppInfo}) = (;path = 1, has_kcl_mod = 2)
+
+function PB.decode(d::PB.AbstractProtoDecoder, ::Type{<:AppInfo}, _endpos::Int=0, _group::Bool=false)
+    path = ""
+    has_kcl_mod = false
+    while !PB.message_done(d, _endpos, _group)
+        field_number, wire_type = PB.decode_tag(d)
+        if field_number == 1
+            path = PB.decode(d, String)
+        elseif field_number == 2
+            has_kcl_mod = PB.decode(d, Bool)
+        else
+            Base.skip(d, wire_type)
+        end
+    end
+    return AppInfo(path, has_kcl_mod)
+end
+
+function PB.encode(e::PB.AbstractProtoEncoder, x::AppInfo)
+    initpos = position(e.io)
+    !isempty(x.path) && PB.encode(e, 1, x.path)
+    x.has_kcl_mod != false && PB.encode(e, 2, x.has_kcl_mod)
+    return position(e.io) - initpos
+end
+function PB._encoded_size(x::AppInfo)
+    encoded_size = 0
+    !isempty(x.path) && (encoded_size += PB._encoded_size(x.path, 1))
+    x.has_kcl_mod != false && (encoded_size += PB._encoded_size(x.has_kcl_mod, 2))
     return encoded_size
 end
 
@@ -349,6 +421,98 @@ function PB._encoded_size(x::ListMethodArgs)
     return encoded_size
 end
 
+struct KclModGitSource
+    git::String
+    branch::String
+    commit::String
+    tag::String
+    version::String
+end
+KclModGitSource(;git = "", branch = "", commit = "", tag = "", version = "") = KclModGitSource(git, branch, commit, tag, version)
+PB.default_values(::Type{KclModGitSource}) = (;git = "", branch = "", commit = "", tag = "", version = "")
+PB.field_numbers(::Type{KclModGitSource}) = (;git = 1, branch = 2, commit = 3, tag = 4, version = 5)
+
+function PB.decode(d::PB.AbstractProtoDecoder, ::Type{<:KclModGitSource}, _endpos::Int=0, _group::Bool=false)
+    git = ""
+    branch = ""
+    commit = ""
+    tag = ""
+    version = ""
+    while !PB.message_done(d, _endpos, _group)
+        field_number, wire_type = PB.decode_tag(d)
+        if field_number == 1
+            git = PB.decode(d, String)
+        elseif field_number == 2
+            branch = PB.decode(d, String)
+        elseif field_number == 3
+            commit = PB.decode(d, String)
+        elseif field_number == 4
+            tag = PB.decode(d, String)
+        elseif field_number == 5
+            version = PB.decode(d, String)
+        else
+            Base.skip(d, wire_type)
+        end
+    end
+    return KclModGitSource(git, branch, commit, tag, version)
+end
+
+function PB.encode(e::PB.AbstractProtoEncoder, x::KclModGitSource)
+    initpos = position(e.io)
+    !isempty(x.git) && PB.encode(e, 1, x.git)
+    !isempty(x.branch) && PB.encode(e, 2, x.branch)
+    !isempty(x.commit) && PB.encode(e, 3, x.commit)
+    !isempty(x.tag) && PB.encode(e, 4, x.tag)
+    !isempty(x.version) && PB.encode(e, 5, x.version)
+    return position(e.io) - initpos
+end
+function PB._encoded_size(x::KclModGitSource)
+    encoded_size = 0
+    !isempty(x.git) && (encoded_size += PB._encoded_size(x.git, 1))
+    !isempty(x.branch) && (encoded_size += PB._encoded_size(x.branch, 2))
+    !isempty(x.commit) && (encoded_size += PB._encoded_size(x.commit, 3))
+    !isempty(x.tag) && (encoded_size += PB._encoded_size(x.tag, 4))
+    !isempty(x.version) && (encoded_size += PB._encoded_size(x.version, 5))
+    return encoded_size
+end
+
+struct KclModOciSource
+    oci::String
+    tag::String
+end
+KclModOciSource(;oci = "", tag = "") = KclModOciSource(oci, tag)
+PB.default_values(::Type{KclModOciSource}) = (;oci = "", tag = "")
+PB.field_numbers(::Type{KclModOciSource}) = (;oci = 1, tag = 2)
+
+function PB.decode(d::PB.AbstractProtoDecoder, ::Type{<:KclModOciSource}, _endpos::Int=0, _group::Bool=false)
+    oci = ""
+    tag = ""
+    while !PB.message_done(d, _endpos, _group)
+        field_number, wire_type = PB.decode_tag(d)
+        if field_number == 1
+            oci = PB.decode(d, String)
+        elseif field_number == 2
+            tag = PB.decode(d, String)
+        else
+            Base.skip(d, wire_type)
+        end
+    end
+    return KclModOciSource(oci, tag)
+end
+
+function PB.encode(e::PB.AbstractProtoEncoder, x::KclModOciSource)
+    initpos = position(e.io)
+    !isempty(x.oci) && PB.encode(e, 1, x.oci)
+    !isempty(x.tag) && PB.encode(e, 2, x.tag)
+    return position(e.io) - initpos
+end
+function PB._encoded_size(x::KclModOciSource)
+    encoded_size = 0
+    !isempty(x.oci) && (encoded_size += PB._encoded_size(x.oci, 1))
+    !isempty(x.tag) && (encoded_size += PB._encoded_size(x.tag, 2))
+    return encoded_size
+end
+
 struct GetVersionArgs end
 
 function PB.decode(d::PB.AbstractProtoDecoder, ::Type{<:GetVersionArgs}, _endpos::Int=0, _group::Bool=false)
@@ -457,6 +621,37 @@ function PB._encoded_size(x::TestCaseInfo)
     x.duration != zero(UInt64) && (encoded_size += PB._encoded_size(x.duration, 3))
     !isempty(x.log_message) && (encoded_size += PB._encoded_size(x.log_message, 4))
     !isempty(x.line_hits) && (encoded_size += PB._encoded_size(x.line_hits, 5))
+    return encoded_size
+end
+
+struct GenerateDocResult
+    content::String
+end
+GenerateDocResult(;content = "") = GenerateDocResult(content)
+PB.default_values(::Type{GenerateDocResult}) = (;content = "")
+PB.field_numbers(::Type{GenerateDocResult}) = (;content = 1)
+
+function PB.decode(d::PB.AbstractProtoDecoder, ::Type{<:GenerateDocResult}, _endpos::Int=0, _group::Bool=false)
+    content = ""
+    while !PB.message_done(d, _endpos, _group)
+        field_number, wire_type = PB.decode_tag(d)
+        if field_number == 1
+            content = PB.decode(d, String)
+        else
+            Base.skip(d, wire_type)
+        end
+    end
+    return GenerateDocResult(content)
+end
+
+function PB.encode(e::PB.AbstractProtoEncoder, x::GenerateDocResult)
+    initpos = position(e.io)
+    !isempty(x.content) && PB.encode(e, 1, x.content)
+    return position(e.io) - initpos
+end
+function PB._encoded_size(x::GenerateDocResult)
+    encoded_size = 0
+    !isempty(x.content) && (encoded_size += PB._encoded_size(x.content, 1))
     return encoded_size
 end
 
@@ -608,6 +803,80 @@ function PB._encoded_size(x::LintPathResult)
     return encoded_size
 end
 
+struct GenerateKclArgs
+    source::String
+    filename::String
+    format::String
+end
+GenerateKclArgs(;source = "", filename = "", format = "") = GenerateKclArgs(source, filename, format)
+PB.default_values(::Type{GenerateKclArgs}) = (;source = "", filename = "", format = "")
+PB.field_numbers(::Type{GenerateKclArgs}) = (;source = 1, filename = 2, format = 3)
+
+function PB.decode(d::PB.AbstractProtoDecoder, ::Type{<:GenerateKclArgs}, _endpos::Int=0, _group::Bool=false)
+    source = ""
+    filename = ""
+    format = ""
+    while !PB.message_done(d, _endpos, _group)
+        field_number, wire_type = PB.decode_tag(d)
+        if field_number == 1
+            source = PB.decode(d, String)
+        elseif field_number == 2
+            filename = PB.decode(d, String)
+        elseif field_number == 3
+            format = PB.decode(d, String)
+        else
+            Base.skip(d, wire_type)
+        end
+    end
+    return GenerateKclArgs(source, filename, format)
+end
+
+function PB.encode(e::PB.AbstractProtoEncoder, x::GenerateKclArgs)
+    initpos = position(e.io)
+    !isempty(x.source) && PB.encode(e, 1, x.source)
+    !isempty(x.filename) && PB.encode(e, 2, x.filename)
+    !isempty(x.format) && PB.encode(e, 3, x.format)
+    return position(e.io) - initpos
+end
+function PB._encoded_size(x::GenerateKclArgs)
+    encoded_size = 0
+    !isempty(x.source) && (encoded_size += PB._encoded_size(x.source, 1))
+    !isempty(x.filename) && (encoded_size += PB._encoded_size(x.filename, 2))
+    !isempty(x.format) && (encoded_size += PB._encoded_size(x.format, 3))
+    return encoded_size
+end
+
+struct GenerateOpenAPIResult
+    spec::String
+end
+GenerateOpenAPIResult(;spec = "") = GenerateOpenAPIResult(spec)
+PB.default_values(::Type{GenerateOpenAPIResult}) = (;spec = "")
+PB.field_numbers(::Type{GenerateOpenAPIResult}) = (;spec = 1)
+
+function PB.decode(d::PB.AbstractProtoDecoder, ::Type{<:GenerateOpenAPIResult}, _endpos::Int=0, _group::Bool=false)
+    spec = ""
+    while !PB.message_done(d, _endpos, _group)
+        field_number, wire_type = PB.decode_tag(d)
+        if field_number == 1
+            spec = PB.decode(d, String)
+        else
+            Base.skip(d, wire_type)
+        end
+    end
+    return GenerateOpenAPIResult(spec)
+end
+
+function PB.encode(e::PB.AbstractProtoEncoder, x::GenerateOpenAPIResult)
+    initpos = position(e.io)
+    !isempty(x.spec) && PB.encode(e, 1, x.spec)
+    return position(e.io) - initpos
+end
+function PB._encoded_size(x::GenerateOpenAPIResult)
+    encoded_size = 0
+    !isempty(x.spec) && (encoded_size += PB._encoded_size(x.spec, 1))
+    return encoded_size
+end
+
 struct SymbolIndex
     i::UInt64
     g::UInt64
@@ -648,6 +917,37 @@ function PB._encoded_size(x::SymbolIndex)
     x.i != zero(UInt64) && (encoded_size += PB._encoded_size(x.i, 1))
     x.g != zero(UInt64) && (encoded_size += PB._encoded_size(x.g, 2))
     !isempty(x.kind) && (encoded_size += PB._encoded_size(x.kind, 3))
+    return encoded_size
+end
+
+struct KclModLocalSource
+    path::String
+end
+KclModLocalSource(;path = "") = KclModLocalSource(path)
+PB.default_values(::Type{KclModLocalSource}) = (;path = "")
+PB.field_numbers(::Type{KclModLocalSource}) = (;path = 1)
+
+function PB.decode(d::PB.AbstractProtoDecoder, ::Type{<:KclModLocalSource}, _endpos::Int=0, _group::Bool=false)
+    path = ""
+    while !PB.message_done(d, _endpos, _group)
+        field_number, wire_type = PB.decode_tag(d)
+        if field_number == 1
+            path = PB.decode(d, String)
+        else
+            Base.skip(d, wire_type)
+        end
+    end
+    return KclModLocalSource(path)
+end
+
+function PB.encode(e::PB.AbstractProtoEncoder, x::KclModLocalSource)
+    initpos = position(e.io)
+    !isempty(x.path) && PB.encode(e, 1, x.path)
+    return position(e.io) - initpos
+end
+function PB._encoded_size(x::KclModLocalSource)
+    encoded_size = 0
+    !isempty(x.path) && (encoded_size += PB._encoded_size(x.path, 1))
     return encoded_size
 end
 
@@ -859,6 +1159,129 @@ function PB._encoded_size(x::ScopeIndex)
     return encoded_size
 end
 
+struct GenerateProtoResult
+    proto::String
+end
+GenerateProtoResult(;proto = "") = GenerateProtoResult(proto)
+PB.default_values(::Type{GenerateProtoResult}) = (;proto = "")
+PB.field_numbers(::Type{GenerateProtoResult}) = (;proto = 1)
+
+function PB.decode(d::PB.AbstractProtoDecoder, ::Type{<:GenerateProtoResult}, _endpos::Int=0, _group::Bool=false)
+    proto = ""
+    while !PB.message_done(d, _endpos, _group)
+        field_number, wire_type = PB.decode_tag(d)
+        if field_number == 1
+            proto = PB.decode(d, String)
+        else
+            Base.skip(d, wire_type)
+        end
+    end
+    return GenerateProtoResult(proto)
+end
+
+function PB.encode(e::PB.AbstractProtoEncoder, x::GenerateProtoResult)
+    initpos = position(e.io)
+    !isempty(x.proto) && PB.encode(e, 1, x.proto)
+    return position(e.io) - initpos
+end
+function PB._encoded_size(x::GenerateProtoResult)
+    encoded_size = 0
+    !isempty(x.proto) && (encoded_size += PB._encoded_size(x.proto, 1))
+    return encoded_size
+end
+
+struct GenerateKclResult
+    kcl::String
+end
+GenerateKclResult(;kcl = "") = GenerateKclResult(kcl)
+PB.default_values(::Type{GenerateKclResult}) = (;kcl = "")
+PB.field_numbers(::Type{GenerateKclResult}) = (;kcl = 1)
+
+function PB.decode(d::PB.AbstractProtoDecoder, ::Type{<:GenerateKclResult}, _endpos::Int=0, _group::Bool=false)
+    kcl = ""
+    while !PB.message_done(d, _endpos, _group)
+        field_number, wire_type = PB.decode_tag(d)
+        if field_number == 1
+            kcl = PB.decode(d, String)
+        else
+            Base.skip(d, wire_type)
+        end
+    end
+    return GenerateKclResult(kcl)
+end
+
+function PB.encode(e::PB.AbstractProtoEncoder, x::GenerateKclResult)
+    initpos = position(e.io)
+    !isempty(x.kcl) && PB.encode(e, 1, x.kcl)
+    return position(e.io) - initpos
+end
+function PB._encoded_size(x::GenerateKclResult)
+    encoded_size = 0
+    !isempty(x.kcl) && (encoded_size += PB._encoded_size(x.kcl, 1))
+    return encoded_size
+end
+
+struct KclModPackage
+    name::String
+    edition::String
+    version::String
+    description::String
+    include::Vector{String}
+    exclude::Vector{String}
+end
+KclModPackage(;name = "", edition = "", version = "", description = "", include = Vector{String}(), exclude = Vector{String}()) = KclModPackage(name, edition, version, description, include, exclude)
+PB.default_values(::Type{KclModPackage}) = (;name = "", edition = "", version = "", description = "", include = Vector{String}(), exclude = Vector{String}())
+PB.field_numbers(::Type{KclModPackage}) = (;name = 1, edition = 2, version = 3, description = 4, include = 5, exclude = 6)
+
+function PB.decode(d::PB.AbstractProtoDecoder, ::Type{<:KclModPackage}, _endpos::Int=0, _group::Bool=false)
+    name = ""
+    edition = ""
+    version = ""
+    description = ""
+    include = PB.BufferedVector{String}()
+    exclude = PB.BufferedVector{String}()
+    while !PB.message_done(d, _endpos, _group)
+        field_number, wire_type = PB.decode_tag(d)
+        if field_number == 1
+            name = PB.decode(d, String)
+        elseif field_number == 2
+            edition = PB.decode(d, String)
+        elseif field_number == 3
+            version = PB.decode(d, String)
+        elseif field_number == 4
+            description = PB.decode(d, String)
+        elseif field_number == 5
+            PB.decode!(d, include)
+        elseif field_number == 6
+            PB.decode!(d, exclude)
+        else
+            Base.skip(d, wire_type)
+        end
+    end
+    return KclModPackage(name, edition, version, description, include[], exclude[])
+end
+
+function PB.encode(e::PB.AbstractProtoEncoder, x::KclModPackage)
+    initpos = position(e.io)
+    !isempty(x.name) && PB.encode(e, 1, x.name)
+    !isempty(x.edition) && PB.encode(e, 2, x.edition)
+    !isempty(x.version) && PB.encode(e, 3, x.version)
+    !isempty(x.description) && PB.encode(e, 4, x.description)
+    !isempty(x.include) && PB.encode(e, 5, x.include)
+    !isempty(x.exclude) && PB.encode(e, 6, x.exclude)
+    return position(e.io) - initpos
+end
+function PB._encoded_size(x::KclModPackage)
+    encoded_size = 0
+    !isempty(x.name) && (encoded_size += PB._encoded_size(x.name, 1))
+    !isempty(x.edition) && (encoded_size += PB._encoded_size(x.edition, 2))
+    !isempty(x.version) && (encoded_size += PB._encoded_size(x.version, 3))
+    !isempty(x.description) && (encoded_size += PB._encoded_size(x.description, 4))
+    !isempty(x.include) && (encoded_size += PB._encoded_size(x.include, 5))
+    !isempty(x.exclude) && (encoded_size += PB._encoded_size(x.exclude, 6))
+    return encoded_size
+end
+
 struct LintPathArgs
     paths::Vector{String}
 end
@@ -995,6 +1418,67 @@ function PB._encoded_size(x::ExternalPkg)
     return encoded_size
 end
 
+struct KclModProfile
+    entries::Vector{String}
+    disable_none::Bool
+    sort_keys::Bool
+    selectors::Vector{String}
+    overrides::Vector{String}
+    options::Vector{String}
+end
+KclModProfile(;entries = Vector{String}(), disable_none = false, sort_keys = false, selectors = Vector{String}(), overrides = Vector{String}(), options = Vector{String}()) = KclModProfile(entries, disable_none, sort_keys, selectors, overrides, options)
+PB.default_values(::Type{KclModProfile}) = (;entries = Vector{String}(), disable_none = false, sort_keys = false, selectors = Vector{String}(), overrides = Vector{String}(), options = Vector{String}())
+PB.field_numbers(::Type{KclModProfile}) = (;entries = 1, disable_none = 2, sort_keys = 3, selectors = 4, overrides = 5, options = 6)
+
+function PB.decode(d::PB.AbstractProtoDecoder, ::Type{<:KclModProfile}, _endpos::Int=0, _group::Bool=false)
+    entries = PB.BufferedVector{String}()
+    disable_none = false
+    sort_keys = false
+    selectors = PB.BufferedVector{String}()
+    overrides = PB.BufferedVector{String}()
+    options = PB.BufferedVector{String}()
+    while !PB.message_done(d, _endpos, _group)
+        field_number, wire_type = PB.decode_tag(d)
+        if field_number == 1
+            PB.decode!(d, entries)
+        elseif field_number == 2
+            disable_none = PB.decode(d, Bool)
+        elseif field_number == 3
+            sort_keys = PB.decode(d, Bool)
+        elseif field_number == 4
+            PB.decode!(d, selectors)
+        elseif field_number == 5
+            PB.decode!(d, overrides)
+        elseif field_number == 6
+            PB.decode!(d, options)
+        else
+            Base.skip(d, wire_type)
+        end
+    end
+    return KclModProfile(entries[], disable_none, sort_keys, selectors[], overrides[], options[])
+end
+
+function PB.encode(e::PB.AbstractProtoEncoder, x::KclModProfile)
+    initpos = position(e.io)
+    !isempty(x.entries) && PB.encode(e, 1, x.entries)
+    x.disable_none != false && PB.encode(e, 2, x.disable_none)
+    x.sort_keys != false && PB.encode(e, 3, x.sort_keys)
+    !isempty(x.selectors) && PB.encode(e, 4, x.selectors)
+    !isempty(x.overrides) && PB.encode(e, 5, x.overrides)
+    !isempty(x.options) && PB.encode(e, 6, x.options)
+    return position(e.io) - initpos
+end
+function PB._encoded_size(x::KclModProfile)
+    encoded_size = 0
+    !isempty(x.entries) && (encoded_size += PB._encoded_size(x.entries, 1))
+    x.disable_none != false && (encoded_size += PB._encoded_size(x.disable_none, 2))
+    x.sort_keys != false && (encoded_size += PB._encoded_size(x.sort_keys, 3))
+    !isempty(x.selectors) && (encoded_size += PB._encoded_size(x.selectors, 4))
+    !isempty(x.overrides) && (encoded_size += PB._encoded_size(x.overrides, 5))
+    !isempty(x.options) && (encoded_size += PB._encoded_size(x.options, 6))
+    return encoded_size
+end
+
 struct FormatCodeResult
     formatted::Vector{UInt8}
 end
@@ -1057,9 +1541,6 @@ function PB._encoded_size(x::FormatCodeArgs)
     return encoded_size
 end
 
-# Hand-added: `FormatTestReportArgs`/`FormatTestReportResult` were spliced in from
-# a `hack/gen_pb.jl` run limited to that addition, so a plain `make proto` does
-# not drag in the unrelated in-flight spec.proto edits.
 struct FormatTestReportResult
     report::String
 end
@@ -1463,6 +1944,92 @@ end
 function PB._encoded_size(x::ListVariablesOptions)
     encoded_size = 0
     x.merge_program != false && (encoded_size += PB._encoded_size(x.merge_program, 1))
+    return encoded_size
+end
+
+struct ImportInfo
+    path::String
+    resolved::String
+end
+ImportInfo(;path = "", resolved = "") = ImportInfo(path, resolved)
+PB.default_values(::Type{ImportInfo}) = (;path = "", resolved = "")
+PB.field_numbers(::Type{ImportInfo}) = (;path = 1, resolved = 2)
+
+function PB.decode(d::PB.AbstractProtoDecoder, ::Type{<:ImportInfo}, _endpos::Int=0, _group::Bool=false)
+    path = ""
+    resolved = ""
+    while !PB.message_done(d, _endpos, _group)
+        field_number, wire_type = PB.decode_tag(d)
+        if field_number == 1
+            path = PB.decode(d, String)
+        elseif field_number == 2
+            resolved = PB.decode(d, String)
+        else
+            Base.skip(d, wire_type)
+        end
+    end
+    return ImportInfo(path, resolved)
+end
+
+function PB.encode(e::PB.AbstractProtoEncoder, x::ImportInfo)
+    initpos = position(e.io)
+    !isempty(x.path) && PB.encode(e, 1, x.path)
+    !isempty(x.resolved) && PB.encode(e, 2, x.resolved)
+    return position(e.io) - initpos
+end
+function PB._encoded_size(x::ImportInfo)
+    encoded_size = 0
+    !isempty(x.path) && (encoded_size += PB._encoded_size(x.path, 1))
+    !isempty(x.resolved) && (encoded_size += PB._encoded_size(x.resolved, 2))
+    return encoded_size
+end
+
+struct KclModDependency
+    version::String
+    git::Union{Nothing,KclModGitSource}
+    oci::Union{Nothing,KclModOciSource}
+    var"#local"::Union{Nothing,KclModLocalSource}
+end
+KclModDependency(;version = "", git = nothing, oci = nothing, var"#local" = nothing) = KclModDependency(version, git, oci, var"#local")
+PB.default_values(::Type{KclModDependency}) = (;version = "", git = nothing, oci = nothing, var"#local" = nothing)
+PB.field_numbers(::Type{KclModDependency}) = (;version = 1, git = 2, oci = 3, var"#local" = 4)
+
+function PB.decode(d::PB.AbstractProtoDecoder, ::Type{<:KclModDependency}, _endpos::Int=0, _group::Bool=false)
+    version = ""
+    git = Ref{Union{Nothing,KclModGitSource}}(nothing)
+    oci = Ref{Union{Nothing,KclModOciSource}}(nothing)
+    var"#local" = Ref{Union{Nothing,KclModLocalSource}}(nothing)
+    while !PB.message_done(d, _endpos, _group)
+        field_number, wire_type = PB.decode_tag(d)
+        if field_number == 1
+            version = PB.decode(d, String)
+        elseif field_number == 2
+            PB.decode!(d, git)
+        elseif field_number == 3
+            PB.decode!(d, oci)
+        elseif field_number == 4
+            PB.decode!(d, var"#local")
+        else
+            Base.skip(d, wire_type)
+        end
+    end
+    return KclModDependency(version, git[], oci[], var"#local"[])
+end
+
+function PB.encode(e::PB.AbstractProtoEncoder, x::KclModDependency)
+    initpos = position(e.io)
+    !isempty(x.version) && PB.encode(e, 1, x.version)
+    !isnothing(x.git) && PB.encode(e, 2, x.git)
+    !isnothing(x.oci) && PB.encode(e, 3, x.oci)
+    !isnothing(x.var"#local") && PB.encode(e, 4, x.var"#local")
+    return position(e.io) - initpos
+end
+function PB._encoded_size(x::KclModDependency)
+    encoded_size = 0
+    !isempty(x.version) && (encoded_size += PB._encoded_size(x.version, 1))
+    !isnothing(x.git) && (encoded_size += PB._encoded_size(x.git, 2))
+    !isnothing(x.oci) && (encoded_size += PB._encoded_size(x.oci, 3))
+    !isnothing(x.var"#local") && (encoded_size += PB._encoded_size(x.var"#local", 4))
     return encoded_size
 end
 
@@ -2053,6 +2620,80 @@ function PB._encoded_size(x::ListVariablesArgs)
     return encoded_size
 end
 
+struct FileImports
+    imports::Vector{ImportInfo}
+end
+FileImports(;imports = Vector{ImportInfo}()) = FileImports(imports)
+PB.default_values(::Type{FileImports}) = (;imports = Vector{ImportInfo}())
+PB.field_numbers(::Type{FileImports}) = (;imports = 1)
+
+function PB.decode(d::PB.AbstractProtoDecoder, ::Type{<:FileImports}, _endpos::Int=0, _group::Bool=false)
+    imports = PB.BufferedVector{ImportInfo}()
+    while !PB.message_done(d, _endpos, _group)
+        field_number, wire_type = PB.decode_tag(d)
+        if field_number == 1
+            PB.decode!(d, imports)
+        else
+            Base.skip(d, wire_type)
+        end
+    end
+    return FileImports(imports[])
+end
+
+function PB.encode(e::PB.AbstractProtoEncoder, x::FileImports)
+    initpos = position(e.io)
+    !isempty(x.imports) && PB.encode(e, 1, x.imports)
+    return position(e.io) - initpos
+end
+function PB._encoded_size(x::FileImports)
+    encoded_size = 0
+    !isempty(x.imports) && (encoded_size += PB._encoded_size(x.imports, 1))
+    return encoded_size
+end
+
+struct KclMod
+    package::Union{Nothing,KclModPackage}
+    profile::Union{Nothing,KclModProfile}
+    dependencies::Dict{String,KclModDependency}
+end
+KclMod(;package = nothing, profile = nothing, dependencies = Dict{String,KclModDependency}()) = KclMod(package, profile, dependencies)
+PB.default_values(::Type{KclMod}) = (;package = nothing, profile = nothing, dependencies = Dict{String,KclModDependency}())
+PB.field_numbers(::Type{KclMod}) = (;package = 1, profile = 2, dependencies = 3)
+
+function PB.decode(d::PB.AbstractProtoDecoder, ::Type{<:KclMod}, _endpos::Int=0, _group::Bool=false)
+    package = Ref{Union{Nothing,KclModPackage}}(nothing)
+    profile = Ref{Union{Nothing,KclModProfile}}(nothing)
+    dependencies = Dict{String,KclModDependency}()
+    while !PB.message_done(d, _endpos, _group)
+        field_number, wire_type = PB.decode_tag(d)
+        if field_number == 1
+            PB.decode!(d, package)
+        elseif field_number == 2
+            PB.decode!(d, profile)
+        elseif field_number == 3
+            PB.decode!(d, dependencies)
+        else
+            Base.skip(d, wire_type)
+        end
+    end
+    return KclMod(package[], profile[], dependencies)
+end
+
+function PB.encode(e::PB.AbstractProtoEncoder, x::KclMod)
+    initpos = position(e.io)
+    !isnothing(x.package) && PB.encode(e, 1, x.package)
+    !isnothing(x.profile) && PB.encode(e, 2, x.profile)
+    !isempty(x.dependencies) && PB.encode(e, 3, x.dependencies)
+    return position(e.io) - initpos
+end
+function PB._encoded_size(x::KclMod)
+    encoded_size = 0
+    !isnothing(x.package) && (encoded_size += PB._encoded_size(x.package, 1))
+    !isnothing(x.profile) && (encoded_size += PB._encoded_size(x.profile, 2))
+    !isempty(x.dependencies) && (encoded_size += PB._encoded_size(x.dependencies, 3))
+    return encoded_size
+end
+
 struct GetSchemaTypeMappingArgs
     exec_args::Union{Nothing,ExecProgramArgs}
     schema_name::String
@@ -2145,6 +2786,43 @@ function PB._encoded_size(x::TestArgs)
     return encoded_size
 end
 
+struct GenerateTomlArgs
+    exec_args::Union{Nothing,ExecProgramArgs}
+    sort_keys::Bool
+end
+GenerateTomlArgs(;exec_args = nothing, sort_keys = false) = GenerateTomlArgs(exec_args, sort_keys)
+PB.default_values(::Type{GenerateTomlArgs}) = (;exec_args = nothing, sort_keys = false)
+PB.field_numbers(::Type{GenerateTomlArgs}) = (;exec_args = 1, sort_keys = 2)
+
+function PB.decode(d::PB.AbstractProtoDecoder, ::Type{<:GenerateTomlArgs}, _endpos::Int=0, _group::Bool=false)
+    exec_args = Ref{Union{Nothing,ExecProgramArgs}}(nothing)
+    sort_keys = false
+    while !PB.message_done(d, _endpos, _group)
+        field_number, wire_type = PB.decode_tag(d)
+        if field_number == 1
+            PB.decode!(d, exec_args)
+        elseif field_number == 2
+            sort_keys = PB.decode(d, Bool)
+        else
+            Base.skip(d, wire_type)
+        end
+    end
+    return GenerateTomlArgs(exec_args[], sort_keys)
+end
+
+function PB.encode(e::PB.AbstractProtoEncoder, x::GenerateTomlArgs)
+    initpos = position(e.io)
+    !isnothing(x.exec_args) && PB.encode(e, 1, x.exec_args)
+    x.sort_keys != false && PB.encode(e, 2, x.sort_keys)
+    return position(e.io) - initpos
+end
+function PB._encoded_size(x::GenerateTomlArgs)
+    encoded_size = 0
+    !isnothing(x.exec_args) && (encoded_size += PB._encoded_size(x.exec_args, 1))
+    x.sort_keys != false && (encoded_size += PB._encoded_size(x.sort_keys, 2))
+    return encoded_size
+end
+
 struct LoadPackageArgs
     parse_args::Union{Nothing,ParseProgramArgs}
     resolve_ast::Bool
@@ -2191,6 +2869,117 @@ function PB._encoded_size(x::LoadPackageArgs)
     x.resolve_ast != false && (encoded_size += PB._encoded_size(x.resolve_ast, 2))
     x.load_builtin != false && (encoded_size += PB._encoded_size(x.load_builtin, 3))
     x.with_ast_index != false && (encoded_size += PB._encoded_size(x.with_ast_index, 4))
+    return encoded_size
+end
+
+struct GenerateDocArgs
+    parse_args::Union{Nothing,ParseProgramArgs}
+    format::String
+end
+GenerateDocArgs(;parse_args = nothing, format = "") = GenerateDocArgs(parse_args, format)
+PB.default_values(::Type{GenerateDocArgs}) = (;parse_args = nothing, format = "")
+PB.field_numbers(::Type{GenerateDocArgs}) = (;parse_args = 1, format = 2)
+
+function PB.decode(d::PB.AbstractProtoDecoder, ::Type{<:GenerateDocArgs}, _endpos::Int=0, _group::Bool=false)
+    parse_args = Ref{Union{Nothing,ParseProgramArgs}}(nothing)
+    format = ""
+    while !PB.message_done(d, _endpos, _group)
+        field_number, wire_type = PB.decode_tag(d)
+        if field_number == 1
+            PB.decode!(d, parse_args)
+        elseif field_number == 2
+            format = PB.decode(d, String)
+        else
+            Base.skip(d, wire_type)
+        end
+    end
+    return GenerateDocArgs(parse_args[], format)
+end
+
+function PB.encode(e::PB.AbstractProtoEncoder, x::GenerateDocArgs)
+    initpos = position(e.io)
+    !isnothing(x.parse_args) && PB.encode(e, 1, x.parse_args)
+    !isempty(x.format) && PB.encode(e, 2, x.format)
+    return position(e.io) - initpos
+end
+function PB._encoded_size(x::GenerateDocArgs)
+    encoded_size = 0
+    !isnothing(x.parse_args) && (encoded_size += PB._encoded_size(x.parse_args, 1))
+    !isempty(x.format) && (encoded_size += PB._encoded_size(x.format, 2))
+    return encoded_size
+end
+
+struct GenerateProtoArgs
+    parse_args::Union{Nothing,ParseProgramArgs}
+    package::String
+end
+GenerateProtoArgs(;parse_args = nothing, package = "") = GenerateProtoArgs(parse_args, package)
+PB.default_values(::Type{GenerateProtoArgs}) = (;parse_args = nothing, package = "")
+PB.field_numbers(::Type{GenerateProtoArgs}) = (;parse_args = 1, package = 2)
+
+function PB.decode(d::PB.AbstractProtoDecoder, ::Type{<:GenerateProtoArgs}, _endpos::Int=0, _group::Bool=false)
+    parse_args = Ref{Union{Nothing,ParseProgramArgs}}(nothing)
+    package = ""
+    while !PB.message_done(d, _endpos, _group)
+        field_number, wire_type = PB.decode_tag(d)
+        if field_number == 1
+            PB.decode!(d, parse_args)
+        elseif field_number == 2
+            package = PB.decode(d, String)
+        else
+            Base.skip(d, wire_type)
+        end
+    end
+    return GenerateProtoArgs(parse_args[], package)
+end
+
+function PB.encode(e::PB.AbstractProtoEncoder, x::GenerateProtoArgs)
+    initpos = position(e.io)
+    !isnothing(x.parse_args) && PB.encode(e, 1, x.parse_args)
+    !isempty(x.package) && PB.encode(e, 2, x.package)
+    return position(e.io) - initpos
+end
+function PB._encoded_size(x::GenerateProtoArgs)
+    encoded_size = 0
+    !isnothing(x.parse_args) && (encoded_size += PB._encoded_size(x.parse_args, 1))
+    !isempty(x.package) && (encoded_size += PB._encoded_size(x.package, 2))
+    return encoded_size
+end
+
+struct GenerateOpenAPIArgs
+    parse_args::Union{Nothing,ParseProgramArgs}
+    version::String
+end
+GenerateOpenAPIArgs(;parse_args = nothing, version = "") = GenerateOpenAPIArgs(parse_args, version)
+PB.default_values(::Type{GenerateOpenAPIArgs}) = (;parse_args = nothing, version = "")
+PB.field_numbers(::Type{GenerateOpenAPIArgs}) = (;parse_args = 1, version = 2)
+
+function PB.decode(d::PB.AbstractProtoDecoder, ::Type{<:GenerateOpenAPIArgs}, _endpos::Int=0, _group::Bool=false)
+    parse_args = Ref{Union{Nothing,ParseProgramArgs}}(nothing)
+    version = ""
+    while !PB.message_done(d, _endpos, _group)
+        field_number, wire_type = PB.decode_tag(d)
+        if field_number == 1
+            PB.decode!(d, parse_args)
+        elseif field_number == 2
+            version = PB.decode(d, String)
+        else
+            Base.skip(d, wire_type)
+        end
+    end
+    return GenerateOpenAPIArgs(parse_args[], version)
+end
+
+function PB.encode(e::PB.AbstractProtoEncoder, x::GenerateOpenAPIArgs)
+    initpos = position(e.io)
+    !isnothing(x.parse_args) && PB.encode(e, 1, x.parse_args)
+    !isempty(x.version) && PB.encode(e, 2, x.version)
+    return position(e.io) - initpos
+end
+function PB._encoded_size(x::GenerateOpenAPIArgs)
+    encoded_size = 0
+    !isnothing(x.parse_args) && (encoded_size += PB._encoded_size(x.parse_args, 1))
+    !isempty(x.version) && (encoded_size += PB._encoded_size(x.version, 2))
     return encoded_size
 end
 
@@ -2461,6 +3250,9 @@ struct var"##Stub#LoadPackageResult"{T1<:var"##Abstract#Symbol"} <: var"##Abstra
     symbol_node_map::Dict{String,String}
     fully_qualified_name_map::Dict{String,SymbolIndex}
     pkg_scope_map::Dict{String,ScopeIndex}
+    imports::Dict{String,FileImports}
+    kcl_mod::Union{Nothing,KclMod}
+    apps::Vector{AppInfo}
 end
 
 struct var"##Stub#MapEntry"{T1<:var"##Abstract#Variable"} <: var"##Abstract#MapEntry"
@@ -2666,9 +3458,9 @@ function PB._encoded_size(x::ListVariablesResult)
 end
 
 const LoadPackageResult = var"##Stub#LoadPackageResult"{var"##Stub#Symbol"{var"##Stub#KclType"}}
-LoadPackageResult(;program = "", paths = Vector{String}(), parse_errors = Vector{Error}(), type_errors = Vector{Error}(), scopes = Dict{String,Scope}(), symbols = Dict{String,Symbol}(), node_symbol_map = Dict{String,SymbolIndex}(), symbol_node_map = Dict{String,String}(), fully_qualified_name_map = Dict{String,SymbolIndex}(), pkg_scope_map = Dict{String,ScopeIndex}()) = LoadPackageResult(program, paths, parse_errors, type_errors, scopes, symbols, node_symbol_map, symbol_node_map, fully_qualified_name_map, pkg_scope_map)
-PB.default_values(::Type{LoadPackageResult}) = (;program = "", paths = Vector{String}(), parse_errors = Vector{Error}(), type_errors = Vector{Error}(), scopes = Dict{String,Scope}(), symbols = Dict{String,Symbol}(), node_symbol_map = Dict{String,SymbolIndex}(), symbol_node_map = Dict{String,String}(), fully_qualified_name_map = Dict{String,SymbolIndex}(), pkg_scope_map = Dict{String,ScopeIndex}())
-PB.field_numbers(::Type{LoadPackageResult}) = (;program = 1, paths = 2, parse_errors = 3, type_errors = 4, scopes = 5, symbols = 6, node_symbol_map = 7, symbol_node_map = 8, fully_qualified_name_map = 9, pkg_scope_map = 10)
+LoadPackageResult(;program = "", paths = Vector{String}(), parse_errors = Vector{Error}(), type_errors = Vector{Error}(), scopes = Dict{String,Scope}(), symbols = Dict{String,Symbol}(), node_symbol_map = Dict{String,SymbolIndex}(), symbol_node_map = Dict{String,String}(), fully_qualified_name_map = Dict{String,SymbolIndex}(), pkg_scope_map = Dict{String,ScopeIndex}(), imports = Dict{String,FileImports}(), kcl_mod = nothing, apps = Vector{AppInfo}()) = LoadPackageResult(program, paths, parse_errors, type_errors, scopes, symbols, node_symbol_map, symbol_node_map, fully_qualified_name_map, pkg_scope_map, imports, kcl_mod, apps)
+PB.default_values(::Type{LoadPackageResult}) = (;program = "", paths = Vector{String}(), parse_errors = Vector{Error}(), type_errors = Vector{Error}(), scopes = Dict{String,Scope}(), symbols = Dict{String,Symbol}(), node_symbol_map = Dict{String,SymbolIndex}(), symbol_node_map = Dict{String,String}(), fully_qualified_name_map = Dict{String,SymbolIndex}(), pkg_scope_map = Dict{String,ScopeIndex}(), imports = Dict{String,FileImports}(), kcl_mod = nothing, apps = Vector{AppInfo}())
+PB.field_numbers(::Type{LoadPackageResult}) = (;program = 1, paths = 2, parse_errors = 3, type_errors = 4, scopes = 5, symbols = 6, node_symbol_map = 7, symbol_node_map = 8, fully_qualified_name_map = 9, pkg_scope_map = 10, imports = 11, kcl_mod = 12, apps = 13)
 
 function PB.decode(d::PB.AbstractProtoDecoder, ::Type{<:LoadPackageResult}, _endpos::Int=0, _group::Bool=false)
     program = ""
@@ -2681,6 +3473,9 @@ function PB.decode(d::PB.AbstractProtoDecoder, ::Type{<:LoadPackageResult}, _end
     symbol_node_map = Dict{String,String}()
     fully_qualified_name_map = Dict{String,SymbolIndex}()
     pkg_scope_map = Dict{String,ScopeIndex}()
+    imports = Dict{String,FileImports}()
+    kcl_mod = Ref{Union{Nothing,KclMod}}(nothing)
+    apps = PB.BufferedVector{AppInfo}()
     while !PB.message_done(d, _endpos, _group)
         field_number, wire_type = PB.decode_tag(d)
         if field_number == 1
@@ -2703,11 +3498,17 @@ function PB.decode(d::PB.AbstractProtoDecoder, ::Type{<:LoadPackageResult}, _end
             PB.decode!(d, fully_qualified_name_map)
         elseif field_number == 10
             PB.decode!(d, pkg_scope_map)
+        elseif field_number == 11
+            PB.decode!(d, imports)
+        elseif field_number == 12
+            PB.decode!(d, kcl_mod)
+        elseif field_number == 13
+            PB.decode!(d, apps)
         else
             Base.skip(d, wire_type)
         end
     end
-    return LoadPackageResult(program, paths[], parse_errors[], type_errors[], scopes, symbols, node_symbol_map, symbol_node_map, fully_qualified_name_map, pkg_scope_map)
+    return LoadPackageResult(program, paths[], parse_errors[], type_errors[], scopes, symbols, node_symbol_map, symbol_node_map, fully_qualified_name_map, pkg_scope_map, imports, kcl_mod[], apps[])
 end
 
 function PB.encode(e::PB.AbstractProtoEncoder, x::LoadPackageResult)
@@ -2722,6 +3523,9 @@ function PB.encode(e::PB.AbstractProtoEncoder, x::LoadPackageResult)
     !isempty(x.symbol_node_map) && PB.encode(e, 8, x.symbol_node_map)
     !isempty(x.fully_qualified_name_map) && PB.encode(e, 9, x.fully_qualified_name_map)
     !isempty(x.pkg_scope_map) && PB.encode(e, 10, x.pkg_scope_map)
+    !isempty(x.imports) && PB.encode(e, 11, x.imports)
+    !isnothing(x.kcl_mod) && PB.encode(e, 12, x.kcl_mod)
+    !isempty(x.apps) && PB.encode(e, 13, x.apps)
     return position(e.io) - initpos
 end
 function PB._encoded_size(x::LoadPackageResult)
@@ -2736,6 +3540,9 @@ function PB._encoded_size(x::LoadPackageResult)
     !isempty(x.symbol_node_map) && (encoded_size += PB._encoded_size(x.symbol_node_map, 8))
     !isempty(x.fully_qualified_name_map) && (encoded_size += PB._encoded_size(x.fully_qualified_name_map, 9))
     !isempty(x.pkg_scope_map) && (encoded_size += PB._encoded_size(x.pkg_scope_map, 10))
+    !isempty(x.imports) && (encoded_size += PB._encoded_size(x.imports, 11))
+    !isnothing(x.kcl_mod) && (encoded_size += PB._encoded_size(x.kcl_mod, 12))
+    !isempty(x.apps) && (encoded_size += PB._encoded_size(x.apps, 13))
     return encoded_size
 end
 

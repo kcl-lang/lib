@@ -10,6 +10,7 @@
 // ignore_for_file: deprecated_member_use_from_same_package, library_prefixes
 // ignore_for_file: non_constant_identifier_names, prefer_relative_imports
 
+import 'dart:async' as $async;
 import 'dart:core' as $core;
 
 import 'package:fixnum/fixnum.dart' as $fixnum;
@@ -1072,6 +1073,9 @@ class LoadPackageResult extends $pb.GeneratedMessage {
     $core.Iterable<$core.MapEntry<$core.String, SymbolIndex>>?
         fullyQualifiedNameMap,
     $core.Iterable<$core.MapEntry<$core.String, ScopeIndex>>? pkgScopeMap,
+    $core.Iterable<$core.MapEntry<$core.String, FileImports>>? imports,
+    KclMod? kclMod,
+    $core.Iterable<AppInfo>? apps,
   }) {
     final result = LoadPackageResult._();
     if (program != null) result.program = program;
@@ -1085,6 +1089,9 @@ class LoadPackageResult extends $pb.GeneratedMessage {
     if (fullyQualifiedNameMap != null)
       result.fullyQualifiedNameMap.addEntries(fullyQualifiedNameMap);
     if (pkgScopeMap != null) result.pkgScopeMap.addEntries(pkgScopeMap);
+    if (imports != null) result.imports.addEntries(imports);
+    if (kclMod != null) result.kclMod = kclMod;
+    if (apps != null) result.apps.addAll(apps);
     return result;
   }
 
@@ -1148,6 +1155,17 @@ class LoadPackageResult extends $pb.GeneratedMessage {
         valueCreator: ScopeIndex.$_createMessage,
         valueDefaultOrMaker: ScopeIndex.getDefault,
         packageName: const $pb.PackageName('com.kcl.api'))
+    ..m<$core.String, FileImports>(11, _omitFieldNames ? '' : 'imports',
+        entryClassName: 'LoadPackageResult.ImportsEntry',
+        keyFieldType: $pb.PbFieldType.OS,
+        valueFieldType: $pb.PbFieldType.OM,
+        valueCreator: FileImports.$_createMessage,
+        valueDefaultOrMaker: FileImports.getDefault,
+        packageName: const $pb.PackageName('com.kcl.api'))
+    ..aOM<KclMod>(12, _omitFieldNames ? '' : 'kclMod',
+        subBuilder: KclMod.$_createMessage)
+    ..pPM<AppInfo>(13, _omitFieldNames ? '' : 'apps',
+        subBuilder: AppInfo.$_createMessage)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1217,6 +1235,878 @@ class LoadPackageResult extends $pb.GeneratedMessage {
   /// Map of package scope with package path as key.
   @$pb.TagNumber(10)
   $pb.PbMap<$core.String, ScopeIndex> get pkgScopeMap => $_getMap(9);
+
+  /// Map of direct imports, keyed by the importing file's absolute path.
+  /// `path` is the import specifier as written in the source; `resolved` is
+  /// the resolved absolute file path (empty for builtins/unresolved imports).
+  /// Upstream files = transitive closure; downstream = reverse closure; this
+  /// replaces the removed ListDep* RPCs.
+  @$pb.TagNumber(11)
+  $pb.PbMap<$core.String, FileImports> get imports => $_getMap(10);
+
+  /// Parsed kcl.mod manifest of the package root. Empty when the root has no
+  /// kcl.mod.
+  @$pb.TagNumber(12)
+  KclMod get kclMod => $_getN(11);
+  @$pb.TagNumber(12)
+  set kclMod(KclMod value) => $_setField(12, value);
+  @$pb.TagNumber(12)
+  $core.bool hasKclMod() => $_has(11);
+  @$pb.TagNumber(12)
+  void clearKclMod() => $_clearField(12);
+  @$pb.TagNumber(12)
+  KclMod ensureKclMod() => $_ensure(11);
+
+  /// Application directories discovered under the package root: every
+  /// directory that directly contains at least one .k file. Sorted by path.
+  @$pb.TagNumber(13)
+  $pb.PbList<AppInfo> get apps => $_getList(12);
+}
+
+/// Message representing the direct imports of a single file.
+class FileImports extends $pb.GeneratedMessage {
+  factory FileImports({
+    $core.Iterable<ImportInfo>? imports,
+  }) {
+    final result = FileImports._();
+    if (imports != null) result.imports.addAll(imports);
+    return result;
+  }
+
+  FileImports._();
+
+  factory FileImports.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      FileImports()..mergeFromBuffer(data, registry);
+  factory FileImports.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      FileImports()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'FileImports',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'com.kcl.api'),
+      createEmptyInstance: FileImports.$_createMessage)
+    ..pPM<ImportInfo>(1, _omitFieldNames ? '' : 'imports',
+        subBuilder: ImportInfo.$_createMessage)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  FileImports clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  FileImports copyWith(void Function(FileImports) updates) =>
+      super.copyWith((message) => updates(message as FileImports))
+          as FileImports;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  @$core.Deprecated('Use FileImports() / FileImports.new instead')
+  static FileImports create() => FileImports._();
+  static $pb.GeneratedMessage $_createMessage() => FileImports._();
+  @$core.override
+  FileImports createEmptyInstance() => FileImports._();
+  @$core.pragma('dart2js:noInline')
+  static FileImports getDefault() =>
+      _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<FileImports>(
+          FileImports.$_createMessage);
+  static FileImports? _defaultInstance;
+
+  /// List of direct imports of the file.
+  @$pb.TagNumber(1)
+  $pb.PbList<ImportInfo> get imports => $_getList(0);
+}
+
+/// Message representing a single direct import of a file.
+class ImportInfo extends $pb.GeneratedMessage {
+  factory ImportInfo({
+    $core.String? path,
+    $core.String? resolved,
+  }) {
+    final result = ImportInfo._();
+    if (path != null) result.path = path;
+    if (resolved != null) result.resolved = resolved;
+    return result;
+  }
+
+  ImportInfo._();
+
+  factory ImportInfo.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      ImportInfo()..mergeFromBuffer(data, registry);
+  factory ImportInfo.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      ImportInfo()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ImportInfo',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'com.kcl.api'),
+      createEmptyInstance: ImportInfo.$_createMessage)
+    ..aOS(1, _omitFieldNames ? '' : 'path')
+    ..aOS(2, _omitFieldNames ? '' : 'resolved')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ImportInfo clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ImportInfo copyWith(void Function(ImportInfo) updates) =>
+      super.copyWith((message) => updates(message as ImportInfo)) as ImportInfo;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  @$core.Deprecated('Use ImportInfo() / ImportInfo.new instead')
+  static ImportInfo create() => ImportInfo._();
+  static $pb.GeneratedMessage $_createMessage() => ImportInfo._();
+  @$core.override
+  ImportInfo createEmptyInstance() => ImportInfo._();
+  @$core.pragma('dart2js:noInline')
+  static ImportInfo getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ImportInfo>(ImportInfo.$_createMessage);
+  static ImportInfo? _defaultInstance;
+
+  /// Import specifier as written in the source.
+  @$pb.TagNumber(1)
+  $core.String get path => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set path($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasPath() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearPath() => $_clearField(1);
+
+  /// Resolved absolute file path of the import.
+  @$pb.TagNumber(2)
+  $core.String get resolved => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set resolved($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasResolved() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearResolved() => $_clearField(2);
+}
+
+/// Message representing a parsed kcl.mod manifest.
+class KclMod extends $pb.GeneratedMessage {
+  factory KclMod({
+    KclModPackage? package,
+    KclModProfile? profile,
+    $core.Iterable<$core.MapEntry<$core.String, KclModDependency>>?
+        dependencies,
+  }) {
+    final result = KclMod._();
+    if (package != null) result.package = package;
+    if (profile != null) result.profile = profile;
+    if (dependencies != null) result.dependencies.addEntries(dependencies);
+    return result;
+  }
+
+  KclMod._();
+
+  factory KclMod.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      KclMod()..mergeFromBuffer(data, registry);
+  factory KclMod.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      KclMod()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'KclMod',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'com.kcl.api'),
+      createEmptyInstance: KclMod.$_createMessage)
+    ..aOM<KclModPackage>(1, _omitFieldNames ? '' : 'package',
+        subBuilder: KclModPackage.$_createMessage)
+    ..aOM<KclModProfile>(2, _omitFieldNames ? '' : 'profile',
+        subBuilder: KclModProfile.$_createMessage)
+    ..m<$core.String, KclModDependency>(
+        3, _omitFieldNames ? '' : 'dependencies',
+        entryClassName: 'KclMod.DependenciesEntry',
+        keyFieldType: $pb.PbFieldType.OS,
+        valueFieldType: $pb.PbFieldType.OM,
+        valueCreator: KclModDependency.$_createMessage,
+        valueDefaultOrMaker: KclModDependency.getDefault,
+        packageName: const $pb.PackageName('com.kcl.api'))
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  KclMod clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  KclMod copyWith(void Function(KclMod) updates) =>
+      super.copyWith((message) => updates(message as KclMod)) as KclMod;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  @$core.Deprecated('Use KclMod() / KclMod.new instead')
+  static KclMod create() => KclMod._();
+  static $pb.GeneratedMessage $_createMessage() => KclMod._();
+  @$core.override
+  KclMod createEmptyInstance() => KclMod._();
+  @$core.pragma('dart2js:noInline')
+  static KclMod getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<KclMod>(KclMod.$_createMessage);
+  static KclMod? _defaultInstance;
+
+  /// Package section of the manifest.
+  @$pb.TagNumber(1)
+  KclModPackage get package => $_getN(0);
+  @$pb.TagNumber(1)
+  set package(KclModPackage value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasPackage() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearPackage() => $_clearField(1);
+  @$pb.TagNumber(1)
+  KclModPackage ensurePackage() => $_ensure(0);
+
+  /// Profile section of the manifest.
+  @$pb.TagNumber(2)
+  KclModProfile get profile => $_getN(1);
+  @$pb.TagNumber(2)
+  set profile(KclModProfile value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasProfile() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearProfile() => $_clearField(2);
+  @$pb.TagNumber(2)
+  KclModProfile ensureProfile() => $_ensure(1);
+
+  /// Mirrors the untagged toml dependency: exactly one of version/git/oci/local is set.
+  @$pb.TagNumber(3)
+  $pb.PbMap<$core.String, KclModDependency> get dependencies => $_getMap(2);
+}
+
+/// Message representing the package section of a kcl.mod manifest.
+class KclModPackage extends $pb.GeneratedMessage {
+  factory KclModPackage({
+    $core.String? name,
+    $core.String? edition,
+    $core.String? version,
+    $core.String? description,
+    $core.Iterable<$core.String>? include,
+    $core.Iterable<$core.String>? exclude,
+  }) {
+    final result = KclModPackage._();
+    if (name != null) result.name = name;
+    if (edition != null) result.edition = edition;
+    if (version != null) result.version = version;
+    if (description != null) result.description = description;
+    if (include != null) result.include.addAll(include);
+    if (exclude != null) result.exclude.addAll(exclude);
+    return result;
+  }
+
+  KclModPackage._();
+
+  factory KclModPackage.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      KclModPackage()..mergeFromBuffer(data, registry);
+  factory KclModPackage.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      KclModPackage()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'KclModPackage',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'com.kcl.api'),
+      createEmptyInstance: KclModPackage.$_createMessage)
+    ..aOS(1, _omitFieldNames ? '' : 'name')
+    ..aOS(2, _omitFieldNames ? '' : 'edition')
+    ..aOS(3, _omitFieldNames ? '' : 'version')
+    ..aOS(4, _omitFieldNames ? '' : 'description')
+    ..pPS(5, _omitFieldNames ? '' : 'include')
+    ..pPS(6, _omitFieldNames ? '' : 'exclude')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  KclModPackage clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  KclModPackage copyWith(void Function(KclModPackage) updates) =>
+      super.copyWith((message) => updates(message as KclModPackage))
+          as KclModPackage;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  @$core.Deprecated('Use KclModPackage() / KclModPackage.new instead')
+  static KclModPackage create() => KclModPackage._();
+  static $pb.GeneratedMessage $_createMessage() => KclModPackage._();
+  @$core.override
+  KclModPackage createEmptyInstance() => KclModPackage._();
+  @$core.pragma('dart2js:noInline')
+  static KclModPackage getDefault() =>
+      _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<KclModPackage>(
+          KclModPackage.$_createMessage);
+  static KclModPackage? _defaultInstance;
+
+  /// Name of the package.
+  @$pb.TagNumber(1)
+  $core.String get name => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set name($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasName() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearName() => $_clearField(1);
+
+  /// KCL compiler edition of the package.
+  @$pb.TagNumber(2)
+  $core.String get edition => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set edition($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasEdition() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearEdition() => $_clearField(2);
+
+  /// Version of the package.
+  @$pb.TagNumber(3)
+  $core.String get version => $_getSZ(2);
+  @$pb.TagNumber(3)
+  set version($core.String value) => $_setString(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasVersion() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearVersion() => $_clearField(3);
+
+  /// Description of the package.
+  @$pb.TagNumber(4)
+  $core.String get description => $_getSZ(3);
+  @$pb.TagNumber(4)
+  set description($core.String value) => $_setString(3, value);
+  @$pb.TagNumber(4)
+  $core.bool hasDescription() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearDescription() => $_clearField(4);
+
+  /// Files to include when publishing.
+  @$pb.TagNumber(5)
+  $pb.PbList<$core.String> get include => $_getList(4);
+
+  /// Files to exclude when publishing.
+  @$pb.TagNumber(6)
+  $pb.PbList<$core.String> get exclude => $_getList(5);
+}
+
+/// Message representing the profile section of a kcl.mod manifest.
+class KclModProfile extends $pb.GeneratedMessage {
+  factory KclModProfile({
+    $core.Iterable<$core.String>? entries,
+    $core.bool? disableNone,
+    $core.bool? sortKeys,
+    $core.Iterable<$core.String>? selectors,
+    $core.Iterable<$core.String>? overrides,
+    $core.Iterable<$core.String>? options,
+  }) {
+    final result = KclModProfile._();
+    if (entries != null) result.entries.addAll(entries);
+    if (disableNone != null) result.disableNone = disableNone;
+    if (sortKeys != null) result.sortKeys = sortKeys;
+    if (selectors != null) result.selectors.addAll(selectors);
+    if (overrides != null) result.overrides.addAll(overrides);
+    if (options != null) result.options.addAll(options);
+    return result;
+  }
+
+  KclModProfile._();
+
+  factory KclModProfile.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      KclModProfile()..mergeFromBuffer(data, registry);
+  factory KclModProfile.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      KclModProfile()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'KclModProfile',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'com.kcl.api'),
+      createEmptyInstance: KclModProfile.$_createMessage)
+    ..pPS(1, _omitFieldNames ? '' : 'entries')
+    ..aOB(2, _omitFieldNames ? '' : 'disableNone')
+    ..aOB(3, _omitFieldNames ? '' : 'sortKeys')
+    ..pPS(4, _omitFieldNames ? '' : 'selectors')
+    ..pPS(5, _omitFieldNames ? '' : 'overrides')
+    ..pPS(6, _omitFieldNames ? '' : 'options')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  KclModProfile clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  KclModProfile copyWith(void Function(KclModProfile) updates) =>
+      super.copyWith((message) => updates(message as KclModProfile))
+          as KclModProfile;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  @$core.Deprecated('Use KclModProfile() / KclModProfile.new instead')
+  static KclModProfile create() => KclModProfile._();
+  static $pb.GeneratedMessage $_createMessage() => KclModProfile._();
+  @$core.override
+  KclModProfile createEmptyInstance() => KclModProfile._();
+  @$core.pragma('dart2js:noInline')
+  static KclModProfile getDefault() =>
+      _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<KclModProfile>(
+          KclModProfile.$_createMessage);
+  static KclModProfile? _defaultInstance;
+
+  /// List of entry-point files.
+  @$pb.TagNumber(1)
+  $pb.PbList<$core.String> get entries => $_getList(0);
+
+  /// Flag that, when true, disables the emission of the special 'none' value in the output.
+  @$pb.TagNumber(2)
+  $core.bool get disableNone => $_getBF(1);
+  @$pb.TagNumber(2)
+  set disableNone($core.bool value) => $_setBool(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasDisableNone() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearDisableNone() => $_clearField(2);
+
+  /// Flag that, when true, ensures keys in maps are sorted.
+  @$pb.TagNumber(3)
+  $core.bool get sortKeys => $_getBF(2);
+  @$pb.TagNumber(3)
+  set sortKeys($core.bool value) => $_setBool(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasSortKeys() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearSortKeys() => $_clearField(3);
+
+  /// List of attribute selectors for conditional compilation.
+  @$pb.TagNumber(4)
+  $pb.PbList<$core.String> get selectors => $_getList(3);
+
+  /// List of override paths.
+  @$pb.TagNumber(5)
+  $pb.PbList<$core.String> get overrides => $_getList(4);
+
+  /// List of additional options for the KCL compiler.
+  @$pb.TagNumber(6)
+  $pb.PbList<$core.String> get options => $_getList(5);
+}
+
+/// Message representing a single dependency of a kcl.mod manifest.
+class KclModDependency extends $pb.GeneratedMessage {
+  factory KclModDependency({
+    $core.String? version,
+    KclModGitSource? git,
+    KclModOciSource? oci,
+    KclModLocalSource? local,
+  }) {
+    final result = KclModDependency._();
+    if (version != null) result.version = version;
+    if (git != null) result.git = git;
+    if (oci != null) result.oci = oci;
+    if (local != null) result.local = local;
+    return result;
+  }
+
+  KclModDependency._();
+
+  factory KclModDependency.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      KclModDependency()..mergeFromBuffer(data, registry);
+  factory KclModDependency.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      KclModDependency()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'KclModDependency',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'com.kcl.api'),
+      createEmptyInstance: KclModDependency.$_createMessage)
+    ..aOS(1, _omitFieldNames ? '' : 'version')
+    ..aOM<KclModGitSource>(2, _omitFieldNames ? '' : 'git',
+        subBuilder: KclModGitSource.$_createMessage)
+    ..aOM<KclModOciSource>(3, _omitFieldNames ? '' : 'oci',
+        subBuilder: KclModOciSource.$_createMessage)
+    ..aOM<KclModLocalSource>(4, _omitFieldNames ? '' : 'local',
+        subBuilder: KclModLocalSource.$_createMessage)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  KclModDependency clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  KclModDependency copyWith(void Function(KclModDependency) updates) =>
+      super.copyWith((message) => updates(message as KclModDependency))
+          as KclModDependency;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  @$core.Deprecated('Use KclModDependency() / KclModDependency.new instead')
+  static KclModDependency create() => KclModDependency._();
+  static $pb.GeneratedMessage $_createMessage() => KclModDependency._();
+  @$core.override
+  KclModDependency createEmptyInstance() => KclModDependency._();
+  @$core.pragma('dart2js:noInline')
+  static KclModDependency getDefault() =>
+      _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<KclModDependency>(
+          KclModDependency.$_createMessage);
+  static KclModDependency? _defaultInstance;
+
+  /// Version of the dependency, e.g. "1.0.0".
+  @$pb.TagNumber(1)
+  $core.String get version => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set version($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasVersion() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearVersion() => $_clearField(1);
+
+  /// Git source of the dependency.
+  @$pb.TagNumber(2)
+  KclModGitSource get git => $_getN(1);
+  @$pb.TagNumber(2)
+  set git(KclModGitSource value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasGit() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearGit() => $_clearField(2);
+  @$pb.TagNumber(2)
+  KclModGitSource ensureGit() => $_ensure(1);
+
+  /// OCI source of the dependency.
+  @$pb.TagNumber(3)
+  KclModOciSource get oci => $_getN(2);
+  @$pb.TagNumber(3)
+  set oci(KclModOciSource value) => $_setField(3, value);
+  @$pb.TagNumber(3)
+  $core.bool hasOci() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearOci() => $_clearField(3);
+  @$pb.TagNumber(3)
+  KclModOciSource ensureOci() => $_ensure(2);
+
+  /// Local path source of the dependency.
+  @$pb.TagNumber(4)
+  KclModLocalSource get local => $_getN(3);
+  @$pb.TagNumber(4)
+  set local(KclModLocalSource value) => $_setField(4, value);
+  @$pb.TagNumber(4)
+  $core.bool hasLocal() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearLocal() => $_clearField(4);
+  @$pb.TagNumber(4)
+  KclModLocalSource ensureLocal() => $_ensure(3);
+}
+
+/// Message representing a Git source of a kcl.mod dependency.
+class KclModGitSource extends $pb.GeneratedMessage {
+  factory KclModGitSource({
+    $core.String? git,
+    $core.String? branch,
+    $core.String? commit,
+    $core.String? tag,
+    $core.String? version,
+  }) {
+    final result = KclModGitSource._();
+    if (git != null) result.git = git;
+    if (branch != null) result.branch = branch;
+    if (commit != null) result.commit = commit;
+    if (tag != null) result.tag = tag;
+    if (version != null) result.version = version;
+    return result;
+  }
+
+  KclModGitSource._();
+
+  factory KclModGitSource.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      KclModGitSource()..mergeFromBuffer(data, registry);
+  factory KclModGitSource.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      KclModGitSource()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'KclModGitSource',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'com.kcl.api'),
+      createEmptyInstance: KclModGitSource.$_createMessage)
+    ..aOS(1, _omitFieldNames ? '' : 'git')
+    ..aOS(2, _omitFieldNames ? '' : 'branch')
+    ..aOS(3, _omitFieldNames ? '' : 'commit')
+    ..aOS(4, _omitFieldNames ? '' : 'tag')
+    ..aOS(5, _omitFieldNames ? '' : 'version')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  KclModGitSource clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  KclModGitSource copyWith(void Function(KclModGitSource) updates) =>
+      super.copyWith((message) => updates(message as KclModGitSource))
+          as KclModGitSource;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  @$core.Deprecated('Use KclModGitSource() / KclModGitSource.new instead')
+  static KclModGitSource create() => KclModGitSource._();
+  static $pb.GeneratedMessage $_createMessage() => KclModGitSource._();
+  @$core.override
+  KclModGitSource createEmptyInstance() => KclModGitSource._();
+  @$core.pragma('dart2js:noInline')
+  static KclModGitSource getDefault() =>
+      _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<KclModGitSource>(
+          KclModGitSource.$_createMessage);
+  static KclModGitSource? _defaultInstance;
+
+  /// URL of the Git repository.
+  @$pb.TagNumber(1)
+  $core.String get git => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set git($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasGit() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearGit() => $_clearField(1);
+
+  /// Optional branch name within the Git repository.
+  @$pb.TagNumber(2)
+  $core.String get branch => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set branch($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasBranch() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearBranch() => $_clearField(2);
+
+  /// Optional commit hash to check out from the Git repository.
+  @$pb.TagNumber(3)
+  $core.String get commit => $_getSZ(2);
+  @$pb.TagNumber(3)
+  set commit($core.String value) => $_setString(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasCommit() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearCommit() => $_clearField(3);
+
+  /// Optional tag name to check out from the Git repository.
+  @$pb.TagNumber(4)
+  $core.String get tag => $_getSZ(3);
+  @$pb.TagNumber(4)
+  set tag($core.String value) => $_setString(3, value);
+  @$pb.TagNumber(4)
+  $core.bool hasTag() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearTag() => $_clearField(4);
+
+  /// Optional version specification associated with the Git source.
+  @$pb.TagNumber(5)
+  $core.String get version => $_getSZ(4);
+  @$pb.TagNumber(5)
+  set version($core.String value) => $_setString(4, value);
+  @$pb.TagNumber(5)
+  $core.bool hasVersion() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearVersion() => $_clearField(5);
+}
+
+/// Message representing an OCI source of a kcl.mod dependency.
+class KclModOciSource extends $pb.GeneratedMessage {
+  factory KclModOciSource({
+    $core.String? oci,
+    $core.String? tag,
+  }) {
+    final result = KclModOciSource._();
+    if (oci != null) result.oci = oci;
+    if (tag != null) result.tag = tag;
+    return result;
+  }
+
+  KclModOciSource._();
+
+  factory KclModOciSource.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      KclModOciSource()..mergeFromBuffer(data, registry);
+  factory KclModOciSource.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      KclModOciSource()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'KclModOciSource',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'com.kcl.api'),
+      createEmptyInstance: KclModOciSource.$_createMessage)
+    ..aOS(1, _omitFieldNames ? '' : 'oci')
+    ..aOS(2, _omitFieldNames ? '' : 'tag')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  KclModOciSource clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  KclModOciSource copyWith(void Function(KclModOciSource) updates) =>
+      super.copyWith((message) => updates(message as KclModOciSource))
+          as KclModOciSource;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  @$core.Deprecated('Use KclModOciSource() / KclModOciSource.new instead')
+  static KclModOciSource create() => KclModOciSource._();
+  static $pb.GeneratedMessage $_createMessage() => KclModOciSource._();
+  @$core.override
+  KclModOciSource createEmptyInstance() => KclModOciSource._();
+  @$core.pragma('dart2js:noInline')
+  static KclModOciSource getDefault() =>
+      _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<KclModOciSource>(
+          KclModOciSource.$_createMessage);
+  static KclModOciSource? _defaultInstance;
+
+  /// URI of the OCI repository.
+  @$pb.TagNumber(1)
+  $core.String get oci => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set oci($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasOci() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearOci() => $_clearField(1);
+
+  /// Optional tag of the OCI package in the registry.
+  @$pb.TagNumber(2)
+  $core.String get tag => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set tag($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasTag() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearTag() => $_clearField(2);
+}
+
+/// Message representing a local path source of a kcl.mod dependency.
+class KclModLocalSource extends $pb.GeneratedMessage {
+  factory KclModLocalSource({
+    $core.String? path,
+  }) {
+    final result = KclModLocalSource._();
+    if (path != null) result.path = path;
+    return result;
+  }
+
+  KclModLocalSource._();
+
+  factory KclModLocalSource.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      KclModLocalSource()..mergeFromBuffer(data, registry);
+  factory KclModLocalSource.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      KclModLocalSource()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'KclModLocalSource',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'com.kcl.api'),
+      createEmptyInstance: KclModLocalSource.$_createMessage)
+    ..aOS(1, _omitFieldNames ? '' : 'path')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  KclModLocalSource clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  KclModLocalSource copyWith(void Function(KclModLocalSource) updates) =>
+      super.copyWith((message) => updates(message as KclModLocalSource))
+          as KclModLocalSource;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  @$core.Deprecated('Use KclModLocalSource() / KclModLocalSource.new instead')
+  static KclModLocalSource create() => KclModLocalSource._();
+  static $pb.GeneratedMessage $_createMessage() => KclModLocalSource._();
+  @$core.override
+  KclModLocalSource createEmptyInstance() => KclModLocalSource._();
+  @$core.pragma('dart2js:noInline')
+  static KclModLocalSource getDefault() =>
+      _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<KclModLocalSource>(
+          KclModLocalSource.$_createMessage);
+  static KclModLocalSource? _defaultInstance;
+
+  /// Path to the local directory or file.
+  @$pb.TagNumber(1)
+  $core.String get path => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set path($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasPath() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearPath() => $_clearField(1);
+}
+
+/// Message representing an application directory discovered under a package root.
+class AppInfo extends $pb.GeneratedMessage {
+  factory AppInfo({
+    $core.String? path,
+    $core.bool? hasKclMod,
+  }) {
+    final result = AppInfo._();
+    if (path != null) result.path = path;
+    if (hasKclMod != null) result.hasKclMod = hasKclMod;
+    return result;
+  }
+
+  AppInfo._();
+
+  factory AppInfo.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      AppInfo()..mergeFromBuffer(data, registry);
+  factory AppInfo.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      AppInfo()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'AppInfo',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'com.kcl.api'),
+      createEmptyInstance: AppInfo.$_createMessage)
+    ..aOS(1, _omitFieldNames ? '' : 'path')
+    ..aOB(2, _omitFieldNames ? '' : 'hasKclMod')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  AppInfo clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  AppInfo copyWith(void Function(AppInfo) updates) =>
+      super.copyWith((message) => updates(message as AppInfo)) as AppInfo;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  @$core.Deprecated('Use AppInfo() / AppInfo.new instead')
+  static AppInfo create() => AppInfo._();
+  static $pb.GeneratedMessage $_createMessage() => AppInfo._();
+  @$core.override
+  AppInfo createEmptyInstance() => AppInfo._();
+  @$core.pragma('dart2js:noInline')
+  static AppInfo getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<AppInfo>(AppInfo.$_createMessage);
+  static AppInfo? _defaultInstance;
+
+  /// Absolute path of the application directory.
+  @$pb.TagNumber(1)
+  $core.String get path => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set path($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasPath() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearPath() => $_clearField(1);
+
+  /// True when the directory contains a kcl.mod manifest.
+  @$pb.TagNumber(2)
+  $core.bool get hasKclMod => $_getBF(1);
+  @$pb.TagNumber(2)
+  set hasKclMod($core.bool value) => $_setBool(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasHasKclMod() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearHasKclMod() => $_clearField(2);
 }
 
 /// Message for list options response.
@@ -4942,11 +5832,6 @@ class CoverageSummary extends $pb.GeneratedMessage {
   void clearPercent() => $_clearField(3);
 }
 
-// Hand-added, not generated by `make proto`: the checked-in file predates the
-// unrelated `LoadPackageResult.imports`/`kclMod`/`apps` proto changes, so a
-// full regeneration would pull in ~1000 lines that are not part of this change.
-// Produced by running protoc 36.2 + protoc_plugin 25.1.0 on a scratch copy of
-// spec.proto carrying only the FormatTestReport hunks.
 /// Message for format test report request arguments.
 class FormatTestReportArgs extends $pb.GeneratedMessage {
   factory FormatTestReportArgs({
@@ -5010,7 +5895,6 @@ class FormatTestReportArgs extends $pb.GeneratedMessage {
   TestResult ensureResult() => $_ensure(0);
 }
 
-// Hand-added, not generated: see the note on FormatTestReportArgs above.
 /// Message for format test report response.
 class FormatTestReportResult extends $pb.GeneratedMessage {
   factory FormatTestReportResult({
@@ -5201,6 +6085,693 @@ class UpdateDependenciesResult extends $pb.GeneratedMessage {
   /// List of external packages updated.
   @$pb.TagNumber(3)
   $pb.PbList<ExternalPkg> get externalPkgs => $_getList(0);
+}
+
+/// Message for generate TOML request arguments.
+class GenerateTomlArgs extends $pb.GeneratedMessage {
+  factory GenerateTomlArgs({
+    ExecProgramArgs? execArgs,
+    $core.bool? sortKeys,
+  }) {
+    final result = GenerateTomlArgs._();
+    if (execArgs != null) result.execArgs = execArgs;
+    if (sortKeys != null) result.sortKeys = sortKeys;
+    return result;
+  }
+
+  GenerateTomlArgs._();
+
+  factory GenerateTomlArgs.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      GenerateTomlArgs()..mergeFromBuffer(data, registry);
+  factory GenerateTomlArgs.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      GenerateTomlArgs()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'GenerateTomlArgs',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'com.kcl.api'),
+      createEmptyInstance: GenerateTomlArgs.$_createMessage)
+    ..aOM<ExecProgramArgs>(1, _omitFieldNames ? '' : 'execArgs',
+        subBuilder: ExecProgramArgs.$_createMessage)
+    ..aOB(2, _omitFieldNames ? '' : 'sortKeys')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GenerateTomlArgs clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GenerateTomlArgs copyWith(void Function(GenerateTomlArgs) updates) =>
+      super.copyWith((message) => updates(message as GenerateTomlArgs))
+          as GenerateTomlArgs;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  @$core.Deprecated('Use GenerateTomlArgs() / GenerateTomlArgs.new instead')
+  static GenerateTomlArgs create() => GenerateTomlArgs._();
+  static $pb.GeneratedMessage $_createMessage() => GenerateTomlArgs._();
+  @$core.override
+  GenerateTomlArgs createEmptyInstance() => GenerateTomlArgs._();
+  @$core.pragma('dart2js:noInline')
+  static GenerateTomlArgs getDefault() =>
+      _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<GenerateTomlArgs>(
+          GenerateTomlArgs.$_createMessage);
+  static GenerateTomlArgs? _defaultInstance;
+
+  /// Arguments for executing the program whose result is serialized to TOML.
+  @$pb.TagNumber(1)
+  ExecProgramArgs get execArgs => $_getN(0);
+  @$pb.TagNumber(1)
+  set execArgs(ExecProgramArgs value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasExecArgs() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearExecArgs() => $_clearField(1);
+  @$pb.TagNumber(1)
+  ExecProgramArgs ensureExecArgs() => $_ensure(0);
+
+  /// Flag to sort keys in the TOML output. Defaults to false (source order).
+  @$pb.TagNumber(2)
+  $core.bool get sortKeys => $_getBF(1);
+  @$pb.TagNumber(2)
+  set sortKeys($core.bool value) => $_setBool(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasSortKeys() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearSortKeys() => $_clearField(2);
+}
+
+/// Message for generate TOML response.
+class GenerateTomlResult extends $pb.GeneratedMessage {
+  factory GenerateTomlResult({
+    $core.String? toml,
+  }) {
+    final result = GenerateTomlResult._();
+    if (toml != null) result.toml = toml;
+    return result;
+  }
+
+  GenerateTomlResult._();
+
+  factory GenerateTomlResult.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      GenerateTomlResult()..mergeFromBuffer(data, registry);
+  factory GenerateTomlResult.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      GenerateTomlResult()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'GenerateTomlResult',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'com.kcl.api'),
+      createEmptyInstance: GenerateTomlResult.$_createMessage)
+    ..aOS(1, _omitFieldNames ? '' : 'toml')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GenerateTomlResult clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GenerateTomlResult copyWith(void Function(GenerateTomlResult) updates) =>
+      super.copyWith((message) => updates(message as GenerateTomlResult))
+          as GenerateTomlResult;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  @$core.Deprecated('Use GenerateTomlResult() / GenerateTomlResult.new instead')
+  static GenerateTomlResult create() => GenerateTomlResult._();
+  static $pb.GeneratedMessage $_createMessage() => GenerateTomlResult._();
+  @$core.override
+  GenerateTomlResult createEmptyInstance() => GenerateTomlResult._();
+  @$core.pragma('dart2js:noInline')
+  static GenerateTomlResult getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<GenerateTomlResult>(
+          GenerateTomlResult.$_createMessage);
+  static GenerateTomlResult? _defaultInstance;
+
+  /// The evaluated result serialized as TOML.
+  @$pb.TagNumber(1)
+  $core.String get toml => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set toml($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasToml() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearToml() => $_clearField(1);
+}
+
+/// Message for generate KCL request arguments.
+class GenerateKclArgs extends $pb.GeneratedMessage {
+  factory GenerateKclArgs({
+    $core.String? source,
+    $core.String? filename,
+    $core.String? format,
+  }) {
+    final result = GenerateKclArgs._();
+    if (source != null) result.source = source;
+    if (filename != null) result.filename = filename;
+    if (format != null) result.format = format;
+    return result;
+  }
+
+  GenerateKclArgs._();
+
+  factory GenerateKclArgs.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      GenerateKclArgs()..mergeFromBuffer(data, registry);
+  factory GenerateKclArgs.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      GenerateKclArgs()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'GenerateKclArgs',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'com.kcl.api'),
+      createEmptyInstance: GenerateKclArgs.$_createMessage)
+    ..aOS(1, _omitFieldNames ? '' : 'source')
+    ..aOS(2, _omitFieldNames ? '' : 'filename')
+    ..aOS(3, _omitFieldNames ? '' : 'format')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GenerateKclArgs clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GenerateKclArgs copyWith(void Function(GenerateKclArgs) updates) =>
+      super.copyWith((message) => updates(message as GenerateKclArgs))
+          as GenerateKclArgs;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  @$core.Deprecated('Use GenerateKclArgs() / GenerateKclArgs.new instead')
+  static GenerateKclArgs create() => GenerateKclArgs._();
+  static $pb.GeneratedMessage $_createMessage() => GenerateKclArgs._();
+  @$core.override
+  GenerateKclArgs createEmptyInstance() => GenerateKclArgs._();
+  @$core.pragma('dart2js:noInline')
+  static GenerateKclArgs getDefault() =>
+      _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<GenerateKclArgs>(
+          GenerateKclArgs.$_createMessage);
+  static GenerateKclArgs? _defaultInstance;
+
+  /// The source data content (JSON, YAML or TOML text).
+  @$pb.TagNumber(1)
+  $core.String get source => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set source($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasSource() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearSource() => $_clearField(1);
+
+  /// File name hint used for error messages and format detection, e.g. "data.json".
+  @$pb.TagNumber(2)
+  $core.String get filename => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set filename($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasFilename() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearFilename() => $_clearField(2);
+
+  /// Data format: "json", "yaml" or "toml". When empty, inferred from the
+  /// filename extension, defaulting to "json".
+  @$pb.TagNumber(3)
+  $core.String get format => $_getSZ(2);
+  @$pb.TagNumber(3)
+  set format($core.String value) => $_setString(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasFormat() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearFormat() => $_clearField(3);
+}
+
+/// Message for generate KCL response.
+class GenerateKclResult extends $pb.GeneratedMessage {
+  factory GenerateKclResult({
+    $core.String? kcl,
+  }) {
+    final result = GenerateKclResult._();
+    if (kcl != null) result.kcl = kcl;
+    return result;
+  }
+
+  GenerateKclResult._();
+
+  factory GenerateKclResult.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      GenerateKclResult()..mergeFromBuffer(data, registry);
+  factory GenerateKclResult.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      GenerateKclResult()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'GenerateKclResult',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'com.kcl.api'),
+      createEmptyInstance: GenerateKclResult.$_createMessage)
+    ..aOS(1, _omitFieldNames ? '' : 'kcl')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GenerateKclResult clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GenerateKclResult copyWith(void Function(GenerateKclResult) updates) =>
+      super.copyWith((message) => updates(message as GenerateKclResult))
+          as GenerateKclResult;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  @$core.Deprecated('Use GenerateKclResult() / GenerateKclResult.new instead')
+  static GenerateKclResult create() => GenerateKclResult._();
+  static $pb.GeneratedMessage $_createMessage() => GenerateKclResult._();
+  @$core.override
+  GenerateKclResult createEmptyInstance() => GenerateKclResult._();
+  @$core.pragma('dart2js:noInline')
+  static GenerateKclResult getDefault() =>
+      _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<GenerateKclResult>(
+          GenerateKclResult.$_createMessage);
+  static GenerateKclResult? _defaultInstance;
+
+  /// The generated KCL source.
+  @$pb.TagNumber(1)
+  $core.String get kcl => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set kcl($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasKcl() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearKcl() => $_clearField(1);
+}
+
+/// Message for generate OpenAPI request arguments.
+class GenerateOpenAPIArgs extends $pb.GeneratedMessage {
+  factory GenerateOpenAPIArgs({
+    ParseProgramArgs? parseArgs,
+    $core.String? version,
+  }) {
+    final result = GenerateOpenAPIArgs._();
+    if (parseArgs != null) result.parseArgs = parseArgs;
+    if (version != null) result.version = version;
+    return result;
+  }
+
+  GenerateOpenAPIArgs._();
+
+  factory GenerateOpenAPIArgs.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      GenerateOpenAPIArgs()..mergeFromBuffer(data, registry);
+  factory GenerateOpenAPIArgs.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      GenerateOpenAPIArgs()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'GenerateOpenAPIArgs',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'com.kcl.api'),
+      createEmptyInstance: GenerateOpenAPIArgs.$_createMessage)
+    ..aOM<ParseProgramArgs>(1, _omitFieldNames ? '' : 'parseArgs',
+        subBuilder: ParseProgramArgs.$_createMessage)
+    ..aOS(2, _omitFieldNames ? '' : 'version')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GenerateOpenAPIArgs clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GenerateOpenAPIArgs copyWith(void Function(GenerateOpenAPIArgs) updates) =>
+      super.copyWith((message) => updates(message as GenerateOpenAPIArgs))
+          as GenerateOpenAPIArgs;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  @$core
+      .Deprecated('Use GenerateOpenAPIArgs() / GenerateOpenAPIArgs.new instead')
+  static GenerateOpenAPIArgs create() => GenerateOpenAPIArgs._();
+  static $pb.GeneratedMessage $_createMessage() => GenerateOpenAPIArgs._();
+  @$core.override
+  GenerateOpenAPIArgs createEmptyInstance() => GenerateOpenAPIArgs._();
+  @$core.pragma('dart2js:noInline')
+  static GenerateOpenAPIArgs getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<GenerateOpenAPIArgs>(
+          GenerateOpenAPIArgs.$_createMessage);
+  static GenerateOpenAPIArgs? _defaultInstance;
+
+  /// Arguments for parsing the program whose schemas are exported.
+  @$pb.TagNumber(1)
+  ParseProgramArgs get parseArgs => $_getN(0);
+  @$pb.TagNumber(1)
+  set parseArgs(ParseProgramArgs value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasParseArgs() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearParseArgs() => $_clearField(1);
+  @$pb.TagNumber(1)
+  ParseProgramArgs ensureParseArgs() => $_ensure(0);
+
+  /// Spec version: "v3" (default) or "v2" (Swagger 2.0).
+  @$pb.TagNumber(2)
+  $core.String get version => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set version($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasVersion() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearVersion() => $_clearField(2);
+}
+
+/// Message for generate OpenAPI response.
+class GenerateOpenAPIResult extends $pb.GeneratedMessage {
+  factory GenerateOpenAPIResult({
+    $core.String? spec,
+  }) {
+    final result = GenerateOpenAPIResult._();
+    if (spec != null) result.spec = spec;
+    return result;
+  }
+
+  GenerateOpenAPIResult._();
+
+  factory GenerateOpenAPIResult.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      GenerateOpenAPIResult()..mergeFromBuffer(data, registry);
+  factory GenerateOpenAPIResult.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      GenerateOpenAPIResult()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'GenerateOpenAPIResult',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'com.kcl.api'),
+      createEmptyInstance: GenerateOpenAPIResult.$_createMessage)
+    ..aOS(1, _omitFieldNames ? '' : 'spec')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GenerateOpenAPIResult clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GenerateOpenAPIResult copyWith(
+          void Function(GenerateOpenAPIResult) updates) =>
+      super.copyWith((message) => updates(message as GenerateOpenAPIResult))
+          as GenerateOpenAPIResult;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  @$core.Deprecated(
+      'Use GenerateOpenAPIResult() / GenerateOpenAPIResult.new instead')
+  static GenerateOpenAPIResult create() => GenerateOpenAPIResult._();
+  static $pb.GeneratedMessage $_createMessage() => GenerateOpenAPIResult._();
+  @$core.override
+  GenerateOpenAPIResult createEmptyInstance() => GenerateOpenAPIResult._();
+  @$core.pragma('dart2js:noInline')
+  static GenerateOpenAPIResult getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<GenerateOpenAPIResult>(
+          GenerateOpenAPIResult.$_createMessage);
+  static GenerateOpenAPIResult? _defaultInstance;
+
+  /// The generated spec as a JSON string.
+  @$pb.TagNumber(1)
+  $core.String get spec => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set spec($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasSpec() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearSpec() => $_clearField(1);
+}
+
+/// Message for generate proto request arguments.
+class GenerateProtoArgs extends $pb.GeneratedMessage {
+  factory GenerateProtoArgs({
+    ParseProgramArgs? parseArgs,
+    $core.String? package,
+  }) {
+    final result = GenerateProtoArgs._();
+    if (parseArgs != null) result.parseArgs = parseArgs;
+    if (package != null) result.package = package;
+    return result;
+  }
+
+  GenerateProtoArgs._();
+
+  factory GenerateProtoArgs.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      GenerateProtoArgs()..mergeFromBuffer(data, registry);
+  factory GenerateProtoArgs.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      GenerateProtoArgs()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'GenerateProtoArgs',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'com.kcl.api'),
+      createEmptyInstance: GenerateProtoArgs.$_createMessage)
+    ..aOM<ParseProgramArgs>(1, _omitFieldNames ? '' : 'parseArgs',
+        subBuilder: ParseProgramArgs.$_createMessage)
+    ..aOS(2, _omitFieldNames ? '' : 'package')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GenerateProtoArgs clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GenerateProtoArgs copyWith(void Function(GenerateProtoArgs) updates) =>
+      super.copyWith((message) => updates(message as GenerateProtoArgs))
+          as GenerateProtoArgs;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  @$core.Deprecated('Use GenerateProtoArgs() / GenerateProtoArgs.new instead')
+  static GenerateProtoArgs create() => GenerateProtoArgs._();
+  static $pb.GeneratedMessage $_createMessage() => GenerateProtoArgs._();
+  @$core.override
+  GenerateProtoArgs createEmptyInstance() => GenerateProtoArgs._();
+  @$core.pragma('dart2js:noInline')
+  static GenerateProtoArgs getDefault() =>
+      _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<GenerateProtoArgs>(
+          GenerateProtoArgs.$_createMessage);
+  static GenerateProtoArgs? _defaultInstance;
+
+  /// Arguments for parsing the program whose schemas are exported.
+  @$pb.TagNumber(1)
+  ParseProgramArgs get parseArgs => $_getN(0);
+  @$pb.TagNumber(1)
+  set parseArgs(ParseProgramArgs value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasParseArgs() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearParseArgs() => $_clearField(1);
+  @$pb.TagNumber(1)
+  ParseProgramArgs ensureParseArgs() => $_ensure(0);
+
+  /// Proto package name, e.g. "example.v1". Empty means no package clause.
+  @$pb.TagNumber(2)
+  $core.String get package => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set package($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasPackage() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearPackage() => $_clearField(2);
+}
+
+/// Message for generate proto response.
+class GenerateProtoResult extends $pb.GeneratedMessage {
+  factory GenerateProtoResult({
+    $core.String? proto,
+  }) {
+    final result = GenerateProtoResult._();
+    if (proto != null) result.proto = proto;
+    return result;
+  }
+
+  GenerateProtoResult._();
+
+  factory GenerateProtoResult.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      GenerateProtoResult()..mergeFromBuffer(data, registry);
+  factory GenerateProtoResult.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      GenerateProtoResult()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'GenerateProtoResult',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'com.kcl.api'),
+      createEmptyInstance: GenerateProtoResult.$_createMessage)
+    ..aOS(1, _omitFieldNames ? '' : 'proto')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GenerateProtoResult clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GenerateProtoResult copyWith(void Function(GenerateProtoResult) updates) =>
+      super.copyWith((message) => updates(message as GenerateProtoResult))
+          as GenerateProtoResult;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  @$core
+      .Deprecated('Use GenerateProtoResult() / GenerateProtoResult.new instead')
+  static GenerateProtoResult create() => GenerateProtoResult._();
+  static $pb.GeneratedMessage $_createMessage() => GenerateProtoResult._();
+  @$core.override
+  GenerateProtoResult createEmptyInstance() => GenerateProtoResult._();
+  @$core.pragma('dart2js:noInline')
+  static GenerateProtoResult getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<GenerateProtoResult>(
+          GenerateProtoResult.$_createMessage);
+  static GenerateProtoResult? _defaultInstance;
+
+  /// The generated proto3 definitions.
+  @$pb.TagNumber(1)
+  $core.String get proto => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set proto($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasProto() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearProto() => $_clearField(1);
+}
+
+/// Message for generate doc request arguments.
+class GenerateDocArgs extends $pb.GeneratedMessage {
+  factory GenerateDocArgs({
+    ParseProgramArgs? parseArgs,
+    $core.String? format,
+  }) {
+    final result = GenerateDocArgs._();
+    if (parseArgs != null) result.parseArgs = parseArgs;
+    if (format != null) result.format = format;
+    return result;
+  }
+
+  GenerateDocArgs._();
+
+  factory GenerateDocArgs.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      GenerateDocArgs()..mergeFromBuffer(data, registry);
+  factory GenerateDocArgs.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      GenerateDocArgs()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'GenerateDocArgs',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'com.kcl.api'),
+      createEmptyInstance: GenerateDocArgs.$_createMessage)
+    ..aOM<ParseProgramArgs>(1, _omitFieldNames ? '' : 'parseArgs',
+        subBuilder: ParseProgramArgs.$_createMessage)
+    ..aOS(2, _omitFieldNames ? '' : 'format')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GenerateDocArgs clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GenerateDocArgs copyWith(void Function(GenerateDocArgs) updates) =>
+      super.copyWith((message) => updates(message as GenerateDocArgs))
+          as GenerateDocArgs;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  @$core.Deprecated('Use GenerateDocArgs() / GenerateDocArgs.new instead')
+  static GenerateDocArgs create() => GenerateDocArgs._();
+  static $pb.GeneratedMessage $_createMessage() => GenerateDocArgs._();
+  @$core.override
+  GenerateDocArgs createEmptyInstance() => GenerateDocArgs._();
+  @$core.pragma('dart2js:noInline')
+  static GenerateDocArgs getDefault() =>
+      _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<GenerateDocArgs>(
+          GenerateDocArgs.$_createMessage);
+  static GenerateDocArgs? _defaultInstance;
+
+  /// Arguments for parsing the program whose schemas are documented.
+  @$pb.TagNumber(1)
+  ParseProgramArgs get parseArgs => $_getN(0);
+  @$pb.TagNumber(1)
+  set parseArgs(ParseProgramArgs value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasParseArgs() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearParseArgs() => $_clearField(1);
+  @$pb.TagNumber(1)
+  ParseProgramArgs ensureParseArgs() => $_ensure(0);
+
+  /// Output format: "md" (default, Markdown), "openapi" (Swagger 2.0 spec)
+  /// or "json-schema" (JSON Schema draft for each schema). "html" is not
+  /// supported yet.
+  @$pb.TagNumber(2)
+  $core.String get format => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set format($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasFormat() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearFormat() => $_clearField(2);
+}
+
+/// Message for generate doc response.
+class GenerateDocResult extends $pb.GeneratedMessage {
+  factory GenerateDocResult({
+    $core.String? content,
+  }) {
+    final result = GenerateDocResult._();
+    if (content != null) result.content = content;
+    return result;
+  }
+
+  GenerateDocResult._();
+
+  factory GenerateDocResult.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      GenerateDocResult()..mergeFromBuffer(data, registry);
+  factory GenerateDocResult.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      GenerateDocResult()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'GenerateDocResult',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'com.kcl.api'),
+      createEmptyInstance: GenerateDocResult.$_createMessage)
+    ..aOS(1, _omitFieldNames ? '' : 'content')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GenerateDocResult clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GenerateDocResult copyWith(void Function(GenerateDocResult) updates) =>
+      super.copyWith((message) => updates(message as GenerateDocResult))
+          as GenerateDocResult;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  @$core.Deprecated('Use GenerateDocResult() / GenerateDocResult.new instead')
+  static GenerateDocResult create() => GenerateDocResult._();
+  static $pb.GeneratedMessage $_createMessage() => GenerateDocResult._();
+  @$core.override
+  GenerateDocResult createEmptyInstance() => GenerateDocResult._();
+  @$core.pragma('dart2js:noInline')
+  static GenerateDocResult getDefault() =>
+      _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<GenerateDocResult>(
+          GenerateDocResult.$_createMessage);
+  static GenerateDocResult? _defaultInstance;
+
+  /// The generated documentation.
+  @$pb.TagNumber(1)
+  $core.String get content => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set content($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasContent() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearContent() => $_clearField(1);
 }
 
 /// Message representing a KCL type.
@@ -5876,6 +7447,1021 @@ class Example extends $pb.GeneratedMessage {
   $core.bool hasValue() => $_has(2);
   @$pb.TagNumber(3)
   void clearValue() => $_clearField(3);
+}
+
+/// Service for built-in functionality.
+class BuiltinServiceApi {
+  final $pb.RpcClient _client;
+
+  BuiltinServiceApi(this._client);
+
+  /// Sends a ping request.
+  $async.Future<PingResult> ping($pb.ClientContext? ctx, PingArgs request) =>
+      _client.invoke<PingResult>(
+          ctx, 'BuiltinService', 'Ping', request, PingResult());
+
+  /// Lists available methods.
+  $async.Future<ListMethodResult> listMethod(
+          $pb.ClientContext? ctx, ListMethodArgs request) =>
+      _client.invoke<ListMethodResult>(
+          ctx, 'BuiltinService', 'ListMethod', request, ListMethodResult());
+}
+
+/// Service for KCL VM interactions.
+class KclServiceApi {
+  final $pb.RpcClient _client;
+
+  KclServiceApi(this._client);
+
+  /// / Ping KclService, return the same value as the parameter
+  /// /
+  /// / # Examples
+  /// /
+  /// / ```jsonrpc
+  /// / // Request
+  /// / {
+  /// /     "jsonrpc": "2.0",
+  /// /     "method": "Ping",
+  /// /     "params": {
+  /// /         "value": "hello"
+  /// /     },
+  /// /     "id": 1
+  /// / }
+  /// /
+  /// / // Response
+  /// / {
+  /// /     "jsonrpc": "2.0",
+  /// /     "result": {
+  /// /         "value": "hello"
+  /// /     },
+  /// /     "id": 1
+  /// / }
+  /// / ```
+  $async.Future<PingResult> ping($pb.ClientContext? ctx, PingArgs request) =>
+      _client.invoke<PingResult>(
+          ctx, 'KclService', 'Ping', request, PingResult());
+
+  /// / GetVersion KclService, return the kcl service version information
+  /// /
+  /// / # Examples
+  /// /
+  /// / ```jsonrpc
+  /// / // Request
+  /// / {
+  /// /     "jsonrpc": "2.0",
+  /// /     "method": "GetVersion",
+  /// /     "params": {},
+  /// /     "id": 1
+  /// / }
+  /// /
+  /// / // Response
+  /// / {
+  /// /     "jsonrpc": "2.0",
+  /// /     "result": {
+  /// /         "version": "0.9.1",
+  /// /         "checksum": "c020ab3eb4b9179219d6837a57f5d323",
+  /// /         "git_sha": "1a9a72942fffc9f62cb8f1ae4e1d5ca32aa1f399",
+  /// /         "version_info": "Version: 0.9.1-c020ab3eb4b9179219d6837a57f5d323\nPlatform: aarch64-apple-darwin\nGitCommit: 1a9a72942fffc9f62cb8f1ae4e1d5ca32aa1f399"
+  /// /     },
+  /// /     "id": 1
+  /// / }
+  /// / ```
+  $async.Future<GetVersionResult> getVersion(
+          $pb.ClientContext? ctx, GetVersionArgs request) =>
+      _client.invoke<GetVersionResult>(
+          ctx, 'KclService', 'GetVersion', request, GetVersionResult());
+
+  /// / Parse KCL program with entry files.
+  /// /
+  /// / # Examples
+  /// /
+  /// / ```jsonrpc
+  /// / // Request
+  /// / {
+  /// /     "jsonrpc": "2.0",
+  /// /     "method": "ParseProgram",
+  /// /     "params": {
+  /// /         "paths": ["./src/testdata/test.k"]
+  /// /     },
+  /// /     "id": 1
+  /// / }
+  /// /
+  /// / // Response
+  /// / {
+  /// /     "jsonrpc": "2.0",
+  /// /     "result": {
+  /// /         "ast_json": "{...}",
+  /// /         "paths": ["./src/testdata/test.k"],
+  /// /         "errors": []
+  /// /     },
+  /// /     "id": 1
+  /// / }
+  /// / ```
+  $async.Future<ParseProgramResult> parseProgram(
+          $pb.ClientContext? ctx, ParseProgramArgs request) =>
+      _client.invoke<ParseProgramResult>(
+          ctx, 'KclService', 'ParseProgram', request, ParseProgramResult());
+
+  /// / Parse KCL single file to Module AST JSON string with import dependencies
+  /// / and parse errors.
+  /// /
+  /// / # Examples
+  /// /
+  /// / ```jsonrpc
+  /// / // Request
+  /// / {
+  /// /     "jsonrpc": "2.0",
+  /// /     "method": "ParseFile",
+  /// /     "params": {
+  /// /         "path": "./src/testdata/parse/main.k"
+  /// /     },
+  /// /     "id": 1
+  /// / }
+  /// /
+  /// / // Response
+  /// / {
+  /// /     "jsonrpc": "2.0",
+  /// /     "result": {
+  /// /         "ast_json": "{...}",
+  /// /         "deps": ["./dep1", "./dep2"],
+  /// /         "errors": []
+  /// /     },
+  /// /     "id": 1
+  /// / }
+  /// / ```
+  $async.Future<ParseFileResult> parseFile(
+          $pb.ClientContext? ctx, ParseFileArgs request) =>
+      _client.invoke<ParseFileResult>(
+          ctx, 'KclService', 'ParseFile', request, ParseFileResult());
+
+  /// / load_package provides users with the ability to parse kcl program and semantic model
+  /// / information including symbols, types, definitions, etc.
+  /// /
+  /// / # Examples
+  /// /
+  /// / ```jsonrpc
+  /// / // Request
+  /// / {
+  /// /     "jsonrpc": "2.0",
+  /// /     "method": "LoadPackage",
+  /// /     "params": {
+  /// /         "parse_args": {
+  /// /             "paths": ["./src/testdata/parse/main.k"]
+  /// /         },
+  /// /         "resolve_ast": true
+  /// /     },
+  /// /     "id": 1
+  /// / }
+  /// /
+  /// / // Response
+  /// / {
+  /// /     "jsonrpc": "2.0",
+  /// /     "result": {
+  /// /         "program": "{...}",
+  /// /         "paths": ["./src/testdata/parse/main.k"],
+  /// /         "parse_errors": [],
+  /// /         "type_errors": [],
+  /// /         "symbols": { ... },
+  /// /         "scopes": { ... },
+  /// /         "node_symbol_map": { ... },
+  /// /         "symbol_node_map": { ... },
+  /// /         "fully_qualified_name_map": { ... },
+  /// /         "pkg_scope_map": { ... }
+  /// /     },
+  /// /     "id": 1
+  /// / }
+  /// / ```
+  $async.Future<LoadPackageResult> loadPackage(
+          $pb.ClientContext? ctx, LoadPackageArgs request) =>
+      _client.invoke<LoadPackageResult>(
+          ctx, 'KclService', 'LoadPackage', request, LoadPackageResult());
+
+  /// / list_options provides users with the ability to parse kcl program and get all option information.
+  /// /
+  /// / # Examples
+  /// /
+  /// / ```jsonrpc
+  /// / // Request
+  /// / {
+  /// /     "jsonrpc": "2.0",
+  /// /     "method": "ListOptions",
+  /// /     "params": {
+  /// /         "paths": ["./src/testdata/option/main.k"]
+  /// /     },
+  /// /     "id": 1
+  /// / }
+  /// /
+  /// / // Response
+  /// / {
+  /// /     "jsonrpc": "2.0",
+  /// /     "result": {
+  /// /         "options": [
+  /// /             { "name": "option1", "type": "str", "required": true, "default_value": "", "help": "option 1 help" },
+  /// /             { "name": "option2", "type": "int", "required": false, "default_value": "0", "help": "option 2 help" },
+  /// /             { "name": "option3", "type": "bool", "required": false, "default_value": "false", "help": "option 3 help" }
+  /// /         ]
+  /// /     },
+  /// /     "id": 1
+  /// / }
+  /// / ```
+  $async.Future<ListOptionsResult> listOptions(
+          $pb.ClientContext? ctx, ParseProgramArgs request) =>
+      _client.invoke<ListOptionsResult>(
+          ctx, 'KclService', 'ListOptions', request, ListOptionsResult());
+
+  /// / list_variables provides users with the ability to parse kcl program and get all variables by specs.
+  /// /
+  /// / # Examples
+  /// /
+  /// / ```jsonrpc
+  /// / // Request
+  /// / {
+  /// /     "jsonrpc": "2.0",
+  /// /     "method": "ListVariables",
+  /// /     "params": {
+  /// /         "files": ["./src/testdata/variables/main.k"],
+  /// /         "specs": ["a"]
+  /// /     },
+  /// /     "id": 1
+  /// / }
+  /// /
+  /// / // Response
+  /// / {
+  /// /     "jsonrpc": "2.0",
+  /// /     "result": {
+  /// /         "variables": {
+  /// /             "a": {
+  /// /                 "variables": [
+  /// /                     { "value": "1", "type_name": "int", "op_sym": "", "list_items": [], "dict_entries": [] }
+  /// /                 ]
+  /// /             }
+  /// /         },
+  /// /         "unsupported_codes": [],
+  /// /         "parse_errors": []
+  /// /     },
+  /// /     "id": 1
+  /// / }
+  /// / ```
+  $async.Future<ListVariablesResult> listVariables(
+          $pb.ClientContext? ctx, ListVariablesArgs request) =>
+      _client.invoke<ListVariablesResult>(
+          ctx, 'KclService', 'ListVariables', request, ListVariablesResult());
+
+  /// / Execute KCL file with args. **Note that it is not thread safe.**
+  /// /
+  /// / # Examples
+  /// /
+  /// / ```jsonrpc
+  /// / // Request
+  /// / {
+  /// /     "jsonrpc": "2.0",
+  /// /     "method": "ExecProgram",
+  /// /     "params": {
+  /// /         "work_dir": "./src/testdata",
+  /// /         "k_filename_list": ["test.k"]
+  /// /     },
+  /// /     "id": 1
+  /// / }
+  /// /
+  /// / // Response
+  /// / {
+  /// /     "jsonrpc": "2.0",
+  /// /     "result": {
+  /// /         "json_result": "{\"alice\": {\"age\": 18}}",
+  /// /         "yaml_result": "alice:\n  age: 18",
+  /// /         "log_message": "",
+  /// /         "err_message": ""
+  /// /     },
+  /// /     "id": 1
+  /// / }
+  /// /
+  /// / // Request with code
+  /// / {
+  /// /     "jsonrpc": "2.0",
+  /// /     "method": "ExecProgram",
+  /// /     "params": {
+  /// /         "k_filename_list": ["file.k"],
+  /// /         "k_code_list": ["alice = {age = 18}"]
+  /// /     },
+  /// /     "id": 2
+  /// / }
+  /// /
+  /// / // Response
+  /// / {
+  /// /     "jsonrpc": "2.0",
+  /// /     "result": {
+  /// /         "json_result": "{\"alice\": {\"age\": 18}}",
+  /// /         "yaml_result": "alice:\n  age: 18",
+  /// /         "log_message": "",
+  /// /         "err_message": ""
+  /// /     },
+  /// /     "id": 2
+  /// / }
+  /// /
+  /// / // Error case - cannot find file
+  /// / {
+  /// /     "jsonrpc": "2.0",
+  /// /     "method": "ExecProgram",
+  /// /     "params": {
+  /// /         "k_filename_list": ["invalid_file.k"]
+  /// /     },
+  /// /     "id": 3
+  /// / }
+  /// /
+  /// / // Error Response
+  /// / {
+  /// /     "jsonrpc": "2.0",
+  /// /     "error": {
+  /// /         "code": -32602,
+  /// /         "message": "Cannot find the kcl file"
+  /// /     },
+  /// /     "id": 3
+  /// / }
+  /// /
+  /// / // Error case - no input files
+  /// / {
+  /// /     "jsonrpc": "2.0",
+  /// /     "method": "ExecProgram",
+  /// /     "params": {
+  /// /         "k_filename_list": []
+  /// /     },
+  /// /     "id": 4
+  /// / }
+  /// /
+  /// / // Error Response
+  /// / {
+  /// /     "jsonrpc": "2.0",
+  /// /     "error": {
+  /// /         "code": -32602,
+  /// /         "message": "No input KCL files or paths"
+  /// /     },
+  /// /     "id": 4
+  /// / }
+  /// / ```
+  $async.Future<ExecProgramResult> execProgram(
+          $pb.ClientContext? ctx, ExecProgramArgs request) =>
+      _client.invoke<ExecProgramResult>(
+          ctx, 'KclService', 'ExecProgram', request, ExecProgramResult());
+
+  /// / Override KCL file with args.
+  /// /
+  /// / # Examples
+  /// /
+  /// / ```jsonrpc
+  /// / // Request
+  /// / {
+  /// /     "jsonrpc": "2.0",
+  /// /     "method": "OverrideFile",
+  /// /     "params": {
+  /// /         "file": "./src/testdata/test.k",
+  /// /         "specs": ["alice.age=18"]
+  /// /     },
+  /// /     "id": 1
+  /// / }
+  /// /
+  /// / // Response
+  /// / {
+  /// /     "jsonrpc": "2.0",
+  /// /     "result": {
+  /// /         "result": true,
+  /// /         "parse_errors": []
+  /// /     },
+  /// /     "id": 1
+  /// / }
+  /// / ```
+  $async.Future<OverrideFileResult> overrideFile(
+          $pb.ClientContext? ctx, OverrideFileArgs request) =>
+      _client.invoke<OverrideFileResult>(
+          ctx, 'KclService', 'OverrideFile', request, OverrideFileResult());
+
+  /// / Get schema type mapping.
+  /// /
+  /// / # Examples
+  /// /
+  /// / ```jsonrpc
+  /// / // Request
+  /// / {
+  /// /     "jsonrpc": "2.0",
+  /// /     "method": "GetSchemaTypeMapping",
+  /// /     "params": {
+  /// /         "exec_args": {
+  /// /             "work_dir": "./src/testdata",
+  /// /             "k_filename_list": ["main.k"],
+  /// /             "external_pkgs": [
+  /// /                 {
+  /// /                     "pkg_name":"pkg",
+  /// /                     "pkg_path": "./src/testdata/pkg"
+  /// /                 }
+  /// /             ]
+  /// /         },
+  /// /         "schema_name": "Person"
+  /// /     },
+  /// /     "id": 1
+  /// / }
+  /// /
+  /// / // Response
+  /// / {
+  /// /     "jsonrpc": "2.0",
+  /// /     "result": {
+  /// /         "schema_type_mapping": {
+  /// /             "Person": {
+  /// /                 "type": "schema",
+  /// /                 "schema_name": "Person",
+  /// /                 "properties": {
+  /// /                     "name": { "type": "str" },
+  /// /                     "age": { "type": "int" }
+  /// /                 },
+  /// /                 "required": ["name", "age"],
+  /// /                 "decorators": []
+  /// /             }
+  /// /         }
+  /// /     },
+  /// /     "id": 1
+  /// / }
+  /// / ```
+  $async.Future<GetSchemaTypeMappingResult> getSchemaTypeMapping(
+          $pb.ClientContext? ctx, GetSchemaTypeMappingArgs request) =>
+      _client.invoke<GetSchemaTypeMappingResult>(ctx, 'KclService',
+          'GetSchemaTypeMapping', request, GetSchemaTypeMappingResult());
+
+  /// / Get schema type mapping under the input paths, including all of their
+  /// / external dependency packages. Different from `GetSchemaTypeMapping`,
+  /// / the result is keyed by package name (e.g. "__main__", "pkg") and each
+  /// / value holds the schema list of that package, so schemas defined in
+  /// / kcl.mod `[dependencies]` keep their own pkgpath and base schema.
+  /// / See https://github.com/kcl-lang/kcl/issues/1546.
+  /// /
+  /// / # Examples
+  /// /
+  /// / ```jsonrpc
+  /// / // Request
+  /// / {
+  /// /     "jsonrpc": "2.0",
+  /// /     "method": "GetSchemaTypeMappingUnderPath",
+  /// /     "params": {
+  /// /         "exec_args": {
+  /// /             "work_dir": "./src/testdata",
+  /// /             "k_filename_list": ["main.k"]
+  /// /         },
+  /// /         "schema_name": ""
+  /// /     },
+  /// /     "id": 1
+  /// / }
+  /// /
+  /// / // Response
+  /// / {
+  /// /     "jsonrpc": "2.0",
+  /// /     "result": {
+  /// /         "schema_type_mapping": {
+  /// /             "__main__": {
+  /// /                 "schema_type": [
+  /// /                     {
+  /// /                         "type": "schema",
+  /// /                         "schema_name": "Person",
+  /// /                         "properties": {
+  /// /                             "name": { "type": "str" }
+  /// /                         },
+  /// /                         "required": ["name"]
+  /// /                     }
+  /// /                 ]
+  /// /             }
+  /// /         }
+  /// /     },
+  /// /     "id": 1
+  /// / }
+  /// / ```
+  $async.Future<GetSchemaTypeMappingUnderPathResult>
+      getSchemaTypeMappingUnderPath(
+              $pb.ClientContext? ctx, GetSchemaTypeMappingArgs request) =>
+          _client.invoke<GetSchemaTypeMappingUnderPathResult>(
+              ctx,
+              'KclService',
+              'GetSchemaTypeMappingUnderPath',
+              request,
+              GetSchemaTypeMappingUnderPathResult());
+
+  /// / Format code source.
+  /// /
+  /// / # Examples
+  /// /
+  /// / ```jsonrpc
+  /// / // Request
+  /// / {
+  /// /     "jsonrpc": "2.0",
+  /// /     "method": "FormatCode",
+  /// /     "params": {
+  /// /         "source": "schema Person {\n    name: str\n    age: int\n}\nperson = Person {\n    name = \"Alice\"\n    age = 18\n}\n"
+  /// /     },
+  /// /     "id": 1
+  /// / }
+  /// /
+  /// / // Response
+  /// / {
+  /// /     "jsonrpc": "2.0",
+  /// /     "result": {
+  /// /         "formatted": "schema Person {\n    name: str\n    age: int\n}\nperson = Person {\n    name = \"Alice\"\n    age = 18\n}\n"
+  /// /     },
+  /// /     "id": 1
+  /// / }
+  /// / ```
+  $async.Future<FormatCodeResult> formatCode(
+          $pb.ClientContext? ctx, FormatCodeArgs request) =>
+      _client.invoke<FormatCodeResult>(
+          ctx, 'KclService', 'FormatCode', request, FormatCodeResult());
+
+  /// / Format KCL file or directory path contains KCL files and returns the changed file paths.
+  /// /
+  /// / # Examples
+  /// /
+  /// / ```jsonrpc
+  /// / // Request
+  /// / {
+  /// /     "jsonrpc": "2.0",
+  /// /     "method": "FormatPath",
+  /// /     "params": {
+  /// /         "path": "./src/testdata/test.k"
+  /// /     },
+  /// /     "id": 1
+  /// / }
+  /// /
+  /// / // Response
+  /// / {
+  /// /     "jsonrpc": "2.0",
+  /// /     "result": {
+  /// /         "changed_paths": []
+  /// /     },
+  /// /     "id": 1
+  /// / }
+  /// / ```
+  $async.Future<FormatPathResult> formatPath(
+          $pb.ClientContext? ctx, FormatPathArgs request) =>
+      _client.invoke<FormatPathResult>(
+          ctx, 'KclService', 'FormatPath', request, FormatPathResult());
+
+  /// / Lint files and return error messages including errors and warnings.
+  /// /
+  /// / # Examples
+  /// /
+  /// / ```jsonrpc
+  /// / // Request
+  /// / {
+  /// /     "jsonrpc": "2.0",
+  /// /     "method": "LintPath",
+  /// /     "params": {
+  /// /         "paths": ["./src/testdata/test-lint.k"]
+  /// /     },
+  /// /     "id": 1
+  /// / }
+  /// /
+  /// / // Response
+  /// / {
+  /// /     "jsonrpc": "2.0",
+  /// /     "result": {
+  /// /         "results": ["Module 'math' imported but unused"]
+  /// /     },
+  /// /     "id": 1
+  /// / }
+  /// / ```
+  $async.Future<LintPathResult> lintPath(
+          $pb.ClientContext? ctx, LintPathArgs request) =>
+      _client.invoke<LintPathResult>(
+          ctx, 'KclService', 'LintPath', request, LintPathResult());
+
+  /// / Validate code using schema and data strings.
+  /// /
+  /// / **Note that it is not thread safe.**
+  /// /
+  /// / # Examples
+  /// /
+  /// / ```jsonrpc
+  /// / // Request
+  /// / {
+  /// /     "jsonrpc": "2.0",
+  /// /     "method": "ValidateCode",
+  /// /     "params": {
+  /// /         "code": "schema Person {\n    name: str\n    age: int\n    check: 0 < age < 120\n}",
+  /// /         "data": "{\"name\": \"Alice\", \"age\": 10}"
+  /// /     },
+  /// /     "id": 1
+  /// / }
+  /// /
+  /// / // Response
+  /// / {
+  /// /     "jsonrpc": "2.0",
+  /// /     "result": {
+  /// /         "success": true,
+  /// /         "err_message": ""
+  /// /     },
+  /// /     "id": 1
+  /// / }
+  /// / ```
+  $async.Future<ValidateCodeResult> validateCode(
+          $pb.ClientContext? ctx, ValidateCodeArgs request) =>
+      _client.invoke<ValidateCodeResult>(
+          ctx, 'KclService', 'ValidateCode', request, ValidateCodeResult());
+
+  /// / Build setting file config from args.
+  /// /
+  /// / # Examples
+  /// /
+  /// /
+  /// / // Request
+  /// / {
+  /// /     "jsonrpc": "2.0",
+  /// /     "method": "LoadSettingsFiles",
+  /// /     "params": {
+  /// /         "work_dir": "./src/testdata/settings",
+  /// /         "files": ["./src/testdata/settings/kcl.yaml"]
+  /// /     },
+  /// /     "id": 1
+  /// / }
+  /// /
+  /// / // Response
+  /// / {
+  /// /     "jsonrpc": "2.0",
+  /// /     "result": {
+  /// /         "kcl_cli_configs": {
+  /// /             "files": ["./src/testdata/settings/kcl.yaml"],
+  /// /             "output": "",
+  /// /             "overrides": [],
+  /// /             "path_selector": [],
+  /// /             "strict_range_check": false,
+  /// /             "disable_none": false,
+  /// /             "verbose": 0,
+  /// /             "debug": false,
+  /// /             "sort_keys": false,
+  /// /             "show_hidden": false,
+  /// /             "include_schema_type_path": false,
+  /// /             "fast_eval": false
+  /// /         },
+  /// /         "kcl_options": []
+  /// /     },
+  /// /     "id": 1
+  /// / }
+  /// / ```
+  $async.Future<LoadSettingsFilesResult> loadSettingsFiles(
+          $pb.ClientContext? ctx, LoadSettingsFilesArgs request) =>
+      _client.invoke<LoadSettingsFilesResult>(ctx, 'KclService',
+          'LoadSettingsFiles', request, LoadSettingsFilesResult());
+
+  /// / Rename all the occurrences of the target symbol in the files. This API will rewrite files if they contain symbols to be renamed.
+  /// / Return the file paths that got changed.
+  /// /
+  /// / # Examples
+  /// /
+  /// /
+  /// / // Request
+  /// / {
+  /// /     "jsonrpc": "2.0",
+  /// /     "method": "Rename",
+  /// /     "params": {
+  /// /         "package_root": "./src/testdata/rename_doc",
+  /// /         "symbol_path": "a",
+  /// /         "file_paths": ["./src/testdata/rename_doc/main.k"],
+  /// /         "new_name": "a2"
+  /// /     },
+  /// /     "id": 1
+  /// / }
+  /// /
+  /// / // Response
+  /// / {
+  /// /     "jsonrpc": "2.0",
+  /// /     "result": {
+  /// /         "changed_files": ["./src/testdata/rename_doc/main.k"]
+  /// /     },
+  /// /     "id": 1
+  /// / }
+  /// / ```
+  $async.Future<RenameResult> rename(
+          $pb.ClientContext? ctx, RenameArgs request) =>
+      _client.invoke<RenameResult>(
+          ctx, 'KclService', 'Rename', request, RenameResult());
+
+  /// / Rename all the occurrences of the target symbol and return the modified code if any code has been changed. This API won't rewrite files but return the changed code.
+  /// /
+  /// / # Examples
+  /// /
+  /// /
+  /// / // Request
+  /// / {
+  /// /     "jsonrpc": "2.0",
+  /// /     "method": "RenameCode",
+  /// /     "params": {
+  /// /         "package_root": "/mock/path",
+  /// /         "symbol_path": "a",
+  /// /         "source_codes": {
+  /// /             "/mock/path/main.k": "a = 1\nb = a"
+  /// /         },
+  /// /         "new_name": "a2"
+  /// /     },
+  /// /     "id": 1
+  /// / }
+  /// /
+  /// / // Response
+  /// / {
+  /// /     "jsonrpc": "2.0",
+  /// /     "result": {
+  /// /         "changed_codes": {
+  /// /             "/mock/path/main.k": "a2 = 1\nb = a2"
+  /// /         }
+  /// /     },
+  /// /     "id": 1
+  /// / }
+  /// / ```
+  $async.Future<RenameCodeResult> renameCode(
+          $pb.ClientContext? ctx, RenameCodeArgs request) =>
+      _client.invoke<RenameCodeResult>(
+          ctx, 'KclService', 'RenameCode', request, RenameCodeResult());
+
+  /// / Test KCL packages with test arguments.
+  /// /
+  /// / # Examples
+  /// /
+  /// /
+  /// / // Request
+  /// / {
+  /// /     "jsonrpc": "2.0",
+  /// /     "method": "Test",
+  /// /     "params": {
+  /// /         "exec_args": {
+  /// /             "work_dir": "./src/testdata/testing/module",
+  /// /             "k_filename_list": ["main.k"]
+  /// /         },
+  /// /         "pkg_list": ["./src/testdata/testing/module/..."]
+  /// /     },
+  /// /     "id": 1
+  /// / }
+  /// /
+  /// / // Response
+  /// / {
+  /// /     "jsonrpc": "2.0",
+  /// /     "result": {
+  /// /         "info": [
+  /// /             {"name": "test_case_1", "error": "", "duration": 1000, "log_message": ""},
+  /// /             {"name": "test_case_2", "error": "some error", "duration": 2000, "log_message": ""}
+  /// /         ]
+  /// /     },
+  /// /     "id": 1
+  /// / }
+  /// / ```
+  $async.Future<TestResult> test($pb.ClientContext? ctx, TestArgs request) =>
+      _client.invoke<TestResult>(
+          ctx, 'KclService', 'Test', request, TestResult());
+
+  /// / Format a test result into a human-readable report.
+  /// /
+  /// / The output is byte-identical to the kcl-go `PrettyReporter` format
+  /// / and is deterministic for a given result. Every line, including the
+  /// / last one, ends with `\n`:
+  /// /
+  /// / - One line per case in result order: `{name}: {STATUS} ({duration_ms}ms)`
+  /// /   where STATUS is PASS or FAIL (no case can currently be skipped) and
+  /// /   the duration is the case duration in microseconds truncated to whole
+  /// /   milliseconds (integer division, e.g. 1500µs renders as `1ms`). When
+  /// /   a case has a non-empty log message, the log is appended on the next
+  /// /   line; otherwise a failed case appends its error string as-is (the
+  /// /   error already carries its own prefix, e.g. `Error: ...`).
+  /// / - A separator line of exactly 80 `-` characters.
+  /// / - Only for non-zero counts, in this order: `PASS: {p}/{total}`,
+  /// /   `FAIL: {f}/{total}`, `SKIPPED: {s}/{total}`, where total is the
+  /// /   number of cases.
+  /// / - When the result is empty (no cases and no coverage) the report is
+  /// /   exactly `no test files\n`.
+  /// / - When coverage is populated (files non-empty), after the summary
+  /// /   lines: one roll-up line `Coverage: {percent:.1}% ({covered}/{executable} lines)`
+  /// /   using the pre-computed CoverageSummary fields, then one line per
+  /// /   file sorted by filename, indented two spaces:
+  /// /   `  {filename}: {covered_lines}/{executable_lines} ({percent:.1}%)`
+  /// /   where the per-file percent is `100.0 * covered / executable`, or
+  /// /   `0.0%` when the file has no executable lines.
+  /// /
+  /// / # Examples
+  /// /
+  /// /
+  /// / // Request
+  /// / {
+  /// /     "jsonrpc": "2.0",
+  /// /     "method": "FormatTestReport",
+  /// /     "params": {
+  /// /         "result": {
+  /// /             "info": [
+  /// /                 {"name": "test_case_1", "error": "", "duration": 1500, "log_message": ""},
+  /// /                 {"name": "test_case_2", "error": "Error: assert failed", "duration": 2500, "log_message": ""}
+  /// /             ]
+  /// /         }
+  /// /     },
+  /// /     "id": 1
+  /// / }
+  /// /
+  /// / // Response
+  /// / {
+  /// /     "jsonrpc": "2.0",
+  /// /     "result": {
+  /// /         "report": "test_case_1: PASS (1ms)\ntest_case_2: FAIL (2ms)\nError: assert failed\n--------------------------------------------------------------------------------\nPASS: 1/2\nFAIL: 1/2\n"
+  /// /     },
+  /// /     "id": 1
+  /// / }
+  /// / ```
+  $async.Future<FormatTestReportResult> formatTestReport(
+          $pb.ClientContext? ctx, FormatTestReportArgs request) =>
+      _client.invoke<FormatTestReportResult>(ctx, 'KclService',
+          'FormatTestReport', request, FormatTestReportResult());
+
+  /// / Download and update dependencies defined in the kcl.mod file.
+  /// /
+  /// / # Examples
+  /// /
+  /// /
+  /// / // Request
+  /// / {
+  /// /     "jsonrpc": "2.0",
+  /// /     "method": "UpdateDependencies",
+  /// /     "params": {
+  /// /         "manifest_path": "./src/testdata/update_dependencies"
+  /// /     },
+  /// /     "id": 1
+  /// / }
+  /// /
+  /// / // Response
+  /// / {
+  /// /     "jsonrpc": "2.0",
+  /// /     "result": {
+  /// /         "external_pkgs": [
+  /// /             {"pkg_name": "pkg1", "pkg_path": "./src/testdata/update_dependencies/pkg1"}
+  /// /         ]
+  /// /     },
+  /// /     "id": 1
+  /// / }
+  /// /
+  /// / // Request with vendor flag
+  /// / {
+  /// /     "jsonrpc": "2.0",
+  /// /     "method": "UpdateDependencies",
+  /// /     "params": {
+  /// /         "manifest_path": "./src/testdata/update_dependencies",
+  /// /         "vendor": true
+  /// /     },
+  /// /     "id": 2
+  /// / }
+  /// /
+  /// / // Response
+  /// / {
+  /// /     "jsonrpc": "2.0",
+  /// /     "result": {
+  /// /         "external_pkgs": [
+  /// /             {"pkg_name": "pkg1", "pkg_path": "./src/testdata/update_dependencies/pkg1"}
+  /// /         ]
+  /// /     },
+  /// /     "id": 2
+  /// / }
+  /// / ```
+  $async.Future<UpdateDependenciesResult> updateDependencies(
+          $pb.ClientContext? ctx, UpdateDependenciesArgs request) =>
+      _client.invoke<UpdateDependenciesResult>(ctx, 'KclService',
+          'UpdateDependencies', request, UpdateDependenciesResult());
+
+  /// / Generate TOML from the evaluated result of a KCL program.
+  /// /
+  /// / # Examples
+  /// /
+  /// / ```jsonrpc
+  /// / // Request
+  /// / {
+  /// /     "jsonrpc": "2.0",
+  /// /     "method": "GenerateToml",
+  /// /     "params": {
+  /// /         "exec_args": {
+  /// /             "k_filename_list": ["file.k"],
+  /// /             "k_code_list": ["a = {b = 1, c = [1, 2]}"]
+  /// /         }
+  /// /     },
+  /// /     "id": 1
+  /// / }
+  /// /
+  /// / // Response
+  /// / {
+  /// /     "jsonrpc": "2.0",
+  /// /     "result": { "toml": "[a]\nb = 1\nc = [1, 2]\n" },
+  /// /     "id": 1
+  /// / }
+  /// / ```
+  $async.Future<GenerateTomlResult> generateToml(
+          $pb.ClientContext? ctx, GenerateTomlArgs request) =>
+      _client.invoke<GenerateTomlResult>(
+          ctx, 'KclService', 'GenerateToml', request, GenerateTomlResult());
+
+  /// / Generate KCL source from data content (JSON, YAML or TOML).
+  /// /
+  /// / # Examples
+  /// /
+  /// / ```jsonrpc
+  /// / // Request
+  /// / {
+  /// /     "jsonrpc": "2.0",
+  /// /     "method": "GenerateKcl",
+  /// /     "params": {
+  /// /         "source": "{\"a\": {\"b\": 1}}",
+  /// /         "filename": "data.json",
+  /// /         "format": "json"
+  /// /     },
+  /// /     "id": 1
+  /// / }
+  /// /
+  /// / // Response
+  /// / {
+  /// /     "jsonrpc": "2.0",
+  /// /     "result": { "kcl": "a = {\n    b = 1\n}\n" },
+  /// /     "id": 1
+  /// / }
+  /// / ```
+  $async.Future<GenerateKclResult> generateKcl(
+          $pb.ClientContext? ctx, GenerateKclArgs request) =>
+      _client.invoke<GenerateKclResult>(
+          ctx, 'KclService', 'GenerateKcl', request, GenerateKclResult());
+
+  /// / Generate an OpenAPI spec from the schemas of a KCL package.
+  /// /
+  /// / # Examples
+  /// /
+  /// / ```jsonrpc
+  /// / // Request
+  /// / {
+  /// /     "jsonrpc": "2.0",
+  /// /     "method": "GenerateOpenAPI",
+  /// /     "params": {
+  /// /         "parse_args": { "paths": ["./src/testdata/gen_openapi/main.k"] },
+  /// /         "version": "v3"
+  /// /     },
+  /// /     "id": 1
+  /// / }
+  /// /
+  /// / // Response
+  /// / {
+  /// /     "jsonrpc": "2.0",
+  /// /     "result": { "spec": "{ \"openapi\": \"3.0.0\", ... }" },
+  /// /     "id": 1
+  /// / }
+  /// / ```
+  $async.Future<GenerateOpenAPIResult> generateOpenAPI(
+          $pb.ClientContext? ctx, GenerateOpenAPIArgs request) =>
+      _client.invoke<GenerateOpenAPIResult>(ctx, 'KclService',
+          'GenerateOpenAPI', request, GenerateOpenAPIResult());
+
+  /// / Generate proto3 definitions from the schemas of a KCL package.
+  /// /
+  /// / # Examples
+  /// /
+  /// / ```jsonrpc
+  /// / // Request
+  /// / {
+  /// /     "jsonrpc": "2.0",
+  /// /     "method": "GenerateProto",
+  /// /     "params": {
+  /// /         "parse_args": { "paths": ["./src/testdata/gen_openapi/main.k"] },
+  /// /         "package": "example.v1"
+  /// /     },
+  /// /     "id": 1
+  /// / }
+  /// /
+  /// / // Response
+  /// / {
+  /// /     "jsonrpc": "2.0",
+  /// /     "result": { "proto": "syntax = \"proto3\"; ..." },
+  /// /     "id": 1
+  /// / }
+  /// / ```
+  $async.Future<GenerateProtoResult> generateProto(
+          $pb.ClientContext? ctx, GenerateProtoArgs request) =>
+      _client.invoke<GenerateProtoResult>(
+          ctx, 'KclService', 'GenerateProto', request, GenerateProtoResult());
+
+  /// / Generate documentation from the schemas of a KCL package.
+  /// /
+  /// / # Examples
+  /// /
+  /// / ```jsonrpc
+  /// / // Request
+  /// / {
+  /// /     "jsonrpc": "2.0",
+  /// /     "method": "GenerateDoc",
+  /// /     "params": {
+  /// /         "parse_args": { "paths": ["./src/testdata/gen_openapi/main.k"] },
+  /// /         "format": "md"
+  /// /     },
+  /// /     "id": 1
+  /// / }
+  /// /
+  /// / // Response
+  /// / {
+  /// /     "jsonrpc": "2.0",
+  /// /     "result": { "content": "# Schemas\n\n..." },
+  /// /     "id": 1
+  /// / }
+  /// / ```
+  $async.Future<GenerateDocResult> generateDoc(
+          $pb.ClientContext? ctx, GenerateDocArgs request) =>
+      _client.invoke<GenerateDocResult>(
+          ctx, 'KclService', 'GenerateDoc', request, GenerateDocResult());
 }
 
 const $core.bool _omitFieldNames =

@@ -51,7 +51,7 @@ PB_BIND(ParseProgramResult, ParseProgramResult, AUTO)
 PB_BIND(LoadPackageArgs, LoadPackageArgs, AUTO)
 
 
-PB_BIND(LoadPackageResult, LoadPackageResult, AUTO)
+PB_BIND(LoadPackageResult, LoadPackageResult, 2)
 
 
 PB_BIND(LoadPackageResult_ScopesEntry, LoadPackageResult_ScopesEntry, AUTO)
@@ -70,6 +70,42 @@ PB_BIND(LoadPackageResult_FullyQualifiedNameMapEntry, LoadPackageResult_FullyQua
 
 
 PB_BIND(LoadPackageResult_PkgScopeMapEntry, LoadPackageResult_PkgScopeMapEntry, AUTO)
+
+
+PB_BIND(LoadPackageResult_ImportsEntry, LoadPackageResult_ImportsEntry, AUTO)
+
+
+PB_BIND(FileImports, FileImports, AUTO)
+
+
+PB_BIND(ImportInfo, ImportInfo, AUTO)
+
+
+PB_BIND(KclMod, KclMod, 2)
+
+
+PB_BIND(KclMod_DependenciesEntry, KclMod_DependenciesEntry, AUTO)
+
+
+PB_BIND(KclModPackage, KclModPackage, AUTO)
+
+
+PB_BIND(KclModProfile, KclModProfile, AUTO)
+
+
+PB_BIND(KclModDependency, KclModDependency, AUTO)
+
+
+PB_BIND(KclModGitSource, KclModGitSource, AUTO)
+
+
+PB_BIND(KclModOciSource, KclModOciSource, AUTO)
+
+
+PB_BIND(KclModLocalSource, KclModLocalSource, AUTO)
+
+
+PB_BIND(AppInfo, AppInfo, AUTO)
 
 
 PB_BIND(ListOptionsResult, ListOptionsResult, AUTO)
@@ -225,7 +261,6 @@ PB_BIND(TestCoverageReport_FilesEntry, TestCoverageReport_FilesEntry, AUTO)
 PB_BIND(CoverageSummary, CoverageSummary, AUTO)
 
 
-/* Hand-added, not generated: see the note in spec.pb.h. */
 PB_BIND(FormatTestReportArgs, FormatTestReportArgs, AUTO)
 
 
@@ -236,6 +271,36 @@ PB_BIND(UpdateDependenciesArgs, UpdateDependenciesArgs, AUTO)
 
 
 PB_BIND(UpdateDependenciesResult, UpdateDependenciesResult, AUTO)
+
+
+PB_BIND(GenerateTomlArgs, GenerateTomlArgs, 2)
+
+
+PB_BIND(GenerateTomlResult, GenerateTomlResult, AUTO)
+
+
+PB_BIND(GenerateKclArgs, GenerateKclArgs, AUTO)
+
+
+PB_BIND(GenerateKclResult, GenerateKclResult, AUTO)
+
+
+PB_BIND(GenerateOpenAPIArgs, GenerateOpenAPIArgs, AUTO)
+
+
+PB_BIND(GenerateOpenAPIResult, GenerateOpenAPIResult, AUTO)
+
+
+PB_BIND(GenerateProtoArgs, GenerateProtoArgs, AUTO)
+
+
+PB_BIND(GenerateProtoResult, GenerateProtoResult, AUTO)
+
+
+PB_BIND(GenerateDocArgs, GenerateDocArgs, AUTO)
+
+
+PB_BIND(GenerateDocResult, GenerateDocResult, AUTO)
 
 
 PB_BIND(KclType, KclType, 2)
