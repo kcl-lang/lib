@@ -12,6 +12,9 @@ on:
       - main
     paths:
       - "c/**"
+      # ast_contract decodes the captured parser output as its fixture, so
+      # regenerating the golden file must re-run this workflow.
+      - "testdata/ast/**"
       - ".github/workflows/c-test.yaml"
   workflow_dispatch:
 
