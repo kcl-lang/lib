@@ -46,6 +46,33 @@ end
 export pb
 
 # ---------------------------------------------------------------------------
+# Tolerant map decode for `LoadPackageResult.imports`
+# ---------------------------------------------------------------------------
+# The Rust runtime (prost) serializes a map entry whose value is a default
+# (empty) message as a key-only entry on the wire. ProtoBuf.jl's generic
+# Dict decoder unconditionally reads a key tag followed by a value tag, so it
+# trips its `position(io) == pair_end_pos` assertion on such entries (seen on
+# macOS against libkcl builds that emit `imports` for files without imports;
+# whether the field is emitted at all varies by platform build). Read the
+# value only when bytes remain inside the entry. Targeted at FileImports,
+# the one map the runtime is known to encode this way.
+function ProtoBuf.decode!(d::ProtoBuf.AbstractProtoDecoder, buffer::Dict{String,FileImports})
+    io = ProtoBuf.Codecs.get_stream(d)
+    pair_len = ProtoBuf.Codecs.vbyte_decode(io, UInt32)
+    pair_end_pos = position(io) + pair_len
+    field_number, wire_type = ProtoBuf.Codecs.decode_tag(d)
+    key = ProtoBuf.decode(d, String)
+    val = FileImports()
+    if position(io) < pair_end_pos
+        field_number, wire_type = ProtoBuf.Codecs.decode_tag(d)
+        val = ProtoBuf.decode(d, Ref{FileImports})
+    end
+    @assert position(io) == pair_end_pos
+    buffer[key] = val
+    return nothing
+end
+
+# ---------------------------------------------------------------------------
 # Errors
 # ---------------------------------------------------------------------------
 
