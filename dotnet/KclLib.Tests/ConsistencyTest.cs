@@ -199,7 +199,7 @@ public class ConsistencyTest
                 {
                     Skip($"core does not list {rpc} (old core)");
                 }
-                var reportArgs = new FormatTestReportArgs();
+                var reportArgs = new FormatTestReportArgs { Result = new TestResult() };
                 foreach (var info in args.GetProperty("result").GetProperty("info").EnumerateArray())
                 {
                     reportArgs.Result.Info.Add(new TestCaseInfo
@@ -221,7 +221,7 @@ public class ConsistencyTest
                 {
                     Skip($"core does not list {rpc} (old core)");
                 }
-                var tomlArgs = new GenerateTomlArgs();
+                var tomlArgs = new GenerateTomlArgs { ExecArgs = new ExecProgramArgs() };
                 foreach (var code in args.GetProperty("exec_args").GetProperty("k_code_list").EnumerateArray())
                 {
                     tomlArgs.ExecArgs.KCodeList.Add(code.GetString());
