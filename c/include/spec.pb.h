@@ -131,6 +131,75 @@ typedef struct _LoadPackageArgs {
     bool with_ast_index;
 } LoadPackageArgs;
 
+typedef struct _LoadPackageResult_SymbolNodeMapEntry {
+    pb_callback_t key;
+    pb_callback_t value;
+} LoadPackageResult_SymbolNodeMapEntry;
+
+/* Message representing the direct imports of a single file. */
+typedef struct _FileImports {
+    /* List of direct imports of the file. */
+    pb_callback_t imports;
+} FileImports;
+
+typedef struct _LoadPackageResult_ImportsEntry {
+    pb_callback_t key;
+    bool has_value;
+    FileImports value;
+} LoadPackageResult_ImportsEntry;
+
+/* Message representing a single direct import of a file. */
+typedef struct _ImportInfo {
+    /* Import specifier as written in the source. */
+    pb_callback_t path;
+    /* Resolved absolute file path of the import. */
+    pb_callback_t resolved;
+} ImportInfo;
+
+/* Message representing the package section of a kcl.mod manifest. */
+typedef struct _KclModPackage {
+    /* Name of the package. */
+    pb_callback_t name;
+    /* KCL compiler edition of the package. */
+    pb_callback_t edition;
+    /* Version of the package. */
+    pb_callback_t version;
+    /* Description of the package. */
+    pb_callback_t description;
+    /* Files to include when publishing. */
+    pb_callback_t include;
+    /* Files to exclude when publishing. */
+    pb_callback_t exclude;
+} KclModPackage;
+
+/* Message representing the profile section of a kcl.mod manifest. */
+typedef struct _KclModProfile {
+    /* List of entry-point files. */
+    pb_callback_t entries;
+    /* Flag that, when true, disables the emission of the special 'none' value in the output. */
+    bool disable_none;
+    /* Flag that, when true, ensures keys in maps are sorted. */
+    bool sort_keys;
+    /* List of attribute selectors for conditional compilation. */
+    pb_callback_t selectors;
+    /* List of override paths. */
+    pb_callback_t overrides;
+    /* List of additional options for the KCL compiler. */
+    pb_callback_t options;
+} KclModProfile;
+
+/* Message representing a parsed kcl.mod manifest. */
+typedef struct _KclMod {
+    /* Package section of the manifest. */
+    bool has_package;
+    KclModPackage package;
+    /* Profile section of the manifest. */
+    bool has_profile;
+    KclModProfile profile;
+    /* Mirrors the untagged toml dependency: exactly one of version/git/oci/local is set. */
+    pb_callback_t dependencies;
+} KclMod;
+
 /* Message for load package response. */
 typedef struct _LoadPackageResult {
     /* Program Abstract Syntax Tree (AST) in JSON format. */
@@ -153,12 +222,77 @@ typedef struct _LoadPackageResult {
     pb_callback_t fully_qualified_name_map;
     /* Map of package scope with package path as key. */
     pb_callback_t pkg_scope_map;
+    /* Map of direct imports, keyed by the importing file's absolute path.
+ `path` is the import specifier as written in the source; `resolved` is
+ the resolved absolute file path (empty for builtins/unresolved imports).
+ Upstream files = transitive closure; downstream = reverse closure; this
+ replaces the removed ListDep* RPCs. */
+    pb_callback_t imports;
+    /* Parsed kcl.mod manifest of the package root. Empty when the root has no
+ kcl.mod. */
+    bool has_kcl_mod;
+    KclMod kcl_mod;
+    /* Application directories discovered under the package root: every
+ directory that directly contains at least one .k file. Sorted by path. */
+    pb_callback_t apps;
 } LoadPackageResult;
 
-typedef struct _LoadPackageResult_SymbolNodeMapEntry {
+/* Message representing a Git source of a kcl.mod dependency. */
+typedef struct _KclModGitSource {
+    /* URL of the Git repository. */
+    pb_callback_t git;
+    /* Optional branch name within the Git repository. */
+    pb_callback_t branch;
+    /* Optional commit hash to check out from the Git repository. */
+    pb_callback_t commit;
+    /* Optional tag name to check out from the Git repository. */
+    pb_callback_t tag;
+    /* Optional version specification associated with the Git source. */
+    pb_callback_t version;
+} KclModGitSource;
+
+/* Message representing an OCI source of a kcl.mod dependency. */
+typedef struct _KclModOciSource {
+    /* URI of the OCI repository. */
+    pb_callback_t oci;
+    /* Optional tag of the OCI package in the registry. */
+    pb_callback_t tag;
+} KclModOciSource;
+
+/* Message representing a local path source of a kcl.mod dependency. */
+typedef struct _KclModLocalSource {
+    /* Path to the local directory or file. */
+    pb_callback_t path;
+} KclModLocalSource;
+
+/* Message representing a single dependency of a kcl.mod manifest. */
+typedef struct _KclModDependency {
+    /* Version of the dependency, e.g. "1.0.0". */
+    pb_callback_t version;
+    /* Git source of the dependency. */
+    bool has_git;
+    KclModGitSource git;
+    /* OCI source of the dependency. */
+    bool has_oci;
+    KclModOciSource oci;
+    /* Local path source of the dependency. */
+    bool has_local;
+    KclModLocalSource local;
+} KclModDependency;
+
+typedef struct _KclMod_DependenciesEntry {
     pb_callback_t key;
-    pb_callback_t value;
-} LoadPackageResult_SymbolNodeMapEntry;
+    bool has_value;
+    KclModDependency value;
+} KclMod_DependenciesEntry;
+
+/* Message representing an application directory discovered under a package root. */
+typedef struct _AppInfo {
+    /* Absolute path of the application directory. */
+    pb_callback_t path;
+    /* True when the directory contains a kcl.mod manifest. */
+    bool has_kcl_mod;
+} AppInfo;
 
 /* Message for list options response. */
 typedef struct _ListOptionsResult {
@@ -709,8 +843,6 @@ typedef struct _TestResult {
     TestCoverageReport coverage;
 } TestResult;
 
-/* Hand-added, not generated: c/scripts/generate.sh clones nanopb from
- GitHub, which the build environment cannot reach. */
 /* Message for format test report request arguments. */
 typedef struct _FormatTestReportArgs {
     /* The test result to format, as returned by the Test RPC. */
@@ -737,6 +869,85 @@ typedef struct _UpdateDependenciesResult {
     /* List of external packages updated. */
     pb_callback_t external_pkgs;
 } UpdateDependenciesResult;
+
+/* Message for generate TOML request arguments. */
+typedef struct _GenerateTomlArgs {
+    /* Arguments for executing the program whose result is serialized to TOML. */
+    bool has_exec_args;
+    ExecProgramArgs exec_args;
+    /* Flag to sort keys in the TOML output. Defaults to false (source order). */
+    bool sort_keys;
+} GenerateTomlArgs;
+
+/* Message for generate TOML response. */
+typedef struct _GenerateTomlResult {
+    /* The evaluated result serialized as TOML. */
+    pb_callback_t toml;
+} GenerateTomlResult;
+
+/* Message for generate KCL request arguments. */
+typedef struct _GenerateKclArgs {
+    /* The source data content (JSON, YAML or TOML text). */
+    pb_callback_t source;
+    /* File name hint used for error messages and format detection, e.g. "data.json". */
+    pb_callback_t filename;
+    /* Data format: "json", "yaml" or "toml". When empty, inferred from the
+ filename extension, defaulting to "json". */
+    pb_callback_t format;
+} GenerateKclArgs;
+
+/* Message for generate KCL response. */
+typedef struct _GenerateKclResult {
+    /* The generated KCL source. */
+    pb_callback_t kcl;
+} GenerateKclResult;
+
+/* Message for generate OpenAPI request arguments. */
+typedef struct _GenerateOpenAPIArgs {
+    /* Arguments for parsing the program whose schemas are exported. */
+    bool has_parse_args;
+    ParseProgramArgs parse_args;
+    /* Spec version: "v3" (default) or "v2" (Swagger 2.0). */
+    pb_callback_t version;
+} GenerateOpenAPIArgs;
+
+/* Message for generate OpenAPI response. */
+typedef struct _GenerateOpenAPIResult {
+    /* The generated spec as a JSON string. */
+    pb_callback_t spec;
+} GenerateOpenAPIResult;
+
+/* Message for generate proto request arguments. */
+typedef struct _GenerateProtoArgs {
+    /* Arguments for parsing the program whose schemas are exported. */
+    bool has_parse_args;
+    ParseProgramArgs parse_args;
+    /* Proto package name, e.g. "example.v1". Empty means no package clause. */
+    pb_callback_t package;
+} GenerateProtoArgs;
+
+/* Message for generate proto response. */
+typedef struct _GenerateProtoResult {
+    /* The generated proto3 definitions. */
+    pb_callback_t proto;
+} GenerateProtoResult;
+
+/* Message for generate doc request arguments. */
+typedef struct _GenerateDocArgs {
+    /* Arguments for parsing the program whose schemas are documented. */
+    bool has_parse_args;
+    ParseProgramArgs parse_args;
+    /* Output format: "md" (default, Markdown), "openapi" (Swagger 2.0 spec)
+ or "json-schema" (JSON Schema draft for each schema). "html" is not
+ supported yet. */
+    pb_callback_t format;
+} GenerateDocArgs;
+
+/* Message for generate doc response. */
+typedef struct _GenerateDocResult {
+    /* The generated documentation. */
+    pb_callback_t content;
+} GenerateDocResult;
 
 /* Message representing a KCL type. */
 typedef struct _KclType {
@@ -892,13 +1103,25 @@ extern "C" {
 #define ParseProgramArgs_init_default            {{{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}}
 #define ParseProgramResult_init_default          {{{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}}
 #define LoadPackageArgs_init_default             {false, ParseProgramArgs_init_default, 0, 0, 0}
-#define LoadPackageResult_init_default           {{{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}}
+#define LoadPackageResult_init_default           {{{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, false, KclMod_init_default, {{NULL}, NULL}}
 #define LoadPackageResult_ScopesEntry_init_default {{{NULL}, NULL}, false, Scope_init_default}
 #define LoadPackageResult_SymbolsEntry_init_default {{{NULL}, NULL}, false, Symbol_init_default}
 #define LoadPackageResult_NodeSymbolMapEntry_init_default {{{NULL}, NULL}, false, SymbolIndex_init_default}
 #define LoadPackageResult_SymbolNodeMapEntry_init_default {{{NULL}, NULL}, {{NULL}, NULL}}
 #define LoadPackageResult_FullyQualifiedNameMapEntry_init_default {{{NULL}, NULL}, false, SymbolIndex_init_default}
 #define LoadPackageResult_PkgScopeMapEntry_init_default {{{NULL}, NULL}, false, ScopeIndex_init_default}
+#define LoadPackageResult_ImportsEntry_init_default {{{NULL}, NULL}, false, FileImports_init_default}
+#define FileImports_init_default                 {{{NULL}, NULL}}
+#define ImportInfo_init_default                  {{{NULL}, NULL}, {{NULL}, NULL}}
+#define KclMod_init_default                      {false, KclModPackage_init_default, false, KclModProfile_init_default, {{NULL}, NULL}}
+#define KclMod_DependenciesEntry_init_default    {{{NULL}, NULL}, false, KclModDependency_init_default}
+#define KclModPackage_init_default               {{{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}}
+#define KclModProfile_init_default               {{{NULL}, NULL}, 0, 0, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}}
+#define KclModDependency_init_default            {{{NULL}, NULL}, false, KclModGitSource_init_default, false, KclModOciSource_init_default, false, KclModLocalSource_init_default}
+#define KclModGitSource_init_default             {{{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}}
+#define KclModOciSource_init_default             {{{NULL}, NULL}, {{NULL}, NULL}}
+#define KclModLocalSource_init_default           {{{NULL}, NULL}}
+#define AppInfo_init_default                     {{{NULL}, NULL}, 0}
 #define ListOptionsResult_init_default           {{{NULL}, NULL}}
 #define OptionHelp_init_default                  {{{NULL}, NULL}, {{NULL}, NULL}, 0, {{NULL}, NULL}, {{NULL}, NULL}}
 #define Symbol_init_default                      {false, KclType_init_default, {{NULL}, NULL}, false, SymbolIndex_init_default, false, SymbolIndex_init_default, {{NULL}, NULL}, 0}
@@ -954,6 +1177,16 @@ extern "C" {
 #define FormatTestReportResult_init_default      {{{NULL}, NULL}}
 #define UpdateDependenciesArgs_init_default      {{{NULL}, NULL}, 0}
 #define UpdateDependenciesResult_init_default    {{{NULL}, NULL}}
+#define GenerateTomlArgs_init_default            {false, ExecProgramArgs_init_default, 0}
+#define GenerateTomlResult_init_default          {{{NULL}, NULL}}
+#define GenerateKclArgs_init_default             {{{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}}
+#define GenerateKclResult_init_default           {{{NULL}, NULL}}
+#define GenerateOpenAPIArgs_init_default         {false, ParseProgramArgs_init_default, {{NULL}, NULL}}
+#define GenerateOpenAPIResult_init_default       {{{NULL}, NULL}}
+#define GenerateProtoArgs_init_default           {false, ParseProgramArgs_init_default, {{NULL}, NULL}}
+#define GenerateProtoResult_init_default         {{{NULL}, NULL}}
+#define GenerateDocArgs_init_default             {false, ParseProgramArgs_init_default, {{NULL}, NULL}}
+#define GenerateDocResult_init_default           {{{NULL}, NULL}}
 #define KclType_init_default                     {{{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}}
 #define KclType_PropertiesEntry_init_default     {{{NULL}, NULL}, false, KclType_init_default}
 #define KclType_ExamplesEntry_init_default       {{{NULL}, NULL}, false, Example_init_default}
@@ -978,13 +1211,25 @@ extern "C" {
 #define ParseProgramArgs_init_zero               {{{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}}
 #define ParseProgramResult_init_zero             {{{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}}
 #define LoadPackageArgs_init_zero                {false, ParseProgramArgs_init_zero, 0, 0, 0}
-#define LoadPackageResult_init_zero              {{{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}}
+#define LoadPackageResult_init_zero              {{{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, false, KclMod_init_zero, {{NULL}, NULL}}
 #define LoadPackageResult_ScopesEntry_init_zero  {{{NULL}, NULL}, false, Scope_init_zero}
 #define LoadPackageResult_SymbolsEntry_init_zero {{{NULL}, NULL}, false, Symbol_init_zero}
 #define LoadPackageResult_NodeSymbolMapEntry_init_zero {{{NULL}, NULL}, false, SymbolIndex_init_zero}
 #define LoadPackageResult_SymbolNodeMapEntry_init_zero {{{NULL}, NULL}, {{NULL}, NULL}}
 #define LoadPackageResult_FullyQualifiedNameMapEntry_init_zero {{{NULL}, NULL}, false, SymbolIndex_init_zero}
 #define LoadPackageResult_PkgScopeMapEntry_init_zero {{{NULL}, NULL}, false, ScopeIndex_init_zero}
+#define LoadPackageResult_ImportsEntry_init_zero {{{NULL}, NULL}, false, FileImports_init_zero}
+#define FileImports_init_zero                    {{{NULL}, NULL}}
+#define ImportInfo_init_zero                     {{{NULL}, NULL}, {{NULL}, NULL}}
+#define KclMod_init_zero                         {false, KclModPackage_init_zero, false, KclModProfile_init_zero, {{NULL}, NULL}}
+#define KclMod_DependenciesEntry_init_zero       {{{NULL}, NULL}, false, KclModDependency_init_zero}
+#define KclModPackage_init_zero                  {{{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}}
+#define KclModProfile_init_zero                  {{{NULL}, NULL}, 0, 0, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}}
+#define KclModDependency_init_zero               {{{NULL}, NULL}, false, KclModGitSource_init_zero, false, KclModOciSource_init_zero, false, KclModLocalSource_init_zero}
+#define KclModGitSource_init_zero                {{{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}}
+#define KclModOciSource_init_zero                {{{NULL}, NULL}, {{NULL}, NULL}}
+#define KclModLocalSource_init_zero              {{{NULL}, NULL}}
+#define AppInfo_init_zero                        {{{NULL}, NULL}, 0}
 #define ListOptionsResult_init_zero              {{{NULL}, NULL}}
 #define OptionHelp_init_zero                     {{{NULL}, NULL}, {{NULL}, NULL}, 0, {{NULL}, NULL}, {{NULL}, NULL}}
 #define Symbol_init_zero                         {false, KclType_init_zero, {{NULL}, NULL}, false, SymbolIndex_init_zero, false, SymbolIndex_init_zero, {{NULL}, NULL}, 0}
@@ -1040,6 +1285,16 @@ extern "C" {
 #define FormatTestReportResult_init_zero         {{{NULL}, NULL}}
 #define UpdateDependenciesArgs_init_zero         {{{NULL}, NULL}, 0}
 #define UpdateDependenciesResult_init_zero       {{{NULL}, NULL}}
+#define GenerateTomlArgs_init_zero               {false, ExecProgramArgs_init_zero, 0}
+#define GenerateTomlResult_init_zero             {{{NULL}, NULL}}
+#define GenerateKclArgs_init_zero                {{{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}}
+#define GenerateKclResult_init_zero              {{{NULL}, NULL}}
+#define GenerateOpenAPIArgs_init_zero            {false, ParseProgramArgs_init_zero, {{NULL}, NULL}}
+#define GenerateOpenAPIResult_init_zero          {{{NULL}, NULL}}
+#define GenerateProtoArgs_init_zero              {false, ParseProgramArgs_init_zero, {{NULL}, NULL}}
+#define GenerateProtoResult_init_zero            {{{NULL}, NULL}}
+#define GenerateDocArgs_init_zero                {false, ParseProgramArgs_init_zero, {{NULL}, NULL}}
+#define GenerateDocResult_init_zero              {{{NULL}, NULL}}
 #define KclType_init_zero                        {{{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}}
 #define KclType_PropertiesEntry_init_zero        {{{NULL}, NULL}, false, KclType_init_zero}
 #define KclType_ExamplesEntry_init_zero          {{{NULL}, NULL}, false, Example_init_zero}
@@ -1081,6 +1336,28 @@ extern "C" {
 #define LoadPackageArgs_resolve_ast_tag          2
 #define LoadPackageArgs_load_builtin_tag         3
 #define LoadPackageArgs_with_ast_index_tag       4
+#define LoadPackageResult_SymbolNodeMapEntry_key_tag 1
+#define LoadPackageResult_SymbolNodeMapEntry_value_tag 2
+#define FileImports_imports_tag                  1
+#define LoadPackageResult_ImportsEntry_key_tag   1
+#define LoadPackageResult_ImportsEntry_value_tag 2
+#define ImportInfo_path_tag                      1
+#define ImportInfo_resolved_tag                  2
+#define KclModPackage_name_tag                   1
+#define KclModPackage_edition_tag                2
+#define KclModPackage_version_tag                3
+#define KclModPackage_description_tag            4
+#define KclModPackage_include_tag                5
+#define KclModPackage_exclude_tag                6
+#define KclModProfile_entries_tag                1
+#define KclModProfile_disable_none_tag           2
+#define KclModProfile_sort_keys_tag              3
+#define KclModProfile_selectors_tag              4
+#define KclModProfile_overrides_tag              5
+#define KclModProfile_options_tag                6
+#define KclMod_package_tag                       1
+#define KclMod_profile_tag                       2
+#define KclMod_dependencies_tag                  3
 #define LoadPackageResult_program_tag            1
 #define LoadPackageResult_paths_tag              2
 #define LoadPackageResult_parse_errors_tag       3
@@ -1091,8 +1368,25 @@ extern "C" {
 #define LoadPackageResult_symbol_node_map_tag    8
 #define LoadPackageResult_fully_qualified_name_map_tag 9
 #define LoadPackageResult_pkg_scope_map_tag      10
-#define LoadPackageResult_SymbolNodeMapEntry_key_tag 1
-#define LoadPackageResult_SymbolNodeMapEntry_value_tag 2
+#define LoadPackageResult_imports_tag            11
+#define LoadPackageResult_kcl_mod_tag            12
+#define LoadPackageResult_apps_tag               13
+#define KclModGitSource_git_tag                  1
+#define KclModGitSource_branch_tag               2
+#define KclModGitSource_commit_tag               3
+#define KclModGitSource_tag_tag                  4
+#define KclModGitSource_version_tag              5
+#define KclModOciSource_oci_tag                  1
+#define KclModOciSource_tag_tag                  2
+#define KclModLocalSource_path_tag               1
+#define KclModDependency_version_tag             1
+#define KclModDependency_git_tag                 2
+#define KclModDependency_oci_tag                 3
+#define KclModDependency_local_tag               4
+#define KclMod_DependenciesEntry_key_tag         1
+#define KclMod_DependenciesEntry_value_tag       2
+#define AppInfo_path_tag                         1
+#define AppInfo_has_kcl_mod_tag                  2
 #define ListOptionsResult_options_tag            2
 #define OptionHelp_name_tag                      1
 #define OptionHelp_type_tag                      2
@@ -1260,6 +1554,22 @@ extern "C" {
 #define UpdateDependenciesArgs_manifest_path_tag 1
 #define UpdateDependenciesArgs_vendor_tag        2
 #define UpdateDependenciesResult_external_pkgs_tag 3
+#define GenerateTomlArgs_exec_args_tag           1
+#define GenerateTomlArgs_sort_keys_tag           2
+#define GenerateTomlResult_toml_tag              1
+#define GenerateKclArgs_source_tag               1
+#define GenerateKclArgs_filename_tag             2
+#define GenerateKclArgs_format_tag               3
+#define GenerateKclResult_kcl_tag                1
+#define GenerateOpenAPIArgs_parse_args_tag       1
+#define GenerateOpenAPIArgs_version_tag          2
+#define GenerateOpenAPIResult_spec_tag           1
+#define GenerateProtoArgs_parse_args_tag         1
+#define GenerateProtoArgs_package_tag            2
+#define GenerateProtoResult_proto_tag            1
+#define GenerateDocArgs_parse_args_tag           1
+#define GenerateDocArgs_format_tag               2
+#define GenerateDocResult_content_tag            1
 #define KclType_type_tag                         1
 #define KclType_union_types_tag                  2
 #define KclType_default__tag                     3
@@ -1421,7 +1731,10 @@ X(a, CALLBACK, REPEATED, MESSAGE,  symbols,           6) \
 X(a, CALLBACK, REPEATED, MESSAGE,  node_symbol_map,   7) \
 X(a, CALLBACK, REPEATED, MESSAGE,  symbol_node_map,   8) \
 X(a, CALLBACK, REPEATED, MESSAGE,  fully_qualified_name_map,   9) \
-X(a, CALLBACK, REPEATED, MESSAGE,  pkg_scope_map,    10)
+X(a, CALLBACK, REPEATED, MESSAGE,  pkg_scope_map,    10) \
+X(a, CALLBACK, REPEATED, MESSAGE,  imports,          11) \
+X(a, STATIC,   OPTIONAL, MESSAGE,  kcl_mod,          12) \
+X(a, CALLBACK, REPEATED, MESSAGE,  apps,             13)
 #define LoadPackageResult_CALLBACK pb_default_field_callback
 #define LoadPackageResult_DEFAULT NULL
 #define LoadPackageResult_parse_errors_MSGTYPE Error
@@ -1432,6 +1745,9 @@ X(a, CALLBACK, REPEATED, MESSAGE,  pkg_scope_map,    10)
 #define LoadPackageResult_symbol_node_map_MSGTYPE LoadPackageResult_SymbolNodeMapEntry
 #define LoadPackageResult_fully_qualified_name_map_MSGTYPE LoadPackageResult_FullyQualifiedNameMapEntry
 #define LoadPackageResult_pkg_scope_map_MSGTYPE LoadPackageResult_PkgScopeMapEntry
+#define LoadPackageResult_imports_MSGTYPE LoadPackageResult_ImportsEntry
+#define LoadPackageResult_kcl_mod_MSGTYPE KclMod
+#define LoadPackageResult_apps_MSGTYPE AppInfo
 
 #define LoadPackageResult_ScopesEntry_FIELDLIST(X, a) \
 X(a, CALLBACK, SINGULAR, STRING,   key,               1) \
@@ -1473,6 +1789,99 @@ X(a, STATIC,   OPTIONAL, MESSAGE,  value,             2)
 #define LoadPackageResult_PkgScopeMapEntry_CALLBACK pb_default_field_callback
 #define LoadPackageResult_PkgScopeMapEntry_DEFAULT NULL
 #define LoadPackageResult_PkgScopeMapEntry_value_MSGTYPE ScopeIndex
+
+#define LoadPackageResult_ImportsEntry_FIELDLIST(X, a) \
+X(a, CALLBACK, SINGULAR, STRING,   key,               1) \
+X(a, STATIC,   OPTIONAL, MESSAGE,  value,             2)
+#define LoadPackageResult_ImportsEntry_CALLBACK pb_default_field_callback
+#define LoadPackageResult_ImportsEntry_DEFAULT NULL
+#define LoadPackageResult_ImportsEntry_value_MSGTYPE FileImports
+
+#define FileImports_FIELDLIST(X, a) \
+X(a, CALLBACK, REPEATED, MESSAGE,  imports,           1)
+#define FileImports_CALLBACK pb_default_field_callback
+#define FileImports_DEFAULT NULL
+#define FileImports_imports_MSGTYPE ImportInfo
+
+#define ImportInfo_FIELDLIST(X, a) \
+X(a, CALLBACK, SINGULAR, STRING,   path,              1) \
+X(a, CALLBACK, SINGULAR, STRING,   resolved,          2)
+#define ImportInfo_CALLBACK pb_default_field_callback
+#define ImportInfo_DEFAULT NULL
+
+#define KclMod_FIELDLIST(X, a) \
+X(a, STATIC,   OPTIONAL, MESSAGE,  package,           1) \
+X(a, STATIC,   OPTIONAL, MESSAGE,  profile,           2) \
+X(a, CALLBACK, REPEATED, MESSAGE,  dependencies,      3)
+#define KclMod_CALLBACK pb_default_field_callback
+#define KclMod_DEFAULT NULL
+#define KclMod_package_MSGTYPE KclModPackage
+#define KclMod_profile_MSGTYPE KclModProfile
+#define KclMod_dependencies_MSGTYPE KclMod_DependenciesEntry
+
+#define KclMod_DependenciesEntry_FIELDLIST(X, a) \
+X(a, CALLBACK, SINGULAR, STRING,   key,               1) \
+X(a, STATIC,   OPTIONAL, MESSAGE,  value,             2)
+#define KclMod_DependenciesEntry_CALLBACK pb_default_field_callback
+#define KclMod_DependenciesEntry_DEFAULT NULL
+#define KclMod_DependenciesEntry_value_MSGTYPE KclModDependency
+
+#define KclModPackage_FIELDLIST(X, a) \
+X(a, CALLBACK, SINGULAR, STRING,   name,              1) \
+X(a, CALLBACK, SINGULAR, STRING,   edition,           2) \
+X(a, CALLBACK, SINGULAR, STRING,   version,           3) \
+X(a, CALLBACK, SINGULAR, STRING,   description,       4) \
+X(a, CALLBACK, REPEATED, STRING,   include,           5) \
+X(a, CALLBACK, REPEATED, STRING,   exclude,           6)
+#define KclModPackage_CALLBACK pb_default_field_callback
+#define KclModPackage_DEFAULT NULL
+
+#define KclModProfile_FIELDLIST(X, a) \
+X(a, CALLBACK, REPEATED, STRING,   entries,           1) \
+X(a, STATIC,   SINGULAR, BOOL,     disable_none,      2) \
+X(a, STATIC,   SINGULAR, BOOL,     sort_keys,         3) \
+X(a, CALLBACK, REPEATED, STRING,   selectors,         4) \
+X(a, CALLBACK, REPEATED, STRING,   overrides,         5) \
+X(a, CALLBACK, REPEATED, STRING,   options,           6)
+#define KclModProfile_CALLBACK pb_default_field_callback
+#define KclModProfile_DEFAULT NULL
+
+#define KclModDependency_FIELDLIST(X, a) \
+X(a, CALLBACK, SINGULAR, STRING,   version,           1) \
+X(a, STATIC,   OPTIONAL, MESSAGE,  git,               2) \
+X(a, STATIC,   OPTIONAL, MESSAGE,  oci,               3) \
+X(a, STATIC,   OPTIONAL, MESSAGE,  local,             4)
+#define KclModDependency_CALLBACK pb_default_field_callback
+#define KclModDependency_DEFAULT NULL
+#define KclModDependency_git_MSGTYPE KclModGitSource
+#define KclModDependency_oci_MSGTYPE KclModOciSource
+#define KclModDependency_local_MSGTYPE KclModLocalSource
+
+#define KclModGitSource_FIELDLIST(X, a) \
+X(a, CALLBACK, SINGULAR, STRING,   git,               1) \
+X(a, CALLBACK, SINGULAR, STRING,   branch,            2) \
+X(a, CALLBACK, SINGULAR, STRING,   commit,            3) \
+X(a, CALLBACK, SINGULAR, STRING,   tag,               4) \
+X(a, CALLBACK, SINGULAR, STRING,   version,           5)
+#define KclModGitSource_CALLBACK pb_default_field_callback
+#define KclModGitSource_DEFAULT NULL
+
+#define KclModOciSource_FIELDLIST(X, a) \
+X(a, CALLBACK, SINGULAR, STRING,   oci,               1) \
+X(a, CALLBACK, SINGULAR, STRING,   tag,               2)
+#define KclModOciSource_CALLBACK pb_default_field_callback
+#define KclModOciSource_DEFAULT NULL
+
+#define KclModLocalSource_FIELDLIST(X, a) \
+X(a, CALLBACK, SINGULAR, STRING,   path,              1)
+#define KclModLocalSource_CALLBACK pb_default_field_callback
+#define KclModLocalSource_DEFAULT NULL
+
+#define AppInfo_FIELDLIST(X, a) \
+X(a, CALLBACK, SINGULAR, STRING,   path,              1) \
+X(a, STATIC,   SINGULAR, BOOL,     has_kcl_mod,       2)
+#define AppInfo_CALLBACK pb_default_field_callback
+#define AppInfo_DEFAULT NULL
 
 #define ListOptionsResult_FIELDLIST(X, a) \
 X(a, CALLBACK, REPEATED, MESSAGE,  options,           2)
@@ -1900,6 +2309,66 @@ X(a, CALLBACK, REPEATED, MESSAGE,  external_pkgs,     3)
 #define UpdateDependenciesResult_DEFAULT NULL
 #define UpdateDependenciesResult_external_pkgs_MSGTYPE ExternalPkg
 
+#define GenerateTomlArgs_FIELDLIST(X, a) \
+X(a, STATIC,   OPTIONAL, MESSAGE,  exec_args,         1) \
+X(a, STATIC,   SINGULAR, BOOL,     sort_keys,         2)
+#define GenerateTomlArgs_CALLBACK NULL
+#define GenerateTomlArgs_DEFAULT NULL
+#define GenerateTomlArgs_exec_args_MSGTYPE ExecProgramArgs
+
+#define GenerateTomlResult_FIELDLIST(X, a) \
+X(a, CALLBACK, SINGULAR, STRING,   toml,              1)
+#define GenerateTomlResult_CALLBACK pb_default_field_callback
+#define GenerateTomlResult_DEFAULT NULL
+
+#define GenerateKclArgs_FIELDLIST(X, a) \
+X(a, CALLBACK, SINGULAR, STRING,   source,            1) \
+X(a, CALLBACK, SINGULAR, STRING,   filename,          2) \
+X(a, CALLBACK, SINGULAR, STRING,   format,            3)
+#define GenerateKclArgs_CALLBACK pb_default_field_callback
+#define GenerateKclArgs_DEFAULT NULL
+
+#define GenerateKclResult_FIELDLIST(X, a) \
+X(a, CALLBACK, SINGULAR, STRING,   kcl,               1)
+#define GenerateKclResult_CALLBACK pb_default_field_callback
+#define GenerateKclResult_DEFAULT NULL
+
+#define GenerateOpenAPIArgs_FIELDLIST(X, a) \
+X(a, STATIC,   OPTIONAL, MESSAGE,  parse_args,        1) \
+X(a, CALLBACK, SINGULAR, STRING,   version,           2)
+#define GenerateOpenAPIArgs_CALLBACK pb_default_field_callback
+#define GenerateOpenAPIArgs_DEFAULT NULL
+#define GenerateOpenAPIArgs_parse_args_MSGTYPE ParseProgramArgs
+
+#define GenerateOpenAPIResult_FIELDLIST(X, a) \
+X(a, CALLBACK, SINGULAR, STRING,   spec,              1)
+#define GenerateOpenAPIResult_CALLBACK pb_default_field_callback
+#define GenerateOpenAPIResult_DEFAULT NULL
+
+#define GenerateProtoArgs_FIELDLIST(X, a) \
+X(a, STATIC,   OPTIONAL, MESSAGE,  parse_args,        1) \
+X(a, CALLBACK, SINGULAR, STRING,   package,           2)
+#define GenerateProtoArgs_CALLBACK pb_default_field_callback
+#define GenerateProtoArgs_DEFAULT NULL
+#define GenerateProtoArgs_parse_args_MSGTYPE ParseProgramArgs
+
+#define GenerateProtoResult_FIELDLIST(X, a) \
+X(a, CALLBACK, SINGULAR, STRING,   proto,             1)
+#define GenerateProtoResult_CALLBACK pb_default_field_callback
+#define GenerateProtoResult_DEFAULT NULL
+
+#define GenerateDocArgs_FIELDLIST(X, a) \
+X(a, STATIC,   OPTIONAL, MESSAGE,  parse_args,        1) \
+X(a, CALLBACK, SINGULAR, STRING,   format,            2)
+#define GenerateDocArgs_CALLBACK pb_default_field_callback
+#define GenerateDocArgs_DEFAULT NULL
+#define GenerateDocArgs_parse_args_MSGTYPE ParseProgramArgs
+
+#define GenerateDocResult_FIELDLIST(X, a) \
+X(a, CALLBACK, SINGULAR, STRING,   content,           1)
+#define GenerateDocResult_CALLBACK pb_default_field_callback
+#define GenerateDocResult_DEFAULT NULL
+
 #define KclType_FIELDLIST(X, a) \
 X(a, CALLBACK, SINGULAR, STRING,   type,              1) \
 X(a, CALLBACK, REPEATED, MESSAGE,  union_types,       2) \
@@ -2013,6 +2482,18 @@ extern const pb_msgdesc_t LoadPackageResult_NodeSymbolMapEntry_msg;
 extern const pb_msgdesc_t LoadPackageResult_SymbolNodeMapEntry_msg;
 extern const pb_msgdesc_t LoadPackageResult_FullyQualifiedNameMapEntry_msg;
 extern const pb_msgdesc_t LoadPackageResult_PkgScopeMapEntry_msg;
+extern const pb_msgdesc_t LoadPackageResult_ImportsEntry_msg;
+extern const pb_msgdesc_t FileImports_msg;
+extern const pb_msgdesc_t ImportInfo_msg;
+extern const pb_msgdesc_t KclMod_msg;
+extern const pb_msgdesc_t KclMod_DependenciesEntry_msg;
+extern const pb_msgdesc_t KclModPackage_msg;
+extern const pb_msgdesc_t KclModProfile_msg;
+extern const pb_msgdesc_t KclModDependency_msg;
+extern const pb_msgdesc_t KclModGitSource_msg;
+extern const pb_msgdesc_t KclModOciSource_msg;
+extern const pb_msgdesc_t KclModLocalSource_msg;
+extern const pb_msgdesc_t AppInfo_msg;
 extern const pb_msgdesc_t ListOptionsResult_msg;
 extern const pb_msgdesc_t OptionHelp_msg;
 extern const pb_msgdesc_t Symbol_msg;
@@ -2068,6 +2549,16 @@ extern const pb_msgdesc_t FormatTestReportArgs_msg;
 extern const pb_msgdesc_t FormatTestReportResult_msg;
 extern const pb_msgdesc_t UpdateDependenciesArgs_msg;
 extern const pb_msgdesc_t UpdateDependenciesResult_msg;
+extern const pb_msgdesc_t GenerateTomlArgs_msg;
+extern const pb_msgdesc_t GenerateTomlResult_msg;
+extern const pb_msgdesc_t GenerateKclArgs_msg;
+extern const pb_msgdesc_t GenerateKclResult_msg;
+extern const pb_msgdesc_t GenerateOpenAPIArgs_msg;
+extern const pb_msgdesc_t GenerateOpenAPIResult_msg;
+extern const pb_msgdesc_t GenerateProtoArgs_msg;
+extern const pb_msgdesc_t GenerateProtoResult_msg;
+extern const pb_msgdesc_t GenerateDocArgs_msg;
+extern const pb_msgdesc_t GenerateDocResult_msg;
 extern const pb_msgdesc_t KclType_msg;
 extern const pb_msgdesc_t KclType_PropertiesEntry_msg;
 extern const pb_msgdesc_t KclType_ExamplesEntry_msg;
@@ -2101,6 +2592,18 @@ extern const pb_msgdesc_t Example_msg;
 #define LoadPackageResult_SymbolNodeMapEntry_fields &LoadPackageResult_SymbolNodeMapEntry_msg
 #define LoadPackageResult_FullyQualifiedNameMapEntry_fields &LoadPackageResult_FullyQualifiedNameMapEntry_msg
 #define LoadPackageResult_PkgScopeMapEntry_fields &LoadPackageResult_PkgScopeMapEntry_msg
+#define LoadPackageResult_ImportsEntry_fields &LoadPackageResult_ImportsEntry_msg
+#define FileImports_fields &FileImports_msg
+#define ImportInfo_fields &ImportInfo_msg
+#define KclMod_fields &KclMod_msg
+#define KclMod_DependenciesEntry_fields &KclMod_DependenciesEntry_msg
+#define KclModPackage_fields &KclModPackage_msg
+#define KclModProfile_fields &KclModProfile_msg
+#define KclModDependency_fields &KclModDependency_msg
+#define KclModGitSource_fields &KclModGitSource_msg
+#define KclModOciSource_fields &KclModOciSource_msg
+#define KclModLocalSource_fields &KclModLocalSource_msg
+#define AppInfo_fields &AppInfo_msg
 #define ListOptionsResult_fields &ListOptionsResult_msg
 #define OptionHelp_fields &OptionHelp_msg
 #define Symbol_fields &Symbol_msg
@@ -2156,6 +2659,16 @@ extern const pb_msgdesc_t Example_msg;
 #define FormatTestReportResult_fields &FormatTestReportResult_msg
 #define UpdateDependenciesArgs_fields &UpdateDependenciesArgs_msg
 #define UpdateDependenciesResult_fields &UpdateDependenciesResult_msg
+#define GenerateTomlArgs_fields &GenerateTomlArgs_msg
+#define GenerateTomlResult_fields &GenerateTomlResult_msg
+#define GenerateKclArgs_fields &GenerateKclArgs_msg
+#define GenerateKclResult_fields &GenerateKclResult_msg
+#define GenerateOpenAPIArgs_fields &GenerateOpenAPIArgs_msg
+#define GenerateOpenAPIResult_fields &GenerateOpenAPIResult_msg
+#define GenerateProtoArgs_fields &GenerateProtoArgs_msg
+#define GenerateProtoResult_fields &GenerateProtoResult_msg
+#define GenerateDocArgs_fields &GenerateDocArgs_msg
+#define GenerateDocResult_fields &GenerateDocResult_msg
 #define KclType_fields &KclType_msg
 #define KclType_PropertiesEntry_fields &KclType_PropertiesEntry_msg
 #define KclType_ExamplesEntry_fields &KclType_ExamplesEntry_msg
@@ -2187,6 +2700,18 @@ extern const pb_msgdesc_t Example_msg;
 /* LoadPackageResult_SymbolNodeMapEntry_size depends on runtime parameters */
 /* LoadPackageResult_FullyQualifiedNameMapEntry_size depends on runtime parameters */
 /* LoadPackageResult_PkgScopeMapEntry_size depends on runtime parameters */
+/* LoadPackageResult_ImportsEntry_size depends on runtime parameters */
+/* FileImports_size depends on runtime parameters */
+/* ImportInfo_size depends on runtime parameters */
+/* KclMod_size depends on runtime parameters */
+/* KclMod_DependenciesEntry_size depends on runtime parameters */
+/* KclModPackage_size depends on runtime parameters */
+/* KclModProfile_size depends on runtime parameters */
+/* KclModDependency_size depends on runtime parameters */
+/* KclModGitSource_size depends on runtime parameters */
+/* KclModOciSource_size depends on runtime parameters */
+/* KclModLocalSource_size depends on runtime parameters */
+/* AppInfo_size depends on runtime parameters */
 /* ListOptionsResult_size depends on runtime parameters */
 /* OptionHelp_size depends on runtime parameters */
 /* Symbol_size depends on runtime parameters */
@@ -2239,6 +2764,16 @@ extern const pb_msgdesc_t Example_msg;
 /* FormatTestReportResult_size depends on runtime parameters */
 /* UpdateDependenciesArgs_size depends on runtime parameters */
 /* UpdateDependenciesResult_size depends on runtime parameters */
+/* GenerateTomlArgs_size depends on runtime parameters */
+/* GenerateTomlResult_size depends on runtime parameters */
+/* GenerateKclArgs_size depends on runtime parameters */
+/* GenerateKclResult_size depends on runtime parameters */
+/* GenerateOpenAPIArgs_size depends on runtime parameters */
+/* GenerateOpenAPIResult_size depends on runtime parameters */
+/* GenerateProtoArgs_size depends on runtime parameters */
+/* GenerateProtoResult_size depends on runtime parameters */
+/* GenerateDocArgs_size depends on runtime parameters */
+/* GenerateDocResult_size depends on runtime parameters */
 /* KclType_size depends on runtime parameters */
 /* KclType_PropertiesEntry_size depends on runtime parameters */
 /* KclType_ExamplesEntry_size depends on runtime parameters */
