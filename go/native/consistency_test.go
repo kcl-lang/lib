@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"strconv"
 	"strings"
 	"testing"
 
@@ -106,9 +107,44 @@ func buildConsistencyArgs(t *testing.T, c consistencyCase) interface{} {
 			Data: jsonString(c.Args, "data"),
 		}
 	case "KclService.FormatTestReport":
-		// Enabled with the api wrappers PR; this base only covers the core RPC surface.
-		t.Skipf("go binding does not export %s", c.RPC)
-		return nil
+		infos := []map[string]interface{}{}
+		raw, _ := c.Args["result"].(map[string]interface{})
+		if raw != nil {
+			if list, ok := raw["info"].([]interface{}); ok {
+				for _, item := range list {
+					if info, ok := item.(map[string]interface{}); ok {
+						infos = append(infos, info)
+					}
+				}
+			}
+		}
+		testInfos := make([]*api.TestCaseInfo, 0, len(infos))
+		for _, info := range infos {
+			duration, _ := strconv.ParseUint(fmt.Sprintf("%v", info["duration"]), 10, 64)
+			testInfos = append(testInfos, &api.TestCaseInfo{
+				Name:       jsonString(info, "name"),
+				Error:      jsonString(info, "error"),
+				Duration:   duration,
+				LogMessage: jsonString(info, "log_message"),
+			})
+		}
+		return &api.FormatTestReportArgs{Result: &api.TestResult{Info: testInfos}}
+	case "KclService.GenerateToml":
+		execArgs := map[string]interface{}{}
+		if raw, ok := c.Args["exec_args"].(map[string]interface{}); ok {
+			execArgs = raw
+		}
+		return &api.GenerateTomlArgs{
+			ExecArgs: &api.ExecProgramArgs{
+				KCodeList: jsonStringList(execArgs, "k_code_list"),
+			},
+		}
+	case "KclService.GenerateKcl":
+		return &api.GenerateKclArgs{
+			Source:   jsonString(c.Args, "source"),
+			Filename: jsonString(c.Args, "filename"),
+			Format:   jsonString(c.Args, "format"),
+		}
 	default:
 		t.Fatalf("no args builder for rpc %s", c.RPC)
 		return nil
@@ -148,7 +184,23 @@ func callConsistencyRPC(client api.ServiceClient, c consistencyCase, args interf
 			"err_message": result.ErrMessage,
 		}, nil
 	case "KclService.FormatTestReport":
-		return nil, fmt.Errorf("go binding does not export %s", c.RPC)
+		result, err := client.FormatTestReport(args.(*api.FormatTestReportArgs))
+		if err != nil {
+			return nil, err
+		}
+		return map[string]interface{}{"report": result.Report}, nil
+	case "KclService.GenerateToml":
+		result, err := client.GenerateToml(args.(*api.GenerateTomlArgs))
+		if err != nil {
+			return nil, err
+		}
+		return map[string]interface{}{"toml": result.Toml}, nil
+	case "KclService.GenerateKcl":
+		result, err := client.GenerateKcl(args.(*api.GenerateKclArgs))
+		if err != nil {
+			return nil, err
+		}
+		return map[string]interface{}{"kcl": result.Kcl}, nil
 	default:
 		return nil, fmt.Errorf("no caller for rpc %s", c.RPC)
 	}
@@ -198,14 +250,6 @@ func TestConsistency(t *testing.T) {
 	for _, c := range cases {
 		c := c
 		t.Run(c.Name, func(t *testing.T) {
-			switch c.RPC {
-			case "KclService.Ping", "KclService.ExecProgram", "KclService.FormatCode",
-				"KclService.ValidateCode":
-				// exposed by this binding on the pre-wrappers base
-			default:
-				t.Skipf("go binding does not export %s", c.RPC)
-			}
-
 			if c.NewCore && !methods[c.RPC] {
 				t.Skipf("core does not list %s (old core)", c.RPC)
 			}

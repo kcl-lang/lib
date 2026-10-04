@@ -17,6 +17,10 @@ import com.kcl.api.Spec.FormatCodeArgs;
 import com.kcl.api.Spec.FormatCodeResult;
 import com.kcl.api.Spec.FormatTestReportArgs;
 import com.kcl.api.Spec.FormatTestReportResult;
+import com.kcl.api.Spec.GenerateKclArgs;
+import com.kcl.api.Spec.GenerateKclResult;
+import com.kcl.api.Spec.GenerateTomlArgs;
+import com.kcl.api.Spec.GenerateTomlResult;
 import com.kcl.api.Spec.PingArgs;
 import com.kcl.api.Spec.PingResult;
 import com.kcl.api.Spec.TestCaseInfo;
@@ -180,8 +184,25 @@ public class ConsistencyTest {
             assertField(name, "report", expect.get("report").asText(), result.getReport());
             break;
         }
+        case "KclService.GenerateToml": {
+            Assume.assumeTrue("core does not list " + rpc + " (old core)", methods().contains(rpc));
+            ExecProgramArgs.Builder execBuilder = ExecProgramArgs.newBuilder();
+            args.get("exec_args").get("k_code_list").forEach(node -> execBuilder.addKCodeList(node.asText()));
+            GenerateTomlResult result = api()
+                    .generateToml(GenerateTomlArgs.newBuilder().setExecArgs(execBuilder).build());
+            assertField(name, "toml", expect.get("toml").asText(), result.getToml());
+            break;
+        }
+        case "KclService.GenerateKcl": {
+            Assume.assumeTrue("core does not list " + rpc + " (old core)", methods().contains(rpc));
+            GenerateKclResult result = api()
+                    .generateKcl(GenerateKclArgs.newBuilder().setSource(args.get("source").asText())
+                            .setFilename(args.get("filename").asText()).setFormat(args.get("format").asText()).build());
+            assertField(name, "kcl", expect.get("kcl").asText(), result.getKcl());
+            break;
+        }
         default:
-            Assume.assumeTrue("java binding does not export " + rpc, false);
+            Assert.fail("no runner support for rpc " + rpc);
         }
     }
 

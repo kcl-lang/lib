@@ -42,6 +42,16 @@ type ServiceClient interface {
 	Test(in *TestArgs) (out *TestResult, err error)
 	// Format a TestResult into a human-readable report.
 	FormatTestReport(in *FormatTestReportArgs) (out *FormatTestReportResult, err error)
+	// Serialize the evaluated result of a KCL program to TOML.
+	GenerateToml(in *GenerateTomlArgs) (out *GenerateTomlResult, err error)
+	// Generate KCL source from data content (JSON, YAML or TOML).
+	GenerateKcl(in *GenerateKclArgs) (out *GenerateKclResult, err error)
+	// Generate an OpenAPI spec from the schemas of a KCL package.
+	GenerateOpenAPI(in *GenerateOpenAPIArgs) (out *GenerateOpenAPIResult, err error)
+	// Generate proto3 definitions from the schemas of a KCL package.
+	GenerateProto(in *GenerateProtoArgs) (out *GenerateProtoResult, err error)
+	// Generate documentation from the schemas of a KCL package.
+	GenerateDoc(in *GenerateDocArgs) (out *GenerateDocResult, err error)
 	// Download and update dependencies defined in the `kcl.mod` file and return the external package name and location list.
 	UpdateDependencies(in *UpdateDependenciesArgs) (out *UpdateDependenciesResult, err error)
 	// GetVersion KclService, return the kcl service version information

@@ -326,6 +326,16 @@ const {
   ping,
   listMethod,
   formatTestReport,
+  GenerateTomlArgs,
+  generateToml,
+  GenerateKclArgs,
+  generateKcl,
+  GenerateOpenAPIArgs,
+  generateOpenAPI,
+  GenerateProtoArgs,
+  generateProto,
+  GenerateDocArgs,
+  generateDoc,
 } = nativeBinding
 
 module.exports.registerPlugin = registerPlugin
@@ -369,3 +379,13 @@ module.exports.PingArgs = PingArgs
 module.exports.ping = ping
 module.exports.listMethod = listMethod
 module.exports.formatTestReport = formatTestReport
+module.exports.GenerateTomlArgs = GenerateTomlArgs
+module.exports.generateToml = generateToml
+module.exports.GenerateKclArgs = GenerateKclArgs
+module.exports.generateKcl = generateKcl
+module.exports.GenerateOpenAPIArgs = GenerateOpenAPIArgs
+module.exports.generateOpenAPI = generateOpenAPI
+module.exports.GenerateProtoArgs = GenerateProtoArgs
+module.exports.generateProto = generateProto
+module.exports.GenerateDocArgs = GenerateDocArgs
+module.exports.generateDoc = generateDoc

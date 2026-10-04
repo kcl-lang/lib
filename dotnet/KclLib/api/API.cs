@@ -182,6 +182,31 @@ public class API : IService
         return FormatTestReportResult.Parser.ParseFrom(Call("KclService.FormatTestReport", args.ToByteArray()));
     }
 
+    public GenerateTomlResult GenerateToml(GenerateTomlArgs args)
+    {
+        return GenerateTomlResult.Parser.ParseFrom(Call("KclService.GenerateToml", args.ToByteArray()));
+    }
+
+    public GenerateKclResult GenerateKcl(GenerateKclArgs args)
+    {
+        return GenerateKclResult.Parser.ParseFrom(Call("KclService.GenerateKcl", args.ToByteArray()));
+    }
+
+    public GenerateOpenAPIResult GenerateOpenAPI(GenerateOpenAPIArgs args)
+    {
+        return GenerateOpenAPIResult.Parser.ParseFrom(Call("KclService.GenerateOpenAPI", args.ToByteArray()));
+    }
+
+    public GenerateProtoResult GenerateProto(GenerateProtoArgs args)
+    {
+        return GenerateProtoResult.Parser.ParseFrom(Call("KclService.GenerateProto", args.ToByteArray()));
+    }
+
+    public GenerateDocResult GenerateDoc(GenerateDocArgs args)
+    {
+        return GenerateDocResult.Parser.ParseFrom(Call("KclService.GenerateDoc", args.ToByteArray()));
+    }
+
     public UpdateDependenciesResult UpdateDependencies(UpdateDependenciesArgs args)
     {
         return UpdateDependenciesResult.Parser.ParseFrom(Call("KclService.UpdateDependencies", args.ToByteArray()));

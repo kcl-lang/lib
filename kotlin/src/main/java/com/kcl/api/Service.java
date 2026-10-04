@@ -62,6 +62,21 @@ public interface Service {
     // Service for formatting a test result into a human-readable report
     FormatTestReportResult formatTestReport(FormatTestReportArgs args) throws Exception;
 
+    // Service for serializing the evaluated result of a KCL program to TOML.
+    GenerateTomlResult generateToml(GenerateTomlArgs args) throws Exception;
+
+    // Service for generating KCL source from data content (JSON, YAML or TOML).
+    GenerateKclResult generateKcl(GenerateKclArgs args) throws Exception;
+
+    // Service for generating an OpenAPI spec from the schemas of a KCL package.
+    GenerateOpenAPIResult generateOpenAPI(GenerateOpenAPIArgs args) throws Exception;
+
+    // Service for generating proto3 definitions from the schemas of a KCL package.
+    GenerateProtoResult generateProto(GenerateProtoArgs args) throws Exception;
+
+    // Service for generating documentation from the schemas of a KCL package.
+    GenerateDocResult generateDoc(GenerateDocArgs args) throws Exception;
+
     // Service for the dependency updating
     UpdateDependenciesResult updateDependencies(UpdateDependenciesArgs args) throws Exception;
 

@@ -194,13 +194,55 @@ public class ConsistencyTest
                 break;
             }
             case "KclService.FormatTestReport":
+            {
+                if (newCore && !AvailableMethods.Value.Contains(rpc))
+                {
+                    Skip($"core does not list {rpc} (old core)");
+                }
+                var reportArgs = new FormatTestReportArgs();
+                foreach (var info in args.GetProperty("result").GetProperty("info").EnumerateArray())
+                {
+                    reportArgs.Result.Info.Add(new TestCaseInfo
+                    {
+                        Name = info.GetProperty("name").GetString(),
+                        Error = info.TryGetProperty("error", out var e) ? e.GetString() : "",
+                        // uint64 values are canonical proto JSON strings in the manifest.
+                        Duration = ulong.Parse(info.GetProperty("duration").GetString()!),
+                        LogMessage = info.TryGetProperty("log_message", out var l) ? l.GetString() : "",
+                    });
+                }
+                var result = ApiInstance.Value.FormatTestReport(reportArgs);
+                AssertField(name, "report", expect.GetProperty("report").GetString()!, result.Report);
+                break;
+            }
             case "KclService.GenerateToml":
+            {
+                if (newCore && !AvailableMethods.Value.Contains(rpc))
+                {
+                    Skip($"core does not list {rpc} (old core)");
+                }
+                var tomlArgs = new GenerateTomlArgs();
+                foreach (var code in args.GetProperty("exec_args").GetProperty("k_code_list").EnumerateArray())
+                {
+                    tomlArgs.ExecArgs.KCodeList.Add(code.GetString());
+                }
+                var result = ApiInstance.Value.GenerateToml(tomlArgs);
+                AssertField(name, "toml", expect.GetProperty("toml").GetString()!, result.Toml);
+                break;
+            }
             case "KclService.GenerateKcl":
             {
-                // These RPCs ship with the api wrappers PR; until it merges
-                // this runner only covers the core RPC surface so the test
-                // compiles against the current generated Spec.cs.
-                Skip($"binding does not export {rpc} yet");
+                if (newCore && !AvailableMethods.Value.Contains(rpc))
+                {
+                    Skip($"core does not list {rpc} (old core)");
+                }
+                var result = ApiInstance.Value.GenerateKcl(new GenerateKclArgs
+                {
+                    Source = args.GetProperty("source").GetString(),
+                    Filename = args.GetProperty("filename").GetString(),
+                    Format = args.GetProperty("format").GetString(),
+                });
+                AssertField(name, "kcl", expect.GetProperty("kcl").GetString()!, result.Kcl);
                 break;
             }
             default:
@@ -227,7 +269,15 @@ public class ConsistencyTest
     [TestMethod]
     public void TestValidateCodeInvalid() => RunCase("validate_code_invalid");
 
+    [TestMethod]
+    public void TestGenerateKclJson() => RunCase("generate_kcl_json");
 
+    [TestMethod]
+    public void TestGenerateKclYaml() => RunCase("generate_kcl_yaml");
 
+    [TestMethod]
+    public void TestGenerateToml() => RunCase("generate_toml");
 
+    [TestMethod]
+    public void TestFormatTestReport() => RunCase("format_test_report");
 }
