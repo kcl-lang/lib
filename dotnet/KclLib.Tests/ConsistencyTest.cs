@@ -245,10 +245,76 @@ public class ConsistencyTest
                 AssertField(name, "kcl", expect.GetProperty("kcl").GetString()!, result.Kcl);
                 break;
             }
+            case "KclService.GenerateOpenAPI":
+            {
+                if (newCore && !AvailableMethods.Value.Contains(rpc))
+                {
+                    Skip($"core does not list {rpc} (old core)");
+                }
+                var result = ApiInstance.Value.GenerateOpenAPI(new GenerateOpenAPIArgs
+                {
+                    ParseArgs = ParseArgs(args.GetProperty("parse_args")),
+                    Version = args.TryGetProperty("version", out var v) ? v.GetString() : "",
+                });
+                AssertField(name, "spec", expect.GetProperty("spec").GetString()!, result.Spec);
+                break;
+            }
+            case "KclService.GenerateProto":
+            {
+                if (newCore && !AvailableMethods.Value.Contains(rpc))
+                {
+                    Skip($"core does not list {rpc} (old core)");
+                }
+                var result = ApiInstance.Value.GenerateProto(new GenerateProtoArgs
+                {
+                    ParseArgs = ParseArgs(args.GetProperty("parse_args")),
+                    Package = args.TryGetProperty("package", out var p) ? p.GetString() : "",
+                });
+                AssertField(name, "proto", expect.GetProperty("proto").GetString()!, result.Proto);
+                break;
+            }
+            case "KclService.GenerateDoc":
+            {
+                if (newCore && !AvailableMethods.Value.Contains(rpc))
+                {
+                    Skip($"core does not list {rpc} (old core)");
+                }
+                var result = ApiInstance.Value.GenerateDoc(new GenerateDocArgs
+                {
+                    ParseArgs = ParseArgs(args.GetProperty("parse_args")),
+                    Format = args.TryGetProperty("format", out var f) ? f.GetString() : "",
+                });
+                AssertField(name, "content", expect.GetProperty("content").GetString()!, result.Content);
+                break;
+            }
             default:
                 Assert.Fail($"no runner support for rpc {rpc}");
                 break;
         }
+    }
+
+    /// <summary>
+    /// Build <see cref="ParseProgramArgs"/> from the manifest. Path entries are
+    /// pinned repo-relative by generate_cases.py; they are resolved against the
+    /// repository root (the parent of the directory holding cases.json), while
+    /// absolute entries are kept as-is.
+    /// </summary>
+    static ParseProgramArgs ParseArgs(JsonElement node)
+    {
+        var parseArgs = new ParseProgramArgs();
+        foreach (var path in node.GetProperty("paths").EnumerateArray())
+        {
+            var p = path.GetString()!;
+            parseArgs.Paths.Add(Path.IsPathRooted(p) ? p : Path.Combine(RepoRoot, p));
+        }
+        if (node.TryGetProperty("sources", out var sources))
+        {
+            foreach (var source in sources.EnumerateArray())
+            {
+                parseArgs.Sources.Add(source.GetString());
+            }
+        }
+        return parseArgs;
     }
 
     [TestMethod]
@@ -280,4 +346,13 @@ public class ConsistencyTest
 
     [TestMethod]
     public void TestFormatTestReport() => RunCase("format_test_report");
+
+    [TestMethod]
+    public void TestGenerateOpenAPIV3() => RunCase("generate_openapi_v3");
+
+    [TestMethod]
+    public void TestGenerateProto() => RunCase("generate_proto");
+
+    [TestMethod]
+    public void TestGenerateDocMd() => RunCase("generate_doc_md");
 }

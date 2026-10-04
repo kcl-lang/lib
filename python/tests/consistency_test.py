@@ -27,6 +27,7 @@ CASES_JSON = (
     / "consistency"
     / "cases.json"
 )
+REPO_ROOT = CASES_JSON.parent.parent.parent
 
 
 def _load_cases():
@@ -38,6 +39,19 @@ def _load_cases():
     manifest = json.loads(CASES_JSON.read_text(encoding="utf-8"))
     assert manifest["version"] == 1, f"unsupported manifest version: {manifest['version']}"
     return manifest["cases"]
+
+
+def _resolve_path(p):
+    """Manifest path entries are repo-relative (pinned by generate_cases.py);
+    absolute entries are kept as-is."""
+    return p if Path(p).is_absolute() else str(REPO_ROOT / p)
+
+
+def _parse_args(a):
+    return api.ParseProgramArgs(
+        paths=[_resolve_path(p) for p in a.get("paths", [])],
+        sources=a.get("sources", []),
+    )
 
 
 def _build_args(case):
@@ -76,6 +90,18 @@ def _build_args(case):
                 ]
             )
         )
+    if rpc == "KclService.GenerateOpenAPI":
+        return api.GenerateOpenAPIArgs(
+            parse_args=_parse_args(a["parse_args"]), version=a.get("version", "")
+        )
+    if rpc == "KclService.GenerateProto":
+        return api.GenerateProtoArgs(
+            parse_args=_parse_args(a["parse_args"]), package=a.get("package", "")
+        )
+    if rpc == "KclService.GenerateDoc":
+        return api.GenerateDocArgs(
+            parse_args=_parse_args(a["parse_args"]), format=a.get("format", "")
+        )
     raise ValueError(f"no args builder for rpc {rpc}")
 
 
@@ -87,6 +113,9 @@ _METHOD_NAMES = {
     "KclService.GenerateKcl": "generate_kcl",
     "KclService.GenerateToml": "generate_toml",
     "KclService.FormatTestReport": "format_test_report",
+    "KclService.GenerateOpenAPI": "generate_openapi",
+    "KclService.GenerateProto": "generate_proto",
+    "KclService.GenerateDoc": "generate_doc",
 }
 
 

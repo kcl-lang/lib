@@ -226,6 +226,60 @@
       "expect": {
         "report": "test_pass: PASS (1ms)\ntest_log: PASS (2ms)\nhello log\ntest_fail: FAIL (1ms)\nError: assert failed\n--------------------------------------------------------------------------------\nPASS: 2/3\nFAIL: 1/3\n"
       }
+    },
+    {
+      "name": "generate_openapi_v3",
+      "rpc": "KclService.GenerateOpenAPI",
+      "new_core": true,
+      "args": {
+        "parse_args": {
+          "paths": [
+            "tests/consistency/testdata/gen_openapi/main.k"
+          ],
+          "sources": [],
+          "external_pkgs": []
+        },
+        "version": "v3"
+      },
+      "expect": {
+        "spec": "{\n  \"components\": {\n    \"schemas\": {\n      \"Address\": {\n        \"description\": \"A postal address.\",\n        \"properties\": {\n          \"geo\": {\n            \"additionalProperties\": {\n              \"format\": \"double\",\n              \"type\": \"number\"\n            },\n            \"description\": \"Arbitrary float coordinates keyed by name.\",\n            \"type\": \"object\"\n          },\n          \"street\": {\n            \"description\": \"The street name.\",\n            \"type\": \"string\"\n          },\n          \"zipCode\": {\n            \"description\": \"The ZIP code.\",\n            \"type\": \"string\"\n          }\n        },\n        \"required\": [\n          \"street\",\n          \"zipCode\",\n          \"geo\"\n        ],\n        \"type\": \"object\"\n      },\n      \"Base\": {\n        \"description\": \"Base schema carrying the shared identifier.\",\n        \"properties\": {\n          \"id\": {\n            \"description\": \"The unique identifier.\",\n            \"format\": \"int64\",\n            \"type\": \"integer\"\n          }\n        },\n        \"required\": [\n          \"id\"\n        ],\n        \"type\": \"object\"\n      },\n      \"Person\": {\n        \"allOf\": [\n          {\n            \"$ref\": \"#/components/schemas/Base\"\n          },\n          {\n            \"description\": \"A person in the address book.\",\n            \"properties\": {\n              \"address\": {\n                \"$ref\": \"#/components/schemas/Address\",\n                \"description\": \"The home address.\"\n              },\n              \"age\": {\n                \"default\": 18,\n                \"description\": \"The age in years.\",\n                \"format\": \"int64\",\n                \"type\": \"integer\"\n              },\n              \"emails\": {\n                \"description\": \"Known email addresses.\",\n                \"items\": {\n                  \"type\": \"string\"\n                },\n                \"type\": \"array\"\n              },\n              \"id\": {\n                \"description\": \"The unique identifier.\",\n                \"format\": \"int64\",\n                \"type\": \"integer\"\n              },\n              \"name\": {\n                \"description\": \"The full name.\",\n                \"type\": \"string\"\n              }\n            },\n            \"required\": [\n              \"name\",\n              \"address\",\n              \"id\"\n            ],\n            \"type\": \"object\"\n          }\n        ]\n      },\n      \"UnionS\": {\n        \"description\": \"A schema with a union attribute.\",\n        \"properties\": {\n          \"val\": {\n            \"description\": \"An int or a str.\",\n            \"oneOf\": [\n              {\n                \"format\": \"int64\",\n                \"type\": \"integer\"\n              },\n              {\n                \"type\": \"string\"\n              }\n            ]\n          }\n        },\n        \"required\": [\n          \"val\"\n        ],\n        \"type\": \"object\"\n      }\n    }\n  },\n  \"info\": {\n    \"title\": \"__main__\",\n    \"version\": \"1.0.0\"\n  },\n  \"openapi\": \"3.0.0\"\n}"
+      }
+    },
+    {
+      "name": "generate_proto",
+      "rpc": "KclService.GenerateProto",
+      "new_core": true,
+      "args": {
+        "parse_args": {
+          "paths": [
+            "tests/consistency/testdata/gen_openapi/main.k"
+          ],
+          "sources": [],
+          "external_pkgs": []
+        },
+        "package": "example.v1"
+      },
+      "expect": {
+        "proto": "syntax = \"proto3\";\n\npackage example.v1;\n\nimport \"google/protobuf/struct.proto\";\n\n// Base schema carrying the shared identifier.\nmessage Base {\n    // The unique identifier.\n    int64 id = 1;\n}\n\n// A postal address.\nmessage Address {\n    // Arbitrary float coordinates keyed by name.\n    map<string, double> geo = 1;\n    // The street name.\n    string street = 2;\n    // The ZIP code.\n    string zip_code = 3;\n}\n\n// A person in the address book.\nmessage Person {\n    // The home address.\n    Address address = 1;\n    // The age in years.\n    int64 age = 2;\n    // Known email addresses.\n    repeated string emails = 3;\n    // The unique identifier.\n    int64 id = 4;\n    // The full name.\n    string name = 5;\n}\n\n// A schema with a union attribute.\nmessage UnionS {\n    // An int or a str.\n    google.protobuf.Value val = 1;\n}\n\n"
+      }
+    },
+    {
+      "name": "generate_doc_md",
+      "rpc": "KclService.GenerateDoc",
+      "new_core": true,
+      "args": {
+        "parse_args": {
+          "paths": [
+            "tests/consistency/testdata/gen_openapi/main.k"
+          ],
+          "sources": [],
+          "external_pkgs": []
+        },
+        "format": "md"
+      },
+      "expect": {
+        "content": "# Schemas\n\n## Package __main__\n\n### Base\n\nBase schema carrying the shared identifier.\n\n| Name | Type | Required | Default | Description |\n| --- | --- | --- | --- | --- |\n| id | int | yes |  | The unique identifier. |\n\n### Address\n\nA postal address.\n\n| Name | Type | Required | Default | Description |\n| --- | --- | --- | --- | --- |\n| geo | {str:float} | yes |  | Arbitrary float coordinates keyed by name. |\n| street | str | yes |  | The street name. |\n| zipCode | str | yes |  | The ZIP code. |\n\n### Person\n\nA person in the address book.\n\n| Name | Type | Required | Default | Description |\n| --- | --- | --- | --- | --- |\n| address | Address | yes |  | The home address. |\n| age | int | no | 18 | The age in years. |\n| emails | [str] | no |  | Known email addresses. |\n| id | int | yes |  | The unique identifier. |\n| name | str | yes |  | The full name. |\n\n### UnionS\n\nA schema with a union attribute.\n\n| Name | Type | Required | Default | Description |\n| --- | --- | --- | --- | --- |\n| val | int \\| str | yes |  | An int or a str. |\n"
+      }
     }
   ]
 }

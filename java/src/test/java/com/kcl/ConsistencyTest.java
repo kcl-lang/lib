@@ -17,10 +17,17 @@ import com.kcl.api.Spec.FormatCodeArgs;
 import com.kcl.api.Spec.FormatCodeResult;
 import com.kcl.api.Spec.FormatTestReportArgs;
 import com.kcl.api.Spec.FormatTestReportResult;
+import com.kcl.api.Spec.GenerateDocArgs;
+import com.kcl.api.Spec.GenerateDocResult;
 import com.kcl.api.Spec.GenerateKclArgs;
 import com.kcl.api.Spec.GenerateKclResult;
+import com.kcl.api.Spec.GenerateOpenAPIArgs;
+import com.kcl.api.Spec.GenerateOpenAPIResult;
+import com.kcl.api.Spec.GenerateProtoArgs;
+import com.kcl.api.Spec.GenerateProtoResult;
 import com.kcl.api.Spec.GenerateTomlArgs;
 import com.kcl.api.Spec.GenerateTomlResult;
+import com.kcl.api.Spec.ParseProgramArgs;
 import com.kcl.api.Spec.PingArgs;
 import com.kcl.api.Spec.PingResult;
 import com.kcl.api.Spec.TestCaseInfo;
@@ -201,9 +208,50 @@ public class ConsistencyTest {
             assertField(name, "kcl", expect.get("kcl").asText(), result.getKcl());
             break;
         }
+        case "KclService.GenerateOpenAPI": {
+            Assume.assumeTrue("core does not list " + rpc + " (old core)", methods().contains(rpc));
+            GenerateOpenAPIResult result = api()
+                    .generateOpenAPI(GenerateOpenAPIArgs.newBuilder().setParseArgs(parseArgs(args.get("parse_args")))
+                            .setVersion(args.path("version").asText("")).build());
+            assertField(name, "spec", expect.get("spec").asText(), result.getSpec());
+            break;
+        }
+        case "KclService.GenerateProto": {
+            Assume.assumeTrue("core does not list " + rpc + " (old core)", methods().contains(rpc));
+            GenerateProtoResult result = api()
+                    .generateProto(GenerateProtoArgs.newBuilder().setParseArgs(parseArgs(args.get("parse_args")))
+                            .setPackage(args.path("package").asText("")).build());
+            assertField(name, "proto", expect.get("proto").asText(), result.getProto());
+            break;
+        }
+        case "KclService.GenerateDoc": {
+            Assume.assumeTrue("core does not list " + rpc + " (old core)", methods().contains(rpc));
+            GenerateDocResult result = api().generateDoc(GenerateDocArgs.newBuilder()
+                    .setParseArgs(parseArgs(args.get("parse_args"))).setFormat(args.path("format").asText("")).build());
+            assertField(name, "content", expect.get("content").asText(), result.getContent());
+            break;
+        }
         default:
             Assert.fail("no runner support for rpc " + rpc);
         }
+    }
+
+    /**
+     * Build {@code ParseProgramArgs} from the manifest. Path entries are pinned repo-relative by
+     * {@code generate_cases.py}; they are resolved against the repository root (the parent of the directory holding
+     * cases.json), while absolute entries are kept as-is.
+     */
+    private static ParseProgramArgs parseArgs(JsonNode node) {
+        Path repoRoot = CASES_JSON.toAbsolutePath().normalize().getParent().getParent().getParent();
+        ParseProgramArgs.Builder builder = ParseProgramArgs.newBuilder();
+        for (JsonNode path : node.path("paths")) {
+            String p = path.asText();
+            builder.addPaths(Paths.get(p).isAbsolute() ? p : repoRoot.resolve(p).toString());
+        }
+        for (JsonNode source : node.path("sources")) {
+            builder.addSources(source.asText());
+        }
+        return builder.build();
     }
 
     @Test
@@ -254,5 +302,20 @@ public class ConsistencyTest {
     @Test
     public void testFormatTestReport() throws Exception {
         runCase("format_test_report");
+    }
+
+    @Test
+    public void testGenerateOpenAPIV3() throws Exception {
+        runCase("generate_openapi_v3");
+    }
+
+    @Test
+    public void testGenerateProto() throws Exception {
+        runCase("generate_proto");
+    }
+
+    @Test
+    public void testGenerateDocMd() throws Exception {
+        runCase("generate_doc_md");
     }
 }
