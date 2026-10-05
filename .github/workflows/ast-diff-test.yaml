@@ -94,6 +94,10 @@ jobs:
         profile: minimal
         toolchain: 1.91
     - name: Install protobuf
+      # Linux only: the swift leg is the one that does not run on the default
+      # runner, and it has no apt. `arduino/setup-protoc` covers zig above;
+      # the bindings that shell out to protoc on Linux get it from apt here.
+      if: runner.os == 'Linux'
       run: sudo apt-get update && sudo apt-get install -y protobuf-compiler
 
     # --- ruby -------------------------------------------------------------
