@@ -382,16 +382,15 @@ void main() {
       expect(pkgNames, containsAll(['helloworld', 'flask']));
     });
 
-    test('list_method tolerates unregistered BuiltinService', () {
-      // Prebuilt libkcl v0.13.0 predates the BuiltinService.ListMethod
-      // registration: its dispatcher answers with an empty payload, while a
-      // runtime built from newer source returns the full method table. Accept
-      // both, matching the Julia binding.
+    test('list_method reports the dispatcher RPC surface', () {
+      // Routed through BuiltinService.ListMethod: the core registers it there,
+      // not under KclService. Assert unconditionally — an empty table means
+      // the wrapper picked the wrong service name again, which is exactly the
+      // bug this pins down.
       final result = listMethod();
-      if (result.methodNameList.isNotEmpty) {
-        expect(result.methodNameList, contains('KclService.ExecProgram'));
-        expect(result.methodNameList, contains('KclService.Ping'));
-      }
+      expect(result.methodNameList, contains('KclService.ExecProgram'));
+      expect(result.methodNameList, contains('KclService.Ping'));
+      expect(result.methodNameList, contains('BuiltinService.ListMethod'));
     });
 
     test('rawCall escapes to any RPC', () {

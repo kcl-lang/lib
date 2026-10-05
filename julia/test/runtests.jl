@@ -369,15 +369,15 @@ end
         end
     end
 
-    @testset "list_method (tolerates unregistered BuiltinService)" begin
-        # Prebuilt libkcl v0.13.0 predates the BuiltinService registration:
-        # its dispatcher answers with an empty payload, while a runtime built
-        # from newer source returns the full method table. Accept both.
+    @testset "list_method (dispatches to BuiltinService)" begin
+        # Routed through BuiltinService.ListMethod: the core registers it
+        # there, not under KclService. Assert unconditionally — an empty table
+        # means the wrapper picked the wrong service name again, which is
+        # exactly the bug this pins down.
         result = list_method()
-        if !isempty(result.method_name_list)
-            @test "KclService.ExecProgram" in result.method_name_list
-            @test "KclService.Ping" in result.method_name_list
-        end
+        @test "KclService.ExecProgram" in result.method_name_list
+        @test "KclService.Ping" in result.method_name_list
+        @test "BuiltinService.ListMethod" in result.method_name_list
     end
 
     @testset "raw call escape hatch" begin

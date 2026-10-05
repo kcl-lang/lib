@@ -194,18 +194,31 @@ UpdateDependenciesResult updateDependencies(UpdateDependenciesArgs args) =>
     );
 
 // ---------------------------------------------------------------------------
-// BuiltinService-equivalent — the bundled libkcl v0.13.0 registers every
-// RPC under `KclService` regardless of the service declared in spec.proto.
-// We follow the implementation, not the spec; see dart/README for details.
+// The bundled libkcl v0.13.0 registers every RPC under `KclService` regardless
+// of the service declared in spec.proto, so the wrappers above follow the
+// implementation rather than the spec; see dart/README for details.
+//
+// `ListMethod` is the one exception: spec.proto declares it under
+// `BuiltinService`, and that is where the core actually registers it.
+// `KclService.ListMethod` is unknown to the dispatcher, which raises
+// `unknown method name` and prints a Rust panic on the way out.
 // ---------------------------------------------------------------------------
 
 /// Round-trips a value through the KCL dispatcher — useful as a smoke test.
+///
+/// `Ping` is declared in *both* services in spec.proto and is registered under
+/// `KclService`, like the other RPCs above.
 PingResult ping(PingArgs args) =>
     _invoke('KclService.Ping', args, PingResult.fromBuffer);
 
 /// Lists every RPC name known to the dispatcher.
+///
+/// Reports the fully-qualified names, e.g. `KclService.ExecProgram` and
+/// `BuiltinService.ListMethod` — i.e. its own entry appears under the
+/// `BuiltinService` prefix, which is what makes the divergence above
+/// observable from the outside.
 ListMethodResult listMethod() => _invoke(
-      'KclService.ListMethod',
+      'BuiltinService.ListMethod',
       ListMethodArgs(),
       ListMethodResult.fromBuffer,
     );
