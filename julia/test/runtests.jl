@@ -732,3 +732,10 @@ end
 # The other half of the AST contract: the same decoder, run against the golden
 # parser capture in `testdata/ast/alignment.json` rather than a live fixture.
 include("ast_alignment.jl")
+
+# ---------------------------------------------------------------------------
+# Cross-language consistency: the same golden cases every other language runner
+# executes from `tests/consistency/cases.json`, driven through this binding.
+# ---------------------------------------------------------------------------
+
+include("consistency_test.jl")

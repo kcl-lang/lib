@@ -28,6 +28,10 @@ export 'src/kcl_ast.dart';
 export 'src/kcl_lib.dart' hide Decorator, FunctionType;
 export 'src/kcl_lib_ffi.dart' show LibKcl;
 export 'src/kcl_plugin.dart';
+// The high-level facade: `run` / `runFiles` / `KclResult` / `KclResultList`
+// / `KclOptions`. It is layered on `src/kcl_lib.dart` and adds no names that
+// clash with the protobuf messages, so it can be re-exported wholesale.
+export 'src/kcl_facade.dart';
 
 // `kcl_lib` deliberately does **not** export a top-level `test()` function —
 // the wrapper for `BuiltinService.Test` is exposed as `runTests` to avoid a

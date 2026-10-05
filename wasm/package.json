@@ -17,6 +17,10 @@
       "types": "./dist/facade.d.ts",
       "default": "./dist/facade.js"
     },
+    "./plugin": {
+      "types": "./dist/plugin.d.ts",
+      "default": "./dist/plugin.js"
+    },
     "./ast": {
       "types": "./dist/ast/index.d.ts",
       "default": "./dist/ast/index.js"

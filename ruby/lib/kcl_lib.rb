@@ -9,6 +9,7 @@
 require_relative "kcl_lib/kcl_ruby"
 require_relative "kcl_lib/version"
 require_relative "kcl_lib/spec_pb"
+require_relative "kcl_lib/plugin"
 require_relative "kcl_lib/api"
 require_relative "kcl_lib/facade"
 require_relative "kcl_lib/ast"

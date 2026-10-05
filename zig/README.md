@@ -181,9 +181,10 @@ so the reply is identical either way.
 + The bindings cover the full 20-RPC `KclService` surface from
   `../spec/spec.proto` plus `BuiltinService.ListMethod`, with the
   high-level facade and the typed AST package built on top.
-+ The prebuilt libkcl v0.13.0 binary predates the `BuiltinService.*`
-  registration: `listMethod` returns an empty result on it (the corresponding
-  unit test therefore tolerates both the empty and the populated result).
++ `listMethod` dispatches to `BuiltinService.ListMethod`, the one RPC the
+  core registers under the service name `spec.proto` gives it rather than
+  under `KclService`. Against the pinned libkcl v0.13.0 it returns all 28
+  names.
 + `execProgram`, `validateCode`, and the `KclService.Test` wrapper
   (`@"test"`) are not thread safe, mirroring the spec. The plugin
   registry is process-wide for the same reason; the runtime releases its

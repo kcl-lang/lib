@@ -7,7 +7,12 @@ import {
   int64Field,
   stringField,
 } from "./protobuf";
-import { invokeKCLCallNative } from "./index";
+import {
+  CallNativeOptions,
+  invokeKCLCallNative,
+  invokeKCLCallNativeWithPluginAgent,
+} from "./index";
+import { hasPlugin } from "./plugin";
 
 export interface ExternalPkg {
   pkgName: string;
@@ -348,6 +353,52 @@ export interface UpdateDependenciesArgs {
 
 export interface UpdateDependenciesResult {
   externalPkgs: ExternalPkg[];
+}
+
+export interface GenerateTomlArgs {
+  execArgs?: ExecProgramArgs;
+  sortKeys?: boolean;
+}
+
+export interface GenerateTomlResult {
+  toml: string;
+}
+
+export interface GenerateKclArgs {
+  source?: string;
+  filename?: string;
+  format?: string;
+}
+
+export interface GenerateKclResult {
+  kcl: string;
+}
+
+export interface GenerateOpenAPIArgs {
+  parseArgs?: ParseProgramArgs;
+  version?: string;
+}
+
+export interface GenerateOpenAPIResult {
+  spec: string;
+}
+
+export interface GenerateProtoArgs {
+  parseArgs?: ParseProgramArgs;
+  package?: string;
+}
+
+export interface GenerateProtoResult {
+  proto: string;
+}
+
+export interface GenerateDocArgs {
+  parseArgs?: ParseProgramArgs;
+  format?: string;
+}
+
+export interface GenerateDocResult {
+  content: string;
 }
 
 export interface SymbolIndex {
@@ -1217,6 +1268,21 @@ function decodeStringMapEntry<V>(
   return [key, value as V];
 }
 
+/**
+ * Decode a result message whose only field is a string (tag 1) — the
+ * shape every `Generate*Result` and `FormatTestReportResult` has.
+ */
+function decodeStringResult(result: Uint8Array): string {
+  const r = new ProtoReader(result);
+  let value = "";
+  while (!r.eof) {
+    const tag = r.readTag();
+    if (tag >>> 3 === 1) value = r.readString();
+    else r.skip(tag & 7);
+  }
+  return value;
+}
+
 function checkServiceError(result: Uint8Array): Uint8Array {
   if (
     result.length >= 6 &&
@@ -1254,11 +1320,18 @@ function callBuiltinService(
   resultBufferSize?: number,
   service: string = BUILTIN_SERVICE
 ): Uint8Array {
-  const result = invokeKCLCallNative(instance, {
+  const opts: CallNativeOptions = {
     methodName: service + method,
     args,
     resultBufferSize,
-  });
+  };
+  // `call_native` is stateless and cannot carry a plugin agent, so once a
+  // plugin is registered every RPC has to go through the service handle
+  // instead — otherwise `import kcl_plugin.<name>` never resolves. With no
+  // plugin registered the stateless path is kept.
+  const result = hasPlugin()
+    ? invokeKCLCallNativeWithPluginAgent(instance, opts)
+    : invokeKCLCallNative(instance, opts);
   return checkServiceError(result);
 }
 
@@ -1945,14 +2018,7 @@ export function formatTestReport(
     args.result ? encodeTestResult(args.result) : new Uint8Array(0)
   );
   const result = callService(instance, "FormatTestReport", encoded);
-  const r = new ProtoReader(result);
-  const out: FormatTestReportResult = { report: "" };
-  while (!r.eof) {
-    const tag = r.readTag();
-    if (tag >>> 3 === 1) out.report = r.readString();
-    else r.skip(tag & 7);
-  }
-  return out;
+  return { report: decodeStringResult(result) };
 }
 
 export function updateDependencies(
@@ -1973,4 +2039,111 @@ export function updateDependencies(
     else r.skip(tag & 7);
   }
   return out;
+}
+
+/**
+ * Evaluate a KCL program and serialize its result as TOML.
+ *
+ * `sortKeys` sorts the keys in the output; the default (`false`) keeps the
+ * source order.
+ */
+export function generateToml(
+  instance: WebAssembly.Instance,
+  args: GenerateTomlArgs
+): GenerateTomlResult {
+  const encoded = concatBytes(
+    bytesField(
+      1,
+      args.execArgs ? encodeExecProgramArgs(args.execArgs) : new Uint8Array(0)
+    ),
+    boolField(2, args.sortKeys ?? false)
+  );
+  const result = callService(instance, "GenerateToml", encoded);
+  return { toml: decodeStringResult(result) };
+}
+
+/**
+ * Generate KCL source from JSON, YAML or TOML text.
+ *
+ * `format` is `"json"`, `"yaml"` or `"toml"`; when empty it is inferred
+ * from the `filename` extension and defaults to `"json"`.
+ */
+export function generateKcl(
+  instance: WebAssembly.Instance,
+  args: GenerateKclArgs
+): GenerateKclResult {
+  const encoded = concatBytes(
+    stringField(1, args.source ?? ""),
+    stringField(2, args.filename ?? ""),
+    stringField(3, args.format ?? "")
+  );
+  const result = callService(instance, "GenerateKcl", encoded);
+  return { kcl: decodeStringResult(result) };
+}
+
+/**
+ * Export the schemas of the parsed program as an OpenAPI spec.
+ *
+ * `version` is `"v3"` (default) or `"v2"` (Swagger 2.0). `parseArgs.paths`
+ * are host paths; under WASI they must be inside a preopened sandbox
+ * directory, since the module cannot reach the host filesystem.
+ */
+export function generateOpenAPI(
+  instance: WebAssembly.Instance,
+  args: GenerateOpenAPIArgs
+): GenerateOpenAPIResult {
+  const encoded = concatBytes(
+    bytesField(
+      1,
+      args.parseArgs
+        ? encodeParseProgramArgs(args.parseArgs)
+        : new Uint8Array(0)
+    ),
+    stringField(2, args.version ?? "")
+  );
+  const result = callService(instance, "GenerateOpenAPI", encoded);
+  return { spec: decodeStringResult(result) };
+}
+
+/**
+ * Export the schemas of the parsed program as proto3 definitions.
+ * `package` is the proto package name, e.g. `"example.v1"`; an empty value
+ * omits the package clause.
+ */
+export function generateProto(
+  instance: WebAssembly.Instance,
+  args: GenerateProtoArgs
+): GenerateProtoResult {
+  const encoded = concatBytes(
+    bytesField(
+      1,
+      args.parseArgs
+        ? encodeParseProgramArgs(args.parseArgs)
+        : new Uint8Array(0)
+    ),
+    stringField(2, args.package ?? "")
+  );
+  const result = callService(instance, "GenerateProto", encoded);
+  return { proto: decodeStringResult(result) };
+}
+
+/**
+ * Document the schemas of the parsed program. `format` is `"md"`
+ * (default), `"openapi"` or `"json-schema"`; `"html"` is not supported.
+ */
+export function generateDoc(
+  instance: WebAssembly.Instance,
+  args: GenerateDocArgs
+): GenerateDocResult {
+  const encoded = concatBytes(
+    bytesField(
+      1,
+      args.parseArgs
+        ? encodeParseProgramArgs(args.parseArgs)
+        : new Uint8Array(0)
+    ),
+    stringField(2, args.format ?? "")
+  );
+  const result = callService(instance, "GenerateDoc", encoded);
+  return { content: decodeStringResult(result) };
 }

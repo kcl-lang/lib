@@ -124,6 +124,39 @@ struct KclStringPairList {
 };
 
 /* ------------------------------------------------------------------ */
+/* Request structs for the wrappers that nest ExecProgramArgs or      */
+/* ParseProgramArgs (GenerateToml, GenerateOpenAPI, GenerateProto,     */
+/* GenerateDoc)                                                       */
+/* ------------------------------------------------------------------ */
+
+/* Plain-C view of ExecProgramArgs. Only the fields the typed wrappers
+ * surface are listed; everything else stays at its proto3 default.
+ * `external_pkgs` pairs a package name with its path. */
+struct KclExecProgramArgs {
+    const char* work_dir;
+    const char* const* k_code_list;
+    size_t k_code_count;
+    const char* const* k_filename_list;
+    size_t k_filename_count;
+    const char* const* overrides;
+    size_t override_count;
+    const struct KclStringPair* external_pkgs;
+    size_t external_pkg_count;
+    bool sort_keys;
+};
+
+/* Plain-C view of ParseProgramArgs, the `parse_args` field shared by
+ * GenerateOpenAPI / GenerateProto / GenerateDoc. */
+struct KclParseProgramArgs {
+    const char* const* paths;
+    size_t path_count;
+    const char* const* sources;
+    size_t source_count;
+    const struct KclStringPair* external_pkgs;
+    size_t external_pkg_count;
+};
+
+/* ------------------------------------------------------------------ */
 /* JSON sink for complex message fields                                */
 /* ------------------------------------------------------------------ */
 

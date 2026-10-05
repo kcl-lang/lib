@@ -233,12 +233,49 @@ pub fn updateDependencies(allocator: std.mem.Allocator, args: spec.UpdateDepende
     return rpc(allocator, "KclService.UpdateDependencies", args, spec.UpdateDependenciesResult);
 }
 
+/// Serialize the evaluated result of the KCL program described by
+/// `exec_args` to TOML, optionally sorting keys. Equivalent to
+/// `call(allocator, "KclService.GenerateToml", encoded)`.
+pub fn generateToml(allocator: std.mem.Allocator, args: spec.GenerateTomlArgs) Error!spec.GenerateTomlResult {
+    return rpc(allocator, "KclService.GenerateToml", args, spec.GenerateTomlResult);
+}
+
+/// Generate KCL source from the JSON, YAML or TOML text in `source`.
+/// `format` is `"json"`, `"yaml"` or `"toml"`; when empty it is inferred
+/// from the `filename` extension and defaults to `"json"`. Equivalent to
+/// `call(allocator, "KclService.GenerateKcl", encoded)`.
+pub fn generateKcl(allocator: std.mem.Allocator, args: spec.GenerateKclArgs) Error!spec.GenerateKclResult {
+    return rpc(allocator, "KclService.GenerateKcl", args, spec.GenerateKclResult);
+}
+
+/// Generate an OpenAPI spec from the schemas of the package selected by
+/// `parse_args`. `version` is `"v3"` (default) or `"v2"` (Swagger 2.0).
+/// Equivalent to `call(allocator, "KclService.GenerateOpenAPI", encoded)`.
+pub fn generateOpenAPI(allocator: std.mem.Allocator, args: spec.GenerateOpenAPIArgs) Error!spec.GenerateOpenAPIResult {
+    return rpc(allocator, "KclService.GenerateOpenAPI", args, spec.GenerateOpenAPIResult);
+}
+
+/// Generate proto3 definitions from the schemas of the package selected by
+/// `parse_args`; an empty `package` emits no package clause. Equivalent to
+/// `call(allocator, "KclService.GenerateProto", encoded)`.
+pub fn generateProto(allocator: std.mem.Allocator, args: spec.GenerateProtoArgs) Error!spec.GenerateProtoResult {
+    return rpc(allocator, "KclService.GenerateProto", args, spec.GenerateProtoResult);
+}
+
+/// Generate documentation from the schemas of the package selected by
+/// `parse_args`. `format` is `"md"` (default), `"openapi"` (Swagger 2.0) or
+/// `"json-schema"`; `"html"` is not supported yet. Equivalent to
+/// `call(allocator, "KclService.GenerateDoc", encoded)`.
+pub fn generateDoc(allocator: std.mem.Allocator, args: spec.GenerateDocArgs) Error!spec.GenerateDocResult {
+    return rpc(allocator, "KclService.GenerateDoc", args, spec.GenerateDocResult);
+}
+
 /// List the methods exposed by the native KCL dispatcher. Equivalent to
-/// `call(allocator, "BuiltinService.ListMethod", "")`. Note that the
-/// prebuilt libkcl aborts the whole process on unknown method names (a Rust
-/// panic in the dispatcher, not an `ERROR:` reply) and does not register
-/// `BuiltinService.ListMethod`, so this wrapper only works against runtimes
-/// that implement it — deliberately there is no end-to-end test for it.
+/// `call(allocator, "BuiltinService.ListMethod", "")`. Cores that predate
+/// `BuiltinService.ListMethod` answer with an `ERROR:` payload (which the
+/// shared `rpc` helper turns into `error.KclRpc`), so callers must treat a
+/// failure here as "the RPC surface is unknown" rather than as a test
+/// failure — see `consistency_test.zig`.
 pub fn listMethod(allocator: std.mem.Allocator) Error!spec.ListMethodResult {
     return rpc(allocator, "BuiltinService.ListMethod", spec.ListMethodArgs{}, spec.ListMethodResult);
 }
@@ -899,10 +936,11 @@ test "typed test runs kcl unit tests of a package" {
 }
 
 // Pure protobuf round-trip for FormatTestReportArgs.result (1) and
-// FormatTestReportResult.report (1). The prebuilt libkcl that `zig build`
-// links against predates KclService.FormatTestReport — the native dispatcher
-// panics with "unknown method name" — so there is deliberately no end-to-end
-// test here; this covers the message plumbing the wrapper uses.
+// FormatTestReportResult.report (1). The end-to-end behaviour of the wrapper
+// is covered by the `format_test_report` case of the cross-language
+// consistency runner in `consistency_test.zig`, which replays the shared
+// golden from `tests/consistency/cases.json`; this test keeps the message
+// plumbing covered without depending on that manifest.
 test "FormatTestReport args and result round-trip on the wire" {
     const allocator = testing.allocator;
 
