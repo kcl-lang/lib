@@ -12,6 +12,9 @@ on:
       - main
     paths:
       - "zig/**"
+      # The consistency runner reads this shared manifest, so a golden-only
+      # change must re-run this workflow.
+      - "tests/consistency/**"
       - ".github/workflows/zig-test.yaml"
   workflow_dispatch:
 

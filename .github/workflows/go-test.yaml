@@ -14,6 +14,9 @@ on:
       - "go/**"
       - "go.mod"
       - "go.sum"
+      # go/native/consistency_test.go reads this shared manifest, so a
+      # golden-only change must re-run the Go runner.
+      - "tests/consistency/**"
       - ".github/workflows/go-test.yaml"
   workflow_dispatch:
 

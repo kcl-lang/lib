@@ -1,0 +1,199 @@
+name: ast-diff-test
+
+# `hack/check_ast_field_types.rb` (ast-shape-test.yaml) reads each binding's
+# decoder *source* and compares field names against the Rust struct
+# definitions. That is the right check for a decoder that names a field
+# wrongly, and blind to a decoder that names every field correctly and then
+# reads the wrong one level of nesting. That second bug has shipped five
+# times; every occurrence produced `undefined` / `None` / `""` rather than
+# raising, so every per-language test suite stayed green.
+#
+# This workflow closes that gap: it runs each binding's real decoder over the
+# same capture (`testdata/ast/alignment.json`) and diffs what comes out
+# against the golden.
+#
+# The job is a matrix of one binding each so a binding only installs its own
+# toolchain. `hack/ast_diff.rb` exits non-zero when nothing agreed, so a
+# binding whose toolchain failed to install shows up as a failure here rather
+# than a silent skip.
+on:
+  push:
+    branches:
+      - main
+      - master
+    tags:
+      - '*'
+  pull_request:
+    branches:
+      - main
+    paths:
+      # hack/** covers the differ itself and every per-binding dump driver
+      # under hack/dump/.
+      - "hack/**"
+      # The golden every binding is diffed against.
+      - "testdata/ast/**"
+      # One entry per binding's AST decoder.
+      - "ruby/lib/kcl_lib/ast.rb"
+      - "julia/src/ast.jl"
+      - "lua/kcl_lib/ast.lua"
+      - "dart/lib/src/ast/**"
+      - "python/kcl_lib/ast/**"
+      - "wasm/src/ast/**"
+      - "nodejs/src/ast/**"
+      - "dotnet/KclLib.AST/**"
+      - "zig/src/ast/**"
+      - "swift/Sources/KclLibAST/**"
+      - ".github/workflows/ast-diff-test.yaml"
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}-${{ github.event_name }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  diff:
+    name: AST diff (${{ matrix.binding }})
+    strategy:
+      fail-fast: false
+      matrix:
+        binding:
+          - ruby
+          - python
+          - nodejs
+          - wasm
+          - lua
+          - julia
+          - dart
+          - swift
+          - zig
+          - dotnet
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: "lib"
+    steps:
+    - uses: actions/checkout@v7
+      with:
+        path: lib
+    # ast_diff.rb and its drivers are Ruby, so every job needs Ruby even when
+    # the binding under test is not Ruby.
+    - name: Setup Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: "3.4"
+    - uses: actions-rs/toolchain@v1
+      with:
+        profile: minimal
+        toolchain: 1.91
+    - name: Install protobuf
+      run: sudo apt-get update && sudo apt-get install -y protobuf-compiler
+
+    # --- ruby -------------------------------------------------------------
+    - name: Build the ruby extension
+      if: matrix.binding == 'ruby'
+      working-directory: "lib/ruby"
+      run: make build
+
+    # --- python -----------------------------------------------------------
+    - name: Build the python extension
+      if: matrix.binding == 'python'
+      uses: PyO3/maturin-action@v1
+      with:
+        command: develop
+        working-directory: lib/python
+
+    # --- nodejs / wasm ----------------------------------------------------
+    - name: Setup node
+      if: matrix.binding == 'nodejs' || matrix.binding == 'wasm'
+      uses: actions/setup-node@v7
+      with:
+        node-version: '22'
+    - name: Install nodejs dependencies
+      if: matrix.binding == 'nodejs'
+      working-directory: "lib/nodejs"
+      run: npm install
+    - name: Build nodejs
+      if: matrix.binding == 'nodejs'
+      working-directory: "lib/nodejs"
+      run: npm run build
+    - name: Install wasm dependencies
+      if: matrix.binding == 'wasm'
+      working-directory: "lib/wasm"
+      run: npm install
+    - name: Build wasm
+      if: matrix.binding == 'wasm'
+      working-directory: "lib/wasm"
+      run: npm run build
+
+    # --- lua --------------------------------------------------------------
+    - name: Setup lua toolchain
+      if: matrix.binding == 'lua'
+      uses: leafo/gh-actions-lua@v13
+    - name: Setup luarocks
+      if: matrix.binding == 'lua'
+      uses: leafo/gh-actions-luarocks@v6
+    - name: Build the lua rock
+      if: matrix.binding == 'lua'
+      working-directory: "lib/lua"
+      run: luarocks make ./*.rockspec
+
+    # --- julia ------------------------------------------------------------
+    - name: Setup Julia
+      if: matrix.binding == 'julia'
+      uses: julia-actions/setup-julia@v2
+    - name: Instantiate the julia project
+      if: matrix.binding == 'julia'
+      working-directory: "lib/julia"
+      run: julia --project=. -e 'using Pkg; Pkg.instantiate()'
+
+    # --- dart -------------------------------------------------------------
+    - name: Install Dart SDK
+      if: matrix.binding == 'dart'
+      uses: dart-lang/setup-dart@v1
+    - name: Resolve the prebuilt libkcl for the runner
+      # The checkout lands in `lib/`, and the job default working-directory is
+      # that same directory, so the repo root is $GITHUB_WORKSPACE/lib and the
+      # prebuilt core is go/lib/<platform>/libkcl.<ext> under it. The directory
+      # is `linux-amd64`, not `linux-x64` — the arch suffix follows the Go
+      # embed dirs, not the NuGet/Rust target names.
+      if: matrix.binding == 'dart'
+      shell: bash
+      run: |
+        lib="$GITHUB_WORKSPACE/lib/go/lib/linux-amd64/libkcl.so"
+        test -f "$lib" || (echo "missing prebuilt libkcl at $lib"; exit 1)
+        echo "KCL_DART_LIB=$lib" >> "$GITHUB_ENV"
+    - name: Fetch dart dependencies
+      if: matrix.binding == 'dart'
+      working-directory: "lib/dart"
+      run: dart pub get
+
+    # --- swift ------------------------------------------------------------
+    - name: Setup Swift toolchain
+      if: matrix.binding == 'swift'
+      uses: swift-actions/setup-swift@v3
+    # No `swift package resolve`: hack/dump/swift.sh compiles the two AST
+    # sources standalone with `swiftc` precisely so it does not need SwiftPM to
+    # resolve the package graph over the network.
+
+    # --- zig --------------------------------------------------------------
+    - name: Setup zig
+      if: matrix.binding == 'zig'
+      uses: korandoru/setup-zig@v1
+    - name: Install protoc
+      if: matrix.binding == 'zig'
+      uses: arduino/setup-protoc@v3
+
+    # --- dotnet -----------------------------------------------------------
+    - name: Setup dotnet
+      if: matrix.binding == 'dotnet'
+      uses: actions/setup-dotnet@v5
+    - name: Build the dotnet native library
+      if: matrix.binding == 'dotnet'
+      working-directory: "lib/dotnet"
+      run: cargo build --release
+
+    - name: Diff this binding against the golden capture
+      run: ruby hack/ast_diff.rb ${{ matrix.binding }}

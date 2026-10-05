@@ -11,6 +11,9 @@ on:
       - main
     paths:
       - "wasm/**"
+      # The consistency runner reads this shared manifest, so a golden-only
+      # change must re-run this workflow.
+      - "tests/consistency/**"
       - ".github/workflows/wasm-test.yaml"
   workflow_dispatch:
 
