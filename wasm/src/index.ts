@@ -1,6 +1,8 @@
 import { init, WASI, MemFS } from "@wasmer/wasi";
 export * from "./api";
 export * from "./facade";
+export * from "./plugin";
+import { invokePluginJson, jsonError } from "./plugin";
 const RUN_FUNCTION_NAME = "kcl_run";
 const RUN_WITH_LOG_MESSAGE_FUNCTION_NAME = "kcl_run_with_log_message";
 const FMT_FUNCTION_NAME = "kcl_fmt";
@@ -16,6 +18,20 @@ const DEFAULT_CALL_NATIVE_RESULT_BUFFER_SIZE = 16 * 1024 * 1024;
 // 4 KiB to match every other binding. See
 // `/Users/timi/codes/lib/docs/abi.md` §5.
 const RUNTIME_ERR_BUFFER_SIZE = 4 * 1024;
+const SERVICE_NEW_FUNCTION_NAME = "kcl_service_new";
+const SERVICE_CALL_FUNCTION_NAME = "kcl_service_call_with_length";
+const SERVICE_DELETE_FUNCTION_NAME = "kcl_service_delete";
+const SERVICE_FREE_STRING_FUNCTION_NAME = "kcl_service_free_string";
+/**
+ * Plugin-agent pointer handed to `kcl_service_new`. Any non-zero value
+ * turns on `load_plugins` in the KCL loader, which is what lets
+ * `import kcl_plugin.<name>` resolve. On `wasm32` the runtime's
+ * `kcl_plugin_invoke_json` never calls this pointer — it always routes
+ * plugin callouts through the `env.kcl_plugin_invoke_json_wasm` import
+ * (see `crates/runtime/src/stdlib/plugin.rs`), so `1` is never invoked
+ * and only its being non-zero matters.
+ */
+const PLUGIN_AGENT_SENTINEL = 1n;
 
 export interface KCLWasmLoadOptions {
   /**
@@ -136,21 +152,110 @@ export async function load(opts?: KCLWasmLoadOptions) {
     }
   }
 
+  // Backs the `env.kcl_plugin_invoke_json_wasm` import below: the import
+  // closure needs the instance to read its arguments out of linear memory,
+  // and the instance only exists once `instantiate` resolves.
+  const host: PluginHost = { instance: null, replyPtr: 0, replyCapacity: 0 };
+
   const imports = {
     env: {
       kcl_plugin_invoke_json_wasm: (
-        _method: number,
-        _args: number,
-        _kwargs: number
+        method: number,
+        args: number,
+        kwargs: number
       ) => {
-        return 0;
+        return dispatchPluginInvoke(host, method, args, kwargs);
       },
     },
     ...(options.imports ?? {}),
   } as const;
 
   const module = await WebAssembly.compile(bytes);
-  return w.instantiate(module, imports);
+  const instance = await w.instantiate(module, imports);
+  // The plugin import is created before the instance exists, so publish it
+  // now: the wasm module can only call back once instantiation returned.
+  host.instance = instance;
+  return instance;
+}
+
+/**
+ * Per-instance state the `env.kcl_plugin_invoke_json_wasm` import needs:
+ * the instance itself (to reach its linear memory and `kcl_malloc`) and
+ * the reply buffer reused across plugin calls.
+ */
+interface PluginHost {
+  instance: WebAssembly.Instance | null;
+  replyPtr: number;
+  replyCapacity: number;
+}
+
+/**
+ * The plugin agent the wasm module calls for every `kcl_plugin.<name>`
+ * invocation. Reads the method name and the JSON-encoded arguments out of
+ * wasm linear memory, runs the registered method, and hands the
+ * JSON-encoded result back as a NUL-terminated string in wasm memory.
+ *
+ * Never throws: a failure inside the registry is reported to KCL as the
+ * `{"__kcl_PanicInfo__": ...}` envelope so the program fails with a
+ * diagnostic rather than tearing down the instance.
+ */
+function dispatchPluginInvoke(
+  host: PluginHost,
+  methodPtr: number,
+  argsPtr: number,
+  kwargsPtr: number
+): number {
+  const instance = host.instance;
+  if (!instance) {
+    return 0;
+  }
+  const exports = instance.exports as Record<string, any>;
+  let reply: string;
+  try {
+    reply = invokePluginJson(
+      copyCStrFromWasmMemory(instance, methodPtr)[0],
+      copyCStrFromWasmMemory(instance, argsPtr)[0],
+      copyCStrFromWasmMemory(instance, kwargsPtr)[0]
+    );
+  } catch (error) {
+    reply = jsonError(
+      error instanceof Error ? error.message : String(error)
+    );
+  }
+  return writePluginReply(exports, host, new TextEncoder().encode(reply));
+}
+
+/**
+ * Write the plugin reply into wasm memory and return its pointer.
+ *
+ * The KCL runtime reads the string and drops the pointer without freeing
+ * it (the C header's contract is "the returned pointer only has to stay
+ * alive until the next plugin invocation"), so the buffer is owned by the
+ * host and reused across calls — allocating per call would leak.
+ */
+function writePluginReply(
+  exports: Record<string, any>,
+  host: PluginHost,
+  bytes: Uint8Array
+): number {
+  const capacity = bytes.length + 1;
+  if (host.replyPtr === 0 || host.replyCapacity < capacity) {
+    if (host.replyPtr !== 0) {
+      exports.kcl_free(host.replyPtr, host.replyCapacity);
+    }
+    host.replyPtr = exports.kcl_malloc(capacity) as number;
+    host.replyCapacity = capacity;
+    if (host.replyPtr === 0) {
+      // Out of memory. Returning a null pointer makes the runtime fall back
+      // to Undefined rather than dereferencing it.
+      return 0;
+    }
+  }
+  // The memory may have grown while `kcl_malloc` ran, so take the view now.
+  const buffer = new Uint8Array(exports.memory.buffer as ArrayBuffer);
+  buffer.set(bytes, host.replyPtr);
+  buffer[host.replyPtr + bytes.length] = 0;
+  return host.replyPtr;
 }
 
 /**
@@ -428,6 +533,85 @@ export function invokeKCLCallNative(
     exports.kcl_free(namePtr, nameAllocLength);
     exports.kcl_free(argsPtr, argsAllocLength);
     exports.kcl_free(resultBufPtr, resultBufferSize);
+  }
+
+  return result;
+}
+
+/**
+ * Exported function to invoke any KCL service method by name through the
+ * service-handle dispatcher, which is the only wasm entry point that can
+ * carry the plugin agent. The handle is created per call and destroyed
+ * again, mirroring `call_with_plugin_agent` on the Rust side, so nothing
+ * is left alive when the call returns.
+ *
+ * The agent pointer is never invoked: on `wasm32` the runtime routes every
+ * plugin callout through the `env.kcl_plugin_invoke_json_wasm` import that
+ * `load()` installs. All the non-zero value does is turn on
+ * `load_plugins` in the KCL loader, so that `import kcl_plugin.<name>`
+ * resolves instead of failing with "plugin mode is not enabled".
+ *
+ * Like {@link invokeKCLCallNative}, the returned bytes are the
+ * protobuf-encoded `<Method>Result`, or the UTF-8 bytes of an
+ * `"ERROR:<message>"` string on failure. Unlike it, the result is
+ * allocated by the wasm side and therefore has no size limit — the
+ * `resultBufferSize` option is ignored.
+ */
+export function invokeKCLCallNativeWithPluginAgent(
+  instance: WebAssembly.Instance,
+  opts: CallNativeOptions
+): Uint8Array {
+  const exports = instance.exports as Record<string, any>;
+  const [namePtr, , nameAllocLength] = copyRawBytesToWasmMemory(
+    instance,
+    new TextEncoder().encode(opts.methodName)
+  );
+  const [argsPtr, argsContentLength, argsAllocLength] =
+    copyRawBytesToWasmMemory(instance, opts.args);
+  const outLenPtr = exports.kcl_malloc(4);
+  // `kcl_service_call_with_length` reports the payload length through this
+  // out-parameter rather than as its return value.
+  const handle = exports[SERVICE_NEW_FUNCTION_NAME](
+    PLUGIN_AGENT_SENTINEL
+  ) as number;
+  let result = new Uint8Array(0);
+
+  try {
+    const resultPtr = exports[SERVICE_CALL_FUNCTION_NAME](
+      handle,
+      namePtr,
+      argsPtr,
+      argsContentLength,
+      outLenPtr
+    ) as number;
+    if (resultPtr === 0 || resultPtr === null) {
+      result = new TextEncoder().encode(
+        "ERROR:kcl_service_call_with_length returned a null pointer"
+      );
+    } else {
+      const outLength = new DataView(
+        exports.memory.buffer as ArrayBuffer
+      ).getUint32(outLenPtr, true);
+      // The memory may have grown during the call, so take this view now.
+      result = new Uint8Array(
+        exports.memory.buffer as ArrayBuffer,
+        resultPtr,
+        outLength
+      ).slice();
+      exports[SERVICE_FREE_STRING_FUNCTION_NAME](resultPtr);
+    }
+  } catch (error) {
+    if (error instanceof Error && error.name === "RuntimeError") {
+      throw new Error(
+        `KCL WASM trap: ${error.message}. The WASM instance is built with panic=abort and is no longer usable after a trap; call load() to create a new one.`
+      );
+    }
+    throw error;
+  } finally {
+    exports[SERVICE_DELETE_FUNCTION_NAME](handle);
+    exports.kcl_free(namePtr, nameAllocLength);
+    exports.kcl_free(argsPtr, argsAllocLength);
+    exports.kcl_free(outLenPtr, 4);
   }
 
   return result;

@@ -15,6 +15,9 @@ on:
       # KclLibASTTests decodes the captured parser output as its fixture, so
       # regenerating the golden file must re-run this workflow.
       - "testdata/ast/**"
+      # The consistency runner reads this shared manifest, so a golden-only
+      # change must re-run this workflow.
+      - "tests/consistency/**"
       - ".github/workflows/swift-test.yaml"
   workflow_dispatch:
 

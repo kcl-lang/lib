@@ -369,14 +369,25 @@ end
         end
     end
 
-    @testset "list_method (tolerates unregistered BuiltinService)" begin
-        # Prebuilt libkcl v0.13.0 predates the BuiltinService registration:
-        # its dispatcher answers with an empty payload, while a runtime built
-        # from newer source returns the full method table. Accept both.
+    @testset "list_method (dispatches to BuiltinService)" begin
+        # Routed through BuiltinService.ListMethod: spec.proto declares it
+        # there, and that is where the core registers it.
+        #
+        # Not every prebuilt core has it. darwin-arm64 was rebuilt with the
+        # RPCs; the other platforms still ship a runtime that predates them,
+        # so the dispatcher answers `unknown method name` and the table comes
+        # back empty. Hence the split: the KclService.ListMethod check runs
+        # either way, since a table naming it would mean this wrapper is
+        # pointed at the wrong service again — the bug this pins down, which
+        # failed silently by decoding that empty payload into a default-valued
+        # message. The rest only mean something once there is a table.
         result = list_method()
-        if !isempty(result.method_name_list)
-            @test "KclService.ExecProgram" in result.method_name_list
-            @test "KclService.Ping" in result.method_name_list
+        names = result.method_name_list
+        @test !("KclService.ListMethod" in names)
+        if !isempty(names)
+            @test "KclService.ExecProgram" in names
+            @test "KclService.Ping" in names
+            @test "BuiltinService.ListMethod" in names
         end
     end
 
@@ -732,3 +743,10 @@ end
 # The other half of the AST contract: the same decoder, run against the golden
 # parser capture in `testdata/ast/alignment.json` rather than a live fixture.
 include("ast_alignment.jl")
+
+# ---------------------------------------------------------------------------
+# Cross-language consistency: the same golden cases every other language runner
+# executes from `tests/consistency/cases.json`, driven through this binding.
+# ---------------------------------------------------------------------------
+
+include("consistency_test.jl")

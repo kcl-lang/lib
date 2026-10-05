@@ -57,9 +57,35 @@ public protocol Service {
   // Executes tests on KCL packages using specified test arguments.
   func test(_ args: TestArgs) throws -> TestResult
 
+  // Formats a test result into a human-readable report.
+  func formatTestReport(_ args: FormatTestReportArgs) throws -> FormatTestReportResult
+
   // Updates dependencies for a KCL project based on defined specifications.
   func updateDependencies(_ args: UpdateDependenciesArgs) throws -> UpdateDependenciesResult
 
+  // Serializes the evaluated result of a KCL program to TOML.
+  func generateToml(_ args: GenerateTomlArgs) throws -> GenerateTomlResult
+
+  // Generates KCL source from data content (JSON, YAML or TOML).
+  func generateKcl(_ args: GenerateKclArgs) throws -> GenerateKclResult
+
+  // Generates an OpenAPI spec from the schemas of a KCL package.
+  func generateOpenAPI(_ args: GenerateOpenAPIArgs) throws -> GenerateOpenAPIResult
+
+  // Generates proto3 definitions from the schemas of a KCL package.
+  func generateProto(_ args: GenerateProtoArgs) throws -> GenerateProtoResult
+
+  // Generates documentation from the schemas of a KCL package.
+  func generateDoc(_ args: GenerateDocArgs) throws -> GenerateDocResult
+
   // Retrieves version information about the KCL service.
   func getVersion(_ args: GetVersionArgs) throws -> GetVersionResult
+
+  // Pings the KCL service and echoes back the sent value.
+  func ping(_ args: PingArgs) throws -> PingResult
+
+  // Lists the KCL service method names supported by the underlying runtime.
+  // Takes no arguments: `ListMethodArgs` is an empty message, and the
+  // implementations pass the encoded (zero-byte) payload to the dispatcher.
+  func listMethod() throws -> ListMethodResult
 }

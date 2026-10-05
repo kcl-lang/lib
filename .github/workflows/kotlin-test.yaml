@@ -12,6 +12,9 @@ on:
       - main
     paths:
       - "kotlin/**"
+      # The consistency runner reads this shared manifest, so a golden-only
+      # change must re-run this workflow.
+      - "tests/consistency/**"
       - ".github/workflows/kotlin-test.yaml"
   workflow_dispatch:
 

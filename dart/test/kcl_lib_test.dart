@@ -382,16 +382,24 @@ void main() {
       expect(pkgNames, containsAll(['helloworld', 'flask']));
     });
 
-    test('list_method tolerates unregistered BuiltinService', () {
-      // Prebuilt libkcl v0.13.0 predates the BuiltinService.ListMethod
-      // registration: its dispatcher answers with an empty payload, while a
-      // runtime built from newer source returns the full method table. Accept
-      // both, matching the Julia binding.
-      final result = listMethod();
-      if (result.methodNameList.isNotEmpty) {
-        expect(result.methodNameList, contains('KclService.ExecProgram'));
-        expect(result.methodNameList, contains('KclService.Ping'));
-      }
+    test('list_method reports the dispatcher RPC surface', () {
+      // Routed through BuiltinService.ListMethod: spec.proto declares it
+      // there, and that is where the core registers it.
+      //
+      // Not every prebuilt core has it. darwin-arm64 was rebuilt with the
+      // RPCs; the other platforms still ship a runtime that predates them and
+      // answers `unknown method name`, so the table comes back empty. Hence
+      // the split: the `KclService.ListMethod` check runs either way, because
+      // a table naming it would mean this wrapper is pointed at the wrong
+      // service again — the bug this pins down, which failed silently by
+      // decoding that empty payload into a default-valued message. The rest
+      // only mean something once there is a table to inspect.
+      final names = listMethod().methodNameList;
+      expect(names, isNot(contains('KclService.ListMethod')));
+      if (names.isEmpty) return;
+      expect(names, contains('KclService.ExecProgram'));
+      expect(names, contains('KclService.Ping'));
+      expect(names, contains('BuiltinService.ListMethod'));
     });
 
     test('rawCall escapes to any RPC', () {

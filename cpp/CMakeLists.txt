@@ -69,7 +69,7 @@ set_target_properties(kcl-lib-cpp
         PROPERTIES ADDITIONAL_CLEAN_FILES ${CARGO_TARGET_DIR}
 )
 
-set(EXECUTABLES facade exec_api exec_with_deps_api override_api update_deps_api validate_api list_options_api get_version_api load_settings_files_api testing_api format_test_report_api rename_code_api rename_api lint_path_api format_path_api format_path_dry_run_api format_code_api get_schema_type_api schema_function_type_api list_variables_api load_package_api parse_file_api parse_program_api get_schema_type_under_path_api list_method_api ping_api ast_alignment ast_contract plugin_api)
+set(EXECUTABLES facade exec_api exec_with_deps_api override_api update_deps_api validate_api list_options_api get_version_api load_settings_files_api testing_api format_test_report_api rename_code_api rename_api lint_path_api format_path_api format_path_dry_run_api format_code_api get_schema_type_api schema_function_type_api list_variables_api load_package_api parse_file_api parse_program_api get_schema_type_under_path_api list_method_api ping_api ast_alignment ast_contract plugin_api generate_kcl_api generate_toml_api generate_openapi_api generate_proto_api generate_doc_api)
 foreach(EXE IN LISTS EXECUTABLES)
     add_executable(${EXE} examples/${EXE}.cpp)
     target_include_directories(${EXE} PUBLIC ${CPP_INCLUDE_DIR})
@@ -142,6 +142,46 @@ if(KCL_LIB_ENABLE_TESTING)
         target_link_libraries(kcl_ast_tests PRIVATE "-framework CoreFoundation -framework Security")
     endif()
     add_test(NAME kcl_ast_tests COMMAND kcl_ast_tests)
+
+    # Cross-language consistency runner. It reads the shared golden manifest at
+    # tests/consistency/cases.json, so the path is baked in at configure time
+    # rather than resolved against whatever working directory ctest picks. The
+    # expectations come from the manifest, never from this file, and the JSON
+    # backend is the facade's own (nlohmann when CMake found it, the bundled
+    # parser otherwise), so no JSON dependency is introduced here.
+    add_executable(kcl_consistency_tests tests/test_consistency.cpp)
+    target_include_directories(kcl_consistency_tests PUBLIC ${CPP_INCLUDE_DIR})
+    target_link_libraries(kcl_consistency_tests PUBLIC kcl-lib-cpp)
+    target_compile_definitions(kcl_consistency_tests PRIVATE
+            KCL_CONSISTENCY_CASES="${PROJECT_SOURCE_DIR}/../tests/consistency/cases.json")
+    if(WIN32)
+        target_link_libraries(kcl_consistency_tests PRIVATE userenv ws2_32 bcrypt)
+    endif()
+    if(APPLE)
+        find_library(CORESERVICES_LIB CoreServices)
+        target_link_libraries(kcl_consistency_tests PRIVATE ${CORESERVICES_LIB})
+        target_link_libraries(kcl_consistency_tests PRIVATE "-framework CoreFoundation -framework Security")
+    endif()
+    add_test(NAME kcl_consistency_tests COMMAND kcl_consistency_tests)
+
+    # Same runner compiled against the facade's bundled JSON parser, so the
+    # no-nlohmann configuration the facade supports stays covered the same way
+    # `facade_bundled_json` covers the facade example.
+    add_executable(kcl_consistency_tests_bundled_json tests/test_consistency.cpp)
+    target_include_directories(kcl_consistency_tests_bundled_json PUBLIC ${CPP_INCLUDE_DIR})
+    target_link_libraries(kcl_consistency_tests_bundled_json PUBLIC kcl-lib-cpp)
+    target_compile_definitions(kcl_consistency_tests_bundled_json PRIVATE
+            KCL_LIB_NO_NLOHMANN
+            KCL_CONSISTENCY_CASES="${PROJECT_SOURCE_DIR}/../tests/consistency/cases.json")
+    if(WIN32)
+        target_link_libraries(kcl_consistency_tests_bundled_json PRIVATE userenv ws2_32 bcrypt)
+    endif()
+    if(APPLE)
+        find_library(CORESERVICES_LIB CoreServices)
+        target_link_libraries(kcl_consistency_tests_bundled_json PRIVATE ${CORESERVICES_LIB})
+        target_link_libraries(kcl_consistency_tests_bundled_json PRIVATE "-framework CoreFoundation -framework Security")
+    endif()
+    add_test(NAME kcl_consistency_tests_bundled_json COMMAND kcl_consistency_tests_bundled_json)
 
     # The facade example is the only coverage the facade has, so run it
     # twice: once with the default JSON backend and once forced onto the

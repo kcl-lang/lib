@@ -145,6 +145,52 @@ RawAPI.update_dependencies = add_method(
   "UpdateDependenciesResult"
 )
 
+-- The five `KclService.Generate*` RPCs below synthesize source in one
+-- representation from another. They are declared after `UpdateDependencies` in
+-- `spec/spec.proto` and are grouped here in the same order.
+--
+-- None of them is implemented by the pinned `kcl-api` revision this binding
+-- compiles against (see the `list_method` note below): the dispatcher answers
+-- with an empty payload, which decodes to an empty result field, or raises
+-- `ERROR: unknown method name`. Callers should `pcall` and treat an empty
+-- result as "this core is too old", the way `list_method` does.
+
+-- `GenerateTomlArgs.exec_args` carries the program to evaluate; the rendered
+-- document comes back in `GenerateTomlResult.toml`.
+RawAPI.generate_toml = add_method(
+  "KclService.GenerateToml",
+  "GenerateTomlArgs",
+  "GenerateTomlResult"
+)
+
+-- `GenerateKclArgs.format` selects the source dialect of `source`; when it is
+-- empty the extension of `filename` is used, defaulting to JSON. The KCL
+-- source comes back in `GenerateKclResult.kcl`.
+RawAPI.generate_kcl =
+  add_method("KclService.GenerateKcl", "GenerateKclArgs", "GenerateKclResult")
+
+-- `GenerateOpenAPIArgs.version` is `"v3"` (default) or `"v2"` for Swagger 2.0;
+-- the OpenAPI document comes back in `GenerateOpenAPIResult.spec`.
+RawAPI.generate_openapi = add_method(
+  "KclService.GenerateOpenAPI",
+  "GenerateOpenAPIArgs",
+  "GenerateOpenAPIResult"
+)
+
+-- `GenerateProtoArgs.package` is the protobuf package to declare; the
+-- `.proto` source comes back in `GenerateProtoResult.proto`.
+RawAPI.generate_proto = add_method(
+  "KclService.GenerateProto",
+  "GenerateProtoArgs",
+  "GenerateProtoResult"
+)
+
+-- `GenerateDocArgs.format` is `"md"` (default), `"openapi"` or
+-- `"json-schema"`; `"html"` is not supported yet. The rendered document comes
+-- back in `GenerateDocResult.content`.
+RawAPI.generate_doc =
+  add_method("KclService.GenerateDoc", "GenerateDocArgs", "GenerateDocResult")
+
 -- `BuiltinService.ListMethod`: lists every method exposed by the native
 -- dispatcher. `ListMethodArgs` is an empty protobuf message, so callers pass
 -- `{}` as the request.

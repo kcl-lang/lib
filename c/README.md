@@ -45,11 +45,17 @@ the matching binary from the `c/` directory.
 |---------------------------------|--------------------------|------------------------------|
 | `ast_alignment`                 | raw protobuf             | `test_data/ast_alignment/`   |
 | `ast_contract`                  | `kcl_ast_parse_module`   | `../testdata/ast/alignment.json` |
+| `consistency`                   | all wrappers             | `../tests/consistency/cases.json` |
 | `exec_api`                      | `kcl_exec_program`       | `test_data/schema.k`         |
 | `exec_api_format`               | `kcl_exec_program`       | (round-trip format/sourcemap)|
 | `exec_api_format_runtime`       | `kcl_exec_program`       | (runtime sourcemap)          |
 | `format_path_api`               | `kcl_format_path`        | `test_data/format_api_tmp.k` |
 | `format_test_report_api`        | `kcl_test` / `kcl_format_test_report` | `test_data/testing_report/` |
+| `generate_doc_api`              | `kcl_generate_doc`       | `test_data/schema.k`         |
+| `generate_kcl_api`              | `kcl_generate_kcl`       | (inline JSON / YAML snippets) |
+| `generate_openapi_api`          | `kcl_generate_openapi`   | `test_data/schema.k`         |
+| `generate_proto_api`            | `kcl_generate_proto`     | `test_data/schema.k`         |
+| `generate_toml_api`             | `kcl_generate_toml`      | (inline config snippet)      |
 | `get_schema_type_mapping_api`   | `kcl_get_schema_type_mapping` | `test_data/schema_ty/` |
 | `get_schema_type_mapping_under_path_api` | `kcl_get_schema_type_mapping_under_path` | `test_data/schema_ty/` |
 | `list_method_api`               | `kcl_list_method`        | —                            |
@@ -150,6 +156,50 @@ supplied.
 | `kcl_test`                           | Run the `*_test.k` test cases under a work dir                          |
 | `kcl_format_test_report`             | Render a test case list as a `PrettyReporter`-style report              |
 | `kcl_update_dependencies`            | Refresh an external-package manifest (`vendor` mode supported)         |
+| `kcl_generate_toml`                  | Serialize an evaluated program's result as TOML                         |
+| `kcl_generate_kcl`                   | Generate KCL source from JSON / YAML / TOML text                        |
+| `kcl_generate_openapi`               | Export a program's schemas as an OpenAPI spec (`v3` / `v2`)             |
+| `kcl_generate_proto`                 | Export a program's schemas as proto3 definitions                        |
+| `kcl_generate_doc`                   | Render a program's schema documentation (`md` / `openapi` / `json-schema`) |
+
+The `Generate*` wrappers take their program through a request struct rather
+than a long positional argument list, because all five nest either
+`ExecProgramArgs` or `ParseProgramArgs`:
+
+```c
+const char* paths[] = { "./test_data/schema.k" };
+struct KclParseProgramArgs parse_args = {
+    .paths = paths,
+    .path_count = 1,
+};
+static char spec[BUFFER_SIZE];
+kcl_generate_openapi(&parse_args, "v3", spec, sizeof(spec));
+```
+
+`struct KclExecProgramArgs` plays the same role for `kcl_generate_toml`.
+
+### Cross-language consistency
+
+`examples/consistency` runs the shared golden cases from
+`../tests/consistency/cases.json` — the same manifest the Python, Node.js,
+Go, Java and .NET runners use. It checks the manifest `version`, asks the
+loaded core for its RPC surface via `kcl_list_method`, skips any case marked
+`new_core` whose rpc the core does not advertise, and then compares every
+field the case's `expect` object pins:
+
+```console
+$ make examples && ./examples/consistency
+consistency manifest: /path/to/lib/tests/consistency/cases.json
+repository root:      /path/to/lib
+core RPC surface:     available
+PASS ping
+...
+6 passed, 0 failed, 7 skipped (of 13 cases)
+```
+
+The manifest's `args.parse_args.paths` are pinned relative to the repository
+root, which the runner derives from the manifest location and makes absolute
+before dispatching.
 
 ### Example: wiring multiple wrappers
 

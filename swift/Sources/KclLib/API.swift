@@ -193,6 +193,45 @@ public class API: Service {
         name: "KclService.UpdateDependencies", args: try args.serializedBytes()))
   }
 
+  // Serializes the evaluated result of a KCL program to TOML.
+  public func generateToml(_ args: GenerateTomlArgs) throws -> GenerateTomlResult {
+    return try GenerateTomlResult(
+      serializedBytes: callNative(
+        name: "KclService.GenerateToml", args: try args.serializedBytes()))
+  }
+
+  // Generates KCL source from data content (JSON, YAML or TOML). An empty
+  // `format` is inferred from the filename extension and defaults to "json".
+  public func generateKcl(_ args: GenerateKclArgs) throws -> GenerateKclResult {
+    return try GenerateKclResult(
+      serializedBytes: callNative(
+        name: "KclService.GenerateKcl", args: try args.serializedBytes()))
+  }
+
+  // Generates an OpenAPI spec from the schemas of a KCL package. `version` is
+  // "v3" (default) or "v2" for Swagger 2.0.
+  public func generateOpenAPI(_ args: GenerateOpenAPIArgs) throws -> GenerateOpenAPIResult {
+    return try GenerateOpenAPIResult(
+      serializedBytes: callNative(
+        name: "KclService.GenerateOpenAPI", args: try args.serializedBytes()))
+  }
+
+  // Generates proto3 definitions from the schemas of a KCL package. An empty
+  // `package` emits no package clause.
+  public func generateProto(_ args: GenerateProtoArgs) throws -> GenerateProtoResult {
+    return try GenerateProtoResult(
+      serializedBytes: callNative(
+        name: "KclService.GenerateProto", args: try args.serializedBytes()))
+  }
+
+  // Generates documentation from the schemas of a KCL package. `format` is
+  // "md" (default), "openapi" or "json-schema"; "html" is not supported yet.
+  public func generateDoc(_ args: GenerateDocArgs) throws -> GenerateDocResult {
+    return try GenerateDocResult(
+      serializedBytes: callNative(
+        name: "KclService.GenerateDoc", args: try args.serializedBytes()))
+  }
+
   // Retrieves version information about the KCL service.
   public func getVersion(_ args: GetVersionArgs) throws -> GetVersionResult {
     return try GetVersionResult(

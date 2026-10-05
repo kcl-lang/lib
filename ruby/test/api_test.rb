@@ -259,6 +259,74 @@ class ApiTest < Minitest::Test
     assert_equal 2, result.info.length
   end
 
+  def test_generate_rpc_dispatch_tables
+    # The typed wrappers are only useful if the raw `call` escape hatch can
+    # reach the same RPCs, and it reaches them through these two tables.
+    # A wrapper without its table entries decodes into a zero-valued message
+    # instead of failing, so pin the classes rather than just the presence.
+    expected = {
+      "GenerateToml" => [KclLib::GenerateTomlArgs, KclLib::GenerateTomlResult],
+      "GenerateKcl" => [KclLib::GenerateKclArgs, KclLib::GenerateKclResult],
+      "GenerateOpenAPI" => [KclLib::GenerateOpenAPIArgs, KclLib::GenerateOpenAPIResult],
+      "GenerateProto" => [KclLib::GenerateProtoArgs, KclLib::GenerateProtoResult],
+      "GenerateDoc" => [KclLib::GenerateDocArgs, KclLib::GenerateDocResult],
+      "FormatTestReport" => [KclLib::FormatTestReportArgs, KclLib::FormatTestReportResult]
+    }
+    expected.each do |method, (req, resp)|
+      # The request table hands back an empty instance to dispatch with; the
+      # response table hands back the class, which `call` decodes into.
+      assert_instance_of req, KclLib::API.create_method_req_message(method)
+      assert_instance_of req, KclLib::API.create_method_req_message("KclService.#{method}")
+      assert_equal resp, KclLib::API.create_method_resp_message(method)
+      assert_equal resp, KclLib::API.create_method_resp_message("KclService.#{method}")
+    end
+  end
+
+  def test_format_test_report_api
+    # The report is the one kcl-go's `PrettyReporter` produces: one line per
+    # case, the log message of a case that has one on the following line, the
+    # error text of a failed case, an 80-dash separator, and the per-status
+    # counts.
+    skip "core does not list KclService.FormatTestReport" unless
+      KclLib::API.new.list_method.method_name_list.include?("KclService.FormatTestReport")
+
+    result = KclLib::TestResult.new(
+      info: [
+        KclLib::TestCaseInfo.new(name: "test_pass", duration: 1500),
+        KclLib::TestCaseInfo.new(name: "test_log", duration: 2500, log_message: "hello log"),
+        KclLib::TestCaseInfo.new(name: "test_fail", duration: 1000, error: "Error: assert failed")
+      ]
+    )
+    api = KclLib::API.new
+    report = api.format_test_report(KclLib::FormatTestReportArgs.new(result: result)).report
+
+    assert_equal(
+      "test_pass: PASS (1ms)\n" \
+      "test_log: PASS (2ms)\n" \
+      "hello log\n" \
+      "test_fail: FAIL (1ms)\n" \
+      "Error: assert failed\n" \
+      "#{"-" * 80}\n" \
+      "PASS: 2/3\n" \
+      "FAIL: 1/3\n",
+      report.dup.force_encoding(Encoding::UTF_8)
+    )
+  end
+
+  def test_format_test_report_of_empty_result
+    # An empty result carries no counts at all, so the separator and the
+    # summary lines are dropped for it.
+    skip "core does not list KclService.FormatTestReport" unless
+      KclLib::API.new.list_method.method_name_list.include?("KclService.FormatTestReport")
+
+    api = KclLib::API.new
+    report = api.format_test_report(
+      KclLib::FormatTestReportArgs.new(result: KclLib::TestResult.new)
+    ).report
+
+    assert_equal "no test files\n", report.dup.force_encoding(Encoding::UTF_8)
+  end
+
   def test_update_dependencies_api
     # Download and update dependencies defined in the `kcl.mod` file and
     # return the external package name and location list.

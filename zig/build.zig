@@ -59,6 +59,14 @@ pub fn build(b: *std.Build) void {
         "ast_contract_golden",
         b.pathResolve(&.{ b.build_root.path orelse ".", "..", "testdata", "ast", "alignment.json" }),
     );
+    // The cross-language golden manifest. Resolved here rather than relative
+    // to the test process so the runner does not depend on the working
+    // directory; the runner derives the repository root from it.
+    test_options.addOption(
+        []const u8,
+        "consistency_cases",
+        b.pathResolve(&.{ b.build_root.path orelse ".", "..", "tests", "consistency", "cases.json" }),
+    );
 
     // This declares intent for the library to be installed into the standard
     // location when the user invokes the "install" step (the default step when
@@ -136,12 +144,28 @@ pub fn build(b: *std.Build) void {
     plugin_unit_tests.root_module.addImport("spec", spec_module);
     plugin_unit_tests.step.dependOn(gen_spec_step);
 
+    // Cross-language consistency runner (src/consistency_test.zig): replays
+    // the shared `tests/consistency/cases.json` golden cases through the
+    // typed wrappers against the same prebuilt libkcl.
+    const consistency_tests = b.addTest(.{
+        .root_module = b.createModule(.{
+            .root_source_file = b.path("src/consistency_test.zig"),
+            .target = b.graph.host,
+            .optimize = optimize,
+        }),
+    });
+    linkNativeKcl(b, consistency_tests.root_module, &target);
+    consistency_tests.root_module.addImport("spec", spec_module);
+    consistency_tests.root_module.addOptions("test_options", test_options);
+    consistency_tests.step.dependOn(gen_spec_step);
+
     const run_lib_unit_tests = b.addRunArtifact(lib_unit_tests);
     const run_kcl_unit_tests = b.addRunArtifact(kcl_unit_tests);
     const run_ast_unit_tests = b.addRunArtifact(ast_unit_tests);
     const run_ast_alignment_tests = b.addRunArtifact(ast_alignment_tests);
     const run_ast_contract_tests = b.addRunArtifact(ast_contract_tests);
     const run_plugin_unit_tests = b.addRunArtifact(plugin_unit_tests);
+    const run_consistency_tests = b.addRunArtifact(consistency_tests);
     const test_step = b.step("test", "Run unit tests");
     test_step.dependOn(&run_lib_unit_tests.step);
     test_step.dependOn(&run_kcl_unit_tests.step);
@@ -149,6 +173,7 @@ pub fn build(b: *std.Build) void {
     test_step.dependOn(&run_ast_alignment_tests.step);
     test_step.dependOn(&run_ast_contract_tests.step);
     test_step.dependOn(&run_plugin_unit_tests.step);
+    test_step.dependOn(&run_consistency_tests.step);
 }
 
 /// Wires a module so it can link the prebuilt native `libkcl` and call the

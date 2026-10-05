@@ -5,7 +5,8 @@
 
 A Julia library for interacting with KCL (Kusion Configuration Language)
 artifacts: run KCL programs, query schemas and options, format, lint, validate,
-rename symbols, run KCL unit tests and manage module dependencies.
+rename symbols, run KCL unit tests, manage module dependencies and generate KCL,
+TOML, OpenAPI, proto3 and documentation from data or from a package's schemas.
 
 **Initial release:** this is the first version of the Julia binding (`0.13.0`,
 matching the vendored `libkcl` ABI version). APIs follow the other KCL language
@@ -368,6 +369,53 @@ Note: pulling OCI dependencies (`oci://ghcr.io/...`) can be rate-limited on
 CI; callers that need resilience should catch `KclError` and treat registry
 errors as skippable, as the test suite does.
 
+### generate_toml
+
+```julia
+result = generate_toml(GenerateTomlArgs(
+    exec_args=ExecProgramArgs(k_code_list=["a = {b = 1, c = [1, 2]}"]),
+))
+print(result.toml)  # "[a]\nb = 1\nc = [1, 2]\n"
+```
+
+### generate_kcl
+
+```julia
+# `format` is "json", "yaml" or "toml"; empty infers it from `filename`.
+result = generate_kcl(GenerateKclArgs(source="{\"a\": {\"b\": 1}}", filename="data.json"))
+print(result.kcl)  # "a = {\n    b = 1\n}\n"
+```
+
+### generate_openapi
+
+```julia
+result = generate_openapi(GenerateOpenAPIArgs(
+    parse_args=ParseProgramArgs(paths=["test_data/schema.k"]),
+    version="v3",           # or "v2" for Swagger 2.0
+))
+println(result.spec)
+```
+
+### generate_proto
+
+```julia
+result = generate_proto(GenerateProtoArgs(
+    parse_args=ParseProgramArgs(paths=["test_data/schema.k"]),
+    package="example.v1",
+))
+println(result.proto)
+```
+
+### generate_doc
+
+```julia
+result = generate_doc(GenerateDocArgs(
+    parse_args=ParseProgramArgs(paths=["test_data/schema.k"]),
+    format="md",            # or "openapi" / "json-schema"
+))
+println(result.content)
+```
+
 ### list_method
 
 ```julia
@@ -375,9 +423,13 @@ result = list_method()
 println(result.method_name_list)
 ```
 
-Note: the prebuilt `libkcl` v0.13.0 binary predates the `BuiltinService`
-registration and answers with an **empty** payload; the wrapper returns an
-empty `method_name_list` in that case instead of raising.
+`ListMethod` is declared under `BuiltinService` in
+[`spec/spec.proto`](../spec/spec.proto) — unlike the other 26 RPCs, which the
+core registers under `KclService` regardless of what the spec says. The wrapper
+follows the registration, so it calls `BuiltinService.ListMethod`;
+`KclService.ListMethod` is not registered and makes the dispatcher raise
+`unknown method name`. Against the prebuilt `libkcl` v0.13.0 this returns the
+full 28-entry table, reported by fully-qualified name.
 
 ### Raw call
 
@@ -451,6 +503,17 @@ This activates the project environment, instantiates dependencies (ProtoBuf.jl)
 and runs the test suite in [`test/runtests.jl`](test/runtests.jl) against the
 prebuilt `libkcl` in `../go/lib`.
 
+### Cross-language consistency
+
+[`test/consistency_test.jl`](test/consistency_test.jl) runs the golden cases in
+[`../tests/consistency/cases.json`](../tests/consistency/cases.json) — the
+manifest every KCL language runner executes — through this binding and asserts
+the same expectations, so a divergence from another binding surfaces here. The
+manifest is read with the binding's own JSON reader and the paths in it are
+resolved against the repository root, so the runner needs neither a JSON
+dependency nor a particular working directory. Cases marked `new_core` skip when
+`list_method` shows the loaded core predates the RPC. `runtests.jl` includes it.
+
 ### Regenerating the protobuf bindings
 
 The protobuf message code in [`src/pb`](src/pb) is generated from
@@ -468,17 +531,19 @@ as the native dispatcher routes by RPC name string.)
 ### Layout
 
 - `src/KclLib.jl` — the whole binding: `LibKcl` FFI module (dlopen + `ccall`),
-  `call` escape hatch, the 20 typed wrappers and `list_method`.
+  `call` escape hatch, the 26 typed wrappers and `list_method`.
 - `src/plugin.jl` — the plugin registry and the `@cfunction` agent, included
   from inside `LibKcl`.
 - `src/ast.jl` — the typed AST: `Pos` / `Node{T}` plus the `AstType`, `KclExpr`,
   `KclStmt` and DTO hierarchies, decoded with the binding's own JSON reader.
 - `src/pb/` — generated protobuf structs (vendored).
-- `test/runtests.jl` — end-to-end tests covering all 20 RPCs and the AST.
+- `test/runtests.jl` — end-to-end tests covering all 26 RPCs and the AST.
 - `test/ast_alignment.jl` — the AST wire contract, asserted against the shared
   golden capture at `../testdata/ast/alignment.json`: every tag in the tree
   resolves to a declared variant, `Comment` reads `text` off the struct under
   `node` rather than off the wrapper, and a `Type` is tagged `type` with its
   payload in `value`. `runtests.jl` includes it. The Dart package has the
   mirror-image file, `test/ast_contract_test.dart`.
+- `test/consistency_test.jl` — the cross-language consistency runner over
+  `../tests/consistency/cases.json`. `runtests.jl` includes it.
 - `test_data/` — fixtures copied from `python/tests/test_data`.

@@ -194,18 +194,95 @@ UpdateDependenciesResult updateDependencies(UpdateDependenciesArgs args) =>
     );
 
 // ---------------------------------------------------------------------------
-// BuiltinService-equivalent — the bundled libkcl v0.13.0 registers every
-// RPC under `KclService` regardless of the service declared in spec.proto.
-// We follow the implementation, not the spec; see dart/README for details.
+// KclService.Generate* — the schema / data generator RPCs.
+//
+// These five only exist on runtimes built after the `Generate*` family was
+// added to spec.proto. Every one of them takes its input as protobuf payload
+// (`ExecProgramArgs` or `ParseProgramArgs`) rather than as a CLI argv, so the
+// wrappers below are thin: they encode, dispatch and decode like the rest.
+// A runtime that predates an RPC answers with an `ERROR:`-prefixed payload,
+// which surfaces as a [KclError] just like any other dispatch failure.
+// ---------------------------------------------------------------------------
+
+/// Serializes the evaluated result of a KCL program to TOML.
+///
+/// Pass [GenerateTomlArgs.sortKeys] to emit the keys in sorted order instead of
+/// source order.
+GenerateTomlResult generateToml(GenerateTomlArgs args) => _invoke(
+      'KclService.GenerateToml',
+      args,
+      GenerateTomlResult.fromBuffer,
+    );
+
+/// Generates KCL source from data content.
+///
+/// [GenerateKclArgs.source] is JSON, YAML or TOML text;
+/// [GenerateKclArgs.format] (`"json"` / `"yaml"` / `"toml"`) selects the input
+/// format and defaults to being inferred from the
+/// [GenerateKclArgs.filename] extension, falling back to JSON.
+GenerateKclResult generateKcl(GenerateKclArgs args) => _invoke(
+      'KclService.GenerateKcl',
+      args,
+      GenerateKclResult.fromBuffer,
+    );
+
+/// Generates an OpenAPI spec from the schemas of a KCL package.
+///
+/// [GenerateOpenAPIArgs.version] is `"v3"` (the runtime default) for OpenAPI
+/// 3.x or `"v2"` for a Swagger 2.0 document.
+GenerateOpenAPIResult generateOpenAPI(GenerateOpenAPIArgs args) => _invoke(
+      'KclService.GenerateOpenAPI',
+      args,
+      GenerateOpenAPIResult.fromBuffer,
+    );
+
+/// Generates proto3 definitions from the schemas of a KCL package.
+///
+/// [GenerateProtoArgs.package] is the proto package name, e.g. `"example.v1"`;
+/// leaving it empty omits the `package` clause.
+GenerateProtoResult generateProto(GenerateProtoArgs args) => _invoke(
+      'KclService.GenerateProto',
+      args,
+      GenerateProtoResult.fromBuffer,
+    );
+
+/// Generates documentation for the schemas of a KCL package.
+///
+/// [GenerateDocArgs.format] is `"md"` (the runtime default) for Markdown,
+/// `"openapi"` for a Swagger 2.0 spec or `"json-schema"` for a JSON Schema
+/// draft per schema. `"html"` is not supported yet.
+GenerateDocResult generateDoc(GenerateDocArgs args) => _invoke(
+      'KclService.GenerateDoc',
+      args,
+      GenerateDocResult.fromBuffer,
+    );
+
+// ---------------------------------------------------------------------------
+// The bundled libkcl v0.13.0 registers every RPC under `KclService` regardless
+// of the service declared in spec.proto, so the wrappers above follow the
+// implementation rather than the spec; see dart/README for details.
+//
+// `ListMethod` is the one exception: spec.proto declares it under
+// `BuiltinService`, and that is where the core actually registers it.
+// `KclService.ListMethod` is unknown to the dispatcher, which raises
+// `unknown method name` and prints a Rust panic on the way out.
 // ---------------------------------------------------------------------------
 
 /// Round-trips a value through the KCL dispatcher — useful as a smoke test.
+///
+/// `Ping` is declared in *both* services in spec.proto and is registered under
+/// `KclService`, like the other RPCs above.
 PingResult ping(PingArgs args) =>
     _invoke('KclService.Ping', args, PingResult.fromBuffer);
 
 /// Lists every RPC name known to the dispatcher.
+///
+/// Reports the fully-qualified names, e.g. `KclService.ExecProgram` and
+/// `BuiltinService.ListMethod` — i.e. its own entry appears under the
+/// `BuiltinService` prefix, which is what makes the divergence above
+/// observable from the outside.
 ListMethodResult listMethod() => _invoke(
-      'KclService.ListMethod',
+      'BuiltinService.ListMethod',
       ListMethodArgs(),
       ListMethodResult.fromBuffer,
     );

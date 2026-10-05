@@ -356,6 +356,138 @@ c = {
     end)
   end)
 
+  -- The five `Generate*` RPCs are not implemented by the pinned `kcl-api`
+  -- revision, so the dispatcher answers with an empty payload and the wrapper
+  -- decodes an empty result field. Assert the rendered document whenever the
+  -- runtime does implement the RPC and `pending` otherwise, the same way the
+  -- `format_test_report` and `list_method` cases above do.
+  local generated_fields = {
+    ["KclService.GenerateToml"] = "toml",
+    ["KclService.GenerateKcl"] = "kcl",
+    ["KclService.GenerateOpenAPI"] = "spec",
+    ["KclService.GenerateProto"] = "proto",
+    ["KclService.GenerateDoc"] = "content",
+  }
+
+  ---@return string|nil the rendered document, or nil on a core without the RPC.
+  local function generated(rpc, result)
+    local value = result[generated_fields[rpc]]
+    if value == "" then
+      pending("the native runtime does not implement " .. rpc)
+      return nil
+    end
+    return value
+  end
+
+  describe("generate_toml", function()
+    it("renders an evaluated program as TOML", function()
+      local args = {
+        exec_args = {
+          k_code_list = { 'app = {name = "demo", ports = [80, 443]}' },
+        },
+        sort_keys = false,
+      }
+      local result = assert(api:generate_toml(args))
+      local toml = generated("KclService.GenerateToml", result)
+      if not toml then
+        return
+      end
+      assert.are.equal('[app]\nname = "demo"\nports = [80, 443]\n', toml)
+    end)
+  end)
+
+  describe("generate_kcl", function()
+    it("renders JSON as KCL", function()
+      local args = {
+        source = '{"a": {"b": 1}}',
+        filename = "data.json",
+        format = "",
+      }
+      local result = assert(api:generate_kcl(args))
+      local kcl = generated("KclService.GenerateKcl", result)
+      if not kcl then
+        return
+      end
+      -- An empty `format` falls back to the extension of `filename`.
+      assert.are.equal("a = {\n    b = 1\n}\n", kcl)
+    end)
+
+    it("honours an explicit format over the filename extension", function()
+      local args = {
+        source = "a: 1\nb:\n  - x\n  - y\n",
+        filename = "data.json",
+        format = "yaml",
+      }
+      local result = assert(api:generate_kcl(args))
+      local kcl = generated("KclService.GenerateKcl", result)
+      if not kcl then
+        return
+      end
+      assert.are.equal("a = 1\nb = [\"x\", \"y\"]\n", kcl)
+    end)
+  end)
+
+  describe("generate_openapi", function()
+    it("can call the native function", function()
+      local args = {
+        parse_args = { paths = { "./spec/test_data/schema.k" } },
+        version = "v3",
+      }
+      local result = assert(api:generate_openapi(args))
+      local document = generated("KclService.GenerateOpenAPI", result)
+      if not document then
+        return
+      end
+      local spec = assert(json.decode(document))
+      assert.is_table(spec.components.schemas)
+      -- `components.schemas` rather than `definitions` is what makes this a
+      -- v3 document, so the version argument is covered by that alone.
+      --
+      -- Within it the schema is keyed by its package-qualified name, not
+      -- bare: the runtime prefixes the package the schema was declared in, so
+      -- `AppConfig` in schema.k arrives as something like `AppConfig___main__`.
+      -- Match on the prefix — pinning the exact key would be asserting on how
+      -- the core qualifies schemas, which is not this fixture's business.
+      local found = false
+      for name in pairs(spec.components.schemas) do
+        if string.find(name, "AppConfig", 1, true) then
+          found = true
+        end
+      end
+      assert.is_true(found)
+    end)
+  end)
+
+  describe("generate_proto", function()
+    it("can call the native function", function()
+      local args = {
+        parse_args = { paths = { "./spec/test_data/schema.k" } },
+        package = "example.v1",
+      }
+      local result = assert(api:generate_proto(args))
+      local document = generated("KclService.GenerateProto", result)
+      if not document then
+        return
+      end
+      assert.is_truthy(document:find("package example.v1;", 1, true))
+    end)
+  end)
+
+  describe("generate_doc", function()
+    it("can call the native function", function()
+      local args = {
+        parse_args = { paths = { "./spec/test_data/schema.k" } },
+        format = "md",
+      }
+      local result = assert(api:generate_doc(args))
+      local document = generated("KclService.GenerateDoc", result)
+      if not document then
+        return
+      end
+      assert.is_truthy(document:find("AppConfig", 1, true))
+    end)
+  end)
+
   describe("list_method", function()
     -- Prebuilt libkcl v0.13.0 predates the `BuiltinService` registration
     -- (mirrors the Julia and Zig bindings): the dispatcher either answers

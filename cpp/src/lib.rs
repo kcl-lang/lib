@@ -789,6 +789,91 @@ mod ffi {
         pub report: String,
     }
 
+    /// Message for generate TOML request arguments.
+    #[derive(Debug, Default)]
+    pub struct GenerateTomlArgs {
+        /// Arguments for executing the program whose result is serialized to TOML.
+        pub exec_args: OptionalExecProgramArgs,
+        /// Flag to sort keys in the TOML output. Defaults to false (source order).
+        pub sort_keys: bool,
+    }
+
+    /// Message for generate TOML response.
+    #[derive(Debug, Default)]
+    pub struct GenerateTomlResult {
+        /// The evaluated result serialized as TOML.
+        pub toml: String,
+    }
+
+    /// Message for generate KCL request arguments.
+    #[derive(Debug, Default)]
+    pub struct GenerateKclArgs {
+        /// The source data content (JSON, YAML or TOML text).
+        pub source: String,
+        /// File name hint used for error messages and format detection, e.g. "data.json".
+        pub filename: String,
+        /// Data format: "json", "yaml" or "toml". When empty, inferred from the
+        /// filename extension, defaulting to "json".
+        pub format: String,
+    }
+
+    /// Message for generate KCL response.
+    #[derive(Debug, Default)]
+    pub struct GenerateKclResult {
+        /// The generated KCL source.
+        pub kcl: String,
+    }
+
+    /// Message for generate OpenAPI request arguments.
+    #[derive(Debug, Default)]
+    pub struct GenerateOpenAPIArgs {
+        /// Arguments for parsing the program whose schemas are exported.
+        pub parse_args: OptionalParseProgramArgs,
+        /// Spec version: "v3" (default) or "v2" (Swagger 2.0).
+        pub version: String,
+    }
+
+    /// Message for generate OpenAPI response.
+    #[derive(Debug, Default)]
+    pub struct GenerateOpenAPIResult {
+        /// The generated spec as a JSON string.
+        pub spec: String,
+    }
+
+    /// Message for generate proto request arguments.
+    #[derive(Debug, Default)]
+    pub struct GenerateProtoArgs {
+        /// Arguments for parsing the program whose schemas are exported.
+        pub parse_args: OptionalParseProgramArgs,
+        /// Proto package name, e.g. "example.v1". Empty means no package clause.
+        pub package: String,
+    }
+
+    /// Message for generate proto response.
+    #[derive(Debug, Default)]
+    pub struct GenerateProtoResult {
+        /// The generated proto3 definitions.
+        pub proto: String,
+    }
+
+    /// Message for generate doc request arguments.
+    #[derive(Debug, Default)]
+    pub struct GenerateDocArgs {
+        /// Arguments for parsing the program whose schemas are documented.
+        pub parse_args: OptionalParseProgramArgs,
+        /// Output format: "md" (default, Markdown), "openapi" (Swagger 2.0 spec)
+        /// or "json-schema" (JSON Schema draft for each schema). "html" is not
+        /// supported yet.
+        pub format: String,
+    }
+
+    /// Message for generate doc response.
+    #[derive(Debug, Default)]
+    pub struct GenerateDocResult {
+        /// The generated documentation.
+        pub content: String,
+    }
+
     /// Message representing a KCL type.
     #[derive(Debug, Default)]
     pub struct KclType {
@@ -964,6 +1049,16 @@ mod ffi {
         fn test(args: &TestArgs) -> Result<TestResult>;
         /// Format a test result into a human-readable report.
         fn format_test_report(args: &FormatTestReportArgs) -> Result<FormatTestReportResult>;
+        /// Generate TOML from the evaluated result of a KCL program.
+        fn generate_toml(args: &GenerateTomlArgs) -> Result<GenerateTomlResult>;
+        /// Generate KCL source from data content (JSON, YAML or TOML).
+        fn generate_kcl(args: &GenerateKclArgs) -> Result<GenerateKclResult>;
+        /// Generate an OpenAPI spec from the schemas of a KCL package.
+        fn generate_openapi(args: &GenerateOpenAPIArgs) -> Result<GenerateOpenAPIResult>;
+        /// Generate proto3 definitions from the schemas of a KCL package.
+        fn generate_proto(args: &GenerateProtoArgs) -> Result<GenerateProtoResult>;
+        /// Generate documentation from the schemas of a KCL package.
+        fn generate_doc(args: &GenerateDocArgs) -> Result<GenerateDocResult>;
         /// Return the KCL service version information.
         fn get_version() -> Result<GetVersionResult>;
         /// Ping the KCL service and echo back the sent value.
@@ -2110,22 +2205,220 @@ impl From<&FormatTestReportArgs> for FormatTestReportRequest {
 /// the pin collapses this into
 /// `Ok(FormatTestReportResult { report: api().format_test_report(&args.into())?.report })`.
 fn format_test_report(args: &FormatTestReportArgs) -> Result<FormatTestReportResult> {
-    use ::prost::Message;
-
-    let request = FormatTestReportRequest::from(args);
-    let raw = kcl_api::call(
+    let response: FormatTestReportResponse = call_rpc(
         b"KclService.FormatTestReport",
-        request.encode_to_vec().as_slice(),
+        &FormatTestReportRequest::from(args),
     )?;
-    // The dispatcher reports failures as a `ERROR:`-prefixed payload rather
-    // than through the `Result`, so translate it here instead of handing
-    // `FormatTestReportResponse` a string to misparse.
+    Ok(FormatTestReportResult {
+        report: response.report,
+    })
+}
+
+/// Encode `request`, dispatch it to the runtime under `name`, and decode the
+/// reply as a `Resp`.
+///
+/// This is the shared shape of every RPC the pinned `kcl-api` revision has no
+/// typed method for: the request/response messages are declared here from the
+/// spec and the bytes go through the universal dispatcher. The dispatcher
+/// reports failures as an `ERROR:`-prefixed payload rather than through the
+/// `Result`, so translate it here instead of handing `Resp` a string to
+/// misparse.
+fn call_rpc<Req, Resp>(name: &[u8], request: &Req) -> Result<Resp>
+where
+    Req: ::prost::Message,
+    Resp: ::prost::Message + Default,
+{
+    let raw = kcl_api::call(name, request.encode_to_vec().as_slice())?;
     if let Some(message) = raw.strip_prefix(b"ERROR:") {
         return Err(anyhow::anyhow!("{}", String::from_utf8_lossy(message)));
     }
-    let response = FormatTestReportResponse::decode(raw.as_slice())?;
-    Ok(FormatTestReportResult {
-        report: response.report,
+    Ok(Resp::decode(raw.as_slice())?)
+}
+
+/// `GenerateTomlArgs` as declared in `spec.proto`. The `kcl-api` revision
+/// pinned in `Cargo.lock` predates the RPC, so there is no generated
+/// counterpart to encode with; this is a copy of the proto definition, so it
+/// can be deleted together with the `From` impl below once the pin moves.
+#[derive(Clone, PartialEq, ::prost::Message)]
+struct GenerateTomlRequest {
+    #[prost(message, optional, tag = "1")]
+    exec_args: Option<kcl_api::ExecProgramArgs>,
+    #[prost(bool, tag = "2")]
+    sort_keys: bool,
+}
+
+/// `GenerateTomlResult` as declared in `spec.proto`, re-declared for the same
+/// reason as `GenerateTomlRequest`.
+#[derive(Clone, PartialEq, ::prost::Message)]
+struct GenerateTomlResponse {
+    #[prost(string, tag = "1")]
+    toml: String,
+}
+
+impl From<&GenerateTomlArgs> for GenerateTomlRequest {
+    #[inline]
+    fn from(args: &GenerateTomlArgs) -> Self {
+        Self {
+            exec_args: build_optional_exec_program_args(&args.exec_args),
+            sort_keys: args.sort_keys,
+        }
+    }
+}
+
+/// Generate TOML from the evaluated result of a KCL program.
+///
+/// Dispatched through `call_rpc` for the same reason as `format_test_report`:
+/// the pinned `kcl-api` revision has no `generate_toml` typed method.
+fn generate_toml(args: &GenerateTomlArgs) -> Result<GenerateTomlResult> {
+    let response: GenerateTomlResponse =
+        call_rpc(b"KclService.GenerateToml", &GenerateTomlRequest::from(args))?;
+    Ok(GenerateTomlResult {
+        toml: response.toml,
+    })
+}
+
+/// `GenerateKclArgs` as declared in `spec.proto`; see `GenerateTomlRequest`.
+#[derive(Clone, PartialEq, ::prost::Message)]
+struct GenerateKclRequest {
+    #[prost(string, tag = "1")]
+    source: String,
+    #[prost(string, tag = "2")]
+    filename: String,
+    #[prost(string, tag = "3")]
+    format: String,
+}
+
+/// `GenerateKclResult` as declared in `spec.proto`.
+#[derive(Clone, PartialEq, ::prost::Message)]
+struct GenerateKclResponse {
+    #[prost(string, tag = "1")]
+    kcl: String,
+}
+
+impl From<&GenerateKclArgs> for GenerateKclRequest {
+    #[inline]
+    fn from(args: &GenerateKclArgs) -> Self {
+        Self {
+            source: args.source.clone(),
+            filename: args.filename.clone(),
+            format: args.format.clone(),
+        }
+    }
+}
+
+/// Generate KCL source from data content (JSON, YAML or TOML).
+fn generate_kcl(args: &GenerateKclArgs) -> Result<GenerateKclResult> {
+    let response: GenerateKclResponse =
+        call_rpc(b"KclService.GenerateKcl", &GenerateKclRequest::from(args))?;
+    Ok(GenerateKclResult { kcl: response.kcl })
+}
+
+/// `GenerateOpenAPIArgs` as declared in `spec.proto`; see `GenerateTomlRequest`.
+#[derive(Clone, PartialEq, ::prost::Message)]
+struct GenerateOpenAPIRequest {
+    #[prost(message, optional, tag = "1")]
+    parse_args: Option<kcl_api::ParseProgramArgs>,
+    #[prost(string, tag = "2")]
+    version: String,
+}
+
+/// `GenerateOpenAPIResult` as declared in `spec.proto`.
+#[derive(Clone, PartialEq, ::prost::Message)]
+struct GenerateOpenAPIResponse {
+    #[prost(string, tag = "1")]
+    spec: String,
+}
+
+impl From<&GenerateOpenAPIArgs> for GenerateOpenAPIRequest {
+    #[inline]
+    fn from(args: &GenerateOpenAPIArgs) -> Self {
+        Self {
+            parse_args: build_optional_parse_program_args(&args.parse_args),
+            version: args.version.clone(),
+        }
+    }
+}
+
+/// Generate an OpenAPI spec from the schemas of a KCL package.
+fn generate_openapi(args: &GenerateOpenAPIArgs) -> Result<GenerateOpenAPIResult> {
+    let response: GenerateOpenAPIResponse = call_rpc(
+        b"KclService.GenerateOpenAPI",
+        &GenerateOpenAPIRequest::from(args),
+    )?;
+    Ok(GenerateOpenAPIResult {
+        spec: response.spec,
+    })
+}
+
+/// `GenerateProtoArgs` as declared in `spec.proto`; see `GenerateTomlRequest`.
+#[derive(Clone, PartialEq, ::prost::Message)]
+struct GenerateProtoRequest {
+    #[prost(message, optional, tag = "1")]
+    parse_args: Option<kcl_api::ParseProgramArgs>,
+    #[prost(string, tag = "2")]
+    package: String,
+}
+
+/// `GenerateProtoResult` as declared in `spec.proto`.
+#[derive(Clone, PartialEq, ::prost::Message)]
+struct GenerateProtoResponse {
+    #[prost(string, tag = "1")]
+    proto: String,
+}
+
+impl From<&GenerateProtoArgs> for GenerateProtoRequest {
+    #[inline]
+    fn from(args: &GenerateProtoArgs) -> Self {
+        Self {
+            parse_args: build_optional_parse_program_args(&args.parse_args),
+            package: args.package.clone(),
+        }
+    }
+}
+
+/// Generate proto3 definitions from the schemas of a KCL package.
+fn generate_proto(args: &GenerateProtoArgs) -> Result<GenerateProtoResult> {
+    let response: GenerateProtoResponse = call_rpc(
+        b"KclService.GenerateProto",
+        &GenerateProtoRequest::from(args),
+    )?;
+    Ok(GenerateProtoResult {
+        proto: response.proto,
+    })
+}
+
+/// `GenerateDocArgs` as declared in `spec.proto`; see `GenerateTomlRequest`.
+#[derive(Clone, PartialEq, ::prost::Message)]
+struct GenerateDocRequest {
+    #[prost(message, optional, tag = "1")]
+    parse_args: Option<kcl_api::ParseProgramArgs>,
+    #[prost(string, tag = "2")]
+    format: String,
+}
+
+/// `GenerateDocResult` as declared in `spec.proto`.
+#[derive(Clone, PartialEq, ::prost::Message)]
+struct GenerateDocResponse {
+    #[prost(string, tag = "1")]
+    content: String,
+}
+
+impl From<&GenerateDocArgs> for GenerateDocRequest {
+    #[inline]
+    fn from(args: &GenerateDocArgs) -> Self {
+        Self {
+            parse_args: build_optional_parse_program_args(&args.parse_args),
+            format: args.format.clone(),
+        }
+    }
+}
+
+/// Generate documentation from the schemas of a KCL package.
+fn generate_doc(args: &GenerateDocArgs) -> Result<GenerateDocResult> {
+    let response: GenerateDocResponse =
+        call_rpc(b"KclService.GenerateDoc", &GenerateDocRequest::from(args))?;
+    Ok(GenerateDocResult {
+        content: response.content,
     })
 }
 

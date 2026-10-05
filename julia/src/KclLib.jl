@@ -241,7 +241,8 @@ function call(name::AbstractString, args::AbstractVector{UInt8}=UInt8[])::Vector
 end
 
 # ---------------------------------------------------------------------------
-# Typed wrappers over the 20 KclService RPCs + BuiltinService.ListMethod
+# Typed wrappers over the 26 KclService RPCs + BuiltinService.ListMethod,
+# in spec order (spec/spec.proto)
 # ---------------------------------------------------------------------------
 
 _encode(msg) = let io = IOBuffer()
@@ -450,14 +451,90 @@ update_dependencies(args::UpdateDependenciesArgs) =
     _rpc("KclService.UpdateDependencies", args, UpdateDependenciesResult)
 
 """
+    generate_toml(args::GenerateTomlArgs) -> GenerateTomlResult
+
+Execute the program described by `args.exec_args` and render its result as a
+TOML document. Equivalent to `call("KclService.GenerateToml", bytes)`.
+
+```julia
+result = generate_toml(GenerateTomlArgs(
+    exec_args=ExecProgramArgs(k_code_list=["a = {b = 1, c = [1, 2]}"])))
+print(result.toml)  # "[a]\nb = 1\nc = [1, 2]\n"
+```
+"""
+generate_toml(args::GenerateTomlArgs) = _rpc("KclService.GenerateToml", args, GenerateTomlResult)
+
+"""
+    generate_kcl(args::GenerateKclArgs) -> GenerateKclResult
+
+Generate KCL source from data content. `args.format` is `"json"`, `"yaml"` or
+`"toml"`; when empty it is inferred from the extension of `args.filename` and
+falls back to JSON. Equivalent to `call("KclService.GenerateKcl", bytes)`.
+
+```julia
+result = generate_kcl(GenerateKclArgs(source="{\\"a\\": {\\"b\\": 1}}", filename="data.json"))
+print(result.kcl)  # "a = {\n    b = 1\n}\n"
+```
+"""
+generate_kcl(args::GenerateKclArgs) = _rpc("KclService.GenerateKcl", args, GenerateKclResult)
+
+"""
+    generate_openapi(args::GenerateOpenAPIArgs) -> GenerateOpenAPIResult
+
+Generate an OpenAPI document from the schemas of the package selected by
+`args.parse_args`. `args.version` is `"v3"` (the default) or `"v2"` for
+Swagger 2.0. Equivalent to `call("KclService.GenerateOpenAPI", bytes)`.
+
+```julia
+result = generate_openapi(GenerateOpenAPIArgs(
+    parse_args=ParseProgramArgs(paths=["main.k"]), version="v3"))
+println(result.spec)
+```
+"""
+generate_openapi(args::GenerateOpenAPIArgs) =
+    _rpc("KclService.GenerateOpenAPI", args, GenerateOpenAPIResult)
+
+"""
+    generate_proto(args::GenerateProtoArgs) -> GenerateProtoResult
+
+Generate proto3 definitions from the schemas of the package selected by
+`args.parse_args`; `args.package` is the proto package name. Equivalent to
+`call("KclService.GenerateProto", bytes)`.
+
+```julia
+result = generate_proto(GenerateProtoArgs(
+    parse_args=ParseProgramArgs(paths=["main.k"]), package="example.v1"))
+println(result.proto)
+```
+"""
+generate_proto(args::GenerateProtoArgs) = _rpc("KclService.GenerateProto", args, GenerateProtoResult)
+
+"""
+    generate_doc(args::GenerateDocArgs) -> GenerateDocResult
+
+Generate documentation from the schemas of the package selected by
+`args.parse_args`. `args.format` is `"md"` (the default), `"openapi"` or
+`"json-schema"`; `"html"` is not supported yet. Equivalent to
+`call("KclService.GenerateDoc", bytes)`.
+
+```julia
+result = generate_doc(GenerateDocArgs(
+    parse_args=ParseProgramArgs(paths=["main.k"]), format="md"))
+println(result.content)
+```
+"""
+generate_doc(args::GenerateDocArgs) = _rpc("KclService.GenerateDoc", args, GenerateDocResult)
+
+"""
     list_method() -> ListMethodResult
 
 List the methods exposed by the native KCL dispatcher. Equivalent to
 `call("BuiltinService.ListMethod", bytes)`.
 
-Note: prebuilt libkcl v0.13.0 predates the `BuiltinService` registration, so
-its dispatcher answers with an empty payload; the wrapper therefore tolerates
-an empty `method_name_list`.
+`ListMethod` is the one RPC the core registers under the service name
+`spec.proto` gives it, rather than under `KclService` like the other 26.
+`KclService.ListMethod` is not registered and makes the dispatcher raise
+`unknown method name`.
 """
 list_method() = _rpc("BuiltinService.ListMethod", ListMethodArgs(), ListMethodResult)
 
@@ -875,7 +952,9 @@ export call, KclError,
     list_variables, exec_program, override_file, get_schema_type_mapping,
     get_schema_type_mapping_under_path, format_code, format_path, lint_path,
     validate_code, load_settings_files, rename, rename_code, test,
-    format_test_report, update_dependencies, list_method,
+    format_test_report, update_dependencies,
+    generate_toml, generate_kcl, generate_openapi, generate_proto, generate_doc,
+    list_method,
     register_plugin, plugin_registered, disable_plugins, has_plugins,
     PluginMethod,
     KCLResult, yaml_string, json_string, to_dict

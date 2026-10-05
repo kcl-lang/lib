@@ -231,6 +231,150 @@ static inline bool kcl_encode_tagged_true(pb_ostream_t* stream, uint32_t field_t
     return pb_encode_varint(stream, 1);
 }
 
+// Encode carrier for `repeated ExternalPkg` request fields
+// (ParseProgramArgs.external_pkgs, ExecProgramArgs.external_pkgs).
+// `items` pairs each package name with its path.
+struct RepeatedExternalPkg {
+    const struct KclStringPair* items;
+    size_t index;
+    size_t saved_index;
+    size_t max_size;
+};
+
+// Encode callback for `repeated ExternalPkg`. Same rewind-on-entry trick
+// as encode_str_list: the index restarts at `saved_index` on every
+// invocation so nanopb's sizing/write pass pair emits the same payload
+// twice.
+static inline bool encode_external_pkg_list(pb_ostream_t* stream, const pb_field_t* field, void* const* arg)
+{
+    struct RepeatedExternalPkg* req = *arg;
+    req->index = req->saved_index;
+    while (req->index < req->max_size) {
+        struct KclStringPair pkg = req->items[req->index++];
+        ExternalPkg msg = ExternalPkg_init_zero;
+        if (pkg.key != NULL) {
+            msg.pkg_name.funcs.encode = encode_string;
+            msg.pkg_name.arg = (void*)pkg.key;
+        }
+        if (pkg.value != NULL) {
+            msg.pkg_path.funcs.encode = encode_string;
+            msg.pkg_path.arg = (void*)pkg.value;
+        }
+        if (!kcl_encode_tagged_submsg(stream, field->tag, ExternalPkg_fields, &msg))
+            return false;
+    }
+    return true;
+}
+
+// One list-valued request field on its way into a nested submessage: the
+// caller's C strings, the `struct Buffer` view nanopb encodes from, and
+// the `struct RepeatedString` carrier whose index the encode callback
+// rewinds. Declared as a single object by the Generate* wrappers so the
+// carrier outlives the pb_encode that kcl_encode_tagged_submsg runs
+// (see kcl_load_package for the stack-use-after-scope rationale).
+struct KclStringList {
+    struct Buffer* buffers;
+    struct Buffer** ptrs;
+    struct RepeatedString carrier;
+};
+
+// Fill `list` from `items`/`count`. An empty list leaves the encode
+// callback unset, which is how the wrappers keep proto3 defaults off
+// the wire. Returns false on allocation failure.
+static inline bool kcl_string_list_init(struct KclStringList* list, const char* const* items, size_t count)
+{
+    list->buffers = NULL;
+    list->ptrs = NULL;
+    list->carrier = (struct RepeatedString){ 0 };
+    if (count == 0)
+        return true;
+    if (items == NULL)
+        return false;
+    list->buffers = (struct Buffer*)malloc(count * sizeof(struct Buffer));
+    list->ptrs = (struct Buffer**)malloc(count * sizeof(struct Buffer*));
+    if (list->buffers == NULL || list->ptrs == NULL)
+        return false;
+    for (size_t i = 0; i < count; ++i) {
+        list->buffers[i].buffer = items[i];
+        list->buffers[i].len = strlen(items[i]);
+        list->ptrs[i] = &list->buffers[i];
+    }
+    list->carrier = (struct RepeatedString){ .repeated = list->ptrs, .index = 0, .saved_index = 0, .max_size = count };
+    return true;
+}
+
+static inline void kcl_string_list_free(struct KclStringList* list)
+{
+    free(list->buffers);
+    free(list->ptrs);
+    list->buffers = NULL;
+    list->ptrs = NULL;
+}
+
+// Point the repeated-string callback field `field` at `list`.
+static inline void kcl_string_list_bind(pb_callback_t* field, struct KclStringList* list)
+{
+    if (list->carrier.max_size == 0)
+        return;
+    field->funcs.encode = encode_str_list;
+    field->arg = &list->carrier;
+}
+
+// Fill a zero-initialised `exec_args` from the plain-C `request`. The
+// list carriers must be declared by the caller and outlive the
+// pb_encode driven by kcl_encode_tagged_submsg.
+static inline bool kcl_bind_exec_program_args(ExecProgramArgs* exec_args,
+    const struct KclExecProgramArgs* request,
+    struct KclStringList* filenames, struct KclStringList* codes,
+    struct KclStringList* overrides, struct RepeatedExternalPkg* pkgs)
+{
+    if (!kcl_string_list_init(filenames, request->k_filename_list, request->k_filename_count))
+        return false;
+    if (!kcl_string_list_init(codes, request->k_code_list, request->k_code_count))
+        return false;
+    if (!kcl_string_list_init(overrides, request->overrides, request->override_count))
+        return false;
+    kcl_string_list_bind(&exec_args->k_filename_list, filenames);
+    kcl_string_list_bind(&exec_args->k_code_list, codes);
+    kcl_string_list_bind(&exec_args->overrides, overrides);
+    if (request->work_dir != NULL) {
+        exec_args->work_dir.funcs.encode = encode_string;
+        exec_args->work_dir.arg = (void*)request->work_dir;
+    }
+    if (request->external_pkg_count > 0) {
+        if (request->external_pkgs == NULL)
+            return false;
+        *pkgs = (struct RepeatedExternalPkg){ .items = request->external_pkgs, .index = 0, .saved_index = 0, .max_size = request->external_pkg_count };
+        exec_args->external_pkgs.funcs.encode = encode_external_pkg_list;
+        exec_args->external_pkgs.arg = pkgs;
+    }
+    exec_args->sort_keys = request->sort_keys;
+    return true;
+}
+
+// Fill a zero-initialised `parse_args` from the plain-C `request`. Same
+// carrier lifetime rule as kcl_bind_exec_program_args.
+static inline bool kcl_bind_parse_program_args(ParseProgramArgs* parse_args,
+    const struct KclParseProgramArgs* request,
+    struct KclStringList* paths, struct KclStringList* sources,
+    struct RepeatedExternalPkg* pkgs)
+{
+    if (!kcl_string_list_init(paths, request->paths, request->path_count))
+        return false;
+    if (!kcl_string_list_init(sources, request->sources, request->source_count))
+        return false;
+    kcl_string_list_bind(&parse_args->paths, paths);
+    kcl_string_list_bind(&parse_args->sources, sources);
+    if (request->external_pkg_count > 0) {
+        if (request->external_pkgs == NULL)
+            return false;
+        *pkgs = (struct RepeatedExternalPkg){ .items = request->external_pkgs, .index = 0, .saved_index = 0, .max_size = request->external_pkg_count };
+        parse_args->external_pkgs.funcs.encode = encode_external_pkg_list;
+        parse_args->external_pkgs.arg = pkgs;
+    }
+    return true;
+}
+
 // Ping KclService and copy the echoed value into out.
 // Returns false and copies the error message into out on failure.
 static inline bool kcl_ping(const char* value, char* out, size_t out_size)
@@ -1779,6 +1923,298 @@ done:
     free(result_buffer);
     free(yaml_buffer);
     free(err_buffer);
+    return status;
+}
+
+// Serialize the evaluated result of a KCL program as TOML.
+// `request` carries the program to evaluate (see struct
+// KclExecProgramArgs); `out` receives the TOML text. Returns false and
+// copies the error message into out on failure.
+static inline bool kcl_generate_toml(const struct KclExecProgramArgs* request, char* out, size_t out_size)
+{
+    uint8_t* buffer = (uint8_t*)malloc(BUFFER_SIZE);
+    uint8_t* result_buffer = (uint8_t*)malloc(BUFFER_SIZE);
+    uint8_t* toml_buffer = (uint8_t*)calloc(1, BUFFER_SIZE);
+    // Hoisted to function scope: encode_str_list is invoked from
+    // pb_encode (called by kcl_encode_tagged_submsg) after the
+    // bind below has returned, so the carriers must outlive it.
+    struct KclStringList filenames = { 0 };
+    struct KclStringList codes = { 0 };
+    struct KclStringList overrides = { 0 };
+    struct RepeatedExternalPkg pkgs = { 0 };
+    bool status = false;
+    if (buffer == NULL || result_buffer == NULL || toml_buffer == NULL)
+        goto done;
+
+    GenerateTomlArgs args = GenerateTomlArgs_init_zero;
+    args.has_exec_args = true;
+    if (!kcl_bind_exec_program_args(&args.exec_args, request, &filenames, &codes, &overrides, &pkgs))
+        goto done;
+    args.sort_keys = request->sort_keys;
+
+    pb_ostream_t stream = pb_ostream_from_buffer(buffer, BUFFER_SIZE);
+    // Encode manually: the static nested ExecProgramArgs would
+    // otherwise trigger nanopb's two-pass submessage encoding, which
+    // breaks the stateful encode_str_list callback.
+    if (!kcl_encode_tagged_submsg(&stream, GenerateTomlArgs_exec_args_tag, ExecProgramArgs_fields, &args.exec_args))
+        goto done;
+    if (args.sort_keys && !kcl_encode_tagged_true(&stream, GenerateTomlArgs_sort_keys_tag))
+        goto done;
+
+    size_t result_length = kcl_call("KclService.GenerateToml", buffer, stream.bytes_written, result_buffer);
+    if (check_error_prefix(result_buffer)) {
+        kcl_copy_string(out, out_size, result_buffer);
+        goto done;
+    }
+
+    pb_istream_t istream = pb_istream_from_buffer(result_buffer, result_length);
+    GenerateTomlResult result = GenerateTomlResult_init_default;
+    result.toml.funcs.decode = decode_string;
+    result.toml.arg = toml_buffer;
+    if (!pb_decode(&istream, GenerateTomlResult_fields, &result))
+        goto done;
+
+    kcl_copy_string(out, out_size, toml_buffer);
+    status = true;
+
+done:
+    free(buffer);
+    free(result_buffer);
+    free(toml_buffer);
+    kcl_string_list_free(&filenames);
+    kcl_string_list_free(&codes);
+    kcl_string_list_free(&overrides);
+    return status;
+}
+
+// Generate KCL source from data content. `format` is "json", "yaml" or
+// "toml"; when NULL or empty the runtime infers it from the `filename`
+// extension and falls back to JSON. Returns false and copies the error
+// message into out on failure.
+static inline bool kcl_generate_kcl(const char* source, const char* filename, const char* format, char* out, size_t out_size)
+{
+    uint8_t* buffer = (uint8_t*)malloc(BUFFER_SIZE);
+    uint8_t* result_buffer = (uint8_t*)malloc(BUFFER_SIZE);
+    uint8_t* kcl_buffer = (uint8_t*)calloc(1, BUFFER_SIZE);
+    bool status = false;
+    if (buffer == NULL || result_buffer == NULL || kcl_buffer == NULL)
+        goto done;
+
+    GenerateKclArgs args = GenerateKclArgs_init_zero;
+    if (source != NULL) {
+        args.source.funcs.encode = encode_string;
+        args.source.arg = (void*)source;
+    }
+    if (filename != NULL) {
+        args.filename.funcs.encode = encode_string;
+        args.filename.arg = (void*)filename;
+    }
+    if (format != NULL) {
+        args.format.funcs.encode = encode_string;
+        args.format.arg = (void*)format;
+    }
+
+    pb_ostream_t stream = pb_ostream_from_buffer(buffer, BUFFER_SIZE);
+    if (!pb_encode(&stream, GenerateKclArgs_fields, &args))
+        goto done;
+
+    size_t result_length = kcl_call("KclService.GenerateKcl", buffer, stream.bytes_written, result_buffer);
+    if (check_error_prefix(result_buffer)) {
+        kcl_copy_string(out, out_size, result_buffer);
+        goto done;
+    }
+
+    pb_istream_t istream = pb_istream_from_buffer(result_buffer, result_length);
+    GenerateKclResult result = GenerateKclResult_init_default;
+    result.kcl.funcs.decode = decode_string;
+    result.kcl.arg = kcl_buffer;
+    if (!pb_decode(&istream, GenerateKclResult_fields, &result))
+        goto done;
+
+    kcl_copy_string(out, out_size, kcl_buffer);
+    status = true;
+
+done:
+    free(buffer);
+    free(result_buffer);
+    free(kcl_buffer);
+    return status;
+}
+
+// Export the OpenAPI spec of the schemas declared by the program
+// described by `request`. `version` is "v3" (default) or "v2"
+// (Swagger 2.0); NULL or empty selects the default. Returns false and
+// copies the error message into out on failure.
+static inline bool kcl_generate_openapi(const struct KclParseProgramArgs* request, const char* version, char* out, size_t out_size)
+{
+    uint8_t* buffer = (uint8_t*)malloc(BUFFER_SIZE);
+    uint8_t* result_buffer = (uint8_t*)malloc(BUFFER_SIZE);
+    uint8_t* spec_buffer = (uint8_t*)calloc(1, BUFFER_SIZE);
+    struct KclStringList paths = { 0 };
+    struct KclStringList sources = { 0 };
+    struct RepeatedExternalPkg pkgs = { 0 };
+    bool status = false;
+    if (buffer == NULL || result_buffer == NULL || spec_buffer == NULL)
+        goto done;
+
+    GenerateOpenAPIArgs args = GenerateOpenAPIArgs_init_zero;
+    args.has_parse_args = true;
+    if (!kcl_bind_parse_program_args(&args.parse_args, request, &paths, &sources, &pkgs))
+        goto done;
+    if (version != NULL) {
+        args.version.funcs.encode = encode_string;
+        args.version.arg = (void*)version;
+    }
+
+    pb_ostream_t stream = pb_ostream_from_buffer(buffer, BUFFER_SIZE);
+    // Encode manually: the static nested ParseProgramArgs would
+    // otherwise trigger nanopb's two-pass submessage encoding, which
+    // breaks the stateful encode_str_list callback.
+    if (!kcl_encode_tagged_submsg(&stream, GenerateOpenAPIArgs_parse_args_tag, ParseProgramArgs_fields, &args.parse_args))
+        goto done;
+    if (version != NULL && !kcl_encode_tagged_string(&stream, GenerateOpenAPIArgs_version_tag, version))
+        goto done;
+
+    size_t result_length = kcl_call("KclService.GenerateOpenAPI", buffer, stream.bytes_written, result_buffer);
+    if (check_error_prefix(result_buffer)) {
+        kcl_copy_string(out, out_size, result_buffer);
+        goto done;
+    }
+
+    pb_istream_t istream = pb_istream_from_buffer(result_buffer, result_length);
+    GenerateOpenAPIResult result = GenerateOpenAPIResult_init_default;
+    result.spec.funcs.decode = decode_string;
+    result.spec.arg = spec_buffer;
+    if (!pb_decode(&istream, GenerateOpenAPIResult_fields, &result))
+        goto done;
+
+    kcl_copy_string(out, out_size, spec_buffer);
+    status = true;
+
+done:
+    free(buffer);
+    free(result_buffer);
+    free(spec_buffer);
+    kcl_string_list_free(&paths);
+    kcl_string_list_free(&sources);
+    return status;
+}
+
+// Export the proto3 definitions of the schemas declared by the program
+// described by `request`. `package` is the proto package name; NULL or
+// empty emits no package clause. Returns false and copies the error
+// message into out on failure.
+static inline bool kcl_generate_proto(const struct KclParseProgramArgs* request, const char* package, char* out, size_t out_size)
+{
+    uint8_t* buffer = (uint8_t*)malloc(BUFFER_SIZE);
+    uint8_t* result_buffer = (uint8_t*)malloc(BUFFER_SIZE);
+    uint8_t* proto_buffer = (uint8_t*)calloc(1, BUFFER_SIZE);
+    struct KclStringList paths = { 0 };
+    struct KclStringList sources = { 0 };
+    struct RepeatedExternalPkg pkgs = { 0 };
+    bool status = false;
+    if (buffer == NULL || result_buffer == NULL || proto_buffer == NULL)
+        goto done;
+
+    GenerateProtoArgs args = GenerateProtoArgs_init_zero;
+    args.has_parse_args = true;
+    if (!kcl_bind_parse_program_args(&args.parse_args, request, &paths, &sources, &pkgs))
+        goto done;
+    if (package != NULL) {
+        args.package.funcs.encode = encode_string;
+        args.package.arg = (void*)package;
+    }
+
+    pb_ostream_t stream = pb_ostream_from_buffer(buffer, BUFFER_SIZE);
+    // Encode manually: the static nested ParseProgramArgs would
+    // otherwise trigger nanopb's two-pass submessage encoding, which
+    // breaks the stateful encode_str_list callback.
+    if (!kcl_encode_tagged_submsg(&stream, GenerateProtoArgs_parse_args_tag, ParseProgramArgs_fields, &args.parse_args))
+        goto done;
+    if (package != NULL && !kcl_encode_tagged_string(&stream, GenerateProtoArgs_package_tag, package))
+        goto done;
+
+    size_t result_length = kcl_call("KclService.GenerateProto", buffer, stream.bytes_written, result_buffer);
+    if (check_error_prefix(result_buffer)) {
+        kcl_copy_string(out, out_size, result_buffer);
+        goto done;
+    }
+
+    pb_istream_t istream = pb_istream_from_buffer(result_buffer, result_length);
+    GenerateProtoResult result = GenerateProtoResult_init_default;
+    result.proto.funcs.decode = decode_string;
+    result.proto.arg = proto_buffer;
+    if (!pb_decode(&istream, GenerateProtoResult_fields, &result))
+        goto done;
+
+    kcl_copy_string(out, out_size, proto_buffer);
+    status = true;
+
+done:
+    free(buffer);
+    free(result_buffer);
+    free(proto_buffer);
+    kcl_string_list_free(&paths);
+    kcl_string_list_free(&sources);
+    return status;
+}
+
+// Render the documentation of the schemas declared by the program
+// described by `request`. `format` is "md" (default), "openapi" or
+// "json-schema"; NULL or empty selects the default. Returns false and
+// copies the error message into out on failure.
+static inline bool kcl_generate_doc(const struct KclParseProgramArgs* request, const char* format, char* out, size_t out_size)
+{
+    uint8_t* buffer = (uint8_t*)malloc(BUFFER_SIZE);
+    uint8_t* result_buffer = (uint8_t*)malloc(BUFFER_SIZE);
+    uint8_t* content_buffer = (uint8_t*)calloc(1, BUFFER_SIZE);
+    struct KclStringList paths = { 0 };
+    struct KclStringList sources = { 0 };
+    struct RepeatedExternalPkg pkgs = { 0 };
+    bool status = false;
+    if (buffer == NULL || result_buffer == NULL || content_buffer == NULL)
+        goto done;
+
+    GenerateDocArgs args = GenerateDocArgs_init_zero;
+    args.has_parse_args = true;
+    if (!kcl_bind_parse_program_args(&args.parse_args, request, &paths, &sources, &pkgs))
+        goto done;
+    if (format != NULL) {
+        args.format.funcs.encode = encode_string;
+        args.format.arg = (void*)format;
+    }
+
+    pb_ostream_t stream = pb_ostream_from_buffer(buffer, BUFFER_SIZE);
+    // Encode manually: the static nested ParseProgramArgs would
+    // otherwise trigger nanopb's two-pass submessage encoding, which
+    // breaks the stateful encode_str_list callback.
+    if (!kcl_encode_tagged_submsg(&stream, GenerateDocArgs_parse_args_tag, ParseProgramArgs_fields, &args.parse_args))
+        goto done;
+    if (format != NULL && !kcl_encode_tagged_string(&stream, GenerateDocArgs_format_tag, format))
+        goto done;
+
+    size_t result_length = kcl_call("KclService.GenerateDoc", buffer, stream.bytes_written, result_buffer);
+    if (check_error_prefix(result_buffer)) {
+        kcl_copy_string(out, out_size, result_buffer);
+        goto done;
+    }
+
+    pb_istream_t istream = pb_istream_from_buffer(result_buffer, result_length);
+    GenerateDocResult result = GenerateDocResult_init_default;
+    result.content.funcs.decode = decode_string;
+    result.content.arg = content_buffer;
+    if (!pb_decode(&istream, GenerateDocResult_fields, &result))
+        goto done;
+
+    kcl_copy_string(out, out_size, content_buffer);
+    status = true;
+
+done:
+    free(buffer);
+    free(result_buffer);
+    free(content_buffer);
+    kcl_string_list_free(&paths);
+    kcl_string_list_free(&sources);
     return status;
 }
 

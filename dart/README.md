@@ -72,6 +72,20 @@ desktop flow still uses `KCL_DART_LIB`. See [Flutter mobile setup](#flutter-mobi
 
 ## Quickstart
 
+The short way — the facade, which takes care of building the request payload
+and splitting the multi-document result (see [Facade](#facade)):
+
+```dart
+import 'package:kcl_lib/kcl_lib.dart';
+
+void main() {
+  final results = run('alice = {age = 18}');
+  print(results.first.get('alice.age')); // 18
+}
+```
+
+The explicit way — one call per `spec.proto` RPC:
+
 ```dart
 import 'package:kcl_lib/kcl_lib.dart';
 
@@ -92,7 +106,7 @@ void main() {
 
 Message types like `ExecProgramArgs` are protobuf structs generated from
 [`../spec/spec.proto`](../spec/spec.proto); every field is a named constructor
-parameter with proto3 defaults. All 21 RPC message types are re-exported from
+parameter with proto3 defaults. All RPC message types are re-exported from
 `package:kcl_lib/kcl_lib.dart`.
 
 ## Error semantics
@@ -122,11 +136,23 @@ by fully-qualified name and raw protobuf bytes.
 > `FormatCode`, `FormatPath`, `LintPath`, `ValidateCode`, `LoadSettingsFiles`,
 > `Rename`, `RenameCode`, `Test`, `UpdateDependencies`, `Ping`, and
 > `ListMethod` under `service BuiltinService`, but the prebuilt `libkcl`
-> v0.13.0 ships them all under `service KclService` (and `BuiltinService.*`
-> calls panic with `unknown method name`). The wrapper layer routes every
-> call through `KclService.*`, matching the implementation. A future
-> upstream fix that re-registers these under `BuiltinService.*` will need a
-> small wrapper update; tracked as a follow-up.
+> v0.13.0 ships all of them under `service KclService` (and those
+> `BuiltinService.*` calls panic with `unknown method name`). The wrapper layer
+> routes every call through `KclService.*`, matching the implementation.
+>
+> **`ListMethod` is the one exception**, and it is worth calling out because it
+> is the only way to ask a core which RPCs it supports. Verified against the
+> prebuilt `darwin-arm64/libkcl.dylib`:
+>
+> - `BuiltinService.ListMethod` → returns the full 28-entry method table.
+> - `KclService.ListMethod` → **not registered**; the native dispatcher panics
+>   with `unknown method name` and answers with an empty payload.
+>
+> `listMethod()` therefore dispatches to `BuiltinService.ListMethod`, matching
+> the Java binding (`java/.../api/API.java`). The method table it returns
+> reports the fully-qualified names, so its own entry appears there as
+> `BuiltinService.ListMethod` — which is what makes the divergence above
+> observable from the outside.
 
 | Wrapper                          | RPC                                              |
 |----------------------------------|--------------------------------------------------|
@@ -150,8 +176,108 @@ by fully-qualified name and raw protobuf bytes.
 | `runTests(args)`                 | `KclService.Test`                                |
 | `formatTestReport(args)`         | `KclService.FormatTestReport`                    |
 | `updateDependencies(args)`       | `KclService.UpdateDependencies`                  |
+| `generateToml(args)`             | `KclService.GenerateToml`                        |
+| `generateKcl(args)`              | `KclService.GenerateKcl`                         |
+| `generateOpenAPI(args)`          | `KclService.GenerateOpenAPI`                     |
+| `generateProto(args)`            | `KclService.GenerateProto`                       |
+| `generateDoc(args)`              | `KclService.GenerateDoc`                         |
 | `ping(args)`                     | `KclService.Ping`                                |
-| `listMethod()`                   | `KclService.ListMethod`                          |
+| `listMethod()`                   | `BuiltinService.ListMethod`                      |
+
+### The `Generate*` family
+
+Five generator RPCs sit on top of the parser. Unlike the rest of the surface
+they take a nested `ExecProgramArgs` / `ParseProgramArgs` payload rather than a
+CLI argv:
+
+| Wrapper | RPC | Input | Output field |
+|---|---|---|---|
+| `generateToml(args)` | `KclService.GenerateToml` | `execArgs` (`ExecProgramArgs`), `sortKeys` | `toml` |
+| `generateKcl(args)` | `KclService.GenerateKcl` | `source`, `filename`, `format` | `kcl` |
+| `generateOpenAPI(args)` | `KclService.GenerateOpenAPI` | `parseArgs` (`ParseProgramArgs`), `version` | `spec` |
+| `generateProto(args)` | `KclService.GenerateProto` | `parseArgs` (`ParseProgramArgs`), `package` | `proto` |
+| `generateDoc(args)` | `KclService.GenerateDoc` | `parseArgs` (`ParseProgramArgs`), `format` | `content` |
+
+Format selectors:
+
+- `GenerateKclArgs.format` — `"json"` / `"yaml"` / `"toml"`. Empty means infer
+  from the `filename` extension, defaulting to JSON.
+- `GenerateOpenAPIArgs.version` — `"v3"` (default) or `"v2"` (Swagger 2.0).
+- `GenerateDocArgs.format` — `"md"` (default) / `"openapi"` / `"json-schema"`.
+  `"html"` is not supported yet.
+
+```dart
+final doc = generateDoc(
+  GenerateDocArgs(
+    parseArgs: ParseProgramArgs(paths: ['path/to/main.k']),
+    format: 'md',
+  ),
+);
+print(doc.content);
+```
+
+## Facade
+
+`lib/src/kcl_facade.dart` is the ergonomic layer on top of the wrappers: it
+builds the `ExecProgramArgs` payload for you and splits the multi-document
+YAML/JSON stream the runtime emits into per-document results.
+
+```dart
+import 'package:kcl_lib/kcl_lib.dart';
+
+void main() {
+  final results = run('alice = {age = 18}');
+  print(results.length);              // 1
+  print(results.first.yamlString);   // alice:\n  age: 18
+  print(results.first.jsonString);   // {"alice":{"age":18}}
+  print(results.first.get('alice.age')); // 18
+  print(results.first.toMap());      // {alice: {age: 18}}
+
+  // From disk, with options.
+  final fromFile = runFiles(
+    ['test_data/schema.k'],
+    options: const KclOptions(overrides: ['app.replicas=3'], sortKeys: true),
+  );
+  print(fromFile.first.get('app.replicas'));
+}
+```
+
+Exported surface:
+
+| Symbol | Purpose |
+|---|---|
+| `run(code, {options})` | Evaluate in-memory KCL; returns a `KclResultList`. |
+| `runFiles(paths, {options})` | Evaluate KCL file(s); returns a `KclResultList`. |
+| `Kcl.run` / `Kcl.runFiles` | The same two entry points as statics, for parity with the other bindings. |
+| `KclOptions` | Immutable options value object: `settings`, `workDir`, `overrides`, `selectors`, `externalPkgs`, `disableNone`, `sortKeys`, `showHidden`, `includeSchemaTypePath`, `strictRangeCheck`, `fastEval`, `verbose`, `debug`, `errorFormat`, `format`. |
+| `KclResult` | One document: `value`, `yamlString`, `jsonString`, `get(dottedPath)`, `toMap()`, `toList()`. |
+| `KclResultList` | `UnmodifiableListView<KclResult>` plus `rawJsonResult`, `rawYamlResult`, `logMessage`. |
+| `splitDocuments(text)` | Split a YAML stream on `---`; throws `KclError` on a malformed separator. |
+| `parseJsonStream(json)` | Decode the runtime's newline-delimited JSON stream. |
+
+Semantics worth knowing:
+
+- **Dotted paths.** `get('a.b')` navigates nested maps; integer segments index
+  lists (`get('a.tags.0')`). Any missing segment, a non-index list segment, or
+  descending into a scalar yields `null` rather than throwing.
+- **YAML-only runs have no value.** With `KclOptions(format: 'yaml')` the
+  runtime emits no JSON, so `value` is `null` and `get`/`toMap`/`toList` raise
+  `KclError` with an explanatory message. Read `yamlString` instead.
+- **Settings resolution.** `KclOptions.settings` accepts a `kcl.yaml` path, a
+  `List<String>` of paths, or a `Map<String, String>` of `-E` package name to
+  path. Settings files are parsed by the native `loadSettingsFiles` RPC — the
+  binding adds no YAML dependency. Settings form the base and explicit option
+  keys win, mirroring kcl-go's `Option.Merge`.
+  External packages declared *only* in a settings file are dropped, because the
+  proto `CliConfig` message carries no `package_maps` field; pass them as
+  `options.externalPkgs` instead.
+- **Inline sources win over settings paths.** When `run()` supplies code and a
+  settings file supplied files, the files are dropped — mixing `k_code_list`
+  with `k_filename_list` would make the runtime treat the code as replacement
+  file content. Everything else from the settings file still applies.
+- **Errors throw.** Anything the core reports — a parse error, a type error, an
+  evaluation error — surfaces as `KclError`, the same exception the typed
+  wrappers raise.
 
 ## Typed AST
 
@@ -386,6 +512,35 @@ This runs `dart pub get` then `dart test test/`. The Makefile assumes
 `KCL_DART_LIB` is already set in the environment; CI does that
 automatically (see `.github/workflows/dart-test.yaml`).
 
+To run it locally against the prebuilt binary that matches your host:
+
+```bash
+# macOS arm64 shown; use darwin-amd64 / linux-* / windows-* as appropriate.
+export KCL_DART_LIB=../go/lib/darwin-arm64/libkcl.dylib
+make test
+# or just:
+dart test
+```
+
+`KCL_DART_LIB` may point at the shared library file or at a directory laid out
+like `go/lib/` (`go/lib/` works — the loader picks the platform file itself).
+
+#### Cross-language consistency
+
+`test/consistency_test.dart` runs the shared golden cases from
+[`../tests/consistency/cases.json`](../tests/consistency/cases.json) and is
+part of `make test`. To run only that runner:
+
+```bash
+dart test test/consistency_test.dart
+```
+
+It needs the shared manifest checked out alongside `dart/` (it walks up from
+the current directory to find `tests/consistency/cases.json`), and it prints
+the RPC table the loaded `libkcl` reports so a skipped case is explainable from
+the log alone. Cases marked `new_core` in the manifest are skipped — not
+failed — against a core that does not advertise their RPC.
+
 ### Regenerating the protobuf bindings
 
 ```bash
@@ -404,6 +559,8 @@ The vendored message code under `lib/src/pb/` is regenerated and committed.
 - `lib/kcl_lib.dart` — barrel that re-exports the public API.
 - `lib/src/kcl_lib.dart` — typed wrappers for every RPC, plus `KclError`
   and the `rawCall` escape hatch.
+- `lib/src/kcl_facade.dart` — the high-level facade: `run` / `runFiles`,
+  `KclOptions`, `KclResult`, `KclResultList`, `splitDocuments`.
 - `lib/src/kcl_lib_ffi.dart` — `dart:ffi` binding of the universal
   dispatcher (`call_native`) and the plugin service handle
   (`kcl_service_*`); manages the 4 MiB scratch buffer and the `libkcl`
@@ -417,6 +574,19 @@ The vendored message code under `lib/src/pb/` is regenerated and committed.
 - `lib/src/pb/` — generated protobuf message code (vendored).
 - `test/kcl_lib_test.dart` — end-to-end tests for all 21 RPCs plus the
   plugin round trip.
+- `test/kcl_facade_test.dart` — facade unit tests (`splitDocuments`,
+  `parseJsonStream`, dotted-path `get`, `toMap`/`toList`, options merging)
+  plus end-to-end `run` / `runFiles` against the core.
+- `test/consistency_test.dart` — cross-language consistency runner. Executes
+  the shared golden cases from [`../tests/consistency/cases.json`](../tests/consistency/cases.json)
+  (generated by `../tests/consistency/generate_cases.py`) and compares the
+  responses field by field, so every binding agrees on the same outputs.
+  Nothing about a case is hardcoded: arguments, expectations and the RPC list
+  all come from the manifest. Cases flagged `new_core` are **skipped** (not
+  failed) when the loaded core does not advertise their RPC, so the suite
+  stays green against older `libkcl` builds. The runner finds the manifest by
+  walking up from the current directory, so it works from `dart/` or from the
+  repository root.
 - `test/kcl_ast_test.dart` — pins the AST wire contract against a real
   fixture parsed through the FFI, so the typed AST cannot silently drift from
   the parser.
