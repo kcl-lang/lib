@@ -364,17 +364,34 @@ module KclLib
     # @return [KclLib::MethodArgs]
     # @raise [ArgumentError] when a payload is not JSON of the expected shape
     def self.parse(args_json, kwargs_json)
-      args = args_json.to_s.empty? ? [] : JSON.parse(args_json)
+      args = args_json.to_s.empty? ? [] : parse_payload(args_json, "positional arguments")
       unless args.is_a?(Array)
         raise ArgumentError, "plugin positional arguments must be a JSON array, got #{args_json}"
       end
 
-      kwargs = kwargs_json.to_s.empty? ? {} : JSON.parse(kwargs_json)
+      kwargs = kwargs_json.to_s.empty? ? {} : parse_payload(kwargs_json, "keyword arguments")
       unless kwargs.is_a?(Hash)
         raise ArgumentError, "plugin keyword arguments must be a JSON object, got #{kwargs_json}"
       end
 
       new(args, kwargs)
+    end
+
+    # Decode one payload, reporting a malformed one the way a wrongly-shaped one
+    # is reported. Left alone, `JSON.parse` raises `JSON::ParserError` and the
+    # message is the underlying parser's wording — "unexpected token 'not' at
+    # line 1 column 1" for the payload `not json` — which contradicts the
+    # `@raise` above, echoes none of the payload, and does not say which of the
+    # two payloads was at fault.
+    #
+    # @param payload [String] raw JSON text
+    # @param what [String] which of the two payloads this is, for the message
+    # @return [Object] the decoded value
+    # @raise [ArgumentError] when the payload is not valid JSON
+    def self.parse_payload(payload, what)
+      JSON.parse(payload)
+    rescue JSON::ParserError => e
+      raise ArgumentError, "plugin #{what} must be valid JSON, got #{payload} (#{e.message})"
     end
 
     # @param index [Integer] position in the positional list
