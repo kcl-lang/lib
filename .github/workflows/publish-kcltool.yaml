@@ -80,7 +80,7 @@ jobs:
             lib-platform-dir: windows-amd64
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
 
       - name: Download kcl CLI release artifact
         shell: bash
@@ -105,7 +105,7 @@ jobs:
           ls -la cli-bin/
 
       - name: Check out matching kcl-lang/lib for libkcl binary
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           repository: kcl-lang/lib
           ref: ${{ env.KCL_LIB_REF }}
@@ -157,7 +157,7 @@ jobs:
       packages: write
     needs: [ build ]
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
 
       - uses: actions/setup-dotnet@v5
         with:
