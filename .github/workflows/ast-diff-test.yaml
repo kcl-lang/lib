@@ -220,7 +220,7 @@ jobs:
     # --- dotnet -----------------------------------------------------------
     - name: Setup dotnet
       if: matrix.binding == 'dotnet'
-      uses: actions/setup-dotnet@v5
+      uses: actions/setup-dotnet@v6
     - name: Build the dotnet native library
       if: matrix.binding == 'dotnet'
       working-directory: "lib/dotnet"
