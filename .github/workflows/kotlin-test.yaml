@@ -56,7 +56,7 @@ jobs:
           distribution: 'zulu'
           cache: 'maven'
 
-      - uses: actions/setup-python@v6
+      - uses: actions/setup-python@v7
         with:
           python-version: '3.10'
 
@@ -250,7 +250,7 @@ jobs:
           override: true
 
       - name: Install Python (build.py runs under python3)
-        uses: actions/setup-python@v6
+        uses: actions/setup-python@v7
         with:
           python-version: '3.10'
 
