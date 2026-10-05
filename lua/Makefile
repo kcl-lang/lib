@@ -5,6 +5,7 @@
 # `make build LUA_FEATURE=luajit` etc.
 
 LUA_FEATURE ?= lua54
+LUA ?= lua
 
 .PHONY: all
 all: build
@@ -20,6 +21,20 @@ fmt:
 .PHONY: check
 check:
 	cargo check --no-default-features --features "$(LUA_FEATURE)"
+
+# `hack/generate_pb.lua` writes the bare descriptor blob; re-prepend
+# `hack/schema_header.lua` so the checked-in file documents its provenance.
+# Run from this directory: the generator uses repo-relative paths.
+.PHONY: proto
+proto:
+	$(LUA) hack/generate_pb.lua
+	cat hack/schema_header.lua kcl_lib/schema.lua > kcl_lib/schema.lua.tmp
+	mv kcl_lib/schema.lua.tmp kcl_lib/schema.lua
+
+.PHONY: test
+test:
+	luarocks make ./*.rockspec
+	luarocks test ./*.rockspec
 
 .PHONY: clean
 clean:
