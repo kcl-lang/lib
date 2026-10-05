@@ -440,7 +440,21 @@ c = {
       end
       local spec = assert(json.decode(document))
       assert.is_table(spec.components.schemas)
-      assert.is_table(spec.components.schemas.AppConfig)
+      -- `components.schemas` rather than `definitions` is what makes this a
+      -- v3 document, so the version argument is covered by that alone.
+      --
+      -- Within it the schema is keyed by its package-qualified name, not
+      -- bare: the runtime prefixes the package the schema was declared in, so
+      -- `AppConfig` in schema.k arrives as something like `AppConfig___main__`.
+      -- Match on the prefix — pinning the exact key would be asserting on how
+      -- the core qualifies schemas, which is not this fixture's business.
+      local found = false
+      for name in pairs(spec.components.schemas) do
+        if string.find(name, "AppConfig", 1, true) then
+          found = true
+        end
+      end
+      assert.is_true(found)
     end)
   end)
 

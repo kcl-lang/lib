@@ -59,18 +59,23 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        binding:
-          - ruby
-          - python
-          - nodejs
-          - wasm
-          - lua
-          - julia
-          - dart
-          - swift
-          - zig
-          - dotnet
-    runs-on: ubuntu-latest
+        include:
+          - binding: ruby
+          - binding: python
+          - binding: nodejs
+          - binding: wasm
+          - binding: lua
+          - binding: julia
+          - binding: dart
+          - binding: zig
+          - binding: dotnet
+          # The only binding that cannot share the default runner. The Swiftly
+          # installer behind swift-actions/setup-swift@v3 cannot provision a
+          # Linux runner — the same limitation that keeps swift-test.yaml off
+          # Linux — so this one runs where that action works.
+          - binding: swift
+            os: macos-latest
+    runs-on: ${{ matrix.os || 'ubuntu-latest' }}
     defaults:
       run:
         working-directory: "lib"
@@ -98,12 +103,21 @@ jobs:
       run: make build
 
     # --- python -----------------------------------------------------------
+    # `maturin develop` installs the built extension into the active
+    # virtualenv and refuses to run without one, so make it explicitly rather
+    # than relying on the runner image having something.
+    - name: Create the python virtualenv
+      if: matrix.binding == 'python'
+      working-directory: "lib/python"
+      run: python3 -m venv .venv
     - name: Build the python extension
       if: matrix.binding == 'python'
       uses: PyO3/maturin-action@v1
       with:
         command: develop
         working-directory: lib/python
+      env:
+        VIRTUAL_ENV: ${{ github.workspace }}/lib/python/.venv
 
     # --- nodejs / wasm ----------------------------------------------------
     - name: Setup node
@@ -132,6 +146,12 @@ jobs:
     - name: Setup lua toolchain
       if: matrix.binding == 'lua'
       uses: leafo/gh-actions-lua@v13
+      with:
+        # The action defaults to 5.5, which the rockspec rejects outright
+        # (`lua >= 5.1, < 5.5`). lua-test.yaml pins the same version per
+        # matrix leg; here there is only one leg, so pin the newest the rock
+        # accepts.
+        luaVersion: "5.4"
     - name: Setup luarocks
       if: matrix.binding == 'lua'
       uses: leafo/gh-actions-luarocks@v6
@@ -174,6 +194,8 @@ jobs:
     - name: Setup Swift toolchain
       if: matrix.binding == 'swift'
       uses: swift-actions/setup-swift@v3
+      with:
+        swift-version: "6.3"
     # No `swift package resolve`: hack/dump/swift.sh compiles the two AST
     # sources standalone with `swiftc` precisely so it does not need SwiftPM to
     # resolve the package graph over the network.
@@ -182,9 +204,14 @@ jobs:
     - name: Setup zig
       if: matrix.binding == 'zig'
       uses: korandoru/setup-zig@v1
+      with:
+        zig-version: 0.16.0
     - name: Install protoc
       if: matrix.binding == 'zig'
       uses: arduino/setup-protoc@v3
+      with:
+        version: "29.x"
+        repo-token: ${{ secrets.GITHUB_TOKEN }}
 
     # --- dotnet -----------------------------------------------------------
     - name: Setup dotnet
