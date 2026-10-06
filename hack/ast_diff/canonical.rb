@@ -323,6 +323,13 @@ module AstDiff
       # models it as a named struct (`Pos.swift:528`); the others keep the
       # payload raw.
       "intliteraltype" => nil,
+      # The other three `LiteralType` arms, same shape and same reason. These
+      # two entries are about the *arm*, which carries the `Int` / `Str` / …
+      # tag on the wire as an adjacent key; the payload it wraps is
+      # registered separately above, as `<arm>value`.
+      "boolliteraltype" => nil,
+      "floatliteraltype" => nil,
+      "strliteraltype" => nil,
       "exprcontext" => nil,
       "op" => nil,
       "unaryop" => nil,
@@ -332,6 +339,36 @@ module AstDiff
       "configentryoperation" => nil,
       "quantoperation" => nil,
       "numberbinarysuffix" => nil,
+      # -- Java's wrapper objects for a payload the wire has no name for -----
+      # `Type` is `#[serde(tag = "type", content = "value")]` — adjacently
+      # tagged — so the wire object under `value` has no class of its own. The
+      # java binding gives it one: a plain holder per variant
+      # (`UnionType.UnionTypeValue`, `ListType.ListTypeValue`, …) with the
+      # payload's fields straight on it. Same for the literal/number payload
+      # arms, which java nests one level deeper again through
+      # `IntLiteralType.IntLiteralTypeValue` because the arm's own `value`
+      # field is a scalar and needs a box.
+      #
+      # These are untagged, so `nil`: the tag at the level above (`Union`,
+      # `Int`, …) is the one on the wire, and the wrapper is a Java
+      # implementation detail the comparator walks *through*. Registering them
+      # is what lets the comparison be about the payload's fields, which is
+      # the thing worth checking — the wrapper adds no information, so
+      # claiming a tag for it would only invent a difference.
+      #
+      # The counterpart is kotlin's `AstWire.kt`, which is the mirror of
+      # `dotnet/KclLib.AST/Wire.cs`: those bindings have a writer and collapse
+      # the wrapper on the way out, which is why the same class tree never
+      # needed naming there. java has no writer, so the `:reflect` walk meets
+      # the wrapper where it stands.
+      "uniontypevalue" => nil,
+      "listtypevalue" => nil,
+      "dicttypevalue" => nil,
+      "namedtypevalue" => nil,
+      "functiontypevalue" => nil,
+      "intliteraltypevalue" => nil,
+      "intnumberlitvalue" => nil,
+      "floatnumberlitvalue" => nil,
       # The sealed base classes and the marker enums, which only ever appear
       # as a wrapper or a scalar and never as a payload object of their own.
       "kclstmt" => nil,
