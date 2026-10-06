@@ -255,6 +255,13 @@ module AstDiff
       "keywordexpr" => "Keyword",
       "argumentsexpr" => "Arguments",
       "compare" => "Compare",
+      # The C binding names these two arms after the union field they sit in
+      # (`c/include/kcl_lib_ast.h`, `kcl_expr_data.u.subscript_expr` and
+      # `.compare_expr`) rather than after the variant, so they arrive with
+      # the `Expr` suffix the other bindings' class names carry. Same two
+      # tags, spelled the way that binding spells them.
+      "subscriptexpr" => "Subscript",
+      "compareexpr" => "Compare",
       "numberlit" => "NumberLit",
       "stringlit" => "StringLit",
       "nameconstantlit" => "NameConstantLit",
@@ -301,6 +308,13 @@ module AstDiff
       "keyword" => nil,
       "numberlitvalue" => nil,
       "literaltypevalue" => nil,
+      # The C++ header calls the same union `LiteralValue`
+      # (`cpp/include/kcl_ast.hpp`, `struct LiteralValue`) rather than
+      # `LiteralTypeValue`, so its `@cls` arrives under this spelling. Same
+      # shape and same reason as the two above it: it is one struct per
+      # *union* with a `kind`, not one per arm, so the wire's tag sits in a
+      # field of its own and there is nothing for CLASS_TAGS to key on.
+      "literalvalue" => nil,
       # `ast.rs:1909` `pub struct IntLiteralType { value, suffix }` — the
       # payload of `LiteralType::Int`. The tag `Int` belongs to the *enum
       # variant* wrapping it, so the struct itself is untagged: the wire is
