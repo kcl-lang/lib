@@ -51,6 +51,15 @@ on:
       - "c/lib/kcl_lib_ast.c"
       - "cpp/include/kcl_ast.hpp"
       - "cpp/include/kcl_ast_json.hpp"
+      # Java and Kotlin share one decoder (`kotlin` compiles the same
+      # `com.kcl.ast` sources java does) but each has its own on top of it, so
+      # both roots are listed. `.java` under the kotlin source root is that
+      # shared decoder; the `.kt` files next to it are the writer and the
+      # `New*` builders, which are kotlin's own and are the part nothing else
+      # checks.
+      - "java/src/main/java/com/kcl/ast/**"
+      - "kotlin/src/main/java/com/kcl/ast/**"
+      - "kotlin/src/main/kotlin/com/kcl/ast/**"
       - ".github/workflows/ast-diff-test.yaml"
   workflow_dispatch:
 
@@ -86,6 +95,21 @@ jobs:
           # layers around them.
           - binding: c
           - binding: cpp
+          # Java and Kotlin share a decoder but not a dumper: java is walked by
+          # reflection over `com.kcl.ast`'s declared fields, and kotlin goes
+          # through `AstWire.kt`, the writer it owns. Neither needs the JNI
+          # shim, so unlike java-test.yaml and kotlin-test.yaml these legs build
+          # nothing — `hack/dump/{java,kotlin}.sh` compile the AST sources
+          # directly.
+          #
+          # JDK 17 rather than the zulu 8 the build matrices use: the dumper
+          # compiles with `--release 8`, so the language level is pinned by the
+          # scripts and not by this choice, and 17 is the version the pinned
+          # kotlin-compiler 1.9.25 is known to run under. `cache: 'maven'` is
+          # the difference between this leg taking two seconds and taking a
+          # minute — the dumpers resolve their classpath through maven.
+          - binding: java
+          - binding: kotlin
           # The only binding that cannot share the default runner. The Swiftly
           # installer behind swift-actions/setup-swift@v3 cannot provision a
           # Linux runner — the same limitation that keeps swift-test.yaml off
@@ -242,6 +266,27 @@ jobs:
       if: matrix.binding == 'dotnet'
       working-directory: "lib/dotnet"
       run: cargo build --release
+
+    # --- java / kotlin ----------------------------------------------------
+    # One JDK for both. The dumper scripts do not run maven's `compile` phase,
+    # so nothing here builds the JNI shim — the AST is plain Java over Jackson
+    # and, for kotlin, plain Kotlin over the same classes.
+    - name: Setup JDK
+      if: matrix.binding == 'java' || matrix.binding == 'kotlin'
+      uses: actions/setup-java@v6.0.1
+      with:
+        distribution: 'temurin'
+        java-version: '17'
+        cache: 'maven'
+    # The kotlin dumper needs `kotlin-compiler` 1.9.25, which is a *plugin*
+    # dependency and so is absent from a fresh local maven repository. The
+    # script falls back to `dependency:go-offline` on its own, but doing it
+    # here turns a silent minute-long resolve inside the harness into a step
+    # whose failure is attributable.
+    - name: Resolve the kotlin compiler
+      if: matrix.binding == 'kotlin'
+      working-directory: "lib/kotlin"
+      run: mvn -q dependency:go-offline
 
     - name: Diff this binding against the golden capture
       run: ruby hack/ast_diff.rb ${{ matrix.binding }}

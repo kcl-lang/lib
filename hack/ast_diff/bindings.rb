@@ -331,6 +331,64 @@ module AstDiff
               "catches the two drifting. Position is nested under `Node::pos`."
       ),
 
+      # ---------------------------------------------------------------- java
+      Binding.new(
+        name: "java",
+        mode: :reflect,
+        probe: lambda {
+          # A JDK is needed both to build the dumper and to run it, and
+          # `javac` alone is not enough: on a machine with the stub `javac`
+          # but no runtime, `javac -version` succeeds and the dumper then
+          # fails to start. Check the runtime, not the compiler.
+          javac = which("javac")
+          java = which("java")
+          return "no `javac` on PATH" unless javac
+          return "no `java` on PATH" unless java
+
+          out, _err, status = Open3.capture3(java, "-version")
+          return "probe failed: `java -version` exited #{status.exitstatus}\n#{out}" \
+            unless status.success?
+
+          nil
+        },
+        argv: ->(golden, out) { ["bash", "hack/dump/java.sh", golden, out] },
+        extra_ok: {},
+        note: "Jackson decoder over `com.kcl.ast.*`, walked by reflection; " \
+              "position is flat on `Node`. The tag is read out of the " \
+              "`@JsonSubTypes` table on the base class, so both the " \
+              "`As.PROPERTY` and `As.EXTERNAL_PROPERTY` spellings are covered."
+      ),
+
+      # -------------------------------------------------------------- kotlin
+      Binding.new(
+        name: "kotlin",
+        mode: :wire,
+        probe: lambda {
+          java = which("java")
+          return "no `java` on PATH" unless java
+
+          out, _err, status = Open3.capture3(java, "-version")
+          return "probe failed: `java -version` exited #{status.exitstatus}\n#{out}" \
+            unless status.success?
+
+          # Deliberately *not* checking for the kotlin compiler jar. The probe
+          # answers "is the toolchain fundamentally absent?", and a missing
+          # `java` is; the compiler is a plugin dependency that
+          # `hack/dump/kotlin.sh` fetches itself when the local maven
+          # repository is cold. Probing for it here would report "no dumper
+          # written" for a binding that would have run fine — which on a fresh
+          # CI runner is exactly what would have happened.
+          nil
+        },
+        argv: ->(golden, out) { ["bash", "hack/dump/kotlin.sh", golden, out] },
+        extra_ok: {},
+        note: "Has a real serializer — `AstWire.kt`, the mirror of " \
+              "`dotnet/KclLib.AST/Wire.cs` — so this is a wire round-trip. The " \
+              "decoder is the same `com.kcl.ast` classes java uses, compiled " \
+              "from the kotlin source root; the writer and the `New*` builders " \
+              "in `AstBuild.kt` are kotlin's own and are what this checks."
+      ),
+
       # ---------------------------------------------------------------- zig
       Binding.new(
         name: "zig",
@@ -371,9 +429,6 @@ module AstDiff
   # than quietly short. `reason` must name the blocker.
   def self.unrunnable
     {
-      "java" => "no JRE on this machine (`java -version` reports no runtime), and the " \
-                "loader is Jackson over com.kcl.ast.* — it needs a JVM to run at all",
-      "kotlin" => "no JRE on this machine; same Jackson loader, compiled by Maven",
       "go" => "the Go binding has no typed AST package at all — go/api/client.go exposes " \
               "ast_json as an opaque string, so there is no decoder to run the golden through"
     }.freeze
