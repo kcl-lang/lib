@@ -271,6 +271,31 @@ module AstDiff
               "payload and are written out as `@raw` (R11)."
       ),
 
+      # ----------------------------------------------------------------- c
+      Binding.new(
+        name: "c",
+        mode: :reflect,
+        probe: lambda {
+          # `hack/dump/c.sh` honours `CC` and falls back to `cc`, so the
+          # probe asks for the same three names in the same order — probing
+          # `cc` alone would report "toolchain missing" on a runner that
+          # only ships clang.
+          cc = which("cc") || which("clang") || which("gcc")
+          return "no `cc`, `clang` or `gcc` on PATH" unless cc
+
+          run_probe([cc, "--version"])
+        },
+        argv: ->(golden, out) { ["bash", "hack/dump/c.sh", golden, out] },
+        extra_ok: {},
+        note: "Hand-written tagged unions in `c/include/kcl_lib_ast.h` with its " \
+              "own embedded JSON parser, walked by hand: C has no runtime " \
+              "reflection, so `hack/dump/c/Dump.c` is a second statement of what " \
+              "the header declares and the diff is what catches the two " \
+              "drifting. `@cls` is the union field name. The `Pos` wrapper nests " \
+              "its position under `pos`; the seven enums the header never names " \
+              "are given their Rust variant names by tables in the dumper."
+      ),
+
       # -------------------------------------------------------------- swift
       Binding.new(
         name: "swift",
@@ -279,6 +304,31 @@ module AstDiff
         argv: ->(golden, out) { ["bash", "hack/dump/swift.sh", golden, out] },
         extra_ok: {},
         note: "Enum/struct decoder; position is nested under `NodeRef.position`."
+      ),
+
+      # ---------------------------------------------------------------- cpp
+      Binding.new(
+        name: "cpp",
+        mode: :reflect,
+        probe: lambda {
+          # Same shape as c's probe: `hack/dump/cpp.sh` honours `CXX` and
+          # falls back to `c++`, so ask for the same three names in the same
+          # order rather than reporting a skip on a runner that only ships
+          # `g++`.
+          cxx = which("c++") || which("g++") || which("clang++")
+          return "no `c++`, `g++` or `clang++` on PATH" unless cxx
+
+          run_probe([cxx, "--version"])
+        },
+        argv: ->(golden, out) { ["bash", "hack/dump/cpp.sh", golden, out] },
+        extra_ok: {},
+        note: "Header-only typed AST (`cpp/include/kcl_ast.hpp`, 1987 lines) " \
+              "with its own decoder, so the walk dispatches on the " \
+              "`virtual const char* tag()` each variant carries. C++ has no " \
+              "runtime reflection, so the field list is written out per " \
+              "class in `hack/dump/cpp/Dump.cpp` — that file is a second " \
+              "statement of what the header declares, and the diff is what " \
+              "catches the two drifting. Position is nested under `Node::pos`."
       ),
 
       # ---------------------------------------------------------------- zig
@@ -325,12 +375,7 @@ module AstDiff
                 "loader is Jackson over com.kcl.ast.* — it needs a JVM to run at all",
       "kotlin" => "no JRE on this machine; same Jackson loader, compiled by Maven",
       "go" => "the Go binding has no typed AST package at all — go/api/client.go exposes " \
-              "ast_json as an opaque string, so there is no decoder to run the golden through",
-      "c" => "hand-written tagged unions in c/include/kcl_lib_ast.h with no reflection and " \
-             "no serializer; a dumper would have to re-encode the same traversal as the " \
-             "decoder, which is a second decoder to get wrong rather than a check",
-      "cpp" => "same as c: the C++ AST is the C header's union tree under RAII wrappers, " \
-               "with no reflection and no writer"
+              "ast_json as an opaque string, so there is no decoder to run the golden through"
     }.freeze
   end
 end

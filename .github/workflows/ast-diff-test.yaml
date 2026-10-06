@@ -43,6 +43,14 @@ on:
       - "dotnet/KclLib.AST/**"
       - "zig/src/ast/**"
       - "swift/Sources/KclLibAST/**"
+      # C and C++ have one decoder each, in a header and its implementation.
+      # `kcl_ast_json.hpp` is the C++ header's own JSON parser and is the
+      # other half of `kcl_ast.hpp`'s decoder; `kcl_lib_ast.h` is the whole
+      # public C contract and `kcl_lib_ast.c` its implementation.
+      - "c/include/kcl_lib_ast.h"
+      - "c/lib/kcl_lib_ast.c"
+      - "cpp/include/kcl_ast.hpp"
+      - "cpp/include/kcl_ast_json.hpp"
       - ".github/workflows/ast-diff-test.yaml"
   workflow_dispatch:
 
@@ -69,6 +77,15 @@ jobs:
           - binding: dart
           - binding: zig
           - binding: dotnet
+          # C and C++ need no toolchain step at all: both decoders are
+          # self-contained, and `hack/dump/{c,cpp}.sh` compile their sources
+          # against a stock cc / c++ on the runner image. Not `cargo build`
+          # (neither decoder touches the runtime), not `libkcl` (both are
+          # plain C and C++ over an embedded JSON parser), and not either
+          # binding's cmake / Makefile, which build the protobuf and JNI
+          # layers around them.
+          - binding: c
+          - binding: cpp
           # The only binding that cannot share the default runner. The Swiftly
           # installer behind swift-actions/setup-swift@v3 cannot provision a
           # Linux runner — the same limitation that keeps swift-test.yaml off
