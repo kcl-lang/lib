@@ -107,19 +107,28 @@ public struct Module: Sendable {
     }
 }
 
-/// The `ParseProgramResult.astJson` payload. The wire is
-/// `{"root": ".", "pkgs": {"__main__": [Module, …]}}`; we surface the main
-/// package's modules directly and keep the full map for callers that need
-/// the imported packages too.
+/// The `ParseProgramResult.astJson` payload, i.e. `ast::SerializeProgram`
+/// (ast.rs:386) — `pub root: String, pub pkgs: HashMap<String, Vec<Module>>`.
+/// Those two are the only fields the struct has, and the only two the
+/// initializer takes.
+///
+/// `mainPackage` is *not* one of them. It is `pkgs["__main__"]`, the
+/// projection the core performs itself in `Program::get_main_files`
+/// (ast.rs:445) via `MAIN_PKG = "__main__"`, surfaced as a stored
+/// property because almost every caller wants that one package. Deriving it
+/// in the initializer rather than taking it as a third argument keeps `pkgs`
+/// the single source of truth: the two cannot be built disagreeing, which a
+/// caller passing both could otherwise do.
 public struct Program: Sendable {
     public let root: String
     public let mainPackage: [Module]
     public let pkgs: [String: [Module]]
 
-    public init(root: String, mainPackage: [Module], pkgs: [String: [Module]]) {
+    public init(root: String, pkgs: [String: [Module]] = [:]) {
         self.root = root
-        self.mainPackage = mainPackage
         self.pkgs = pkgs
+        // `MAIN_PKG` is `"__main__"` (crates/ast/src/lib.rs:14).
+        self.mainPackage = pkgs["__main__"] ?? []
     }
 }
 
@@ -229,12 +238,22 @@ public struct TypeAliasStmt: Sendable {
     /// The human-readable spelling Rust carries alongside the parsed `ty`.
     public let typeValue: NodeRef<String>
     public let ty: NodeRef<KclTypeNode>
+
+    public init(typeName: NodeRef<Identifier>, typeValue: NodeRef<String>, ty: NodeRef<KclTypeNode>) {
+        self.typeName = typeName
+        self.typeValue = typeValue
+        self.ty = ty
+    }
 }
 
 public struct ExprStmt: Sendable {
     /// A list even though a statement holds one expression: `a, b = 1, 2`
     /// desugars into two.
     public let exprs: [NodeRef<Expr>]
+
+    public init(exprs: [NodeRef<Expr>] = []) {
+        self.exprs = exprs
+    }
 }
 
 public struct UnificationStmt: Sendable {
@@ -242,6 +261,11 @@ public struct UnificationStmt: Sendable {
     /// `SchemaExpr`, both bare structs rather than tagged expressions.
     public let target: NodeRef<Identifier>
     public let value: NodeRef<SchemaExpr>
+
+    public init(target: NodeRef<Identifier>, value: NodeRef<SchemaExpr>) {
+        self.target = target
+        self.value = value
+    }
 }
 
 public struct AssignStmt: Sendable {
@@ -250,12 +274,28 @@ public struct AssignStmt: Sendable {
     public let targets: [NodeRef<Target>]
     public let value: NodeRef<Expr>
     public let ty: NodeRef<KclTypeNode>?
+
+    public init(
+        targets: [NodeRef<Target>] = [],
+        value: NodeRef<Expr>,
+        ty: NodeRef<KclTypeNode>?
+    ) {
+        self.targets = targets
+        self.value = value
+        self.ty = ty
+    }
 }
 
 public struct AugAssignStmt: Sendable {
     public let target: NodeRef<Target>
     public let value: NodeRef<Expr>
     public let op: AugOp
+
+    public init(target: NodeRef<Target>, value: NodeRef<Expr>, op: AugOp) {
+        self.target = target
+        self.value = value
+        self.op = op
+    }
 }
 
 public struct AssertStmt: Sendable {
@@ -264,6 +304,12 @@ public struct AssertStmt: Sendable {
     public let test: NodeRef<Expr>
     public let ifCond: NodeRef<Expr>?
     public let msg: NodeRef<Expr>?
+
+    public init(test: NodeRef<Expr>, ifCond: NodeRef<Expr>?, msg: NodeRef<Expr>?) {
+        self.test = test
+        self.ifCond = ifCond
+        self.msg = msg
+    }
 }
 
 public struct IfStmt: Sendable {
@@ -273,6 +319,12 @@ public struct IfStmt: Sendable {
     /// a sibling list. Modelling it as a nested if is the classic way to get
     /// `elif` wrong.
     public let orelse: [NodeRef<Stmt>]
+
+    public init(body: [NodeRef<Stmt>] = [], cond: NodeRef<Expr>, orelse: [NodeRef<Stmt>] = []) {
+        self.body = body
+        self.cond = cond
+        self.orelse = orelse
+    }
 }
 
 public struct ImportStmt: Sendable {
@@ -285,6 +337,20 @@ public struct ImportStmt: Sendable {
     /// Not `pkg_root`: `pkg_name` is the package this import indexes into,
     /// and it is `"__main__"` for builtins, plugins and internal packages.
     public let pkgName: String
+
+    public init(
+        path: NodeRef<String>,
+        rawpath: String,
+        name: String,
+        asname: NodeRef<String>?,
+        pkgName: String
+    ) {
+        self.path = path
+        self.rawpath = rawpath
+        self.name = name
+        self.asname = asname
+        self.pkgName = pkgName
+    }
 }
 
 public struct SchemaStmt: Sendable {
@@ -302,6 +368,34 @@ public struct SchemaStmt: Sendable {
     /// `Vec<NodeRef<CheckExpr>>` — a bare `{test,if_cond,msg}`, untagged.
     public let checks: [NodeRef<CheckExpr>]
     public let indexSignature: NodeRef<SchemaIndexSignature>?
+
+    public init(
+        doc: NodeRef<String>?,
+        name: NodeRef<String>,
+        parentName: NodeRef<Identifier>?,
+        forHostName: NodeRef<Identifier>?,
+        isMixin: Bool,
+        isProtocol: Bool,
+        args: NodeRef<Arguments>?,
+        mixins: [NodeRef<Identifier>] = [],
+        body: [NodeRef<Stmt>] = [],
+        decorators: [NodeRef<CallExpr>] = [],
+        checks: [NodeRef<CheckExpr>] = [],
+        indexSignature: NodeRef<SchemaIndexSignature>?
+    ) {
+        self.doc = doc
+        self.name = name
+        self.parentName = parentName
+        self.forHostName = forHostName
+        self.isMixin = isMixin
+        self.isProtocol = isProtocol
+        self.args = args
+        self.mixins = mixins
+        self.body = body
+        self.decorators = decorators
+        self.checks = checks
+        self.indexSignature = indexSignature
+    }
 }
 
 public struct SchemaAttr: Sendable {
@@ -316,6 +410,24 @@ public struct SchemaAttr: Sendable {
     public let decorators: [NodeRef<CallExpr>]
     /// Not optional: Rust declares `ty: NodeRef<Type>`.
     public let ty: NodeRef<KclTypeNode>
+
+    public init(
+        doc: String,
+        name: NodeRef<String>,
+        op: AugOp?,
+        value: NodeRef<Expr>?,
+        isOptional: Bool,
+        decorators: [NodeRef<CallExpr>] = [],
+        ty: NodeRef<KclTypeNode>
+    ) {
+        self.doc = doc
+        self.name = name
+        self.op = op
+        self.value = value
+        self.isOptional = isOptional
+        self.decorators = decorators
+        self.ty = ty
+    }
 }
 
 public struct RuleStmt: Sendable {
@@ -326,6 +438,24 @@ public struct RuleStmt: Sendable {
     public let checks: [NodeRef<CheckExpr>]
     public let args: NodeRef<Arguments>?
     public let forHostName: NodeRef<Identifier>?
+
+    public init(
+        doc: NodeRef<String>?,
+        name: NodeRef<String>,
+        parentRules: [NodeRef<Identifier>] = [],
+        decorators: [NodeRef<CallExpr>] = [],
+        checks: [NodeRef<CheckExpr>] = [],
+        args: NodeRef<Arguments>?,
+        forHostName: NodeRef<Identifier>?
+    ) {
+        self.doc = doc
+        self.name = name
+        self.parentRules = parentRules
+        self.decorators = decorators
+        self.checks = checks
+        self.args = args
+        self.forHostName = forHostName
+    }
 }
 
 // MARK: - Expr payloads
@@ -333,18 +463,35 @@ public struct RuleStmt: Sendable {
 public struct UnaryExpr: Sendable {
     public let op: UnaryOp
     public let operand: NodeRef<Expr>
+
+    public init(op: UnaryOp, operand: NodeRef<Expr>) {
+        self.op = op
+        self.operand = operand
+    }
 }
 
 public struct BinaryExpr: Sendable {
     public let left: NodeRef<Expr>
     public let op: BinOp
     public let right: NodeRef<Expr>
+
+    public init(left: NodeRef<Expr>, op: BinOp, right: NodeRef<Expr>) {
+        self.left = left
+        self.op = op
+        self.right = right
+    }
 }
 
 public struct IfExpr: Sendable {
     public let body: NodeRef<Expr>
     public let cond: NodeRef<Expr>
     public let orelse: NodeRef<Expr>
+
+    public init(body: NodeRef<Expr>, cond: NodeRef<Expr>, orelse: NodeRef<Expr>) {
+        self.body = body
+        self.cond = cond
+        self.orelse = orelse
+    }
 }
 
 public struct SelectorExpr: Sendable {
@@ -354,16 +501,37 @@ public struct SelectorExpr: Sendable {
     public let ctx: ExprContext
     /// True for `a?.b` — the `?` is recorded, not folded into `ctx`.
     public let hasQuestion: Bool
+
+    public init(value: NodeRef<Expr>, attr: NodeRef<Identifier>, ctx: ExprContext, hasQuestion: Bool) {
+        self.value = value
+        self.attr = attr
+        self.ctx = ctx
+        self.hasQuestion = hasQuestion
+    }
 }
 
 public struct CallExpr: Sendable {
     public let `func`: NodeRef<Expr>
     public let args: [NodeRef<Expr>]
     public let keywords: [NodeRef<Keyword>]
+
+    public init(
+        `func`: NodeRef<Expr>,
+        args: [NodeRef<Expr>] = [],
+        keywords: [NodeRef<Keyword>] = []
+    ) {
+        self.`func` = `func`
+        self.args = args
+        self.keywords = keywords
+    }
 }
 
 public struct ParenExpr: Sendable {
     public let expr: NodeRef<Expr>
+
+    public init(expr: NodeRef<Expr>) {
+        self.expr = expr
+    }
 }
 
 public struct QuantExpr: Sendable {
@@ -374,27 +542,64 @@ public struct QuantExpr: Sendable {
     public let test: NodeRef<Expr>
     public let ifCond: NodeRef<Expr>?
     public let ctx: ExprContext
+
+    public init(
+        target: NodeRef<Expr>,
+        variables: [NodeRef<Identifier>] = [],
+        op: QuantOperation,
+        test: NodeRef<Expr>,
+        ifCond: NodeRef<Expr>?,
+        ctx: ExprContext
+    ) {
+        self.target = target
+        self.variables = variables
+        self.op = op
+        self.test = test
+        self.ifCond = ifCond
+        self.ctx = ctx
+    }
 }
 
 public struct ListExpr: Sendable {
     public let elts: [NodeRef<Expr>]
     public let ctx: ExprContext
+
+    public init(elts: [NodeRef<Expr>] = [], ctx: ExprContext) {
+        self.elts = elts
+        self.ctx = ctx
+    }
 }
 
 public struct ListIfItemExpr: Sendable {
     public let ifCond: NodeRef<Expr>
     public let exprs: [NodeRef<Expr>]
     public let orelse: NodeRef<Expr>?
+
+    public init(ifCond: NodeRef<Expr>, exprs: [NodeRef<Expr>] = [], orelse: NodeRef<Expr>?) {
+        self.ifCond = ifCond
+        self.exprs = exprs
+        self.orelse = orelse
+    }
 }
 
 public struct ListComp: Sendable {
     public let elt: NodeRef<Expr>
     public let generators: [NodeRef<CompClause>]
+
+    public init(elt: NodeRef<Expr>, generators: [NodeRef<CompClause>] = []) {
+        self.elt = elt
+        self.generators = generators
+    }
 }
 
 public struct StarredExpr: Sendable {
     public let value: NodeRef<Expr>
     public let ctx: ExprContext
+
+    public init(value: NodeRef<Expr>, ctx: ExprContext) {
+        self.value = value
+        self.ctx = ctx
+    }
 }
 
 public struct DictComp: Sendable {
@@ -402,6 +607,11 @@ public struct DictComp: Sendable {
     /// `value` and `operation` sit directly under `entry`.
     public let entry: ConfigEntry
     public let generators: [NodeRef<CompClause>]
+
+    public init(entry: ConfigEntry, generators: [NodeRef<CompClause>] = []) {
+        self.entry = entry
+        self.generators = generators
+    }
 }
 
 public struct ConfigIfEntryExpr: Sendable {
@@ -410,6 +620,12 @@ public struct ConfigIfEntryExpr: Sendable {
     /// The else branch is a whole `ConfigExpr`, not a second
     /// `ConfigIfEntryExpr`.
     public let orelse: NodeRef<Expr>?
+
+    public init(ifCond: NodeRef<Expr>, items: [NodeRef<ConfigEntry>] = [], orelse: NodeRef<Expr>?) {
+        self.ifCond = ifCond
+        self.items = items
+        self.orelse = orelse
+    }
 }
 
 public struct SchemaExpr: Sendable {
@@ -421,10 +637,26 @@ public struct SchemaExpr: Sendable {
     /// For `Person {name = "Alice"}` the entries land here and `keywords`
     /// stays empty; `Person(1, name = "Bob")` is a plain `Expr::Call`.
     public let config: NodeRef<Expr>
+
+    public init(
+        name: NodeRef<Identifier>,
+        args: [NodeRef<Expr>] = [],
+        keywords: [NodeRef<Keyword>] = [],
+        config: NodeRef<Expr>
+    ) {
+        self.name = name
+        self.args = args
+        self.keywords = keywords
+        self.config = config
+    }
 }
 
 public struct ConfigExpr: Sendable {
     public let items: [NodeRef<ConfigEntry>]
+
+    public init(items: [NodeRef<ConfigEntry>] = []) {
+        self.items = items
+    }
 }
 
 public struct LambdaExpr: Sendable {
@@ -434,6 +666,16 @@ public struct LambdaExpr: Sendable {
     /// Statements, not expressions — a lambda body is a `Vec<NodeRef<Stmt>>`.
     public let body: [NodeRef<Stmt>]
     public let returnTy: NodeRef<KclTypeNode>?
+
+    public init(
+        args: NodeRef<Arguments>?,
+        body: [NodeRef<Stmt>] = [],
+        returnTy: NodeRef<KclTypeNode>?
+    ) {
+        self.args = args
+        self.body = body
+        self.returnTy = returnTy
+    }
 }
 
 public struct Subscript: Sendable {
@@ -446,6 +688,24 @@ public struct Subscript: Sendable {
     public let step: NodeRef<Expr>?
     public let ctx: ExprContext
     public let hasQuestion: Bool
+
+    public init(
+        value: NodeRef<Expr>,
+        index: NodeRef<Expr>?,
+        lower: NodeRef<Expr>?,
+        upper: NodeRef<Expr>?,
+        step: NodeRef<Expr>?,
+        ctx: ExprContext,
+        hasQuestion: Bool
+    ) {
+        self.value = value
+        self.index = index
+        self.lower = lower
+        self.upper = upper
+        self.step = step
+        self.ctx = ctx
+        self.hasQuestion = hasQuestion
+    }
 }
 
 public struct Compare: Sendable {
@@ -454,27 +714,54 @@ public struct Compare: Sendable {
     /// (or `comparators[i-1]`) and `comparators[i]`.
     public let ops: [CmpOp]
     public let comparators: [NodeRef<Expr>]
+
+    public init(left: NodeRef<Expr>, ops: [CmpOp] = [], comparators: [NodeRef<Expr>] = []) {
+        self.left = left
+        self.ops = ops
+        self.comparators = comparators
+    }
 }
 
 public struct NumberLit: Sendable {
     public let binarySuffix: NumberBinarySuffix?
     public let value: NumberLitValue
+
+    public init(binarySuffix: NumberBinarySuffix?, value: NumberLitValue) {
+        self.binarySuffix = binarySuffix
+        self.value = value
+    }
 }
 
 public struct StringLit: Sendable {
     public let isLongString: Bool
     public let rawValue: String
     public let value: String
+
+    public init(isLongString: Bool, rawValue: String, value: String) {
+        self.isLongString = isLongString
+        self.rawValue = rawValue
+        self.value = value
+    }
 }
 
 public struct NameConstantLit: Sendable {
     public let value: NameConstant
+
+    public init(value: NameConstant) {
+        self.value = value
+    }
 }
 
 public struct JoinedString: Sendable {
     public let isLongString: Bool
     public let values: [NodeRef<Expr>]
     public let rawValue: String
+
+    public init(isLongString: Bool, values: [NodeRef<Expr>] = [], rawValue: String) {
+        self.isLongString = isLongString
+        self.values = values
+        self.rawValue = rawValue
+    }
 }
 
 public struct FormattedValue: Sendable {
@@ -482,34 +769,63 @@ public struct FormattedValue: Sendable {
     public let value: NodeRef<Expr>
     /// `format_spec`, and a bare `String` — there is no node position.
     public let formatSpec: String?
+
+    public init(isLongString: Bool, value: NodeRef<Expr>, formatSpec: String?) {
+        self.isLongString = isLongString
+        self.value = value
+        self.formatSpec = formatSpec
+    }
 }
 
-public struct MissingExpr: Sendable {}
+public struct MissingExpr: Sendable {
+    public init() {}
+}
 
 public struct CheckExpr: Sendable {
     public let test: NodeRef<Expr>
     public let ifCond: NodeRef<Expr>?
     public let msg: NodeRef<Expr>?
+
+    public init(test: NodeRef<Expr>, ifCond: NodeRef<Expr>?, msg: NodeRef<Expr>?) {
+        self.test = test
+        self.ifCond = ifCond
+        self.msg = msg
+    }
 }
 
 // MARK: - Type payloads
 
 /// `Type::Any` — the only unit variant of `Type`, and the only one with no
 /// payload: the wire is the bare `{"type":"Any"}` with no `value` key.
-public struct AnyType: Sendable {}
+public struct AnyType: Sendable {
+    public init() {}
+}
 
 public struct ListType: Sendable {
     public let innerType: NodeRef<KclTypeNode>?
+
+    public init(innerType: NodeRef<KclTypeNode>?) {
+        self.innerType = innerType
+    }
 }
 
 public struct DictType: Sendable {
     public let keyType: NodeRef<KclTypeNode>?
     public let valueType: NodeRef<KclTypeNode>?
+
+    public init(keyType: NodeRef<KclTypeNode>?, valueType: NodeRef<KclTypeNode>?) {
+        self.keyType = keyType
+        self.valueType = valueType
+    }
 }
 
 public struct UnionType: Sendable {
     /// `type_elements`, not `types`.
     public let typeElements: [NodeRef<KclTypeNode>]
+
+    public init(typeElements: [NodeRef<KclTypeNode>] = []) {
+        self.typeElements = typeElements
+    }
 }
 
 public struct FunctionType: Sendable {
@@ -517,10 +833,19 @@ public struct FunctionType: Sendable {
     /// parentheses' absence, and a bare `-> bool` has no `params_ty`.
     public let paramsTy: [NodeRef<KclTypeNode>]?
     public let retTy: NodeRef<KclTypeNode>?
+
+    public init(paramsTy: [NodeRef<KclTypeNode>]? = [], retTy: NodeRef<KclTypeNode>?) {
+        self.paramsTy = paramsTy
+        self.retTy = retTy
+    }
 }
 
 public struct LiteralType: Sendable {
     public let value: LiteralTypeValue
+
+    public init(value: LiteralTypeValue) {
+        self.value = value
+    }
 }
 
 /// `IntLiteralType` — the newtype payload of `LiteralType::Int`, inlined
@@ -528,6 +853,11 @@ public struct LiteralType: Sendable {
 public struct IntLiteralType: Sendable {
     public let value: Int64
     public let suffix: NumberBinarySuffix?
+
+    public init(value: Int64, suffix: NumberBinarySuffix?) {
+        self.value = value
+        self.suffix = suffix
+    }
 }
 
 // MARK: - Flat DTOs
@@ -542,7 +872,7 @@ public struct Identifier: Sendable {
     public let pkgpath: String
     public let ctx: ExprContext
 
-    public init(names: [NodeRef<String>], pkgpath: String = "", ctx: ExprContext = .load) {
+    public init(names: [NodeRef<String>] = [], pkgpath: String = "", ctx: ExprContext = .load) {
         self.names = names
         self.pkgpath = pkgpath
         self.ctx = ctx
@@ -563,6 +893,12 @@ public struct Target: Sendable {
     /// `{"type":"Member"|"Index","value":…}`.
     public let paths: [MemberOrIndex]
     public let pkgpath: String
+
+    public init(name: NodeRef<String>, paths: [MemberOrIndex] = [], pkgpath: String) {
+        self.name = name
+        self.paths = paths
+        self.pkgpath = pkgpath
+    }
 }
 
 public struct ConfigEntry: Sendable {
@@ -573,12 +909,29 @@ public struct ConfigEntry: Sendable {
     /// `#[serde(skip_serializing_if = "is_false")]` upstream, so the key is
     /// absent unless true. We expose it as a plain `Bool`.
     public let isShorthand: Bool
+
+    public init(
+        key: NodeRef<Expr>?,
+        value: NodeRef<Expr>,
+        operation: ConfigEntryOperation,
+        isShorthand: Bool
+    ) {
+        self.key = key
+        self.value = value
+        self.operation = operation
+        self.isShorthand = isShorthand
+    }
 }
 
 public struct Keyword: Sendable {
     /// An `Identifier`, not an expression: `k = 3` names the parameter `k`.
     public let arg: NodeRef<Identifier>
     public let value: NodeRef<Expr>?
+
+    public init(arg: NodeRef<Identifier>, value: NodeRef<Expr>?) {
+        self.arg = arg
+        self.value = value
+    }
 }
 
 public struct Arguments: Sendable {
@@ -587,6 +940,16 @@ public struct Arguments: Sendable {
     /// `OptionalNodeRefList` in `AstJson.swift` for why the nulls matter.
     public let defaults: [NodeRef<Expr>?]
     public let tyList: [NodeRef<KclTypeNode>?]
+
+    public init(
+        args: [NodeRef<Identifier>] = [],
+        defaults: [NodeRef<Expr>?] = [],
+        tyList: [NodeRef<KclTypeNode>?] = []
+    ) {
+        self.args = args
+        self.defaults = defaults
+        self.tyList = tyList
+    }
 }
 
 public struct CompClause: Sendable {
@@ -594,6 +957,16 @@ public struct CompClause: Sendable {
     public let targets: [NodeRef<Identifier>]
     public let iter: NodeRef<Expr>
     public let ifs: [NodeRef<Expr>]
+
+    public init(
+        targets: [NodeRef<Identifier>] = [],
+        iter: NodeRef<Expr>,
+        ifs: [NodeRef<Expr>] = []
+    ) {
+        self.targets = targets
+        self.iter = iter
+        self.ifs = ifs
+    }
 }
 
 public struct SchemaIndexSignature: Sendable {
@@ -602,6 +975,20 @@ public struct SchemaIndexSignature: Sendable {
     public let anyOther: Bool
     public let keyTy: NodeRef<KclTypeNode>
     public let valueTy: NodeRef<KclTypeNode>
+
+    public init(
+        keyName: NodeRef<String>?,
+        value: NodeRef<Expr>?,
+        anyOther: Bool,
+        keyTy: NodeRef<KclTypeNode>,
+        valueTy: NodeRef<KclTypeNode>
+    ) {
+        self.keyName = keyName
+        self.value = value
+        self.anyOther = anyOther
+        self.keyTy = keyTy
+        self.valueTy = valueTy
+    }
 }
 
 // MARK: - Operator and literal enums

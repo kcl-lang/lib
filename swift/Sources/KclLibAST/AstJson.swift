@@ -74,7 +74,7 @@ public func parseProgramEnvelope(_ astJson: String) throws -> Program {
     let root = try jsonObject(astJson)
     if let modules = root as? [[String: Any]] {
         let parsed = try modules.map(parseModuleObject)
-        return Program(root: ".", mainPackage: parsed, pkgs: ["__main__": parsed])
+        return Program(root: ".", pkgs: ["__main__": parsed])
     }
     guard let dict = root as? [String: Any] else {
         throw AstJsonError.notADictionary("ast_json root")
@@ -87,11 +87,9 @@ public func parseProgramEnvelope(_ astJson: String) throws -> Program {
         guard let list = value as? [[String: Any]] else { continue }
         parsed[name] = try list.map(parseModuleObject)
     }
-    return Program(
-        root: dict["root"] as? String ?? ".",
-        mainPackage: parsed["__main__"] ?? [],
-        pkgs: parsed
-    )
+    // `mainPackage` is not a wire key and not a `SerializeProgram` field: it
+    // is `pkgs["__main__"]`, so it is derived rather than passed in.
+    return Program(root: dict["root"] as? String ?? ".", pkgs: parsed)
 }
 
 private func jsonObject(_ json: String) throws -> Any {
