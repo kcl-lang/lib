@@ -88,7 +88,7 @@ class DictType extends AstType {
 
 /// `ast::Type::Union(UnionType)`.
 class UnionType extends AstType {
-  const UnionType(this.types);
+  const UnionType({this.types = const []});
 
   @override
   String get tag => 'Union';
@@ -187,9 +187,10 @@ AstType typeFromWire(Map<String, Object?> w) {
       );
     case 'Union':
       final union = asMap(value);
-      return UnionType(union == null
-          ? const []
-          : nodeListOf<AstType>(union['type_elements'], typeFromWire));
+      return UnionType(
+          types: union == null
+              ? const []
+              : nodeListOf<AstType>(union['type_elements'], typeFromWire));
     case 'Literal':
       return LiteralType(value, asMap(value)?['type'] as String?);
     case 'Function':
