@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
+require "fileutils"
 require "json"
 require "minitest/autorun"
+require "tmpdir"
 
 require "kcl_lib"
 
@@ -31,21 +33,53 @@ class ConsistencyTest < Minitest::Test
   # against.
   CASES_JSON = File.join(REPO_ROOT, "tests", "consistency", "cases.json")
 
+  # Templates the `scratch:` paths are copied out of.
+  TESTDATA = File.join(REPO_ROOT, "tests", "consistency", "testdata")
+
+  # The marker `generate_cases.py` writes into a path that names a template
+  # rather than a file. `scratch:a/b.k` means "b.k inside a copy of
+  # testdata/a"; the copy is what makes the RPCs that write files safe to
+  # run, and it is also why the expectations for those cases pin the RPC's
+  # answer rather than a path.
+  SCRATCH_PREFIX = "scratch:"
+
   # RPC name -> the {KclLib::API} wrapper that serves it. Resolved per call
   # rather than captured in a hash of bound methods, so a binding that
   # predates a wrapper fails on that one case instead of on every case.
   METHOD_NAMES = {
     "KclService.Ping" => :ping,
     "KclService.ExecProgram" => :exec_program,
+    "KclService.ParseFile" => :parse_file,
+    "KclService.ParseProgram" => :parse_program,
+    "KclService.ListOptions" => :list_options,
+    "KclService.ListVariables" => :list_variables,
+    "KclService.LoadPackage" => :load_package,
     "KclService.FormatCode" => :format_code,
+    "KclService.FormatPath" => :format_path,
+    "KclService.LintPath" => :lint_path,
+    "KclService.OverrideFile" => :override_file,
+    "KclService.GetSchemaTypeMapping" => :get_schema_type_mapping,
+    "KclService.GetSchemaTypeMappingUnderPath" => :get_schema_type_mapping_under_path,
     "KclService.ValidateCode" => :validate_code,
+    "KclService.LoadSettingsFiles" => :load_settings_files,
+    "KclService.Rename" => :rename,
+    "KclService.RenameCode" => :rename_code,
+    "KclService.Test" => :test,
     "KclService.FormatTestReport" => :format_test_report,
     "KclService.GenerateToml" => :generate_toml,
     "KclService.GenerateKcl" => :generate_kcl,
     "KclService.GenerateOpenAPI" => :generate_openapi,
     "KclService.GenerateProto" => :generate_proto,
-    "KclService.GenerateDoc" => :generate_doc
+    "KclService.GenerateDoc" => :generate_doc,
+    "KclService.UpdateDependencies" => :update_dependencies,
+    "KclService.GetVersion" => :get_version,
+    "BuiltinService.ListMethod" => :list_method
   }.freeze
+
+  # The two methods the service builds its (empty) args message for, so
+  # calling them with the one this runner constructed is not what the
+  # binding expects.
+  NO_ARG_METHODS = %w[get_version list_method].freeze
 
   class << self
     # The parsed manifest, loaded once per run.
@@ -103,8 +137,6 @@ class ConsistencyTest < Minitest::Test
   def run_case(name)
     kase = find_case(name)
     rpc = kase.fetch("rpc")
-    expect = kase.fetch("expect")
-    args = build_args(rpc, kase.fetch("args"))
 
     # A `new_core` case names an RPC the core may predate. Skipping rather
     # than failing keeps an old core green while still failing loudly on a
@@ -114,12 +146,18 @@ class ConsistencyTest < Minitest::Test
            "regenerate cases.json against a new core to enable")
     end
 
-    result = call_rpc(rpc, args)
-    # Only the fields the manifest actually pins are compared, so adding a
-    # field to `expect` is the only way to start asserting on it.
-    expect.each do |field, want|
-      assert_field(name, field, want, result.public_send(field))
-    end
+    result = call_rpc(rpc, build_args(rpc, kase.fetch("args")))
+    # Only the fields the manifest pins are compared, so adding a field to
+    # `expect` is the only way to start asserting on it. A projection may
+    # compute more than that -- several cases project a field that is not
+    # pinnable on every core -- but a field the manifest *does* pin and the
+    # projection does not produce is still a failure, because the key is
+    # missing from the Hash either way.
+    expect = kase.fetch("expect")
+    actual = extract(kase.fetch("name"), result).select { |field, _| expect.key?(field) }
+    assert_equal(actual, expect,
+                 "consistency case `#{name}` (#{rpc}) mismatch:\n" \
+                 "#{diff(expect, actual)}")
   end
 
   def find_case(name)
@@ -133,7 +171,7 @@ class ConsistencyTest < Minitest::Test
     method = METHOD_NAMES[rpc]
     raise "no runner support for rpc #{rpc}" if method.nil?
 
-    self.class.api.public_send(method, args)
+    NO_ARG_METHODS.include?(method.to_s) ? self.class.api.public_send(method) : self.class.api.public_send(method, args)
   end
 
   # ------------------------------------------------------------------ #
@@ -144,25 +182,88 @@ class ConsistencyTest < Minitest::Test
   def build_args(rpc, a)
     case rpc
     when "KclService.Ping"
-      build_message(KclLib::PingArgs, a)
+      KclLib::PingArgs.new(value: a.fetch("value"))
     when "KclService.ExecProgram"
-      build_message(KclLib::ExecProgramArgs, a)
+      build_exec_args(a)
     when "KclService.FormatCode"
-      build_message(KclLib::FormatCodeArgs, a)
+      KclLib::FormatCodeArgs.new(source: a.fetch("source"))
     when "KclService.ValidateCode"
-      build_message(KclLib::ValidateCodeArgs, a)
+      KclLib::ValidateCodeArgs.new(
+        code: a.fetch("code"), data: a.fetch("data"), format: a.fetch("format", "")
+      )
     when "KclService.FormatTestReport"
       KclLib::FormatTestReportArgs.new(result: build_test_result(a))
-    when "KclService.GenerateToml"
-      KclLib::GenerateTomlArgs.new(
-        exec_args: build_message(KclLib::ExecProgramArgs, a.fetch("exec_args")),
-        sort_keys: a.fetch("sort_keys", false)
-      )
     when "KclService.GenerateKcl"
       KclLib::GenerateKclArgs.new(
         source: a.fetch("source"),
         filename: a.fetch("filename", ""),
         format: a.fetch("format", "")
+      )
+    when "KclService.GenerateToml"
+      KclLib::GenerateTomlArgs.new(
+        exec_args: build_exec_args(a.fetch("exec_args")),
+        sort_keys: a.fetch("sort_keys", false)
+      )
+    when "KclService.ParseFile"
+      KclLib::ParseFileArgs.new(
+        path: resolve_path(a.fetch("path", "")),
+        source: a.fetch("source", ""),
+        external_pkgs: build_external_pkgs(a.fetch("external_pkgs", []))
+      )
+    when "KclService.ParseProgram", "KclService.ListOptions"
+      build_parse_args(a)
+    when "KclService.ListVariables"
+      KclLib::ListVariablesArgs.new(
+        files: resolve_paths(a.fetch("files", [])),
+        specs: a.fetch("specs", []),
+        options: KclLib::ListVariablesOptions.new(
+          merge_program: a.fetch("options", {}).fetch("merge_program", false)
+        )
+      )
+    when "KclService.LoadPackage"
+      KclLib::LoadPackageArgs.new(
+        parse_args: build_parse_args(a.fetch("parse_args")),
+        resolve_ast: a.fetch("resolve_ast", false),
+        load_builtin: a.fetch("load_builtin", false),
+        with_ast_index: a.fetch("with_ast_index", false)
+      )
+    when "KclService.GetSchemaTypeMapping", "KclService.GetSchemaTypeMappingUnderPath"
+      KclLib::GetSchemaTypeMappingArgs.new(
+        exec_args: build_exec_args(a.fetch("exec_args")),
+        schema_name: a.fetch("schema_name", "")
+      )
+    when "KclService.GetVersion", "BuiltinService.ListMethod"
+      KclLib::GetVersionArgs.new
+    when "KclService.LintPath"
+      KclLib::LintPathArgs.new(paths: resolve_paths(a.fetch("paths", [])))
+    when "KclService.FormatPath"
+      KclLib::FormatPathArgs.new(
+        path: resolve_path(a.fetch("path", "")),
+        dry_run: a.fetch("dry_run", false)
+      )
+    when "KclService.Test"
+      KclLib::TestArgs.new(
+        exec_args: build_exec_args(a.fetch("exec_args", {})),
+        pkg_list: resolve_paths(a.fetch("pkg_list", [])),
+        run_regexp: a.fetch("run_regexp", ""),
+        fail_fast: a.fetch("fail_fast", false),
+        coverage: a.fetch("coverage", false)
+      )
+    when "KclService.OverrideFile"
+      KclLib::OverrideFileArgs.new(
+        file: resolve_path(a.fetch("file", "")),
+        specs: a.fetch("specs", []),
+        import_paths: resolve_paths(a.fetch("import_paths", []))
+      )
+    when "KclService.LoadSettingsFiles"
+      KclLib::LoadSettingsFilesArgs.new(
+        work_dir: resolve_path(a.fetch("work_dir", "")),
+        files: resolve_paths(a.fetch("files", []))
+      )
+    when "KclService.UpdateDependencies"
+      KclLib::UpdateDependenciesArgs.new(
+        manifest_path: resolve_path(a.fetch("manifest_path", "")),
+        vendor: a.fetch("vendor", false)
       )
     when "KclService.GenerateOpenAPI"
       KclLib::GenerateOpenAPIArgs.new(
@@ -184,6 +285,37 @@ class ConsistencyTest < Minitest::Test
     end
   end
 
+  # `k_filename_list` is resolved by the core against the process working
+  # directory rather than against `work_dir`, so a relative entry has to be
+  # made absolute here or it will not survive being run from another
+  # directory.
+  def build_exec_args(a)
+    work_dir = resolve_path(a.fetch("work_dir", ""))
+    KclLib::ExecProgramArgs.new(
+      k_code_list: a.fetch("k_code_list", []),
+      k_filename_list: a.fetch("k_filename_list", []).map { |p| File.expand_path(p, work_dir) },
+      work_dir: work_dir,
+      args: a.fetch("args", []),
+      overrides: a.fetch("overrides", [])
+    )
+  end
+
+  # `ParseProgramArgs` from the manifest. The `paths` are pinned
+  # repo-relative by `generate_cases.py` and the core resolves them against
+  # its own working directory, so they have to be absolute here; absolute
+  # entries are kept as they are.
+  def build_parse_args(a)
+    KclLib::ParseProgramArgs.new(
+      paths: resolve_paths(a.fetch("paths", [])),
+      sources: a.fetch("sources", []),
+      external_pkgs: build_external_pkgs(a.fetch("external_pkgs", []))
+    )
+  end
+
+  def build_external_pkgs(pkgs)
+    pkgs.map { |pkg| KclLib::ExternalPkg.new(pkg_name: pkg.fetch("pkg_name", ""), pkg_path: pkg.fetch("pkg_path", "")) }
+  end
+
   # `TestResult` nests a repeated message field, so the cases are assembled
   # rather than splatted. `duration` is a `uint64` and the manifest carries
   # it as a string — JSON has no unsigned type and the value would not
@@ -202,73 +334,224 @@ class ConsistencyTest < Minitest::Test
     )
   end
 
-  # `ParseProgramArgs` from the manifest. The `paths` are pinned
-  # repo-relative by `generate_cases.py` and the core resolves them against
-  # its own working directory, so they have to be absolute here; absolute
-  # entries are kept as they are.
-  def build_parse_args(node)
-    KclLib::ParseProgramArgs.new(
-      paths: node.fetch("paths", []).map { |p| File.absolute_path?(p) ? p : File.join(REPO_ROOT, p) },
-      sources: node.fetch("sources", []),
-      external_pkgs: node.fetch("external_pkgs", []).map do |pkg|
-        KclLib::ExternalPkg.new(pkg_name: pkg.fetch("pkg_name", ""), pkg_path: pkg.fetch("pkg_path", ""))
-      end
-    )
+  # ------------------------------------------------------------------ #
+  # Paths
+  # ------------------------------------------------------------------ #
+
+  # A `scratch:` entry names a template directory rather than a file, so it
+  # is copied to a fresh temporary directory and the copy is returned. Each
+  # case gets its own, so two cases -- and two runs -- never observe each
+  # other's writes and the repository is never the target of an RPC that
+  # rewrites files.
+  def scratch_copy(rest)
+    template, _, tail = rest.partition("/")
+    src = File.join(TESTDATA, template)
+    raise "scratch template is not a directory: #{src}" unless File.directory?(src)
+
+    dest = File.join(Dir.mktmpdir("kcl-consistency-"), template)
+    FileUtils.cp_r(src, dest)
+    tail.empty? ? dest : File.join(dest, tail)
   end
 
-  # Build a protobuf message from a manifest fragment.
-  #
-  # Only the fields the proto declares are copied, so a case may leave any of
-  # them out — every scalar has a default and a repeated field an empty list,
-  # and `generate_toml` in particular spells out a long run of defaults. A
-  # key the proto does *not* declare is a manifest that has drifted from the
-  # message, and dropping it silently would let the case pass for the wrong
-  # reason, so that is an error.
-  def build_message(klass, fields)
-    declared = klass.descriptor.map(&:name)
-    unknown = fields.keys - declared
-    unless unknown.empty?
-      raise "#{klass.name} has no field(s) #{unknown.join(", ")} " \
-            "(declared: #{declared.join(", ")})"
-    end
+  def resolve_path(p)
+    return scratch_copy(p.delete_prefix(SCRATCH_PREFIX)) if p.start_with?(SCRATCH_PREFIX)
 
-    klass.new(**fields.slice(*declared).transform_keys(&:to_sym))
+    File.absolute_path?(p) ? p : File.join(REPO_ROOT, p)
+  end
+
+  def resolve_paths(values)
+    values.map { |p| resolve_path(p) }
+  end
+
+  # ------------------------------------------------------------------ #
+  # Projection
+  # ------------------------------------------------------------------ #
+
+  # Project a result into the same JSON-shaped map the manifest pins, keyed
+  # by case name. It mirrors the `extract` of each definition in
+  # `tests/consistency/generate_cases.py` -- the projections are per-runner
+  # on purpose, because a binding's own view of the result is the thing under
+  # test.
+  #
+  # A case with no entry here reads its named fields straight off the
+  # result, which is all the generation RPCs need: their contract *is* one
+  # top-level field, and it is the whole answer.
+  def extract(name, result)
+    case name
+    # `ParseFile` returns a bare `Module` document, so its statements are at
+    # `body` and its dependencies are a flat list.
+    when "parse_file"
+      document = parse_ast(result.ast_json)
+      {
+        "body_count" => document.fetch("body", []).size,
+        "error_count" => result.errors.size,
+        "deps" => result.deps.to_a
+      }
+    # `ParseProgram` returns a `pkgs` document instead: one Module per file,
+    # keyed by package path.
+    when "parse_program"
+      document = parse_ast(result.ast_json)
+      {
+        "module_count" => document.fetch("pkgs", {}).fetch("__main__", []).size,
+        "error_count" => result.errors.size,
+        "paths" => result.paths.map { |p| File.basename(p) }
+      }
+    when "list_options"
+      {
+        "option_count" => result.options.size,
+        "options" => result.options.map { |o| [o.name, o.required] }.sort
+      }
+    when "list_variables"
+      {
+        "values" => result.variables.keys.sort.to_h { |spec| [spec, result.variables[spec].variables.map(&:value)] },
+        "unsupported_codes" => result.unsupported_codes.to_a,
+        "parse_error_count" => result.parse_errors.size
+      }
+    when "load_package"
+      {
+        "path_count" => result.paths.size,
+        "type_error_count" => result.type_errors.size,
+        "parse_error_count" => result.parse_errors.size,
+        "symbol_count" => result.symbols.size,
+        "scope_count" => result.scopes.size,
+        "has_kcl_mod" => !result.kcl_mod.nil?,
+        "kcl_mod_name" => result.kcl_mod&.package&.name.to_s,
+        "app_count" => result.apps.size,
+        "import_count" => result.imports.size
+      }
+    when "get_schema_type_mapping"
+      { "type_mapping" => kcl_types(result.schema_type_mapping) }
+    when "get_schema_type_mapping_under_path"
+      { "type_mapping" => kcl_types(result.schema_type_mapping) }
+    when "get_version"
+      {
+        "version" => semver(result.version),
+        "has_checksum" => !result.checksum.empty?,
+        "has_git_sha" => !result.git_sha.empty?,
+        "has_version_info" => !result.version_info.empty?
+      }
+    when "list_method"
+      {
+        "has_kclservice_ping" => result.method_name_list.include?("KclService.Ping"),
+        "has_kclservice_parse_program" => result.method_name_list.include?("KclService.ParseProgram"),
+        "has_builtinservice_list_method" => result.method_name_list.include?("BuiltinService.ListMethod"),
+        "method_count" => result.method_name_list.size,
+        "has_empty_name" => result.method_name_list.any?(&:empty?)
+      }
+    when "lint_path_clean"
+      { "result_count" => result.results.size }
+    when "lint_path_with_errors"
+      { "has_result" => !result.results.empty? }
+    when "format_path_dry_run"
+      { "changed_count" => result.changed_paths.size, "changed" => result.changed_paths.map { |p| File.basename(p) }.sort }
+    when "test_run"
+      {
+        "names" => result.info.map(&:name).sort,
+        "failed" => result.info.select { |i| !i.error.empty? }.map(&:name).sort
+      }
+    when "override_file"
+      { "result" => result.result, "parse_error_count" => result.parse_errors.size }
+    when "load_settings_files"
+      {
+        "options" => result.kcl_options.map { |o| [o.key, o.value] }.sort,
+        "output" => result.kcl_cli_configs.output,
+        "overrides" => result.kcl_cli_configs.overrides.to_a,
+        "strict_range_check" => result.kcl_cli_configs.strict_range_check,
+        "verbose" => result.kcl_cli_configs.verbose
+      }
+    when "update_dependencies_no_deps"
+      { "external_pkg_count" => result.external_pkgs.size }
+    # `validate_code_invalid` reads `err_message` as a boolean: the
+    # diagnostic carries ANSI colour escapes, a random temp path and a temp
+    # filename, so the string itself is not pinnable but its presence is.
+    when "validate_code_invalid"
+      { "success" => result.success, "has_error_message" => !result.err_message.empty? }
+    else
+      kase_expect(name).keys.to_h { |field| [field, coerce(result.public_send(field))] }
+    end
+  end
+
+  # An RPC that parsed nothing returns an empty `ast_json` rather than `null`,
+  # and the manifest pins a count of zero for it.
+  def parse_ast(ast_json)
+    ast_json.empty? ? {} : JSON.parse(ast_json)
+  end
+
+  def semver(version)
+    parts = version.split(".")
+    return "" if parts.size < 2
+
+    "#{parts[0]}.#{parts[1]}"
+  end
+
+  # A `bytes` field decodes to an ASCII-8BIT string, which never equals the
+  # manifest's UTF-8 one; the manifest holds the text, not the encoding.
+  def coerce(value)
+    value.is_a?(String) ? value.dup.force_encoding(Encoding::UTF_8) : value
+  end
+
+  # The schema-mapping documents, in the form every binding can produce.
+  #
+  # `KclType` is 18 fields and recursive through `union_types`, `properties`,
+  # `key`, `item` and `base_schema`, so a per-field projection would be a
+  # recursive walk written once per language. Ruby's protobuf runtime already
+  # emits the canonical form the manifest is pinned to -- a field the core
+  # left unset is absent rather than rendered as an empty value -- so this is
+  # `to_json` and two fix-ups: `filename` dropped, and every object sorted.
+  #
+  # The sort is load-bearing. Two of `KclType`'s fields are protobuf maps, and
+  # map iteration order is not defined, so an unsorted rendering differs from
+  # run to run and a golden file that churns is a golden file contributors
+  # learn to ignore. It recurses because `properties` and `examples` are
+  # nested -- sorting only the top level would leave them unordered.
+  #
+  # Both of the two schema-mapping RPCs go through here, and they do not return
+  # the same thing: `GetSchemaTypeMapping` maps a schema name to one
+  # `KclType`, while `GetSchemaTypeMappingUnderPath` maps a *package* name to
+  # a `SchemaTypes` wrapper holding a list.
+  def kcl_types(mapping)
+    document = {}
+    # `Google::Protobuf::Map#to_h` looks like it takes a block and does not:
+    # the block is ignored and the values come back as protobuf messages
+    # under symbol keys. Building the Hash by hand is what actually applies
+    # the per-value conversion -- and under symbol keys the `filename` strip
+    # below silently matches nothing.
+    mapping.each { |name, value| document[name] = JSON.parse(value.to_json(preserve_proto_fieldnames: true)) }
+    canonical(document)
+  end
+
+  def canonical(node)
+    case node
+    when Hash
+      node.reject { |key, _| key == "filename" }
+          .sort.to_h { |key, value| [key, canonical(value)] }
+    when Array
+      node.map { |value| canonical(value) }
+    else
+      node
+    end
+  end
+
+  # The fields a case pins, looked up by name. The manifest is the contract
+  # and `self.class.cases` is already parsed, so this is a lookup rather than
+  # a second source of truth.
+  def kase_expect(name)
+    find_case(name).fetch("expect")
   end
 
   # ------------------------------------------------------------------ #
   # Comparison
   # ------------------------------------------------------------------ #
 
-  def assert_field(case_name, field, expected, actual)
-    # Protobuf hands Ruby strings back as binary, and the manifest's are
-    # UTF-8, so compare bytes under one encoding rather than letting an
-    # ASCII/UTF-8 mismatch decide the verdict.
-    want = expected.is_a?(String) ? expected.dup.force_encoding(Encoding::UTF_8) : expected
-    got = actual.is_a?(String) ? actual.dup.force_encoding(Encoding::UTF_8) : actual
-    assert_equal(
-      want, got,
-      "consistency case `#{case_name}` field `#{field}` mismatch:\n#{diff(want, got)}"
-    )
-  end
-
   # A line-oriented expected/actual rendering, so a one-character difference
   # deep inside a generated OpenAPI document is visible instead of being
   # buried in a single-line assertion message.
   def diff(expected, actual)
-    return "  (only one side is a string)" unless expected.is_a?(String) && actual.is_a?(String)
+    return "" if expected == actual
 
-    want_lines = expected.split("\n", -1)
-    got_lines = actual.split("\n", -1)
-    out = +"--- expected\n+++ actual\n"
-    [want_lines.length, got_lines.length].max.times do |i|
-      want = want_lines[i]
-      got = got_lines[i]
-      if want == got
-        out << "  #{want}\n"
-      else
-        out << "- #{want}\n" unless want.nil?
-        out << "+ #{got}\n" unless got.nil?
-      end
+    out = +"  --- expected\n  +++ actual\n"
+    [expected, actual].each_with_index do |side, index|
+      out << "  #{index.zero? ? "-" : "+"} #{side.is_a?(String) ? side : JSON.generate(side)}\n"
     end
     out
   end

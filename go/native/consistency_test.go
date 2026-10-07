@@ -1,13 +1,20 @@
 package native
 
 import (
+	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"os"
 	"path/filepath"
+	"reflect"
+	"sort"
 	"strconv"
 	"strings"
 	"testing"
+
+	"google.golang.org/protobuf/encoding/protojson"
+	"google.golang.org/protobuf/proto"
+	"google.golang.org/protobuf/reflect/protoreflect"
 
 	"kcl-lang.io/lib/go/api"
 )
@@ -75,6 +82,11 @@ func jsonString(m map[string]interface{}, key string) string {
 	return v
 }
 
+func jsonBool(m map[string]interface{}, key string) bool {
+	v, _ := m[key].(bool)
+	return v
+}
+
 func jsonStringList(m map[string]interface{}, key string) []string {
 	raw, ok := m[key].([]interface{})
 	if !ok {
@@ -89,32 +101,161 @@ func jsonStringList(m map[string]interface{}, key string) []string {
 	return out
 }
 
+// The marker `generate_cases.py` writes into a path that names a template
+// rather than a file. `scratch:a/b.k` means "b.k inside a copy of testdata/a";
+// the copy is what makes the RPCs that write files safe to run, and it is also
+// why the expectations for those cases pin the RPC's answer rather than a path.
+const scratchPrefix = "scratch:"
+
+// scratchRoot is the repository root, derived from this file's location rather
+// than from the working directory: `go test` runs each package in its own
+// directory, so "." is go/native and not the root.
+var scratchRoot = func() string {
+	wd, err := os.Getwd()
+	if err != nil {
+		return ".."
+	}
+	return filepath.Clean(filepath.Join(wd, "..", ".."))
+}()
+
+// scratchCopy copies a template out of testdata and returns the path inside the
+// copy. Each case gets its own temporary directory, so two cases -- and two
+// runs -- never observe each other's writes and the repository is never the
+// target of an RPC that rewrites files.
+func scratchCopy(t *testing.T, rest string) string {
+	t.Helper()
+	template, tail, _ := strings.Cut(rest, "/")
+	src := filepath.Join(scratchRoot, "tests", "consistency", "testdata", template)
+	info, err := os.Stat(src)
+	if err != nil || !info.IsDir() {
+		t.Fatalf("scratch template is not a directory: %s", src)
+	}
+	destRoot, err := os.MkdirTemp("", "kcl-consistency-")
+	if err != nil {
+		t.Fatalf("cannot create a scratch directory: %v", err)
+	}
+	dest := filepath.Join(destRoot, template)
+	if err := copyTree(src, dest); err != nil {
+		t.Fatalf("cannot copy scratch template %s: %v", src, err)
+	}
+	if tail == "" {
+		return dest
+	}
+	return filepath.Join(dest, tail)
+}
+
+func copyTree(src, dest string) error {
+	entries, err := os.ReadDir(src)
+	if err != nil {
+		return err
+	}
+	if err := os.MkdirAll(dest, 0o755); err != nil {
+		return err
+	}
+	for _, entry := range entries {
+		from, to := filepath.Join(src, entry.Name()), filepath.Join(dest, entry.Name())
+		if entry.IsDir() {
+			if err := copyTree(from, to); err != nil {
+				return err
+			}
+			continue
+		}
+		data, err := os.ReadFile(from)
+		if err != nil {
+			return err
+		}
+		if err := os.WriteFile(to, data, 0o644); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+// resolvePath turns one manifest path into one the local core can open. Paths
+// are pinned repo-relative; `scratch:` names a template to copy first.
+func resolvePath(t *testing.T, p string) string {
+	t.Helper()
+	if rest, ok := strings.CutPrefix(p, scratchPrefix); ok {
+		return scratchCopy(t, rest)
+	}
+	if filepath.IsAbs(p) {
+		return p
+	}
+	return filepath.Join(scratchRoot, p)
+}
+
+func resolvePaths(t *testing.T, values []string) []string {
+	out := make([]string, 0, len(values))
+	for _, v := range values {
+		out = append(out, resolvePath(t, v))
+	}
+	return out
+}
+
+func jsonMap(m map[string]interface{}, key string) map[string]interface{} {
+	raw, _ := m[key].(map[string]interface{})
+	if raw == nil {
+		return map[string]interface{}{}
+	}
+	return raw
+}
+
+func execArgs(t *testing.T, m map[string]interface{}) *api.ExecProgramArgs {
+	t.Helper()
+	workDir := ""
+	if raw, ok := m["work_dir"].(string); ok && raw != "" {
+		workDir = resolvePath(t, raw)
+	}
+	// k_filename_list is resolved by the core against the process working
+	// directory rather than against work_dir, so it is made absolute here.
+	files := make([]string, 0)
+	for _, f := range jsonStringList(m, "k_filename_list") {
+		if filepath.IsAbs(f) || workDir == "" {
+			files = append(files, f)
+		} else {
+			files = append(files, filepath.Join(workDir, f))
+		}
+	}
+	// `args` is a list of {name, value} rather than a list of strings, and no
+	// case sets it -- it is the CLI's `-D name=value` -- so an empty list is the
+	// same answer as not filling it in, and reading it wrong cannot hide a
+	// difference in the cases that do matter.
+	return &api.ExecProgramArgs{
+		WorkDir:       workDir,
+		KFilenameList: files,
+		KCodeList:     jsonStringList(m, "k_code_list"),
+		Overrides:     jsonStringList(m, "overrides"),
+	}
+}
+
+// parseArgs builds ParseProgramArgs, the argument of the parse RPCs and of the
+// three schema-generation RPCs.
+func parseArgs(t *testing.T, m map[string]interface{}) *api.ParseProgramArgs {
+	t.Helper()
+	return &api.ParseProgramArgs{
+		Paths:   resolvePaths(t, jsonStringList(m, "paths")),
+		Sources: jsonStringList(m, "sources"),
+	}
+}
+
 func buildConsistencyArgs(t *testing.T, c consistencyCase) interface{} {
 	t.Helper()
+	a := c.Args
 	switch c.RPC {
 	case "KclService.Ping":
-		return &api.PingArgs{Value: jsonString(c.Args, "value")}
+		return &api.PingArgs{Value: jsonString(a, "value")}
 	case "KclService.ExecProgram":
-		return &api.ExecProgramArgs{
-			KCodeList: jsonStringList(c.Args, "k_code_list"),
-			Overrides: jsonStringList(c.Args, "overrides"),
-		}
+		return execArgs(t, a)
 	case "KclService.FormatCode":
-		return &api.FormatCodeArgs{Source: jsonString(c.Args, "source")}
+		return &api.FormatCodeArgs{Source: jsonString(a, "source")}
 	case "KclService.ValidateCode":
-		return &api.ValidateCodeArgs{
-			Code: jsonString(c.Args, "code"),
-			Data: jsonString(c.Args, "data"),
-		}
+		return &api.ValidateCodeArgs{Code: jsonString(a, "code"), Data: jsonString(a, "data")}
 	case "KclService.FormatTestReport":
 		infos := []map[string]interface{}{}
-		raw, _ := c.Args["result"].(map[string]interface{})
-		if raw != nil {
-			if list, ok := raw["info"].([]interface{}); ok {
-				for _, item := range list {
-					if info, ok := item.(map[string]interface{}); ok {
-						infos = append(infos, info)
-					}
+		if list, ok := jsonMap(a, "result")["info"].([]interface{}); ok {
+			for _, item := range list {
+				if info, ok := item.(map[string]interface{}); ok {
+					infos = append(infos, info)
 				}
 			}
 		}
@@ -130,35 +271,76 @@ func buildConsistencyArgs(t *testing.T, c consistencyCase) interface{} {
 		}
 		return &api.FormatTestReportArgs{Result: &api.TestResult{Info: testInfos}}
 	case "KclService.GenerateToml":
-		execArgs := map[string]interface{}{}
-		if raw, ok := c.Args["exec_args"].(map[string]interface{}); ok {
-			execArgs = raw
-		}
-		return &api.GenerateTomlArgs{
-			ExecArgs: &api.ExecProgramArgs{
-				KCodeList: jsonStringList(execArgs, "k_code_list"),
-			},
-		}
+		return &api.GenerateTomlArgs{ExecArgs: execArgs(t, jsonMap(a, "exec_args"))}
 	case "KclService.GenerateKcl":
 		return &api.GenerateKclArgs{
-			Source:   jsonString(c.Args, "source"),
-			Filename: jsonString(c.Args, "filename"),
-			Format:   jsonString(c.Args, "format"),
+			Source:   jsonString(a, "source"),
+			Filename: jsonString(a, "filename"),
+			Format:   jsonString(a, "format"),
 		}
 	case "KclService.GenerateOpenAPI":
-		return &api.GenerateOpenAPIArgs{
-			ParseArgs: consistencyParseArgs(c.Args),
-			Version:   jsonString(c.Args, "version"),
-		}
+		return &api.GenerateOpenAPIArgs{ParseArgs: parseArgs(t, jsonMap(a, "parse_args")), Version: jsonString(a, "version")}
 	case "KclService.GenerateProto":
-		return &api.GenerateProtoArgs{
-			ParseArgs: consistencyParseArgs(c.Args),
-			Package:   jsonString(c.Args, "package"),
-		}
+		return &api.GenerateProtoArgs{ParseArgs: parseArgs(t, jsonMap(a, "parse_args")), Package: jsonString(a, "package")}
 	case "KclService.GenerateDoc":
-		return &api.GenerateDocArgs{
-			ParseArgs: consistencyParseArgs(c.Args),
-			Format:    jsonString(c.Args, "format"),
+		return &api.GenerateDocArgs{ParseArgs: parseArgs(t, jsonMap(a, "parse_args")), Format: jsonString(a, "format")}
+
+	// The cases added for the remaining RPCs. Every one of their arguments is a
+	// string, a list of strings or a bool, so each is a straight field read --
+	// the interesting part of these cases is the result, not the request.
+	case "KclService.ParseFile":
+		return &api.ParseFileArgs{Path: jsonString(a, "path"), Source: jsonString(a, "source")}
+	case "KclService.ParseProgram", "KclService.ListOptions":
+		return parseArgs(t, a)
+	case "KclService.ListVariables":
+		return &api.ListVariablesArgs{
+			Files:   resolvePaths(t, jsonStringList(a, "files")),
+			Specs:   jsonStringList(a, "specs"),
+			Options: &api.ListVariablesOptions{MergeProgram: jsonBool(jsonMap(a, "options"), "merge_program")},
+		}
+	case "KclService.LoadPackage":
+		return &api.LoadPackageArgs{
+			ParseArgs:    parseArgs(t, jsonMap(a, "parse_args")),
+			ResolveAst:   jsonBool(a, "resolve_ast"),
+			LoadBuiltin:  jsonBool(a, "load_builtin"),
+			WithAstIndex: jsonBool(a, "with_ast_index"),
+		}
+	case "KclService.GetSchemaTypeMapping", "KclService.GetSchemaTypeMappingUnderPath":
+		return &api.GetSchemaTypeMappingArgs{
+			ExecArgs:   execArgs(t, jsonMap(a, "exec_args")),
+			SchemaName: jsonString(a, "schema_name"),
+		}
+	case "KclService.GetVersion":
+		return &api.GetVersionArgs{}
+	case "BuiltinService.ListMethod":
+		return &api.ListMethodArgs{}
+	case "KclService.LintPath":
+		return &api.LintPathArgs{Paths: resolvePaths(t, jsonStringList(a, "paths"))}
+	case "KclService.FormatPath":
+		return &api.FormatPathArgs{Path: resolvePath(t, jsonString(a, "path")), DryRun: jsonBool(a, "dry_run")}
+	case "KclService.Test":
+		return &api.TestArgs{
+			ExecArgs:  execArgs(t, jsonMap(a, "exec_args")),
+			PkgList:   resolvePaths(t, jsonStringList(a, "pkg_list")),
+			RunRegexp: jsonString(a, "run_regexp"),
+			FailFast:  jsonBool(a, "fail_fast"),
+			Coverage:  jsonBool(a, "coverage"),
+		}
+	case "KclService.OverrideFile":
+		return &api.OverrideFileArgs{
+			File:        resolvePath(t, jsonString(a, "file")),
+			Specs:       jsonStringList(a, "specs"),
+			ImportPaths: resolvePaths(t, jsonStringList(a, "import_paths")),
+		}
+	case "KclService.LoadSettingsFiles":
+		return &api.LoadSettingsFilesArgs{
+			WorkDir: resolvePath(t, jsonString(a, "work_dir")),
+			Files:   resolvePaths(t, jsonStringList(a, "files")),
+		}
+	case "KclService.UpdateDependencies":
+		return &api.UpdateDependenciesArgs{
+			ManifestPath: resolvePath(t, jsonString(a, "manifest_path")),
+			Vendor:       jsonBool(a, "vendor"),
 		}
 	default:
 		t.Fatalf("no args builder for rpc %s", c.RPC)
@@ -166,91 +348,400 @@ func buildConsistencyArgs(t *testing.T, c consistencyCase) interface{} {
 	}
 }
 
-// consistencyParseArgs builds the ParseProgramArgs of the schema-driven
-// generation RPCs. Path entries are pinned repo-relative in the manifest
-// (resolved against the repository root, the parent of tests/consistency);
-// absolute entries are kept as-is.
-func consistencyParseArgs(args map[string]interface{}) *api.ParseProgramArgs {
-	raw, _ := args["parse_args"].(map[string]interface{})
-	paths := []string{}
-	for _, p := range jsonStringList(raw, "paths") {
-		if filepath.IsAbs(p) {
-			paths = append(paths, p)
-		} else {
-			paths = append(paths, filepath.Join("..", "..", p))
+// kclTypesProto renders a `map<string, KclType>` (or `map<string, SchemaTypes>`)
+// the way every other runner does: canonical protobuf JSON, with `filename`
+// dropped and every object key-sorted. The two files differ from each other for
+// the same two reasons in both languages -- `filename` is an absolute path so
+// it differs per machine, and `KclType` holds two protobuf maps whose iteration
+// order Go randomises, so an unsorted rendering would differ per run.
+//
+// Each value is marshalled on its own and the outer object is assembled here,
+// because protojson marshals a message and not a Go map. Sorting therefore
+// falls out of the round trip through encoding/json at the end, which sorts
+// every object at every depth -- the two `KclType` maps are nested, and sorting
+// only the top level would leave `properties` and `examples` unordered.
+//
+// The marshal options are protojson's defaults, so an unset field is simply
+// absent. That is the dialect the manifest is pinned to, and it is what
+// protojson emits with no configuration at all -- `EmitUnpopulated` is the
+// option that does *not* match, because it renders unset message fields as
+// `null` as well as filling in the scalars and repeated fields.
+func kclTypesProto[T proto.Message](m map[string]T) map[string]interface{} {
+	document := make(map[string]interface{}, len(m))
+	marshal := protojson.MarshalOptions{UseProtoNames: true}
+	for name, value := range m {
+		raw, err := marshal.Marshal(value)
+		if err != nil {
+			return map[string]interface{}{"__error__": err.Error()}
 		}
+		var decoded map[string]interface{}
+		if err := json.Unmarshal(raw, &decoded); err != nil {
+			return map[string]interface{}{"__error__": err.Error()}
+		}
+		document[name] = decoded
 	}
-	return &api.ParseProgramArgs{Paths: paths}
+	sorted, err := json.Marshal(document)
+	if err != nil {
+		return map[string]interface{}{"__error__": err.Error()}
+	}
+	var out map[string]interface{}
+	if err := json.Unmarshal(sorted, &out); err != nil {
+		return map[string]interface{}{"__error__": err.Error()}
+	}
+	return withoutLocalPaths(out).(map[string]interface{})
 }
 
-func callConsistencyRPC(client api.ServiceClient, c consistencyCase, args interface{}) (map[string]interface{}, error) {
+// withoutLocalPaths drops `filename` at every depth. A one-level strip would be
+// enough for this fixture and would silently stop being enough for a schema
+// whose properties carry one, which is why it recurses.
+func withoutLocalPaths(node interface{}) interface{} {
+	switch n := node.(type) {
+	case map[string]interface{}:
+		out := make(map[string]interface{}, len(n))
+		for k, v := range n {
+			if k == "filename" {
+				continue
+			}
+			out[k] = withoutLocalPaths(v)
+		}
+		return out
+	case []interface{}:
+		out := make([]interface{}, len(n))
+		for i, v := range n {
+			out[i] = withoutLocalPaths(v)
+		}
+		return out
+	default:
+		return node
+	}
+}
+
+// extractConsistency projects a result into the same JSON-shaped map the
+// manifest pins, keyed by case name. It mirrors the `extract` of each
+// definition in tests/consistency/generate_cases.py -- the projections are
+// per-runner on purpose, because a binding's own view of the result is the
+// thing under test and a shared serialiser would test the serialiser instead.
+//
+// A case with no entry here reads its named fields straight off the result
+// through the message's canonical JSON form, which is all the generation RPCs
+// need: their contract *is* one top-level field, and it is the whole answer.
+func extractConsistency(c consistencyCase, result interface{}) map[string]interface{} {
+	switch c.Name {
+	case "parse_file":
+		r := result.(*api.ParseFileResult)
+		return map[string]interface{}{
+			"body_count":  jsonTreeLen(r.AstJson, "body"),
+			"error_count": len(r.Errors),
+			"deps":        stringList(r.Deps),
+		}
+	case "parse_program":
+		r := result.(*api.ParseProgramResult)
+		// ParseProgram returns a `pkgs` document, not a module: one Module per
+		// file, keyed by package path. ParseFile returns a bare Module with a
+		// `body` at the top level instead, which is why the two cases pin
+		// different numbers and neither of them is a statement count.
+		var pkgs struct {
+			Pkgs map[string][]json.RawMessage `json:"pkgs"`
+		}
+		modules := 0
+		if r.AstJson != "" && json.Unmarshal([]byte(r.AstJson), &pkgs) == nil {
+			modules = len(pkgs.Pkgs["__main__"])
+		}
+		return map[string]interface{}{
+			"module_count": modules,
+			"error_count":  len(r.Errors),
+			"paths":        baseNames(r.Paths),
+		}
+	case "list_options":
+		r := result.(*api.ListOptionsResult)
+		pairs := make([]interface{}, 0, len(r.Options))
+		for _, o := range r.Options {
+			pairs = append(pairs, []interface{}{o.Name, o.Required})
+		}
+		return map[string]interface{}{
+			"option_count": len(r.Options),
+			"options":      sortPairs(pairs),
+		}
+	case "list_variables":
+		r := result.(*api.ListVariablesResult)
+		values := make(map[string]interface{}, len(r.Variables))
+		for spec, vl := range r.Variables {
+			items := make([]interface{}, 0, len(vl.Variables))
+			for _, v := range vl.Variables {
+				items = append(items, v.Value)
+			}
+			values[spec] = items
+		}
+		return map[string]interface{}{
+			"values":            values,
+			"unsupported_codes": stringList(r.UnsupportedCodes),
+			"parse_error_count": len(r.ParseErrors),
+		}
+	case "load_package":
+		r := result.(*api.LoadPackageResult)
+		modName := ""
+		if r.KclMod != nil && r.KclMod.Package != nil {
+			modName = r.KclMod.Package.Name
+		}
+		return map[string]interface{}{
+			"path_count":        len(r.Paths),
+			"type_error_count":  len(r.TypeErrors),
+			"parse_error_count": len(r.ParseErrors),
+			"symbol_count":      len(r.Symbols),
+			"scope_count":       len(r.Scopes),
+			"has_kcl_mod":       r.KclMod != nil,
+			"kcl_mod_name":      modName,
+			"app_count":         len(r.Apps),
+			"import_count":      len(r.Imports),
+		}
+	case "get_schema_type_mapping":
+		return map[string]interface{}{"type_mapping": kclTypesProto(result.(*api.GetSchemaTypeMappingResult).SchemaTypeMapping)}
+	case "get_schema_type_mapping_under_path":
+		return map[string]interface{}{"type_mapping": kclTypesProto(result.(*api.GetSchemaTypeMappingUnderPathResult).SchemaTypeMapping)}
+	case "get_version":
+		r := result.(*api.GetVersionResult)
+		return map[string]interface{}{
+			"version":          majorMinor(r.Version),
+			"has_checksum":     r.Checksum != "",
+			"has_git_sha":      r.GitSha != "",
+			"has_version_info": r.VersionInfo != "",
+		}
+	case "list_method":
+		r := result.(*api.ListMethodResult)
+		present := map[string]bool{}
+		empty := false
+		for _, name := range r.MethodNameList {
+			present[name] = true
+			if name == "" {
+				empty = true
+			}
+		}
+		return map[string]interface{}{
+			"has_kclservice_ping":            present["KclService.Ping"],
+			"has_kclservice_parse_program":   present["KclService.ParseProgram"],
+			"has_builtinservice_list_method": present["BuiltinService.ListMethod"],
+			"method_count":                   len(r.MethodNameList),
+			"has_empty_name":                 empty,
+		}
+	case "lint_path_clean":
+		return map[string]interface{}{"result_count": len(result.(*api.LintPathResult).Results)}
+	case "lint_path_with_errors":
+		return map[string]interface{}{"has_result": len(result.(*api.LintPathResult).Results) > 0}
+	case "format_path_dry_run":
+		r := result.(*api.FormatPathResult)
+		return map[string]interface{}{
+			"changed_count": len(r.ChangedPaths),
+			"changed":       baseNames(r.ChangedPaths),
+		}
+	case "test_run":
+		r := result.(*api.TestResult)
+		names, failed := []interface{}{}, []interface{}{}
+		for _, i := range r.Info {
+			names = append(names, i.Name)
+			if i.Error != "" {
+				failed = append(failed, i.Name)
+			}
+		}
+		sort.Slice(names, func(i, j int) bool { return names[i].(string) < names[j].(string) })
+		sort.Slice(failed, func(i, j int) bool { return failed[i].(string) < failed[j].(string) })
+		return map[string]interface{}{"names": names, "failed": failed}
+	case "override_file":
+		r := result.(*api.OverrideFileResult)
+		return map[string]interface{}{"result": r.Result, "parse_error_count": len(r.ParseErrors)}
+	case "load_settings_files":
+		r := result.(*api.LoadSettingsFilesResult)
+		opts := make([]interface{}, 0, len(r.KclOptions))
+		for _, kv := range r.KclOptions {
+			opts = append(opts, []interface{}{kv.Key, kv.Value})
+		}
+		cfg := r.KclCliConfigs
+		if cfg == nil {
+			cfg = &api.CliConfig{}
+		}
+		return map[string]interface{}{
+			"options":            sortPairs(opts),
+			"output":             cfg.Output,
+			"overrides":          stringList(cfg.Overrides),
+			"strict_range_check": cfg.StrictRangeCheck,
+			"verbose":            cfg.Verbose,
+		}
+	case "update_dependencies_no_deps":
+		return map[string]interface{}{"external_pkg_count": len(result.(*api.UpdateDependenciesResult).ExternalPkgs)}
+	case "validate_code_invalid":
+		// err_message is read as a boolean: the diagnostic carries ANSI colour
+		// escapes, a random temp path and a temp filename, so the string itself
+		// is not pinnable but its presence is.
+		r := result.(*api.ValidateCodeResult)
+		return map[string]interface{}{"success": r.Success, "has_error_message": r.ErrMessage != ""}
+	}
+	actual := map[string]interface{}{}
+	for field := range c.Expect {
+		value, err := protoField(result, field)
+		if err != nil {
+			actual[field] = map[string]interface{}{"__error__": err.Error()}
+			continue
+		}
+		actual[field] = value
+	}
+	return actual
+}
+
+// jsonTreeLen counts the entries of a top-level array in an AST document, or 0
+// when the document is empty or does not parse. A document that does not parse
+// yields 0 rather than failing, because "the binding attached no tree at all"
+// and "the tree is malformed" are the same observation to this case.
+func jsonTreeLen(document, key string) int {
+	if document == "" {
+		return 0
+	}
+	var tree map[string]json.RawMessage
+	if json.Unmarshal([]byte(document), &tree) != nil {
+		return 0
+	}
+	var items []json.RawMessage
+	if json.Unmarshal(tree[key], &items) != nil {
+		return 0
+	}
+	return len(items)
+}
+
+func sortPairs(pairs []interface{}) []interface{} {
+	sort.Slice(pairs, func(i, j int) bool {
+		return fmt.Sprint(pairs[i]) < fmt.Sprint(pairs[j])
+	})
+	return pairs
+}
+
+func stringList(values []string) []interface{} {
+	out := make([]interface{}, 0, len(values))
+	for _, v := range values {
+		out = append(out, v)
+	}
+	return out
+}
+
+func baseNames(paths []string) []interface{} {
+	out := make([]interface{}, 0, len(paths))
+	for _, p := range paths {
+		out = append(out, filepath.Base(p))
+	}
+	return out
+}
+
+// majorMinor keeps the first two version components, so a patch release does
+// not churn the manifest. Anything that is not dot-separated numbers becomes the
+// empty string, which fails loudly rather than silently agreeing.
+func majorMinor(version string) string {
+	parts := strings.Split(version, ".")
+	if len(parts) < 2 {
+		return ""
+	}
+	for _, p := range parts[:2] {
+		if p == "" || strings.Trim(p, "0123456789") != "" {
+			return ""
+		}
+	}
+	return parts[0] + "." + parts[1]
+}
+
+// protoField reads one named field off a result message through the message's
+// canonical protobuf JSON form, which is the representation the manifest's
+// expectations are written in. `bytes` fields render as base64 there, so they
+// are decoded back to text: the manifest holds the text, not the encoding.
+//
+// `EmitUnpopulated` is the one place this file asks for it, and for the
+// opposite reason to the one it avoids elsewhere: the manifest pins fields by
+// name whether or not the core populated them -- `validate_code`'s
+// `success: false` is the shape of that -- so a pinned field has to come back
+// with its zero value rather than as an absent key. Every field reached
+// through here is a scalar or a `bytes`, which this renders as `""`/`0`/`false`
+// exactly as the other protobuf runtimes do.
+func protoField(msg interface{}, field string) (interface{}, error) {
+	m, ok := msg.(proto.Message)
+	if !ok {
+		return nil, fmt.Errorf("result is not a protobuf message")
+	}
+	if m.ProtoReflect().Descriptor().Fields().ByName(protoreflect.Name(field)) == nil {
+		return nil, fmt.Errorf("result has no field %q", field)
+	}
+	raw, err := protojson.MarshalOptions{UseProtoNames: true, EmitUnpopulated: true}.Marshal(m)
+	if err != nil {
+		return nil, err
+	}
+	var doc map[string]interface{}
+	if err := json.Unmarshal(raw, &doc); err != nil {
+		return nil, err
+	}
+	value, ok := doc[field]
+	if !ok {
+		return nil, fmt.Errorf("field %q is absent from the message's JSON form", field)
+	}
+	if encoded, isString := value.(string); isString {
+		if decoded, err := base64.StdEncoding.DecodeString(encoded); err == nil {
+			return string(decoded), nil
+		}
+	}
+	return value, nil
+}
+
+func callConsistencyRPC(client api.ServiceClient, c consistencyCase, args interface{}) (interface{}, error) {
 	switch c.RPC {
 	case "KclService.Ping":
-		result, err := client.Ping(args.(*api.PingArgs))
-		if err != nil {
-			return nil, err
-		}
-		return map[string]interface{}{"value": result.Value}, nil
+		return client.Ping(args.(*api.PingArgs))
 	case "KclService.ExecProgram":
-		result, err := client.ExecProgram(args.(*api.ExecProgramArgs))
-		if err != nil {
-			return nil, err
-		}
-		return map[string]interface{}{
-			"yaml_result": result.YamlResult,
-			"json_result": result.JsonResult,
-		}, nil
+		return client.ExecProgram(args.(*api.ExecProgramArgs))
 	case "KclService.FormatCode":
-		result, err := client.FormatCode(args.(*api.FormatCodeArgs))
-		if err != nil {
-			return nil, err
-		}
-		return map[string]interface{}{"formatted": string(result.Formatted)}, nil
+		return client.FormatCode(args.(*api.FormatCodeArgs))
 	case "KclService.ValidateCode":
-		result, err := client.ValidateCode(args.(*api.ValidateCodeArgs))
-		if err != nil {
-			return nil, err
-		}
-		return map[string]interface{}{
-			"success":     result.Success,
-			"err_message": result.ErrMessage,
-		}, nil
+		return client.ValidateCode(args.(*api.ValidateCodeArgs))
 	case "KclService.FormatTestReport":
-		result, err := client.FormatTestReport(args.(*api.FormatTestReportArgs))
-		if err != nil {
-			return nil, err
-		}
-		return map[string]interface{}{"report": result.Report}, nil
+		return client.FormatTestReport(args.(*api.FormatTestReportArgs))
 	case "KclService.GenerateToml":
-		result, err := client.GenerateToml(args.(*api.GenerateTomlArgs))
-		if err != nil {
-			return nil, err
-		}
-		return map[string]interface{}{"toml": result.Toml}, nil
+		return client.GenerateToml(args.(*api.GenerateTomlArgs))
 	case "KclService.GenerateKcl":
-		result, err := client.GenerateKcl(args.(*api.GenerateKclArgs))
-		if err != nil {
-			return nil, err
-		}
-		return map[string]interface{}{"kcl": result.Kcl}, nil
+		return client.GenerateKcl(args.(*api.GenerateKclArgs))
 	case "KclService.GenerateOpenAPI":
-		result, err := client.GenerateOpenAPI(args.(*api.GenerateOpenAPIArgs))
-		if err != nil {
-			return nil, err
-		}
-		return map[string]interface{}{"spec": result.Spec}, nil
+		return client.GenerateOpenAPI(args.(*api.GenerateOpenAPIArgs))
 	case "KclService.GenerateProto":
-		result, err := client.GenerateProto(args.(*api.GenerateProtoArgs))
-		if err != nil {
-			return nil, err
-		}
-		return map[string]interface{}{"proto": result.Proto}, nil
+		return client.GenerateProto(args.(*api.GenerateProtoArgs))
 	case "KclService.GenerateDoc":
-		result, err := client.GenerateDoc(args.(*api.GenerateDocArgs))
-		if err != nil {
-			return nil, err
+		return client.GenerateDoc(args.(*api.GenerateDocArgs))
+	case "KclService.ParseFile":
+		return client.ParseFile(args.(*api.ParseFileArgs))
+	case "KclService.ParseProgram":
+		return client.ParseProgram(args.(*api.ParseProgramArgs))
+	case "KclService.ListOptions":
+		return client.ListOptions(args.(*api.ParseProgramArgs))
+	case "KclService.ListVariables":
+		return client.ListVariables(args.(*api.ListVariablesArgs))
+	case "KclService.LoadPackage":
+		return client.LoadPackage(args.(*api.LoadPackageArgs))
+	case "KclService.GetSchemaTypeMapping":
+		return client.GetSchemaTypeMapping(args.(*api.GetSchemaTypeMappingArgs))
+	case "KclService.GetSchemaTypeMappingUnderPath":
+		return client.GetSchemaTypeMappingUnderPath(args.(*api.GetSchemaTypeMappingArgs))
+	case "KclService.GetVersion":
+		return client.GetVersion(args.(*api.GetVersionArgs))
+	case "KclService.LintPath":
+		return client.LintPath(args.(*api.LintPathArgs))
+	case "KclService.FormatPath":
+		return client.FormatPath(args.(*api.FormatPathArgs))
+	case "KclService.Test":
+		return client.Test(args.(*api.TestArgs))
+	case "KclService.OverrideFile":
+		return client.OverrideFile(args.(*api.OverrideFileArgs))
+	case "KclService.LoadSettingsFiles":
+		return client.LoadSettingsFiles(args.(*api.LoadSettingsFilesArgs))
+	case "KclService.UpdateDependencies":
+		return client.UpdateDependencies(args.(*api.UpdateDependenciesArgs))
+	case "BuiltinService.ListMethod":
+		lister, ok := client.(interface {
+			ListMethod(*api.ListMethodArgs) (*api.ListMethodResult, error)
+		})
+		if !ok {
+			return nil, fmt.Errorf("client does not expose ListMethod")
 		}
-		return map[string]interface{}{"content": result.Content}, nil
+		return lister.ListMethod(args.(*api.ListMethodArgs))
 	default:
 		return nil, fmt.Errorf("no caller for rpc %s", c.RPC)
 	}
@@ -267,6 +758,17 @@ func isUnavailableRPCError(err error) bool {
 		strings.Contains(msg, "not implemented") ||
 		strings.Contains(msg, "unimplemented") ||
 		strings.Contains(msg, "invalid rpc")
+}
+
+// prettyJSON renders a value indented so a diff of two nested documents lines
+// up. encoding/json already sorts map keys, so this is only indentation, but it
+// is what turns a mismatch into a readable diff rather than one long line.
+func prettyJSON(v interface{}) string {
+	raw, err := json.MarshalIndent(v, "", "  ")
+	if err != nil {
+		return fmt.Sprintf("%v", v)
+	}
+	return string(raw)
 }
 
 func diffLines(expected, actual string) string {
@@ -292,6 +794,25 @@ func diffLines(expected, actual string) string {
 	return b.String()
 }
 
+// normalizeJSON puts an extracted value into the same shape the manifest's
+// expectations arrive in. The expectations came out of encoding/json, so every
+// number in them is a float64; an extractor that counts a repeated field
+// produces an int, and reflect.DeepEqual calls `int(0)` and `float64(0)`
+// different even though the manifest is about the value and not about Go's
+// choice of numeric type. Round-tripping through JSON is what makes the two
+// comparable without every extractor having to know the manifest's encoding.
+func normalizeJSON(v interface{}) (interface{}, error) {
+	raw, err := json.Marshal(v)
+	if err != nil {
+		return nil, err
+	}
+	var out interface{}
+	if err := json.Unmarshal(raw, &out); err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func TestConsistency(t *testing.T) {
 	cases := loadConsistencyCases(t)
 	client := NewNativeServiceClient()
@@ -304,7 +825,7 @@ func TestConsistency(t *testing.T) {
 				t.Skipf("core does not list %s (old core)", c.RPC)
 			}
 
-			actual, err := callConsistencyRPC(client, c, buildConsistencyArgs(t, c))
+			result, err := callConsistencyRPC(client, c, buildConsistencyArgs(t, c))
 			if err != nil {
 				if c.NewCore && isUnavailableRPCError(err) {
 					t.Skipf("%s call failed on this core: %v", c.RPC, err)
@@ -312,14 +833,24 @@ func TestConsistency(t *testing.T) {
 				t.Fatalf("%s failed: %v", c.RPC, err)
 			}
 
+			actual := extractConsistency(c, result)
+			// Deep equality rather than a rendered comparison: several cases
+			// pin a nested document (a KclType tree, a map of lists), and two
+			// structures that print the same are rare enough that comparing
+			// text would hide a real difference more often than it found one.
 			for field, want := range c.Expect {
 				got, ok := actual[field]
 				if !ok {
 					t.Errorf("result has no field %s", field)
 					continue
 				}
-				if fmt.Sprintf("%v", got) != fmt.Sprintf("%v", want) {
-					t.Errorf("field %s mismatch:\n%s", field, diffLines(fmt.Sprintf("%v", want), fmt.Sprintf("%v", got)))
+				normalized, err := normalizeJSON(got)
+				if err != nil {
+					t.Errorf("field %s could not be compared: %v", field, err)
+					continue
+				}
+				if !reflect.DeepEqual(normalized, want) {
+					t.Errorf("field %s mismatch:\n%s", field, diffLines(prettyJSON(want), prettyJSON(normalized)))
 				}
 			}
 		})

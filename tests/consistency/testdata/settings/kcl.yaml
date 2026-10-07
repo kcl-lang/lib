@@ -1,0 +1,20 @@
+# One settings file, both halves. `kcl_cli_configs` and `kcl_options` are
+# siblings in this format, not two files: a second file with only one of them
+# is rejected outright as "invalid setting file format", so a case that read
+# the CLI config from a `cli.yaml` of its own would fail on a detail of the
+# format rather than on anything a binding does.
+#
+# `value` is pinned JSON-encoded ("myval" with the quotes) because the loader
+# parses each value as a KCL expression and renders the parsed form back. A
+# binding that passed the raw string through would differ here, and should.
+kcl_cli_configs:
+  output: out.yaml
+  overrides:
+    - app.name=overridden
+  strict_range_check: true
+  verbose: 1
+kcl_options:
+  - key: myopt
+    value: myval
+  - key: other
+    value: 2

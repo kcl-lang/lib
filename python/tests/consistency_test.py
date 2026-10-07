@@ -15,6 +15,8 @@ If ``cases.json`` is missing, regenerate it with
 
 import difflib
 import json
+import shutil
+import tempfile
 from pathlib import Path
 
 import pytest
@@ -28,6 +30,13 @@ CASES_JSON = (
     / "cases.json"
 )
 REPO_ROOT = CASES_JSON.parent.parent.parent
+TESTDATA = REPO_ROOT / "tests" / "consistency" / "testdata"
+
+# The marker `generate_cases.py` writes into a path that names a template rather
+# than a file. `scratch:a/b.k` means "b.k inside a copy of testdata/a"; the copy
+# is what makes the RPCs that write files safe to run, and it is also why the
+# expectations for those cases pin the RPC's answer rather than a path.
+SCRATCH_PREFIX = "scratch:"
 
 
 def _load_cases():
@@ -41,16 +50,50 @@ def _load_cases():
     return manifest["cases"]
 
 
+def _scratch(rest):
+    """Copy a scratch template and return the path inside the copy.
+
+    Each case gets its own temporary directory, so two cases -- and two runs --
+    never observe each other's writes and the repository is never the target of
+    an RPC that rewrites files.
+    """
+    template, _, tail = rest.partition("/")
+    src = TESTDATA / template
+    assert src.is_dir(), f"scratch template is not a directory: {src}"
+    dest = Path(tempfile.mkdtemp(prefix="kcl-consistency-")) / template
+    shutil.copytree(src, dest)
+    return str(dest / tail) if tail else str(dest)
+
+
 def _resolve_path(p):
     """Manifest path entries are repo-relative (pinned by generate_cases.py);
     absolute entries are kept as-is."""
+    if p.startswith(SCRATCH_PREFIX):
+        return _scratch(p[len(SCRATCH_PREFIX) :])
     return p if Path(p).is_absolute() else str(REPO_ROOT / p)
 
 
+def _paths(values):
+    return [_resolve_path(p) for p in values]
+
+
 def _parse_args(a):
-    return api.ParseProgramArgs(
-        paths=[_resolve_path(p) for p in a.get("paths", [])],
-        sources=a.get("sources", []),
+    return api.ParseProgramArgs(paths=_paths(a.get("paths", [])), sources=a.get("sources", []))
+
+
+def _exec_args(a):
+    # `k_filename_list` is resolved by the core against the process working
+    # directory rather than against `work_dir`, so it has to be made absolute
+    # here or it will not survive being run from another directory.
+    return api.ExecProgramArgs(
+        k_code_list=a.get("k_code_list", []),
+        k_filename_list=[
+            p if Path(p).is_absolute() else str(Path(_resolve_path(a.get("work_dir", "."))) / p)
+            for p in a.get("k_filename_list", [])
+        ],
+        work_dir=_resolve_path(a.get("work_dir", "")),
+        args=a.get("args", []),
+        overrides=a.get("overrides", []),
     )
 
 
@@ -60,7 +103,7 @@ def _build_args(case):
     if rpc == "KclService.Ping":
         return api.PingArgs(value=a["value"])
     if rpc == "KclService.ExecProgram":
-        return api.ExecProgramArgs(**a)
+        return _exec_args(a)
     if rpc == "KclService.FormatCode":
         return api.FormatCodeArgs(source=a["source"])
     if rpc == "KclService.ValidateCode":
@@ -69,11 +112,13 @@ def _build_args(case):
         )
     if rpc == "KclService.GenerateKcl":
         return api.GenerateKclArgs(
-            source=a["source"], filename=a["filename"], format=a["format"]
+            source=a["source"],
+            filename=a["filename"],
+            format=a.get("format", ""),
         )
     if rpc == "KclService.GenerateToml":
         return api.GenerateTomlArgs(
-            exec_args=api.ExecProgramArgs(**a["exec_args"]),
+            exec_args=_exec_args(a["exec_args"]),
             sort_keys=a.get("sort_keys", False),
         )
     if rpc == "KclService.FormatTestReport":
@@ -89,6 +134,68 @@ def _build_args(case):
                     for i in a["result"]["info"]
                 ]
             )
+        )
+    if rpc == "KclService.ParseFile":
+        return api.ParseFileArgs(
+            path=a.get("path", ""), source=a.get("source", ""),
+            external_pkgs=a.get("external_pkgs", []),
+        )
+    if rpc == "KclService.ParseProgram":
+        return _parse_args(a)
+    if rpc == "KclService.ListOptions":
+        return _parse_args(a)
+    if rpc == "KclService.ListVariables":
+        return api.ListVariablesArgs(
+            files=_paths(a.get("files", [])),
+            specs=a.get("specs", []),
+            options=api.ListVariablesOptions(
+                merge_program=a.get("options", {}).get("merge_program", False)
+            ),
+        )
+    if rpc == "KclService.LoadPackage":
+        return api.LoadPackageArgs(
+            parse_args=_parse_args(a["parse_args"]),
+            resolve_ast=a.get("resolve_ast", False),
+            load_builtin=a.get("load_builtin", False),
+            with_ast_index=a.get("with_ast_index", False),
+        )
+    if rpc in ("KclService.GetSchemaTypeMapping", "KclService.GetSchemaTypeMappingUnderPath"):
+        return api.GetSchemaTypeMappingArgs(
+            exec_args=_exec_args(a["exec_args"]), schema_name=a.get("schema_name", "")
+        )
+    if rpc == "KclService.GetVersion":
+        return api.GetVersionArgs()
+    if rpc == "BuiltinService.ListMethod":
+        return api.ListMethodArgs()
+    if rpc == "KclService.LintPath":
+        return api.LintPathArgs(paths=_paths(a.get("paths", [])))
+    if rpc == "KclService.FormatPath":
+        return api.FormatPathArgs(
+            path=_resolve_path(a.get("path", "")), dry_run=a.get("dry_run", False)
+        )
+    if rpc == "KclService.Test":
+        return api.TestArgs(
+            exec_args=_exec_args(a.get("exec_args", {})),
+            pkg_list=_paths(a.get("pkg_list", [])),
+            run_regexp=a.get("run_regexp", ""),
+            fail_fast=a.get("fail_fast", False),
+            coverage=a.get("coverage", False),
+        )
+    if rpc == "KclService.OverrideFile":
+        return api.OverrideFileArgs(
+            file=_resolve_path(a.get("file", "")),
+            specs=a.get("specs", []),
+            import_paths=_paths(a.get("import_paths", [])),
+        )
+    if rpc == "KclService.LoadSettingsFiles":
+        return api.LoadSettingsFilesArgs(
+            work_dir=_resolve_path(a.get("work_dir", "")),
+            files=_paths(a.get("files", [])),
+        )
+    if rpc == "KclService.UpdateDependencies":
+        return api.UpdateDependenciesArgs(
+            manifest_path=_resolve_path(a.get("manifest_path", "")),
+            vendor=a.get("vendor", False),
         )
     if rpc == "KclService.GenerateOpenAPI":
         return api.GenerateOpenAPIArgs(
@@ -108,15 +215,36 @@ def _build_args(case):
 _METHOD_NAMES = {
     "KclService.Ping": "ping",
     "KclService.ExecProgram": "exec_program",
+    "KclService.ParseFile": "parse_file",
+    "KclService.ParseProgram": "parse_program",
+    "KclService.ListOptions": "list_options",
+    "KclService.ListVariables": "list_variables",
+    "KclService.LoadPackage": "load_package",
     "KclService.FormatCode": "format_code",
+    "KclService.FormatPath": "format_path",
+    "KclService.LintPath": "lint_path",
+    "KclService.OverrideFile": "override_file",
+    "KclService.GetSchemaTypeMapping": "get_schema_type_mapping",
+    "KclService.GetSchemaTypeMappingUnderPath": "get_schema_type_mapping_under_path",
     "KclService.ValidateCode": "validate_code",
-    "KclService.GenerateKcl": "generate_kcl",
-    "KclService.GenerateToml": "generate_toml",
+    "KclService.LoadSettingsFiles": "load_settings_files",
+    "KclService.Rename": "rename",
+    "KclService.RenameCode": "rename_code",
+    "KclService.Test": "test",
     "KclService.FormatTestReport": "format_test_report",
+    "KclService.GenerateToml": "generate_toml",
+    "KclService.GenerateKcl": "generate_kcl",
     "KclService.GenerateOpenAPI": "generate_openapi",
     "KclService.GenerateProto": "generate_proto",
     "KclService.GenerateDoc": "generate_doc",
+    "KclService.UpdateDependencies": "update_dependencies",
+    "KclService.GetVersion": "get_version",
+    "BuiltinService.ListMethod": "list_method",
 }
+
+# The two methods the service builds its (empty) args message for, so calling
+# them with the one this runner constructed is not what the binding expects.
+_NO_ARG_METHODS = {"get_version", "list_method"}
 
 
 def _call(instance, case):
@@ -124,10 +252,140 @@ def _call(instance, case):
     # not define the new methods, and building a dict of bound methods would
     # raise AttributeError for every case, not just the new-RPC ones.
     method = getattr(instance, _METHOD_NAMES[case["rpc"]])
+    if _METHOD_NAMES[case["rpc"]] in _NO_ARG_METHODS:
+        return method()
     return method(_build_args(case))
 
 
+# Per-case projections, mirroring the `extract` of each definition in
+# `tests/consistency/generate_cases.py`. A case not listed here reads the named
+# fields straight off the result, which is all the generation RPCs need; the
+# cases below are the ones whose contract is a shape or a count rather than a
+# top-level field.
+def _tree_shape(result):
+    """`ParseFile`: a bare `Module` document, so the statements are at `body`."""
+    return {
+        "body_count": len(json.loads(result.ast_json)["body"]) if result.ast_json else 0,
+        "error_count": len(result.errors),
+        "deps": list(result.deps),
+    }
+
+
+def _kcl_types(mapping):
+    """The schema-mapping documents, in the form every binding can produce.
+
+    Canonical protobuf JSON -- the default dialect, so a field the core left
+    unset is absent rather than rendered as an empty value -- minus `filename`
+    (an absolute path, so it differs on every machine) and with every object
+    key-sorted, because `KclType` holds two protobuf maps whose iteration order
+    is undefined and an unsorted golden file churns on every regeneration.
+    """
+    from google.protobuf.json_format import MessageToDict
+
+    document = {
+        name: MessageToDict(value, preserving_proto_field_name=True)
+        for name, value in mapping.items()
+    }
+    return _without_local_paths(json.loads(json.dumps(document, sort_keys=True)))
+
+
+def _without_local_paths(node):
+    if isinstance(node, dict):
+        return {
+            k: _without_local_paths(v)
+            for k, v in node.items()
+            if k not in ("filename",)
+        }
+    if isinstance(node, list):
+        return [_without_local_paths(v) for v in node]
+    return node
+
+
+_EXTRACTORS = {
+    "parse_file": lambda r: _tree_shape(r),
+    "parse_program": lambda r: {
+        # `ParseProgram` returns a `pkgs` document, not a module: one Module per
+        # file, keyed by package path.
+        "module_count": len(json.loads(r.ast_json)["pkgs"]["__main__"]) if r.ast_json else 0,
+        "error_count": len(r.errors),
+        "paths": [Path(p).name for p in r.paths],
+    },
+    "list_options": lambda r: {
+        "option_count": len(r.options),
+        "options": sorted([o.name, o.required] for o in r.options),
+    },
+    "list_variables": lambda r: {
+        "values": {
+            spec: [v.value for v in vl.variables]
+            for spec, vl in sorted(r.variables.items())
+        },
+        "unsupported_codes": list(r.unsupported_codes),
+        "parse_error_count": len(r.parse_errors),
+    },
+    "load_package": lambda r: {
+        "path_count": len(r.paths),
+        "type_error_count": len(r.type_errors),
+        "parse_error_count": len(r.parse_errors),
+        "symbol_count": len(r.symbols),
+        "scope_count": len(r.scopes),
+        "has_kcl_mod": r.kcl_mod is not None,
+        "kcl_mod_name": r.kcl_mod.package.name if r.kcl_mod is not None else "",
+        "app_count": len(r.apps),
+        "import_count": len(r.imports),
+    },
+    "get_schema_type_mapping": lambda r: {"type_mapping": _kcl_types(r.schema_type_mapping)},
+    "get_schema_type_mapping_under_path": lambda r: {
+        "type_mapping": _kcl_types(r.schema_type_mapping)
+    },
+    "get_version": lambda r: {
+        "version": ".".join(r.version.split(".")[:2]) if r.version else "",
+        "has_checksum": bool(r.checksum),
+        "has_git_sha": bool(r.git_sha),
+        "has_version_info": bool(r.version_info),
+    },
+    "list_method": lambda r: {
+        "has_kclservice_ping": "KclService.Ping" in r.method_name_list,
+        "has_kclservice_parse_program": "KclService.ParseProgram" in r.method_name_list,
+        "has_builtinservice_list_method": "BuiltinService.ListMethod" in r.method_name_list,
+        "method_count": len(r.method_name_list),
+        "has_empty_name": any(not n for n in r.method_name_list),
+    },
+    "lint_path_clean": lambda r: {"result_count": len(r.results)},
+    "lint_path_with_errors": lambda r: {"has_result": len(r.results) > 0},
+    "format_path_dry_run": lambda r: {
+        "changed_count": len(r.changed_paths),
+        "changed": sorted(Path(p).name for p in r.changed_paths),
+    },
+    "test_run": lambda r: {
+        "names": sorted(i.name for i in r.info),
+        "failed": sorted(i.name for i in r.info if i.error),
+    },
+    "override_file": lambda r: {
+        "result": r.result,
+        "parse_error_count": len(r.parse_errors),
+    },
+    "load_settings_files": lambda r: {
+        "options": sorted([o.key, o.value] for o in r.kcl_options),
+        "output": r.kcl_cli_configs.output,
+        "overrides": list(r.kcl_cli_configs.overrides),
+        "strict_range_check": r.kcl_cli_configs.strict_range_check,
+        "verbose": r.kcl_cli_configs.verbose,
+    },
+    "update_dependencies_no_deps": lambda r: {"external_pkg_count": len(r.external_pkgs)},
+    # `validate_code_invalid` reads `err_message` as a boolean: the diagnostic
+    # carries ANSI colour escapes, a random temp path and a temp filename, so
+    # the string itself is not pinnable but its presence is.
+    "validate_code_invalid": lambda r: {
+        "success": r.success,
+        "has_error_message": bool(r.err_message),
+    },
+}
+
+
 def _actual_fields(case, result):
+    extract = _EXTRACTORS.get(case["name"])
+    if extract is not None:
+        return extract(result)
     actual = {}
     for field in case["expect"]:
         value = getattr(result, field)
@@ -189,7 +447,17 @@ def test_consistency(case):
             "regenerate cases.json against a new core to enable"
         )
     result = _call(_ensure_api(), case)
-    actual = _actual_fields(case, result)
+    # Only the fields the manifest pins are compared, so adding a field to
+    # `expect` is the only way to start asserting on it. A projection may
+    # compute more than that -- several cases project a field that is not
+    # pinnable on every core -- but a field the manifest *does* pin and the
+    # projection does not produce is still a failure, because the key is
+    # missing from the dict either way.
+    actual = {
+        field: value
+        for field, value in _actual_fields(case, result).items()
+        if field in case["expect"]
+    }
     assert actual == case["expect"], (
         f"consistency case `{case['name']}` ({case['rpc']}) mismatch:\n"
         f"{_diff(case['expect'], actual)}"

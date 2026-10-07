@@ -202,9 +202,9 @@ public class ConsistencyTest {
         }
         case "KclService.GenerateKcl": {
             Assume.assumeTrue("core does not list " + rpc + " (old core)", methods().contains(rpc));
-            GenerateKclResult result = api()
-                    .generateKcl(GenerateKclArgs.newBuilder().setSource(args.get("source").asText())
-                            .setFilename(args.get("filename").asText()).setFormat(args.get("format").asText()).build());
+            GenerateKclResult result = api().generateKcl(GenerateKclArgs.newBuilder()
+                    .setSource(args.get("source").asText()).setFilename(args.get("filename").asText())
+                    .setFormat(args.path("format").asText("")).build());
             assertField(name, "kcl", expect.get("kcl").asText(), result.getKcl());
             break;
         }
