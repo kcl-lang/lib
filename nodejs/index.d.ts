@@ -501,7 +501,9 @@ export declare function getSchemaTypeMapping(args: GetSchemaTypeMappingArgs): Ge
  * dependency packages. The result is keyed by package name.
  * See https://github.com/kcl-lang/kcl/issues/1546.
  */
-export declare function getSchemaTypeMappingUnderPath(args: GetSchemaTypeMappingArgs): GetSchemaTypeMappingUnderPathResult
+export declare function getSchemaTypeMappingUnderPath(
+  args: GetSchemaTypeMappingArgs,
+): GetSchemaTypeMappingUnderPathResult
 /** Format KCL file or directory path contains KCL files and returns the changed file paths. */
 export declare function formatCode(args: FormatCodeArgs): FormatCodeResult
 /** Format KCL file or directory path contains KCL files and returns the changed file paths. */
@@ -581,14 +583,47 @@ export declare function generateDoc(args: GenerateDocArgs): GenerateDocResult
  * - with_ast_index: Flag indicating whether to include AST index.
  */
 export declare class LoadPackageArgs {
-  constructor(paths: Array<string>, sources: Array<string>, resolveAst?: boolean | undefined | null, loadBuiltin?: boolean | undefined | null, withAstIndex?: boolean | undefined | null)
+  constructor(
+    paths: Array<string>,
+    sources: Array<string>,
+    resolveAst?: boolean | undefined | null,
+    loadBuiltin?: boolean | undefined | null,
+    withAstIndex?: boolean | undefined | null,
+  )
 }
 /** Message for execute program request arguments. */
 export declare class ExecProgramArgs {
-  constructor(paths: Array<string>, sources?: Array<string> | undefined | null, workDir?: string | undefined | null, args?: Array<Argument> | undefined | null, overrides?: Array<string> | undefined | null, disableYamlResult?: boolean | undefined | null, printOverrideAst?: boolean | undefined | null, strictRangeCheck?: boolean | undefined | null, disableNone?: boolean | undefined | null, verbose?: number | undefined | null, debug?: number | undefined | null, sortKeys?: boolean | undefined | null, externalPkgs?: Array<ExternalPkg> | undefined | null, includeSchemaTypePath?: boolean | undefined | null, compileOnly?: boolean | undefined | null, showHidden?: boolean | undefined | null, pathSelector?: Array<string> | undefined | null, fastEval?: boolean | undefined | null, errorFormat?: string | undefined | null, format?: string | undefined | null, sourcemapOutput?: string | undefined | null, emitAttributeMetadata?: boolean | undefined | null)
+  constructor(
+    paths: Array<string>,
+    sources?: Array<string> | undefined | null,
+    workDir?: string | undefined | null,
+    args?: Array<Argument> | undefined | null,
+    overrides?: Array<string> | undefined | null,
+    disableYamlResult?: boolean | undefined | null,
+    printOverrideAst?: boolean | undefined | null,
+    strictRangeCheck?: boolean | undefined | null,
+    disableNone?: boolean | undefined | null,
+    verbose?: number | undefined | null,
+    debug?: number | undefined | null,
+    sortKeys?: boolean | undefined | null,
+    externalPkgs?: Array<ExternalPkg> | undefined | null,
+    includeSchemaTypePath?: boolean | undefined | null,
+    compileOnly?: boolean | undefined | null,
+    showHidden?: boolean | undefined | null,
+    pathSelector?: Array<string> | undefined | null,
+    fastEval?: boolean | undefined | null,
+    errorFormat?: string | undefined | null,
+    format?: string | undefined | null,
+    sourcemapOutput?: string | undefined | null,
+    emitAttributeMetadata?: boolean | undefined | null,
+  )
 }
 export declare class ParseProgramArgs {
-  constructor(paths: Array<string>, sources?: Array<string> | undefined | null, externalPkgs?: Array<ExternalPkg> | undefined | null)
+  constructor(
+    paths: Array<string>,
+    sources?: Array<string> | undefined | null,
+    externalPkgs?: Array<ExternalPkg> | undefined | null,
+  )
 }
 export declare class ParseFileArgs {
   constructor(path: string, source?: string | undefined | null, externalPkgs?: Array<ExternalPkg> | undefined | null)
@@ -603,7 +638,13 @@ export declare class OverrideFileArgs {
   constructor(file: string, specs: Array<string>, importPaths: Array<string>)
 }
 export declare class GetSchemaTypeMappingArgs {
-  constructor(paths: Array<string>, workDir?: string | undefined | null, schemaName?: string | undefined | null, externalPkgs?: Array<ExternalPkg> | undefined | null, sources?: Array<string> | undefined | null)
+  constructor(
+    paths: Array<string>,
+    workDir?: string | undefined | null,
+    schemaName?: string | undefined | null,
+    externalPkgs?: Array<ExternalPkg> | undefined | null,
+    sources?: Array<string> | undefined | null,
+  )
 }
 export declare class FormatCodeArgs {
   constructor(source: string)
@@ -615,7 +656,16 @@ export declare class LintPathArgs {
   constructor(paths: Array<string>)
 }
 export declare class ValidateCodeArgs {
-  constructor(datafile?: string | undefined | null, data?: string | undefined | null, file?: string | undefined | null, code?: string | undefined | null, schema?: string | undefined | null, attributeName?: string | undefined | null, format?: string | undefined | null, externalPkgs?: Array<ExternalPkg> | undefined | null)
+  constructor(
+    datafile?: string | undefined | null,
+    data?: string | undefined | null,
+    file?: string | undefined | null,
+    code?: string | undefined | null,
+    schema?: string | undefined | null,
+    attributeName?: string | undefined | null,
+    format?: string | undefined | null,
+    externalPkgs?: Array<ExternalPkg> | undefined | null,
+  )
 }
 export declare class LoadSettingsFilesArgs {
   constructor(workDir: string, files: Array<string>)
@@ -627,7 +677,14 @@ export declare class RenameCodeArgs {
   constructor(packageRoot: string, symbolPath: string, sourceCodes: Record<string, string>, newName: string)
 }
 export declare class TestArgs {
-  constructor(pkgList: Array<string>, failFast?: boolean | undefined | null, runRegexp?: string | undefined | null, workDir?: string | undefined | null, paths?: Array<string> | undefined | null, coverage?: boolean | undefined | null)
+  constructor(
+    pkgList: Array<string>,
+    failFast?: boolean | undefined | null,
+    runRegexp?: string | undefined | null,
+    workDir?: string | undefined | null,
+    paths?: Array<string> | undefined | null,
+    coverage?: boolean | undefined | null,
+  )
 }
 export declare class UpdateDependenciesArgs {
   constructor(manifestPath: string, vendor: boolean)
