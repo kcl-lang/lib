@@ -56,4 +56,9 @@ type ServiceClient interface {
 	UpdateDependencies(in *UpdateDependenciesArgs) (out *UpdateDependenciesResult, err error)
 	// GetVersion KclService, return the kcl service version information
 	GetVersion(in *GetVersionArgs) (out *GetVersionResult, err error)
+	// ListMethod returns the list of KCL service method names available in the
+	// underlying native runtime. It is the one method here dispatched against
+	// the BuiltinService rather than the KclService, so a caller can enumerate
+	// the supported RPC surface without hard-coding names client-side.
+	ListMethod(in *ListMethodArgs) (out *ListMethodResult, err error)
 }

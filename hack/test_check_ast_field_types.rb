@@ -1102,6 +1102,93 @@ abort "java/kotlin AST trees have drifted: #{drift.join(' ')}" unless drift.empt
 JAVA_CASES = java_cases(JAVA_SRC).freeze
 KOTLIN_CASES = java_cases(KOTLIN_SRC).freeze
 
+# ---------------------------------------------------------------------------
+# Go
+# ---------------------------------------------------------------------------
+
+# The collector reads struct declarations, so a Go case mutates a field's
+# *declared type* — the slot name and the `[]`/`*` around it are the whole of
+# what the checker knows about how the field is read. The lines below are
+# copied verbatim from the generated tree, alignment included: `gofmt` pads
+# the tag column, and a `good` line without that padding matches nothing and
+# the case passes over a rule it never exercised.
+GO_SRC = Dir[File.expand_path("../#{GO_AST_DIR}/*_gen.go", __dir__)]
+         .to_h { |p| [File.basename(p), File.read(p)] }.freeze
+
+GO_CASES = [
+  ["payload type: `SelectorExpr.attr` is an Identifier, not an Expr",
+   GO_SRC["expr_gen.go"], "type SelectorExpr struct {\n",
+   "\tAttr        *IdentifierNode `json:\"attr\"`\n",
+   "\tAttr        *ExprNode       `json:\"attr\"`\n",
+   "SelectorExpr", "attr"],
+
+  ["payload type: `Module.comments` is a list of Comment, not of String",
+   GO_SRC["module_gen.go"], "type Module struct {\n",
+   "\tComments []*CommentNode `json:\"comments\"`\n",
+   "\tComments []*StringNode  `json:\"comments\"`\n",
+   "Module", "comments"],
+
+  # `Target.paths` is a bare `Vec<MemberOrIndex>`: no `NodeRef` wrapper at all,
+  # so its Go type is `[]MemberOrIndex` with no slot suffix to strip. The slot
+  # table in `go_payload` has to answer for a type whose name it does not
+  # manufacture, and this is the only field in the tree that asks it to.
+  ["payload type: `Target.paths` is a list of MemberOrIndex, not of Identifier",
+   GO_SRC["dto_gen.go"], "type Target struct {\n",
+   "\tPaths   []MemberOrIndex `json:\"paths\"`\n",
+   "\tPaths   []IdentifierNode `json:\"paths\"`\n",
+   "Target", "paths"],
+
+  ["payload type: `LambdaExpr.body` is a list of Stmt, not of Expr",
+   GO_SRC["expr_gen.go"], "type LambdaExpr struct {\n",
+   "\tBody     []*StmtNode    `json:\"body\"`\n",
+   "\tBody     []*ExprNode    `json:\"body\"`\n",
+   "LambdaExpr", "body"],
+
+  ["list read as single: `IfStmt.body` is a `Vec`",
+   GO_SRC["stmt_gen.go"], "type IfStmt struct {\n",
+   "\tBody   []*StmtNode `json:\"body\"`\n",
+   "\tBody   *StmtNode   `json:\"body\"`\n",
+   "IfStmt", "body"],
+
+  ["single read as list: `IfExpr.orelse` is one `NodeRef`",
+   GO_SRC["expr_gen.go"], "type IfExpr struct {\n",
+   "\tOrelse *ExprNode `json:\"orelse\"`\n",
+   "\tOrelse []*ExprNode `json:\"orelse\"`\n",
+   "IfExpr", "orelse"],
+
+  # `Arguments.defaults` is `Vec<Option<NodeRef<Expr>>>` and `ty_list` is
+  # `Vec<Option<NodeRef<Type>>>`. Go has no wrapper for the `Option` — a slot
+  # pointer is nullable, so `[]*ExprNode` is both — and these are the two
+  # fields in the tree where the two languages' vocabularies part company.
+  ["payload type: `Arguments.defaults` is a list of Expr, not of Type",
+   GO_SRC["dto_gen.go"], "type Arguments struct {\n",
+   "\tDefaults []*ExprNode       `json:\"defaults\"`\n",
+   "\tDefaults []*TypeNode       `json:\"defaults\"`\n",
+   "Arguments", "defaults"],
+
+  ["payload type: `Arguments.ty_list` is a list of Type, not of Expr",
+   GO_SRC["dto_gen.go"], "type Arguments struct {\n",
+   "\tTyList   []*TypeNode       `json:\"ty_list\"`\n",
+   "\tTyList   []*ExprNode       `json:\"ty_list\"`\n",
+   "Arguments", "ty_list"],
+
+  # `Comment` is a plain struct with one `String` field, so the object under
+  # `node` is `{"text": "…"}` and not the text. `CommentNode.UnmarshalJSON`
+  # lifts `node` and hands the payload here, so this decoder must not lift it
+  # again -- which is exactly what the second case does.
+  ["leaf payload: `Comment` is a struct, so `Module.comments` reads `text` off it",
+   GO_SRC["base_gen.go"], "type Comment struct {\n",
+   "\treturn json.Unmarshal(d[\"text\"], &c.Text)\n",
+   "\treturn json.Unmarshal(d[\"node\"], &c.Text)\n",
+   "Module", "comments", true],
+
+  ["leaf payload: `Module.comments` unwraps `node` exactly once",
+   GO_SRC["base_gen.go"], "func (c *Comment) fromWire(d map[string]json.RawMessage) error {\n",
+   "\treturn json.Unmarshal(d[\"text\"], &c.Text)\n",
+   "\t_ = d[\"node\"]\n\treturn json.Unmarshal(d[\"text\"], &c.Text)\n",
+   "Module", "comments", true]
+].freeze
+
 # A floor on how much a checker may silently stop covering. Every binding sits
 # at or above 100 node-shaped field decoders; a drop below 90 means a regex
 # stopped matching and "ok" has stopped meaning anything.
@@ -1121,7 +1208,13 @@ FLOOR = {
   # rest — and it lost `AssertStmt`, `AugAssignStmt`, `IfStmt` and
   # `TypeAliasStmt` outright before the never-reached assertion existed.
   dotnet: 120,
-  java: 90, kotlin: 90, c: 90, cpp: 90
+  java: 90, kotlin: 90, c: 90, cpp: 90,
+  # Go's tree is generated, so the collector's reach is the emitter's: 145
+  # node-shaped fields, the same figure java and kotlin report for the same
+  # Rust structs, and 145 is what a dropped `GO_FIELD` or a mis-stripped
+  # `Node` suffix would take it below. A floor rather than a snapshot because
+  # adding a struct to `ast.rs` should raise this number, not break CI.
+  go: 145
 }.freeze
 
 # Each case rewrites one line of the binding in a scratch copy and asserts the
@@ -1282,6 +1375,18 @@ BINDINGS = {
       check_java(dir, :kotlin)
     },
     locate: ->(src) { KOTLIN_SRC.key(src) }
+  },
+  # The collector reads every `*_gen.go` in the directory, so a scratch copy
+  # has to keep the rest: `Comment`'s fields are not the only reads in
+  # `base_gen.go` and `Module`'s are in a third file, and a tree with just the
+  # mutated file would leave both unreached.
+  "go" => {
+    path: GO_AST_DIR, cases: GO_CASES, checker: method(:check_go),
+    materialise: lambda { |dir, n, m|
+      scratch(GO_SRC.keys, GO_SRC, dir, n, m)
+      method(:check_go).call(dir)
+    },
+    locate: ->(src) { GO_SRC.key(src) }
   },
   # Two files, so a case can land in the loader or in the type declarations, and
   # `c_pair` derives one from the other — the scratch has to be laid out the

@@ -4,15 +4,15 @@
 # check_generated_ast.rb — are the generated AST bindings still what the
 # generator produces, and does the generator still believe what it emits?
 #
-# `python/kcl_lib/ast/` and `wasm/src/ast/` used to be hand-written, and every
-# binding's copy of the same declarations drifted from `ast.rs` on its own
-# schedule. They are now generated from the Rust source by
+# `python/kcl_lib/ast/`, `wasm/src/ast/` and `go/ast/` used to be hand-written,
+# and every binding's copy of the same declarations drifted from `ast.rs` on
+# its own schedule. They are now generated from the Rust source by
 # `tools/generate_ast.py`, which replaces them rather than sitting beside them.
 # That solves the drift and creates one new way for it to come back: a
 # generated file that nobody regenerates. A checked-in generated file is still
 # a hand-written file the moment anyone edits it without re-running the tool,
-# and nothing in either language's build notices — `tsc` is perfectly happy
-# with a stale interface, and so is `pytest`.
+# and nothing in any of the three builds notices — `tsc` is perfectly happy
+# with a stale interface, and so is `pytest` and so is `go vet`.
 #
 # So this is a "regenerate and diff" check, run over the *bytes*:
 #
@@ -32,9 +32,9 @@
 # Exit status is 0 only if both pass. It does not check the generated code
 # against the wire format — that is `hack/check_ast_field_types.rb`, which reads
 # the *decoders* and compares them to the Rust field types, and
-# `python/tests/ast_contract_test.py` and `wasm/tests/ast_contract.test.ts`,
-# which run them. This one asks a narrower question: does the checked-in text
-# still match the tool that produced it.
+# `python/tests/ast_contract_test.py`, `wasm/tests/ast_contract.test.ts` and
+# `go/ast/ast_contract_test.go`, which run them. This one asks a narrower
+# question: does the checked-in text still match the tool that produced it.
 #
 # Set KCL_AST_RS to point at another checkout of `crates/ast/src/ast.rs`; the
 # default is the `kcl` repository checked out as a sibling of this one, which is

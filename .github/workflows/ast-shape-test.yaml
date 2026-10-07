@@ -30,6 +30,7 @@ on:
       - "dotnet/KclLib.AST/**"
       - "zig/src/ast/**"
       - "swift/Sources/KclLibAST/**"
+      - "go/ast/**"
       - "java/src/main/java/com/kcl/ast/**"
       - "kotlin/src/main/java/com/kcl/ast/**"
       - "c/include/kcl_lib_ast.h"
