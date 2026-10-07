@@ -248,6 +248,26 @@ MemFS()` instance to `load()` to set up the sandbox filesystem.
   `tests/generate_api.test.ts`, but calling one against this artifact traps
   the instance rather than returning an error. The cross-language
   consistency runner reports those cases as skipped for the same reason.
+- **`KclService.Test` panics.** The test runner reaches for a `std` syscall
+  the `wasm32-wasip1` target does not implement and the module aborts on
+  `library/std/src/sys/pal/wasip1/os.rs:131:5: unsupported`. Because
+  `panic=abort` destroys the instance, the consistency runner probes it on a
+  throwaway instance before running the rest of the suite, and reports the
+  case as skipped.
+- **`KclService.GetSchemaTypeMappingUnderPath` does not return.** The
+  sibling `KclService.GetSchemaTypeMapping` works; what does not terminate is
+  the walk over a sandbox directory once the arguments name a real package.
+  With no arguments at all the call reports `No input KCL files or paths`, so
+  the method is registered and reachable. The consistency runner therefore
+  skips this case rather than calling it — probing it would take the process
+  down with it.
+- **`LoadPackage` answers a shorter message than the one in `spec.proto`.**
+  This artifact puts only fields 1 to 10 of `LoadPackageResult` on the wire;
+  `imports` (11), `kcl_mod` (12) and `apps` (13) are never emitted, so they
+  decode as absent rather than empty. The wrapper in `src/api.ts` does decode
+  all three, and the consistency runner reports the four pinned fields it
+  cannot read rather than comparing them against a core that never sent
+  them.
 
 ### Rust
 
