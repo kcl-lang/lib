@@ -160,10 +160,40 @@ UNMAPPED = Hash.new { |h, k| h[k] = [] }
 #
 # Kotlin's `unionType(elements)` sets `type_elements`, and `UnionType`'s own DTO
 # field is `typeElements`; `elements` is the ergonomic spelling the constructor
-# takes. Nothing else is allowed in here without the same justification: an
-# entry that hides a field nobody can set is worse than the failure it silences.
+# takes.
+#
+# The two `ImportStmt` names are `ast.rs` being internally inconsistent, not a
+# binding's renaming: `CallExpr.keywords` (ast.rs:1055) and `SchemaExpr.kwargs`
+# (ast.rs:1199) are the same wire field under two spellings, and
+# `ImportStmt.rawpath` / `.asname` (ast.rs:681) drop the separator their
+# neighbours keep. Swift unifies the first pair under `keywords` and .NET the
+# second under `rawPath` / `asName`. That Swift's `keywords` means `kwargs` for
+# one struct and `keywords` for the other is not an ambiguity the join has to
+# resolve: an exact match is tried before the table, so `CallExpr` takes the
+# exact one and only `SchemaExpr` ever reaches the alias.
+#
+# A general "squash the underscores" fallback was the obvious way to avoid the
+# second pair and was rejected: `ast.rs` declares both `pkg_path` (ast.rs:350,
+# `OverrideSpec`) and `pkgpath` (ast.rs:935, `Target`), so `pkgPath` would join
+# to whichever the squash happened to reach first.
+#
+# Zig's two underscore pairs are not a rename at all — `test` and `orelse` are
+# Zig builtins and keywords, so `test_` and `orelse_` are the only legal
+# spelling of an ast.rs field. Zig's `modules` for `pkgs` is a genuine rename
+# and the weakest claim here: Zig flattens `HashMap<String, Vec<Module>>` into
+# the `__main__` list alone, so `modules` is defensible rather than merely
+# necessary. It is written down for that reason.
+#
+# Nothing else is allowed in here without the same justification: an entry that
+# hides a field nobody can set is worse than the failure it silences.
 PARAM_ALIASES = {
-  "kotlin" => { "elements" => "type_elements" }
+  "kotlin" => { "elements" => "type_elements" },
+  "nodejs" => { "types" => "type_elements" },
+  "julia" => { "as_name" => "asname", "types" => "type_elements" },
+  "dart" => { "types" => "type_elements", "asName" => "asname" },
+  "swift" => { "keywords" => "kwargs" },
+  "zig" => { "test_" => "test", "orelse_" => "orelse", "modules" => "pkgs" },
+  "dotnet" => { "rawPath" => "rawpath", "asName" => "asname" }
 }.freeze
 
 # Field types Rust writes whether or not they have a value: an empty `Vec` is
@@ -313,8 +343,18 @@ end
 # enum variant stamps onto its payload. Both are answers to "where" and "which
 # spelling", not to "which field", so a constructor that takes them is not
 # inventing a field.
+#
+# Each name is listed under every spelling a binding actually uses rather than
+# matched case-insensitively, because case is the one convention that is not
+# worth guessing: Go exports both members of a serde tag — 41 of its 73 AST
+# structs carry `Type string` for `#[serde(tag = "type")]` on `pub enum Stmt`
+# (`ast.rs:572`) — and a case-insensitive match would also fold `ID` into `id`
+# and `Raw` into `raw`, which are field names and would then be exempted from
+# rule 3 for the wrong reason.
 KNOWN_HELPERS = %w[
-  filename line column end_line end_column endLine endColumn tag type kind
+  filename line column end_line end_column endLine endColumn
+  tag type kind Type Kind
+  valueTag value_tag
 ].freeze
 
 # A binding may name a struct something other than `ast.rs` does. Kotlin calls
@@ -477,7 +517,16 @@ Dir[File.expand_path("ast_ctors/*.rb", __dir__)].sort.each { |f| require f }
 
 CHECKS = {
   "kotlin" => -> { check_kotlin(File.expand_path("../kotlin/src/main/kotlin/com/kcl/ast/AstBuild.kt", __dir__)) },
-  "python" => -> { check_python(File.expand_path("../python/kcl_lib/ast", __dir__)) }
+  "python" => -> { check_python(File.expand_path("../python/kcl_lib/ast", __dir__)) },
+  "go" => -> { check_go(File.expand_path("../go/ast", __dir__)) },
+  "java" => -> { check_java(File.expand_path("../java/src/main/java/com/kcl/ast", __dir__)) },
+  "nodejs" => -> { check_nodejs(File.expand_path("../nodejs/src/ast", __dir__)) },
+  "dotnet" => -> { check_dotnet(File.expand_path("../dotnet/KclLib.AST", __dir__)) },
+  "swift" => -> { check_swift(File.expand_path("../swift/Sources/KclLibAST", __dir__)) },
+  "zig" => -> { check_zig(File.expand_path("../zig/src/ast", __dir__)) },
+  "julia" => -> { check_julia(File.expand_path("../julia/src", __dir__)) },
+  "dart" => -> { check_dart(File.expand_path("../dart/lib/src/ast", __dir__)) },
+  "lua" => -> { check_lua(File.expand_path("../lua/kcl_lib/ast.lua", __dir__)) }
 }.freeze
 
 # `CHECKS` is a registry; the loop below is the CLI. Requiring this file from a
