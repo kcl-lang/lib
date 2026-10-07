@@ -63,6 +63,8 @@
 # (line 386) and `NODE_TYPES` counts, has no Go type at all: `ParseProgram`
 # returns `[]*Module` after flattening `pkgs.__main__`, so the document a Go
 # caller receives has no struct to build and `root` is dropped on the floor.
+# `check_ast_constructors.rb` records it in `NOT_MODELED` for go, and the
+# report names it as deliberately not modeled rather than as missing.
 
 def check_go(path)
   files = File.directory?(path) ? Dir[File.join(path, "*.go")].sort : [path]

@@ -135,13 +135,15 @@
 # re-modelled, because it has three different shapes depending on the inner tag" —
 # so there is no class, no constructor and no parameter a caller can name for
 # `value: i64` / `suffix: Option<NumberBinarySuffix>`. Nothing is papered over
-# here: the struct is absent from the returned constructors and arrives in the
-# report's `missing` list, which is the failure a caller would hit. Nothing
-# could be registered for it either — `WRAPPED_PAYLOADS` is keyed by *function*
-# name for a Kotlin `fun`, and Dart has no free function that fills one in.
+# here: the struct is absent from the returned constructors and is recorded in
+# `check_ast_constructors.rb`'s `NOT_MODELED` table, so the report names it as
+# deliberately not modeled rather than as missing. Nothing could be registered
+# for it either — `WRAPPED_PAYLOADS` is keyed by *function* name for a Kotlin
+# `fun`, and Dart has no free function that fills one in.
 #
-# `SerializeProgram` is the third thing the report's `missing` list names, and
-# for the same reason `check_go` records it for Go: `parseProgramAst`
+# `SerializeProgram` is the other entry `check_ast_constructors.rb` records in
+# `NOT_MODELED` for dart, and for the same reason `check_go` records it for Go:
+# `parseProgramAst`
 # (module.dart:70) returns `List<Module>` after accepting either a bare array or
 # the `{"root": …, "pkgs": …}` envelope, so the document a Dart caller receives
 # has no struct to build and `root` (ast.rs:387) is dropped on the floor.

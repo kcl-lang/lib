@@ -19,34 +19,36 @@
 # That was read at runtime rather than trusted off the page: `using KclLib`
 # under `julia --project=julia`, then `fieldnames` and `methods` for all 65
 # structs. `methods` is what settled the two questions below that a regex would
-# have guessed at — there is no keyword constructor anywhere in the binding, and
-# exactly two structs have an outer constructor.
+# have guessed at — every struct is `Base.@kwdef`, and exactly one struct has an
+# outer constructor.
 #
-# What `defaulted` means here is the one place Julia's answer is not a
-# precedent, so it is spelled out rather than left to be inferred:
+# The `@kwdef` layer is this binding's answer to rule 1, and `defaulted` means
+# what it says there:
 #
-#   * There is no `@kwdef` and no keyword constructor in `ast.jl`, so a `struct`
-#     has exactly one inner constructor and it takes every field, positionally.
-#     No field of any struct has a default value.
-#   * `Union{Node{KclExpr},Nothing}` is nonetheless the README's "a nullable
-#     type" — the exact item on its list — and in Julia it is the language's own
-#     spelling of "absent": a caller leaves such a field out by passing
-#     `nothing`, and Julia stores that as the field's undefined value rather
-#     than as data. So a nullable field lands in `defaulted` and nothing else
-#     does.
-#   * A `Vector{…}` field is *not* omittable. Julia has no zero-value fill:
-#     `SchemaStmt(nothing, name, nothing, nothing, false, false, nothing,
-#     Identifier[], KclStmt[], Decorator[], CheckExpr[], nothing)` is what a
-#     caller writes for a schema with no body, and there is no shorter spelling.
-#     That is a real ergonomics gap and rule 1 exists to say so, so it is left
-#     to fire rather than softened with a default the language does not have.
+#   * Every node struct is declared `Base.@kwdef`, which generates a keyword
+#     constructor alongside the positional one. The positional inner constructor
+#     is untouched — `stmt_from_wire` still builds every node positionally — so
+#     a node's parameters are still its fields, in declaration order.
+#   * A field whose `ast.rs` counterpart is a `Vec<`, `Option<Vec<`, `HashMap<`
+#     or `Option<HashMap<` carries the empty collection as its default:
+#     `Vector{…} = X[]`, and `Union{Vector{…},Nothing} = nothing` for the
+#     `Option<Vec<…>>` case, where `nothing` is the empty spelling of the
+#     union. Such a field lands in `defaulted`.
+#   * Nothing else is omittable. A scalar and a required node reference stay
+#     required keyword arguments: `Keyword.arg::Union{Node{Identifier},Nothing}`
+#     has no default, and neither does `Module.filename`. `nothing` is a value
+#     the caller passes there, not an omission — a default would let a caller
+#     build a node the parser can never produce.
 #
 # Four shapes decide what counts, and each is a place a naive scan gets it wrong:
 #
 #   * `struct X … end` — the constructor. Its fields are the parameters, in
-#     declaration order. A `struct X <: Y … end` carries its supertype after the
-#     name and is still a struct; `struct X <: Y end` is a unit struct with no
-#     parameters at all, which is how `AnyType` and `MissingExpr` are built.
+#     declaration order. Nearly every struct spells the declaration
+#     `Base.@kwdef struct X … end`; the prefix is optional in the scan because
+#     `AnyType` and `MissingExpr` stay plain — a unit struct cannot carry a
+#     default. A `struct X <: Y … end` carries its supertype after the name
+#     and is still a struct; `struct X <: Y end` is a unit struct with no
+#     parameters at all, which is how those two are built.
 #   * `abstract type X end` is *not* a constructor. `AstType`, `KclExpr`,
 #     `KclStmt` and `MemberOrIndex` cannot be instantiated — `methods(KclExpr)`
 #     is empty at runtime — so returning one would claim a constructor the
@@ -86,7 +88,9 @@
 #     function at all: `LiteralType` is modelled verbatim as
 #     `LiteralType(value::Any, inner_tag)`, so the `Int` arm's `{value, suffix}`
 #     payload is never given a type of its own and there is nothing to register.
-#     Neither struct is registered, so both stay in the report's missing list.
+#     Neither struct is registered: both are recorded in
+#     `check_ast_constructors.rb`'s `NOT_MODELED` table for julia, and the
+#     report names them as deliberately not modeled rather than as missing.
 #   * `ast.rs` spells two fields differently from this binding, and the join
 #     needs a name it does not have: `ImportStmt.as_name` against `pub asname`
 #     (ast.rs:681), and `UnionType.types` against `pub type_elements`
@@ -136,42 +140,15 @@ def check_julia(path)
   end
 
   # Whether a caller may leave the field out, which is what `defaulted` means.
-  # Two shapes answer yes and they are not the same shape:
-  #
-  #   * `Union{X,Nothing}` — the field itself is nullable, so `nothing` is what
-  #     a caller passes when there is nothing to pass. Julia's spelling of the
-  #     README's "a nullable type", and the whole of it: the union has to be the
-  #     *outermost* type, so `Union{Vector{…},Nothing}` counts and
-  #     `Vector{Union{…,Nothing}}` does not.
-  #   * `Vector{Union{…,Nothing}}` — the field is a list and it is *required*.
-  #     The nulls are per element and they line up positionally with a sibling
-  #     list (`Arguments.defaults` and `ty_list` against ast.rs:1356's
-  #     `Vec<Option<NodeRef<Expr>>>`), so a caller still has to pass the vector;
-  #     `[]` is its empty spelling, not an omission. Reading the `Nothing` here
-  #     as an omission would let rule 1 pass on a field nobody can leave out.
-  #
-  # A `Nothing` anywhere else is a spelling this scan has not seen, and reading
-  # it as either would be a guess in one direction or the other, so it aborts.
+  # `Base.@kwdef` makes the answer purely syntactic: a field is omittable
+  # exactly when its declaration carries `= default` at bracket depth 0 —
+  # `names::Vector{Node{String}} = Node{String}[]`, or
+  # `params_ty::Union{Vector{Node{AstType}},Nothing} = nothing`. Every default
+  # in the file is the empty collection (or `nothing`, the empty spelling of an
+  # `Option<Vec<…>>` union); a field without one, nullable or not, is a
+  # required keyword argument.
   omittable = lambda do |ty, field|
-    return false unless /\bNothing\b/.match?(ty)
-
-    if ty.start_with?("Union{")
-      # Depth 1 is the union's own brace; the scan starts *inside* it and is
-      # asking whether that brace is the last thing in the type, i.e. whether
-      # the nullable union is the whole field and not an element of a list.
-      d = 1
-      ("Union{".length...ty.length).each do |k|
-        d += 1 if "<([{".include?(ty[k])
-        d -= 1 if ">])}".include?(ty[k])
-        break if d.zero?
-      end
-      abort "check_julia: #{field} is nullable in a way this scan does not model: #{ty}" unless d.zero?
-      true
-    elsif ty.start_with?("Vector{Union{")
-      false
-    else
-      abort "check_julia: #{field} is nullable in a way this scan does not model: #{ty}"
-    end
+    has_default.call(ty)
   end
 
   # The index of the `)` closing the call that opens at `open`, so a nested
@@ -198,7 +175,7 @@ def check_julia(path)
   # so this is the whole concrete type namespace.
   structs = []
   lines.each do |line|
-    m = /\Astruct (\w+)\b/.match(line)
+    m = /\A(?:Base\.@kwdef )?struct (\w+)\b/.match(line)
     structs << m[1] if m
   end
 
@@ -207,7 +184,7 @@ def check_julia(path)
   i = 0
   while i < lines.length
     line = lines[i]
-    header = /\Astruct (\w+)\b([^\n]*)\n?\z/.match(line)
+    header = /\A(?:Base\.@kwdef )?struct (\w+)\b([^\n]*)\n?\z/.match(line)
 
     if header
       # `struct X <: Y end` closes on its own line; `struct X <: Y … end` does
@@ -267,11 +244,10 @@ def check_julia(path)
       abort "check_julia: #{file}:#{i + 1} is a `const` that is not a plain alias: #{line.strip}" unless structs.include?(m[2])
 
     elsif /\A(\w+)\(/.match(line) && structs.include?(Regexp.last_match(1))
-      # An outer constructor. `Identifier()` (ast.jl:197) and
-      # `CallExpr(d::Decorator)` (ast.jl:507) are the only two in the file, and
-      # both are returned: `compare` judges a struct over the union of its
-      # constructors, so a convenience that forwards is free and one that is
-      # dropped is a field reported unreachable that is in fact reachable.
+      # An outer constructor. `CallExpr(d::Decorator)` is the only one in the
+      # file, and it is returned: `compare` judges a struct over the union of
+      # its constructors, so a convenience that forwards is free and one that
+      # is dropped is a field reported unreachable that is in fact reachable.
       m = /\A(\w+)\(/.match(line)
       open = line.index("(")
       close = matching_paren.call(line, open)

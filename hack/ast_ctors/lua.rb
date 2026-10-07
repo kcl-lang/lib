@@ -99,8 +99,8 @@
 # by `parse_module_dict`.
 #
 # Two `ast.rs` structs this binding cannot reach at all, both real gaps rather
-# than blind spots in the parse, and both left for the report rather than
-# closed here:
+# than blind spots in the parse, and both recorded in `NOT_MODELED` rather than
+# closed here — the report prints them as deliberately not modeled:
 #
 #   * `SerializeProgram` (ast.rs:386, `root` / `pkgs`) — `M.parse_program`
 #     unwraps the envelope and returns the modules of `pkgs.__main__`

@@ -31,6 +31,14 @@
 # fieldless (`pass`) and are returned in their own right, so a base that ever
 # grew a field shows up as a field of its own rather than silently
 # disappearing into every subclass that inherits it.
+#
+# One `ast.rs` struct has no Python class: `SerializeProgram` (ast.rs:386).
+# `parse_program` (`_base.py:242`) unwraps the `{"root": …, "pkgs": …}`
+# envelope and returns `List[Module]` — the modules of `pkgs.__main__` — so
+# the document a Python caller receives has no class to build and `root` is
+# dropped on the floor. `check_ast_constructors.rb` records it in `NOT_MODELED`
+# for python, and the report names it as deliberately not modeled rather than
+# as missing.
 
 def check_python(dir)
   # The same seven generated modules `check_ast_field_types.rb` reads, in the

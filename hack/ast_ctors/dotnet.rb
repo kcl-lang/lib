@@ -115,7 +115,9 @@
 # returns `List<Module>` after flattening `pkgs.__main__`, and
 # `AstLoader.WriteProgramJson` builds the envelope as a `Dictionary<string,
 # object?>` and returns a `string`, so `root` is a parameter of a serializer and
-# not a field anyone can set on a node. And `LiteralType.Int(value, suffix)`
+# not a field anyone can set on a node. `check_ast_constructors.rb` records it
+# in `NOT_MODELED` for dotnet, and the report names it as deliberately not
+# modeled rather than as missing. And `LiteralType.Int(value, suffix)`
 # (`Type.cs:119`) returns a `LiteralType` — a tagged-enum wrapper — while the
 # struct it fills in, `IntLiteralTypeValue`, is named nowhere in that signature:
 # the blind spot `WRAPPED_PAYLOADS` exists to write down. It happens not to cost

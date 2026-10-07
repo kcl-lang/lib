@@ -114,6 +114,39 @@ NOT_ON_THE_WIRE = %w[Argument ExternalPkg OverrideSpec SymbolSelectorSpec Progra
 # constructor target as `BinaryExpr` is.
 NODE_TYPES = (STRUCTS.keys - NOT_NODES - NOT_ON_THE_WIRE).sort.freeze
 
+# Node types a named binding deliberately does not give a caller a constructor
+# for. Unlike `NOT_ON_THE_WIRE` these are on the wire; the exemption is a
+# per-binding API design decision, and each one is argued in that binding's
+# collector header, which is where a reviewer should look before adding an
+# entry here. Two decisions cover every entry:
+#
+#   SerializeProgram — the binding's `parseProgram` unwraps the
+#     `{"root": …, "pkgs": …}` envelope and hands back the modules of
+#     `pkgs.__main__`, so the document a caller receives has no type to
+#     build and `root` is dropped. Changing this is a public API break,
+#     not an ergonomics tweak.
+#   IntLiteralType — the payload of `LiteralType::Int`, the one literal
+#     variant that is a struct. These bindings model `LiteralType` verbatim
+#     (`value` rides through undecoded, the arm recorded separately), so the
+#     payload is never a type a caller spells. Kotlin's `literalIntType` is
+#     the other answer, registered in `WRAPPED_PAYLOADS`.
+#
+# A binding that reaches everything — kotlin, java, swift, c — has no
+# entry, and an entry is a claim a reviewer can check, so the same load-bearing
+# guard as the global tables below applies: a struct here that `ast.rs` no
+# longer declares, or one that is not a node type at all, aborts the run.
+NOT_MODELED = {
+  "cpp" => %w[SerializeProgram IntLiteralType],
+  "python" => %w[SerializeProgram],
+  "go" => %w[SerializeProgram],
+  "julia" => %w[SerializeProgram IntLiteralType],
+  "dotnet" => %w[SerializeProgram],
+  "lua" => %w[SerializeProgram IntLiteralType],
+  "nodejs" => %w[SerializeProgram IntLiteralType],
+  "zig" => %w[IntLiteralType],
+  "dart" => %w[SerializeProgram IntLiteralType]
+}.freeze
+
 # Every struct `ast.rs` declares has to be either a node the rules judge or a
 # named exclusion, and both halves of that are checked rather than trusted. A
 # struct in neither set is one the report would quietly never mention, and a
@@ -125,6 +158,10 @@ NODE_TYPES = (STRUCTS.keys - NOT_NODES - NOT_ON_THE_WIRE).sort.freeze
 # removed nothing, which is exactly the drift this catches.
 STALE_EXCLUSIONS = (NOT_NODES + NOT_ON_THE_WIRE).reject { |n| STRUCTS.key?(n) }
 abort "exclusion table names a struct ast.rs does not declare: #{STALE_EXCLUSIONS.join(' ')}" unless STALE_EXCLUSIONS.empty?
+NOT_MODELED.each do |lang, names|
+  stale = names.reject { |n| NODE_TYPES.include?(n) }
+  abort "NOT_MODELED[#{lang}] names a struct that is not a node type: #{stale.join(' ')}" unless stale.empty?
+end
 
 # ---------------------------------------------------------------------------
 # Coverage bookkeeping
@@ -199,10 +236,17 @@ PARAM_ALIASES = {
 }.freeze
 
 # Field types Rust writes whether or not they have a value: an empty `Vec` is
-# `[]` and an empty map is `{}`, never absent. Rule 1 reads this list — a
-# constructor demanding one of these is making the caller spell the empty
-# collection.
-ALWAYS_WRITTEN = ["Vec<", "Option<Vec<", "HashMap<", "Option<HashMap<"].freeze
+# `[]` and an empty map is `{}`, never absent, so a constructor demanding one
+# is making the caller spell the empty collection.
+#
+# `Option<Vec<…>>` and `Option<HashMap<…>>` are deliberately not here. serde
+# writes `None` as `null`, so the wire itself spells absence for them —
+# `FunctionType.params_ty` (ast.rs:1871) arrives as `"params_ty": null` for
+# `() -> T` and the parser never builds `[]` — which means requiring the
+# caller to pass an explicit `null` is a faithful modelling of the wire, not
+# the ceremony rule 1 exists to catch. Julia's `params_ty = nothing` default
+# and C#'s required `paramsTy` are both right, and the rule has no opinion.
+ALWAYS_WRITTEN = ["Vec<", "HashMap<"].freeze
 
 # ---------------------------------------------------------------------------
 # The rules
@@ -452,7 +496,9 @@ WRAPPED_PAYLOADS = {
 # dropping to zero and by every struct arriving in `missing`.
 def report(lang, problems)
   compared = COMPARED[lang]
-  missing = NODE_TYPES.reject { |s| REACHED[lang].include?(s) }.sort
+  modeled = NODE_TYPES - NOT_MODELED.fetch(lang, [])
+  missing = modeled.reject { |s| REACHED[lang].include?(s) }.sort
+  not_modeled = NOT_MODELED.fetch(lang, []).reject { |s| REACHED[lang].include?(s) }.sort
   gaps = (REACHED[lang].uniq - CHECKED[lang].uniq).select { |g| STRUCTS.key?(g) }.sort
   unmapped = UNMAPPED[lang].uniq.sort
 
@@ -474,6 +520,7 @@ def report(lang, problems)
     problems.sort.each { |p| puts "  #{p}" }
     code = 1
   end
+  puts "  #{not_modeled.length} node type(s) deliberately not modeled: #{not_modeled.join(' ')} (see the collector header)" if not_modeled.any?
   puts "  #{unmapped.length} constructor(s) return a non-struct and are not counted: #{unmapped.join(' ')}" unless unmapped.empty?
   code
 end

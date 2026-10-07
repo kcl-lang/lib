@@ -79,6 +79,8 @@
 #     constructor here reaches, and unlike Kotlin's `literalIntType` there is
 #     no `WRAPPED_PAYLOADS` entry to declare: no function returns the wrapper
 #     either, because a Zig caller writes the union literal inline.
+#     `check_ast_constructors.rb` records it in `NOT_MODELED` for zig, and the
+#     report names it as deliberately not modeled rather than as missing.
 #   * Two field names are dodged around a Zig keyword — `test` is a builtin
 #     and `orelse` a keyword, so the structs spell them `test_` and `orelse_`
 #     (`expr.zig:739`, `expr.zig:117`, `expr.zig:224`, `expr.zig:281`,

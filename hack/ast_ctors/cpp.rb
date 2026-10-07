@@ -78,9 +78,11 @@
 #     `kind` discriminator, so `suffix` keeps its name and `value` arrives as
 #     `int_value` under `kind == Kind::Int` — reachable, but never as the
 #     struct that declares them. This is the blind spot `WRAPPED_PAYLOADS`
-#     exists for, and it is not papered over here: `IntLiteralType` appears
-#     zero times under `cpp/`, so there is no function whose return type or
-#     body names it and nothing to register.
+#     exists for: `IntLiteralType` appears zero times under `cpp/`, so there is
+#     no function whose return type or body names it and nothing to register.
+#     `SerializeProgram` and `IntLiteralType` are both recorded in
+#     `check_ast_constructors.rb`'s `NOT_MODELED` table for cpp, and the report
+#     names them as deliberately not modeled rather than as missing.
 #   * `Decorator`, `SchemaConfig`, `TargetExpr`, `IdentifierExpr`,
 #     `KeywordExpr` and `ArgumentsExpr` are C++ names for payloads `ast.rs`
 #     reaches under another name (`CallExpr`, `SchemaExpr`, `Target`,

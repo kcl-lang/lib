@@ -70,7 +70,9 @@
 # would make the two files agree about it.
 #
 # Two `ast.rs` structs this binding has no constructor for, both real gaps
-# rather than blind spots in the parse, and both left for the report:
+# rather than blind spots in the parse, and both recorded in
+# `check_ast_constructors.rb`'s `NOT_MODELED` table as deliberately not
+# modeled:
 #
 #   * `SerializeProgram` — `parseProgram` unwraps the envelope and returns the
 #     modules of `pkgs.__main__` (`_module.mjs:47`), so the document a caller
