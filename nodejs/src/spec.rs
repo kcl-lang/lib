@@ -195,8 +195,98 @@ impl LoadPackageResult {
                 .iter()
                 .map(|(k, v)| (k.to_string(), ScopeIndex::new(v)))
                 .collect(),
+            imports: r
+                .imports
+                .iter()
+                .map(|(k, v)| {
+                    (
+                        k.clone(),
+                        FileImports {
+                            imports: v
+                                .imports
+                                .iter()
+                                .map(|i| ImportInfo {
+                                    path: i.path.clone(),
+                                    resolved: i.resolved.clone(),
+                                })
+                                .collect(),
+                        },
+                    )
+                })
+                .collect(),
+            kcl_mod: r.kcl_mod.as_ref().map(|m| KclMod {
+                package: m.package.as_ref().map(|p| KclModPackage {
+                    name: p.name.clone(),
+                    edition: p.edition.clone(),
+                    version: p.version.clone(),
+                    description: p.description.clone(),
+                    include: p.include.clone(),
+                    exclude: p.exclude.clone(),
+                }),
+            }),
+            apps: r
+                .apps
+                .iter()
+                .map(|a| AppInfo {
+                    path: a.path.clone(),
+                    has_kcl_mod: a.has_kcl_mod,
+                })
+                .collect(),
         }
     }
+}
+
+/// Message representing the direct imports of a single file.
+#[napi(object)]
+pub struct FileImports {
+    /// List of direct imports of the file.
+    pub imports: Vec<ImportInfo>,
+}
+
+/// Message representing a single direct import of a file.
+#[napi(object)]
+pub struct ImportInfo {
+    /// Import specifier as written in the source.
+    pub path: String,
+    /// Resolved absolute file path of the import.
+    pub resolved: String,
+}
+
+/// Message representing the package section of a `kcl.mod` manifest.
+#[napi(object)]
+pub struct KclModPackage {
+    /// Name of the package.
+    pub name: String,
+    /// KCL compiler edition of the package.
+    pub edition: String,
+    /// Version of the package.
+    pub version: String,
+    /// Description of the package.
+    pub description: String,
+    /// Files to include when publishing.
+    pub include: Vec<String>,
+    /// Files to exclude when publishing.
+    pub exclude: Vec<String>,
+}
+
+/// Message representing a parsed `kcl.mod` manifest.
+///
+/// Only the package section is carried across. The profile and dependency
+/// sections are not part of this mirror, the same way the napi `Symbol` and
+/// `Scope` mirrors carry indexes rather than the whole `kcl_api` document.
+#[napi(object)]
+pub struct KclMod {
+    /// Package section of the manifest.
+    pub package: Option<KclModPackage>,
+}
+
+/// Message representing an application directory discovered under the root.
+#[napi(object)]
+pub struct AppInfo {
+    /// Absolute path of the application directory.
+    pub path: String,
+    /// True when the directory contains a `kcl.mod` manifest.
+    pub has_kcl_mod: bool,
 }
 
 /// Message for load package response.
@@ -222,6 +312,13 @@ pub struct LoadPackageResult {
     pub fully_qualified_name_map: HashMap<String, SymbolIndex>,
     /// Map key is the package path.
     pub pkg_scope_map: HashMap<String, ScopeIndex>,
+    /// Map of direct imports, keyed by the importing file's absolute path.
+    pub imports: HashMap<String, FileImports>,
+    /// Parsed `kcl.mod` manifest of the package root, absent when the root has
+    /// no `kcl.mod`.
+    pub kcl_mod: Option<KclMod>,
+    /// Application directories discovered under the package root.
+    pub apps: Vec<AppInfo>,
 }
 
 /// Message for list options response.
@@ -480,6 +577,13 @@ impl ListVariablesResult {
 pub struct GetSchemaTypeMappingResult {
     /// Map of schema type mappings.
     pub schema_type_mapping: HashMap<String, String>,
+    /// The same map in canonical protobuf JSON: proto field names, and a field
+    /// the core left unset absent rather than rendered as `""`/`0`/`[]`/`{}`.
+    /// The summary above drops everything but the type name, and `KclType`
+    /// recurses through plain message fields (`key`, `item`, `base_schema`,
+    /// `function`), which a napi object cannot express, so the whole document
+    /// travels as JSON instead.
+    pub schema_type_mapping_json: String,
 }
 
 impl GetSchemaTypeMappingResult {
@@ -490,6 +594,7 @@ impl GetSchemaTypeMappingResult {
                 .iter()
                 .map(|(k, v)| (k.to_string(), v.r#type.clone()))
                 .collect(),
+            schema_type_mapping_json: schema_type_mapping_json(&r.schema_type_mapping),
         }
     }
 }
@@ -503,6 +608,9 @@ impl GetSchemaTypeMappingResult {
 pub struct GetSchemaTypeMappingUnderPathResult {
     /// Map of package name to the schema names defined in that package.
     pub schema_type_mapping: HashMap<String, Vec<String>>,
+    /// The same map in canonical protobuf JSON, keyed by package name as
+    /// above. See `GetSchemaTypeMappingResult::schema_type_mapping_json`.
+    pub schema_type_mapping_json: String,
 }
 
 impl GetSchemaTypeMappingUnderPathResult {
@@ -518,8 +626,197 @@ impl GetSchemaTypeMappingUnderPathResult {
                     )
                 })
                 .collect(),
+            schema_type_mapping_json: schema_types_under_path_json(&r.schema_type_mapping),
         }
     }
+}
+
+/// Insert `value` under `key` unless it is the proto default, which canonical
+/// protobuf JSON spells by leaving the field out entirely.
+fn set_if_set(object: &mut serde_json::Map<String, serde_json::Value>, key: &str, value: serde_json::Value) {
+    let unset = match &value {
+        serde_json::Value::String(s) => s.is_empty(),
+        serde_json::Value::Number(n) => n.as_f64() == Some(0.0),
+        serde_json::Value::Bool(b) => !*b,
+        serde_json::Value::Array(a) => a.is_empty(),
+        serde_json::Value::Object(o) => o.is_empty(),
+        _ => false,
+    };
+    if !unset {
+        object.insert(key.to_string(), value);
+    }
+}
+
+/// Canonical protobuf JSON for a `KclType`. Every field the core set is spelled
+/// with its proto name; every field it left unset is absent, which is the
+/// dialect the cross-language consistency manifest pins.
+fn kcl_type_json(ty: &kcl_api::KclType) -> serde_json::Value {
+    let mut out = serde_json::Map::new();
+    set_if_set(&mut out, "type", ty.r#type.clone().into());
+    set_if_set(
+        &mut out,
+        "union_types",
+        serde_json::Value::Array(ty.union_types.iter().map(kcl_type_json).collect()),
+    );
+    set_if_set(&mut out, "default", ty.default.clone().into());
+    set_if_set(&mut out, "schema_name", ty.schema_name.clone().into());
+    set_if_set(&mut out, "schema_doc", ty.schema_doc.clone().into());
+    set_if_set(
+        &mut out,
+        "properties",
+        serde_json::Value::Object(
+            ty.properties
+                .iter()
+                .map(|(k, v)| (k.clone(), kcl_type_json(v)))
+                .collect(),
+        ),
+    );
+    set_if_set(
+        &mut out,
+        "required",
+        serde_json::Value::Array(
+            ty.required
+                .iter()
+                .map(|r| serde_json::Value::String(r.clone()))
+                .collect(),
+        ),
+    );
+    if let Some(key) = &ty.key {
+        out.insert("key".to_string(), kcl_type_json(key));
+    }
+    if let Some(item) = &ty.item {
+        out.insert("item".to_string(), kcl_type_json(item));
+    }
+    set_if_set(&mut out, "line", ty.line.into());
+    set_if_set(
+        &mut out,
+        "decorators",
+        serde_json::Value::Array(
+            ty.decorators
+                .iter()
+                .map(|d| {
+                    let mut decorator = serde_json::Map::new();
+                    set_if_set(&mut decorator, "name", d.name.clone().into());
+                    set_if_set(
+                        &mut decorator,
+                        "arguments",
+                        serde_json::Value::Array(
+                            d.arguments
+                                .iter()
+                                .map(|a| serde_json::Value::String(a.clone()))
+                                .collect(),
+                        ),
+                    );
+                    set_if_set(
+                        &mut decorator,
+                        "keywords",
+                        serde_json::Value::Object(
+                            d.keywords
+                                .iter()
+                                .map(|(k, v)| (k.clone(), serde_json::Value::String(v.clone())))
+                                .collect(),
+                        ),
+                    );
+                    serde_json::Value::Object(decorator)
+                })
+                .collect(),
+        ),
+    );
+    set_if_set(&mut out, "filename", ty.filename.clone().into());
+    set_if_set(&mut out, "pkg_path", ty.pkg_path.clone().into());
+    set_if_set(&mut out, "description", ty.description.clone().into());
+    set_if_set(
+        &mut out,
+        "examples",
+        serde_json::Value::Object(
+            ty.examples
+                .iter()
+                .map(|(k, v)| {
+                    let mut example = serde_json::Map::new();
+                    set_if_set(&mut example, "summary", v.summary.clone().into());
+                    set_if_set(&mut example, "description", v.description.clone().into());
+                    set_if_set(&mut example, "value", v.value.clone().into());
+                    (k.clone(), serde_json::Value::Object(example))
+                })
+                .collect(),
+        ),
+    );
+    if let Some(base_schema) = &ty.base_schema {
+        out.insert("base_schema".to_string(), kcl_type_json(base_schema));
+    }
+    if let Some(function) = &ty.function {
+        let mut function_json = serde_json::Map::new();
+        set_if_set(
+            &mut function_json,
+            "params",
+            serde_json::Value::Array(
+                function
+                    .params
+                    .iter()
+                    .map(|p| {
+                        let mut param = serde_json::Map::new();
+                        set_if_set(&mut param, "name", p.name.clone().into());
+                        if let Some(ty) = &p.ty {
+                            param.insert("ty".to_string(), kcl_type_json(ty));
+                        }
+                        serde_json::Value::Object(param)
+                    })
+                    .collect(),
+            ),
+        );
+        if let Some(return_ty) = &function.return_ty {
+            function_json.insert("return_ty".to_string(), kcl_type_json(return_ty));
+        }
+        out.insert("function".to_string(), serde_json::Value::Object(function_json));
+    }
+    if let Some(index_signature) = &ty.index_signature {
+        let mut signature = serde_json::Map::new();
+        if let Some(key_name) = &index_signature.key_name {
+            signature.insert("key_name".to_string(), serde_json::Value::String(key_name.clone()));
+        }
+        if let Some(key) = &index_signature.key {
+            signature.insert("key".to_string(), kcl_type_json(key));
+        }
+        if let Some(val) = &index_signature.val {
+            signature.insert("val".to_string(), kcl_type_json(val));
+        }
+        set_if_set(&mut signature, "any_other", index_signature.any_other.into());
+        out.insert("index_signature".to_string(), serde_json::Value::Object(signature));
+    }
+    serde_json::Value::Object(out)
+}
+
+/// Canonical protobuf JSON for `map<string, KclType>`. `serde_json`'s object is
+/// key-sorted by default, so the document does not depend on the order the core
+/// built its map in.
+fn schema_type_mapping_json(mapping: &HashMap<String, kcl_api::KclType>) -> String {
+    serde_json::Value::Object(
+        mapping
+            .iter()
+            .map(|(k, v)| (k.clone(), kcl_type_json(v)))
+            .collect(),
+    )
+    .to_string()
+}
+
+/// Canonical protobuf JSON for `map<string, SchemaTypes>` -- the same document
+/// shape the other bindings pin, `{"<pkg>": {"schema_type": [...]}}`.
+fn schema_types_under_path_json(mapping: &HashMap<String, kcl_api::SchemaTypes>) -> String {
+    serde_json::Value::Object(
+        mapping
+            .iter()
+            .map(|(k, v)| {
+                let mut schemas = serde_json::Map::new();
+                set_if_set(
+                    &mut schemas,
+                    "schema_type",
+                    serde_json::Value::Array(v.schema_type.iter().map(kcl_type_json).collect()),
+                );
+                (k.clone(), serde_json::Value::Object(schemas))
+            })
+            .collect(),
+    )
+    .to_string()
 }
 
 /// Message for validate code response.

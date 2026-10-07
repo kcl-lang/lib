@@ -359,11 +359,13 @@ impl GetSchemaTypeMappingArgs {
         work_dir: Option<String>,
         schema_name: Option<String>,
         external_pkgs: Option<Vec<ExternalPkg>>,
+        sources: Option<Vec<String>>,
     ) -> Result<Self> {
         Ok(Self(kcl_api::GetSchemaTypeMappingArgs {
             exec_args: Some(kcl_api::ExecProgramArgs {
                 work_dir: work_dir.unwrap_or_default(),
                 k_filename_list: paths,
+                k_code_list: sources.unwrap_or_default(),
                 external_pkgs: external_pkgs
                     .unwrap_or_default()
                     .into_iter()
@@ -437,10 +439,10 @@ pub struct FormatPathArgs(kcl_api::FormatPathArgs);
 #[napi]
 impl FormatPathArgs {
     #[napi(constructor)]
-    pub fn new(path: String) -> Result<Self> {
+    pub fn new(path: String, dry_run: Option<bool>) -> Result<Self> {
         Ok(Self(kcl_api::FormatPathArgs {
             path,
-            dry_run: false,
+            dry_run: dry_run.unwrap_or_default(),
         }))
     }
 }

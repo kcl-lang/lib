@@ -74,6 +74,51 @@ export interface ParseProgramResult {
   /** List of parse errors. */
   errors: Array<Error>
 }
+/** Message representing the direct imports of a single file. */
+export interface FileImports {
+  /** List of direct imports of the file. */
+  imports: Array<ImportInfo>
+}
+/** Message representing a single direct import of a file. */
+export interface ImportInfo {
+  /** Import specifier as written in the source. */
+  path: string
+  /** Resolved absolute file path of the import. */
+  resolved: string
+}
+/** Message representing the package section of a `kcl.mod` manifest. */
+export interface KclModPackage {
+  /** Name of the package. */
+  name: string
+  /** KCL compiler edition of the package. */
+  edition: string
+  /** Version of the package. */
+  version: string
+  /** Description of the package. */
+  description: string
+  /** Files to include when publishing. */
+  include: Array<string>
+  /** Files to exclude when publishing. */
+  exclude: Array<string>
+}
+/**
+ * Message representing a parsed `kcl.mod` manifest.
+ *
+ * Only the package section is carried across. The profile and dependency
+ * sections are not part of this mirror, the same way the napi `Symbol` and
+ * `Scope` mirrors carry indexes rather than the whole `kcl_api` document.
+ */
+export interface KclMod {
+  /** Package section of the manifest. */
+  package?: KclModPackage
+}
+/** Message representing an application directory discovered under the root. */
+export interface AppInfo {
+  /** Absolute path of the application directory. */
+  path: string
+  /** True when the directory contains a `kcl.mod` manifest. */
+  hasKclMod: boolean
+}
 /** Message for load package response. */
 export interface LoadPackageResult {
   /** JSON string value */
@@ -96,6 +141,15 @@ export interface LoadPackageResult {
   fullyQualifiedNameMap: Record<string, SymbolIndex>
   /** Map key is the package path. */
   pkgScopeMap: Record<string, ScopeIndex>
+  /** Map of direct imports, keyed by the importing file's absolute path. */
+  imports: Record<string, FileImports>
+  /**
+   * Parsed `kcl.mod` manifest of the package root, absent when the root has
+   * no `kcl.mod`.
+   */
+  kclMod?: KclMod
+  /** Application directories discovered under the package root. */
+  apps: Array<AppInfo>
 }
 /** Message for list options response. */
 export interface ListOptionsResult {
@@ -222,10 +276,24 @@ export interface Variable {
 export interface GetSchemaTypeMappingResult {
   /** Map of schema type mappings. */
   schemaTypeMapping: Record<string, string>
+  /**
+   * The same map in canonical protobuf JSON: proto field names, and a field
+   * the core left unset absent rather than rendered as `""`/`0`/`[]`/`{}`.
+   * The summary above drops everything but the type name, and `KclType`
+   * recurses through plain message fields (`key`, `item`, `base_schema`,
+   * `function`), which a napi object cannot express, so the whole document
+   * travels as JSON instead.
+   */
+  schemaTypeMappingJson: string
 }
 export interface GetSchemaTypeMappingUnderPathResult {
   /** Map of package name to the schema names defined in that package. */
   schemaTypeMapping: Record<string, Array<string>>
+  /**
+   * The same map in canonical protobuf JSON, keyed by package name as
+   * above. See `GetSchemaTypeMappingResult::schema_type_mapping_json`.
+   */
+  schemaTypeMappingJson: string
 }
 /** Message for validate code response. */
 export interface ValidateCodeResult {
@@ -433,9 +501,7 @@ export declare function getSchemaTypeMapping(args: GetSchemaTypeMappingArgs): Ge
  * dependency packages. The result is keyed by package name.
  * See https://github.com/kcl-lang/kcl/issues/1546.
  */
-export declare function getSchemaTypeMappingUnderPath(
-  args: GetSchemaTypeMappingArgs,
-): GetSchemaTypeMappingUnderPathResult
+export declare function getSchemaTypeMappingUnderPath(args: GetSchemaTypeMappingArgs): GetSchemaTypeMappingUnderPathResult
 /** Format KCL file or directory path contains KCL files and returns the changed file paths. */
 export declare function formatCode(args: FormatCodeArgs): FormatCodeResult
 /** Format KCL file or directory path contains KCL files and returns the changed file paths. */
@@ -515,47 +581,14 @@ export declare function generateDoc(args: GenerateDocArgs): GenerateDocResult
  * - with_ast_index: Flag indicating whether to include AST index.
  */
 export declare class LoadPackageArgs {
-  constructor(
-    paths: Array<string>,
-    sources: Array<string>,
-    resolveAst?: boolean | undefined | null,
-    loadBuiltin?: boolean | undefined | null,
-    withAstIndex?: boolean | undefined | null,
-  )
+  constructor(paths: Array<string>, sources: Array<string>, resolveAst?: boolean | undefined | null, loadBuiltin?: boolean | undefined | null, withAstIndex?: boolean | undefined | null)
 }
 /** Message for execute program request arguments. */
 export declare class ExecProgramArgs {
-  constructor(
-    paths: Array<string>,
-    sources?: Array<string> | undefined | null,
-    workDir?: string | undefined | null,
-    args?: Array<Argument> | undefined | null,
-    overrides?: Array<string> | undefined | null,
-    disableYamlResult?: boolean | undefined | null,
-    printOverrideAst?: boolean | undefined | null,
-    strictRangeCheck?: boolean | undefined | null,
-    disableNone?: boolean | undefined | null,
-    verbose?: number | undefined | null,
-    debug?: number | undefined | null,
-    sortKeys?: boolean | undefined | null,
-    externalPkgs?: Array<ExternalPkg> | undefined | null,
-    includeSchemaTypePath?: boolean | undefined | null,
-    compileOnly?: boolean | undefined | null,
-    showHidden?: boolean | undefined | null,
-    pathSelector?: Array<string> | undefined | null,
-    fastEval?: boolean | undefined | null,
-    errorFormat?: string | undefined | null,
-    format?: string | undefined | null,
-    sourcemapOutput?: string | undefined | null,
-    emitAttributeMetadata?: boolean | undefined | null,
-  )
+  constructor(paths: Array<string>, sources?: Array<string> | undefined | null, workDir?: string | undefined | null, args?: Array<Argument> | undefined | null, overrides?: Array<string> | undefined | null, disableYamlResult?: boolean | undefined | null, printOverrideAst?: boolean | undefined | null, strictRangeCheck?: boolean | undefined | null, disableNone?: boolean | undefined | null, verbose?: number | undefined | null, debug?: number | undefined | null, sortKeys?: boolean | undefined | null, externalPkgs?: Array<ExternalPkg> | undefined | null, includeSchemaTypePath?: boolean | undefined | null, compileOnly?: boolean | undefined | null, showHidden?: boolean | undefined | null, pathSelector?: Array<string> | undefined | null, fastEval?: boolean | undefined | null, errorFormat?: string | undefined | null, format?: string | undefined | null, sourcemapOutput?: string | undefined | null, emitAttributeMetadata?: boolean | undefined | null)
 }
 export declare class ParseProgramArgs {
-  constructor(
-    paths: Array<string>,
-    sources?: Array<string> | undefined | null,
-    externalPkgs?: Array<ExternalPkg> | undefined | null,
-  )
+  constructor(paths: Array<string>, sources?: Array<string> | undefined | null, externalPkgs?: Array<ExternalPkg> | undefined | null)
 }
 export declare class ParseFileArgs {
   constructor(path: string, source?: string | undefined | null, externalPkgs?: Array<ExternalPkg> | undefined | null)
@@ -570,33 +603,19 @@ export declare class OverrideFileArgs {
   constructor(file: string, specs: Array<string>, importPaths: Array<string>)
 }
 export declare class GetSchemaTypeMappingArgs {
-  constructor(
-    paths: Array<string>,
-    workDir?: string | undefined | null,
-    schemaName?: string | undefined | null,
-    externalPkgs?: Array<ExternalPkg> | undefined | null,
-  )
+  constructor(paths: Array<string>, workDir?: string | undefined | null, schemaName?: string | undefined | null, externalPkgs?: Array<ExternalPkg> | undefined | null, sources?: Array<string> | undefined | null)
 }
 export declare class FormatCodeArgs {
   constructor(source: string)
 }
 export declare class FormatPathArgs {
-  constructor(path: string)
+  constructor(path: string, dryRun?: boolean | undefined | null)
 }
 export declare class LintPathArgs {
   constructor(paths: Array<string>)
 }
 export declare class ValidateCodeArgs {
-  constructor(
-    datafile?: string | undefined | null,
-    data?: string | undefined | null,
-    file?: string | undefined | null,
-    code?: string | undefined | null,
-    schema?: string | undefined | null,
-    attributeName?: string | undefined | null,
-    format?: string | undefined | null,
-    externalPkgs?: Array<ExternalPkg> | undefined | null,
-  )
+  constructor(datafile?: string | undefined | null, data?: string | undefined | null, file?: string | undefined | null, code?: string | undefined | null, schema?: string | undefined | null, attributeName?: string | undefined | null, format?: string | undefined | null, externalPkgs?: Array<ExternalPkg> | undefined | null)
 }
 export declare class LoadSettingsFilesArgs {
   constructor(workDir: string, files: Array<string>)
@@ -608,14 +627,7 @@ export declare class RenameCodeArgs {
   constructor(packageRoot: string, symbolPath: string, sourceCodes: Record<string, string>, newName: string)
 }
 export declare class TestArgs {
-  constructor(
-    pkgList: Array<string>,
-    failFast?: boolean | undefined | null,
-    runRegexp?: string | undefined | null,
-    workDir?: string | undefined | null,
-    paths?: Array<string> | undefined | null,
-    coverage?: boolean | undefined | null,
-  )
+  constructor(pkgList: Array<string>, failFast?: boolean | undefined | null, runRegexp?: string | undefined | null, workDir?: string | undefined | null, paths?: Array<string> | undefined | null, coverage?: boolean | undefined | null)
 }
 export declare class UpdateDependenciesArgs {
   constructor(manifestPath: string, vendor: boolean)
