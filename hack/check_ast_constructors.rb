@@ -50,13 +50,21 @@ abort "ast.rs not found at #{AST_RS} - set KCL_AST_RS to the kcl repo's crates/a
 # ---------------------------------------------------------------------------
 
 STRUCTS = {}
-File.read(AST_RS).scan(/pub struct (\w+) \{(.*?)\n\}/m) do |name, body|
+File.read(AST_RS).scan(/^pub struct (\w+)(?:<[^>]*>)? \{(.*?)\n\}/m) do |name, body|
   STRUCTS[name] = body.scan(/pub (\w+): ([^,\n]+),/).to_h { |f, t| [f, t.strip] }
 end
-# `pub struct MissingExpr;` — a unit struct with no body, so the scan above
-# cannot see it. It is the payload of `Expr::Missing`, so it is a node type and
-# a constructor has to exist for it; it simply has no fields to cover.
-STRUCTS["MissingExpr"] ||= {}
+# The two other spellings, and they are not edge cases: `Pos` and `AstIndex` are
+# tuple structs and `MissingExpr` is a unit struct, so a braced-only scan cannot
+# see them at all — and a struct the scan cannot see is a struct neither the
+# rules nor the exclusion tables below can reason about, which makes every
+# exclusion a claim about nothing. A tuple struct's five positional fields have
+# no names, so the body is recorded under a synthetic key: no rule can demand a
+# parameter be settable, which is the correct outcome for something no binding
+# names its fields after anyway.
+File.read(AST_RS).scan(/^pub struct (\w+)\(([^)]*)\);/).each do |name, body|
+  STRUCTS[name] = { "(tuple)" => body.strip }
+end
+File.read(AST_RS).scan(/^pub struct (\w+);/).flatten.each { |name| STRUCTS[name] = {} }
 
 # The four structs that are AST infrastructure rather than nodes a caller
 # builds. `Pos` is a position, `AstIndex` is a byte range, `Node<T>` is the
@@ -64,6 +72,17 @@ STRUCTS["MissingExpr"] ||= {}
 # constructor for the wrapper would be demanding a constructor for
 # `NodeRef<Identifier>` and `NodeRef<String>` under the same name, which is
 # exactly the ambiguity the bindings resolve by suffix (`nodeRef` / `nodeStr`).
+#
+# This exempts them from the rules as well as from the coverage list, and that
+# is the point: a struct we have declared is not a node a caller builds cannot
+# also be one we hold to "every field settable". Python does expose a `Node`
+# constructor, and it is a complete one — `Node(node=…, id=…, pos=Pos(…))`
+# builds a fully-populated wrapper, spelling the five position members as the
+# `Pos` they already are a class for and re-flattening them in `to_dict`. Rule 2
+# would report four of `Node`'s five members unset, which is the checker reading
+# Rust's field layout as an API requirement. `check_ast_field_types.rb` is where
+# the wire shape of a wrapper is held to account, and it holds every binding to
+# that already.
 NOT_NODES = %w[Pos AstIndex Node Spanned].freeze
 
 # Structs that sit in `ast.rs` beside the nodes but cannot appear in the
@@ -94,6 +113,18 @@ NOT_ON_THE_WIRE = %w[Argument ExternalPkg OverrideSpec SymbolSelectorSpec Progra
 # `Module` is what `parseModule` returns, so they are as much a caller-facing
 # constructor target as `BinaryExpr` is.
 NODE_TYPES = (STRUCTS.keys - NOT_NODES - NOT_ON_THE_WIRE).sort.freeze
+
+# Every struct `ast.rs` declares has to be either a node the rules judge or a
+# named exclusion, and both halves of that are checked rather than trusted. A
+# struct in neither set is one the report would quietly never mention, and a
+# struct in an exclusion table that `ast.rs` does not declare is a claim about a
+# struct that has since been renamed or deleted — which is how an exclusion list
+# rots into a list of names that no longer mean anything. This is the guard that
+# makes those tables load-bearing rather than decorative: `Pos` and `AstIndex`
+# are tuple structs, so a braced-only scan could not see them and `NOT_NODES`
+# removed nothing, which is exactly the drift this catches.
+STALE_EXCLUSIONS = (NOT_NODES + NOT_ON_THE_WIRE).reject { |n| STRUCTS.key?(n) }
+abort "exclusion table names a struct ast.rs does not declare: #{STALE_EXCLUSIONS.join(' ')}" unless STALE_EXCLUSIONS.empty?
 
 # ---------------------------------------------------------------------------
 # Coverage bookkeeping
@@ -190,6 +221,11 @@ def compare(lang, ctors)
 
   ctors.each do |struct, params, defaulted|
     struct = STRUCT_ALIASES.dig(lang, struct) || struct
+    # Infrastructure, not a node — see `NOT_NODES`. Exempt from the rules and
+    # from the coverage list alike, so a binding that does expose one is not
+    # then held to a rule the exemption already disclaims.
+    next if NOT_NODES.include?(struct)
+
     # A struct `ast.rs` does not declare is a helper, not a node — `nodeRef`
     # returns a `NodeRef<T>`, `basicIntType` returns one arm of the `Type`
     # content-tagged enum, which has no struct of its own. Counting it as
@@ -290,6 +326,22 @@ KNOWN_HELPERS = %w[
 # reviewer can check, so it is written down rather than guessed.
 STRUCT_ALIASES = {
   "kotlin" => { "SchemaConfig" => "SchemaExpr", "Program" => "SerializeProgram" }
+}.freeze
+
+# A constructor whose return type is a tagged-enum wrapper, so the struct it
+# fills in is never named in the signature: `literalIntType` returns
+# `LiteralType`, because `{"type":"Int","value":{…}}` is what the tree holds,
+# and the `IntLiteralType` payload is constructed inside. Registering the same
+# constructor for the payload is the honest reading — a caller asking "can I
+# build an `IntLiteralType`?" is answered yes — and it is opt-in per function
+# rather than inferred, so a body that merely *mentions* a struct cannot
+# quietly claim it.
+#
+# `LiteralType::Int` is the only variant in `ast.rs` whose payload is a struct
+# rather than a scalar (`Bool(bool)`, `Float(f64)`, `Str(String)`), so this is
+# the only entry there is.
+WRAPPED_PAYLOADS = {
+  "kotlin" => { "literalIntType" => "IntLiteralType" }
 }.freeze
 
 # ---------------------------------------------------------------------------
@@ -412,24 +464,20 @@ def check_kotlin(path)
   ctors
 end
 
-CHECKS = {
-  "kotlin" => -> { check_kotlin(File.expand_path("../kotlin/src/main/kotlin/com/kcl/ast/AstBuild.kt", __dir__)) }
-}.freeze
-
-# A constructor whose return type is a tagged-enum wrapper, so the struct it
-# fills in is never named in the signature: `literalIntType` returns
-# `LiteralType`, because `{"type":"Int","value":{…}}` is what the tree holds,
-# and the `IntLiteralType` payload is constructed inside. Registering the same
-# constructor for the payload is the honest reading — a caller asking "can I
-# build an `IntLiteralType`?" is answered yes — and it is opt-in per function
-# rather than inferred, so a body that merely *mentions* a struct cannot
-# quietly claim it.
+# Per-language collectors live in their own file under `ast_ctors/` so that two
+# of them can be written without either having to know about the other, and so
+# that a binding's collector can be read on its own. Each defines one method,
+# `check_<lang>(path_or_dir)`, returning `[struct, params, defaulted]` triples —
+# the same shape `check_kotlin` returns above.
 #
-# `LiteralType::Int` is the only variant in `ast.rs` whose payload is a struct
-# rather than a scalar (`Bool(bool)`, `Float(f64)`, `Str(String)`), so this is
-# the only entry there is.
-WRAPPED_PAYLOADS = {
-  "kotlin" => { "literalIntType" => "IntLiteralType" }
+# `require` rather than `load` so that a collector with a syntax error stops
+# the run instead of being silently skipped, and so a second require of the
+# same file is free.
+Dir[File.expand_path("ast_ctors/*.rb", __dir__)].sort.each { |f| require f }
+
+CHECKS = {
+  "kotlin" => -> { check_kotlin(File.expand_path("../kotlin/src/main/kotlin/com/kcl/ast/AstBuild.kt", __dir__)) },
+  "python" => -> { check_python(File.expand_path("../python/kcl_lib/ast", __dir__)) }
 }.freeze
 
 # `CHECKS` is a registry; the loop below is the CLI. Requiring this file from a
