@@ -32,7 +32,7 @@ on:
       - "swift/Sources/KclLibAST/**"
       - "go/ast/**"
       - "java/src/main/java/com/kcl/ast/**"
-      - "kotlin/src/main/java/com/kcl/ast/**"
+      - "kotlin/src/main/kotlin/com/kcl/ast/**"
       - "c/include/kcl_lib_ast.h"
       - "c/lib/kcl_lib_ast.c"
       - "cpp/include/kcl_lib_ast.hpp"
@@ -100,3 +100,17 @@ jobs:
     - name: Verify the declaration checker still catches drift
       working-directory: "lib"
       run: ruby hack/test_check_ast_decl_drift.rb
+    # Field shapes are half the question a caller runs into; how a node is
+    # built is the other half. This checker holds every binding's node
+    # constructors to the same three rules — one exists, every field is
+    # reachable through it, and no parameter names a field ast.rs does not
+    # declare — with kotlin/.../AstBuild.kt as the reference form.
+    - name: Check every binding's AST constructors against ast.rs
+      working-directory: "lib"
+      run: ruby hack/check_ast_constructors.rb
+    # The self-test breaks constructors on purpose and asserts the rules fire,
+    # for the same reason as the two above: a collector that silently matches
+    # nothing must fail loudly, not report "ok" for every binding.
+    - name: Verify the constructor checker still catches a gutted binding
+      working-directory: "lib"
+      run: ruby hack/test_check_ast_constructors.rb
