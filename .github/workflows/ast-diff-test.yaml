@@ -60,6 +60,9 @@ on:
       - "java/src/main/java/com/kcl/ast/**"
       - "kotlin/src/main/java/com/kcl/ast/**"
       - "kotlin/src/main/kotlin/com/kcl/ast/**"
+      # The dump drivers that do not build from source parse with the prebuilt
+      # core from go/lib/, so refreshing it must re-run the diff.
+      - "go/lib/**"
       - ".github/workflows/ast-diff-test.yaml"
   workflow_dispatch:
 

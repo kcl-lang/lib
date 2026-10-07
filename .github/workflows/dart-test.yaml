@@ -13,6 +13,9 @@ on:
     paths:
       - "dart/**"
       - "spec/**"
+      # The FFI loader consumes the prebuilt libkcl binaries from go/lib/, so
+      # refreshing them must re-run this workflow.
+      - "go/lib/**"
       # ast_contract_test decodes the captured parser output as its fixture, so
       # regenerating the golden file must re-run this workflow.
       - "testdata/ast/**"
