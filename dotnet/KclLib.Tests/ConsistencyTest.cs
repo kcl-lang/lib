@@ -240,7 +240,7 @@ public class ConsistencyTest
                 {
                     Source = args.GetProperty("source").GetString(),
                     Filename = args.GetProperty("filename").GetString(),
-                    Format = args.GetProperty("format").GetString(),
+                    Format = args.TryGetProperty("format", out var fmt) ? fmt.GetString() : "",
                 });
                 AssertField(name, "kcl", expect.GetProperty("kcl").GetString()!, result.Kcl);
                 break;
