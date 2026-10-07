@@ -1,6 +1,6 @@
 name: ast-codegen
 
-# `python/kcl_lib/ast/` and `wasm/src/ast/` are generated from
+# `python/kcl_lib/ast/`, `wasm/src/ast/` and `go/ast/` are generated from
 # `kcl-lang/kcl`'s `crates/ast/src/ast.rs` by `tools/generate_ast.py`. They
 # used to be hand-written, and every binding's copy of the same declarations
 # drifted from the Rust on its own schedule — which is the whole reason the
@@ -34,6 +34,7 @@ on:
       - "python/tests/ast_contract_test.py"
       - "wasm/src/ast/**"
       - "wasm/tests/ast_contract.test.ts"
+      - "go/ast/**"
       - ".github/workflows/ast-codegen.yaml"
   workflow_dispatch:
 
@@ -105,3 +106,17 @@ jobs:
       - name: Run the wasm AST contract test
         working-directory: "lib/wasm"
         run: npx jest tests/ast_contract.test.ts
+
+      # The Go leg needs the toolchain the emitter itself needs: `gofmt` is
+      # what decides the generated layout, so a generator run without it either
+      # fails loudly or — worse, on a machine that happens to have it — writes
+      # a file the freshness check then reads back differently.
+      - uses: actions/setup-go@v6
+        with:
+          go-version: "1.25"
+      - name: Vet the generated Go
+        working-directory: "lib/go"
+        run: go vet ./ast/
+      - name: Run the Go AST contract test
+        working-directory: "lib/go"
+        run: go test ./ast/

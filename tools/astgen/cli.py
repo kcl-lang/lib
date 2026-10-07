@@ -11,13 +11,39 @@ from __future__ import annotations
 import argparse
 import difflib
 import os
+import shutil
+import subprocess
 import sys
 from typing import Dict, List
 
+from .emit_go import GO_FILES, GoEmitter
 from .emit_python import PY_MODULES, PythonEmitter
 from .emit_typescript import TS_FILES, TypeScriptEmitter
 from .model import build
 from .rust_ast import parse_crate
+
+
+def gofmt(text: str) -> str:
+    """Run ``gofmt`` over generated Go.
+
+    The emitter lays the source out and ``gofmt`` decides it: aligning a const
+    block or a run of struct fields is exactly the work a formatter exists for,
+    and re-deriving it here would be a second, weaker copy of the same rules.
+    The failure is deliberately loud rather than skipped -- a checked-in file
+    that one machine formatted and another did not is precisely the staleness
+    ``--check`` exists to catch, so quietly emitting unformatted Go would turn
+    that check into coin flips.
+    """
+    tool = shutil.which("gofmt")
+    if tool is None:
+        raise SystemExit(
+            "gofmt not found on PATH.\n"
+            "Generating the Go binding needs the Go toolchain; install Go and re-run."
+        )
+    done = subprocess.run([tool], input=text, capture_output=True, text=True)
+    if done.returncode != 0:
+        raise SystemExit(f"gofmt failed on generated Go:\n{done.stderr}")
+    return done.stdout
 
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 DEFAULT_AST_RS = os.environ.get("KCL_AST_RS") or os.path.join(
@@ -26,6 +52,7 @@ DEFAULT_AST_RS = os.environ.get("KCL_AST_RS") or os.path.join(
 
 PYTHON_DIR = os.path.join("python", "kcl_lib", "ast")
 TYPESCRIPT_DIR = os.path.join("wasm", "src", "ast")
+GO_DIR = os.path.join("go", "ast")
 
 
 def generate() -> Dict[str, str]:
@@ -42,6 +69,10 @@ def generate() -> Dict[str, str]:
     ts = TypeScriptEmitter(model)
     for name in TS_FILES:
         files[os.path.join(TYPESCRIPT_DIR, name)] = ts.emit(name)
+
+    go = GoEmitter(model)
+    for name in GO_FILES:
+        files[os.path.join(GO_DIR, name)] = gofmt(go.emit(name))
     return files
 
 
@@ -77,7 +108,11 @@ def check() -> int:
     # orphan nobody notices, so the reverse direction is checked too. A
     # directory that is not there at all is already reported above, one
     # `MISSING` line per file the generator owns; listing it would raise.
-    for directory, suffixes in ((PYTHON_DIR, (".py",)), (TYPESCRIPT_DIR, (".ts",))):
+    for directory, suffixes in (
+        (PYTHON_DIR, (".py",)),
+        (TYPESCRIPT_DIR, (".ts",)),
+        (GO_DIR, ("_gen.go",)),
+    ):
         abs_dir = os.path.join(REPO_ROOT, directory)
         if not os.path.isdir(abs_dir):
             continue

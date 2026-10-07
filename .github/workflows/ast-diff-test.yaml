@@ -43,6 +43,11 @@ on:
       - "dotnet/KclLib.AST/**"
       - "zig/src/ast/**"
       - "swift/Sources/KclLibAST/**"
+      # Go's AST package, and the dumper that drives it. The dumper is its own
+      # module with a `replace` back to this tree, so it is the only place a
+      # change to the Go decoder can reach the harness from.
+      - "go/ast/**"
+      - "hack/dump/go/**"
       # C and C++ have one decoder each, in a header and its implementation.
       # `kcl_ast_json.hpp` is the C++ header's own JSON parser and is the
       # other half of `kcl_ast.hpp`'s decoder; `kcl_lib_ast.h` is the whole
@@ -86,6 +91,13 @@ jobs:
           - binding: dart
           - binding: zig
           - binding: dotnet
+          # Go needs nothing built: `go/ast` is pure Go with no cgo, and
+          # `hack/dump/go/` is its own module with a `replace` back to this
+          # tree, so `go run` there compiles the decoder sitting next to it
+          # rather than a published `kcl-lang.io/lib`. That is the whole point
+          # — a leg that resolved the binding from the proxy would be diffing a
+          # released version and reporting it as this one.
+          - binding: go
           # C and C++ need no toolchain step at all: both decoders are
           # self-contained, and `hack/dump/{c,cpp}.sh` compile their sources
           # against a stock cc / c++ on the runner image. Not `cargo build`
@@ -266,6 +278,16 @@ jobs:
       if: matrix.binding == 'dotnet'
       working-directory: "lib/dotnet"
       run: cargo build --release
+
+    # --- go ---------------------------------------------------------------
+    # No `go mod download` and no prebuilt `libkcl`: `go/ast` imports only
+    # `encoding/json`, `fmt` and `os`, so the dumper's module graph is the
+    # standard library plus this tree. `go run` in `hack/dump/go` compiles it.
+    - name: Setup go
+      if: matrix.binding == 'go'
+      uses: actions/setup-go@v6
+      with:
+        go-version: "1.25"
 
     # --- java / kotlin ----------------------------------------------------
     # One JDK for both. The dumper scripts do not run maven's `compile` phase,

@@ -363,6 +363,14 @@ LEAF_DECODER = {
   # same reason and no longer is: it has a decoder of its own in
   # `cpp/include/kcl_ast.hpp`, and that is the one its binding uses.
   kotlin:     ->(src, leaf, word) { src[/^public class #{leaf} \{(.*?)\n\}/m, 1] },
+  # Go's `Comment` is reached through `CommentNode.UnmarshalJSON`, which lifts
+  # `node` off the wrapper and hands the payload to `Comment.fromWire` -- so
+  # the decoder is handed the payload, not the wrapper, and it must not unwrap
+  # `node` a second time. That is `LEAF_TAKES_WRAPPER`'s default for Go, but
+  # the slot is what makes it true: it is a per-decoder property, and here the
+  # only decoder is a generated one whose call site is the slot's own
+  # `UnmarshalJSON`.
+  go:         ->(src, leaf, word) { src[/^func \(c \*#{leaf}\) fromWire\(d map\[string\]json\.RawMessage\) error \{(.*?)^\}/m, 1] },
   # C++ is checked through two headers, and each carries its own `Comment`
   # decoder with a different calling convention: the C one is handed the
   # `{"node": …}` wrapper and lifts `node` out of it, the C++ one is handed the
@@ -1953,6 +1961,62 @@ def java_ast_files(dir)
 end
 
 # ---------------------------------------------------------------------------
+# Go
+# ---------------------------------------------------------------------------
+
+# Go's AST is generated from `ast.rs` by `tools/astgen/emit_go.py`, so every
+# field is a struct declaration. That is what this collector reads and all it
+# reads: there is no hand-written loader name to grep for, so the declared type
+# is the loader, in the same way Jackson's field type is Java's and a
+# `_from_wire` suffix is Ruby's.
+GO_AST_DIR = "go/ast"
+
+# A field is `Name Type `json:"wire"`` on one line, and the tag's options
+# (`omitempty`) are not part of the wire key. The `json:"-"` on
+# `MemberOrIndex`'s per-variant fields does not match, which is right: those
+# slots are placed by `MarshalJSON` rather than by the struct's own key set, so
+# they are not wire keys and must not be compared as if they were.
+GO_FIELD = /^\t(\w+)\s+(\S+)\s+`json:"([^",]+)(?:,[^"]*)?"`/
+
+# `type Name struct { … }`, body included. The `Node[T]` wrapper and the fifteen
+# slot types are structs as well; none of them is a Rust struct, so `checkable?`
+# drops them and their reads never enter the comparison.
+GO_STRUCT = /^type (\w+) struct \{\n(.*?)\n\}/m
+
+# The payload a Go type names. `NodeRef<T>` is a generic struct in Rust and a
+# named slot type in Go -- `ExprNode`, `StringNode` -- because a generic method
+# cannot dispatch on its type parameter, so the mapping cannot live in `Node[T]`
+# and the slot name has to be the Rust payload's name plus `Node`. Stripping
+# that suffix is what makes the lookup a derivation rather than a hand-written
+# list: `*ExprNode`, `[]*ExprNode` and `*ConfigEntry` all answer through
+# `PAYLOAD_LOADER` the same way every other binding's loaders do, and a slot
+# added to the emitter shows up here without this file being told.
+def go_payload(type)
+  PAYLOAD_LOADER[type.delete_prefix("[]").delete_prefix("*").sub(/Node\z/, "")]
+end
+
+def check_go(dir)
+  reads = []
+  blob = +""
+  Dir[File.join(dir, "*_gen.go")].sort.each do |path|
+    source = File.read(path)
+    blob << "\n" << source
+    source.scan(GO_STRUCT) do |name, body|
+      cur = STRUCTS.key?(name) ? name : nil
+      REACHED[:go] << cur unless cur.nil?
+      next if cur.nil?
+
+      body.each_line do |line|
+        next unless (m = line.match(GO_FIELD))
+
+        reads << [cur, m[3], m[2].start_with?("[]"), go_payload(m[2])]
+      end
+    end
+  end
+  compare(:go, reads) + compare_leaf(:go, blob)
+end
+
+# ---------------------------------------------------------------------------
 # C
 # ---------------------------------------------------------------------------
 
@@ -2579,6 +2643,7 @@ CHECKS = {
   "nodejs" => -> { check_nodejs(File.expand_path("../nodejs/src/ast", __dir__)) },
   "java" => -> { check_java(File.expand_path("../#{JAVA_AST_DIR}", __dir__)) },
   "kotlin" => -> { check_java(File.expand_path("../#{KOTLIN_AST_DIR}", __dir__), :kotlin) },
+  "go" => -> { check_go(File.expand_path("../#{GO_AST_DIR}", __dir__)) },
   "c" => -> { check_c(File.expand_path("../#{C_AST_HEADER}", __dir__)) },
   # `cpp/include/kcl_lib_ast.hpp` declares no struct and reads no wire key:
   # it hands `ast_json` straight to `kcl_ast_parse_module` and wraps the

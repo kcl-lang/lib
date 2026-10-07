@@ -271,6 +271,21 @@ module AstDiff
               "payload and are written out as `@raw` (R11)."
       ),
 
+      # ----------------------------------------------------------------- go
+      Binding.new(
+        name: "go",
+        mode: :wire,
+        probe: -> { run_probe(["go", "version"]) },
+        argv: ->(golden, out) { ["bash", "hack/dump/go.sh", golden, out] },
+        extra_ok: {},
+        note: "Generated from ast.rs by `tools/astgen/emit_go.py`, so the field " \
+              "lists cannot drift. Go has a real serializer -- the struct tags " \
+              "and the four `MarshalJSON` for the inline and compact documents -- " \
+              "so this is a wire round-trip. The `Node[T]` wrapper is generic but " \
+              "its fifteen slot types are named, because a generic method cannot " \
+              "dispatch on `T`."
+      ),
+
       # ----------------------------------------------------------------- c
       Binding.new(
         name: "c",
@@ -428,9 +443,6 @@ module AstDiff
   # cannot execute. Listed so the report is explicit about the gap rather
   # than quietly short. `reason` must name the blocker.
   def self.unrunnable
-    {
-      "go" => "the Go binding has no typed AST package at all — go/api/client.go exposes " \
-              "ast_json as an opaque string, so there is no decoder to run the golden through"
-    }.freeze
+    {}.freeze
   end
 end
