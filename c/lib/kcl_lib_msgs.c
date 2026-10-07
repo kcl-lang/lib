@@ -42,20 +42,26 @@ static bool kclm_encode_string(pb_ostream_t* stream, const pb_field_t* field, vo
     return pb_encode_string(stream, (const uint8_t*)(*arg), strlen((const char*)*arg));
 }
 
-struct KclStringSlot {
-    char* buffer;
-    size_t size;
-};
-
-static bool kclm_copy_string(pb_istream_t* stream, const pb_field_t* field, void** arg)
+bool kcl_decode_copy_string(pb_istream_t* stream, const pb_field_t* field, void** arg)
 {
     struct KclStringSlot* slot = (struct KclStringSlot*)(*arg);
     size_t size = stream->bytes_left;
+    (void)field;
     if (size >= slot->size)
         return false;
     if (!pb_read(stream, (uint8_t*)slot->buffer, size))
         return false;
     slot->buffer[size] = '\0';
+    return true;
+}
+
+bool kcl_decode_count_only(pb_istream_t* stream, const pb_field_t* field, void** arg)
+{
+    size_t* count = (size_t*)(*arg);
+    (void)field;
+    if (!pb_read(stream, NULL, stream->bytes_left))
+        return false;
+    ++*count;
     return true;
 }
 
@@ -331,7 +337,10 @@ static bool kclm_decode_json_string_member(pb_istream_t* stream, const pb_field_
     return kclm_decode_json_string(stream, field, (void**)&ctx->sink);
 }
 
-/* Decode one element of a repeated string member: `"name": ["a", "b"]`. */
+/* Decode one element of a repeated string member: `"name": ["a", "b"]`.
+ * Scalar elements carry no kclm_sink_begin of their own, so the comma
+ * between them is emitted here: the array frame's has_items is set when
+ * the first element lands and checked before every later one. */
 static bool kclm_decode_json_string_array_member(pb_istream_t* stream, const pb_field_t* field, void** arg)
 {
     struct KclJsonMemberCtx* ctx = (struct KclJsonMemberCtx*)(*arg);
@@ -341,7 +350,12 @@ static bool kclm_decode_json_string_array_member(pb_istream_t* stream, const pb_
         if (!kclm_sink_begin(ctx->sink, true))
             return false;
         ctx->array_started = true;
+    } else if (ctx->sink->depth >= 0 && ctx->sink->frames[ctx->sink->depth].has_items && !ctx->sink->after_member) {
+        if (!kclm_sink_putn(ctx->sink, ",", 1))
+            return false;
     }
+    if (ctx->sink->depth >= 0)
+        ctx->sink->frames[ctx->sink->depth].has_items = true;
     return kclm_decode_json_string(stream, field, (void**)&ctx->sink);
 }
 
@@ -593,7 +607,6 @@ bool kcl_decode_scope_map_json(pb_istream_t* stream, const pb_field_t* field, vo
     struct KclJsonArrayCtx ctx_children = { NULL, "children", false };
     struct KclJsonArrayCtx ctx_defs = { NULL, "defs", false };
     size_t capacity = stream->bytes_left * 8 + 4096;
-    int depth = sink->depth;
     bool status;
 
     if (!kclm_scratch_begin(&value_scratch, capacity)
@@ -620,12 +633,22 @@ bool kcl_decode_scope_map_json(pb_istream_t* stream, const pb_field_t* field, vo
     entry.key.funcs.decode = kclm_decode_json_string_member;
     entry.key.arg = &ctx_key;
 
+    /* parent_scratch and owner_scratch back static submessage members,
+     * so they are opened here like value_scratch: their `kind` member
+     * callback fires while the entry decodes, and kclm_index_value_finish
+     * appends the i/g members and closes them before the splice. */
     if (!kclm_sink_list_entry_begin(sink)
         || !kclm_sink_begin(sink, false)
-        || !kclm_sink_begin(&value_scratch, false)) {
+        || !kclm_sink_begin(&value_scratch, false)
+        || !kclm_sink_begin(&parent_scratch, false)
+        || !kclm_sink_begin(&owner_scratch, false)) {
         status = false;
     } else {
         status = pb_decode(stream, LoadPackageResult_ScopesEntry_fields, &entry);
+        if (status && entry.value.has_parent)
+            status = kclm_index_value_finish(&parent_scratch, entry.value.parent.i, entry.value.parent.g);
+        if (status && entry.value.has_owner)
+            status = kclm_index_value_finish(&owner_scratch, entry.value.owner.i, entry.value.owner.g);
         if (status && entry.value.has_parent)
             status = kclm_sink_member_raw(&value_scratch, "parent", parent_scratch.buffer, false);
         if (status && entry.value.has_owner)
@@ -637,7 +660,7 @@ bool kcl_decode_scope_map_json(pb_istream_t* stream, const pb_field_t* field, vo
         if (status)
             status = kclm_sink_member_raw(sink, "value", value_scratch.buffer, false);
         if (status)
-            status = kclm_sink_close_to(sink, depth);
+            status = kclm_sink_end(sink);
     }
 
     status = status && kclm_sink_ok(&value_scratch) && kclm_sink_ok(&parent_scratch) && kclm_sink_ok(&owner_scratch);
@@ -662,7 +685,6 @@ bool kcl_decode_symbol_map_json(pb_istream_t* stream, const pb_field_t* field, v
     struct KclJsonMemberCtx ctx_def = { NULL, "kind", false };
     struct KclJsonArrayCtx ctx_attrs = { NULL, "attrs", false };
     size_t capacity = stream->bytes_left * 8 + 4096;
-    int depth = sink->depth;
     bool status;
 
     if (!kclm_scratch_begin(&value_scratch, capacity)
@@ -690,10 +712,15 @@ bool kcl_decode_symbol_map_json(pb_istream_t* stream, const pb_field_t* field, v
     entry.key.funcs.decode = kclm_decode_json_string_member;
     entry.key.arg = &ctx_key;
 
+    /* owner_scratch and def_scratch back static submessage members; see
+     * kcl_decode_scope_map_json for why they are opened and finished
+     * around the entry decode. */
     if (!kclm_sink_list_entry_begin(sink)
         || !kclm_sink_begin(sink, false)
         || !kclm_sink_begin(&value_scratch, false)
-        || !kclm_sink_begin(&ty_scratch, false)) {
+        || !kclm_sink_begin(&ty_scratch, false)
+        || !kclm_sink_begin(&owner_scratch, false)
+        || !kclm_sink_begin(&def_scratch, false)) {
         status = false;
     } else {
         status = pb_decode(stream, LoadPackageResult_SymbolsEntry_fields, &entry);
@@ -701,6 +728,10 @@ bool kcl_decode_symbol_map_json(pb_istream_t* stream, const pb_field_t* field, v
             status = kclm_sink_close_to(&ty_scratch, 0) && kclm_sink_end(&ty_scratch);
         if (status && entry.value.has_ty)
             status = kclm_sink_member_raw(&value_scratch, "ty", ty_scratch.buffer, false);
+        if (status && entry.value.has_owner)
+            status = kclm_index_value_finish(&owner_scratch, entry.value.owner.i, entry.value.owner.g);
+        if (status && entry.value.has_def)
+            status = kclm_index_value_finish(&def_scratch, entry.value.def.i, entry.value.def.g);
         if (status && entry.value.has_owner)
             status = kclm_sink_member_raw(&value_scratch, "owner", owner_scratch.buffer, false);
         if (status && entry.value.has_def)
@@ -714,7 +745,7 @@ bool kcl_decode_symbol_map_json(pb_istream_t* stream, const pb_field_t* field, v
         if (status)
             status = kclm_sink_member_raw(sink, "value", value_scratch.buffer, false);
         if (status)
-            status = kclm_sink_close_to(sink, depth);
+            status = kclm_sink_end(sink);
     }
 
     status = status && kclm_sink_ok(&value_scratch) && kclm_sink_ok(&ty_scratch) && kclm_sink_ok(&owner_scratch) && kclm_sink_ok(&def_scratch);
@@ -737,7 +768,6 @@ bool kcl_decode_symbol_index_map_json(pb_istream_t* stream, const pb_field_t* fi
     struct KclJsonMemberCtx ctx_key = { sink, "key", false };
     struct KclJsonMemberCtx ctx_kind = { NULL, "kind", false };
     size_t capacity = stream->bytes_left * 8 + 4096;
-    int depth = sink->depth;
     bool status;
 
     if (!kclm_scratch_begin(&value_scratch, capacity))
@@ -759,7 +789,7 @@ bool kcl_decode_symbol_index_map_json(pb_istream_t* stream, const pb_field_t* fi
         if (status)
             status = kclm_sink_member_raw(sink, "value", value_scratch.buffer, false);
         if (status)
-            status = kclm_sink_close_to(sink, depth);
+            status = kclm_sink_end(sink);
     }
 
     status = status && kclm_sink_ok(&value_scratch);
@@ -775,7 +805,6 @@ bool kcl_decode_fully_qualified_name_map_json(pb_istream_t* stream, const pb_fie
     struct KclJsonMemberCtx ctx_key = { sink, "key", false };
     struct KclJsonMemberCtx ctx_kind = { NULL, "kind", false };
     size_t capacity = stream->bytes_left * 8 + 4096;
-    int depth = sink->depth;
     bool status;
 
     if (!kclm_scratch_begin(&value_scratch, capacity))
@@ -797,7 +826,7 @@ bool kcl_decode_fully_qualified_name_map_json(pb_istream_t* stream, const pb_fie
         if (status)
             status = kclm_sink_member_raw(sink, "value", value_scratch.buffer, false);
         if (status)
-            status = kclm_sink_close_to(sink, depth);
+            status = kclm_sink_end(sink);
     }
 
     status = status && kclm_sink_ok(&value_scratch);
@@ -813,7 +842,6 @@ bool kcl_decode_scope_index_map_json(pb_istream_t* stream, const pb_field_t* fie
     struct KclJsonMemberCtx ctx_key = { sink, "key", false };
     struct KclJsonMemberCtx ctx_kind = { NULL, "kind", false };
     size_t capacity = stream->bytes_left * 8 + 4096;
-    int depth = sink->depth;
     bool status;
 
     if (!kclm_scratch_begin(&value_scratch, capacity))
@@ -835,7 +863,7 @@ bool kcl_decode_scope_index_map_json(pb_istream_t* stream, const pb_field_t* fie
         if (status)
             status = kclm_sink_member_raw(sink, "value", value_scratch.buffer, false);
         if (status)
-            status = kclm_sink_close_to(sink, depth);
+            status = kclm_sink_end(sink);
     }
 
     status = status && kclm_sink_ok(&value_scratch);
@@ -853,7 +881,6 @@ bool kcl_decode_string_map_json(pb_istream_t* stream, const pb_field_t* field, v
     LoadPackageResult_SymbolNodeMapEntry entry = LoadPackageResult_SymbolNodeMapEntry_init_default;
     struct KclJsonMemberCtx ctx_key = { sink, "key", false };
     struct KclJsonMemberCtx ctx_value = { sink, "value", false };
-    int depth = sink->depth;
     bool status;
 
     entry.key.funcs.decode = kclm_decode_json_string_member;
@@ -865,7 +892,7 @@ bool kcl_decode_string_map_json(pb_istream_t* stream, const pb_field_t* field, v
         return false;
     status = pb_decode(stream, LoadPackageResult_SymbolNodeMapEntry_fields, &entry);
     if (status)
-        status = kclm_sink_close_to(sink, depth);
+        status = kclm_sink_end(sink);
     return status && kclm_sink_ok(sink);
 }
 
@@ -875,7 +902,6 @@ bool kcl_decode_string_string_map_json(pb_istream_t* stream, const pb_field_t* f
     RenameCodeResult_ChangedCodesEntry entry = RenameCodeResult_ChangedCodesEntry_init_default;
     struct KclJsonMemberCtx ctx_key = { sink, "key", false };
     struct KclJsonMemberCtx ctx_value = { sink, "value", false };
-    int depth = sink->depth;
     bool status;
 
     entry.key.funcs.decode = kclm_decode_json_string_member;
@@ -887,7 +913,7 @@ bool kcl_decode_string_string_map_json(pb_istream_t* stream, const pb_field_t* f
         return false;
     status = pb_decode(stream, RenameCodeResult_ChangedCodesEntry_fields, &entry);
     if (status)
-        status = kclm_sink_close_to(sink, depth);
+        status = kclm_sink_end(sink);
     return status && kclm_sink_ok(sink);
 }
 
@@ -904,7 +930,6 @@ bool kcl_decode_kcltype_map_json(pb_istream_t* stream, const pb_field_t* field, 
     struct KclJsonSink value_scratch;
     struct KclJsonMemberCtx ctx_key = { sink, "key", false };
     size_t capacity = stream->bytes_left * 8 + 4096;
-    int depth = sink->depth;
     bool status;
 
     if (!kclm_scratch_begin(&value_scratch, capacity))
@@ -928,7 +953,7 @@ bool kcl_decode_kcltype_map_json(pb_istream_t* stream, const pb_field_t* field, 
         if (status)
             status = kclm_sink_member_raw(sink, "value", value_scratch.buffer, false);
         if (status)
-            status = kclm_sink_close_to(sink, depth);
+            status = kclm_sink_end(sink);
     }
 
     status = status && kclm_sink_ok(&value_scratch);
@@ -945,7 +970,6 @@ bool kcl_decode_schema_types_map_json(pb_istream_t* stream, const pb_field_t* fi
     struct KclJsonSink types_scratch;
     struct KclJsonMemberCtx ctx_key = { sink, "key", false };
     size_t capacity = stream->bytes_left * 8 + 4096;
-    int depth = sink->depth;
     bool status;
 
     if (!kclm_scratch_begin(&value_scratch, capacity) || !kclm_scratch_begin(&types_scratch, capacity)) {
@@ -979,7 +1003,7 @@ bool kcl_decode_schema_types_map_json(pb_istream_t* stream, const pb_field_t* fi
         if (status)
             status = kclm_sink_member_raw(sink, "value", value_scratch.buffer, false);
         if (status)
-            status = kclm_sink_close_to(sink, depth);
+            status = kclm_sink_end(sink);
     }
 
     status = status && kclm_sink_ok(&value_scratch) && kclm_sink_ok(&types_scratch);
@@ -1514,7 +1538,6 @@ bool kcl_decode_variable_map_json(pb_istream_t* stream, const pb_field_t* field,
     struct KclJsonMemberCtx ctx_key = { sink, "key", false };
     struct KclJsonArrayCtx ctx_variables = { NULL, "variables", false };
     size_t capacity = stream->bytes_left * 8 + 4096;
-    int depth = sink->depth;
     bool status;
 
     if (!kclm_scratch_begin(&value_scratch, capacity))
@@ -1539,7 +1562,7 @@ bool kcl_decode_variable_map_json(pb_istream_t* stream, const pb_field_t* field,
         if (status)
             status = kclm_sink_member_raw(sink, "value", value_scratch.buffer, false);
         if (status)
-            status = kclm_sink_close_to(sink, depth);
+            status = kclm_sink_end(sink);
     }
 
     status = status && kclm_sink_ok(&value_scratch);
@@ -1566,13 +1589,13 @@ bool kcl_decode_option_help_list(pb_istream_t* stream, const pb_field_t* field, 
     slots[2].size = sizeof(coll->items[coll->count].default_value);
     slots[3].buffer = coll->items[coll->count].help;
     slots[3].size = sizeof(coll->items[coll->count].help);
-    oh.name.funcs.decode = kclm_copy_string;
+    oh.name.funcs.decode = kcl_decode_copy_string;
     oh.name.arg = &slots[0];
-    oh.type.funcs.decode = kclm_copy_string;
+    oh.type.funcs.decode = kcl_decode_copy_string;
     oh.type.arg = &slots[1];
-    oh.default_value.funcs.decode = kclm_copy_string;
+    oh.default_value.funcs.decode = kcl_decode_copy_string;
     oh.default_value.arg = &slots[2];
-    oh.help.funcs.decode = kclm_copy_string;
+    oh.help.funcs.decode = kcl_decode_copy_string;
     oh.help.arg = &slots[3];
     if (!pb_decode(stream, OptionHelp_fields, &oh))
         return false;
@@ -1594,11 +1617,11 @@ bool kcl_decode_test_case_info_list(pb_istream_t* stream, const pb_field_t* fiel
     slots[1].size = sizeof(coll->items[coll->count].error);
     slots[2].buffer = coll->items[coll->count].log_message;
     slots[2].size = sizeof(coll->items[coll->count].log_message);
-    info.name.funcs.decode = kclm_copy_string;
+    info.name.funcs.decode = kcl_decode_copy_string;
     info.name.arg = &slots[0];
-    info.error.funcs.decode = kclm_copy_string;
+    info.error.funcs.decode = kcl_decode_copy_string;
     info.error.arg = &slots[1];
-    info.log_message.funcs.decode = kclm_copy_string;
+    info.log_message.funcs.decode = kcl_decode_copy_string;
     info.log_message.arg = &slots[2];
     if (!pb_decode(stream, TestCaseInfo_fields, &info))
         return false;
@@ -1618,9 +1641,9 @@ bool kcl_decode_external_pkg_list(pb_istream_t* stream, const pb_field_t* field,
     slots[0].size = sizeof(coll->items[coll->count].pkg_name);
     slots[1].buffer = coll->items[coll->count].pkg_path;
     slots[1].size = sizeof(coll->items[coll->count].pkg_path);
-    pkg.pkg_name.funcs.decode = kclm_copy_string;
+    pkg.pkg_name.funcs.decode = kcl_decode_copy_string;
     pkg.pkg_name.arg = &slots[0];
-    pkg.pkg_path.funcs.decode = kclm_copy_string;
+    pkg.pkg_path.funcs.decode = kcl_decode_copy_string;
     pkg.pkg_path.arg = &slots[1];
     if (!pb_decode(stream, ExternalPkg_fields, &pkg))
         return false;
@@ -1639,9 +1662,9 @@ bool kcl_decode_key_value_pair_list(pb_istream_t* stream, const pb_field_t* fiel
     slots[0].size = sizeof(coll->items[coll->count].key);
     slots[1].buffer = coll->items[coll->count].value;
     slots[1].size = sizeof(coll->items[coll->count].value);
-    pair.key.funcs.decode = kclm_copy_string;
+    pair.key.funcs.decode = kcl_decode_copy_string;
     pair.key.arg = &slots[0];
-    pair.value.funcs.decode = kclm_copy_string;
+    pair.value.funcs.decode = kcl_decode_copy_string;
     pair.value.arg = &slots[1];
     if (!pb_decode(stream, KeyValuePair_fields, &pair))
         return false;
