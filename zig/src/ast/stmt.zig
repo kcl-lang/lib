@@ -42,7 +42,7 @@ pub const Stmt = union(enum) {
 };
 
 pub const ExprStmt = struct {
-    exprs: std.ArrayList(*ExprNode),
+    exprs: std.ArrayList(*ExprNode) = .empty,
 
     fn parse(alloc: Allocator, v: Value) Error!ExprStmt {
         return .{
@@ -81,7 +81,7 @@ pub const UnificationStmt = struct {
 };
 
 pub const AssignStmt = struct {
-    targets: std.ArrayList(*TargetNode),
+    targets: std.ArrayList(*TargetNode) = .empty,
     ty: ?*TypeNode,
     value: ?*ExprNode,
 
@@ -114,10 +114,10 @@ pub const SchemaStmt = struct {
     is_mixin: bool,
     is_protocol: bool,
     args: ?*ArgumentsNode,
-    mixins: std.ArrayList(*IdentifierNode),
-    body: std.ArrayList(*StmtNode),
-    decorators: std.ArrayList(*DecoratorNode),
-    checks: std.ArrayList(*expr.CheckExprNode),
+    mixins: std.ArrayList(*IdentifierNode) = .empty,
+    body: std.ArrayList(*StmtNode) = .empty,
+    decorators: std.ArrayList(*DecoratorNode) = .empty,
+    checks: std.ArrayList(*expr.CheckExprNode) = .empty,
     index_signature: ?*SchemaIndexSignatureNode,
 
     fn parse(alloc: Allocator, v: Value) Error!SchemaStmt {
@@ -177,7 +177,7 @@ pub const SchemaAttr = struct {
     op: ?[]const u8,
     value: ?*ExprNode,
     is_optional: bool,
-    decorators: std.ArrayList(*DecoratorNode),
+    decorators: std.ArrayList(*DecoratorNode) = .empty,
     ty: ?*TypeNode,
 
     fn parse(alloc: Allocator, v: Value) Error!SchemaAttr {
@@ -216,9 +216,9 @@ pub const SchemaAttr = struct {
 pub const RuleStmt = struct {
     doc: ?*StringNode,
     name: ?*StringNode,
-    parent_rules: std.ArrayList(*IdentifierNode),
-    decorators: std.ArrayList(*DecoratorNode),
-    checks: std.ArrayList(*expr.CheckExprNode),
+    parent_rules: std.ArrayList(*IdentifierNode) = .empty,
+    decorators: std.ArrayList(*DecoratorNode) = .empty,
+    checks: std.ArrayList(*expr.CheckExprNode) = .empty,
     args: ?*ArgumentsNode,
     for_host_name: ?*IdentifierNode,
 
@@ -313,8 +313,8 @@ pub const AugAssignStmt = struct {
 
 pub const IfStmt = struct {
     cond: ?*ExprNode,
-    body: std.ArrayList(*StmtNode),
-    orelse_: std.ArrayList(*StmtNode),
+    body: std.ArrayList(*StmtNode) = .empty,
+    orelse_: std.ArrayList(*StmtNode) = .empty,
 
     fn parse(alloc: Allocator, v: Value) Error!IfStmt {
         return .{

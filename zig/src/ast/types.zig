@@ -113,7 +113,7 @@ pub const DictType = struct {
 };
 
 pub const FunctionType = struct {
-    params_ty: std.ArrayList(*TypeNode),
+    params_ty: std.ArrayList(*TypeNode) = .empty,
     ret_ty: ?*TypeNode,
 
     fn parse(alloc: Allocator, v: Value) Error!FunctionType {
@@ -153,7 +153,7 @@ pub const FunctionType = struct {
 };
 
 pub const UnionType = struct {
-    type_elements: std.ArrayList(*TypeNode),
+    type_elements: std.ArrayList(*TypeNode) = .empty,
 
     fn parse(alloc: Allocator, v: Value) Error!UnionType {
         const inner = base.getField(v, "value") orelse Value.null;

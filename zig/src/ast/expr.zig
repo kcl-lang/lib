@@ -163,8 +163,8 @@ pub const SelectorExpr = struct {
 /// no `"type"` key, so `dto.zig` re-exports `parseCallExprPayload` for them.
 pub const CallExpr = struct {
     func: ?*ExprNode,
-    args: std.ArrayList(*ExprNode),
-    keywords: std.ArrayList(*KeywordNode),
+    args: std.ArrayList(*ExprNode) = .empty,
+    keywords: std.ArrayList(*KeywordNode) = .empty,
 
     pub fn parse(alloc: Allocator, v: Value) Error!CallExpr {
         return .{
@@ -219,7 +219,7 @@ pub const ParenExpr = struct {
 
 pub const QuantExpr = struct {
     target: ?*ExprNode,
-    variables: std.ArrayList(*IdentifierNode),
+    variables: std.ArrayList(*IdentifierNode) = .empty,
     op: []const u8,
     test_: ?*ExprNode,
     if_cond: ?*ExprNode,
@@ -253,7 +253,7 @@ pub const QuantExpr = struct {
 };
 
 pub const ListExpr = struct {
-    elts: std.ArrayList(*ExprNode),
+    elts: std.ArrayList(*ExprNode) = .empty,
     ctx: []const u8,
 
     fn parse(alloc: Allocator, v: Value) Error!ListExpr {
@@ -277,7 +277,7 @@ pub const ListExpr = struct {
 
 pub const ListIfItemExpr = struct {
     if_cond: ?*ExprNode,
-    exprs: std.ArrayList(*ExprNode),
+    exprs: std.ArrayList(*ExprNode) = .empty,
     orelse_: ?*ExprNode,
 
     fn parse(alloc: Allocator, v: Value) Error!ListIfItemExpr {
@@ -303,7 +303,7 @@ pub const ListIfItemExpr = struct {
 
 pub const ListCompExpr = struct {
     elt: ?*ExprNode,
-    generators: std.ArrayList(*CompClauseNode),
+    generators: std.ArrayList(*CompClauseNode) = .empty,
 
     fn parse(alloc: Allocator, v: Value) Error!ListCompExpr {
         return .{
@@ -349,7 +349,7 @@ pub const DictCompExpr = struct {
     /// payload inline with no `{"node": ...}` wrapper to unwrap. Wrapping it
     /// would silently decode the whole entry as empty.
     entry: dto.ConfigEntry,
-    generators: std.ArrayList(*CompClauseNode),
+    generators: std.ArrayList(*CompClauseNode) = .empty,
 
     fn parse(alloc: Allocator, v: Value) Error!DictCompExpr {
         return .{
@@ -372,7 +372,7 @@ pub const DictCompExpr = struct {
 
 pub const ConfigIfEntryExpr = struct {
     if_cond: ?*ExprNode,
-    items: std.ArrayList(*ConfigEntryNode),
+    items: std.ArrayList(*ConfigEntryNode) = .empty,
     orelse_: ?*ExprNode,
 
     fn parse(alloc: Allocator, v: Value) Error!ConfigIfEntryExpr {
@@ -401,8 +401,8 @@ pub const ConfigIfEntryExpr = struct {
 /// `"type":"Schema"` key.
 pub const SchemaExpr = struct {
     name: ?*IdentifierNode,
-    args: std.ArrayList(*ExprNode),
-    kwargs: std.ArrayList(*KeywordNode),
+    args: std.ArrayList(*ExprNode) = .empty,
+    kwargs: std.ArrayList(*KeywordNode) = .empty,
     config: ?*ExprNode,
 
     pub fn parse(alloc: Allocator, v: Value) Error!SchemaExpr {
@@ -444,7 +444,7 @@ pub fn dumpSchemaExprPayload(alloc: Allocator, e: SchemaExpr) Error!Value {
 }
 
 pub const ConfigExpr = struct {
-    items: std.ArrayList(*ConfigEntryNode),
+    items: std.ArrayList(*ConfigEntryNode) = .empty,
 
     fn parse(alloc: Allocator, v: Value) Error!ConfigExpr {
         return .{
@@ -469,7 +469,7 @@ pub const LambdaExpr = struct {
     /// expressions. Routing it through the `Expr` registry would look for a
     /// tag like `"Expr"` / `"Assign"`, find nothing, and yield an `unknown`
     /// that looks like an empty tree.
-    body: std.ArrayList(*stmt.StmtNode),
+    body: std.ArrayList(*stmt.StmtNode) = .empty,
     return_ty: ?*TypeNode,
 
     fn parse(alloc: Allocator, v: Value) Error!LambdaExpr {
@@ -529,8 +529,8 @@ pub const SubscriptExpr = struct {
 
 pub const CompareExpr = struct {
     left: ?*ExprNode,
-    ops: std.ArrayList([]const u8),
-    comparators: std.ArrayList(*ExprNode),
+    ops: std.ArrayList([]const u8) = .empty,
+    comparators: std.ArrayList(*ExprNode) = .empty,
 
     fn parse(alloc: Allocator, v: Value) Error!CompareExpr {
         var ops: std.ArrayList([]const u8) = .empty;
@@ -655,7 +655,7 @@ pub const NameConstantLitExpr = struct {
 pub const JoinedStringExpr = struct {
     is_long_string: bool,
     raw_value: []const u8,
-    values: std.ArrayList(*ExprNode),
+    values: std.ArrayList(*ExprNode) = .empty,
 
     fn parse(alloc: Allocator, v: Value) Error!JoinedStringExpr {
         return .{

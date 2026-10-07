@@ -28,7 +28,7 @@ pub const parseTypeNodeRef = base.parseNodeRef;
 /// `Type::Named`, `TypeAlias.type_name`, `SchemaStmt.parent_name` /
 /// `mixins` / `for_host_name`, and tagged as `Expr::Identifier`.
 pub const Identifier = struct {
-    names: std.ArrayList(*StringNode),
+    names: std.ArrayList(*StringNode) = .empty,
     pkgpath: []const u8,
     ctx: []const u8,
 
@@ -165,7 +165,7 @@ pub const MemberOrIndex = union(enum) {
 /// discriminator added.
 pub const Target = struct {
     name: ?*StringNode,
-    paths: std.ArrayList(MemberOrIndex),
+    paths: std.ArrayList(MemberOrIndex) = .empty,
     pkgpath: []const u8,
 
     pub fn parse(alloc: Allocator, v: Value) Error!Target {
@@ -236,9 +236,9 @@ pub fn dumpKeywordPayload(alloc: Allocator, k: Keyword) Error!Value {
 /// same length as `args`, so their explicit `null`s are meaningful and keep
 /// their slot.
 pub const Arguments = struct {
-    args: std.ArrayList(*IdentifierNode),
-    defaults: std.ArrayList(?*ExprNode),
-    ty_list: std.ArrayList(?*TypeNode),
+    args: std.ArrayList(*IdentifierNode) = .empty,
+    defaults: std.ArrayList(?*ExprNode) = .empty,
+    ty_list: std.ArrayList(?*TypeNode) = .empty,
 
     pub fn parse(alloc: Allocator, v: Value) Error!Arguments {
         return .{
@@ -317,9 +317,9 @@ pub const SchemaIndexSignatureNode = base.Node(SchemaIndexSignature);
 /// One `for` clause of a list/dict comprehension — flat payload (no `"type"`
 /// tag) inside `ListComp.generators` / `DictComp.generators`.
 pub const CompClause = struct {
-    targets: std.ArrayList(*IdentifierNode),
+    targets: std.ArrayList(*IdentifierNode) = .empty,
     iter: ?*ExprNode,
-    ifs: std.ArrayList(*ExprNode),
+    ifs: std.ArrayList(*ExprNode) = .empty,
 
     pub fn parse(alloc: Allocator, v: Value) Error!CompClause {
         return .{

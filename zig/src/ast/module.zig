@@ -39,8 +39,8 @@ pub const Comment = struct {
 pub const Module = struct {
     filename: []const u8,
     doc: ?*StringNode,
-    body: std.ArrayList(*StmtNode),
-    comments: std.ArrayList(*CommentNode),
+    body: std.ArrayList(*StmtNode) = .empty,
+    comments: std.ArrayList(*CommentNode) = .empty,
 
     pub fn parse(alloc: Allocator, v: Value) Error!*Module {
         const module = try alloc.create(Module);
@@ -103,7 +103,7 @@ fn dumpStringPayload(alloc: Allocator, s: []const u8) Error!Value {
 /// `ParseProgramResult.ast_json`.
 pub const Program = struct {
     root: []const u8,
-    modules: std.ArrayList(*Module),
+    modules: std.ArrayList(*Module) = .empty,
 
     pub fn dump(alloc: Allocator, p: *const Program) Error!Value {
         var obj: std.json.ObjectMap = .empty;
