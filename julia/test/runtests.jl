@@ -730,6 +730,12 @@ end
 # parser capture in `testdata/ast/alignment.json` rather than a live fixture.
 include("ast_alignment.jl")
 
+# The other half of the AST contract again: `src/ast.jl` is also how a *caller*
+# builds a node, and the shape of that constructor is pure ergonomics
+# (`docs/architecture.md` rule 2). `hack/check_ast_constructors.rb` holds it to
+# `ast.rs` statically; these are the runtime properties it cannot see.
+include("ast_ctors.jl")
+
 # ---------------------------------------------------------------------------
 # Cross-language consistency: the same golden cases every other language runner
 # executes from `tests/consistency/cases.json`, driven through this binding.
