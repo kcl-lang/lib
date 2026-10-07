@@ -33,7 +33,7 @@ public record Identifier(List<NodeRef<string>>? Names = null, string Pkgpath = "
     /// </summary>
     public static Identifier Of(params string[] names) =>
         new(names.Select(n => new NodeRef<string>(n)).ToList());
-    public static Identifier Of(List<NodeRef<string>>? names, string pkgpath = "", string? ctx = "Load")
+    public static Identifier Of(List<NodeRef<string>>? names = null, string pkgpath = "", string? ctx = "Load")
         => new(names, pkgpath, ctx);
 }
 
