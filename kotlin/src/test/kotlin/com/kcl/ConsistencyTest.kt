@@ -238,7 +238,7 @@ class ConsistencyTest {
                         generateKclArgs {
                             source = args.get("source").asText()
                             filename = args.get("filename").asText()
-                            format = args.get("format").asText()
+                            format = args.path("format").asText("")
                         }
                     )
                     assertField(name, "kcl", expect.get("kcl").asText(), result.kcl)
