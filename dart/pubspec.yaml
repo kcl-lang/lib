@@ -6,7 +6,7 @@ description: >
   the universal protobuf dispatcher shipped as a prebuilt `libkcl` shared
   library (see `go/lib/` in the parent repository). The Dart runtime never
   builds any Rust code.
-version: 0.13.0
+version: 0.13.1
 
 environment:
   # protoc_plugin 25.x and protobuf 6.x both require Dart SDK 3.7+.

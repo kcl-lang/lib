@@ -1,6 +1,6 @@
 [package]
 name = "kcl-lib-c"
-version = "0.13.0"
+version = "0.13.1"
 edition = "2024"
 publish = false
 
@@ -9,4 +9,4 @@ crate-type = ["cdylib", "staticlib"]
 doc = false
 
 [dependencies]
-kcl-api = { git = "https://github.com/kcl-lang/kcl", version = "0.13.0", rev = "842b02be046bf9f34a29e4b200a4b64c1b5ad9af" }
+kcl-api = { git = "https://github.com/kcl-lang/kcl", version = "0.13.1", rev = "0e17d8069aac7060161996ce74a6a1efd95aeae8" }

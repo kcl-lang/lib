@@ -2,7 +2,7 @@
 name = "kcl-lib-cpp"
 publish = false
 edition = "2024"
-version = "0.13.0"
+version = "0.13.1"
 
 [lib]
 crate-type = ["staticlib"]
@@ -10,7 +10,7 @@ crate-type = ["staticlib"]
 [dependencies]
 anyhow = "1.0"
 cxx = "1.0"
-kcl-api = { git = "https://github.com/kcl-lang/kcl", version = "0.13.0" }
+kcl-api = { git = "https://github.com/kcl-lang/kcl", version = "0.13.1" }
 # Used to encode the empty `ListMethodArgs` and decode `ListMethodResult`
 # through the universal `kcl_api::call` dispatcher since `KclServiceImpl`
 # does not expose a typed `list_method` wrapper.
