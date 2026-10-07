@@ -215,6 +215,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
+                <version>${maven-jar-plugin.version}</version>
                 <executions>
                     <!--  Generate the fallback JAR that does not contain the native library.  -->
                     <execution>
@@ -227,6 +228,18 @@
                         </configuration>
                     </execution>
                 </executions>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                        </manifest>
+                        <manifestEntries>
+                            <Build-Number>${buildNumber}</Build-Number>
+                            <Build-Timestamp>${maven.build.timestamp}</Build-Timestamp>
+                        </manifestEntries>
+                    </archive>
+                    <finalName>${project.artifactId}-${project.version}-${maven.build.timestamp}</finalName>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -280,22 +293,6 @@
                     <doCheck>false</doCheck>
                     <doUpdate>false</doUpdate>
                     <timestampFormat>{0,date,yyyyMMddHHmmss}</timestampFormat>
-                </configuration>
-            </plugin>
-            <plugin>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>${maven-jar-plugin.version}</version>
-                <configuration>
-                    <archive>
-                        <manifest>
-                            <addClasspath>true</addClasspath>
-                        </manifest>
-                        <manifestEntries>
-                            <Build-Number>${buildNumber}</Build-Number>
-                            <Build-Timestamp>${maven.build.timestamp}</Build-Timestamp>
-                        </manifestEntries>
-                    </archive>
-                    <finalName>${project.artifactId}-${project.version}-${maven.build.timestamp}</finalName>
                 </configuration>
             </plugin>
         </plugins>
