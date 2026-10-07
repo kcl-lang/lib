@@ -193,6 +193,8 @@ PARAM_ALIASES = {
   "dart" => { "types" => "type_elements", "asName" => "asname" },
   "swift" => { "keywords" => "kwargs" },
   "zig" => { "test_" => "test", "orelse_" => "orelse", "modules" => "pkgs" },
+  "cpp" => { "as_name" => "asname" },
+  "c" => { "main_package" => "pkgs" },
   "dotnet" => { "rawPath" => "rawpath", "asName" => "asname" }
 }.freeze
 
@@ -213,21 +215,66 @@ ALWAYS_WRITTEN = ["Vec<", "Option<Vec<", "HashMap<", "Option<HashMap<"].freeze
 # constructor that requires one is asking for a value, not for ceremony.
 NODE_SHAPED = /\A(?:Option<)?(?:Node|NodeRef|Vec|Option<Vec)/
 
-# Bindings spell a field in their own language's convention — `ifCond`,
-# `if_cond`, `IfCond`, `if_cond`, `ifCond` — so a constructor parameter is
-# matched to a Rust field by exact name first, by the binding's declared alias
-# second, and by convention third. The convention fallback is one pass of the
-# standard camelCase split, which is enough because `ast.rs` is snake_case
-# throughout and every binding derives from it.
-def rust_field_for(lang, param, rust)
-  return param if rust.key?(param)
+# A binding with no sum types and no length-carrying arrays cannot name a
+# field the way `ast.rs` does, so it writes the field's *storage* instead. Two
+# of the three idioms are derivable, and deriving them is strictly better than
+# listing them: the base name still has to be a real field of this struct, so
+# the rule can be silenced by a real field or not at all, and a member that
+# stands alone — `has_foo` where `foo` is not a field — still fails.
+#
+#   `has_op` + `op`         `Option<T>` has no zero value in C, so
+#                           `SchemaAttr.op: Option<AugOp>` (ast.rs:817)
+#                           becomes a pointer plus a presence flag.
+#   `ops_count` + `ops`     an array carries no length, so `Compare.ops:
+#                           Vec<CmpOp>` (ast.rs:1387) becomes the pointer and
+#                           its count.
+#
+# The third — splitting a tagged enum's payload into one member per arm — is not
+# derivable, because `int_value` says nothing mechanical about `value`. That
+# one is `ENUM_ARM_MEMBERS` below.
+DERIVED_TWIN = /\A(?:has_(.+)|(.+)_count)\z/.freeze
 
-  aliased = PARAM_ALIASES.dig(lang, param)
+# A parameter name to the `ast.rs` field it sets, by every route but the twin
+# rule below. Split out so the twin rule can resolve its base through the same
+# tables without recursing back into itself: C's `main_package_count` is a twin
+# of `main_package`, which is itself only a field by way of `PARAM_ALIASES`.
+def resolve_field(lang, name, rust, struct)
+  return name if rust.key?(name)
+
+  aliased = PARAM_ALIASES.dig(lang, name)
   return aliased if aliased && rust.key?(aliased)
 
-  snake = param.gsub(/([a-z\d])([A-Z])/, '\1_\2').downcase
-  rust.key?(snake) ? snake : nil
+  arm = ENUM_ARM_MEMBERS.dig(lang, struct, name)
+  return arm if arm && rust.key?(arm)
+
+  snake = name.gsub(/([a-z\d])([A-Z])/, '\1_\2').downcase
+  snake if rust.key?(snake)
 end
+
+def rust_field_for(lang, param, rust, struct = nil)
+  direct = resolve_field(lang, param, rust, struct)
+  return direct if direct
+
+  m = DERIVED_TWIN.match(param)
+  m && resolve_field(lang, m[1] || m[2], rust, struct)
+end
+
+# The one place a binding says "these members together are this field", for the
+# case no naming convention reaches.
+#
+# C has no sum type, so `NumberLit.value: NumberLitValue` (ast.rs:1478) — whose
+# arms are `Int(i64)` and `Float(f64)` (ast.rs:1464) — becomes a `value_kind`
+# discriminator plus one member per arm. `value_kind` is the tag and joins
+# `KNOWN_HELPERS` with `valueTag` and `value_tag`, which is the same answer;
+# the two arm members have no mechanical relationship to `value`, so the claim
+# is written down here rather than guessed at.
+#
+# Keyed by lang and struct because the answer is per-struct: `int_value` means
+# something about `NumberLit` and nothing about any other node, and a flat list
+# would let one struct's claim excuse another's.
+ENUM_ARM_MEMBERS = {
+  "c" => { "NumberLit" => { "int_value" => "value", "float_value" => "value" } }
+}.freeze
 
 # A constructor is `{struct, params, defaulted}`:
 #
@@ -270,7 +317,7 @@ def compare(lang, ctors)
 
   by_struct.each do |struct, group|
     rust = STRUCTS[struct]
-    settable = group.flat_map { |params, _| params.filter_map { |p| rust_field_for(lang, p, rust) } }.uniq
+    settable = group.flat_map { |params, _| params.filter_map { |p| rust_field_for(lang, p, rust, struct) } }.uniq
 
     # A constructor that sets none of the struct's fields is a convenience over
     # a real one — `argumentsOf(vararg names)` builds `Arguments` from names,
@@ -282,7 +329,7 @@ def compare(lang, ctors)
     # A struct with no fields at all is the other case, and the opposite one:
     # `MissingExpr` has none, so `missingExpr()` takes no parameters and is
     # still the only way to build it.
-    real = group.select { |params, _| params.any? { |p| rust_field_for(lang, p, rust) } || rust.empty? }
+    real = group.select { |params, _| params.any? { |p| rust_field_for(lang, p, rust, struct) } || rust.empty? }
     next if real.empty?
 
     REACHED[lang] << struct
@@ -307,9 +354,9 @@ def compare(lang, ctors)
     # its parameters against `Arguments` would flag every convenience overload
     # in every binding.
     group.each do |params, _|
-      next if params.none? { |p| rust_field_for(lang, p, rust) }
+      next if params.none? { |p| rust_field_for(lang, p, rust, struct) }
 
-      unknown = params.reject { |p| KNOWN_HELPERS.include?(p) || rust_field_for(lang, p, rust) }
+      unknown = params.reject { |p| KNOWN_HELPERS.include?(p) || rust_field_for(lang, p, rust, struct) }
       next if unknown.empty?
 
       problems << "#{struct}: constructor parameter #{unknown.join(', ')} " \
@@ -326,7 +373,7 @@ def compare(lang, ctors)
     # and `ListType.inner_type` are children a node cannot exist without, and a
     # default that let a caller omit them would build a node the parser can never
     # produce. Asking for a child is asking for a value; asking for `[]` is not.
-    forced_lists = group.flat_map { |params, defaulted| (params - defaulted).filter_map { |p| rust_field_for(lang, p, rust) } }
+    forced_lists = group.flat_map { |params, defaulted| (params - defaulted).filter_map { |p| rust_field_for(lang, p, rust, struct) } }
                        .uniq.select { |f| ALWAYS_WRITTEN.any? { |t| rust[f].start_with?(t) } }
     if forced_lists.empty?
       COMPARED[lang] += 1
@@ -354,7 +401,7 @@ end
 KNOWN_HELPERS = %w[
   filename line column end_line end_column endLine endColumn
   tag type kind Type Kind
-  valueTag value_tag
+  valueTag value_tag value_kind
 ].freeze
 
 # A binding may name a struct something other than `ast.rs` does. Kotlin calls
@@ -526,7 +573,9 @@ CHECKS = {
   "zig" => -> { check_zig(File.expand_path("../zig/src/ast", __dir__)) },
   "julia" => -> { check_julia(File.expand_path("../julia/src", __dir__)) },
   "dart" => -> { check_dart(File.expand_path("../dart/lib/src/ast", __dir__)) },
-  "lua" => -> { check_lua(File.expand_path("../lua/kcl_lib/ast.lua", __dir__)) }
+  "lua" => -> { check_lua(File.expand_path("../lua/kcl_lib/ast.lua", __dir__)) },
+  "c" => -> { check_c(File.expand_path("../c/include/kcl_lib_ast.h", __dir__)) },
+  "cpp" => -> { check_cpp(File.expand_path("../cpp/include", __dir__)) }
 }.freeze
 
 # `CHECKS` is a registry; the loop below is the CLI. Requiring this file from a

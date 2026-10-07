@@ -26,9 +26,11 @@ KOTLIN_SRC = File.expand_path("../kotlin/src/main/kotlin/com/kcl/ast/AstBuild.kt
 # struct the report must name, :problem or :missing].
 #
 # `:problem` means the struct has to be named in `compare`'s output; `:missing`
-# means it has to show up in the report's unreachable list. Both matter: a rule
-# that fires on the wrong struct and a coverage gap that goes unreported are
-# failures in opposite directions, and each case names which one it is testing.
+# means it has to show up in the report's unreachable list; `:silent` means the
+# struct must NOT be named. All three matter: a rule that fires on the wrong
+# struct, a coverage gap that goes unreported, and an exemption that has quietly
+# stopped exempting are failures in three different directions, and each case
+# names which one it is testing.
 #
 # Rule 2 (a field nothing can set) is the one with real teeth: the case nobody
 # writes a test for is the one field a constructor forgot, and a constructor
@@ -76,6 +78,20 @@ KOTLIN_CASES = [
    "fun comment(text: String): Comment = Comment().apply { this.text = text }",
    "fun comment(text: String, colour: String = \"\"): Comment = Comment().apply { this.text = text }",
    "Comment", :problem],
+
+  # The other side of the same rule, and the only thing pinning `KNOWN_HELPERS`.
+  # `tag` is the serde discriminator a tagged-enum variant stamps onto its
+  # payload: no `ast.rs` struct declares it, but a constructor that takes it is
+  # not inventing a field — it is saying which spelling of the node this is.
+  # Kotlin's 9 and Go's 41 `Type` members are the same claim in two languages, so
+  # if this ever starts firing the report turns into noise nobody reads, and if
+  # the list were widened without an `ast.rs` line to justify it, a real gap goes
+  # quiet. Between this case and `colour` above the boundary is exact: `tag` is
+  # exempt, `colour` is not.
+  ["rule 3: a `KNOWN_HELPERS` parameter is not reported as drift",
+   "fun comment(text: String): Comment = Comment().apply { this.text = text }",
+   "fun comment(text: String, tag: String = \"\"): Comment = Comment().apply { this.text = text }",
+   "Comment", :silent],
 
   # The one claim that is not visible in a signature. `literalIntType` returns
   # the `LiteralType` wrapper and fills the `IntLiteralType` payload inside, so
@@ -129,6 +145,64 @@ def check_silent_binding
   end
 end
 
+# The exemption rules are the one place this checker could go wrong quietly:
+# each one silences a parameter that `ast.rs` does not declare, so each has to
+# be shown to silence *only* what it is entitled to. `DERIVED_TWIN` stands in
+# for C's `Option` presence flag and list-length twin, and `ENUM_ARM_MEMBERS` for
+# splitting a tagged enum into one member per arm — the first derives its base
+# field, so it is only entitled to speak when that base really is a field of the
+# same struct, and the second is keyed per struct so one node's claim cannot
+# excuse another's.
+#
+# The failure these guard against is the rule 3 report going quiet because
+# someone widened an exemption, which is exactly the kind of drift the README
+# says the tables exist to prevent.
+EXEMPTION_CASES = [
+  # The twin of a real field resolves — this is the exemption working.
+  ["DERIVED_TWIN silences a twin of a real field",
+   -> { rust_field_for("c", "has_text", STRUCTS["Comment"], "Comment") == "text" }],
+
+  # …and a twin of a field the struct does not have does not. If this resolved,
+  # any binding could invent `has_anything` and rule 3 would never see it.
+  ["DERIVED_TWIN stays quiet when the base is not a field",
+   -> { rust_field_for("c", "has_colour", STRUCTS["Comment"], "Comment").nil? }],
+
+  ["DERIVED_TWIN applies to the `_count` twin too",
+   -> { rust_field_for("c", "colour_count", STRUCTS["Comment"], "Comment").nil? &&
+         rust_field_for("c", "text_count", STRUCTS["Comment"], "Comment") == "text" }],
+
+  # The twin's base resolves through the alias table, not just by exact name:
+  # C's `main_package_count` is a twin of `main_package`, which is only a field
+  # by way of `PARAM_ALIASES["c"]["main_package"]`.
+  ["DERIVED_TWIN resolves its base through PARAM_ALIASES",
+   -> { rust_field_for("c", "main_package_count", STRUCTS["SerializeProgram"], "SerializeProgram") == "pkgs" }],
+
+  # `ENUM_ARM_MEMBERS` is keyed per struct: `int_value` means something about
+  # `NumberLit` and nothing about any other node.
+  ["ENUM_ARM_MEMBERS does not leak across structs",
+   -> { rust_field_for("c", "int_value", STRUCTS["NumberLit"], "NumberLit") == "value" &&
+         rust_field_for("c", "int_value", STRUCTS["SchemaAttr"], "SchemaAttr").nil? }],
+
+  # And it is an allowlist, not a pattern: `colour` spells no field of
+  # `NumberLit` and must still be reported.
+  ["ENUM_ARM_MEMBERS exempts only what it names",
+   -> { rust_field_for("c", "colour", STRUCTS["NumberLit"], "NumberLit").nil? }]
+].freeze
+
+def check_exemptions
+  misses = 0
+  puts "\nexemption self-tests:"
+  EXEMPTION_CASES.each do |label, assertion|
+    if assertion.call
+      puts "  ok   #{label}"
+    else
+      puts "  MISS #{label}"
+      misses += 1
+    end
+  end
+  misses
+end
+
 def run
   misses = 0
   Dir.mktmpdir("ast-constructors") do |dir|
@@ -151,6 +225,7 @@ def run
       hit = case expect
             when :problem then problems.find { |p| p.start_with?("#{struct}:") }
             when :missing then (NODE_TYPES - REACHED["kotlin"]).include?(struct) ? "#{struct}: no constructor reaches it" : nil
+            when :silent then problems.none? { |p| p.start_with?("#{struct}:") } ? "#{struct}: correctly left alone" : nil
             end
 
       if hit
@@ -160,6 +235,9 @@ def run
         seen = if expect == :missing
                  unreached = NODE_TYPES - REACHED["kotlin"]
                  unreached.include?(struct) ? "unreachable list is empty" : "reachable anyway: #{REACHED['kotlin'].include?(struct)}"
+               elsif expect == :silent
+                 named = problems.find { |p| p.start_with?("#{struct}:") }
+                 named ? "reported anyway: #{named}" : "the mutation did not land"
                elsif problems.empty?
                  "ok"
                else
@@ -182,7 +260,7 @@ def run
     misses += 1
   end
 
-  misses
+  misses + check_exemptions
 end
 
 misses = run
