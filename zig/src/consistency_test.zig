@@ -1428,4 +1428,3 @@ test "consistency: load_settings_files" {
 test "consistency: update_dependencies_no_deps" {
     try runCase(testing.allocator, "update_dependencies_no_deps");
 }
-
