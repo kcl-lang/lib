@@ -31,6 +31,8 @@ import com.kcl.ast.ImportStmt
 import com.kcl.ast.Module
 import com.kcl.ast.NumberBinarySuffix
 import com.kcl.ast.NodeRef
+import com.kcl.ast.Program
+import com.kcl.ast.program
 import com.kcl.ast.QuantOperation
 import com.kcl.ast.anyType
 import com.kcl.ast.argumentsOf
@@ -177,6 +179,21 @@ class AstWireRoundTripTest {
         // reads.
         val modules = parseProgram(toProgramJson(listOf(module("a.k"), module("b.k"))))
         assertEquals(listOf("a.k", "b.k"), modules.map { it.filename })
+    }
+
+    @Test
+    fun `a program built by hand is the document toProgramJson writes`() {
+        // `toProgramJson` spells the envelope out as a literal map; `program()`
+        // builds the DTO that `toWire` walks. They are two routes to one
+        // document, so the constructor is only correct if the routes agree —
+        // and `pkgs` defaulting to `emptyMap()` must not quietly drop the
+        // modules that were put in.
+        val built = program(
+            Program.MAIN_PKG,
+            mapOf(Program.MAIN_PKG to listOf(module("a.k"), module("b.k"))),
+        )
+        assertJsonEqual(parse(toProgramJson(listOf(module("a.k"), module("b.k")))), parse(toJson(built)))
+        assertEquals(listOf("a.k", "b.k"), parseProgram(toJson(built)).map { it.filename })
     }
 
     // -----------------------------------------------------------------------

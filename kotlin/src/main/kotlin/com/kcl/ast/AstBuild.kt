@@ -30,6 +30,7 @@
 
 package com.kcl.ast
 
+import java.util.HashMap
 import java.util.Optional
 
 /**
@@ -654,6 +655,22 @@ fun module(
     this.doc = doc
     this.body = body
     this.comments = comments
+}
+
+/**
+ * The root of the tree, which is what `parseProgram` hands back.
+ *
+ * `ast.rs` calls the thing this deserialises `SerializeProgram` and keeps
+ * `Program` for the resolution index it derives it from — that one holds
+ * `Arc<RwLock<Module>>` maps, derives no `Serialize`, and never reaches a
+ * binding. What travels is `{root, pkgs}`, and `pkgs` is a map rather than a
+ * `Vec`, so it is defaulted here for the same reason a list is: Rust writes
+ * the key either way, and a caller should not have to spell `emptyMap()`.
+ * The main package is `Program.MAIN_PKG`.
+ */
+fun program(root: String = "", pkgs: Map<String, List<Module>> = emptyMap()): Program = Program().apply {
+    this.root = root
+    this.pkgs = HashMap(pkgs)
 }
 
 /**

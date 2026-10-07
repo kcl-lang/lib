@@ -66,11 +66,34 @@ STRUCTS["MissingExpr"] ||= {}
 # exactly the ambiguity the bindings resolve by suffix (`nodeRef` / `nodeStr`).
 NOT_NODES = %w[Pos AstIndex Node Spanned].freeze
 
-# Every struct a caller can build: the AST nodes plus the four top-level
-# messages the loader hands back. `Program` and `SerializeProgram` are what
-# `parseProgram` returns, `Module` is what `parseModule` returns, so they are
-# as much a caller-facing constructor target as `BinaryExpr` is.
-NODE_TYPES = (STRUCTS.keys - NOT_NODES).sort.freeze
+# Structs that sit in `ast.rs` beside the nodes but cannot appear in the
+# document a binding decodes. A binding is not behind on these; they are not on
+# the wire, so there is nothing to be behind about.
+#
+#   Argument            one `--override-key=value` pair from the exec API
+#   ExternalPkg         one entry of the runner's resolved `external_pkgs`
+#   OverrideSpec        the parsed form of `alice.age=10`
+#   SymbolSelectorSpec  the parsed form of `pkg:a.b`
+#   Program             the resolution index
+#
+# The first four are fields of nothing in `ast.rs` — they are inputs and
+# outputs of other APIs that happen to be declared beside the nodes, so serde
+# can never reach them from a node.
+#
+# `Program` is the one that looks like the root of the tree and is not. It
+# derives only `Debug, Clone, Default`, so it is never serialised; `parse_program`
+# sends `SerializeProgram` instead (`service_impl.rs`, `let ast_json =
+# serde_json::to_string(&serialize_program)?`). Its `pkgs` is `Vec<String>`
+# where `SerializeProgram`'s is `Vec<Module>`, and it holds `Arc<RwLock<Module>>`
+# maps that have no JSON spelling. What a binding receives is `SerializeProgram`,
+# which is in the set below.
+NOT_ON_THE_WIRE = %w[Argument ExternalPkg OverrideSpec SymbolSelectorSpec Program].freeze
+
+# Every struct a caller can build: the AST nodes plus the top-level documents
+# the loader hands back. `SerializeProgram` is what `parseProgram` returns,
+# `Module` is what `parseModule` returns, so they are as much a caller-facing
+# constructor target as `BinaryExpr` is.
+NODE_TYPES = (STRUCTS.keys - NOT_NODES - NOT_ON_THE_WIRE).sort.freeze
 
 # ---------------------------------------------------------------------------
 # Coverage bookkeeping
@@ -111,6 +134,12 @@ UNMAPPED = Hash.new { |h, k| h[k] = [] }
 PARAM_ALIASES = {
   "kotlin" => { "elements" => "type_elements" }
 }.freeze
+
+# Field types Rust writes whether or not they have a value: an empty `Vec` is
+# `[]` and an empty map is `{}`, never absent. Rule 1 reads this list — a
+# constructor demanding one of these is making the caller spell the empty
+# collection.
+ALWAYS_WRITTEN = ["Vec<", "Option<Vec<", "HashMap<", "Option<HashMap<"].freeze
 
 # ---------------------------------------------------------------------------
 # The rules
@@ -221,22 +250,23 @@ def compare(lang, ctors)
                   "names no field of the struct in ast.rs"
     end
 
-    # Rule 1: a list field must never be a *required* parameter. Rust writes a
-    # `Vec` field as `[]` when it is empty — the field is never absent — so a
-    # constructor demanding one is making the caller type an empty collection at
-    # every level of the tree, which is the ceremony this file exists to catch.
+    # Rule 1: a collection field must never be a *required* parameter. Rust
+    # writes a `Vec` field as `[]` and a `HashMap` field as `{}` when it is
+    # empty — the field is never absent — so a constructor demanding one is
+    # making the caller type an empty collection at every level of the tree,
+    # which is the ceremony this file exists to catch.
     #
     # A required `Option<NodeRef<T>>` is deliberately not included: `Keyword.arg`
     # and `ListType.inner_type` are children a node cannot exist without, and a
     # default that let a caller omit them would build a node the parser can never
     # produce. Asking for a child is asking for a value; asking for `[]` is not.
     forced_lists = group.flat_map { |params, defaulted| (params - defaulted).filter_map { |p| rust_field_for(lang, p, rust) } }
-                       .uniq.select { |f| rust[f].start_with?("Vec<", "Option<Vec<") }
+                       .uniq.select { |f| ALWAYS_WRITTEN.any? { |t| rust[f].start_with?(t) } }
     if forced_lists.empty?
       COMPARED[lang] += 1
     else
       problems << "#{struct}: constructor requires #{forced_lists.join(', ')}, " \
-                  "which Rust always writes as a list — default it to empty instead"
+                  "which Rust always writes as a collection — default it to empty instead"
     end
   end
   problems.uniq
@@ -253,11 +283,13 @@ KNOWN_HELPERS = %w[
 
 # A binding may name a struct something other than `ast.rs` does. Kotlin calls
 # `SchemaExpr` `SchemaConfig` as well, because `UnificationStmt.value` reaches
-# the same struct and both spellings are in use. Same discipline as
-# `PARAM_ALIASES`: an alias is a claim a reviewer can check, so it is written
-# down rather than guessed.
+# the same struct and both spellings are in use. Kotlin's `Program` class is
+# `SerializeProgram` — it holds `root` and `pkgs: Map<String, List<Module>>`,
+# which is the serialised projection, not the resolution index `ast.rs` calls
+# `Program`. Same discipline as `PARAM_ALIASES`: an alias is a claim a
+# reviewer can check, so it is written down rather than guessed.
 STRUCT_ALIASES = {
-  "kotlin" => { "SchemaConfig" => "SchemaExpr" }
+  "kotlin" => { "SchemaConfig" => "SchemaExpr", "Program" => "SerializeProgram" }
 }.freeze
 
 # ---------------------------------------------------------------------------
@@ -363,14 +395,41 @@ end
 # and judged nothing, which is what they are.
 def check_kotlin(path)
   src = File.read(path)
-  src.scan(/^fun\s+\w+\s*\((.*?)\)\s*:\s*([A-Za-z0-9_.<>]+)\s*=/m).map do |params_text, ret|
+  found = src.scan(/^fun\s+(\w+)\s*\((.*?)\)\s*:\s*([A-Za-z0-9_.<>]+)\s*=/m).map do |name, params_text, ret|
     parsed = split_params(params_text).filter_map { |p| parse_param(p) }
-    [ret, parsed.map(&:first), parsed.select { |(_, d)| d }.map(&:first)]
+    [[ret, parsed.map(&:first), parsed.select { |(_, d)| d }.map(&:first)], name]
   end
+
+  ctors = found.map(&:first)
+  # A constructor registered for the enum payload it fills in. If the function
+  # is not in the file the entry is silently a no-op and the payload stays in
+  # the report's missing list, which is the right outcome: a claim about a
+  # function that no longer exists should not keep a struct looking covered.
+  WRAPPED_PAYLOADS.fetch("kotlin", {}).each do |name, payload|
+    entry = found.find { |(_, n)| n == name }
+    ctors << [payload, entry.first[1], entry.first[2]] if entry
+  end
+  ctors
 end
 
 CHECKS = {
   "kotlin" => -> { check_kotlin(File.expand_path("../kotlin/src/main/kotlin/com/kcl/ast/AstBuild.kt", __dir__)) }
+}.freeze
+
+# A constructor whose return type is a tagged-enum wrapper, so the struct it
+# fills in is never named in the signature: `literalIntType` returns
+# `LiteralType`, because `{"type":"Int","value":{…}}` is what the tree holds,
+# and the `IntLiteralType` payload is constructed inside. Registering the same
+# constructor for the payload is the honest reading — a caller asking "can I
+# build an `IntLiteralType`?" is answered yes — and it is opt-in per function
+# rather than inferred, so a body that merely *mentions* a struct cannot
+# quietly claim it.
+#
+# `LiteralType::Int` is the only variant in `ast.rs` whose payload is a struct
+# rather than a scalar (`Bool(bool)`, `Float(f64)`, `Str(String)`), so this is
+# the only entry there is.
+WRAPPED_PAYLOADS = {
+  "kotlin" => { "literalIntType" => "IntLiteralType" }
 }.freeze
 
 # `CHECKS` is a registry; the loop below is the CLI. Requiring this file from a
