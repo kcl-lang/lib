@@ -254,7 +254,9 @@ List<String> _paths(Map<String, Object?> json, String key) =>
 /// and format RPCs report, which differ on every machine.
 String _basename(String p) {
   final slash = p.lastIndexOf('/');
-  return slash < 0 ? p : p.substring(slash + 1);
+  final backslash = p.lastIndexOf('\\');
+  final cut = slash > backslash ? slash : backslash;
+  return cut < 0 ? p : p.substring(cut + 1);
 }
 
 /// Builds `ParseProgramArgs` from the manifest.
