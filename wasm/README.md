@@ -40,7 +40,7 @@ import { load, invokeKCLCall, invokeKCLVersion } from "@kcl-lib/wasm";
 const inst = await load();
 
 // Read the KCL version baked into the artifact.
-console.log(invokeKCLVersion(inst)); // -> "0.13.0"
+console.log(invokeKCLVersion(inst)); // -> "0.13.1"
 
 // Dispatch any KclService.* RPC by name. The `args` field must be the
 // protobuf-encoded `<Method>Args` message, and the returned string is
@@ -74,7 +74,7 @@ import { load, ping, lintPath, getVersion } from "@kcl-lib/wasm";
 const inst = await load();
 
 console.log(ping(inst, { value: "hello" }).value); // -> "hello"
-console.log(getVersion(inst).version); // -> "0.13.0"
+console.log(getVersion(inst).version); // -> "0.13.1"
 
 // File-based methods operate on the WASI sandbox filesystem.
 const result = lintPath(inst, { paths: ["/test.k"] });

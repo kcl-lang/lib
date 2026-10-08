@@ -489,21 +489,9 @@ c = {
   end)
 
   describe("list_method", function()
-    -- Prebuilt libkcl v0.13.0 predates the `BuiltinService` registration
-    -- (mirrors the Julia and Zig bindings): the dispatcher either answers
-    -- with an empty payload (decoded as `method_name_list == {}`) or
-    -- surfaces an `ERROR:`-prefixed string that the raw wrapper raises as
-    -- a Lua error. Tolerate both and, when the runtime implements the RPC,
-    -- assert it advertises the documented KclService RPCs.
     it("can call the native function", function()
-      local ok, result = pcall(api.list_method, api, {})
-      if not ok then
-        return
-      end
+      local result = api.list_method(api, {})
       assert.is_table(result.method_name_list)
-      if #result.method_name_list == 0 then
-        return
-      end
       local found_exec, found_ping = false, false
       for _, name in ipairs(result.method_name_list) do
         if name == "KclService.ExecProgram" then
@@ -515,6 +503,10 @@ c = {
       end
       assert.is_true(found_exec)
       assert.is_true(found_ping)
+      -- Pin the registry size so a method cannot be dropped from the core
+      -- without this binding noticing -- `KclService.ListDepFiles` was removed
+      -- in v0.13.1, replaced by `LoadPackageResult.imports` / `kcl_mod` / `apps`.
+      assert.are.equal(28, #result.method_name_list)
     end)
   end)
 end)

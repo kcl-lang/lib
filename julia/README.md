@@ -109,7 +109,7 @@ result = ping(PingArgs(value="Hello, KCL!"))
 
 ```julia
 result = get_version()
-println(result.version_info)  # "Version: 0.13.0-...\nPlatform: ...\nGitCommit: ..."
+println(result.version_info)  # "Version: 0.13.1-...\nPlatform: ...\nGitCommit: ..."
 ```
 
 ### exec_program
@@ -428,7 +428,7 @@ println(result.method_name_list)
 core registers under `KclService` regardless of what the spec says. The wrapper
 follows the registration, so it calls `BuiltinService.ListMethod`;
 `KclService.ListMethod` is not registered and makes the dispatcher raise
-`unknown method name`. Against the prebuilt `libkcl` v0.13.0 this returns the
+`unknown method name`. Against the prebuilt `libkcl` v0.13.1 this returns the
 full 28-entry table, reported by fully-qualified name.
 
 ### Raw call

@@ -48,9 +48,11 @@ L3  Consistency  hack/, testdata/, .github/workflows/
    *Active violation being removed:* `python/kcl_lib/kcl.py`
    `_run_cli_listing` implements `list_dep_files`/`list_upstream_files`/
    `list_downstream_files` by invoking `ExecProgram` with a magic
-   `kcl_cli` argument and parsing `log_message`. This is replaced by
-   enriching `LoadPackageResult` (§3, item A) — the RPC the core
-   already exposes for package introspection — and deleting the hack.
+   `kcl_cli` argument and parsing `log_message`. The core half of this
+   landed in kcl v0.13.1: `LoadPackageResult` gained `imports` / `kcl_mod`
+   / `apps`, and the `KclService.ListDepFiles` RPC was **removed** — the
+   proto now states these fields "replace the removed ListDep\* RPCs".
+   What is left is deleting the hack on the Python side (§3, item A).
 
 2. **Idiomatics are binding-local.** Naming, constructors, collection
    wrappers, error types, and async-ness are unrestricted per language.
@@ -71,8 +73,9 @@ L3  Consistency  hack/, testdata/, .github/workflows/
    bindings → CI. The mirror diff must stay inside an explicit
    allowlist (package name, `option` lines, and RPCs deliberately not
    surfaced to bindings, e.g. `BuildProgram`/`ExecArtifact` today).
-   Current known drift: the core registers `KclService.ListDepFiles`,
-   which is intentionally *not* mirrored — item A subsumes it.
+   The `KclService.ListDepFiles` drift is closed: the core dropped that
+   RPC in v0.13.1 and moved the data onto `LoadPackageResult`, so the
+   mirror and the core now agree.
 
 5. **Every binding change is machine-checked.** AST decoder and RPC
    wrapper changes must be covered by an L3 check — static (field

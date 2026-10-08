@@ -444,21 +444,13 @@ void main() {
     test('core advertises the Generate* RPC surface', () {
       // Informational: prints what this libkcl registers so a skip below is
       // explainable from the log alone.
-      //
-      // An empty table is allowed. It means this platform's prebuilt runtime
-      // predates ListMethod — darwin-arm64 was rebuilt with it, the others
-      // were not — and every new_core case below then skips because the core
-      // cannot say what it lacks. That is the pre-existing arrangement, not
-      // something this runner introduces; the cost is that on those platforms
-      // the skips are unconditional rather than evidence-driven.
       final methods = _methods().toList()..sort();
       // ignore: avoid_print
       print('core RPC surface (${methods.length}): ${methods.join(', ')}');
-      if (methods.isEmpty) {
-        // ignore: avoid_print
-        print('this core does not implement ListMethod; new_core cases '
-            'cannot be probed and will skip');
-      }
+      // Pin the registry size so a method cannot be dropped from the core
+      // without this binding noticing -- `KclService.ListDepFiles` was removed
+      // in v0.13.1, replaced by `LoadPackageResult.imports` / `kcl_mod` / `apps`.
+      expect(methods, hasLength(28));
     });
 
     // One test per manifest case, mirroring ConsistencyTest.java.

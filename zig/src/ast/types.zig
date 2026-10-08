@@ -2,7 +2,7 @@
 //! `kcl-lang/kcl/crates/ast/src/ast.rs` with the same internally-tagged
 //! representation as `Expr`.
 //!
-//! Wire shapes verified against the v0.13.0 runtime:
+//! Wire shapes verified against the v0.13.1 runtime:
 //!
 //!   - `Any`      → `{"type":"Any"}`
 //!   - `Basic`    → `{"type":"Basic","value":"Int"}`
@@ -210,7 +210,7 @@ pub const LiteralType = struct {
     }
 };
 
-/// A named schema reference (`SchemaRefType`). The v0.13.0 runtime resolves
+/// A named schema reference (`SchemaRefType`). The v0.13.1 runtime resolves
 /// schema paths to `Named` instead, so this variant is provided for
 /// forward compatibility and mirrors the Python shape.
 pub const SchemaRefType = struct {

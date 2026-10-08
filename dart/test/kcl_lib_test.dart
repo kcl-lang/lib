@@ -319,17 +319,6 @@ void main() {
         ]),
       )).report;
 
-      // The prebuilt libkcl v0.13.0 runtime predates this RPC: the native
-      // dispatcher panics with "unknown method name" on a background thread
-      // and answers with an empty payload, so there is nothing to assert
-      // against it.
-      if (report.isEmpty) {
-        markTestSkipped(
-          'the native runtime does not implement KclService.FormatTestReport',
-        );
-        return;
-      }
-
       expect(
         report,
         'test_case_1: PASS (1ms)\n'
@@ -343,12 +332,6 @@ void main() {
 
     test('format_test_report (empty result)', () {
       final report = formatTestReport(FormatTestReportArgs()).report;
-      if (report.isEmpty) {
-        markTestSkipped(
-          'the native runtime does not implement KclService.FormatTestReport',
-        );
-        return;
-      }
       expect(report, 'no test files\n');
     });
 
@@ -386,20 +369,18 @@ void main() {
       // Routed through BuiltinService.ListMethod: spec.proto declares it
       // there, and that is where the core registers it.
       //
-      // Not every prebuilt core has it. darwin-arm64 was rebuilt with the
-      // RPCs; the other platforms still ship a runtime that predates them and
-      // answers `unknown method name`, so the table comes back empty. Hence
-      // the split: the `KclService.ListMethod` check runs either way, because
-      // a table naming it would mean this wrapper is pointed at the wrong
-      // service again — the bug this pins down, which failed silently by
-      // decoding that empty payload into a default-valued message. The rest
-      // only mean something once there is a table to inspect.
+      // `KclService.ListMethod` is not an alias: a table naming it would mean
+      // this wrapper is pointed at the wrong service, which used to fail
+      // silently by decoding an empty payload into a default-valued message.
       final names = listMethod().methodNameList;
       expect(names, isNot(contains('KclService.ListMethod')));
-      if (names.isEmpty) return;
       expect(names, contains('KclService.ExecProgram'));
       expect(names, contains('KclService.Ping'));
       expect(names, contains('BuiltinService.ListMethod'));
+      // Pin the registry size so a method cannot be dropped from the core
+      // without this binding noticing -- `KclService.ListDepFiles` was removed
+      // in v0.13.1, replaced by `LoadPackageResult.imports` / `kcl_mod` / `apps`.
+      expect(names, hasLength(28));
     });
 
     test('rawCall escapes to any RPC', () {

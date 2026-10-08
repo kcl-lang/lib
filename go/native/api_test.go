@@ -595,13 +595,6 @@ func TestFormatTestReportAPI(t *testing.T) {
 		t.Fatalf("FormatTestReport failed: %v", err)
 	}
 
-	// The prebuilt kcl v0.13.0 runtime predates this RPC: the native
-	// dispatcher panics with "unknown method name" and answers with an
-	// empty payload, so there is nothing to assert against it.
-	if result.Report == "" {
-		t.Skip("the native runtime does not implement KclService.FormatTestReport")
-	}
-
 	expected := "test_case_1: PASS (1ms)\n" +
 		"test_case_2: FAIL (2ms)\n" +
 		"Error: assert failed\n" +
@@ -627,13 +620,6 @@ func TestGenerateTomlAPI(t *testing.T) {
 		t.Fatalf("GenerateToml failed: %v", err)
 	}
 
-	// The prebuilt kcl v0.13.0 runtime predates this RPC: the native
-	// dispatcher panics with "unknown method name" and answers with an
-	// empty payload, so there is nothing to assert against it.
-	if result.Toml == "" {
-		t.Skip("the native runtime does not implement KclService.GenerateToml")
-	}
-
 	expected := "[a]\nb = 1\nc = [1, 2]\n"
 	if result.Toml != expected {
 		t.Errorf("Expected TOML:\n%s\nGot:\n%s", expected, result.Toml)
@@ -651,10 +637,6 @@ func TestGenerateKclAPI(t *testing.T) {
 	result, err := client.GenerateKcl(args)
 	if err != nil {
 		t.Fatalf("GenerateKcl failed: %v", err)
-	}
-
-	if result.Kcl == "" {
-		t.Skip("the native runtime does not implement KclService.GenerateKcl")
 	}
 
 	expected := "a = {\n    b = 1\n}\n"
@@ -675,10 +657,6 @@ func TestGenerateOpenAPIAPI(t *testing.T) {
 	result, err := client.GenerateOpenAPI(args)
 	if err != nil {
 		t.Fatalf("GenerateOpenAPI failed: %v", err)
-	}
-
-	if result.Spec == "" {
-		t.Skip("the native runtime does not implement KclService.GenerateOpenAPI")
 	}
 
 	if !strings.Contains(result.Spec, "\"openapi\": \"3.0.0\"") {
@@ -709,10 +687,6 @@ func TestGenerateProtoAPI(t *testing.T) {
 		t.Fatalf("GenerateProto failed: %v", err)
 	}
 
-	if result.Proto == "" {
-		t.Skip("the native runtime does not implement KclService.GenerateProto")
-	}
-
 	if !strings.HasPrefix(result.Proto, "syntax = \"proto3\";\n\npackage example.v1;\n") {
 		t.Errorf("Expected proto to start with the proto3 syntax and package clause, got:\n%s", result.Proto)
 	}
@@ -736,10 +710,6 @@ func TestGenerateDocAPI(t *testing.T) {
 	result, err := client.GenerateDoc(args)
 	if err != nil {
 		t.Fatalf("GenerateDoc failed: %v", err)
-	}
-
-	if result.Content == "" {
-		t.Skip("the native runtime does not implement KclService.GenerateDoc")
 	}
 
 	if !strings.HasPrefix(result.Content, "# Schemas\n") {

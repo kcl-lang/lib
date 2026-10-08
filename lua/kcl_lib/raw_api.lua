@@ -195,12 +195,13 @@ RawAPI.generate_doc =
 -- dispatcher. `ListMethodArgs` is an empty protobuf message, so callers pass
 -- `{}` as the request.
 --
--- Prebuilt libkcl v0.13.0 predates the `BuiltinService` registration: the
--- dispatcher either answers with an empty payload (decoded as an empty
--- `method_name_list`) or surfaces an `ERROR:`-prefixed string that the
--- wrapper above turns into a Lua error. Callers should `pcall` this RPC and
--- treat both empty and populated answers as success, mirroring the Julia
--- and Zig bindings.
+-- The `BuiltinService.*` names are the exception to the "everything is
+-- `KclService.*`" rule: the core registers `BuiltinService.Ping` and
+-- `BuiltinService.ListMethod` under exactly those names, and there is no
+-- `KclService.ListMethod` alias. The registry has 28 entries; it grew in
+-- v0.13.1, which added `FormatTestReport` and the five `Generate*` RPCs and
+-- dropped `KclService.ListDepFiles` (dependency data now rides on
+-- `LoadPackageResult.imports` / `kcl_mod` / `apps`).
 RawAPI.list_method =
   add_method("BuiltinService.ListMethod", "ListMethodArgs", "ListMethodResult")
 
