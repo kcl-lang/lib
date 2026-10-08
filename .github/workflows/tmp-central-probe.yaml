@@ -17,6 +17,62 @@ jobs:
   probe:
     runs-on: ubuntu-latest
     steps:
+      - name: Set up JDK (same inputs as deploy-central)
+        uses: actions/setup-java@v6.0.1
+        with:
+          distribution: 'temurin'
+          java-version: '8'
+          server-id: central
+          server-username: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
+          server-password: ${{ secrets.MAVEN_CENTRAL_TOKEN }}
+          settings-path: ${{ github.workspace }}
+
+      - name: Inspect the generated settings.xml
+        run: |
+          set -uo pipefail
+          echo "settings.xml present: $(test -f "$GITHUB_WORKSPACE/settings.xml" && echo yes || echo NO)"
+          echo "--- server blocks (structure only) ---"
+          # Print ids/usernames but never passwords; hash them instead.
+          python3 - "$GITHUB_WORKSPACE/settings.xml" <<'PY'
+          import hashlib, sys, xml.etree.ElementTree as ET
+          path = sys.argv[1]
+          try:
+              root = ET.parse(path).getroot()
+          except Exception as e:
+              print(f"PARSE FAILED: {e}")
+              sys.exit(0)
+          ns = {"m": root.tag.split("}")[0].strip("{")} if "}" in root.tag else {}
+          servers = root.iter(f"{{{root.tag.split('}')[0].strip('{')}}}server") if ns else root.iter("server")
+          found = False
+          for s in servers:
+              found = True
+              sid  = (s.findtext("id") or "")
+              user = (s.findtext("username") or "")
+              pw   = (s.findtext("password") or "")
+              print(f"server id={sid!r} username={user!r} "
+                    f"password_len={len(pw)} password_sha256_8={hashlib.sha256(pw.encode()).hexdigest()[:8]}")
+          if not found:
+              print("NO <server> BLOCKS FOUND -- setup-java did not write credentials")
+          PY
+
+      - name: Maven's view of the settings (no build)
+        run: |
+          set -uo pipefail
+          cd /tmp && rm -rf mvnx && mkdir mvnx && cd mvnx
+          cat > pom.xml <<'XML'
+          <project xmlns="http://maven.apache.org/POM/4.0.0">
+            <modelVersion>4.0.0</modelVersion>
+            <groupId>t</groupId><artifactId>t</artifactId><version>1</version><packaging>pom</packaging>
+          </project>
+          XML
+          mvn -q -s "$GITHUB_WORKSPACE/settings.xml" \
+            -Dmaven.repo.local=/tmp/mvnrepo help:effective-settings -Doutput=/tmp/eff.xml >/dev/null 2>&1
+          if [ -f /tmp/eff.xml ]; then
+            grep -A4 '<server>' /tmp/eff.xml | grep -E '<id>|<username>' || echo "(no server in effective settings)"
+          else
+            echo "help:effective-settings produced no output"
+          fi
+
       - name: Report secret shape (never prints the secret)
         env:
           MAVEN_CENTRAL_USERNAME: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
