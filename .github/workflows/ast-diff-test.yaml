@@ -48,6 +48,10 @@ on:
       # change to the Go decoder can reach the harness from.
       - "go/ast/**"
       - "hack/dump/go/**"
+      # The PHP AST package and its dumper. The dumper loads the composer
+      # autoloader, so the leg installs php/ before diffing.
+      - "php/src/Ast/**"
+      - "hack/dump/php.php"
       # C and C++ have one decoder each, in a header and its implementation.
       # `kcl_ast_json.hpp` is the C++ header's own JSON parser and is the
       # other half of `kcl_ast.hpp`'s decoder; `kcl_lib_ast.h` is the whole
@@ -101,6 +105,10 @@ jobs:
           # — a leg that resolved the binding from the proxy would be diffing a
           # released version and reporting it as this one.
           - binding: go
+          # PHP decodes the golden capture through the composer autoloader,
+          # so the leg resolves php/ before diffing; the prebuilt libkcl is
+          # not needed — the dumper is pure AST over the capture.
+          - binding: php
           # C and C++ need no toolchain step at all: both decoders are
           # self-contained, and `hack/dump/{c,cpp}.sh` compile their sources
           # against a stock cc / c++ on the runner image. Not `cargo build`
@@ -291,6 +299,22 @@ jobs:
       uses: actions/setup-go@v6
       with:
         go-version: "1.25"
+
+    # --- php ----------------------------------------------------------------
+    # The dumper walks the decoded capture with the composer autoloader, so
+    # the leg installs the binding's dependencies (google/protobuf) the way
+    # php-test.yaml does. No libkcl: the diff is pure AST.
+    - name: Setup PHP
+      if: matrix.binding == 'php'
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: "8.4"
+        extensions: ffi
+        tools: composer
+    - name: Install php dependencies
+      if: matrix.binding == 'php'
+      working-directory: "lib/php"
+      run: composer install
 
     # --- java / kotlin ----------------------------------------------------
     # One JDK for both. The dumper scripts do not run maven's `compile` phase,
