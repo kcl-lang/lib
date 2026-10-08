@@ -132,8 +132,18 @@ jobs:
         run: |
           mv release-assets/libkcl_lib_c-darwin-x86_64/libkcl_lib_c.a release-assets/libkcl_lib_c-darwin-x86_64.a
           mv release-assets/libkcl_lib_c-darwin-arm64/libkcl_lib_c.a release-assets/libkcl_lib_c-darwin-arm64.a
-          gh release create "$TAG" \
-            --title "$TAG" \
-            --generate-notes \
-            release-assets/libkcl_lib_c-darwin-x86_64.a \
-            release-assets/libkcl_lib_c-darwin-arm64.a
+          # napi's prepublish step already created the release for this tag
+          # (nodejs-test.yaml), so `gh release create` would fail with
+          # "release already exists". Attach the static libraries either way.
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            echo "Release $TAG already exists; uploading assets to it"
+            gh release upload "$TAG" --clobber \
+              release-assets/libkcl_lib_c-darwin-x86_64.a \
+              release-assets/libkcl_lib_c-darwin-arm64.a
+          else
+            gh release create "$TAG" \
+              --title "$TAG" \
+              --generate-notes \
+              release-assets/libkcl_lib_c-darwin-x86_64.a \
+              release-assets/libkcl_lib_c-darwin-arm64.a
+          fi
