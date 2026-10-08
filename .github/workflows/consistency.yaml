@@ -101,8 +101,11 @@ jobs:
 
       # --- shared baseline -------------------------------------------------
       # Nine of the fifteen bindings build the core from source with the same
-      # toolchain; harmless for the rest.
+      # toolchain; harmless for the rest. Skipped in the alpine container: go
+      # links the musl prebuilt statically there and the rustup musl host
+      # toolchain does not run on alpine.
       - name: Install Rust
+        if: matrix.container == null
         uses: actions-rs/toolchain@v1
         with:
           toolchain: 1.91
