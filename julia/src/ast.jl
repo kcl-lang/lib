@@ -28,6 +28,62 @@
 # (`KclLib._json_parse`), the same one `to_dict` uses.
 
 # ---------------------------------------------------------------------------
+# How a caller builds a node
+# ---------------------------------------------------------------------------
+#
+# `docs/architecture.md` rule 2 calls AST constructors pure ergonomics and
+# `kotlin/.../AstBuild.kt` the reference form: there, every collection
+# parameter is defaulted to the empty collection, because Rust writes a `Vec`
+# field as `[]` and a `HashMap` as `{}` — never absent — so a constructor that
+# *demands* one is making the caller type `[]` at every level of the tree.
+#
+# This file's answer is the one Julia already has for it:
+#
+#   * every AST struct is declared `Base.@kwdef`, which generates a keyword
+#     constructor alongside the positional one; and
+#   * every field whose `ast.rs` counterpart is a `Vec<`, `Option<Vec<`,
+#     `HashMap<` or `Option<HashMap<` carries the empty collection as its
+#     default, so a caller can leave it out.
+#
+#     ConfigExpr()                     # was ConfigExpr(Node{ConfigEntry}[])
+#     Target(name = Node{String}("a.b", nothing), pkgpath = "")   # no `paths`
+#
+# Three properties of that choice are load-bearing and were checked at runtime
+# rather than assumed:
+#
+#   * **The positional constructor is untouched.** `@kwdef` puts the defaults
+#     in a *keyword* method; the generated inner constructor still takes every
+#     field, positionally, in declaration order. Every call in
+#     `*_from_wire` below, and every positional constructor any caller has
+#     already written, keeps working — verified in `test/ast_ctors.jl`.
+#   * **The default is evaluated per call**, so it is a fresh array every time.
+#     The trap `@kwdef` invites is a shared mutable default (`const EMPTY = X[]`
+#     hoisted out), where one caller's `push!` shows up in the next caller's
+#     node. Spelling the literal `X[]` inline is what avoids it.
+#   * **Only collections are defaulted.** A field that maps to a scalar or to a
+#     node the node cannot exist without keeps its position in the keyword
+#     signature as a *required* keyword argument — `Module` still asks for
+#     `filename` and `doc`, and `SchemaStmt` still asks for `is_mixin` and
+#     `is_protocol`, because asking for a value is not the same as asking for
+#     `[]`. This is why the rule is stated in terms of the `ast.rs` type rather
+#     than "anything that looks optional".
+#
+# `Pos` and `Node{T}` are the two structs left alone: they are AST
+# infrastructure rather than nodes a caller composes a tree from, and neither
+# has a collection field. `AnyType` and `MissingExpr` are unit structs and
+# cannot carry a default. The rest — `Comment`, `Module` and all 59 node
+# structs — are `@kwdef`.
+#
+# `Base.@kwdef` is spelled qualified because the macro is only exported from
+# Julia 1.9 and `Project.toml` supports 1.6; the macro itself and its handling
+# of required keyword arguments both predate that by a long way.
+#
+# One consequence worth knowing before adding an outer constructor: in Julia a
+# method's signature is its *positional* arguments, so `X()` and `X(; a = 1)`
+# are the same method and the second definition silently replaces the first.
+# See the note on `Identifier` below for the case this bit.
+
+# ---------------------------------------------------------------------------
 # Pos / Node{T} / Comment
 # ---------------------------------------------------------------------------
 
@@ -50,7 +106,7 @@ struct Node{T}
 end
 
 """A `#` comment — `ast::Comment { text }`."""
-struct Comment
+Base.@kwdef struct Comment
     text::String
 end
 
@@ -189,12 +245,15 @@ abstract type KclStmt end
 `ctx` is `ast::ExprContext`, serialized as the bare string `"Load"` or
 `"Store"`.
 """
-struct Identifier
-    names::Vector{Node{String}}
+Base.@kwdef struct Identifier
+    names::Vector{Node{String}} = Node{String}[]
     pkgpath::String
     ctx::String
 end
-Identifier() = Identifier(Node{String}[], "", "")
+# No zero-argument `Identifier()`: a method taking no positional arguments *is*
+# the `@kwdef` keyword constructor's signature, so redefining it here would
+# silently replace it and take the keyword form down with it. The empty
+# identifier is `Identifier(pkgpath = "", ctx = "")` now, which says what it is.
 identifier_from_wire(w) = Identifier(_string_node_list(get(w, "names", nothing)),
                                      _str(w, "pkgpath"), _str(w, "ctx"))
 Base.show(io::IO, i::Identifier) = print(io, "Identifier(",
@@ -217,12 +276,12 @@ though the variants hold a `NodeRef`.
 abstract type MemberOrIndex end
 
 """`ast::MemberOrIndex::Member` — the `a.b` step of a `Target`."""
-struct Member <: MemberOrIndex
+Base.@kwdef struct Member <: MemberOrIndex
     member::Node{String}
 end
 
 """`ast::MemberOrIndex::Index` — the `a[0]` step of a `Target`."""
-struct Index <: MemberOrIndex
+Base.@kwdef struct Index <: MemberOrIndex
     index::Node{KclExpr}
 end
 
@@ -241,9 +300,9 @@ function member_or_index_from_wire(w)
 end
 
 """`ast::Target` — `a.b.c` on the left of an assignment."""
-struct Target
+Base.@kwdef struct Target
     name::Union{Node{String},Nothing}
-    paths::Vector{MemberOrIndex}
+    paths::Vector{MemberOrIndex} = MemberOrIndex[]
     pkgpath::String
 end
 target_from_wire(w) = Target(_string_node(get(w, "name", nothing)),
@@ -257,7 +316,7 @@ Base.show(io::IO, t::Target) = print(io, "Target(",
 
 `arg` is a `NodeRef{Identifier}`, not an expression.
 """
-struct Keyword
+Base.@kwdef struct Keyword
     arg::Union{Node{Identifier},Nothing}
     value::Union{Node{KclExpr},Nothing}
 end
@@ -270,10 +329,10 @@ keyword_from_wire(w) = Keyword(_node_of(get(w, "arg", nothing), identifier_from_
 as `args` with a null for every parameter that has no default and no
 annotation. Both keep their nulls for that reason.
 """
-struct Arguments
-    args::Vector{Node{Identifier}}
-    defaults::Vector{Union{Node{KclExpr},Nothing}}
-    ty_list::Vector{Union{Node{AstType},Nothing}}
+Base.@kwdef struct Arguments
+    args::Vector{Node{Identifier}} = Node{Identifier}[]
+    defaults::Vector{Union{Node{KclExpr},Nothing}} = Union{Node{KclExpr},Nothing}[]
+    ty_list::Vector{Union{Node{AstType},Nothing}} = Union{Node{AstType},Nothing}[]
 end
 function arguments_from_wire(w)
     Arguments(_node_list(get(w, "args", nothing), identifier_from_wire),
@@ -285,7 +344,7 @@ Base.show(io::IO, a::Arguments) = print(io, "Arguments(",
     join([x.node.names[1].node for x in a.args if !isempty(x.node.names)], ", "), ")")
 
 """`ast::ConfigEntry` — one `key = value` pair inside a config expression."""
-struct ConfigEntry
+Base.@kwdef struct ConfigEntry
     key::Union{Node{KclExpr},Nothing}
     value::Union{Node{KclExpr},Nothing}
     operation::String
@@ -305,7 +364,7 @@ is the *same* struct reached through that tag, so one type serves both here,
 which is how the Java binding draws it too. That is why a check is not a
 `KclExpr` field to descend into and why it is not tagged on the wire.
 """
-struct CheckExpr <: KclExpr
+Base.@kwdef struct CheckExpr <: KclExpr
     test::Union{Node{KclExpr},Nothing}
     if_cond::Union{Node{KclExpr},Nothing}
     msg::Union{Node{KclExpr},Nothing}
@@ -316,7 +375,7 @@ check_from_wire(w) = CheckExpr(_node_of(get(w, "test", nothing), expr_from_wire)
                                _node_of(get(w, "msg", nothing), expr_from_wire))
 
 """`ast::SchemaIndexSignature` — `[str]: int`."""
-struct SchemaIndexSignature
+Base.@kwdef struct SchemaIndexSignature
     key_name::Union{Node{String},Nothing}
     value::Union{Node{KclExpr},Nothing}
     any_other::Bool
@@ -346,29 +405,29 @@ type therefore reads back as `{"type": "Basic", "value": "Int"}`, *not*
 `{"type": "Int"}` — the discriminator names the outer `Type` variant, and the
 inner enum name is the payload.
 """
-struct BasicType <: AstType
+Base.@kwdef struct BasicType <: AstType
     name::String
 end
 
 """`ast::Type::Named(Identifier)` — a schema or alias name."""
-struct NamedType <: AstType
+Base.@kwdef struct NamedType <: AstType
     identifier::Identifier
 end
 
 """`ast::Type::List(ListType)`."""
-struct ListType <: AstType
+Base.@kwdef struct ListType <: AstType
     inner_type::Union{Node{AstType},Nothing}
 end
 
 """`ast::Type::Dict(DictType)`."""
-struct DictType <: AstType
+Base.@kwdef struct DictType <: AstType
     key_type::Union{Node{AstType},Nothing}
     value_type::Union{Node{AstType},Nothing}
 end
 
 """`ast::Type::Union(UnionType)`. The Rust field is `type_elements`."""
-struct UnionType <: AstType
-    types::Vector{Node{AstType}}
+Base.@kwdef struct UnionType <: AstType
+    types::Vector{Node{AstType}} = Node{AstType}[]
 end
 
 """`ast::Type::Literal(LiteralType)`.
@@ -378,14 +437,14 @@ The nested `LiteralType` is itself tagged, so the payload arrives as
 verbatim rather than re-modelled — it has four different shapes depending on
 the inner tag.
 """
-struct LiteralType <: AstType
+Base.@kwdef struct LiteralType <: AstType
     value::Any
     inner_tag::Union{String,Nothing}
 end
 
 """`ast::Type::Function(FunctionType)`."""
-struct FunctionType <: AstType
-    params_ty::Union{Vector{Node{AstType}},Nothing}
+Base.@kwdef struct FunctionType <: AstType
+    params_ty::Union{Vector{Node{AstType}},Nothing} = nothing
     ret_ty::Union{Node{AstType},Nothing}
 end
 
@@ -396,7 +455,7 @@ an unregistered subtype, this decoder degrades. `ast::Type` is adjacently
 tagged, so an unknown tag leaves the payload under `value` untouched for the
 caller.
 """
-struct UnknownType <: AstType
+Base.@kwdef struct UnknownType <: AstType
     tag::String
     value::Any
 end
@@ -438,37 +497,37 @@ end
 """The `type` tag the parser emitted."""
 node_type(::KclExpr) = "?"
 
-struct TargetExpr <: KclExpr
+Base.@kwdef struct TargetExpr <: KclExpr
     target::Target
 end
 node_type(::TargetExpr) = "Target"
 
-struct IdentifierExpr <: KclExpr
+Base.@kwdef struct IdentifierExpr <: KclExpr
     identifier::Identifier
 end
 node_type(::IdentifierExpr) = "Identifier"
 
-struct UnaryExpr <: KclExpr
+Base.@kwdef struct UnaryExpr <: KclExpr
     op::String
     operand::Union{Node{KclExpr},Nothing}
 end
 node_type(::UnaryExpr) = "Unary"
 
-struct BinaryExpr <: KclExpr
+Base.@kwdef struct BinaryExpr <: KclExpr
     left::Union{Node{KclExpr},Nothing}
     op::String
     right::Union{Node{KclExpr},Nothing}
 end
 node_type(::BinaryExpr) = "Binary"
 
-struct IfExpr <: KclExpr
+Base.@kwdef struct IfExpr <: KclExpr
     body::Union{Node{KclExpr},Nothing}
     cond::Union{Node{KclExpr},Nothing}
     orelse::Union{Node{KclExpr},Nothing}
 end
 node_type(::IfExpr) = "If"
 
-struct SelectorExpr <: KclExpr
+Base.@kwdef struct SelectorExpr <: KclExpr
     value::Union{Node{KclExpr},Nothing}
     attr::Union{Node{Identifier},Nothing}
     ctx::String
@@ -485,10 +544,10 @@ wherever a `NodeRef<CallExpr>` sits outside the enum. `SchemaStmt.decorators`,
 and a decorator is a call — which is why the Java binding gives the untagged
 twin its own name, [`Decorator`](@ref), and this binding does too.
 """
-struct CallExpr <: KclExpr
+Base.@kwdef struct CallExpr <: KclExpr
     func::Union{Node{KclExpr},Nothing}
-    args::Vector{Node{KclExpr}}
-    keywords::Vector{Node{Keyword}}
+    args::Vector{Node{KclExpr}} = Node{KclExpr}[]
+    keywords::Vector{Node{Keyword}} = Node{Keyword}[]
 end
 node_type(::CallExpr) = "Call"
 
@@ -499,10 +558,10 @@ emits one struct and serde tags it only inside the `Expr` enum. The two types
 are kept apart so `SchemaAttr.decorators` says what it holds, and
 `CallExpr(d::Decorator)` is the promotion back into the tagged hierarchy.
 """
-struct Decorator
+Base.@kwdef struct Decorator
     func::Union{Node{KclExpr},Nothing}
-    args::Vector{Node{KclExpr}}
-    keywords::Vector{Node{Keyword}}
+    args::Vector{Node{KclExpr}} = Node{KclExpr}[]
+    keywords::Vector{Node{Keyword}} = Node{Keyword}[]
 end
 CallExpr(d::Decorator) = CallExpr(d.func, d.args, d.keywords)
 
@@ -510,14 +569,14 @@ call_expr_from_wire(w) = Decorator(_node_of(get(w, "func", nothing), expr_from_w
                                    _node_list(get(w, "args", nothing), expr_from_wire),
                                    _node_list(get(w, "keywords", nothing), keyword_from_wire))
 
-struct ParenExpr <: KclExpr
+Base.@kwdef struct ParenExpr <: KclExpr
     expr::Union{Node{KclExpr},Nothing}
 end
 node_type(::ParenExpr) = "Paren"
 
-struct QuantExpr <: KclExpr
+Base.@kwdef struct QuantExpr <: KclExpr
     target::Union{Node{KclExpr},Nothing}
-    variables::Vector{Node{Identifier}}
+    variables::Vector{Node{Identifier}} = Node{Identifier}[]
     op::String
     test::Union{Node{KclExpr},Nothing}
     if_cond::Union{Node{KclExpr},Nothing}
@@ -525,34 +584,34 @@ struct QuantExpr <: KclExpr
 end
 node_type(::QuantExpr) = "Quant"
 
-struct ListExpr <: KclExpr
-    elts::Vector{Node{KclExpr}}
+Base.@kwdef struct ListExpr <: KclExpr
+    elts::Vector{Node{KclExpr}} = Node{KclExpr}[]
     ctx::String
 end
 node_type(::ListExpr) = "List"
 
-struct ListIfItemExpr <: KclExpr
+Base.@kwdef struct ListIfItemExpr <: KclExpr
     if_cond::Union{Node{KclExpr},Nothing}
-    exprs::Vector{Node{KclExpr}}
+    exprs::Vector{Node{KclExpr}} = Node{KclExpr}[]
     orelse::Union{Node{KclExpr},Nothing}
 end
 node_type(::ListIfItemExpr) = "ListIfItem"
 
 """`ast::Expr::CompClause` — the `x in xs if cond` half of a comprehension."""
-struct CompClause <: KclExpr
-    targets::Vector{Node{Identifier}}
+Base.@kwdef struct CompClause <: KclExpr
+    targets::Vector{Node{Identifier}} = Node{Identifier}[]
     iter::Union{Node{KclExpr},Nothing}
-    ifs::Vector{Node{KclExpr}}
+    ifs::Vector{Node{KclExpr}} = Node{KclExpr}[]
 end
 node_type(::CompClause) = "CompClause"
 
-struct ListComp <: KclExpr
+Base.@kwdef struct ListComp <: KclExpr
     elt::Union{Node{KclExpr},Nothing}
-    generators::Vector{Node{CompClause}}
+    generators::Vector{Node{CompClause}} = Node{CompClause}[]
 end
 node_type(::ListComp) = "ListComp"
 
-struct StarredExpr <: KclExpr
+Base.@kwdef struct StarredExpr <: KclExpr
     value::Union{Node{KclExpr},Nothing}
     ctx::String
 end
@@ -563,15 +622,15 @@ node_type(::StarredExpr) = "Starred"
 The Rust field is a single `entry: ConfigEntry`, not the
 `entry_key` / `key` / `value` triple some bindings model.
 """
-struct DictComp <: KclExpr
+Base.@kwdef struct DictComp <: KclExpr
     entry::Union{ConfigEntry,Nothing}
-    generators::Vector{Node{CompClause}}
+    generators::Vector{Node{CompClause}} = Node{CompClause}[]
 end
 node_type(::DictComp) = "DictComp"
 
-struct ConfigIfEntryExpr <: KclExpr
+Base.@kwdef struct ConfigIfEntryExpr <: KclExpr
     if_cond::Union{Node{KclExpr},Nothing}
-    items::Vector{Node{ConfigEntry}}
+    items::Vector{Node{ConfigEntry}} = Node{ConfigEntry}[]
     orelse::Union{Node{KclExpr},Nothing}
 end
 node_type(::ConfigIfEntryExpr) = "ConfigIfEntry"
@@ -580,10 +639,10 @@ node_type(::ConfigIfEntryExpr) = "ConfigIfEntry"
 
 `name` is a `NodeRef{Identifier}`, not an expression.
 """
-struct SchemaExpr <: KclExpr
+Base.@kwdef struct SchemaExpr <: KclExpr
     name::Union{Node{Identifier},Nothing}
-    args::Vector{Node{KclExpr}}
-    kwargs::Vector{Node{Keyword}}
+    args::Vector{Node{KclExpr}} = Node{KclExpr}[]
+    kwargs::Vector{Node{Keyword}} = Node{Keyword}[]
     config::Union{Node{KclExpr},Nothing}
 end
 node_type(::SchemaExpr) = "Schema"
@@ -606,19 +665,19 @@ this is not a separate struct.
 """
 const SchemaConfig = SchemaExpr
 
-struct ConfigExpr <: KclExpr
-    items::Vector{Node{ConfigEntry}}
+Base.@kwdef struct ConfigExpr <: KclExpr
+    items::Vector{Node{ConfigEntry}} = Node{ConfigEntry}[]
 end
 node_type(::ConfigExpr) = "Config"
 
-struct LambdaExpr <: KclExpr
+Base.@kwdef struct LambdaExpr <: KclExpr
     args::Union{Node{Arguments},Nothing}
-    body::Vector{Node{KclStmt}}
+    body::Vector{Node{KclStmt}} = Node{KclStmt}[]
     return_ty::Union{Node{AstType},Nothing}
 end
 node_type(::LambdaExpr) = "Lambda"
 
-struct Subscript <: KclExpr
+Base.@kwdef struct Subscript <: KclExpr
     value::Union{Node{KclExpr},Nothing}
     index::Union{Node{KclExpr},Nothing}
     lower::Union{Node{KclExpr},Nothing}
@@ -629,20 +688,20 @@ struct Subscript <: KclExpr
 end
 node_type(::Subscript) = "Subscript"
 
-struct KeywordExpr <: KclExpr
+Base.@kwdef struct KeywordExpr <: KclExpr
     keyword::Keyword
 end
 node_type(::KeywordExpr) = "Keyword"
 
-struct ArgumentsExpr <: KclExpr
+Base.@kwdef struct ArgumentsExpr <: KclExpr
     arguments::Arguments
 end
 node_type(::ArgumentsExpr) = "Arguments"
 
-struct Compare <: KclExpr
+Base.@kwdef struct Compare <: KclExpr
     left::Union{Node{KclExpr},Nothing}
-    ops::Vector{String}
-    comparators::Vector{Node{KclExpr}}
+    ops::Vector{String} = String[]
+    comparators::Vector{Node{KclExpr}} = Node{KclExpr}[]
 end
 node_type(::Compare) = "Compare"
 
@@ -652,14 +711,14 @@ node_type(::Compare) = "Compare"
 `#[serde(tag = "type", content = "value")]` — so `0` arrives as
 `{"type": "Int", "value": 0}`.
 """
-struct NumberLit <: KclExpr
+Base.@kwdef struct NumberLit <: KclExpr
     binary_suffix::Union{String,Nothing}
     value_tag::Union{String,Nothing}
     value::Union{Real,Nothing}
 end
 node_type(::NumberLit) = "NumberLit"
 
-struct StringLit <: KclExpr
+Base.@kwdef struct StringLit <: KclExpr
     is_long_string::Bool
     raw_value::String
     value::String
@@ -667,21 +726,21 @@ end
 node_type(::StringLit) = "StringLit"
 
 """`ast::Expr::NameConstantLit` — `True`, `False` or `Undefined`."""
-struct NameConstantLit <: KclExpr
+Base.@kwdef struct NameConstantLit <: KclExpr
     value::String
 end
 node_type(::NameConstantLit) = "NameConstantLit"
 
 raw"""`ast::Expr::JoinedString` — an f-string, `"a${b}c"`."""
-struct JoinedString <: KclExpr
+Base.@kwdef struct JoinedString <: KclExpr
     is_long_string::Bool
-    values::Vector{Node{KclExpr}}
+    values::Vector{Node{KclExpr}} = Node{KclExpr}[]
     raw_value::String
 end
 node_type(::JoinedString) = "JoinedString"
 
 raw"""`ast::Expr::FormattedValue` — the `${x:>10}` part of an f-string."""
-struct FormattedValue <: KclExpr
+Base.@kwdef struct FormattedValue <: KclExpr
     is_long_string::Bool
     value::Union{Node{KclExpr},Nothing}
     format_spec::Union{String,Nothing}
@@ -703,7 +762,7 @@ a newer parser degrades here instead of throwing. This is a deliberate
 divergence from the Java vocabulary, in the same place the Node.js binding makes
 it.
 """
-struct UnknownExpr <: KclExpr
+Base.@kwdef struct UnknownExpr <: KclExpr
     variant::String
     raw::AbstractDict{String,Any}
 end
@@ -853,15 +912,15 @@ end
 
 node_type(::KclStmt) = "?"
 
-struct TypeAliasStmt <: KclStmt
+Base.@kwdef struct TypeAliasStmt <: KclStmt
     type_name::Union{Node{Identifier},Nothing}
     type_value::Union{Node{String},Nothing}
     ty::Union{Node{AstType},Nothing}
 end
 node_type(::TypeAliasStmt) = "TypeAlias"
 
-struct ExprStmt <: KclStmt
-    exprs::Vector{Node{KclExpr}}
+Base.@kwdef struct ExprStmt <: KclStmt
+    exprs::Vector{Node{KclExpr}} = Node{KclExpr}[]
 end
 node_type(::ExprStmt) = "Expr"
 
@@ -872,37 +931,37 @@ not a generic expression. `SchemaExpr` is a plain struct, so what lands in
 `value` is a [`SchemaConfig`](@ref), the untagged twin of the `Schema`
 expression variant.
 """
-struct UnificationStmt <: KclStmt
+Base.@kwdef struct UnificationStmt <: KclStmt
     target::Union{Node{Identifier},Nothing}
     value::Union{Node{SchemaConfig},Nothing}
 end
 node_type(::UnificationStmt) = "Unification"
 
-struct AssignStmt <: KclStmt
-    targets::Vector{Node{Target}}
+Base.@kwdef struct AssignStmt <: KclStmt
+    targets::Vector{Node{Target}} = Node{Target}[]
     value::Union{Node{KclExpr},Nothing}
     ty::Union{Node{AstType},Nothing}
 end
 node_type(::AssignStmt) = "Assign"
 
-struct AugAssignStmt <: KclStmt
+Base.@kwdef struct AugAssignStmt <: KclStmt
     target::Union{Node{Target},Nothing}
     value::Union{Node{KclExpr},Nothing}
     op::String
 end
 node_type(::AugAssignStmt) = "AugAssign"
 
-struct AssertStmt <: KclStmt
+Base.@kwdef struct AssertStmt <: KclStmt
     test::Union{Node{KclExpr},Nothing}
     if_cond::Union{Node{KclExpr},Nothing}
     msg::Union{Node{KclExpr},Nothing}
 end
 node_type(::AssertStmt) = "Assert"
 
-struct IfStmt <: KclStmt
-    body::Vector{Node{KclStmt}}
+Base.@kwdef struct IfStmt <: KclStmt
+    body::Vector{Node{KclStmt}} = Node{KclStmt}[]
     cond::Union{Node{KclExpr},Nothing}
-    orelse::Vector{Node{KclStmt}}
+    orelse::Vector{Node{KclStmt}} = Node{KclStmt}[]
 end
 node_type(::IfStmt) = "If"
 
@@ -911,7 +970,7 @@ node_type(::IfStmt) = "If"
 `path` and `asname` are `Node{String}`, so they carry their own position;
 `rawpath`, `name` and `pkg_name` are plain strings on the same node.
 """
-struct ImportStmt <: KclStmt
+Base.@kwdef struct ImportStmt <: KclStmt
     path::Union{Node{String},Nothing}
     rawpath::String
     name::String
@@ -921,19 +980,19 @@ end
 node_type(::ImportStmt) = "Import"
 
 """`ast::Stmt::SchemaAttr` — one attribute inside a schema body."""
-struct SchemaAttr <: KclStmt
+Base.@kwdef struct SchemaAttr <: KclStmt
     doc::String
     name::Union{Node{String},Nothing}
     op::Union{String,Nothing}
     value::Union{Node{KclExpr},Nothing}
     is_optional::Bool
-    decorators::Vector{Node{Decorator}}
+    decorators::Vector{Node{Decorator}} = Node{Decorator}[]
     ty::Union{Node{AstType},Nothing}
 end
 node_type(::SchemaAttr) = "SchemaAttr"
 
 """`ast::Stmt::Schema` — `schema`, `protocol` and `mixin` all land here."""
-struct SchemaStmt <: KclStmt
+Base.@kwdef struct SchemaStmt <: KclStmt
     doc::Union{Node{String},Nothing}
     name::Union{Node{String},Nothing}
     parent_name::Union{Node{Identifier},Nothing}
@@ -941,20 +1000,20 @@ struct SchemaStmt <: KclStmt
     is_mixin::Bool
     is_protocol::Bool
     args::Union{Node{Arguments},Nothing}
-    mixins::Vector{Node{Identifier}}
-    body::Vector{Node{KclStmt}}
-    decorators::Vector{Node{Decorator}}
-    checks::Vector{Node{CheckExpr}}
+    mixins::Vector{Node{Identifier}} = Node{Identifier}[]
+    body::Vector{Node{KclStmt}} = Node{KclStmt}[]
+    decorators::Vector{Node{Decorator}} = Node{Decorator}[]
+    checks::Vector{Node{CheckExpr}} = Node{CheckExpr}[]
     index_signature::Union{Node{SchemaIndexSignature},Nothing}
 end
 node_type(::SchemaStmt) = "Schema"
 
-struct RuleStmt <: KclStmt
+Base.@kwdef struct RuleStmt <: KclStmt
     doc::Union{Node{String},Nothing}
     name::Union{Node{String},Nothing}
-    parent_rules::Vector{Node{Identifier}}
-    decorators::Vector{Node{Decorator}}
-    checks::Vector{Node{CheckExpr}}
+    parent_rules::Vector{Node{Identifier}} = Node{Identifier}[]
+    decorators::Vector{Node{Decorator}} = Node{Decorator}[]
+    checks::Vector{Node{CheckExpr}} = Node{CheckExpr}[]
     args::Union{Node{Arguments},Nothing}
     for_host_name::Union{Node{Identifier},Nothing}
 end
@@ -963,7 +1022,7 @@ node_type(::RuleStmt) = "Rule"
 """A `Stmt` tag this package does not know about. Same deliberate divergence from
 Java as [`UnknownExpr`](@ref): Jackson raises on an unregistered subtype, this
 decoder degrades."""
-struct UnknownStmt <: KclStmt
+Base.@kwdef struct UnknownStmt <: KclStmt
     variant::String
     raw::AbstractDict{String,Any}
 end
@@ -1071,11 +1130,11 @@ _loader_type(::typeof(comment_from_wire)) = Comment
 The Rust struct has no `pkg` field: the Java and Go bindings used to expose one
 and were aligned to drop it, so this struct has none either.
 """
-struct Module
+Base.@kwdef struct Module
     filename::String
     doc::Union{Node{String},Nothing}
-    body::Vector{Node{KclStmt}}
-    comments::Vector{Node{Comment}}
+    body::Vector{Node{KclStmt}} = Node{KclStmt}[]
+    comments::Vector{Node{Comment}} = Node{Comment}[]
 end
 
 # The name this binding shipped before the cross-binding vocabulary was

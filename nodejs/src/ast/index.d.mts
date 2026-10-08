@@ -42,6 +42,28 @@
  * Every optional field is `undefined` rather than `null` at runtime, because
  * `nodeFromWire` returns `undefined` for an absent wrapper.
  *
+ * ## Collections are optional, because Rust always writes them
+ *
+ * A member whose `ast.rs` field is a `Vec<…>`, an `Option<Vec<…>>`, a
+ * `HashMap<…>` or an `Option<HashMap<…>>` is marked `?`. Rust has no absent
+ * `Vec`: an empty one serialises as `[]`, so `args` is *always* on the wire,
+ * and a caller who has no arguments has nothing to say about it. Requiring the
+ * key instead would make every call site spell the empty collection —
+ * `{ func, args: [], keywords: [] }` for a decorator with none — at every level
+ * of the tree, which is the ceremony `kotlin/.../AstBuild.kt` exists to stop and
+ * which `docs/architecture.md` rule 2 calls ergonomics rather than an API.
+ *
+ * Omitting one reads as `undefined` to a consumer, so the loaders below still
+ * emit the key: every one of them writes `[]` for a list the wire carried empty,
+ * and this file is a statement about what a caller *owes* the object literal,
+ * not about which keys a decoded node holds.
+ *
+ * Nothing else is optional. A `NodeRef<T>`, a scalar or a tagged-enum wrapper
+ * is a child or a value the parser genuinely produces, and defaulting it would
+ * be inventing a node the core never emits — `Keyword.arg` and
+ * `ListType.innerType` are the two the rule above spells out as staying
+ * required.
+ *
  * `Node<T>` is Java's `NodeRef<T>`; Java splits the two because its `Node`
  * carries an `id` field that the Rust wire does not have.
  */
@@ -114,7 +136,8 @@ export interface WireNode<T> {
  * a `NodeRef<Identifier>` and never an `Expr`.
  */
 export interface Identifier {
-  names: Node<string>[];
+  /** `Vec<NodeRef<String>>` — `a.b.c` splits into `["a", "b", "c"]`. */
+  names?: Node<string>[];
   pkgpath: string;
   ctx?: string;
 }
@@ -160,7 +183,9 @@ export interface DictType {
  *  `types` is deliberate and is the one place this file parts ways with it. */
 export interface UnionType {
   type: "Union";
-  types: Node<Type>[];
+  /** `Vec<NodeRef<Type>>`; a union always has at least one member, but a
+   *  caller building an empty one should not have to say so. */
+  types?: Node<Type>[];
 }
 
 /**
@@ -218,11 +243,11 @@ export interface Keyword {
 
 /** `ast::Arguments` — a lambda's parameter list. Also `Expr::Arguments`. */
 export interface Arguments {
-  args: Node<Identifier>[];
+  args?: Node<Identifier>[];
   /** Same length as `args`; the slots for absent defaults are `undefined`. */
-  defaults: (Node<Expr> | undefined)[];
+  defaults?: (Node<Expr> | undefined)[];
   /** Same length as `args`; the slots for absent types are `undefined`. */
-  tyList: (Node<Type> | undefined)[];
+  tyList?: (Node<Type> | undefined)[];
 }
 
 /** `ast::CheckExpr` — `len(attr) > 3 if attr, "message"`. Also `Expr::Check`. */
@@ -236,9 +261,9 @@ export interface CheckExpr {
 
 /** `ast::CompClause` — one `for x in y if z` leg of a comprehension. */
 export interface CompClause {
-  targets: Node<Identifier>[];
+  targets?: Node<Identifier>[];
   iter: Node<Expr>;
-  ifs: Node<Expr>[];
+  ifs?: Node<Expr>[];
 }
 
 /** `ast::ConfigEntry` — one `key = value` / `key: value` / `key += value`. */
@@ -264,8 +289,8 @@ export interface ConfigEntry {
  */
 export interface Decorator {
   func: Node<Expr>;
-  args: Node<Expr>[];
-  keywords: Node<Keyword>[];
+  args?: Node<Expr>[];
+  keywords?: Node<Keyword>[];
 }
 
 /**
@@ -277,8 +302,8 @@ export interface Decorator {
  */
 export interface SchemaConfig {
   name: Node<Identifier>;
-  args: Node<Expr>[];
-  kwargs: Node<Keyword>[];
+  args?: Node<Expr>[];
+  kwargs?: Node<Keyword>[];
   config: Node<Expr>;
 }
 
@@ -312,7 +337,7 @@ export interface MemberOrIndex {
 /** `ast::Target` — `a.b[0].c`. */
 export interface Target {
   name: Node<string>;
-  paths: MemberOrIndex[];
+  paths?: MemberOrIndex[];
   pkgpath: string;
 }
 
@@ -369,8 +394,8 @@ export interface SelectorExpr {
 export interface CallExpr {
   type: "Call";
   func: Node<Expr>;
-  args: Node<Expr>[];
-  keywords: Node<Keyword>[];
+  args?: Node<Expr>[];
+  keywords?: Node<Keyword>[];
 }
 
 export interface ParenExpr {
@@ -381,7 +406,7 @@ export interface ParenExpr {
 export interface QuantExpr {
   type: "Quant";
   target: Node<Expr>;
-  variables: Node<Identifier>[];
+  variables?: Node<Identifier>[];
   op?: string;
   test: Node<Expr>;
   ifCond: Node<Expr>;
@@ -390,14 +415,14 @@ export interface QuantExpr {
 
 export interface ListExpr {
   type: "List";
-  elts: Node<Expr>[];
+  elts?: Node<Expr>[];
   ctx?: string;
 }
 
 export interface ListIfItemExpr {
   type: "ListIfItem";
   ifCond: Node<Expr>;
-  exprs: Node<Expr>[];
+  exprs?: Node<Expr>[];
   orelse: Node<Expr>;
 }
 
@@ -405,7 +430,7 @@ export interface ListComp {
   type: "ListComp";
   elt: Node<Expr>;
   /** `Vec<NodeRef<CompClause>>`, and `CompClause` is untagged. */
-  generators: Node<CompClause>[];
+  generators?: Node<CompClause>[];
 }
 
 export interface StarredExpr {
@@ -419,13 +444,13 @@ export interface StarredExpr {
 export interface DictComp {
   type: "DictComp";
   entry?: ConfigEntry;
-  generators: Node<CompClause>[];
+  generators?: Node<CompClause>[];
 }
 
 export interface ConfigIfEntryExpr {
   type: "ConfigIfEntry";
   ifCond: Node<Expr>;
-  items: Node<ConfigEntry>[];
+  items?: Node<ConfigEntry>[];
   orelse: Node<Expr>;
 }
 
@@ -442,14 +467,14 @@ export interface SchemaExpr extends SchemaConfig {
 
 export interface ConfigExpr {
   type: "Config";
-  items: Node<ConfigEntry>[];
+  items?: Node<ConfigEntry>[];
 }
 
 export interface LambdaExpr {
   type: "Lambda";
   args: Node<Arguments>;
   /** A lambda body is `Vec<NodeRef<Stmt>>`, not a list of expressions. */
-  body: Node<Stmt>[];
+  body?: Node<Stmt>[];
   returnTy: Node<Type>;
 }
 
@@ -479,8 +504,9 @@ export interface ArgumentsExpr extends Arguments {
 export interface Compare {
   type: "Compare";
   left: Node<Expr>;
-  ops: string[];
-  comparators: Node<Expr>[];
+  /** `Vec<CmpOp>` and `Vec<NodeRef<Expr>>`, positionally aligned. */
+  ops?: string[];
+  comparators?: Node<Expr>[];
 }
 
 /**
@@ -508,7 +534,7 @@ export interface NameConstantLit {
 export interface JoinedString {
   type: "JoinedString";
   isLongString: boolean;
-  values: Node<Expr>[];
+  values?: Node<Expr>[];
   rawValue: string;
 }
 
@@ -579,7 +605,7 @@ export interface TypeAliasStmt {
 
 export interface ExprStmt {
   type: "Expr";
-  exprs: Node<Expr>[];
+  exprs?: Node<Expr>[];
 }
 
 /**
@@ -595,7 +621,7 @@ export interface UnificationStmt {
 
 export interface AssignStmt {
   type: "Assign";
-  targets: Node<Target>[];
+  targets?: Node<Target>[];
   ty: Node<Type>;
   value: Node<Expr>;
 }
@@ -618,9 +644,9 @@ export interface AssertStmt {
 /** `If` is both a `Stmt` and an `Expr`, so each hierarchy owns its own. */
 export interface IfStmt {
   type: "If";
-  body: Node<Stmt>[];
+  body?: Node<Stmt>[];
   cond: Node<Expr>;
-  orelse: Node<Stmt>[];
+  orelse?: Node<Stmt>[];
 }
 
 /**
@@ -646,12 +672,12 @@ export interface SchemaStmt {
   isMixin: boolean;
   isProtocol: boolean;
   args: Node<Arguments>;
-  mixins: Node<Identifier>[];
+  mixins?: Node<Identifier>[];
   /** Holds `SchemaAttr` and reaches the index signature. */
-  body: Node<Stmt>[];
-  decorators: Node<Decorator>[];
+  body?: Node<Stmt>[];
+  decorators?: Node<Decorator>[];
   /** `Vec<NodeRef<CheckExpr>>` — untagged, so not a `Node<Expr>[]`. */
-  checks: Node<CheckExpr>[];
+  checks?: Node<CheckExpr>[];
   indexSignature: Node<SchemaIndexSignature>;
 }
 
@@ -662,7 +688,7 @@ export interface SchemaAttr {
   op?: string;
   value: Node<Expr>;
   isOptional: boolean;
-  decorators: Node<Decorator>[];
+  decorators?: Node<Decorator>[];
   ty: Node<Type>;
 }
 
@@ -670,9 +696,9 @@ export interface RuleStmt {
   type: "Rule";
   doc: Node<string>;
   name: Node<string>;
-  parentRules: Node<Identifier>[];
-  decorators: Node<Decorator>[];
-  checks: Node<CheckExpr>[];
+  parentRules?: Node<Identifier>[];
+  decorators?: Node<Decorator>[];
+  checks?: Node<CheckExpr>[];
   args: Node<Arguments>;
   forHostName: Node<Identifier>;
 }
