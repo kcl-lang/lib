@@ -105,6 +105,56 @@ KOTLIN_CASES = [
    "IntLiteralType", :missing]
 ].freeze
 
+# The PHP binding's constructors are generated (`php/src/Ast/AstBuild.php`),
+# so a mutation is a scratch copy of that one file — `check_php` reads only
+# it, not a directory of siblings. The same four rules are exercised:
+# rule 2 (a field no constructor sets), rule 1 (a collection demanded
+# instead of defaulted), rule 3 in both directions (a parameter naming no
+# field, and a `KNOWN_HELPERS` spelling that must stay quiet), and the
+# coverage direction (a renamed constructor un-reaches its struct).
+PHP_SRC = File.read(File.expand_path("../php/src/Ast/AstBuild.php", __dir__))
+
+PHP_CASES = [
+  ["rule 2: `stringLit` stops accepting `rawValue`",
+   "        bool $isLongString = false,\n        /** @var string */\n        string $rawValue = '',\n        /** @var string */\n        string $value = '',",
+   "        bool $isLongString = false,\n        /** @var string */\n        string $value = '',",
+   "StringLit", :problem],
+
+  # Rule 1: `Vec` is never absent on the wire, so a constructor that demands
+  # one is making the caller type `[]` at every level of the tree. The
+  # generated default `= []` is the whole claim, and dropping it has to fire.
+  ["rule 1: `configExpr` requires its items list",
+   "        array $items = [],\n    ): ConfigExpr {",
+   "        array $items,\n    ): ConfigExpr {",
+   "ConfigExpr", :problem],
+
+  # Rule 3: a parameter naming a field the core does not declare is drift in
+  # the other direction — a constructor argument that goes nowhere.
+  ["rule 3: `comment` grows a parameter `ast.rs` does not declare",
+   "        string $text = '',\n    ): Comment {",
+   "        string $text = '',\n        string $colour = '',\n    ): Comment {",
+   "Comment", :problem],
+
+  # The other side of the same rule, and the case pinning `KNOWN_HELPERS`:
+  # `tag` is the serde discriminator a tagged-enum variant stamps onto its
+  # payload, so a constructor that takes it is not inventing a field. Between
+  # this and `colour` above the boundary is exact.
+  ["rule 3: a `KNOWN_HELPERS` parameter is not reported as drift",
+   "        string $text = '',\n    ): Comment {",
+   "        string $text = '',\n        string $tag = '',\n    ): Comment {",
+   "Comment", :silent],
+
+  # The coverage direction. PHP's collector joins constructor to struct on
+  # the *return type*, not the function name — renaming `missingExpr` would
+  # still reach `MissingExpr` — so the mutation that un-reaches the struct
+  # here is the constructor's deletion, which has to drop `MissingExpr` into
+  # the unreachable list rather than leave it covered.
+  ["coverage: deleting `missingExpr` un-reaches `MissingExpr`",
+   "    public static function missingExpr(): MissingExpr\n    {\n        return new MissingExpr();\n    }\n",
+   "",
+   "MissingExpr", :missing]
+].freeze
+
 # The counters are globals that accumulate across every `compare`, so a case
 # that asserted on `missing` would see whatever the cases before it reached.
 # Each case starts from the full list or a coverage case proves nothing.
@@ -203,6 +253,40 @@ def check_exemptions
   misses
 end
 
+# The outcome assertion shared by the kotlin and php mutation loops: which
+# shape "the checker caught it" takes depends on the case's expectation, and
+# all three matter — a rule that fires on the wrong struct, a coverage gap
+# that goes unreported, and an exemption that has quietly stopped exempting
+# are failures in three different directions.
+def case_hit?(label, expect, struct, problems, lang)
+  hit = case expect
+        when :problem then problems.find { |p| p.start_with?("#{struct}:") }
+        when :missing then (NODE_TYPES - REACHED[lang]).include?(struct) ? "#{struct}: no constructor reaches it" : nil
+        when :silent then problems.none? { |p| p.start_with?("#{struct}:") } ? "#{struct}: correctly left alone" : nil
+        end
+
+  if hit
+    puts "  ok   #{label}"
+    puts "         -> #{hit}"
+    return true
+  end
+
+  seen = if expect == :missing
+           unreached = NODE_TYPES - REACHED[lang]
+           unreached.include?(struct) ? "unreachable list is empty" : "reachable anyway: #{REACHED[lang].include?(struct)}"
+         elsif expect == :silent
+           named = problems.find { |p| p.start_with?("#{struct}:") }
+           named ? "reported anyway: #{named}" : "the mutation did not land"
+         elsif problems.empty?
+           "ok"
+         else
+           "#{problems.length} unrelated: #{problems.first}"
+         end
+  puts "  MISS #{label}"
+  puts "         -> checker said: #{seen}"
+  false
+end
+
 def run
   misses = 0
   Dir.mktmpdir("ast-constructors") do |dir|
@@ -222,31 +306,25 @@ def run
       reset_coverage("kotlin")
       ctors = check_kotlin(scratch)
       problems = compare("kotlin", ctors)
-      hit = case expect
-            when :problem then problems.find { |p| p.start_with?("#{struct}:") }
-            when :missing then (NODE_TYPES - REACHED["kotlin"]).include?(struct) ? "#{struct}: no constructor reaches it" : nil
-            when :silent then problems.none? { |p| p.start_with?("#{struct}:") } ? "#{struct}: correctly left alone" : nil
-            end
+      misses += 1 unless case_hit?(label, expect, struct, problems, "kotlin")
+    end
 
-      if hit
-        puts "  ok   #{label}"
-        puts "         -> #{hit}"
-      else
-        seen = if expect == :missing
-                 unreached = NODE_TYPES - REACHED["kotlin"]
-                 unreached.include?(struct) ? "unreachable list is empty" : "reachable anyway: #{REACHED['kotlin'].include?(struct)}"
-               elsif expect == :silent
-                 named = problems.find { |p| p.start_with?("#{struct}:") }
-                 named ? "reported anyway: #{named}" : "the mutation did not land"
-               elsif problems.empty?
-                 "ok"
-               else
-                 "#{problems.length} unrelated: #{problems.first}"
-               end
+    php_scratch = File.join(dir, "AstBuild.php")
+
+    puts "\nrule self-tests (php/AstBuild.php):"
+    PHP_CASES.each do |label, good, bad, struct, expect|
+      unless PHP_SRC.include?(good)
         puts "  MISS #{label}"
-        puts "         -> checker said: #{seen}"
+        puts "         -> the constructor it mutates is not in AstBuild.php any more"
         misses += 1
+        next
       end
+
+      File.write(php_scratch, PHP_SRC.sub(good, bad))
+      reset_coverage("php")
+      ctors = check_php(php_scratch)
+      problems = compare("php", ctors)
+      misses += 1 unless case_hit?(label, expect, struct, problems, "php")
     end
   end
 

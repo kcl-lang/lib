@@ -1189,6 +1189,107 @@ GO_CASES = [
    "Module", "comments", true]
 ].freeze
 
+# ---------------------------------------------------------------------------
+# PHP
+# ---------------------------------------------------------------------------
+
+# One generated file per class, so a case mutates exactly the file its struct
+# lives in and the scratch copy has to carry the rest of the directory — the
+# checker reads every `*.php` there and a tree with only the mutated file
+# would leave every other struct unreached. The reads are one `Wire::helper`
+# call per field inside `fromWire`, so each mutation swaps one call for
+# another, the way the other bindings' cases swap one loader for another.
+PHP_DIR = File.expand_path("../php/src/Ast", __dir__)
+PHP_FILES = Dir[File.join(PHP_DIR, "*.php")].map { |p| File.basename(p) }.sort.freeze
+PHP_SRC = PHP_FILES.to_h { |n| [n, File.read(File.join(PHP_DIR, n))] }.freeze
+
+PHP_CASES = [
+  ["payload type: `SelectorExpr.attr` is an Identifier, not a String",
+   PHP_SRC["SelectorExpr.php"], "final class SelectorExpr extends Expr\n",
+   "            attr: Wire::nodeRef($w, 'attr', 'identifier'),\n",
+   "            attr: Wire::stringNode($w, 'attr'),\n",
+   "SelectorExpr", "attr"],
+
+  ["payload type: `SchemaExpr.name` is an Identifier, not a String",
+   PHP_SRC["SchemaExpr.php"], "final class SchemaExpr extends Expr\n",
+   "            name: Wire::nodeRef($w, 'name', 'identifier'),\n",
+   "            name: Wire::stringNode($w, 'name'),\n",
+   "SchemaExpr", "name"],
+
+  ["list read as single: `IfStmt.body` is a `Vec`",
+   PHP_SRC["IfStmt.php"], "final class IfStmt extends Stmt\n",
+   "            body: Wire::nodeRefList($w, 'body', 'stmt'),\n",
+   "            body: Wire::nodeRef($w, 'body', 'stmt'),\n",
+   "IfStmt", "body"],
+
+  # No trailing comma: `orelse` is the last field of `IfExpr`, and the
+  # generated file says so — a `good` line with one would match nothing and
+  # the case would pass over a rule it never exercised.
+  ["single read as list: `IfExpr.orelse` is one `NodeRef`",
+   PHP_SRC["IfExpr.php"], "final class IfExpr extends Expr\n",
+   "            orelse: Wire::nodeRef($w, 'orelse', 'expr')\n",
+   "            orelse: Wire::nodeRefList($w, 'orelse', 'expr')\n",
+   "IfExpr", "orelse"],
+
+  ["payload type: `LambdaExpr.body` is a list of Stmt, not of Expr",
+   PHP_SRC["LambdaExpr.php"], "final class LambdaExpr extends Expr\n",
+   "            body: Wire::nodeRefList($w, 'body', 'stmt'),\n",
+   "            body: Wire::nodeRefList($w, 'body', 'expr'),\n",
+   "LambdaExpr", "body"],
+
+  ["payload type: `SchemaStmt.checks` is a list of CheckExpr, not of Expr",
+   PHP_SRC["SchemaStmt.php"], "final class SchemaStmt extends Stmt\n",
+   "            checks: Wire::nodeRefList($w, 'checks', 'check'),\n",
+   "            checks: Wire::nodeRefList($w, 'checks', 'expr'),\n",
+   "SchemaStmt", "checks"],
+
+  # `DictComp.entry` is a bare `ConfigEntry`: no `node` wrapper and no
+  # `type` tag, so it decodes through `classRef` and not `nodeRef` — and the
+  # payload word it names is `config_entry`, not `identifier`.
+  ["payload type: `DictComp.entry` is a ConfigEntry, not an Identifier",
+   PHP_SRC["DictComp.php"], "final class DictComp extends Expr\n",
+   "            entry: Wire::classRef($w, 'entry', 'config_entry'),\n",
+   "            entry: Wire::classRef($w, 'entry', 'identifier'),\n",
+   "DictComp", "entry"],
+
+  ["payload type: `Target.paths` is a list of MemberOrIndex, not of Identifier",
+   PHP_SRC["Target.php"], "final class Target extends Expr\n",
+   "            paths: Wire::classList($w, 'paths', 'member_or_index'),\n",
+   "            paths: Wire::classList($w, 'paths', 'identifier'),\n",
+   "Target", "paths"],
+
+  ["payload type: `Arguments.defaults` is a list of Expr, not of Type",
+   PHP_SRC["Arguments.php"], "final class Arguments extends Expr\n",
+   "            defaults: Wire::optNodeRefList($w, 'defaults', 'expr'),\n",
+   "            defaults: Wire::optNodeRefList($w, 'defaults', 'type'),\n",
+   "Arguments", "defaults"],
+
+  ["payload type: `Identifier.names` is a list of String, not of Expr",
+   PHP_SRC["Identifier.php"], "final class Identifier extends Expr\n",
+   "            names: Wire::nodeRefList($w, 'names', 'string'),\n",
+   "            names: Wire::nodeRefList($w, 'names', 'expr'),\n",
+   "Identifier", "names"],
+
+  # The argument still *names* `text:`, which is what makes this the shape
+  # the name-and-type rules cannot see: only where the value came from is
+  # wrong, one level below where the field name is checked.
+  ["leaf payload: `Comment` is a struct, so `Module.comments` reads `text` off it",
+   PHP_SRC["Comment.php"], "final class Comment\n",
+   "            text: Wire::str($w, 'text')\n",
+   "            text: Wire::str($w, 'node')\n",
+   "Module", "comments", true],
+
+  # The other half of the same descent, and the one this binding could ship
+  # silently: `Wire::nodeRef` hands the decoder the payload with `node`
+  # already lifted, so reading `node` again is a key that is not there —
+  # every comment decodes to `''` without raising.
+  ["leaf payload: `Module.comments` is handed the payload, so it must not unwrap `node`",
+   PHP_SRC["Comment.php"], "final class Comment\n",
+   "            text: Wire::str($w, 'text')\n",
+   "            text: Wire::str(is_array($w['node'] ?? null) ? $w['node'] : $w, 'text')\n",
+   "Module", "comments", true]
+].freeze
+
 # A floor on how much a checker may silently stop covering. Every binding sits
 # at or above 100 node-shaped field decoders; a drop below 90 means a regex
 # stopped matching and "ok" has stopped meaning anything.
@@ -1214,7 +1315,14 @@ FLOOR = {
   # Rust structs, and 145 is what a dropped `GO_FIELD` or a mis-stripped
   # `Node` suffix would take it below. A floor rather than a snapshot because
   # adding a struct to `ast.rs` should raise this number, not break CI.
-  go: 145
+  go: 145,
+  # PHP's collector reads the `Wire::` node decoders only — scalars read the
+  # same way whatever Rust says about them, so they carry no information the
+  # two rules could use — and 126 is that set's exact size: every node-shaped
+  # field of every emitted struct, plus the bare-enum reads (`op`, `opList`)
+  # the list rule alone judges. Generated, so a dropped shape or a helper
+  # renamed out of `PHP_HELPERS` takes it below the floor.
+  php: 126
 }.freeze
 
 # Each case rewrites one line of the binding in a scratch copy and asserts the
@@ -1387,6 +1495,19 @@ BINDINGS = {
       method(:check_go).call(dir)
     },
     locate: ->(src) { GO_SRC.key(src) }
+  },
+  # One generated file per class in one flat directory, so a scratch copy is
+  # the whole directory with one file mutated — the checker walks every
+  # `*.php` there and a tree with just the mutated file would leave every
+  # other struct unreached (and the `Comment` cases would mutate a file the
+  # leaf rule never reads).
+  "php" => {
+    path: "php/src/Ast", cases: PHP_CASES, checker: method(:check_php),
+    materialise: lambda { |dir, n, m|
+      scratch(PHP_FILES, PHP_SRC, dir, n, m)
+      method(:check_php).call(dir)
+    },
+    locate: ->(src) { PHP_SRC.key(src) }
   },
   # Two files, so a case can land in the loader or in the type declarations, and
   # `c_pair` derives one from the other — the scratch has to be laid out the

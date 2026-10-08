@@ -142,6 +142,7 @@ NOT_MODELED = {
   "julia" => %w[SerializeProgram IntLiteralType],
   "dotnet" => %w[SerializeProgram],
   "lua" => %w[SerializeProgram IntLiteralType],
+  "php" => %w[SerializeProgram],
   "nodejs" => %w[SerializeProgram IntLiteralType],
   "zig" => %w[IntLiteralType],
   "dart" => %w[SerializeProgram IntLiteralType]
@@ -621,6 +622,7 @@ CHECKS = {
   "julia" => -> { check_julia(File.expand_path("../julia/src", __dir__)) },
   "dart" => -> { check_dart(File.expand_path("../dart/lib/src/ast", __dir__)) },
   "lua" => -> { check_lua(File.expand_path("../lua/kcl_lib/ast.lua", __dir__)) },
+  "php" => -> { check_php(File.expand_path("../php/src/Ast", __dir__)) },
   "c" => -> { check_c(File.expand_path("../c/include/kcl_lib_ast.h", __dir__)) },
   "cpp" => -> { check_cpp(File.expand_path("../cpp/include", __dir__)) }
 }.freeze

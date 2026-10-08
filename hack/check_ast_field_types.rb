@@ -381,7 +381,12 @@ LEAF_DECODER = {
     next [native, false] unless native.nil?
 
     [src[/static \w+\* parse_#{word}_node\(kcl_arena_t\* \w+, const kcl_json_value_t\* \w+\)(.*?)\n\}/m, 1], true]
-  }
+  },
+  # PHP decodes with one generated `final class` per struct, one file each;
+  # the class body runs to the closing brace at column 0. `Wire::nodeRef`
+  # lifts `node` off the wrapper and hands the decoder the payload, so the
+  # decoder must not unwrap again.
+  php: ->(src, leaf, word) { src[/^final class #{leaf}\b.*?\n\{(.*?)^\}/m, 1] }
 }.freeze
 
 LEAF_CHECKED = Hash.new(0)
@@ -2508,6 +2513,63 @@ def check_cpp_native(path, lang = :cpp)
   compare(lang, reads) + compare_leaf(lang, src)
 end
 
+# ---------------------------------------------------------------------------
+# PHP
+# ---------------------------------------------------------------------------
+
+# The `Wire` helper a read goes through decides both rules. `nodeRefList`
+# against a `NodeRef<T>` is the list-versus-single bug; the third argument —
+# the payload word — is the same vocabulary `PAYLOAD_LOADER` maps, so
+# `nodeRef($w, 'attr', 'identifier')` reads an Identifier and
+# `stringNode($w, 'doc')` reads a String. The string helpers name their own
+# payload; `op`/`opList` read bare enum strings, which have no payload the
+# payload rule could check (only the list rule applies to `Compare.ops`).
+PHP_LIST = %w[nodeRefList optNodeRefList stringNodeList classList opList].freeze
+PHP_STRING = %w[stringNode stringNodeList].freeze
+PHP_HELPERS = %w[nodeRef nodeRefList optNodeRefList stringNode stringNodeList
+                 classRef classList op opList].freeze
+
+# PHP spreads the AST over one generated file per class in `php/src/Ast`, all
+# in one namespace; a file's reads belong to the `final class` it declares,
+# and the class is what the report names. The support files carry no class
+# decoders — `Wire.php` defines the helpers and `AstBuild.php` constructs
+# rather than decodes — so a read attributed to them has no class to reach
+# and is raised rather than passed over.
+def check_php(dir)
+  reads = []
+  blob = +""
+  Dir[File.join(dir, "*.php")].sort.each do |path|
+    src = File.read(path)
+    blob << "\n" << src
+    cur = nil
+    File.read(path).each_line do |line|
+      if (m = line.match(/^final class (\w+)/))
+        cur = m[1]
+        REACHED[:php] << cur if STRUCTS.key?(cur)
+        next
+      end
+      if line.match?(/^abstract class /) || line.match?(/^final class /)
+        cur = nil if line.match?(/^abstract class /)
+        next
+      end
+      next if cur.nil?
+
+      m = line.match(/Wire::(\w+)\(\$w,\s*'(\w+)'(?:\s*,\s*'(\w+)')?/)
+      next if m.nil? || !PHP_HELPERS.include?(m[1])
+
+      payload = if PHP_STRING.include?(m[1])
+                  "string"
+                elsif m[1] == "op" || m[1] == "opList"
+                  nil
+                else
+                  m[3]
+                end
+      reads << [cur, m[2], PHP_LIST.include?(m[1]), payload]
+    end
+  end
+  compare(:php, reads) + compare_leaf(:php, blob)
+end
+
 
 # ---------------------------------------------------------------------------
 # The declared field types, which `compare` cannot see
@@ -2644,6 +2706,7 @@ CHECKS = {
   "java" => -> { check_java(File.expand_path("../#{JAVA_AST_DIR}", __dir__)) },
   "kotlin" => -> { check_java(File.expand_path("../#{KOTLIN_AST_DIR}", __dir__), :kotlin) },
   "go" => -> { check_go(File.expand_path("../#{GO_AST_DIR}", __dir__)) },
+  "php" => -> { check_php(File.expand_path("../php/src/Ast", __dir__)) },
   "c" => -> { check_c(File.expand_path("../#{C_AST_HEADER}", __dir__)) },
   # `cpp/include/kcl_lib_ast.hpp` declares no struct and reads no wire key:
   # it hands `ast_json` straight to `kcl_ast_parse_module` and wraps the
