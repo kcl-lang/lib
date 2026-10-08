@@ -1,0 +1,361 @@
+name: consistency
+
+# One workflow/matrix for the shared consistency suite (item F of
+# docs/architecture.md). Every language binding runs the same 29 cases from
+# tests/consistency/cases.json through its own runner; each runner already
+# fails when the manifest grows a case it does not dispatch, so this matrix
+# cannot silently drop a language. The per-language *-test.yaml workflows keep
+# their build/pack/publish roles and their full test suites; they no longer
+# need to trigger on manifest-only changes -- this workflow is the gate for
+# tests/consistency/**, the prebuilt native libs and the spec.
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "tests/consistency/**"
+      - "spec/**"
+      # Prebuilt native libs the FFI consumers load (dart/go/julia/zig).
+      - "go/lib/**"
+      # Checked-in wasm core.
+      - "wasm/kcl.wasm"
+      # Shared core dependency revision.
+      - "Cargo.toml"
+      - ".github/workflows/consistency.yaml"
+      # Binding sources, same roots the per-language workflows watch.
+      - "c/**"
+      - "cpp/**"
+      - "dart/**"
+      - "dotnet/**"
+      - "go/**"
+      - "java/**"
+      - "julia/**"
+      - "kotlin/**"
+      - "lua/**"
+      - "nodejs/**"
+      - "python/**"
+      - "ruby/**"
+      - "swift/**"
+      - "wasm/**"
+      - "zig/**"
+  push:
+    branches:
+      - main
+      - master
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}-${{ github.event_name }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  run:
+    name: ${{ matrix.binding }} (${{ matrix.os }})
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # Source-built bindings: one ubuntu leg each. The heavy OS matrices
+          # stay in the per-language workflows; consistency is about identical
+          # output across languages, not across operating systems.
+          - { binding: c, os: ubuntu-latest }
+          - { binding: cpp, os: ubuntu-latest }
+          - { binding: dotnet, os: ubuntu-latest }
+          - { binding: java, os: ubuntu-latest }
+          - { binding: kotlin, os: ubuntu-latest }
+          - { binding: lua, os: ubuntu-latest, lua: "5.4" }
+          - { binding: lua, os: ubuntu-latest, lua: "luajit-2.1" }
+          - { binding: nodejs, os: ubuntu-latest }
+          - { binding: python, os: ubuntu-latest }
+          - { binding: ruby, os: ubuntu-latest }
+          # Prebuilt-lib consumers: no rust build.
+          - { binding: dart, os: ubuntu-latest }
+          # The windows leg covers the kcl.dll (no lib prefix) load path.
+          - { binding: dart, os: windows-latest }
+          - { binding: julia, os: ubuntu-latest }
+          - { binding: zig, os: ubuntu-latest }
+          - { binding: wasm, os: ubuntu-latest }
+          # OS spot checks that have bitten before: go's purego LoadLibrary
+          # on windows and the static musl link in the alpine container.
+          - { binding: go, os: ubuntu-latest }
+          - { binding: go, os: windows-latest }
+          - { binding: go, os: macos-latest }
+          - { binding: go, os: ubuntu-latest, container: golang:1.25-alpine3.21, musl: true }
+          # Swift on macOS: setup-swift cannot provision Linux.
+          - { binding: swift, os: macos-latest }
+    runs-on: ${{ matrix.os }}
+    container: ${{ matrix.container || fromJSON('null') }}
+    defaults:
+      run:
+        # The checkout lands in lib/ (same layout ast-diff-test.yaml uses),
+        # and manifest-relative fixture resolution works from these dirs.
+        working-directory: lib
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          path: lib
+
+      # --- shared baseline -------------------------------------------------
+      # Nine of the fifteen bindings build the core from source with the same
+      # toolchain; harmless for the rest.
+      - name: Install Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: 1.91
+          override: true
+
+      # --- c ----------------------------------------------------------------
+      - name: c
+        if: matrix.binding == 'c'
+        working-directory: lib/c
+        run: |
+          make
+          make examples
+          ./examples/consistency
+
+      # --- cpp --------------------------------------------------------------
+      - name: cpp deps
+        if: matrix.binding == 'cpp'
+        run: sudo apt-get update && sudo apt-get install -y libgtest-dev ninja-build nlohmann-json3-dev
+      - name: cpp
+        if: matrix.binding == 'cpp'
+        working-directory: lib/cpp
+        run: |
+          mkdir build && cd build
+          cmake .. -DKCL_LIB_ENABLE_TESTING=ON
+          make -j8
+          ctest --output-on-failure -R consistency
+
+      # --- dart -------------------------------------------------------------
+      - name: dart sdk
+        if: matrix.binding == 'dart'
+        uses: dart-lang/setup-dart@v1
+        with:
+          sdk: stable
+      - name: dart protoc
+        if: matrix.binding == 'dart'
+        shell: bash
+        run: |
+          if [ "$RUNNER_OS" = "Linux" ]; then
+            sudo apt-get update -qq && sudo apt-get install -y -qq protobuf-compiler
+          elif [ "$RUNNER_OS" = "macOS" ]; then
+            brew install protobuf
+          elif [ "$RUNNER_OS" = "Windows" ]; then
+            choco install -y --no-progress protoc
+          fi
+          dart pub global activate protoc_plugin
+          echo "$PUB_CACHE/bin" >> "$GITHUB_PATH"
+      - name: dart
+        if: matrix.binding == 'dart'
+        shell: bash
+        working-directory: lib/dart
+        run: |
+          case "$RUNNER_OS/$RUNNER_ARCH" in
+            Linux/X64)   lib=../go/lib/linux-amd64/libkcl.so ;;
+            Linux/ARM64) lib=../go/lib/linux-arm64/libkcl.so ;;
+            macOS/X64)   lib=../go/lib/darwin-amd64/libkcl.dylib ;;
+            macOS/ARM64) lib=../go/lib/darwin-arm64/libkcl.dylib ;;
+            Windows/X64) lib=../go/lib/windows-amd64/kcl.dll ;;
+          esac
+          test -f "$lib" || { echo "missing prebuilt $lib"; exit 1; }
+          echo "KCL_DART_LIB=$PWD/$lib" >> "$GITHUB_ENV"
+          make test
+
+      # --- dotnet -----------------------------------------------------------
+      - name: dotnet sdk
+        if: matrix.binding == 'dotnet'
+        uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: '8.0.x'
+      - name: dotnet
+        if: matrix.binding == 'dotnet'
+        working-directory: lib/dotnet
+        run: |
+          cargo build --release
+          dotnet clean KclLib.sln && dotnet nuget locals all --clear
+          # KclTool is excluded: it PackageReferences runtime nupkgs that only
+          # exist after a publish-kcltool release.
+          dotnet restore KclLib/KclLib.csproj
+          dotnet restore KclLib.Tests/KclLib.Tests.csproj
+          dotnet build KclLib.Tests/KclLib.Tests.csproj -c release --no-restore
+          dotnet test KclLib.Tests/KclLib.Tests.csproj -c release --no-restore --filter 'FullyQualifiedName~ConsistencyTest'
+
+      # --- go (plus windows and alpine-musl spot checks) --------------------
+      - name: go toolchain
+        if: matrix.binding == 'go' && matrix.container == null
+        uses: actions/setup-go@v7
+        with:
+          go-version: "1.25"
+      - name: go musl deps
+        if: matrix.binding == 'go' && matrix.musl
+        run: apk add --no-cache musl-dev gcc git make
+      - name: go musl env
+        if: matrix.binding == 'go' && matrix.musl
+        run: |
+          echo "GO_BUILD_TAGS=musl netgo static osusergo" >> $GITHUB_ENV
+          echo "GO_LDFLAGS=-linkmode external -extldflags '-static'" >> $GITHUB_ENV
+      - name: go
+        if: matrix.binding == 'go' && matrix.os != 'windows-latest'
+        working-directory: lib/go
+        shell: bash
+        run: |
+          go mod tidy
+          CGO_ENABLED=${{ matrix.musl && '1' || '0' }} \
+            go test ./native/ -run TestConsistency -v \
+            -tags="$GO_BUILD_TAGS" -ldflags="$GO_LDFLAGS"
+      - name: go (windows)
+        if: matrix.binding == 'go' && matrix.os == 'windows-latest'
+        working-directory: lib/go
+        run: go test ./native/ -run TestConsistency -v
+
+      # --- java / kotlin ------------------------------------------------------
+      - name: jdk
+        if: contains(fromJSON('["java","kotlin"]'), matrix.binding)
+        uses: actions/setup-java@de7274f081f381c8f8158605e0321c36c376e2e6
+        with:
+          java-version: 8
+          distribution: zulu
+          cache: maven
+      - name: python (cargo plugin)
+        if: contains(fromJSON('["java","kotlin"]'), matrix.binding)
+        uses: actions/setup-python@v7
+        with:
+          python-version: '3.10'
+      - name: java
+        if: matrix.binding == 'java'
+        working-directory: lib/java
+        run: mvn clean test -Dcargo-build.profile=release -Dtest=ConsistencyTest
+      - name: kotlin
+        if: matrix.binding == 'kotlin'
+        working-directory: lib/kotlin
+        run: mvn clean test -Dcargo-build.profile=release -Dtest=ConsistencyTest
+
+      # --- julia --------------------------------------------------------------
+      - name: julia protoc
+        if: matrix.binding == 'julia'
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq protobuf-compiler
+      - name: julia toolchain
+        if: matrix.binding == 'julia'
+        uses: julia-actions/setup-julia@v2
+        with:
+          version: "1.13"
+      - name: julia
+        if: matrix.binding == 'julia'
+        working-directory: lib/julia
+        run: make test
+
+      # --- lua ------------------------------------------------------------------
+      - name: lua
+        if: matrix.binding == 'lua'
+        uses: leafo/gh-actions-lua@v13
+        with:
+          luaVersion: ${{ matrix.lua }}
+      - name: luarocks
+        if: matrix.binding == 'lua'
+        uses: leafo/gh-actions-luarocks@v6
+      - name: lua test
+        if: matrix.binding == 'lua'
+        working-directory: lib/lua
+        run: |
+          luarocks make ./*.rockspec
+          luarocks test ./*.rockspec
+
+      # --- nodejs -----------------------------------------------------------------
+      - name: pnpm
+        if: matrix.binding == 'nodejs'
+        uses: pnpm/action-setup@v6
+        with:
+          version: 10
+      - name: node
+        if: matrix.binding == 'nodejs'
+        uses: actions/setup-node@v7
+        with:
+          node-version: '22'
+      - name: nodejs
+        if: matrix.binding == 'nodejs'
+        working-directory: lib/nodejs
+        run: |
+          pnpm i
+          pnpm build
+          pnpm test
+
+      # --- python -------------------------------------------------------------------
+      - name: python toolchain
+        if: matrix.binding == 'python'
+        uses: actions/setup-python@v7
+        with:
+          python-version: '3.x'
+      - name: python
+        if: matrix.binding == 'python'
+        working-directory: lib/python
+        run: |
+          python -m venv .venv
+          .venv/bin/pip install maturin pytest
+          .venv/bin/maturin develop --release
+          .venv/bin/python -m pytest -v tests/consistency_test.py
+
+      # --- ruby ---------------------------------------------------------------------
+      - name: ruby toolchain
+        if: matrix.binding == 'ruby'
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.4"
+      - name: ruby protoc
+        if: matrix.binding == 'ruby'
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq protobuf-compiler
+      - name: ruby
+        if: matrix.binding == 'ruby'
+        working-directory: lib/ruby
+        run: |
+          bundle install
+          make build
+          make test
+        env:
+          # Pick setup-ruby's gem home over Homebrew's on the macos runners.
+          RUBY: ruby
+
+      # --- swift (macOS only) -----------------------------------------------------------
+      - name: swift toolchain
+        if: matrix.binding == 'swift'
+        uses: swift-actions/setup-swift@v3
+        with:
+          swift-version: "6.3"
+      - name: swift
+        if: matrix.binding == 'swift'
+        working-directory: lib/swift
+        run: make test
+
+      # --- wasm ---------------------------------------------------------------------------
+      - name: wasm node
+        if: matrix.binding == 'wasm'
+        uses: actions/setup-node@v7
+        with:
+          node-version: 22
+      - name: wasm
+        if: matrix.binding == 'wasm'
+        working-directory: lib/wasm
+        run: |
+          npm install
+          npm run build
+          npm test
+
+      # --- zig -------------------------------------------------------------------------------
+      - name: zig toolchain
+        if: matrix.binding == 'zig'
+        uses: korandoru/setup-zig@v1
+        with:
+          zig-version: 0.16.0
+      - name: zig protoc
+        if: matrix.binding == 'zig'
+        uses: arduino/setup-protoc@v3
+        with:
+          version: "29.x"
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: zig
+        if: matrix.binding == 'zig'
+        working-directory: lib/zig
+        run: zig build test
