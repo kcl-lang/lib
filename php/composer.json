@@ -1,0 +1,30 @@
+{
+    "name": "kcl-lang/kcl-lib-php",
+    "description": "KCL bindings for PHP: FFI loader, protobuf service client and typed AST over the prebuilt libkcl shared library.",
+    "type": "library",
+    "license": "Apache-2.0",
+    "require": {
+        "php": ">=8.1",
+        "ext-ffi": "*",
+        "google/protobuf": "^4.33"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^10.5 || ^11.5 || ^12"
+    },
+    "autoload": {
+        "psr-4": {
+            "KclLib\\": "src/",
+            "Com\\Kcl\\Api\\": "src/Api/Com/Kcl/Api/",
+            "GPBMetadata\\": "src/Api/GPBMetadata/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "KclLib\\Tests\\": "tests/"
+        }
+    },
+    "config": {
+        "allow-plugins": false,
+        "sort-packages": true
+    }
+}
