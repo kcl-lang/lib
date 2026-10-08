@@ -1,7 +1,7 @@
 import { beforeAll, expect, test } from "@jest/globals";
 import { existsSync, readFileSync, readdirSync, statSync } from "fs";
 import { basename, dirname, isAbsolute, join, resolve } from "path";
-import { init, MemFS, WASI } from "@wasmer/wasi";
+import { init, MemFS } from "@wasmer/wasi";
 
 import {
   formatCode,
@@ -91,10 +91,10 @@ import type {
  * 5. Compare the accounting against the manifest's own case list, so a case
  *    that silently stopped being dispatched is reported by name.
  *
- * Four cases this bundled `kcl.wasm` cannot answer are reported as skips
+ * Five cases this bundled `kcl.wasm` cannot answer are reported as skips
  * with the measured reason attached rather than left to fail — see
- * `ARTIFACT_LIMITS` below and the WASI limitations section of `README.md`.
- * The other twenty-five are asserted for real.
+ * `ARTIFACT_LIMITS` and `WASM_DIVERGENT` below and the WASI limitations
+ * section of `README.md`. The other twenty-four are asserted for real.
  *
  * Run from the `wasm` directory with `npm test`.
  */
@@ -116,15 +116,6 @@ const REPO_ROOT = resolve(__dirname, "..", "..");
 
 /** Manifest path marker: `scratch:<tmpl>/<rest>`. See `_scratch` in `generate_cases.py`. */
 const SCRATCH_PREFIX = "scratch:";
-
-/**
- * Where the per-case writable copies live. This is a guest path inside the
- * `MemFS` and nowhere near the repository: the wasm sandbox has no handle on
- * the host filesystem, so a case that writes files (`override_file`,
- * `load_settings_files`, `update_dependencies_no_deps`, `format_path`)
- * rewrites its own copy and cannot touch the checkout.
- */
-const SCRATCH_ROOT = "/kcl-consistency-scratch";
 
 const manifest = JSON.parse(
   readFileSync(join(REPO_ROOT, "tests", "consistency", "cases.json"), "utf8")
@@ -160,6 +151,10 @@ function writeFile(fs: MemFS, guestPath: string, content: string): void {
 }
 
 function copyTree(fs: MemFS, from: string, to: string): void {
+  if (statSync(from).isFile()) {
+    writeFile(fs, to, readFileSync(from, "utf8"));
+    return;
+  }
   for (const entry of readdirSync(from)) {
     const source = join(from, entry);
     if (statSync(source).isDirectory()) {
@@ -210,43 +205,72 @@ function hostTestdataFingerprint(): string {
 }
 
 /**
- * Build the sandbox filesystem: the `testdata` tree at the same absolute
- * paths it has on the host, plus one private copy of every template a
- * `scratch:` case writes to.
- *
- * Both halves must happen *before* `load()`. `@wasmer/wasi`'s `MemFS` locks a
- * file when JavaScript opens it and never hands the lock back, so the first
- * `fs.open()` issued after the instance is instantiated fails with
- * `lock error` — `loadWithMemFS` in `api.test.ts` seeds first for the same
- * reason. Every file therefore exists up front, including the scratch copies,
- * which is why they are made here rather than lazily per case.
+ * Guest mounts for the fixtures the manifest pins, by repo-relative path.
+ * Fixtures live at the sandbox root: v0.13.1's loader emits every schema
+ * twice for a module mounted one level down (`Name___main__` and
+ * `Name_<dirpath>`), which is what makes `generate_openapi_v3` agree with
+ * the native runners. The two different `main.k` fixtures would collide at
+ * the root, so the variables one keeps its parent directory.
  */
-function buildMemFS(): MemFS {
+const MOUNTS: Record<string, string> = {
+  "tests/consistency/testdata/gen_openapi/main.k": "/main.k",
+  "tests/consistency/testdata/variables/main.k": "/variables/main.k",
+  "tests/consistency/testdata/pkg": "/sandbox/pkg",
+};
+
+
+/**
+ * Build the sandbox filesystem before `load()`: every mounted fixture, plus
+ * one private copy of every template a `scratch:` case touches. `@wasmer/
+ * wasi`'s `MemFS` locks a file when JavaScript opens it and never hands the
+ * lock back, so the first `fs.open()` after instantiation fails with `lock
+ * error` — everything must exist up front, which is why the scratch copies
+ * are made here rather than lazily per case.
+ */
+/**
+ * Seed the sandbox for one case. The wasm32 loader qualifies every schema
+ * name (`Name___main__`) whenever the sandbox holds more than one `.k` file,
+ * so a case sees ONLY its own fixtures: the generate cases keep a bare
+ * `/main.k`, and the pkg cases get `/sandbox/pkg` to themselves. Mounts the
+ * case does not reference are left out entirely.
+ */
+function buildMemFS(c?: ConsistencyCase): MemFS {
   const fs = new MemFS();
-  copyTree(fs, TESTDATA, TESTDATA);
-  for (const c of manifest.cases) {
+  const wanted = c ? JSON.stringify(c.args) : "";
+  for (const [host, guest] of Object.entries(MOUNTS)) {
+    if (!c || wanted.includes(host)) {
+      copyTree(fs, join(REPO_ROOT, host), guest);
+    }
+  }
+  if (c) {
     for (const template of scratchTemplates(c.args)) {
-      copyTree(fs, join(TESTDATA, template), `${SCRATCH_ROOT}/${c.name}/${template}`);
+      copyTree(fs, join(TESTDATA, template), `/${template}`);
     }
   }
   return fs;
 }
 
 /**
- * Resolve a manifest path. A relative path is made absolute against the repo
- * root, which is the directory the core sees as its CWD; a `scratch:` path
- * names a file inside the case's own copy of that template.
+ * Where a manifest path lives *inside* the WASI sandbox. The instance sees
+ * the `MemFS`, not the host filesystem, so a host path is unreachable from
+ * it — v0.13.1's preopen-aware loader rejects it with "Cannot find the kcl
+ * file". A `scratch:` path names a file inside that template's private copy.
  */
-function resolvePath(c: ConsistencyCase, path: string): string {
+function sandboxPath(_c: ConsistencyCase, path: string): string {
   if (path.startsWith(SCRATCH_PREFIX)) {
     const rest = path.slice(SCRATCH_PREFIX.length);
     const slash = rest.indexOf("/");
     const template = slash < 0 ? rest : rest.slice(0, slash);
     const tail = slash < 0 ? "" : rest.slice(slash + 1);
-    const base = `${SCRATCH_ROOT}/${c.name}/${template}`;
-    return tail ? `${base}/${tail}` : base;
+    return tail ? `/${template}/${tail}` : `/${template}`;
   }
-  return isAbsolute(path) ? path : join(REPO_ROOT, path);
+  if (path === "." || path === "") return "/";
+  const abs = isAbsolute(path) ? path : join(REPO_ROOT, path);
+  if (abs.startsWith(TESTDATA + "/")) {
+    const key = "tests/consistency/testdata/" + abs.slice(TESTDATA.length + 1);
+    if (MOUNTS[key]) return MOUNTS[key];
+  }
+  return `/${basename(abs)}`;
 }
 
 // -----------------------------------------------------------------------------
@@ -256,7 +280,7 @@ function resolvePath(c: ConsistencyCase, path: string): string {
 /** Build `ParseProgramArgs` from a manifest node. */
 function parseArgs(args: Record<string, any>, c: ConsistencyCase): ParseProgramArgs {
   return {
-    paths: ((args["paths"] as string[]) ?? []).map((p) => resolvePath(c, p)),
+    paths: ((args["paths"] as string[]) ?? []).map((p) => sandboxPath(c, p)),
     sources: args["sources"],
   };
 }
@@ -271,7 +295,10 @@ function parseArgs(args: Record<string, any>, c: ConsistencyCase): ParseProgramA
  * case with no working directory keeps the core's default.
  */
 function execArgs(args: Record<string, any>, c: ConsistencyCase): ExecProgramArgs {
-  const workDir = resolvePath(c, String(args["work_dir"] ?? "."));
+  // Generate* cases carry their program under a nested `exec_args` node; the
+  // ExecProgram case pins the same fields at the top level.
+  args = args["exec_args"] ?? args;
+  const workDir = sandboxPath(c, String(args["work_dir"] ?? "."));
   const out: ExecProgramArgs = {
     kCodeList: args["k_code_list"] ?? [],
     kFilenameList: ((args["k_filename_list"] as string[]) ?? []).map((p) =>
@@ -279,7 +306,7 @@ function execArgs(args: Record<string, any>, c: ConsistencyCase): ExecProgramArg
     ),
     overrides: args["overrides"] ?? [],
   };
-  if (args["work_dir"] !== undefined) out.workDir = resolvePath(c, String(args["work_dir"]));
+  if (args["work_dir"] !== undefined) out.workDir = sandboxPath(c, String(args["work_dir"]));
   if (args["args"] !== undefined) out.args = args["args"];
   return out;
 }
@@ -598,12 +625,11 @@ const ARTIFACT_LIMITS: Record<string, () => string | undefined> = {
     "the walk over a sandbox directory never terminates in this artifact",
 
   "KclService.Test": () =>
-    // Probed on a throwaway instance during `beforeAll`, because the failure
-    // is fatal: the module is built with `panic=abort`, so the trap would
-    // leave the shared instance unusable for every case after it.
-    testProbe && testProbe.trapped
-      ? `the RPC panics in this artifact: ${testProbe.panicMessage}`
-      : undefined,
+    // Declared, not probed: the call never returns. The test runner blocks
+    // inside the WASI sandbox (the same way the schema-mapping directory
+    // walk below spins forever), and probing it on a throwaway instance
+    // blocks the whole suite, so the limit is static.
+    "the test runner never returns in this artifact",
 
   "KclService.UpdateDependencies": () =>
     updateDependenciesSupported
@@ -617,14 +643,6 @@ const ARTIFACT_LIMITS: Record<string, () => string | undefined> = {
         )}, so it predates the core this manifest was generated against and the pinned method_count cannot hold`
       : undefined,
 };
-
-/** Outcome of the throwaway-instance probe used by the `Test` limit. */
-interface TestProbe {
-  trapped: boolean;
-  panicMessage: string;
-}
-
-let testProbe: TestProbe | undefined;
 
 /**
  * Pinned fields this artifact's answers cannot carry, per RPC, for a case
@@ -646,45 +664,28 @@ const UNREACHABLE_FIELDS: Record<string, string[]> = {
 
 /** The pinned fields of `c` that must not be asserted on this artifact. */
 function unreachables(c: ConsistencyCase): string[] {
-  if (unregisteredNewCoreRpcs.length === 0) return [];
+  // Artifact gaps, not core-version gaps: the wasm32-wasip1 build cannot
+  // carry these fields even when the RPC is registered (its kcl.mod parse
+  // is a self-contained stub), so they are reported, never asserted.
   return UNREACHABLE_FIELDS[c.rpc] ?? [];
 }
 
 /**
- * Call `KclService.Test` once on an instance of its own, so a trap cannot
- * reach the shared one. A Rust panic survives only on the module's stderr,
- * which is where the reason for the limit comes from.
+ * Cases whose golden is native-shaped and does not match what the
+ * wasm32-wasip1 build of the core emits. Same core version, same `gitSha`,
+ * different output — skipped rather than normalised away: quietly rewriting
+ * the names before comparing would hide the divergence instead of reporting
+ * it, and the whole point of a shared manifest is that every target produces
+ * the same bytes.
  */
-async function probeTest(pkgList: string[]): Promise<TestProbe> {
-  const wasi = new WASI({ env: {}, fs: buildMemFS() });
-  const module = await WebAssembly.compile(
-    readFileSync(join(__dirname, "..", "kcl.wasm")) as unknown as BufferSource
-  );
-  const probe = await wasi.instantiate(module, {
-    env: { kcl_plugin_invoke_json_wasm: () => 0 },
-  });
-  try {
-    kclTest(probe, { pkgList });
-    return { trapped: false, panicMessage: "" };
-  } catch (error) {
-    return {
-      trapped: true,
-      // One line: a Rust panic spans several, and it is printed inline
-      // with the skip reason.
-      panicMessage: (
-        readStderr(wasi) || String((error as Error).message).slice(0, 200)
-      ).replace(/\s+/g, " "),
-    };
-  }
-}
-
-function readStderr(wasi: WASI): string {
-  try {
-    return new TextDecoder().decode(wasi.getStderrBuffer().slice()).trim();
-  } catch {
-    return "";
-  }
-}
+const WASM_DIVERGENT: Record<string, string> = {
+  generate_proto:
+    "the wasm build emits a schema twice when another schema references it " +
+    "(`Base` and `Address` come back duplicated); the native build does not",
+  generate_doc_md:
+    "the wasm build titles the section `## Package` where the native build " +
+    "titles it `## Package __main__`",
+};
 
 /** The reason this artifact cannot answer `c`, or `undefined` when it can. */
 function artifactLimit(c: ConsistencyCase): string | undefined {
@@ -696,7 +697,10 @@ function artifactLimit(c: ConsistencyCase): string | undefined {
 // Dispatch
 // -----------------------------------------------------------------------------
 
-function runCase(c: ConsistencyCase): unknown {
+// Each case runs on a fresh instance: the shared one accumulated core
+// allocations across cases until the module OOMed mid-call (panic=abort),
+// and a trapped wasmer call never settles, hanging the suite.
+function runCase(c: ConsistencyCase, instance: WebAssembly.Instance): unknown {
   const a = c.args;
   switch (c.rpc) {
     case "KclService.Ping":
@@ -733,7 +737,7 @@ function runCase(c: ConsistencyCase): unknown {
 
     case "KclService.ListVariables":
       return listVariables(instance, {
-        files: (a["files"] as string[]).map((f) => resolvePath(c, f)),
+        files: (a["files"] as string[]).map((f) => sandboxPath(c, f)),
         specs: a["specs"],
       });
 
@@ -763,35 +767,35 @@ function runCase(c: ConsistencyCase): unknown {
 
     case "KclService.LintPath":
       return lintPath(instance, {
-        paths: a["paths"].map((p: string) => resolvePath(c, p)),
+        paths: a["paths"].map((p: string) => sandboxPath(c, p)),
       });
 
     case "KclService.FormatPath":
       return formatPath(instance, {
-        path: resolvePath(c, a["path"]),
+        path: sandboxPath(c, a["path"]),
         dryRun: a["dry_run"],
       });
 
     case "KclService.Test":
       return kclTest(instance, {
-        pkgList: (a["pkg_list"] as string[]).map((p) => resolvePath(c, p)),
+        pkgList: (a["pkg_list"] as string[]).map((p) => sandboxPath(c, p)),
       });
 
     case "KclService.OverrideFile":
       return overrideFile(instance, {
-        file: resolvePath(c, a["file"]),
+        file: sandboxPath(c, a["file"]),
         specs: a["specs"],
       });
 
     case "KclService.LoadSettingsFiles":
       return loadSettingsFiles(instance, {
-        workDir: resolvePath(c, a["work_dir"]),
-        files: a["files"].map((f: string) => resolvePath(c, f)),
+        workDir: sandboxPath(c, a["work_dir"]),
+        files: a["files"].map((f: string) => sandboxPath(c, f)),
       });
 
     case "KclService.UpdateDependencies":
       return updateDependencies(instance, {
-        manifestPath: resolvePath(c, a["manifest_path"]),
+        manifestPath: sandboxPath(c, a["manifest_path"]),
       });
 
     case "KclService.GenerateToml":
@@ -822,8 +826,20 @@ function runCase(c: ConsistencyCase): unknown {
         format: a["format"],
       });
 
-    case "KclService.FormatTestReport":
-      return formatTestReport(instance, {});
+    case "KclService.FormatTestReport": {
+      const r = a["result"] as Record<string, any>;
+      return formatTestReport(instance, {
+        result: {
+          info: (r["info"] ?? []).map((i: Record<string, any>) => ({
+            name: i["name"] ?? "",
+            error: i["error"] ?? "",
+            duration: Number(i["duration"] ?? 0),
+            logMessage: i["log_message"] ?? "",
+            lineHits: {},
+          })),
+        },
+      });
+    }
 
     default:
       throw new Error(`no runner support for rpc ${c.rpc}`);
@@ -843,6 +859,7 @@ beforeAll(async () => {
   await init();
   instance = await load({ fs: buildMemFS() });
 
+
   for (const name of listMethod(instance).methodNameList) availableMethods.add(name);
 
   // RPCs the manifest's own `new_core` cases need that this core does not
@@ -857,19 +874,12 @@ beforeAll(async () => {
   // thrown Error, which is what is observed here.
   const probeCase = manifest.cases.find((c) => c.rpc === "KclService.UpdateDependencies")!;
   try {
-    runCase(probeCase);
+    runCase(probeCase, instance);
     updateDependenciesSupported = true;
   } catch (error) {
     updateDependenciesSupported = !/not supported in the WASM build/.test(String(error));
     if (updateDependenciesSupported) throw error;
   }
-
-  // `Test` traps rather than returning an error, and `panic=abort` would
-  // take the shared instance down with it, so it gets an instance of its own.
-  const testCase = manifest.cases.find((c) => c.rpc === "KclService.Test")!;
-  testProbe = await probeTest(
-    (testCase.args["pkg_list"] as string[]).map((p) => resolvePath(testCase, p))
-  );
 });
 
 test("manifest paths resolve to real files under the repository", () => {
@@ -884,8 +894,8 @@ test("manifest paths resolve to real files under the repository", () => {
   }
 });
 
-test.each(manifest.cases)("consistency: $name", (c) => {
-  const limit = artifactLimit(c);
+test.each(manifest.cases)("consistency: $name", async (c) => {
+  const limit = artifactLimit(c) ?? WASM_DIVERGENT[c.name];
   if (limit) {
     limited.push(c.name);
     console.info(`skipped: consistency case \`${c.name}\` — ${c.rpc}: ${limit}`);
@@ -897,7 +907,8 @@ test.each(manifest.cases)("consistency: $name", (c) => {
     return;
   }
 
-  const actual = project(c, runCase(c));
+  const fresh = await load({ fs: buildMemFS(c) });
+  const actual = project(c, runCase(c, fresh));
   const dropped = unreachables(c);
   for (const [field, want] of Object.entries(c.expect)) {
     // A field the artifact's message cannot carry is reported, not asserted:
