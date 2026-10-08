@@ -1,8 +1,6 @@
-// The linked KCL runtime has to implement KclService.FormatTestReport for the
-// report below to be non-empty; the kcl-api revision pinned in Cargo.lock does
-// not yet, so this currently prints nothing.
 #include "kcl_lib.hpp"
 #include <iostream>
+#include <string>
 
 int main()
 {
@@ -18,5 +16,19 @@ int main()
     } };
     auto result = kcl_lib::format_test_report(args);
     std::cout << result.report.c_str();
+
+    // One line per case, the error text of a failed case on the line after it,
+    // an 80-dash separator, then the per-status counts.
+    const std::string expected = "test_case_1: PASS (1ms)\n"
+                                 "test_case_2: FAIL (2ms)\n"
+                                 "Error: assert failed\n"
+                                 + std::string(80, '-') + "\n"
+                                 "PASS: 1/2\n"
+                                 "FAIL: 1/2\n";
+    const std::string report(result.report.data(), result.report.size());
+    if (report != expected) {
+        std::cout << "Expected a report of:\n" << expected << "got:\n" << report << std::endl;
+        return 1;
+    }
     return 0;
 }

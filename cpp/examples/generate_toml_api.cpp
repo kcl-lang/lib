@@ -1,9 +1,7 @@
 #include "kcl_lib.hpp"
 #include <iostream>
+#include <string>
 
-// The linked KCL runtime has to implement KclService.GenerateToml for the
-// document below to be non-empty; the kcl-api revision pinned in Cargo.lock
-// does not yet, so this currently prints nothing.
 int main()
 {
     auto args = kcl_lib::GenerateTomlArgs {};
@@ -13,5 +11,17 @@ int main()
     args.sort_keys = false;
     auto result = kcl_lib::generate_toml(args);
     std::cout << result.toml.c_str() << std::endl;
+
+    const std::string toml(result.toml.data(), result.toml.size());
+    // An empty `package` omits the `package` clause, so a bare `[app]` table
+    // heading is the only marker of where the document starts.
+    if (toml.find("[app]") == std::string::npos) {
+        std::cout << "Expected an [app] table in the TOML output: " << toml << std::endl;
+        return 1;
+    }
+    if (toml.find("name = \"demo\"") == std::string::npos) {
+        std::cout << "Expected the app name in the TOML output: " << toml << std::endl;
+        return 1;
+    }
     return 0;
 }

@@ -287,9 +287,6 @@ class ApiTest < Minitest::Test
     # case, the log message of a case that has one on the following line, the
     # error text of a failed case, an 80-dash separator, and the per-status
     # counts.
-    skip "core does not list KclService.FormatTestReport" unless
-      KclLib::API.new.list_method.method_name_list.include?("KclService.FormatTestReport")
-
     result = KclLib::TestResult.new(
       info: [
         KclLib::TestCaseInfo.new(name: "test_pass", duration: 1500),
@@ -316,9 +313,6 @@ class ApiTest < Minitest::Test
   def test_format_test_report_of_empty_result
     # An empty result carries no counts at all, so the separator and the
     # summary lines are dropped for it.
-    skip "core does not list KclService.FormatTestReport" unless
-      KclLib::API.new.list_method.method_name_list.include?("KclService.FormatTestReport")
-
     api = KclLib::API.new
     report = api.format_test_report(
       KclLib::FormatTestReportArgs.new(result: KclLib::TestResult.new)

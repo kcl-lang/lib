@@ -86,11 +86,10 @@ final class AstJsonAlignmentTest: XCTestCase {
         XCTAssertEqual(article.decorators.count, 1)
         // `schema Article(HasTimestamp)` — the parent is an Identifier.
         XCTAssertEqual(article.parentName?.node.dottedName(), "HasTimestamp")
-        // Newer kcl runtimes also copy the parent into `mixins`; the pinned
-        // runtime lists it only in `parent_name`, so there is nothing to
-        // assert against until the pin moves.
-        try XCTSkipIf(article.mixins.isEmpty, "the pinned kcl runtime does not copy the parent into mixins")
-        XCTAssertEqual(article.mixins.map { $0.node.dottedName() }, ["HasTimestamp"])
+        // `mixins` is the `mixin [...]` clause, not the parent: the parser
+        // only fills it from an explicit mixin keyword, so a schema with a
+        // parent and no mixins lists the parent in `parent_name` alone.
+        XCTAssertEqual(article.mixins.map { $0.node.dottedName() }, [])
     }
 
     func testCheckOnSchemaAttrHasMsgAndIfCond() throws {

@@ -1,9 +1,7 @@
 #include "kcl_lib.hpp"
 #include <iostream>
+#include <string>
 
-// The linked KCL runtime has to implement KclService.GenerateKcl for the
-// source below to be non-empty; the kcl-api revision pinned in Cargo.lock does
-// not yet, so this currently prints nothing.
 int main()
 {
     auto args = kcl_lib::GenerateKclArgs {
@@ -15,5 +13,17 @@ int main()
     };
     auto result = kcl_lib::generate_kcl(args);
     std::cout << result.kcl.c_str() << std::endl;
+
+    // A JSON null becomes `None`, a nested object becomes a dict literal, and
+    // the key order follows the document rather than being sorted.
+    const std::string expected = "a = {\n"
+                                 "    b = 1\n"
+                                 "}\n"
+                                 "c = [1, 2.5, true, None]\n";
+    const std::string kcl(result.kcl.data(), result.kcl.size());
+    if (kcl != expected) {
+        std::cout << "Expected:\n" << expected << "got:\n" << kcl << std::endl;
+        return 1;
+    }
     return 0;
 }
