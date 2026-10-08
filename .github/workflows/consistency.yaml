@@ -162,7 +162,7 @@ jobs:
             Windows/X64) lib=../go/lib/windows-amd64/kcl.dll ;;
           esac
           test -f "$lib" || { echo "missing prebuilt $lib"; exit 1; }
-          echo "KCL_DART_LIB=$PWD/$lib" >> "$GITHUB_ENV"
+          export KCL_DART_LIB="$PWD/$lib"
           make test
 
       # --- dotnet -----------------------------------------------------------
