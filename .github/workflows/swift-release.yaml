@@ -69,10 +69,13 @@ jobs:
 
       - name: Download per-arch .a artifacts
         uses: actions/download-artifact@v8
+        # Do NOT set merge-multiple: both artifacts contain a file named
+        # libkcl_lib_c.a, so merging flattens them into per-arch/ where one
+        # silently overwrites the other and lipo below builds a single-arch
+        # binary. One subdirectory per artifact is what lipo expects.
         with:
           path: per-arch
           pattern: libkcl_lib_c-darwin-*
-          merge-multiple: true
 
       - name: Combine into universal .a with lipo
         run: |

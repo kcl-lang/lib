@@ -214,6 +214,42 @@ jobs:
             echo "present=false" >> "$GITHUB_OUTPUT"
           fi
 
+      # Probes the credentials against the Central Portal before the (slow)
+      # deploy-central job burns a full Rust rebuild on a doomed publish.
+      # A GET is rejected with 401 when auth fails and 500 once auth passes,
+      # since the upload endpoint only accepts POST multipart bodies.
+      - name: Probe Central Portal credentials
+        env:
+          MAVEN_CENTRAL_USERNAME: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
+          MAVEN_CENTRAL_TOKEN: ${{ secrets.MAVEN_CENTRAL_TOKEN }}
+        run: |
+          set -uo pipefail
+          # Diagnostics only — never prints the secret. Length, a short
+          # digest and a whitespace check tell a malformed secret apart from
+          # a valid one without exposing either value.
+          for v in MAVEN_CENTRAL_USERNAME MAVEN_CENTRAL_TOKEN; do
+            val="${!v}"
+            echo "::group::$v"
+            echo "bytes: $(printf %s "$val" | wc -c | tr -d ' ')"
+            echo "sha256[0:8]: $(printf %s "$val" | sha256sum | cut -c1-8)"
+            if [ -z "$val" ]; then
+              echo "state: EMPTY"
+            elif [ "$val" != "$(printf %s "$val" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')" ]; then
+              echo "state: leading/trailing WHITESPACE — this breaks HTTP Basic auth"
+            else
+              echo "state: clean"
+            fi
+            echo "::endgroup::"
+          done
+          code=$(curl -sS -o /dev/null -w '%{http_code}' --max-time 20 \
+            -u "$MAVEN_CENTRAL_USERNAME:$MAVEN_CENTRAL_TOKEN" \
+            https://central.sonatype.com/api/v1/publisher/upload) || code="000"
+          echo "Central Portal credential probe: HTTP $code (401 = credentials rejected, 500 = auth OK / endpoint rejects GET)"
+          if [ "$code" = "401" ]; then
+            echo "::error::Central Portal rejected MAVEN_CENTRAL_USERNAME/MAVEN_CENTRAL_TOKEN"
+            exit 1
+          fi
+
   deploy-central:
     runs-on: ubuntu-latest
 
