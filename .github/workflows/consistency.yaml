@@ -204,7 +204,8 @@ jobs:
       - name: go
         if: matrix.binding == 'go' && matrix.os != 'windows-latest'
         working-directory: lib/go
-        shell: bash
+        # No explicit shell: the runner defaults to bash and falls back to sh
+        # in the alpine musl container, which ships no bash.
         run: |
           go mod tidy
           CGO_ENABLED=${{ matrix.musl && '1' || '0' }} \
