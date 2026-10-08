@@ -2185,8 +2185,9 @@ impl From<&FormatTestReportArgs> for kcl_api::FormatTestReportArgs {
 /// generated messages, which the `From` impl above encodes. `list_method` takes
 /// the same route for `BuiltinService.ListMethod`.
 fn format_test_report(args: &FormatTestReportArgs) -> Result<FormatTestReportResult> {
+    let request: kcl_api::FormatTestReportArgs = args.into();
     let response: kcl_api::FormatTestReportResult =
-        call_rpc(b"KclService.FormatTestReport", &args.into())?;
+        call_rpc(b"KclService.FormatTestReport", &request)?;
     Ok(FormatTestReportResult {
         report: response.report,
     })
@@ -2226,7 +2227,8 @@ impl From<&GenerateTomlArgs> for kcl_api::GenerateTomlArgs {
 ///
 /// Dispatched through `call_rpc` for the same reason as `format_test_report`.
 fn generate_toml(args: &GenerateTomlArgs) -> Result<GenerateTomlResult> {
-    let response: kcl_api::GenerateTomlResult = call_rpc(b"KclService.GenerateToml", &args.into())?;
+    let request: kcl_api::GenerateTomlArgs = args.into();
+    let response: kcl_api::GenerateTomlResult = call_rpc(b"KclService.GenerateToml", &request)?;
     Ok(GenerateTomlResult {
         toml: response.toml,
     })
@@ -2245,7 +2247,8 @@ impl From<&GenerateKclArgs> for kcl_api::GenerateKclArgs {
 
 /// Generate KCL source from data content (JSON, YAML or TOML).
 fn generate_kcl(args: &GenerateKclArgs) -> Result<GenerateKclResult> {
-    let response: kcl_api::GenerateKclResult = call_rpc(b"KclService.GenerateKcl", &args.into())?;
+    let request: kcl_api::GenerateKclArgs = args.into();
+    let response: kcl_api::GenerateKclResult = call_rpc(b"KclService.GenerateKcl", &request)?;
     Ok(GenerateKclResult { kcl: response.kcl })
 }
 
@@ -2261,8 +2264,9 @@ impl From<&GenerateOpenAPIArgs> for kcl_api::GenerateOpenApiArgs {
 
 /// Generate an OpenAPI spec from the schemas of a KCL package.
 fn generate_openapi(args: &GenerateOpenAPIArgs) -> Result<GenerateOpenAPIResult> {
+    let request: kcl_api::GenerateOpenApiArgs = args.into();
     let response: kcl_api::GenerateOpenApiResult =
-        call_rpc(b"KclService.GenerateOpenAPI", &args.into())?;
+        call_rpc(b"KclService.GenerateOpenAPI", &request)?;
     Ok(GenerateOpenAPIResult {
         spec: response.spec,
     })
@@ -2280,8 +2284,8 @@ impl From<&GenerateProtoArgs> for kcl_api::GenerateProtoArgs {
 
 /// Generate proto3 definitions from the schemas of a KCL package.
 fn generate_proto(args: &GenerateProtoArgs) -> Result<GenerateProtoResult> {
-    let response: kcl_api::GenerateProtoResult =
-        call_rpc(b"KclService.GenerateProto", &args.into())?;
+    let request: kcl_api::GenerateProtoArgs = args.into();
+    let response: kcl_api::GenerateProtoResult = call_rpc(b"KclService.GenerateProto", &request)?;
     Ok(GenerateProtoResult {
         proto: response.proto,
     })
@@ -2299,7 +2303,8 @@ impl From<&GenerateDocArgs> for kcl_api::GenerateDocArgs {
 
 /// Generate documentation from the schemas of a KCL package.
 fn generate_doc(args: &GenerateDocArgs) -> Result<GenerateDocResult> {
-    let response: kcl_api::GenerateDocResult = call_rpc(b"KclService.GenerateDoc", &args.into())?;
+    let request: kcl_api::GenerateDocArgs = args.into();
+    let response: kcl_api::GenerateDocResult = call_rpc(b"KclService.GenerateDoc", &request)?;
     Ok(GenerateDocResult {
         content: response.content,
     })
