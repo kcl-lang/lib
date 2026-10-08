@@ -8,7 +8,10 @@
 # a difference nobody notices.
 #
 # The cases are hermetic: inline KCL source, or files inside the repository, so
-# nothing here needs a registry, a network or a writable working directory.
+# nothing here needs a registry, a network or a writable working directory. The
+# exception is a path the manifest spells `scratch:<tmpl>/<rest>`: that names a
+# template the runner copies into a temporary directory first, so the RPCs that
+# rewrite files never touch the repository.
 #
 # `runtests.jl` includes this file; the paths are derived from `@__DIR__` so the
 # runner does not care what the working directory is.
@@ -32,6 +35,18 @@ The repository root, i.e. the parent of the parent of the directory holding
 """
 const _CONSISTENCY_REPO_ROOT = normpath(joinpath(_CONSISTENCY_CASES_JSON, "..", "..", ".."))
 
+"""The fixture tree the manifest's repo-relative paths and `scratch:` templates live under."""
+const _CONSISTENCY_TESTDATA =
+    normpath(joinpath(_CONSISTENCY_REPO_ROOT, "tests", "consistency", "testdata"))
+
+"""The marker `generate_cases.py` writes into a path that names a template rather than a file.
+
+`scratch:a/b.k` means "b.k inside a copy of testdata/a"; the copy is what makes
+the RPCs that write files safe to run, and it is also why the expectations for
+those cases pin the RPC's answer rather than a path.
+"""
+const _CONSISTENCY_SCRATCH_PREFIX = "scratch:"
+
 """
 Read the manifest, refusing to run against a version this runner does not know.
 
@@ -48,6 +63,47 @@ function _consistency_cases()
     version == 1 || error("unsupported consistency manifest version: $version")
     return manifest["cases"]
 end
+
+# ---------------------------------------------------------------------------
+# Manifest paths and scratch copies
+# ---------------------------------------------------------------------------
+
+"""
+    _consistency_scratch(rest)
+
+Copy the `tests/consistency/<template>` scratch template into a fresh temporary
+directory and return `<copy>/<tail>` inside it — `<copy>` itself when `rest`
+names no file below the template.
+
+Every resolution gets its own copy, so two cases — and two runs — never observe
+each other's writes, and the repository is never the target of an RPC that
+rewrites files. `mktempdir` removes the copy when the test process exits.
+"""
+function _consistency_scratch(rest::AbstractString)
+    parts = split(rest, '/'; limit=2)
+    template = String(parts[1])
+    src = joinpath(_CONSISTENCY_TESTDATA, template)
+    isdir(src) || error("scratch template is not a directory: $src")
+    dest = joinpath(mktempdir(), template)
+    cp(src, dest; force=true)
+    return length(parts) > 1 ? joinpath(dest, parts[2]) : dest
+end
+
+"""
+    _consistency_path(entry)
+
+Resolve one manifest path entry: a `scratch:` marker names a path inside a
+fresh copy of a scratch template, an absolute entry is kept as-is, and anything
+else is repo-relative (`generate_cases.py` pins it that way).
+"""
+function _consistency_path(entry::AbstractString)
+    prefix = _CONSISTENCY_SCRATCH_PREFIX
+    startswith(entry, prefix) &&
+        return _consistency_scratch(entry[length(prefix)+1:end])
+    return isabspath(entry) ? String(entry) : normpath(joinpath(_CONSISTENCY_REPO_ROOT, entry))
+end
+
+_consistency_paths(entries) = String[_consistency_path(entry) for entry in entries]
 
 # ---------------------------------------------------------------------------
 # Manifest JSON -> generated protobuf messages
@@ -100,24 +156,137 @@ function _consistency_value(::Type{Dict{K,V}}, values::AbstractDict) where {K,V}
 end
 _consistency_value(::Type{T}, value::AbstractDict) where {T} = _consistency_message(T, value)
 
-"""
-    _consistency_request(rpc, args)
+# ---------------------------------------------------------------------------
+# Per-RPC args builders
+# ---------------------------------------------------------------------------
 
-Manifest `args` for one RPC. `args.parse_args.paths` entries are pinned
-repo-relative by `generate_cases.py`, so they are resolved against the
-repository root before the runtime sees them — the core would not find the file
-otherwise. Absolute entries are kept as-is.
+# The manifest's `args` are JSON, so a case is not a request message yet: paths
+# have to be resolved against the repository (or a scratch copy), and the nested
+# `parse_args` / `exec_args` / `result` sub-messages have to be built as their
+# own generated types. The builders below mirror the python runner's
+# `_build_args` case for case; an RPC that is not listed falls back to the
+# generic field-table build, which is all the cases whose args are plain
+# strings need.
+
+_consistency_string(value) = String(value)
+_consistency_strings(values) = String[String(value) for value in values]
+_consistency_flag(node, key) = Bool(get(node, key, false))
+
 """
-function _consistency_request(rpc::AbstractString, args)
-    haskey(args, "parse_args") || return args
-    node = args["parse_args"]
-    resolved = copy(node)
-    resolved["paths"] = String[_consistency_path(p) for p in get(node, "paths", Any[])]
-    return merge(args, Dict("parse_args" => resolved))
+`major.minor` of a dotted version string. The patch level moves every release
+and is not a contract any runner can pin.
+"""
+function _consistency_major_minor(version::AbstractString)
+    isempty(version) && return ""
+    parts = split(version, '.')
+    return join(parts[1:min(2, length(parts))], '.')
 end
 
-_consistency_path(path::AbstractString) =
-    isabspath(path) ? String(path) : normpath(joinpath(_CONSISTENCY_REPO_ROOT, path))
+function _consistency_parse_args(node)
+    return ParseProgramArgs(
+        paths = _consistency_paths(get(node, "paths", Any[])),
+        sources = _consistency_strings(get(node, "sources", Any[])))
+end
+
+function _consistency_exec_args(node)
+    # `k_filename_list` is resolved by the core against the process working
+    # directory rather than against `work_dir`, so it has to be made absolute
+    # here or it will not survive being run from another directory.
+    work_dir = _consistency_path(get(node, "work_dir", "."))
+    return ExecProgramArgs(
+        k_code_list = _consistency_strings(get(node, "k_code_list", Any[])),
+        k_filename_list = String[_consistency_filename(name, work_dir)
+                                for name in get(node, "k_filename_list", Any[])],
+        work_dir = work_dir,
+        args = Argument[Argument(name = _consistency_string(get(item, "name", "")),
+                                 value = _consistency_string(get(item, "value", "")))
+                        for item in get(node, "args", Any[])],
+        overrides = _consistency_strings(get(node, "overrides", Any[])))
+end
+
+_consistency_filename(name::AbstractString, work_dir::AbstractString) =
+    isabspath(name) ? String(name) : normpath(joinpath(work_dir, name))
+
+function _consistency_test_result_args(node)
+    info = TestCaseInfo[
+        TestCaseInfo(name = _consistency_string(entry["name"]),
+                     error = _consistency_string(get(entry, "error", "")),
+                     duration = parse(UInt64, _consistency_string(entry["duration"])),
+                     log_message = _consistency_string(get(entry, "log_message", "")))
+        for entry in node["result"]["info"]]
+    return FormatTestReportArgs(result = TestResult(info = info))
+end
+
+function _consistency_list_variables_args(node)
+    options = get(node, "options", Dict{String,Any}())
+    return ListVariablesArgs(
+        files = _consistency_paths(get(node, "files", Any[])),
+        specs = _consistency_strings(get(node, "specs", Any[])),
+        options = ListVariablesOptions(
+            merge_program = _consistency_flag(options, "merge_program")))
+end
+
+function _consistency_load_package_args(node)
+    return LoadPackageArgs(
+        parse_args = _consistency_parse_args(node["parse_args"]),
+        resolve_ast = _consistency_flag(node, "resolve_ast"),
+        load_builtin = _consistency_flag(node, "load_builtin"),
+        with_ast_index = _consistency_flag(node, "with_ast_index"))
+end
+
+function _consistency_schema_mapping_args(node)
+    return GetSchemaTypeMappingArgs(
+        exec_args = _consistency_exec_args(node["exec_args"]),
+        schema_name = _consistency_string(get(node, "schema_name", "")))
+end
+
+function _consistency_test_args(node)
+    return TestArgs(
+        exec_args = _consistency_exec_args(get(node, "exec_args", Dict{String,Any}())),
+        pkg_list = _consistency_paths(get(node, "pkg_list", Any[])),
+        run_regexp = _consistency_string(get(node, "run_regexp", "")),
+        fail_fast = _consistency_flag(node, "fail_fast"),
+        coverage = _consistency_flag(node, "coverage"))
+end
+
+const _CONSISTENCY_ARG_BUILDERS = Dict{String,Function}(
+    "KclService.ExecProgram" => _consistency_exec_args,
+    "KclService.FormatTestReport" => _consistency_test_result_args,
+    "KclService.GenerateToml" => node -> GenerateTomlArgs(
+        exec_args = _consistency_exec_args(node["exec_args"]),
+        sort_keys = _consistency_flag(node, "sort_keys")),
+    "KclService.ParseProgram" => _consistency_parse_args,
+    "KclService.ListOptions" => _consistency_parse_args,
+    "KclService.ListVariables" => _consistency_list_variables_args,
+    "KclService.LoadPackage" => _consistency_load_package_args,
+    "KclService.GetSchemaTypeMapping" => _consistency_schema_mapping_args,
+    "KclService.GetSchemaTypeMappingUnderPath" => _consistency_schema_mapping_args,
+    "KclService.LintPath" => node -> LintPathArgs(
+        paths = _consistency_paths(get(node, "paths", Any[]))),
+    "KclService.FormatPath" => node -> FormatPathArgs(
+        path = _consistency_path(get(node, "path", "")),
+        dry_run = _consistency_flag(node, "dry_run")),
+    "KclService.Test" => _consistency_test_args,
+    "KclService.OverrideFile" => node -> OverrideFileArgs(
+        file = _consistency_path(get(node, "file", "")),
+        specs = _consistency_strings(get(node, "specs", Any[])),
+        import_paths = _consistency_paths(get(node, "import_paths", Any[]))),
+    "KclService.LoadSettingsFiles" => node -> LoadSettingsFilesArgs(
+        work_dir = _consistency_path(get(node, "work_dir", "")),
+        files = _consistency_paths(get(node, "files", Any[]))),
+    "KclService.UpdateDependencies" => node -> UpdateDependenciesArgs(
+        manifest_path = _consistency_path(get(node, "manifest_path", "")),
+        vendor = _consistency_flag(node, "vendor")),
+    "KclService.GenerateOpenAPI" => node -> GenerateOpenAPIArgs(
+        parse_args = _consistency_parse_args(node["parse_args"]),
+        version = _consistency_string(get(node, "version", ""))),
+    "KclService.GenerateProto" => node -> GenerateProtoArgs(
+        parse_args = _consistency_parse_args(node["parse_args"]),
+        package = _consistency_string(get(node, "package", ""))),
+    "KclService.GenerateDoc" => node -> GenerateDocArgs(
+        parse_args = _consistency_parse_args(node["parse_args"]),
+        format = _consistency_string(get(node, "format", ""))),
+)
 
 # ---------------------------------------------------------------------------
 # Dispatch
@@ -138,13 +307,109 @@ const _CONSISTENCY_RPCS = Dict(
     "KclService.GenerateOpenAPI" => (GenerateOpenAPIArgs, generate_openapi),
     "KclService.GenerateProto" => (GenerateProtoArgs, generate_proto),
     "KclService.GenerateDoc" => (GenerateDocArgs, generate_doc),
+    "KclService.ParseFile" => (ParseFileArgs, parse_file),
+    "KclService.ParseProgram" => (ParseProgramArgs, parse_program),
+    "KclService.ListOptions" => (ParseProgramArgs, list_options),
+    "KclService.ListVariables" => (ListVariablesArgs, list_variables),
+    "KclService.LoadPackage" => (LoadPackageArgs, load_package),
+    "KclService.GetSchemaTypeMapping" => (GetSchemaTypeMappingArgs, get_schema_type_mapping),
+    "KclService.GetSchemaTypeMappingUnderPath" =>
+        (GetSchemaTypeMappingArgs, get_schema_type_mapping_under_path),
+    "KclService.GetVersion" => (GetVersionArgs, get_version),
+    "KclService.LintPath" => (LintPathArgs, lint_path),
+    "KclService.FormatPath" => (FormatPathArgs, format_path),
+    "KclService.Test" => (TestArgs, test),
+    "KclService.OverrideFile" => (OverrideFileArgs, override_file),
+    "KclService.LoadSettingsFiles" => (LoadSettingsFilesArgs, load_settings_files),
+    "KclService.UpdateDependencies" => (UpdateDependenciesArgs, update_dependencies),
+    "BuiltinService.ListMethod" => (ListMethodArgs, list_method),
 )
 
-function _consistency_call(rpc::AbstractString, args)
+# The two methods this binding exposes without an args message: it builds the
+# (empty) request itself, so calling them with the one the manifest describes
+# is not what they take.
+const _CONSISTENCY_NO_ARG_RPCS =
+    Set(["KclService.GetVersion", "BuiltinService.ListMethod"])
+
+"""
+    _consistency_request(rpc, args)
+
+The request message for one case: the RPC's own builder when it has one,
+otherwise the generic field-table build over the generated message.
+"""
+function _consistency_request(rpc::AbstractString, args)
     haskey(_CONSISTENCY_RPCS, rpc) || error("no consistency runner support for rpc $rpc")
-    request_type, wrapper = _CONSISTENCY_RPCS[rpc]
-    return wrapper(_consistency_message(request_type, args))
+    builder = get(_CONSISTENCY_ARG_BUILDERS, rpc, nothing)
+    builder === nothing || return builder(args)
+    request_type, _ = _CONSISTENCY_RPCS[rpc]
+    return _consistency_message(request_type, args)
 end
+
+"""
+    _consistency_call(rpc, args)
+
+Drive one RPC. `GetVersion` and `ListMethod` take no args message in this
+binding; everything else takes the one `_consistency_request` builds.
+"""
+function _consistency_call(rpc::AbstractString, args)
+    wrapper = _CONSISTENCY_RPCS[rpc][2]
+    rpc in _CONSISTENCY_NO_ARG_RPCS && return wrapper()
+    return wrapper(_consistency_request(rpc, args))
+end
+
+"""
+    _consistency_find(name)
+
+The manifest case named `name`, or an error naming it. The dispatch list below
+is written out independently of the manifest, so the two can disagree — this
+is what turns that disagreement into a failure rather than a missing test.
+"""
+function _consistency_find(name::AbstractString)
+    for case in _CONSISTENCY_CASES
+        case["name"] == name && return case
+    end
+    error("consistency case not found in manifest: $name")
+end
+
+"""
+The cases this runner dispatches, spelled out rather than read off the manifest.
+
+The guard at the bottom of the file compares this list against the manifest's
+own case list; deriving either side from the other would make the check agree
+with itself, which is how a runner ends up covering half the spec and reporting
+a green run.
+"""
+const _CONSISTENCY_DISPATCH = [
+    "ping",
+    "exec_program_basic",
+    "exec_program_overrides",
+    "format_code",
+    "validate_code_ok",
+    "validate_code_invalid",
+    "generate_kcl_json",
+    "generate_kcl_yaml",
+    "generate_toml",
+    "format_test_report",
+    "generate_openapi_v3",
+    "generate_proto",
+    "generate_doc_md",
+    "parse_file",
+    "parse_program",
+    "list_options",
+    "list_variables",
+    "load_package",
+    "get_schema_type_mapping",
+    "get_schema_type_mapping_under_path",
+    "get_version",
+    "list_method",
+    "lint_path_clean",
+    "lint_path_with_errors",
+    "format_path_dry_run",
+    "test_run",
+    "override_file",
+    "load_settings_files",
+    "update_dependencies_no_deps",
+]
 
 """
 The RPC surface of the loaded core, resolved once per run.
@@ -160,6 +425,206 @@ function _consistency_methods()
         return Set{String}()
     end
 end
+
+# ---------------------------------------------------------------------------
+# Canonical protobuf JSON
+# ---------------------------------------------------------------------------
+
+# `GetSchemaTypeMapping` returns `map<string, KclType>` and
+# `GetSchemaTypeMappingUnderPath` returns `map<string, SchemaTypes>`. `KclType`
+# is eighteen fields and recursive through `union_types`, `properties`, `key`,
+# `item` and `base_schema`, so a hand-written projection would be one recursive
+# walk per language — exactly the kind of dispatch that agrees with itself and
+# disagrees with the core. Canonical protobuf JSON is the one representation
+# every binding can reach, because producing it is part of decoding a protobuf
+# message at all.
+#
+# The dialect is the default one: a field the runtime left unset is *absent*,
+# not rendered as `""`, `0`, `[]`, `{}` or `null`. A generated struct carries no
+# presence bit, so "unset" is "equal to the proto3 default", which is exactly
+# what `_consistency_is_default` asks. (The two schema-mapping cases also do not
+# return the same shape: one maps a schema name to a `KclType`, the other a
+# package name to a `SchemaTypes` wrapper. A binding that ran one method's
+# result through the other's message type is the failure neither case catches.)
+
+"""
+    _consistency_canonical(message)
+
+One generated protobuf message as a `Dict` in canonical protobuf JSON, under
+proto field names, with every field the runtime left at its proto3 default
+omitted.
+"""
+function _consistency_canonical(message)
+    document = Dict{String,Any}()
+    for field in fieldnames(typeof(message))
+        value = getfield(message, field)
+        (value === nothing || _consistency_is_default(value)) && continue
+        document[_consistency_field_name(field)] = _consistency_json_value(value)
+    end
+    return document
+end
+
+"""
+The proto name of a generated struct field. ProtoBuf.jl suffixes a field whose
+proto name is a Julia keyword — `type` and `function` are the two in
+`spec.proto` — with `_`, and leaves every other name alone.
+"""
+_consistency_field_name(field::Symbol) =
+    endswith(String(field), "_") ? String(field)[1:end-1] : String(field)
+
+# The proto3 default each kind of field falls back to when the runtime did not
+# populate it. A message field is `nothing` when unset, which
+# `_consistency_canonical` has already dropped by the time it gets here.
+_consistency_is_default(value::AbstractString) = isempty(value)
+_consistency_is_default(value::Bool) = !value
+_consistency_is_default(value::Integer) = iszero(value)
+_consistency_is_default(value::AbstractVector) = isempty(value)
+_consistency_is_default(value::AbstractDict) = isempty(value)
+_consistency_is_default(value) = false
+
+_consistency_json_value(value::AbstractString) = String(value)
+_consistency_json_value(value::Bool) = value
+_consistency_json_value(value::Integer) = value
+function _consistency_json_value(value::AbstractVector)
+    return Any[_consistency_json_value(item) for item in value]
+end
+function _consistency_json_value(value::AbstractDict)
+    return Dict{String,Any}(String(key) => _consistency_json_value(item)
+        for (key, item) in value)
+end
+_consistency_json_value(value) = _consistency_canonical(value)
+
+"""
+    _consistency_kcl_types(mapping)
+
+A `map<string, KclType>` or `map<string, SchemaTypes>` as plain JSON.
+
+`KclType.filename` is the absolute path of the file a type was declared in, so
+it differs on every machine and under every runner. It is dropped at every
+depth — a schema's *properties* carry one too, so a one-level strip would be
+exactly the kind of rule that works until someone writes a schema inline.
+`pkg_path` is kept: it is a KCL package path like `__main__`, not a filesystem
+one, and it is what makes the under-path result's outer key meaningful.
+"""
+_consistency_kcl_types(mapping::AbstractDict) = _consistency_without_local_paths(
+    Dict{String,Any}(name => _consistency_canonical(value) for (name, value) in mapping))
+
+_consistency_without_local_paths(node::AbstractDict) =
+    Dict{String,Any}(key => _consistency_without_local_paths(value)
+        for (key, value) in node if key != "filename")
+_consistency_without_local_paths(node::AbstractVector) =
+    Any[_consistency_without_local_paths(item) for item in node]
+_consistency_without_local_paths(node) = node
+
+# ---------------------------------------------------------------------------
+# Projection
+# ---------------------------------------------------------------------------
+
+# Per-case projections, mirroring the `extract` of each definition in
+# `tests/consistency/generate_cases.py`. A case not listed here reads the named
+# fields straight off the result, which is all the generation RPCs need; the
+# cases below are the ones whose contract is a shape or a count rather than a
+# top-level field. Every list the manifest pins as a set is sorted before it is
+# handed over, so a source-order guarantee nobody promised cannot fail a run.
+const _CONSISTENCY_PROJECTIONS = Dict{String,Function}(
+
+    "parse_file" => result -> Dict{String,Any}(
+        # A bare `Module` document, so the statements are at `body`.
+        "body_count" => isempty(result.ast_json) ? 0 :
+            length(KclLib._json_parse(result.ast_json)["body"]),
+        "error_count" => length(result.errors),
+        "deps" => collect(String, result.deps)),
+
+    "parse_program" => result -> Dict{String,Any}(
+        # `ParseProgram` returns a `pkgs` document, not a module: one Module per
+        # file, keyed by package path.
+        "module_count" => isempty(result.ast_json) ? 0 :
+            length(KclLib._json_parse(result.ast_json)["pkgs"]["__main__"]),
+        "error_count" => length(result.errors),
+        "paths" => [basename(path) for path in result.paths]),
+
+    "list_options" => result -> Dict{String,Any}(
+        "option_count" => length(result.options),
+        "options" => [[option.name, option.required]
+                      for option in sort(result.options; by = option -> option.name)]),
+
+    "list_variables" => result -> Dict{String,Any}(
+        "values" => Dict{String,Any}(spec => Any[variable.value
+            for variable in result.variables[spec].variables]
+            for spec in sort(collect(keys(result.variables)))),
+        "unsupported_codes" => collect(String, result.unsupported_codes),
+        "parse_error_count" => length(result.parse_errors)),
+
+    "load_package" => result -> Dict{String,Any}(
+        "path_count" => length(result.paths),
+        "type_error_count" => length(result.type_errors),
+        "parse_error_count" => length(result.parse_errors),
+        "symbol_count" => length(result.symbols),
+        "scope_count" => length(result.scopes),
+        "has_kcl_mod" => result.kcl_mod !== nothing,
+        "kcl_mod_name" => result.kcl_mod === nothing || result.kcl_mod.package === nothing ?
+            "" : result.kcl_mod.package.name,
+        "app_count" => length(result.apps),
+        "import_count" => length(result.imports)),
+
+    "get_schema_type_mapping" => result -> Dict{String,Any}(
+        "type_mapping" => _consistency_kcl_types(result.schema_type_mapping)),
+
+    "get_schema_type_mapping_under_path" => result -> Dict{String,Any}(
+        "type_mapping" => _consistency_kcl_types(result.schema_type_mapping)),
+
+    "get_version" => result -> Dict{String,Any}(
+        "version" => _consistency_major_minor(result.version),
+        "has_checksum" => !isempty(result.checksum),
+        "has_git_sha" => !isempty(result.git_sha),
+        "has_version_info" => !isempty(result.version_info)),
+
+    "list_method" => result -> Dict{String,Any}(
+        "has_kclservice_ping" => "KclService.Ping" in result.method_name_list,
+        "has_kclservice_parse_program" =>
+            "KclService.ParseProgram" in result.method_name_list,
+        "has_builtinservice_list_method" =>
+            "BuiltinService.ListMethod" in result.method_name_list,
+        "method_count" => length(result.method_name_list),
+        "has_empty_name" => any(isempty, result.method_name_list)),
+
+    "lint_path_clean" => result -> Dict{String,Any}(
+        "result_count" => length(result.results)),
+
+    "lint_path_with_errors" => result -> Dict{String,Any}(
+        "result_count" => length(result.results),
+        "has_result" => !isempty(result.results)),
+
+    "format_path_dry_run" => result -> Dict{String,Any}(
+        "changed_count" => length(result.changed_paths),
+        "changed" => sort([basename(path) for path in result.changed_paths])),
+
+    "test_run" => result -> Dict{String,Any}(
+        "names" => sort([info.name for info in result.info]),
+        "failed" => sort([info.name for info in result.info if !isempty(info.error)])),
+
+    "override_file" => result -> Dict{String,Any}(
+        "result" => result.result,
+        "parse_error_count" => length(result.parse_errors)),
+
+    "load_settings_files" => result -> Dict{String,Any}(
+        "options" => [[option.key, option.value]
+                      for option in sort(result.kcl_options; by = option -> option.key)],
+        "output" => result.kcl_cli_configs.output,
+        "overrides" => collect(String, result.kcl_cli_configs.overrides),
+        "strict_range_check" => result.kcl_cli_configs.strict_range_check,
+        "verbose" => result.kcl_cli_configs.verbose),
+
+    "update_dependencies_no_deps" => result -> Dict{String,Any}(
+        "external_pkg_count" => length(result.external_pkgs)),
+
+    # `validate_code_invalid` reads `err_message` as a boolean: the diagnostic
+    # carries ANSI colour escapes, a random temp path and a temp filename, so
+    # the string itself is not pinnable but its presence is.
+    "validate_code_invalid" => result -> Dict{String,Any}(
+        "success" => result.success,
+        "has_error_message" => !isempty(result.err_message)),
+)
 
 # ---------------------------------------------------------------------------
 # Comparison
@@ -192,6 +657,25 @@ function _consistency_diff(expected, actual)
 end
 
 """
+    _consistency_fields(case, result)
+
+The fields to compare for `case`: the case's own projection when it has one,
+otherwise the `expect` fields read straight off the result.
+
+Only the fields the manifest pins are compared, so adding a field to `expect`
+is the only way to start asserting on it — but a pinned field the projection
+does *not* produce is a failure, not a skip, because the key is missing on
+either side.
+"""
+function _consistency_fields(case, result)
+    projection = get(_CONSISTENCY_PROJECTIONS, case["name"], nothing)
+    projection === nothing ||
+        return projection(result)
+    return Dict{String,Any}(field => getproperty(result, Symbol(field))
+        for field in keys(case["expect"]))
+end
+
+"""
     _consistency_case(case, methods)
 
 Run one manifest case and assert every field its `expect` mentions. Fields the
@@ -208,16 +692,22 @@ function _consistency_case(case, methods)::Bool
         @test_skip "core does not list $rpc (old core)"
         return false
     end
-    result = _consistency_call(rpc, _consistency_request(rpc, case["args"]))
+    result = _consistency_call(rpc, case["args"])
+    actual = _consistency_fields(case, result)
     for (field, expected) in case["expect"]
-        actual = _consistency_actual(getproperty(result, Symbol(field)))
-        if actual != expected
-            # A field can be a whole OpenAPI document, so the line diff is the
-            # only failure output worth reading.
-            println(stderr, "consistency case `$name` field `$field` mismatch:\n",
-                _consistency_diff(expected, actual))
+        if !haskey(actual, field)
+            println(stderr, "consistency case `$name` does not project pinned field `$field`")
+            @test false
+            continue
         end
-        @test actual == expected
+        got = _consistency_actual(actual[field])
+        if got != expected
+            # A field can be a whole OpenAPI document or a schema mapping, so
+            # the line diff is the only failure output worth reading.
+            println(stderr, "consistency case `$name` field `$field` mismatch:\n",
+                _consistency_diff(expected, got))
+        end
+        @test got == expected
     end
     return true
 end
@@ -242,14 +732,40 @@ const _CONSISTENCY_CASES = _consistency_cases()
     # the RPC surface cannot change mid-process.
     methods = _consistency_methods()
     skipped = String[]
+    ran = String[]
 
-    for case in _CONSISTENCY_CASES
-        @testset "consistency: $(case["name"])" begin
-            _consistency_case(case, methods) || push!(skipped, case["name"])
+    for name in _CONSISTENCY_DISPATCH
+        @testset "consistency: $name" begin
+            # Recorded before the case runs, so a case that errors is not also
+            # reported below as one the runner never reached.
+            push!(ran, name)
+            case = _consistency_find(name)
+            _consistency_case(case, methods) || push!(skipped, name)
         end
     end
 
-    @info string("consistency cases: ", length(_CONSISTENCY_CASES) - length(skipped),
+    # The coverage guard. `ran` comes from the dispatch list written out above,
+    # the other side from the manifest's own case list: two lists produced
+    # independently, so this can fail even when every case that *is* dispatched
+    # passes — which is exactly the "quietly covers half the spec" the check
+    # exists to turn into a build failure.
+    @testset "coverage" begin
+        manifest_names = String[case["name"] for case in _CONSISTENCY_CASES]
+        uncovered = String[name for name in manifest_names if !(name in ran)]
+        if !isempty(uncovered)
+            println(stderr, "consistency manifest has cases this runner does not execute: ",
+                join(uncovered, ", "))
+        end
+        @test isempty(uncovered)
+        stale = String[name for name in ran if !(name in manifest_names)]
+        if !isempty(stale)
+            println(stderr, "consistency runner dispatches cases the manifest does not have: ",
+                join(stale, ", "))
+        end
+        @test isempty(stale)
+    end
+
+    @info string("consistency cases: ", length(ran) - length(skipped),
         " run, ", length(skipped), " skipped",
         isempty(skipped) ? "" : " ($(join(skipped, ", ")))")
 end

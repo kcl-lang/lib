@@ -56,6 +56,8 @@ const Cache = struct {
     /// Kept alive so `cases` can borrow strings out of the parsed document.
     manifest: std.json.Parsed(Value),
     repo_root: []const u8,
+    /// `tests/consistency/testdata`, the template tree `scratch:` paths copy.
+    testdata: []const u8,
     cases: []const Case,
     /// RPC names the loaded core advertises. Empty means "unknown surface",
     /// which the runners translate into skipping `new_core` cases.
@@ -68,12 +70,25 @@ const Cache = struct {
 /// after the last one. It must outlive `load`, so never store an
 /// `std.mem.Allocator` taken from it — call `arena.allocator()` at each use
 /// site, otherwise the cached `ptr` dangles the moment `load` returns.
+///
+/// The runner executes tests on a thread pool, so this state is written only
+/// under `load_mutex` and is read-only afterwards; request building does not
+/// use it (see `runCase`).
 var arena: std.heap.ArenaAllocator = .init(std.heap.page_allocator);
 var cache: ?Cache = null;
+/// Single-owner spinlock guarding the one-time initialisation below; the
+/// critical section runs once per process, so contention is a few threads
+/// yielding for the length of a single manifest load.
+var load_mutex: std.atomic.Mutex = .unlocked;
 
 /// Loads the manifest, resolves the repository root and probes the core's
-/// RPC surface. Called once; every test then reuses the result.
+/// RPC surface. Called once; every test then reuses the result. The pool
+/// starts every test at once, so without the mutex the first callers would
+/// race on the arena (overlapping allocations) and on the `listMethod` FFI
+/// probe.
 fn load() !*Cache {
+    while (!load_mutex.tryLock()) std.Thread.yield() catch {};
+    defer load_mutex.unlock();
     if (cache) |*c| return c;
     const a = arena.allocator();
 
@@ -117,9 +132,12 @@ fn load() !*Cache {
     const cases = try parseCases(a, manifest.value);
     const methods = try listMethods(a);
 
+    const testdata = try std.fs.path.join(a, &.{ repo_root, "tests", "consistency", "testdata" });
+
     cache = .{
         .manifest = manifest,
         .repo_root = repo_root,
+        .testdata = testdata,
         .cases = cases,
         .methods = methods,
     };
@@ -204,6 +222,15 @@ fn boolean(node: Value, key: []const u8) bool {
     };
 }
 
+/// `text`, but a missing or non-string key yields `fallback` instead of the
+/// empty string -- for a default that is itself a real path.
+fn textOr(node: Value, key: []const u8, fallback: []const u8) []const u8 {
+    return switch (field(node, key) orelse return fallback) {
+        .string => |s| s,
+        else => fallback,
+    };
+}
+
 /// Appends `node[key]` as a list of strings, skipping absent keys and
 /// non-string entries.
 fn appendTexts(a: std.mem.Allocator, target: *std.ArrayList([]const u8), node: Value, key: []const u8) !void {
@@ -223,6 +250,151 @@ fn resolvePath(a: std.mem.Allocator, repo_root: []const u8, path: []const u8) ![
     return std.fs.path.join(a, &.{ repo_root, path });
 }
 
+/// The marker `generate_cases.py` writes into a path that names a template
+/// rather than a file. `scratch:a/b.k` means "b.k inside a copy of
+/// `testdata/a`"; the copy is what makes the RPCs that write files safe to
+/// run, and it is also why the expectations for those cases pin the RPC's
+/// answer rather than a path.
+const scratch_prefix = "scratch:";
+
+/// Per-thread state for scratch directories. The test runner executes the
+/// cases in this file on a pool of threads, and a test owns its thread for
+/// its whole run, so `scratch-{thread}-{n}` names every `scratch:` path in a
+/// case -- and every case in a run -- onto a directory no other test can
+/// name, delete or clean up. Sharing one counter would let the second copy
+/// wipe the first, which is exactly what `load_settings_files` does: it
+/// names a template in both `work_dir` and `files`.
+threadlocal var scratch_seq: usize = 0;
+
+/// Formats the name of the `n`-th scratch directory of the calling thread.
+fn scratchName(buf: []u8, n: usize) ![]const u8 {
+    return std.fmt.bufPrint(buf, "scratch-{d}-{d}", .{ std.Thread.getCurrentId(), n });
+}
+
+/// Root of the scratch tree, under the build cache so a run never writes
+/// anything the repository tracks.
+const scratch_root = ".zig-cache/kcl-consistency";
+
+/// Removes every scratch directory this thread created at or after `mark`,
+/// so a run leaves nothing for the next one. Called from `runCase`, which is
+/// the last point where a case's directories are still observable. The names
+/// carry the calling thread's id, so the range can only cover directories
+/// the calling test created itself.
+fn scratchCleanup(mark: usize) void {
+    var root_dir = std.Io.Dir.cwd().openDir(testing.io, scratch_root, .{}) catch return;
+    defer root_dir.close(testing.io);
+    var n = mark;
+    while (n < scratch_seq) : (n += 1) {
+        var buf: [64]u8 = undefined;
+        const name = scratchName(&buf, n) catch return;
+        deleteTreeIfPresent(testing.io, root_dir, name);
+    }
+}
+
+/// Copies `testdata/<template>` into a fresh temporary directory and returns
+/// the path of `tail` inside it. Each call gets its own directory, so two
+/// cases -- and two runs -- never observe each other's writes and the
+/// repository is never the target of an RPC that rewrites files.
+fn scratchPath(a: std.mem.Allocator, testdata: []const u8, rest: []const u8) ![]const u8 {
+    const slash = std.mem.indexOfScalar(u8, rest, '/');
+    const template = if (slash) |i| rest[0..i] else rest;
+    const tail = if (slash) |i| rest[i + 1 ..] else "";
+
+    const src = try std.fs.path.join(a, &.{ testdata, template });
+    // The directory is iterated by `copyDir`; on Linux an `openDir` without
+    // `.iterate` hands back an `O_PATH` fd, which `lseek`/`getdents64` refuse
+    // with EBADF, so the capability has to be requested up front.
+    var src_dir = std.Io.Dir.cwd().openDir(testing.io, src, .{ .iterate = true }) catch |err| {
+        std.debug.print("scratch template is not a directory: {s} ({s})\n", .{ src, @errorName(err) });
+        return err;
+    };
+    defer src_dir.close(testing.io);
+
+    std.Io.Dir.cwd().createDirPath(testing.io, scratch_root) catch |err| switch (err) {
+        error.PathAlreadyExists => {},
+        else => return err,
+    };
+    var root_dir = try std.Io.Dir.cwd().openDir(testing.io, scratch_root, .{});
+    defer root_dir.close(testing.io);
+
+    var buf: [64]u8 = undefined;
+    const name = try scratchName(&buf, scratch_seq);
+    // A directory left by a run that died before its cleanup would otherwise be
+    // adopted here, and a reused copy is not a copy.
+    deleteTreeIfPresent(testing.io, root_dir, name);
+    try root_dir.createDir(testing.io, name, .default_dir);
+    scratch_seq += 1;
+
+    const dest = try std.fs.path.join(a, &.{ scratch_root, name, template });
+    var dest_dir = try root_dir.openDir(testing.io, name, .{});
+    defer dest_dir.close(testing.io);
+    // The template keeps its own name inside the copy, so `scratch:a/b.k`
+    // lands on `<copy>/a/b.k` and `scratch:a` on the directory `<copy>/a`.
+    try dest_dir.createDir(testing.io, template, .default_dir);
+    var template_dir = try dest_dir.openDir(testing.io, template, .{});
+    defer template_dir.close(testing.io);
+    try copyDir(a, src_dir, template_dir);
+    if (tail.len == 0) return dest;
+    return std.fs.path.join(a, &.{ dest, tail });
+}
+
+/// Removes a leftover scratch directory, if there is one. The scratch tree
+/// only ever holds copies the runner made, and a directory this run created is
+/// never revisited, so a plain recursive delete is enough.
+fn deleteTreeIfPresent(io: std.Io, dir: std.Io.Dir, name: []const u8) void {
+    // Iterated below, so the open has to request `.iterate` (see `scratchPath`
+    // for why): on Linux the default would be an `O_PATH` fd.
+    var sub = dir.openDir(io, name, .{ .iterate = true }) catch return;
+    defer sub.close(io);
+    var it = sub.iterate();
+    while (it.next(io) catch return) |entry| {
+        if (std.mem.eql(u8, entry.name, ".") or std.mem.eql(u8, entry.name, "..")) continue;
+        if (entry.kind == .directory) {
+            deleteTreeIfPresent(io, sub, entry.name);
+        } else {
+            sub.deleteFile(io, entry.name) catch {};
+        }
+    }
+    dir.deleteDir(io, name) catch {};
+}
+
+fn copyDir(a: std.mem.Allocator, src: std.Io.Dir, dest: std.Io.Dir) !void {
+    var it = src.iterate();
+    while (try it.next(testing.io)) |entry| {
+        if (std.mem.eql(u8, entry.name, ".") or std.mem.eql(u8, entry.name, "..")) continue;
+        switch (entry.kind) {
+            .directory => {
+                try dest.createDirPath(testing.io, entry.name);
+                var sub = try dest.openDir(testing.io, entry.name, .{});
+                defer sub.close(testing.io);
+                var parent = try src.openDir(testing.io, entry.name, .{ .iterate = true });
+                defer parent.close(testing.io);
+                try copyDir(a, parent, sub);
+            },
+            else => try src.copyFile(entry.name, dest, entry.name, testing.io, .{}),
+        }
+    }
+}
+
+/// Resolves one manifest path entry: a `scratch:` marker, an absolute path, or
+/// a repo-relative one.
+fn resolveAny(a: std.mem.Allocator, repo_root: []const u8, testdata: []const u8, path: []const u8) ![]const u8 {
+    if (std.mem.startsWith(u8, path, scratch_prefix)) {
+        return scratchPath(a, testdata, path[scratch_prefix.len..]);
+    }
+    return resolvePath(a, repo_root, path);
+}
+
+fn appendResolved(a: std.mem.Allocator, target: *std.ArrayList([]const u8), repo_root: []const u8, testdata: []const u8, node: Value, key: []const u8) !void {
+    switch (field(node, key) orelse return) {
+        .array => |arr| for (arr.items) |item| switch (item) {
+            .string => |p| try target.append(a, try resolveAny(a, repo_root, testdata, p)),
+            else => {},
+        },
+        else => {},
+    }
+}
+
 /// `<root>/tests/consistency/cases.json` -> `<root>`. Three levels up from the
 /// manifest file itself: the file, the `consistency` directory and `tests`.
 fn repoRootOf(cases_path: []const u8) ?[]const u8 {
@@ -237,8 +409,8 @@ fn repoRootOf(cases_path: []const u8) ?[]const u8 {
 // ---------------------------------------------------------------------------
 // Request builders.
 //
-// These three functions populate messages whose string fields *borrow* from
-// the parsed manifest, so they must be built with the cache arena and are
+// These functions populate messages whose string fields *borrow* from the
+// parsed manifest, so they are built on a per-test arena (see `runCase`) and
 // never deinitialised: `protobuf.deinit` would try to free the borrowed
 // bytes. Only the decoded results below are owned by the caller.
 // ---------------------------------------------------------------------------
@@ -261,13 +433,26 @@ fn parseArgs(a: std.mem.Allocator, repo_root: []const u8, node: Value) !spec.Par
     return args;
 }
 
-/// Builds the `ExecProgramArgs` of `KclService.ExecProgram` and
-/// `KclService.GenerateToml`.
-fn execArgs(a: std.mem.Allocator, node: Value) !spec.ExecProgramArgs {
+/// Builds the `ExecProgramArgs` of `KclService.ExecProgram`,
+/// `KclService.GenerateToml` and `KclService.Test`.
+fn execArgs(a: std.mem.Allocator, c: *const Cache, node: Value) !spec.ExecProgramArgs {
     var args: spec.ExecProgramArgs = .{};
     try appendTexts(a, &args.k_code_list, node, "k_code_list");
-    try appendTexts(a, &args.k_filename_list, node, "k_filename_list");
     try appendTexts(a, &args.overrides, node, "overrides");
+    args.work_dir = try resolveAny(a, c.repo_root, c.testdata, textOr(node, "work_dir", "."));
+    // The core resolves `k_filename_list` against the process working
+    // directory rather than against `work_dir`, so a relative entry has to be
+    // made absolute here or it will not survive being run from `zig/`.
+    switch (field(node, "k_filename_list") orelse return args) {
+        .array => |arr| for (arr.items) |item| switch (item) {
+            .string => |p| try args.k_filename_list.append(a, if (std.fs.path.isAbsolute(p))
+                p
+            else
+                try std.fs.path.join(a, &.{ args.work_dir, p })),
+            else => {},
+        },
+        else => {},
+    }
     return args;
 }
 
@@ -301,9 +486,26 @@ fn testResultArg(a: std.mem.Allocator, node: Value) !spec.TestResult {
 const Actual = union(enum) {
     text: []const u8,
     flag: bool,
+    /// A projected document: the cases whose contract is a shape or a count
+    /// rather than a top-level string, so the pinned fields are compared as
+    /// canonical JSON instead of field by field.
+    json: Value,
 };
 
 const Observed = struct { name: []const u8, value: Actual };
+
+/// Fans a projected document out into one observation per key, so the shape
+/// cases get the same per-field diff as the golden-string cases. Fields the
+/// manifest does not pin are simply never looked up by `expectFields`.
+fn shapeObserved(a: std.mem.Allocator, o: std.json.ObjectMap) ![]Observed {
+    const out = try a.alloc(Observed, o.count());
+    var i: usize = 0;
+    var it = o.iterator();
+    while (it.next()) |entry| : (i += 1) {
+        out[i] = .{ .name = entry.key_ptr.*, .value = .{ .json = entry.value_ptr.* } };
+    }
+    return out;
+}
 
 /// Line-wise `--- expected / +++ actual` rendering, mirroring
 /// `diffLines` in `go/native/consistency_test.go` so a golden mismatch reads
@@ -325,6 +527,190 @@ fn diff(expected: []const u8, actual: []const u8, writer: *std.Io.Writer) !void 
     }
 }
 
+/// The schema-mapping documents as canonical protobuf JSON -- the *default*
+/// dialect, so a field the core left unset is absent rather than rendered as
+/// an empty value. Written out by hand because the Zig protobuf runtime has no
+/// JSON printer, and because emitting only the set fields is the whole point:
+/// the golden file is the default dialect too, so anything else would disagree
+/// with every other runner on every schema.
+///
+/// `filename` is deliberately emitted and then dropped by `renderValue`, so
+/// there is exactly one place that decides an unpinnable field is dropped.
+fn kclTypeJson(a: std.mem.Allocator, t: spec.KclType) !Value {
+    var o = try newObject(a);
+    if (t.type.len != 0) try o.put(a, "type", .{ .string = t.type });
+    if (t.schema_name.len != 0) try o.put(a, "schema_name", .{ .string = t.schema_name });
+    if (t.schema_doc.len != 0) try o.put(a, "schema_doc", .{ .string = t.schema_doc });
+    if (t.default.len != 0) try o.put(a, "default", .{ .string = t.default });
+    if (t.pkg_path.len != 0) try o.put(a, "pkg_path", .{ .string = t.pkg_path });
+    if (t.description.len != 0) try o.put(a, "description", .{ .string = t.description });
+    if (t.filename.len != 0) try o.put(a, "filename", .{ .string = t.filename });
+    if (t.line != 0) try o.put(a, "line", .{ .integer = t.line });
+    if (t.required.items.len != 0) {
+        var arr = std.json.Array.init(a);
+        for (t.required.items) |name| try arr.append(.{ .string = name });
+        try o.put(a, "required", .{ .array = arr });
+    }
+    if (t.union_types.items.len != 0) {
+        var arr = std.json.Array.init(a);
+        for (t.union_types.items) |child| try arr.append(try kclTypeJson(a, child));
+        try o.put(a, "union_types", .{ .array = arr });
+    }
+    if (t.properties.items.len != 0) {
+        var map = try newObject(a);
+        for (t.properties.items) |entry| {
+            if (entry.value) |v| try map.put(a, entry.key, try kclTypeJson(a, v));
+        }
+        try o.put(a, "properties", .{ .object = map });
+    }
+    if (t.examples.items.len != 0) {
+        var map = try newObject(a);
+        for (t.examples.items) |entry| {
+            if (entry.value) |v| try map.put(a, entry.key, .{ .string = v.value });
+        }
+        try o.put(a, "examples", .{ .object = map });
+    }
+    if (t.key) |k| try o.put(a, "key", try kclTypeJson(a, k.*));
+    if (t.item) |item| try o.put(a, "item", try kclTypeJson(a, item.*));
+    if (t.base_schema) |base| try o.put(a, "base_schema", try kclTypeJson(a, base.*));
+    if (t.decorators.items.len != 0) {
+        var arr = std.json.Array.init(a);
+        for (t.decorators.items) |d| {
+            var dec = try newObject(a);
+            try dec.put(a, "name", .{ .string = d.name });
+            if (d.arguments.items.len != 0) {
+                var args = std.json.Array.init(a);
+                for (d.arguments.items) |arg| try args.append(.{ .string = arg });
+                try dec.put(a, "arguments", .{ .array = args });
+            }
+            try arr.append(.{ .object = dec });
+        }
+        try o.put(a, "decorators", .{ .array = arr });
+    }
+    return .{ .object = o };
+}
+
+/// `GetSchemaTypeMappingUnderPath` answers a `SchemaTypes` document -- a
+/// `schema_type` array rather than the flat map the plain RPC returns -- so
+/// the two cases serialise through different shapes even though the runner
+/// pins both under `type_mapping`.
+fn schemaTypesJson(a: std.mem.Allocator, s: spec.SchemaTypes) !Value {
+    var o = try newObject(a);
+    var arr = std.json.Array.init(a);
+    for (s.schema_type.items) |t| try arr.append(try kclTypeJson(a, t));
+    try o.put(a, "schema_type", .{ .array = arr });
+    return .{ .object = o };
+}
+
+/// Canonical JSON for a projected value: every object key sorted and the
+/// `filename` key dropped. The schema-mapping documents hold two protobuf
+/// map fields whose iteration order is undefined, and `filename` is an
+/// absolute path that differs on every machine, so neither can be compared as
+/// it arrives.
+fn renderValue(a: std.mem.Allocator, v: Value, w: *std.Io.Writer) !void {
+    switch (v) {
+        .object => |o| {
+            var keys: std.ArrayList([]const u8) = .empty;
+            defer keys.deinit(a);
+            var it = o.iterator();
+            while (it.next()) |entry| {
+                if (std.mem.eql(u8, entry.key_ptr.*, "filename")) continue;
+                try keys.append(a, entry.key_ptr.*);
+            }
+            std.mem.sort([]const u8, keys.items, {}, lessThanStr);
+            try w.writeAll("{");
+            for (keys.items, 0..) |key, i| {
+                if (i > 0) try w.writeAll(",");
+                try std.json.fmt(key, .{}).format(w);
+                try w.writeAll(":");
+                try renderValue(a, o.get(key).?, w);
+            }
+            try w.writeAll("}");
+        },
+        .array => |arr| {
+            try w.writeAll("[");
+            for (arr.items, 0..) |item, i| {
+                if (i > 0) try w.writeAll(",");
+                try renderValue(a, item, w);
+            }
+            try w.writeAll("]");
+        },
+        else => try std.json.fmt(v, .{}).format(w),
+    }
+}
+
+fn lessThanStr(_: void, a: []const u8, b: []const u8) bool {
+    return std.mem.lessThan(u8, a, b);
+}
+
+/// Builders for the projection trees. They take the case's `expect` block as
+/// the key set to build, so a projection only computes what the manifest
+/// actually pins — a field nobody pinned cannot drift into the comparison.
+/// An empty projection document. `ObjectMap` is a `StringArrayHashMap`, whose
+/// `init` takes the backing key/value slices explicitly.
+fn newObject(a: std.mem.Allocator) !std.json.ObjectMap {
+    return .init(a, &.{}, &.{});
+}
+
+fn putString(a: std.mem.Allocator, o: *std.json.ObjectMap, key: []const u8, v: []const u8) !void {
+    try o.put(a, key, .{ .string = v });
+}
+
+fn putBool(a: std.mem.Allocator, o: *std.json.ObjectMap, key: []const u8, v: bool) !void {
+    try o.put(a, key, .{ .bool = v });
+}
+
+fn putCount(a: std.mem.Allocator, o: *std.json.ObjectMap, key: []const u8, n: usize) !void {
+    try o.put(a, key, .{ .integer = @intCast(n) });
+}
+
+fn putInt(a: std.mem.Allocator, o: *std.json.ObjectMap, key: []const u8, n: i64) !void {
+    try o.put(a, key, .{ .integer = n });
+}
+
+fn putTexts(a: std.mem.Allocator, o: *std.json.ObjectMap, key: []const u8, items: []const []const u8) !void {
+    var arr = std.json.Array.init(a);
+    for (items) |item| try arr.append(.{ .string = item });
+    try o.put(a, key, .{ .array = arr });
+}
+
+/// A `[[a, b], ...]` list of pairs, sorted on the first element.
+fn putPairs(a: std.mem.Allocator, o: *std.json.ObjectMap, key: []const u8, items: []const [2][]const u8) !void {
+    const sorted = try a.dupe([2][]const u8, items);
+    std.mem.sort([2][]const u8, sorted, {}, struct {
+        fn lt(_: void, x: [2][]const u8, y: [2][]const u8) bool {
+            return std.mem.lessThan(u8, x[0], y[0]);
+        }
+    }.lt);
+    var arr = std.json.Array.init(a);
+    for (sorted) |pair| {
+        var inner = std.json.Array.init(a);
+        try inner.append(.{ .string = pair[0] });
+        try inner.append(.{ .string = pair[1] });
+        try arr.append(.{ .array = inner });
+    }
+    try o.put(a, key, .{ .array = arr });
+}
+
+fn putBoolPairs(a: std.mem.Allocator, o: *std.json.ObjectMap, key: []const u8, items: []const [2]PairBool) !void {
+    const sorted = try a.dupe([2]PairBool, items);
+    std.mem.sort([2]PairBool, sorted, {}, struct {
+        fn lt(_: void, x: [2]PairBool, y: [2]PairBool) bool {
+            return std.mem.lessThan(u8, x[0].name, y[0].name);
+        }
+    }.lt);
+    var arr = std.json.Array.init(a);
+    for (sorted) |pair| {
+        var inner = std.json.Array.init(a);
+        try inner.append(.{ .string = pair[0].name });
+        try inner.append(.{ .bool = pair[0].flag });
+        try arr.append(.{ .array = inner });
+    }
+    try o.put(a, key, .{ .array = arr });
+}
+
+const PairBool = struct { name: []const u8, flag: bool };
+
 /// Compares exactly the fields that appear in the case's `expect` block — the
 /// field list is data, not code, so adding a golden field needs no runner
 /// change while a golden change still turns this red.
@@ -340,24 +726,45 @@ fn expectFields(c: Case, observed: []const Observed) !void {
         for (observed) |o| {
             if (!std.mem.eql(u8, o.name, field_name)) continue;
             matched = true;
-            switch (wanted) {
-                .string => |want| {
-                    if (o.value != .text) return error.FieldTypeMismatch;
-                    if (std.mem.eql(u8, want, o.value.text)) continue;
+            switch (o.value) {
+                .text => |got| switch (wanted) {
+                    .string => |want| {
+                        if (std.mem.eql(u8, want, got)) continue;
+                        var out: std.Io.Writer.Allocating = .init(testing.allocator);
+                        defer out.deinit();
+                        try diff(want, got, &out.writer);
+                        std.debug.print(
+                            "consistency case `{s}` field `{s}` mismatch:\n{s}",
+                            .{ c.name, field_name, out.written() },
+                        );
+                        return error.ExpectMismatch;
+                    },
+                    else => return error.FieldTypeMismatch,
+                },
+                .flag => |got| switch (wanted) {
+                    .bool => |want| try testing.expectEqual(want, got),
+                    else => return error.FieldTypeMismatch,
+                },
+                .json => |got| {
+                    // Every other shape -- integer, nested object, array --
+                    // goes through one comparison so there is a single place
+                    // where the canonical form is defined.
+                    var want_buf: std.Io.Writer.Allocating = .init(testing.allocator);
+                    defer want_buf.deinit();
+                    try renderValue(testing.allocator, wanted, &want_buf.writer);
+                    var got_buf: std.Io.Writer.Allocating = .init(testing.allocator);
+                    defer got_buf.deinit();
+                    try renderValue(testing.allocator, got, &got_buf.writer);
+                    if (std.mem.eql(u8, want_buf.written(), got_buf.written())) continue;
                     var out: std.Io.Writer.Allocating = .init(testing.allocator);
                     defer out.deinit();
-                    try diff(want, o.value.text, &out.writer);
+                    try diff(want_buf.written(), got_buf.written(), &out.writer);
                     std.debug.print(
                         "consistency case `{s}` field `{s}` mismatch:\n{s}",
                         .{ c.name, field_name, out.written() },
                     );
                     return error.ExpectMismatch;
                 },
-                .bool => |want| {
-                    if (o.value != .flag) return error.FieldTypeMismatch;
-                    try testing.expectEqual(want, o.value.flag);
-                },
-                else => return error.FieldTypeMismatch,
             }
         }
         // An `expect` key the RPC branch does not know about would otherwise
@@ -386,6 +793,21 @@ const Rpc = enum {
     generate_openapi,
     generate_proto,
     generate_doc,
+    parse_file,
+    parse_program,
+    list_options,
+    list_variables,
+    load_package,
+    get_schema_type_mapping,
+    get_schema_type_mapping_under_path,
+    get_version,
+    list_method,
+    lint_path,
+    format_path,
+    test_run,
+    override_file,
+    load_settings_files,
+    update_dependencies,
 
     fn fromName(name: []const u8) ?Rpc {
         const table = .{
@@ -399,6 +821,21 @@ const Rpc = enum {
             .{ "KclService.GenerateOpenAPI", Rpc.generate_openapi },
             .{ "KclService.GenerateProto", Rpc.generate_proto },
             .{ "KclService.GenerateDoc", Rpc.generate_doc },
+            .{ "KclService.ParseFile", Rpc.parse_file },
+            .{ "KclService.ParseProgram", Rpc.parse_program },
+            .{ "KclService.ListOptions", Rpc.list_options },
+            .{ "KclService.ListVariables", Rpc.list_variables },
+            .{ "KclService.LoadPackage", Rpc.load_package },
+            .{ "KclService.GetSchemaTypeMapping", Rpc.get_schema_type_mapping },
+            .{ "KclService.GetSchemaTypeMappingUnderPath", Rpc.get_schema_type_mapping_under_path },
+            .{ "KclService.GetVersion", Rpc.get_version },
+            .{ "BuiltinService.ListMethod", Rpc.list_method },
+            .{ "KclService.LintPath", Rpc.lint_path },
+            .{ "KclService.FormatPath", Rpc.format_path },
+            .{ "KclService.Test", Rpc.test_run },
+            .{ "KclService.OverrideFile", Rpc.override_file },
+            .{ "KclService.LoadSettingsFiles", Rpc.load_settings_files },
+            .{ "KclService.UpdateDependencies", Rpc.update_dependencies },
         };
         inline for (table) |entry| {
             if (std.mem.eql(u8, name, entry[0])) return entry[1];
@@ -406,6 +843,47 @@ const Rpc = enum {
         return null;
     }
 };
+
+/// Counts the entries of `key` in a JSON document, treating an empty or
+/// unparsable document as zero. `ParseFile` answers a bare `Module` (the
+/// statements are at `body`) and `ParseProgram` a `pkgs` document keyed by
+/// package path, so the two count different paths into the same tree.
+fn countArray(doc: []const u8, key: []const u8) !usize {
+    if (doc.len == 0) return 0;
+    const parsed = std.json.parseFromSlice(Value, std.heap.page_allocator, doc, .{}) catch return 0;
+    const found = field(parsed.value, key) orelse return 0;
+    return switch (found) {
+        .array => |arr| arr.items.len,
+        else => 0,
+    };
+}
+
+/// `pkgs.__main__` -- one Module per parsed file.
+fn countMainModules(doc: []const u8) !usize {
+    if (doc.len == 0) return 0;
+    const parsed = std.json.parseFromSlice(Value, std.heap.page_allocator, doc, .{}) catch return 0;
+    const pkgs = field(parsed.value, "pkgs") orelse return 0;
+    const main = field(pkgs, "__main__") orelse return 0;
+    return switch (main) {
+        .array => |arr| arr.items.len,
+        else => 0,
+    };
+}
+
+fn containsName(names: []const []const u8, needle: []const u8) bool {
+    for (names) |n| {
+        if (std.mem.eql(u8, n, needle)) return true;
+    }
+    return false;
+}
+
+/// The shared shape of both schema-mapping request builders.
+fn schemaArgs(a: std.mem.Allocator, c: *const Cache, args: Value) !spec.GetSchemaTypeMappingArgs {
+    return .{
+        .exec_args = try execArgs(a, c, field(args, "exec_args") orelse absent),
+        .schema_name = text(args, "schema_name"),
+    };
+}
 
 /// Looks a case up by name and reports a manifest that does not carry it.
 fn findCase(c: *const Cache, name: []const u8) !*const Case {
@@ -420,12 +898,18 @@ fn findCase(c: *const Cache, name: []const u8) !*const Case {
 /// RPC, otherwise dispatches on `rpc` and compares `expect`.
 ///
 /// `a` owns the decoded results and must free them; the request messages are
-/// built from the manifest arena (see the request-builder section) and live
-/// for the whole process.
+/// built on a per-test arena (see the request-builder section) and die with
+/// the case.
 fn runCase(a: std.mem.Allocator, name: []const u8) !void {
     const c = try load();
     const case = try findCase(c, name);
-    const args = arena.allocator();
+    // Request messages borrow from the parsed manifest, so `protobuf.deinit`
+    // cannot own them; a per-test arena gets the same leak-free lifetime
+    // without sharing an allocator across the runner's test threads (the
+    // cache arena is not thread-safe).
+    var request_arena = std.heap.ArenaAllocator.init(a);
+    defer request_arena.deinit();
+    const args = request_arena.allocator();
 
     if (case.new_core and !c.methods.contains(case.rpc)) {
         std.debug.print(
@@ -434,6 +918,19 @@ fn runCase(a: std.mem.Allocator, name: []const u8) !void {
         );
         return;
     }
+
+    // Projections are a tree of small maps and lists that only has to
+    // outlive the comparison, and hand-freeing each one is the kind of
+    // bookkeeping that goes wrong silently. The decoded RPC results keep `a`
+    // instead, so their own `defer result.deinit(a)` still owns them.
+    var shape_arena = std.heap.ArenaAllocator.init(a);
+    defer shape_arena.deinit();
+    const s = shape_arena.allocator();
+
+    // The copies this case asks for are the last thing it observes, so they go
+    // with it rather than accumulating under the build cache.
+    const scratch_mark = scratch_seq;
+    defer scratchCleanup(scratch_mark);
 
     const rpc = Rpc.fromName(case.rpc) orelse {
         std.debug.print("no runner support for rpc {s}\n", .{case.rpc});
@@ -447,7 +944,7 @@ fn runCase(a: std.mem.Allocator, name: []const u8) !void {
             try expectFields(case.*, &.{.{ .name = "value", .value = .{ .text = result.value } }});
         },
         .exec_program => {
-            var result = try root.execProgram(a, try execArgs(args, case.args));
+            var result = try root.execProgram(a, try execArgs(args, c, case.args));
             defer result.deinit(a);
             try expectFields(case.*, &.{
                 .{ .name = "yaml_result", .value = .{ .text = result.yaml_result } },
@@ -466,10 +963,17 @@ fn runCase(a: std.mem.Allocator, name: []const u8) !void {
                 .format = text(case.args, "format"),
             });
             defer result.deinit(a);
-            try expectFields(case.*, &.{
-                .{ .name = "success", .value = .{ .flag = result.success } },
-                .{ .name = "err_message", .value = .{ .text = result.err_message } },
-            });
+            var o = try newObject(s);
+            try putBool(s, &o, "success", result.success);
+            // The diagnostic carries ANSI colour escapes, a random temp path
+            // and a temp filename, so the string itself is not pinnable but
+            // its presence is.
+            try putBool(s, &o, "has_error_message", result.err_message.len != 0);
+            // Pinned only by the ok case, where it is the empty string. It is
+            // emitted for both so `expectFields` finds it under the name the
+            // manifest uses rather than reporting it unobserved.
+            try putString(s, &o, "err_message", result.err_message);
+            try expectFields(case.*, try shapeObserved(s, o));
         },
         .format_test_report => {
             const result_arg = try testResultArg(args, field(case.args, "result") orelse absent);
@@ -478,7 +982,7 @@ fn runCase(a: std.mem.Allocator, name: []const u8) !void {
             try expectFields(case.*, &.{.{ .name = "report", .value = .{ .text = result.report } }});
         },
         .generate_toml => {
-            const exec = try execArgs(args, field(case.args, "exec_args") orelse absent);
+            const exec = try execArgs(args, c, field(case.args, "exec_args") orelse absent);
             var result = try root.generateToml(a, .{
                 .exec_args = exec,
                 .sort_keys = boolean(case.args, "sort_keys"),
@@ -521,6 +1025,236 @@ fn runCase(a: std.mem.Allocator, name: []const u8) !void {
             });
             defer result.deinit(a);
             try expectFields(case.*, &.{.{ .name = "content", .value = .{ .text = result.content } }});
+        },
+        .parse_file => {
+            var result = try root.parseFile(a, .{
+                .path = text(case.args, "path"),
+                .source = text(case.args, "source"),
+            });
+            defer result.deinit(a);
+            var o = try newObject(s);
+            // A bare `Module` document, so the statements are at `body`.
+            try putCount(s, &o, "body_count", try countArray(result.ast_json, "body"));
+            try putCount(s, &o, "error_count", result.errors.items.len);
+            try putTexts(s, &o, "deps", result.deps.items);
+            try expectFields(case.*, try shapeObserved(s, o));
+        },
+        .parse_program => {
+            const parse_arg = try parseArgs(args, c.repo_root, case.args);
+            var result = try root.parseProgram(a, parse_arg);
+            defer result.deinit(a);
+            var o = try newObject(s);
+            // `ParseProgram` returns a `pkgs` document, not a module: one
+            // Module per file, keyed by package path.
+            try putCount(s, &o, "module_count", try countMainModules(result.ast_json));
+            try putCount(s, &o, "error_count", result.errors.items.len);
+            const names = try s.alloc([]const u8, result.paths.items.len);
+            for (result.paths.items, names) |p, *slot| slot.* = std.fs.path.basename(p);
+            try putTexts(s, &o, "paths", names);
+            try expectFields(case.*, try shapeObserved(s, o));
+        },
+        .list_options => {
+            const parse_arg = try parseArgs(args, c.repo_root, case.args);
+            var result = try root.listOptions(a, parse_arg);
+            defer result.deinit(a);
+            var o = try newObject(s);
+            try putCount(s, &o, "option_count", result.options.items.len);
+            const pairs = try s.alloc([2]PairBool, result.options.items.len);
+            for (result.options.items, pairs) |opt, *slot| slot[0] = .{ .name = opt.name, .flag = opt.required };
+            try putBoolPairs(s, &o, "options", pairs);
+            try expectFields(case.*, try shapeObserved(s, o));
+        },
+        .list_variables => {
+            var arg: spec.ListVariablesArgs = .{};
+            try appendResolved(s, &arg.files, c.repo_root, c.testdata, case.args, "files");
+            try appendTexts(s, &arg.specs, case.args, "specs");
+            arg.options = .{ .merge_program = boolean(field(case.args, "options") orelse absent, "merge_program") };
+            var result = try root.listVariables(a, arg);
+            defer result.deinit(a);
+            var o = try newObject(s);
+            var values = try newObject(s);
+            for (result.variables.items) |entry| {
+                var arr = std.json.Array.init(s);
+                if (entry.value) |list| {
+                    for (list.variables.items) |v| try arr.append(.{ .string = v.value });
+                }
+                try values.put(s, entry.key, .{ .array = arr });
+            }
+            try o.put(s, "values", .{ .object = values });
+            try putTexts(s, &o, "unsupported_codes", result.unsupported_codes.items);
+            try putCount(s, &o, "parse_error_count", result.parse_errors.items.len);
+            try expectFields(case.*, try shapeObserved(s, o));
+        },
+        .load_package => {
+            const arg: spec.LoadPackageArgs = .{
+                .parse_args = try parseArgs(args, c.repo_root, field(case.args, "parse_args") orelse absent),
+                .resolve_ast = boolean(case.args, "resolve_ast"),
+                .load_builtin = boolean(case.args, "load_builtin"),
+                .with_ast_index = boolean(case.args, "with_ast_index"),
+            };
+            var result = try root.loadPackage(a, arg);
+            defer result.deinit(a);
+            var o = try newObject(s);
+            try putCount(s, &o, "path_count", result.paths.items.len);
+            try putCount(s, &o, "type_error_count", result.type_errors.items.len);
+            try putCount(s, &o, "parse_error_count", result.parse_errors.items.len);
+            try putCount(s, &o, "symbol_count", result.symbols.items.len);
+            try putCount(s, &o, "scope_count", result.scopes.items.len);
+            try putBool(s, &o, "has_kcl_mod", result.kcl_mod != null);
+            try putString(s, &o, "kcl_mod_name", if (result.kcl_mod) |m|
+                (if (m.package) |p| p.name else "")
+            else
+                "");
+            try putCount(s, &o, "app_count", result.apps.items.len);
+            try putCount(s, &o, "import_count", result.imports.items.len);
+            try expectFields(case.*, try shapeObserved(s, o));
+        },
+        .get_schema_type_mapping => {
+            var result = try root.getSchemaTypeMapping(a, try schemaArgs(s, c, case.args));
+            defer result.deinit(a);
+            var o = try newObject(s);
+            var mapping = try newObject(s);
+            for (result.schema_type_mapping.items) |entry| {
+                if (entry.value) |t| try mapping.put(s, entry.key, try kclTypeJson(s, t));
+            }
+            try o.put(s, "type_mapping", .{ .object = mapping });
+            try expectFields(case.*, try shapeObserved(s, o));
+        },
+        .get_schema_type_mapping_under_path => {
+            var result = try root.getSchemaTypeMappingUnderPath(a, try schemaArgs(s, c, case.args));
+            defer result.deinit(a);
+            var o = try newObject(s);
+            var mapping = try newObject(s);
+            for (result.schema_type_mapping.items) |entry| {
+                if (entry.value) |st| try mapping.put(s, entry.key, try schemaTypesJson(s, st));
+            }
+            try o.put(s, "type_mapping", .{ .object = mapping });
+            try expectFields(case.*, try shapeObserved(s, o));
+        },
+        .get_version => {
+            var result = try root.getVersion(a);
+            defer result.deinit(a);
+            var o = try newObject(s);
+            // Only the major.minor pair is pinned: the patch moves with every
+            // release, and the manifest is regenerated against a pinned core.
+            const minor = std.mem.indexOfScalar(u8, result.version, '.');
+            try putString(s, &o, "version", if (minor) |i|
+                (if (std.mem.indexOfScalarPos(u8, result.version, i + 1, '.')) |j|
+                    result.version[0..j]
+                else
+                    result.version)
+            else
+                result.version);
+            try putBool(s, &o, "has_checksum", result.checksum.len != 0);
+            try putBool(s, &o, "has_git_sha", result.git_sha.len != 0);
+            try putBool(s, &o, "has_version_info", result.version_info.len != 0);
+            try expectFields(case.*, try shapeObserved(s, o));
+        },
+        .list_method => {
+            var result = try root.listMethod(a);
+            defer result.deinit(a);
+            var o = try newObject(s);
+            const names = result.method_name_list.items;
+            try putBool(s, &o, "has_kclservice_ping", containsName(names, "KclService.Ping"));
+            try putBool(s, &o, "has_kclservice_parse_program", containsName(names, "KclService.ParseProgram"));
+            try putBool(s, &o, "has_builtinservice_list_method", containsName(names, "BuiltinService.ListMethod"));
+            try putCount(s, &o, "method_count", names.len);
+            try putBool(s, &o, "has_empty_name", blk: {
+                for (names) |n| {
+                    if (n.len == 0) break :blk true;
+                }
+                break :blk false;
+            });
+            try expectFields(case.*, try shapeObserved(s, o));
+        },
+        .lint_path => {
+            var arg: spec.LintPathArgs = .{};
+            try appendResolved(s, &arg.paths, c.repo_root, c.testdata, case.args, "paths");
+            var result = try root.lintPath(a, arg);
+            defer result.deinit(a);
+            var o = try newObject(s);
+            try putCount(s, &o, "result_count", result.results.items.len);
+            try putBool(s, &o, "has_result", result.results.items.len > 0);
+            try expectFields(case.*, try shapeObserved(s, o));
+        },
+        .format_path => {
+            var result = try root.formatPath(a, .{
+                .path = try resolveAny(s, c.repo_root, c.testdata, text(case.args, "path")),
+                .dry_run = boolean(case.args, "dry_run"),
+            });
+            defer result.deinit(a);
+            var o = try newObject(s);
+            try putCount(s, &o, "changed_count", result.changed_paths.items.len);
+            const names = try s.alloc([]const u8, result.changed_paths.items.len);
+            for (result.changed_paths.items, names) |p, *slot| slot.* = std.fs.path.basename(p);
+            std.mem.sort([]const u8, names, {}, lessThanStr);
+            try putTexts(s, &o, "changed", names);
+            try expectFields(case.*, try shapeObserved(s, o));
+        },
+        .test_run => {
+            var arg: spec.TestArgs = .{
+                .exec_args = try execArgs(s, c, field(case.args, "exec_args") orelse absent),
+                .run_regexp = text(case.args, "run_regexp"),
+                .fail_fast = boolean(case.args, "fail_fast"),
+                .coverage = boolean(case.args, "coverage"),
+            };
+            try appendResolved(s, &arg.pkg_list, c.repo_root, c.testdata, case.args, "pkg_list");
+            var result = try root.@"test"(a, arg);
+            defer result.deinit(a);
+            var o = try newObject(s);
+            const names = try s.alloc([]const u8, result.info.items.len);
+            var failed: std.ArrayList([]const u8) = .empty;
+            for (result.info.items, 0..) |info, i| {
+                names[i] = info.name;
+                if (info.@"error".len != 0) try failed.append(s, info.name);
+            }
+            std.mem.sort([]const u8, names, {}, lessThanStr);
+            std.mem.sort([]const u8, failed.items, {}, lessThanStr);
+            try putTexts(s, &o, "names", names);
+            try putTexts(s, &o, "failed", failed.items);
+            try expectFields(case.*, try shapeObserved(s, o));
+        },
+        .override_file => {
+            var arg: spec.OverrideFileArgs = .{
+                .file = try resolveAny(s, c.repo_root, c.testdata, text(case.args, "file")),
+            };
+            try appendTexts(s, &arg.specs, case.args, "specs");
+            try appendResolved(s, &arg.import_paths, c.repo_root, c.testdata, case.args, "import_paths");
+            var result = try root.overrideFile(a, arg);
+            defer result.deinit(a);
+            var o = try newObject(s);
+            try putBool(s, &o, "result", result.result);
+            try putCount(s, &o, "parse_error_count", result.parse_errors.items.len);
+            try expectFields(case.*, try shapeObserved(s, o));
+        },
+        .load_settings_files => {
+            var arg: spec.LoadSettingsFilesArgs = .{
+                .work_dir = try resolveAny(s, c.repo_root, c.testdata, text(case.args, "work_dir")),
+            };
+            try appendResolved(s, &arg.files, c.repo_root, c.testdata, case.args, "files");
+            var result = try root.loadSettingsFiles(a, arg);
+            defer result.deinit(a);
+            var o = try newObject(s);
+            const pairs = try s.alloc([2][]const u8, result.kcl_options.items.len);
+            for (result.kcl_options.items, pairs) |opt, *slot| slot.* = .{ opt.key, opt.value };
+            try putPairs(s, &o, "options", pairs);
+            if (result.kcl_cli_configs) |cfg| {
+                try putString(s, &o, "output", cfg.output);
+                try putTexts(s, &o, "overrides", cfg.overrides.items);
+                try putBool(s, &o, "strict_range_check", cfg.strict_range_check);
+                try putInt(s, &o, "verbose", cfg.verbose);
+            }
+            try expectFields(case.*, try shapeObserved(s, o));
+        },
+        .update_dependencies => {
+            var result = try root.updateDependencies(a, .{
+                .manifest_path = try resolveAny(s, c.repo_root, c.testdata, text(case.args, "manifest_path")),
+                .vendor = boolean(case.args, "vendor"),
+            });
+            defer result.deinit(a);
+            var o = try newObject(s);
+            try putCount(s, &o, "external_pkg_count", result.external_pkgs.items.len);
+            try expectFields(case.*, try shapeObserved(s, o));
         },
     }
 }
@@ -602,4 +1336,128 @@ test "consistency: generate_proto" {
 
 test "consistency: generate_doc_md" {
     try runCase(testing.allocator, "generate_doc_md");
+}
+
+test "consistency: every manifest case has a runner" {
+    const c = try load();
+    var missing: std.ArrayList([]const u8) = .empty;
+    defer missing.deinit(testing.allocator);
+    for (c.cases) |*case| {
+        if (!containsName(&test_case_names, case.name)) {
+            try missing.append(testing.allocator, case.name);
+        }
+    }
+    if (missing.items.len != 0) {
+        std.debug.print(
+            "cases.json has cases this runner does not execute; add a test for each:\n",
+            .{},
+        );
+        for (missing.items) |name| std.debug.print("  {s}\n", .{name});
+        return error.UncoveredManifestCase;
+    }
+}
+
+// Every case in the manifest must be dispatched by one of the tests above.
+// Without this a runner that covers half the spec passes silently, which is
+// how the manifest could grow from 13 cases to 29 while this file still ran
+// only 13.
+//
+// `test_case_names` is hand-maintained rather than derived from the `runCase`
+// calls above: a check that inferred its own coverage would agree with itself,
+// which is the opposite of a check. Zig forbids doc comments on `test`, hence
+// the `//` here and the `///` everywhere else in this file.
+const test_case_names = [_][]const u8{
+    "ping",
+    "exec_program_basic",
+    "exec_program_overrides",
+    "format_code",
+    "validate_code_ok",
+    "validate_code_invalid",
+    "generate_kcl_json",
+    "generate_kcl_yaml",
+    "generate_toml",
+    "format_test_report",
+    "generate_openapi_v3",
+    "generate_proto",
+    "generate_doc_md",
+    "parse_file",
+    "parse_program",
+    "list_options",
+    "list_variables",
+    "load_package",
+    "get_schema_type_mapping",
+    "get_schema_type_mapping_under_path",
+    "get_version",
+    "list_method",
+    "lint_path_clean",
+    "lint_path_with_errors",
+    "format_path_dry_run",
+    "test_run",
+    "override_file",
+    "load_settings_files",
+    "update_dependencies_no_deps",
+};
+
+test "consistency: parse_file" {
+    try runCase(testing.allocator, "parse_file");
+}
+
+test "consistency: parse_program" {
+    try runCase(testing.allocator, "parse_program");
+}
+
+test "consistency: list_options" {
+    try runCase(testing.allocator, "list_options");
+}
+
+test "consistency: list_variables" {
+    try runCase(testing.allocator, "list_variables");
+}
+
+test "consistency: load_package" {
+    try runCase(testing.allocator, "load_package");
+}
+
+test "consistency: get_schema_type_mapping" {
+    try runCase(testing.allocator, "get_schema_type_mapping");
+}
+
+test "consistency: get_schema_type_mapping_under_path" {
+    try runCase(testing.allocator, "get_schema_type_mapping_under_path");
+}
+
+test "consistency: get_version" {
+    try runCase(testing.allocator, "get_version");
+}
+
+test "consistency: list_method" {
+    try runCase(testing.allocator, "list_method");
+}
+
+test "consistency: lint_path_clean" {
+    try runCase(testing.allocator, "lint_path_clean");
+}
+
+test "consistency: lint_path_with_errors" {
+    try runCase(testing.allocator, "lint_path_with_errors");
+}
+
+test "consistency: format_path_dry_run" {
+    try runCase(testing.allocator, "format_path_dry_run");
+}
+
+test "consistency: test_run" {
+    try runCase(testing.allocator, "test_run");
+}
+
+test "consistency: override_file" {
+    try runCase(testing.allocator, "override_file");
+}
+
+test "consistency: load_settings_files" {
+    try runCase(testing.allocator, "load_settings_files");
+}
+
+test "consistency: update_dependencies_no_deps" {
+    try runCase(testing.allocator, "update_dependencies_no_deps");
 }

@@ -15,6 +15,9 @@ napi-derive = "2.12.2"
 # universal `kcl_api::call` dispatcher since `KclServiceImpl` does not
 # expose a typed wrapper for that RPC.
 prost = "0.14"
+# Used to render `KclType` — which `#[napi(object)]` cannot express because
+# it recurses through plain message fields — as canonical protobuf JSON.
+serde_json = "1.0"
 
 [build-dependencies]
 napi-build = "2.0.1"

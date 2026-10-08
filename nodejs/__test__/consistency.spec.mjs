@@ -1,5 +1,6 @@
-import { readFileSync } from 'node:fs'
-import { dirname, isAbsolute, join } from 'node:path'
+import { cpSync, existsSync, mkdtempSync, readFileSync, rmSync } from 'node:fs'
+import { tmpdir } from 'node:os'
+import { basename, dirname, isAbsolute, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 import test from 'ava'
@@ -14,12 +15,12 @@ const casesUrl = new URL('../../tests/consistency/cases.json', import.meta.url)
 // Manifest path entries are pinned repo-relative; resolve them against the
 // repository root (two levels up from tests/consistency).
 const repoRoot = join(dirname(fileURLToPath(casesUrl)), '..', '..')
-const resolvePath = (p) => (isAbsolute(p) ? p : join(repoRoot, p))
+const testdataRoot = join(repoRoot, 'tests', 'consistency', 'testdata')
 
 let manifest
 try {
   manifest = JSON.parse(readFileSync(fileURLToPath(casesUrl), 'utf8'))
-} catch (error) {
+} catch {
   throw new Error(
     `consistency manifest not found at ${fileURLToPath(casesUrl)}. ` +
       'Run `python tests/consistency/generate_cases.py` to generate it.',
@@ -30,18 +31,101 @@ if (manifest.version !== 1) {
   throw new Error(`unsupported consistency manifest version: ${manifest.version}`)
 }
 
-// Determine the available RPC surface once per run. Cores that predate
-// BuiltinService.ListMethod answer with an empty list (or throw), in which
-// case new_core cases are skipped.
-let availableMethods = new Set()
-try {
-  availableMethods = new Set(kcl.listMethod().methodNameList)
-} catch {
-  availableMethods = new Set()
+// The marker `generate_cases.py` writes into a path that names a template
+// rather than a file. `scratch:a/b.k` means "b.k inside a copy of testdata/a";
+// the copy is what makes the RPCs that write files safe to run, and it is also
+// why the expectations for those cases pin the RPC's answer rather than a path.
+const scratchPrefix = 'scratch:'
+
+// Every scratch root this run created, removed in the teardown below.
+const scratchRoots = []
+
+const scratch = (rest) => {
+  const cut = rest.indexOf('/')
+  const template = cut === -1 ? rest : rest.slice(0, cut)
+  const tail = cut === -1 ? '' : rest.slice(cut + 1)
+  const src = join(testdataRoot, template)
+  if (!existsSync(src)) {
+    throw new Error(`scratch template is not a directory: ${src}`)
+  }
+  // One temporary directory per path entry, so two cases -- and two runs --
+  // never observe each other's writes and the repository is never the target
+  // of an RPC that rewrites files.
+  const root = mkdtempSync(join(tmpdir(), 'kcl-consistency-'))
+  scratchRoots.push(root)
+  const dest = join(root, template)
+  cpSync(src, dest, { recursive: true })
+  return tail ? join(dest, tail) : dest
 }
 
-// RPC name -> [binding export, args builder]. RPCs the binding does not export
-// yet (e.g. GenerateKcl/GenerateToml) are skipped statically.
+const resolvePath = (p) => {
+  if (p.startsWith(scratchPrefix)) {
+    return scratch(p.slice(scratchPrefix.length))
+  }
+  return isAbsolute(p) ? p : join(repoRoot, p)
+}
+
+const resolvePaths = (values) => (values ?? []).map(resolvePath)
+
+// The RPC surface this core answers for, read once per run. Cores that predate
+// BuiltinService.ListMethod answer with an empty list (or fail outright), in
+// which case the new_core cases are skipped rather than failed.
+const availableMethods = (() => {
+  try {
+    return new Set(kcl.listMethod().methodNameList)
+  } catch {
+    return new Set()
+  }
+})()
+
+const resolveExternalPkgs = (pkgs) =>
+  (pkgs ?? []).map((p) => ({ pkgName: p.pkg_name, pkgPath: resolvePath(p.pkg_path) }))
+
+const parseArgs = (a) =>
+  new kcl.ParseProgramArgs(resolvePaths(a.paths), a.sources ?? [], resolveExternalPkgs(a.external_pkgs))
+
+// `k_filename_list` is resolved by the core against the process working
+// directory rather than against `work_dir`, so it has to be made absolute here
+// or it will not survive being run from another directory.
+const execFileNames = (a) =>
+  (a.k_filename_list ?? []).map((p) => (isAbsolute(p) ? p : join(resolvePath(a.work_dir ?? '.'), p)))
+
+// `ExecProgramArgs` is a positional constructor whose trailing fields no
+// consistency case sets, so they are spelled as named runs of unset values
+// rather than as a wall of bare nulls.
+const execArgs = (a) =>
+  new kcl.ExecProgramArgs(
+    ...[
+      execFileNames(a),
+      a.k_code_list ?? [],
+      // Only pinned when the manifest has one: leaving it empty keeps the core
+      // from going looking for a kcl.mod above the sources it was handed.
+      a.work_dir === undefined ? null : resolvePath(a.work_dir ?? ''),
+      (a.args ?? []).map((arg) => ({ name: arg.name ?? '', value: arg.value ?? '' })),
+      a.overrides ?? [],
+    ],
+    // disable_yaml_result .. sort_keys
+    ...Array(7).fill(null),
+    resolveExternalPkgs(a.external_pkgs),
+    // include_schema_type_path .. emit_attribute_metadata
+    ...Array(9).fill(null),
+  )
+
+// `GetSchemaTypeMappingArgs` builds its own `ExecProgramArgs`, so it takes the
+// source text as its own argument rather than an `ExecProgramArgs`.
+const schemaTypeMappingArgs = (a) => {
+  const e = a.exec_args ?? {}
+  return new kcl.GetSchemaTypeMappingArgs(
+    execFileNames(e),
+    e.work_dir === undefined ? null : resolvePath(e.work_dir ?? ''),
+    a.schema_name ?? '',
+    resolveExternalPkgs(e.external_pkgs),
+    e.k_code_list ?? [],
+  )
+}
+
+// RPC name -> [binding export, args builder]. An RPC with no entry here is not
+// dispatched at all, and the coverage guard below reports it by name.
 const CALLS = {
   'KclService.Ping': {
     fn: () => kcl.ping,
@@ -49,7 +133,7 @@ const CALLS = {
   },
   'KclService.ExecProgram': {
     fn: () => kcl.execProgram,
-    build: (a) => new kcl.ExecProgramArgs([], a.k_code_list, null, null, a.overrides ?? null),
+    build: (a) => execArgs(a),
   },
   'KclService.FormatCode': {
     fn: () => kcl.formatCode,
@@ -57,7 +141,8 @@ const CALLS = {
   },
   'KclService.ValidateCode': {
     fn: () => kcl.validateCode,
-    build: (a) => new kcl.ValidateCodeArgs(undefined, a.data, undefined, a.code),
+    build: (a) =>
+      new kcl.ValidateCodeArgs(undefined, a.data, undefined, a.code, undefined, undefined, a.format ?? undefined),
   },
   'KclService.FormatTestReport': {
     fn: () => kcl.formatTestReport,
@@ -78,22 +163,103 @@ const CALLS = {
   },
   'KclService.GenerateToml': {
     fn: () => kcl.generateToml,
-    build: (a) => new kcl.GenerateTomlArgs(new kcl.ExecProgramArgs([], a.exec_args.k_code_list)),
+    build: (a) => new kcl.GenerateTomlArgs(execArgs(a.exec_args), a.sort_keys ?? null),
   },
   'KclService.GenerateOpenAPI': {
     fn: () => kcl.generateOpenAPI,
-    build: (a) =>
-      new kcl.GenerateOpenAPIArgs(new kcl.ParseProgramArgs(a.parse_args.paths.map(resolvePath)), a.version ?? ''),
+    build: (a) => new kcl.GenerateOpenAPIArgs(parseArgs(a.parse_args), a.version ?? ''),
   },
   'KclService.GenerateProto': {
     fn: () => kcl.generateProto,
-    build: (a) =>
-      new kcl.GenerateProtoArgs(new kcl.ParseProgramArgs(a.parse_args.paths.map(resolvePath)), a.package ?? ''),
+    build: (a) => new kcl.GenerateProtoArgs(parseArgs(a.parse_args), a.package ?? ''),
   },
   'KclService.GenerateDoc': {
     fn: () => kcl.generateDoc,
+    build: (a) => new kcl.GenerateDocArgs(parseArgs(a.parse_args), a.format ?? ''),
+  },
+  'KclService.ParseFile': {
+    fn: () => kcl.parseFile,
+    build: (a) => new kcl.ParseFileArgs(a.path ?? '', a.source ?? undefined, resolveExternalPkgs(a.external_pkgs)),
+  },
+  'KclService.ParseProgram': {
+    fn: () => kcl.parseProgram,
+    build: (a) => parseArgs(a),
+  },
+  'KclService.ListOptions': {
+    fn: () => kcl.listOptions,
+    build: (a) => new kcl.ListOptionsArgs(resolvePaths(a.paths), a.sources ?? []),
+  },
+  'KclService.ListVariables': {
+    fn: () => kcl.listVariables,
     build: (a) =>
-      new kcl.GenerateDocArgs(new kcl.ParseProgramArgs(a.parse_args.paths.map(resolvePath)), a.format ?? ''),
+      new kcl.ListVariablesArgs(resolvePaths(a.files), a.specs ?? [], {
+        mergeProgram: a.options?.merge_program ?? false,
+      }),
+  },
+  'KclService.LoadPackage': {
+    fn: () => kcl.loadPackage,
+    build: (a) =>
+      new kcl.LoadPackageArgs(
+        resolvePaths(a.parse_args.paths),
+        a.parse_args.sources ?? [],
+        a.resolve_ast ?? false,
+        a.load_builtin ?? false,
+        a.with_ast_index ?? false,
+      ),
+  },
+  'KclService.GetSchemaTypeMapping': {
+    fn: () => kcl.getSchemaTypeMapping,
+    build: (a) => schemaTypeMappingArgs(a),
+  },
+  'KclService.GetSchemaTypeMappingUnderPath': {
+    fn: () => kcl.getSchemaTypeMappingUnderPath,
+    build: (a) => schemaTypeMappingArgs(a),
+  },
+  // The two methods the service builds its (empty) args message for, so calling
+  // them with the one this runner constructed is not what the binding expects.
+  'KclService.GetVersion': {
+    fn: () => kcl.getVersion,
+    build: () => undefined,
+    noArgs: true,
+  },
+  'BuiltinService.ListMethod': {
+    fn: () => kcl.listMethod,
+    build: () => undefined,
+    noArgs: true,
+  },
+  'KclService.LintPath': {
+    fn: () => kcl.lintPath,
+    build: (a) => new kcl.LintPathArgs(resolvePaths(a.paths)),
+  },
+  'KclService.FormatPath': {
+    fn: () => kcl.formatPath,
+    build: (a) => new kcl.FormatPathArgs(resolvePath(a.path ?? ''), a.dry_run ?? false),
+  },
+  'KclService.Test': {
+    fn: () => kcl.test,
+    build: (a) => {
+      const e = a.exec_args ?? {}
+      return new kcl.TestArgs(
+        resolvePaths(a.pkg_list),
+        a.fail_fast ?? false,
+        a.run_regexp ?? '',
+        e.work_dir === undefined ? null : resolvePath(e.work_dir),
+        execFileNames(e),
+        a.coverage ?? false,
+      )
+    },
+  },
+  'KclService.OverrideFile': {
+    fn: () => kcl.overrideFile,
+    build: (a) => new kcl.OverrideFileArgs(resolvePath(a.file ?? ''), a.specs ?? [], resolvePaths(a.import_paths)),
+  },
+  'KclService.LoadSettingsFiles': {
+    fn: () => kcl.loadSettingsFiles,
+    build: (a) => new kcl.LoadSettingsFilesArgs(resolvePath(a.work_dir ?? ''), resolvePaths(a.files)),
+  },
+  'KclService.UpdateDependencies': {
+    fn: () => kcl.updateDependencies,
+    build: (a) => new kcl.UpdateDependenciesArgs(resolvePath(a.manifest_path ?? ''), a.vendor ?? false),
   },
 }
 
@@ -113,6 +279,122 @@ const EXPECT_GETTERS = {
   content: (r) => r.content,
 }
 
+// Per-case projections, mirroring the `extract` of each definition in
+// `tests/consistency/generate_cases.py`. A case not listed here reads the named
+// fields straight off the result, which is all the generation RPCs need; the
+// cases below are the ones whose contract is a shape or a count rather than a
+// top-level field.
+const byName = (a, b) => (a[0] === b[0] ? 0 : a[0] < b[0] ? -1 : 1)
+
+// Canonical protobuf JSON is the default dialect: a field the core left unset
+// is absent, not `""`/`0`/`[]`/`{}`. `filename` is an absolute path, so it
+// differs on every machine and is dropped rather than pinned.
+const withoutLocalPaths = (node) => {
+  if (Array.isArray(node)) {
+    return node.map(withoutLocalPaths)
+  }
+  if (node !== null && typeof node === 'object') {
+    return Object.fromEntries(
+      Object.entries(node)
+        .filter(([key]) => key !== 'filename')
+        .map(([key, value]) => [key, withoutLocalPaths(value)]),
+    )
+  }
+  return node
+}
+
+const kclTypes = (document) => withoutLocalPaths(JSON.parse(document))
+
+const EXTRACTORS = {
+  parse_file: (r) => ({
+    // A bare `Module` document, so the statements are at `body`.
+    body_count: r.astJson ? JSON.parse(r.astJson).body.length : 0,
+    error_count: r.errors.length,
+    deps: [...r.deps],
+  }),
+  parse_program: (r) => ({
+    // `ParseProgram` returns a `pkgs` document, not a module: one Module per
+    // file, keyed by package path.
+    module_count: r.astJson ? JSON.parse(r.astJson).pkgs.__main__.length : 0,
+    error_count: r.errors.length,
+    paths: r.paths.map((p) => basename(p)),
+  }),
+  list_options: (r) => ({
+    option_count: r.options.length,
+    options: r.options.map((o) => [o.name, o.required]).sort(byName),
+  }),
+  list_variables: (r) => ({
+    // The napi mirror flattens the proto's `ListVariablesResponse` wrapper, so
+    // each entry is already the variable list the other bindings reach through.
+    values: Object.fromEntries(
+      Object.entries(r.variables)
+        .sort(([a], [b]) => (a === b ? 0 : a < b ? -1 : 1))
+        .map(([spec, vl]) => [spec, vl.map((v) => v.value)]),
+    ),
+    unsupported_codes: [...r.unsupportedCodes],
+    parse_error_count: r.parseErrors.length,
+  }),
+  load_package: (r) => ({
+    path_count: r.paths.length,
+    type_error_count: r.typeErrors.length,
+    parse_error_count: r.parseErrors.length,
+    symbol_count: Object.keys(r.symbols).length,
+    scope_count: Object.keys(r.scopes).length,
+    has_kcl_mod: r.kclMod !== null && r.kclMod !== undefined,
+    kcl_mod_name: r.kclMod?.package?.name ?? '',
+    app_count: r.apps.length,
+    // The map is keyed by the importing file, so its size is the number of
+    // files that import, not the number of import statements.
+    import_count: Object.keys(r.imports).length,
+  }),
+  get_schema_type_mapping: (r) => ({ type_mapping: kclTypes(r.schemaTypeMappingJson) }),
+  get_schema_type_mapping_under_path: (r) => ({ type_mapping: kclTypes(r.schemaTypeMappingJson) }),
+  get_version: (r) => ({
+    version: r.version ? r.version.split('.').slice(0, 2).join('.') : '',
+    has_checksum: Boolean(r.checksum),
+    has_git_sha: Boolean(r.gitSha),
+    has_version_info: Boolean(r.versionInfo),
+  }),
+  list_method: (r) => ({
+    has_kclservice_ping: r.methodNameList.includes('KclService.Ping'),
+    has_kclservice_parse_program: r.methodNameList.includes('KclService.ParseProgram'),
+    has_builtinservice_list_method: r.methodNameList.includes('BuiltinService.ListMethod'),
+    method_count: r.methodNameList.length,
+    has_empty_name: r.methodNameList.some((name) => !name),
+  }),
+  lint_path_clean: (r) => ({ result_count: r.results.length }),
+  lint_path_with_errors: (r) => ({ has_result: r.results.length > 0 }),
+  format_path_dry_run: (r) => ({
+    changed_count: r.changedPaths.length,
+    changed: r.changedPaths.map((p) => basename(p)).sort(),
+  }),
+  test_run: (r) => ({
+    names: r.info.map((i) => i.name).sort(),
+    failed: r.info
+      .filter((i) => i.error)
+      .map((i) => i.name)
+      .sort(),
+  }),
+  override_file: (r) => ({
+    result: r.result,
+    parse_error_count: r.parseErrors.length,
+  }),
+  load_settings_files: (r) => ({
+    options: r.kclOptions.map((o) => [o.key, o.value]).sort(byName),
+    output: r.kclCliConfigs.output,
+    overrides: [...r.kclCliConfigs.overrides],
+    strict_range_check: r.kclCliConfigs.strictRangeCheck,
+    verbose: Number(r.kclCliConfigs.verbose),
+  }),
+  update_dependencies_no_deps: (r) => ({ external_pkg_count: r.externalPkgs.length }),
+  // The diagnostic carries ANSI colour escapes, a random temp path and a temp
+  // filename, so the string itself is not pinnable but its presence is.
+  validate_code_invalid: (r) => ({
+    success: r.success,
+    has_error_message: Boolean(r.errMessage),
+  }),
+}
+
 const runCase = (t, call, case_) => {
   if (case_.new_core && !availableMethods.has(case_.rpc)) {
     // ava has no dynamic skip; a passed assertion with the reason keeps the
@@ -122,7 +404,10 @@ const runCase = (t, call, case_) => {
   }
   let result
   try {
-    result = call.fn()(call.build(case_.args))
+    // `fn` is a thunk over the namespace import, so it is only resolved here
+    // and nowhere at module scope.
+    const rpc = call.fn()
+    result = call.noArgs ? rpc() : rpc(call.build(case_.args))
   } catch (error) {
     if (case_.new_core && /unknown method|not implemented|unimplemented|invalid rpc/i.test(String(error))) {
       t.pass(`skipped: ${case_.rpc} call failed on this core: ${error}`)
@@ -130,22 +415,60 @@ const runCase = (t, call, case_) => {
     }
     throw error
   }
+  const extract = EXTRACTORS[case_.name]
+  const projected = extract ? extract(result) : {}
+  // Only the fields the manifest pins are compared, so adding a field to
+  // `expect` is the only way to start asserting on it. A projection may compute
+  // more than that, but a pinned field the projection does not produce is still
+  // a failure, because the key is missing either way.
   const actual = {}
   for (const field of Object.keys(case_.expect)) {
-    actual[field] = EXPECT_GETTERS[field](result)
+    actual[field] = extract ? projected[field] : EXPECT_GETTERS[field](result)
   }
   t.deepEqual(actual, case_.expect)
 }
 
-for (const case_ of manifest.cases) {
-  const title = `consistency: ${case_.name}`
-  const call = CALLS[case_.rpc]
+// Every case this runner executed, recorded at the top of the test body rather
+// than at the end so a case that fails is not additionally reported as
+// unexecuted. The guard below fails if the manifest grows a case this runner
+// does not dispatch -- the check that turns "this runner quietly covers half the
+// spec" into a build failure.
+const executed = new Set()
 
+for (const case_ of manifest.cases) {
+  const call = CALLS[case_.rpc]
   if (!call || typeof call.fn() !== 'function') {
-    throw new Error(`nodejs binding does not export ${case_.rpc} — update index.js/index.d.ts`)
+    continue
   }
 
-  test(title, (t) => {
+  test(`consistency: ${case_.name}`, (t) => {
+    executed.add(case_.name)
     runCase(t, call, case_)
   })
 }
+
+// Every case in the manifest must be dispatched by a test above. Without this,
+// a runner that covers half the spec passes silently -- which is exactly how
+// this file went from 13 dispatched cases to 29 in the manifest while still
+// only running 13.
+test.after.always((t) => {
+  const missing = manifest.cases
+    .filter((case_) => !executed.has(case_.name))
+    .map((case_) => {
+      const reason = CALLS[case_.rpc]
+        ? `rpc ${case_.rpc} is not exported by index.js/index.d.ts`
+        : `no dispatch for rpc ${case_.rpc}`
+      return `${case_.name} (${reason})`
+    })
+  t.deepEqual(
+    missing,
+    [],
+    'cases.json has cases this runner does not execute; add a dispatch and a projection for each',
+  )
+})
+
+test.after.always(() => {
+  for (const root of scratchRoots) {
+    rmSync(root, { recursive: true, force: true })
+  }
+})

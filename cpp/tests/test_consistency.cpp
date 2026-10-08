@@ -5,7 +5,7 @@
 // expectations as the python / nodejs / go / java / .NET runners, so a change to
 // the shared manifest that only one binding notices shows up here too.
 //
-// Three steps, mirroring `java/src/test/java/com/kcl/ConsistencyTest.java`:
+// Four steps, mirroring `java/src/test/java/com/kcl/ConsistencyTest.java`:
 //
 //   1. Load the manifest and check `version == 1`.
 //   2. Ask `list_method` once for the RPC surface of the linked core. Cases
@@ -17,11 +17,17 @@
 //   3. Dispatch on the `rpc` field and compare only the fields that actually
 //      appear under `expect`, so a manifest that grows a field needs no change
 //      here.
+//   4. Fail if any case in the manifest went undispatched. Without that check a
+//      runner covering half the spec is green on the half it covers, which is
+//      how this file could report 13 executed cases against a 29 case manifest
+//      for as long as it did.
 //
-// Expectations are read from the manifest, never hardcoded. Paths in
-// `parse_args.paths` are pinned repo-relative by the generator and are resolved
-// against the repository root, so the runner does not depend on the working
-// directory ctest happens to pick.
+// Expectations are read from the manifest, never hardcoded. Paths in the
+// manifest are pinned repo-relative by the generator and are resolved against
+// the repository root, so the runner does not depend on the working directory
+// ctest happens to pick; the paths carrying the `scratch:` marker are copied
+// into a fresh temporary tree first, because several of the RPCs exercised
+// here rewrite the files they are pointed at.
 //
 // JSON comes from `kcl_facade.hpp`, so this file builds and runs identically
 // whether CMake found nlohmann/json or fell back to the bundled parser; the
@@ -34,6 +40,7 @@
 #include "kcl_lib.hpp"
 
 #include <algorithm>
+#include <chrono>
 #include <cstdint>
 #include <cstdlib>
 #include <filesystem>
@@ -79,8 +86,8 @@ struct SkipCase : std::runtime_error {
 // `kcl_lib::JsonValue` is `nlohmann::ordered_json` or the facade's bundled
 // `Json`, and the two differ in a few spellings. Everything the walk below
 // needs is already ported in `kcl_lib::detail` (`json_find`, `for_each_member`,
-// `for_each_item`, `json_string`, `json_scalar_text`); only the four gaps below
-// are filled in here.
+// `for_each_item`, `json_string`, `json_scalar_text`); the constructors and the
+// scalar predicates below are the gaps this file fills in.
 // ---------------------------------------------------------------------------
 
 /// Whole-document parse. `detail::parse_json_stream` is deliberately a
@@ -134,6 +141,219 @@ inline bool value_is_int(const kcl_lib::JsonValue& value)
     return value.is_number();
 }
 
+/// `rust::String`'s conversion to std::string is explicit and its `c_str()` is
+/// non-const, so every hand-off below goes through data()/size().
+std::string to_string(const rust::String& text)
+{
+    return std::string(text.data(), text.size());
+}
+
+kcl_lib::JsonValue make_string(std::string value)
+{
+#ifdef KCL_LIB_HAS_NLOHMANN
+    return kcl_lib::JsonValue(std::move(value));
+#else
+    return kcl_lib::Json::string(std::move(value));
+#endif
+}
+
+kcl_lib::JsonValue make_bool(bool value)
+{
+#ifdef KCL_LIB_HAS_NLOHMANN
+    return kcl_lib::JsonValue(value);
+#else
+    return kcl_lib::Json::boolean(value);
+#endif
+}
+
+kcl_lib::JsonValue make_number(long long value)
+{
+#ifdef KCL_LIB_HAS_NLOHMANN
+    return kcl_lib::JsonValue(value);
+#else
+    return kcl_lib::Json::number(std::to_string(value));
+#endif
+}
+
+kcl_lib::JsonValue make_array(std::vector<kcl_lib::JsonValue> items)
+{
+#ifdef KCL_LIB_HAS_NLOHMANN
+    // nlohmann's `array()` factory takes an initializer list, not a vector, and
+    // its value constructor wants `array_t` -- so grow the empty container in
+    // place, which also preserves the order the members were appended in.
+    nlohmann::ordered_json value = nlohmann::ordered_json::array();
+    for (kcl_lib::JsonValue& item : items) {
+        value.push_back(std::move(item));
+    }
+    return value;
+#else
+    return kcl_lib::Json::array(std::move(items));
+#endif
+}
+
+kcl_lib::JsonValue make_object(std::vector<std::pair<std::string, kcl_lib::JsonValue>> members)
+{
+#ifdef KCL_LIB_HAS_NLOHMANN
+    nlohmann::ordered_json value = nlohmann::ordered_json::object();
+    for (std::pair<std::string, kcl_lib::JsonValue>& member : members) {
+        value[std::move(member.first)] = std::move(member.second);
+    }
+    return value;
+#else
+    return kcl_lib::Json::object(std::move(members));
+#endif
+}
+
+/// JSON string literal. Escaping is written out here rather than borrowed from
+/// the facade's `json_quote` so the two JSON backends cannot disagree about
+/// which control characters get an escape and turn two identical documents into
+/// a mismatch.
+void render_json_text(const std::string& text, std::string& out)
+{
+    out.push_back('"');
+    for (char ch : text) {
+        switch (ch) {
+        case '"':
+            out += "\\\"";
+            break;
+        case '\\':
+            out += "\\\\";
+            break;
+        case '\b':
+            out += "\\b";
+            break;
+        case '\f':
+            out += "\\f";
+            break;
+        case '\n':
+            out += "\\n";
+            break;
+        case '\r':
+            out += "\\r";
+            break;
+        case '\t':
+            out += "\\t";
+            break;
+        default:
+            out.push_back(ch);
+        }
+    }
+    out.push_back('"');
+}
+
+// ---------------------------------------------------------------------------
+// Canonical rendering
+//
+// Both sides of a shape comparison go through this, so a comparison never
+// depends on protobuf map iteration order or on an absolute path. Object keys
+// are sorted at every depth -- a top-level sort alone would leave `properties`
+// and `examples` unordered one level down -- and `filename` is dropped at every
+// depth, the same rule the python runner's `_without_local_paths` applies.
+// ---------------------------------------------------------------------------
+
+bool is_container(const kcl_lib::JsonValue& value)
+{
+    return value.is_object() || value.is_array();
+}
+
+void render_scalar(const kcl_lib::JsonValue& value, std::string& out)
+{
+    std::string text;
+    if (kcl_lib::detail::json_string(value, text)) {
+        render_json_text(text, out);
+        return;
+    }
+    kcl_lib::detail::json_scalar_text(value, out);
+}
+
+/// Arrays of scalars stay on one line (`["key1", false]`), which is what the
+/// projections of `list_options` and `load_settings_files` produce; anything
+/// nested is indented so a schema document diffs line by line.
+bool all_scalar(const kcl_lib::JsonValue& value)
+{
+    bool flat = true;
+    kcl_lib::detail::for_each_item(
+        value, [&flat](const kcl_lib::JsonValue& item) { flat = flat && !is_container(item); });
+    return flat;
+}
+
+void render_canonical(const kcl_lib::JsonValue& node, std::string& out, int depth)
+{
+    const std::string pad(static_cast<size_t>(depth) * 2, ' ');
+    const std::string inner(static_cast<size_t>(depth + 1) * 2, ' ');
+
+    if (node.is_object()) {
+        std::vector<std::pair<std::string, const kcl_lib::JsonValue*>> members;
+        kcl_lib::detail::for_each_member(
+            node, [&members](const std::string& key, const kcl_lib::JsonValue& value) {
+                if (key != "filename") {
+                    members.emplace_back(key, &value);
+                }
+            });
+        std::sort(members.begin(), members.end(),
+            [](const std::pair<std::string, const kcl_lib::JsonValue*>& a,
+                const std::pair<std::string, const kcl_lib::JsonValue*>& b) { return a.first < b.first; });
+        if (members.empty()) {
+            out += "{}";
+            return;
+        }
+        out += "{\n";
+        for (size_t i = 0; i < members.size(); ++i) {
+            out += inner;
+            render_json_text(members[i].first, out);
+            out += ": ";
+            render_canonical(*members[i].second, out, depth + 1);
+            out += (i + 1 < members.size() ? ",\n" : "\n");
+        }
+        out += pad + "}";
+        return;
+    }
+
+    if (node.is_array()) {
+        if (all_scalar(node)) {
+            out += '[';
+            bool first = true;
+            kcl_lib::detail::for_each_item(node, [&out, &first](const kcl_lib::JsonValue& item) {
+                if (!first) {
+                    out += ", ";
+                }
+                first = false;
+                render_scalar(item, out);
+            });
+            out += ']';
+            return;
+        }
+        if (node.size() == 0) {
+            out += "[]";
+            return;
+        }
+        const size_t total = node.size();
+        size_t index = 0;
+        out += "[\n";
+        kcl_lib::detail::for_each_item(
+            node, [&out, &index, &inner, total, depth](const kcl_lib::JsonValue& item) {
+                out += inner;
+                render_canonical(item, out, depth + 1);
+                out += (++index < total ? ",\n" : "\n");
+            });
+        out += pad + "]";
+        return;
+    }
+
+    render_scalar(node, out);
+}
+
+std::string render_canonical(const kcl_lib::JsonValue& node)
+{
+    std::string out;
+    render_canonical(node, out, 0);
+    return out;
+}
+
+// ---------------------------------------------------------------------------
+// Manifest readers
+// ---------------------------------------------------------------------------
+
 /// String member, or `fallback` when absent or another type. Mirrors the
 /// `args.path("k")` defaulting the other runners rely on.
 std::string json_string_or(const kcl_lib::JsonValue& parent, const std::string& key,
@@ -180,9 +400,33 @@ std::vector<std::string> json_string_array(const kcl_lib::JsonValue& parent, con
     return values;
 }
 
+/// Every element of an array member, kept whole. `ExecProgramArgs.args` is the
+/// one list-valued manifest field that is not a list of strings.
+std::vector<kcl_lib::JsonValue> json_array(const kcl_lib::JsonValue& parent,
+                                           const std::string& key)
+{
+    std::vector<kcl_lib::JsonValue> values;
+    const kcl_lib::JsonValue* member = kcl_lib::detail::json_find(parent, key);
+    if (member == nullptr || !member->is_array()) {
+        return values;
+    }
+    kcl_lib::detail::for_each_item(
+        *member, [&values](const kcl_lib::JsonValue& item) { values.push_back(item); });
+    return values;
+}
+
 const kcl_lib::JsonValue* member_or_null(const kcl_lib::JsonValue& parent, const std::string& key)
 {
     return kcl_lib::detail::json_find(parent, key);
+}
+
+/// A sub-message of `args`, or an empty object when the manifest omits it. The
+/// runners treat a missing sub-message and an empty one the same way, because
+/// every field of every args message defaults to the empty value.
+kcl_lib::JsonValue json_member_or_empty(const kcl_lib::JsonValue& parent, const std::string& key)
+{
+    const kcl_lib::JsonValue* member = member_or_null(parent, key);
+    return member != nullptr && member->is_object() ? *member : make_object({});
 }
 
 // ---------------------------------------------------------------------------
@@ -208,6 +452,13 @@ fs::path repo_root()
         .parent_path();
 }
 
+/// The directory holding the `scratch:` templates `generate_cases.py` names a
+/// path against.
+fs::path testdata_root()
+{
+    return repo_root() / "tests" / "consistency" / "testdata";
+}
+
 /// One manifest entry, borrowed from the parsed document.
 struct Case {
     std::string name;
@@ -219,6 +470,17 @@ struct Case {
 
 kcl_lib::JsonValue manifest;
 std::vector<Case> cases;
+
+/// Every case this runner dispatched, recorded at the top of `run_case` rather
+/// than at the end so a case that fails is not additionally reported as
+/// unexecuted.
+std::set<std::string> executed;
+
+/// Cases whose `rpc` reached the bottom of `run_case` without matching a
+/// handler. They already fail on their own line; the coverage guard reports
+/// them separately so a manifest that grows an RPC this runner does not
+/// implement can never be mistaken for a runner that quietly ignored it.
+std::set<std::string> unhandled;
 
 /// Load and index the manifest once, checking the version the runner knows.
 bool load_manifest()
@@ -277,9 +539,7 @@ std::set<std::string>& methods()
         resolved = true;
         try {
             for (const rust::String& name : kcl_lib::list_method().method_name_list) {
-                // `rust::String`'s conversion to std::string is explicit and
-                // its `c_str()` is non-const, so go through data()/size().
-                names.insert(std::string(name.data(), name.size()));
+                names.insert(to_string(name));
             }
         } catch (const std::exception& e) {
             std::cerr << "list_method unavailable (" << e.what() << "); new_core cases will skip"
@@ -367,6 +627,28 @@ bool field_matches(const std::string& case_name, const std::string& field,
         } \
     } while (0)
 
+/// Compare a projection against the pinned fields of the manifest. Only the
+/// fields `expect` names are compared, so adding a field to `expect` is the
+/// only way to start asserting on it and building an extra field here is
+/// harmless. A field the manifest pins and the projection does not build is a
+/// failure rather than a silent pass: the key is missing from the trimmed
+/// document, so the two renderings differ. Both sides go through
+/// `render_canonical`, so the comparison depends on neither protobuf map
+/// iteration order nor an absolute path.
+bool shape_matches(const std::string& case_name, const kcl_lib::JsonValue& expect,
+                   const kcl_lib::JsonValue& actual)
+{
+    std::vector<std::pair<std::string, kcl_lib::JsonValue>> pinned;
+    kcl_lib::detail::for_each_member(
+        actual, [&pinned, &expect](const std::string& key, const kcl_lib::JsonValue& value) {
+            if (kcl_lib::detail::json_find(expect, key) != nullptr) {
+                pinned.emplace_back(key, value);
+            }
+        });
+    return field_matches(case_name, "shape", render_canonical(expect),
+                         render_canonical(make_object(std::move(pinned))));
+}
+
 /// `expect.<field>` as a string, failing when the manifest omits it entirely.
 bool expect_string(const Case& c, const std::string& field, std::string& out)
 {
@@ -387,22 +669,91 @@ bool expect_has(const Case& c, const std::string& field)
 }
 
 // ---------------------------------------------------------------------------
-// Argument construction
+// Scratch paths
+//
+// The marker `generate_cases.py` writes into a path that names a template
+// rather than a file. `scratch:a/b.k` means "b.k inside a copy of
+// testdata/a"; the copy is what makes the RPCs that write files
+// (`override_file`, `load_settings_files`, `update_dependencies`, `format_path`
+// and `lint_path`) safe to run, and it is also why the expectations for those
+// cases pin the RPC's answer rather than a path.
 // ---------------------------------------------------------------------------
 
-/// `ParseProgramArgs.paths` entries are pinned repo-relative by the generator;
-/// absolute entries are kept as-is. Resolving here is what keeps the runner
-/// independent of the working directory.
-rust::Vec<rust::String> absolute_paths(const kcl_lib::JsonValue& parse_args)
+const char* const SCRATCH_PREFIX = "scratch:";
+
+/// A fresh, uniquely named directory under the system temp directory, named
+/// after the case so a failure log points at what it wrote. The clock plus a
+/// counter keeps the two ctest binaries built from this file from colliding,
+/// because `create_directories` reports failure on a name that is taken rather
+/// than reusing it.
+fs::path make_temp_dir(const std::string& label)
 {
-    rust::Vec<rust::String> paths;
-    for (const std::string& raw : json_string_array(parse_args, "paths")) {
-        const fs::path entry(raw);
-        const fs::path resolved = entry.is_absolute() ? entry : repo_root() / entry;
-        paths.push_back(rust::String(resolved.lexically_normal().string()));
+    const fs::path base = fs::temp_directory_path();
+    const auto stamp = std::chrono::steady_clock::now().time_since_epoch().count();
+    for (int attempt = 0; attempt < 64; ++attempt) {
+        const fs::path candidate = base / ("kcl-consistency-" + label + "-"
+                                           + std::to_string(stamp) + "-" + std::to_string(attempt));
+        std::error_code error;
+        if (fs::create_directories(candidate, error) && fs::is_directory(candidate)) {
+            return candidate;
+        }
     }
-    return paths;
+    throw std::runtime_error("could not create a temporary directory for " + label);
 }
+
+/// Copy a scratch template and return the path inside the copy. Each case gets
+/// its own temporary directory, so two cases -- and two runs -- never observe
+/// each other's writes and the repository is never the target of an RPC that
+/// rewrites files. A marker with no `/` names the copied directory itself.
+fs::path scratch(const std::string& rest, const std::string& label)
+{
+    const size_t slash = rest.find('/');
+    const std::string tmpl = slash == std::string::npos ? rest : rest.substr(0, slash);
+    const std::string tail = slash == std::string::npos ? std::string() : rest.substr(slash + 1);
+
+    const fs::path src = testdata_root() / tmpl;
+    if (!fs::is_directory(src)) {
+        throw std::runtime_error("scratch template is not a directory: " + src.string());
+    }
+    const fs::path dest = make_temp_dir(label) / tmpl;
+    std::error_code error;
+    fs::copy(src, dest, fs::copy_options::recursive, error);
+    if (error) {
+        throw std::runtime_error("could not copy " + src.string() + ": " + error.message());
+    }
+    return tail.empty() ? dest : dest / tail;
+}
+
+/// Manifest path entries are repo-relative (pinned by generate_cases.py);
+/// absolute entries are kept as-is. An absent path resolves to the repository
+/// root, which is what the other runners' `args.path("work_dir").asText(".")`
+/// fallback amounts to.
+fs::path resolve_path(const std::string& raw, const std::string& label)
+{
+    const std::string prefix = SCRATCH_PREFIX;
+    if (raw.compare(0, prefix.size(), prefix) == 0) {
+        return scratch(raw.substr(prefix.size()), label);
+    }
+    if (raw.empty()) {
+        return repo_root();
+    }
+    const fs::path path(raw);
+    return path.is_absolute() ? path : (repo_root() / path).lexically_normal();
+}
+
+std::vector<std::string> resolve_paths(const kcl_lib::JsonValue& args, const std::string& key,
+                                       const std::string& label)
+{
+    std::vector<std::string> resolved;
+    for (const std::string& raw : json_string_array(args, key)) {
+        resolved.push_back(resolve_path(raw, label).string());
+    }
+    return resolved;
+}
+
+// ---------------------------------------------------------------------------
+// Argument construction
+// ---------------------------------------------------------------------------
 
 rust::Vec<rust::String> as_rust_strings(const std::vector<std::string>& values)
 {
@@ -413,60 +764,380 @@ rust::Vec<rust::String> as_rust_strings(const std::vector<std::string>& values)
     return out;
 }
 
-/// Only the fields the ExecProgram cases set are forwarded; the runtime treats
-/// every omitted field as its default, which is what the golden results were
-/// produced with.
-kcl_lib::ExecProgramArgs build_exec_args(const kcl_lib::JsonValue& args)
+kcl_lib::ParseProgramArgs build_parse_args(const kcl_lib::JsonValue& node, const std::string& label)
 {
+    kcl_lib::ParseProgramArgs parse {};
+    parse.paths = as_rust_strings(resolve_paths(node, "paths", label));
+    parse.sources = as_rust_strings(json_string_array(node, "sources"));
+    return parse;
+}
+
+/// Build `ExecProgramArgs` from the manifest. `k_filename_list` is resolved by
+/// the core against the process working directory rather than against
+/// `work_dir`, so each entry is made absolute here or it will not survive being
+/// run from another directory.
+kcl_lib::ExecProgramArgs build_exec_args(const kcl_lib::JsonValue& args, const std::string& label)
+{
+    const fs::path work_dir = resolve_path(json_string_or(args, "work_dir"), label);
     kcl_lib::ExecProgramArgs exec {};
-    exec.work_dir = rust::String(json_string_or(args, "work_dir"));
-    exec.k_filename_list = as_rust_strings(json_string_array(args, "k_filename_list"));
+    exec.work_dir = rust::String(work_dir.string());
+    for (const std::string& raw : json_string_array(args, "k_filename_list")) {
+        const fs::path entry(raw);
+        const fs::path resolved = entry.is_absolute() ? entry : work_dir / entry;
+        exec.k_filename_list.push_back(rust::String(resolved.lexically_normal().string()));
+    }
     exec.k_code_list = as_rust_strings(json_string_array(args, "k_code_list"));
+    for (const kcl_lib::JsonValue& item : json_array(args, "args")) {
+        kcl_lib::Argument argument {};
+        argument.name = rust::String(json_string_or(item, "name"));
+        argument.value = rust::String(json_string_or(item, "value"));
+        exec.args.push_back(std::move(argument));
+    }
     exec.overrides = as_rust_strings(json_string_array(args, "overrides"));
     return exec;
 }
 
-kcl_lib::ParseProgramArgs build_parse_args(const kcl_lib::JsonValue& node)
+// ---------------------------------------------------------------------------
+// Parse-result shapes
+// ---------------------------------------------------------------------------
+
+/// The AST document a parse RPC returned, or a JSON null when it returned no
+/// document at all; both are the "nothing parsed" answer the projections below
+/// read as a count of zero rather than as an error.
+kcl_lib::JsonValue ast_document(const rust::String& ast_json)
 {
-    kcl_lib::ParseProgramArgs parse {};
-    parse.paths = absolute_paths(node);
-    parse.sources = as_rust_strings(json_string_array(node, "sources"));
-    return parse;
+    const std::string text = to_string(ast_json);
+    return text.empty() ? kcl_lib::JsonValue() : parse_json_document(text);
 }
+
+/// `ParseFile` returns a bare `Module` document, so the statements sit at
+/// `body`.
+long long body_count(const rust::String& ast_json)
+{
+    // The document has to outlive the lookup: `json_find` hands back a pointer
+    // into it.
+    const kcl_lib::JsonValue document = ast_document(ast_json);
+    const kcl_lib::JsonValue* body = kcl_lib::detail::json_find(document, "body");
+    return body == nullptr ? 0 : static_cast<long long>(body->size());
+}
+
+/// `ParseProgram` returns a `pkgs` document, not a module: one Module per file,
+/// keyed by package path.
+long long main_module_count(const rust::String& ast_json)
+{
+    const kcl_lib::JsonValue document = ast_document(ast_json);
+    const kcl_lib::JsonValue* pkgs = kcl_lib::detail::json_find(document, "pkgs");
+    const kcl_lib::JsonValue* main =
+        pkgs == nullptr ? nullptr : kcl_lib::detail::json_find(*pkgs, "__main__");
+    return main == nullptr ? 0 : static_cast<long long>(main->size());
+}
+
+// ---------------------------------------------------------------------------
+// Schema type documents
+//
+// `KclType` is 18 fields and recursive through `union_types`, `properties`,
+// `key`, `item` and `base_schema`, so a per-field projection would be a
+// recursive walk written once per language -- exactly the kind of dispatch
+// that agrees with itself and disagrees with the core. The canonical protobuf
+// JSON of each value is the one representation every binding can reach, so
+// that is what is produced here, by hand: the cxx bridge carries no protobuf
+// runtime and the schema documents are small.
+//
+// Two details are load-bearing and not tidiness:
+//
+//   * The dialect is protobuf JSON's *default*: a field the core left unset is
+//     absent, not rendered as `""`, `0`, `[]` or `null`. That is what every
+//     protobuf runtime emits without being asked, so the manifest is pinned
+//     to it.
+//   * The keys are the *proto* field names. The bridge renames two of them to
+//     keep Rust happy -- `type` is carried as `ty` and `default` as
+//     `default_value` -- so the bridge spelling must not leak into the
+//     document or this runner alone would disagree with the manifest.
+//
+// `filename` is dropped rather than emitted: it is an absolute path, so it
+// differs on every machine and under every runner. `pkg_path` is kept -- it is
+// a KCL package path like `__main__`, not a filesystem one, and it is what
+// makes the under-path result's outer key meaningful.
+// ---------------------------------------------------------------------------
+
+using JsonMembers = std::vector<std::pair<std::string, kcl_lib::JsonValue>>;
+
+void put(JsonMembers& members, const std::string& key, kcl_lib::JsonValue value)
+{
+    members.emplace_back(key, std::move(value));
+}
+
+/// Add a string member only when the bridge value is non-empty, which is how
+/// protobuf JSON's default dialect spells an unset `string` field.
+void put_string(JsonMembers& members, const std::string& key, const rust::String& value)
+{
+    if (!value.empty()) {
+        put(members, key, make_string(to_string(value)));
+    }
+}
+
+void put_strings(JsonMembers& members, const std::string& key, const rust::Vec<rust::String>& values)
+{
+    if (values.empty()) {
+        return;
+    }
+    std::vector<kcl_lib::JsonValue> items;
+    for (const rust::String& value : values) {
+        items.push_back(make_string(to_string(value)));
+    }
+    put(members, key, make_array(std::move(items)));
+}
+
+/// `KclType` is recursive through `union_types`, `properties`, `key`, `item`
+/// and `base_schema`.
+kcl_lib::JsonValue kcl_type_json(const kcl_lib::KclType& type);
+
+/// A nested optional type -- `KclType.key` / `.item` / `.base_schema`,
+/// `Parameter.ty`, `FunctionType.return_ty`, `IndexSignature.key` / `.val`.
+///
+/// The cxx bridge models `optional KclType` as a *string* holding just the type
+/// name (`OptionalKclType::new` copies `KclType.type` and nothing else), so that
+/// is all there is to project here: the single `type` key rather than the whole
+/// nested message. Nothing in the shared manifest pins a dict item type, a list
+/// item type, a union member or a base schema, so this is not exercised today;
+/// the day one is, the comparison fails with the missing keys rather than
+/// passing on a half-built document. `union_types` and `properties` recurse in
+/// full, because the bridge carries those as real `KclType` values.
+kcl_lib::JsonValue nested_type_json(const kcl_lib::OptionalKclType& type)
+{
+    JsonMembers members;
+    put_string(members, "type", type.value);
+    return make_object(std::move(members));
+}
+
+kcl_lib::JsonValue kcl_type_json(const kcl_lib::KclType& type)
+{
+    JsonMembers members;
+    put_string(members, "type", type.ty);
+    put_string(members, "default", type.default_value);
+    put_string(members, "schema_name", type.schema_name);
+    put_string(members, "schema_doc", type.schema_doc);
+    put_string(members, "description", type.description);
+    put_string(members, "pkg_path", type.pkg_path);
+    if (type.line != 0) {
+        put(members, "line", make_number(type.line));
+    }
+    if (!type.union_types.empty()) {
+        std::vector<kcl_lib::JsonValue> items;
+        for (const kcl_lib::KclType& member : type.union_types) {
+            items.push_back(kcl_type_json(member));
+        }
+        put(members, "union_types", make_array(std::move(items)));
+    }
+    if (!type.properties.empty()) {
+        JsonMembers properties;
+        for (const kcl_lib::HashMapKclTypeValue& entry : type.properties) {
+            put(properties, to_string(entry.key), kcl_type_json(entry.value));
+        }
+        put(members, "properties", make_object(std::move(properties)));
+    }
+    put_strings(members, "required", type.required);
+    if (type.key.has_value) {
+        put(members, "key", nested_type_json(type.key));
+    }
+    if (type.item.has_value) {
+        put(members, "item", nested_type_json(type.item));
+    }
+    if (type.base_schema.has_value) {
+        put(members, "base_schema", nested_type_json(type.base_schema));
+    }
+    if (!type.decorators.empty()) {
+        std::vector<kcl_lib::JsonValue> items;
+        for (const kcl_lib::Decorator& decorator : type.decorators) {
+            JsonMembers entry;
+            put_string(entry, "name", decorator.name);
+            put_strings(entry, "arguments", decorator.arguments);
+            if (!decorator.keywords.empty()) {
+                JsonMembers keywords;
+                for (const kcl_lib::HashMapStringValue& pair : decorator.keywords) {
+                    put(keywords, to_string(pair.key), make_string(to_string(pair.value)));
+                }
+                put(entry, "keywords", make_object(std::move(keywords)));
+            }
+            items.push_back(make_object(std::move(entry)));
+        }
+        put(members, "decorators", make_array(std::move(items)));
+    }
+    if (!type.examples.empty()) {
+        JsonMembers examples;
+        for (const kcl_lib::HashMapExampleValue& pair : type.examples) {
+            JsonMembers example;
+            put_string(example, "summary", pair.value.summary);
+            put_string(example, "description", pair.value.description);
+            put_string(example, "value", pair.value.value);
+            put(examples, to_string(pair.key), make_object(std::move(example)));
+        }
+        put(members, "examples", make_object(std::move(examples)));
+    }
+    if (type.function.has_value) {
+        JsonMembers function;
+        if (!type.function.value.params.empty()) {
+            std::vector<kcl_lib::JsonValue> params;
+            for (const kcl_lib::Parameter& param : type.function.value.params) {
+                JsonMembers entry;
+                put_string(entry, "name", param.name);
+                if (param.ty.has_value) {
+                    put(entry, "ty", nested_type_json(param.ty));
+                }
+                params.push_back(make_object(std::move(entry)));
+            }
+            put(function, "params", make_array(std::move(params)));
+        }
+        if (type.function.value.return_ty.has_value) {
+            put(function, "return_ty", nested_type_json(type.function.value.return_ty));
+        }
+        put(members, "function", make_object(std::move(function)));
+    }
+    if (type.index_signature.has_value) {
+        const kcl_lib::IndexSignature& signature = type.index_signature.value;
+        JsonMembers index;
+        // `key_name` is an explicit-presence field in the proto, so protobuf
+        // JSON emits it whenever it is set; the bridge carries it as a plain
+        // string, so an explicitly-empty key name is reported as absent here.
+        // The manifest pins no index signature, and getting this wrong shows up
+        // as a mismatch rather than as a silent pass.
+        put_string(index, "key_name", signature.key_name);
+        if (signature.key.has_value) {
+            put(index, "key", nested_type_json(signature.key));
+        }
+        if (signature.val.has_value) {
+            put(index, "val", nested_type_json(signature.val));
+        }
+        if (signature.any_other) {
+            put(index, "any_other", make_bool(true));
+        }
+        put(members, "index_signature", make_object(std::move(index)));
+    }
+    return make_object(std::move(members));
+}
+
+/// `GetSchemaTypeMapping`: a map from schema name to one `KclType`.
+kcl_lib::JsonValue schema_type_mapping_json(const rust::Vec<kcl_lib::HashMapKclTypeValue>& mapping)
+{
+    JsonMembers members;
+    for (const kcl_lib::HashMapKclTypeValue& entry : mapping) {
+        put(members, to_string(entry.key), kcl_type_json(entry.value));
+    }
+    return make_object(std::move(members));
+}
+
+/// `GetSchemaTypeMappingUnderPath`: a map from *package* name to a `SchemaTypes`
+/// wrapper holding a list. The two shapes are why both cases exist -- a binding
+/// that ran one method's result through the other's message type is the failure
+/// neither case would catch alone.
+kcl_lib::JsonValue schema_types_mapping_json(
+    const rust::Vec<kcl_lib::HashMapSchemaTypesValue>& mapping)
+{
+    JsonMembers members;
+    for (const kcl_lib::HashMapSchemaTypesValue& entry : mapping) {
+        std::vector<kcl_lib::JsonValue> items;
+        for (const kcl_lib::KclType& type : entry.value.schema_type) {
+            items.push_back(kcl_type_json(type));
+        }
+        JsonMembers wrapper;
+        put(wrapper, "schema_type", make_array(std::move(items)));
+        put(members, to_string(entry.key), make_object(std::move(wrapper)));
+    }
+    return make_object(std::move(members));
+}
+
+// ---------------------------------------------------------------------------
+// Small projections shared by the cases
+// ---------------------------------------------------------------------------
+
+kcl_lib::JsonValue make_string_array(const rust::Vec<rust::String>& values)
+{
+    std::vector<kcl_lib::JsonValue> items;
+    for (const rust::String& value : values) {
+        items.push_back(make_string(to_string(value)));
+    }
+    return make_array(std::move(items));
+}
+
+/// `option(...)` declarations as `[name, required]` pairs, sorted by name so
+/// the pinned order does not depend on the order the runtime visited them in.
+kcl_lib::JsonValue option_help_json(rust::Vec<kcl_lib::OptionHelp> options)
+{
+    std::sort(options.begin(), options.end(), [](const kcl_lib::OptionHelp& a, const kcl_lib::OptionHelp& b) {
+        return to_string(a.name) < to_string(b.name);
+    });
+    std::vector<kcl_lib::JsonValue> items;
+    for (const kcl_lib::OptionHelp& option : options) {
+        items.push_back(make_array({ make_string(to_string(option.name)), make_bool(option.required) }));
+    }
+    return make_array(std::move(items));
+}
+
+/// `kcl.yaml` options as `[key, value]` pairs, sorted by key for the same
+/// reason.
+kcl_lib::JsonValue key_value_json(rust::Vec<kcl_lib::KeyValuePair> pairs)
+{
+    std::sort(pairs.begin(), pairs.end(), [](const kcl_lib::KeyValuePair& a, const kcl_lib::KeyValuePair& b) {
+        return to_string(a.key) < to_string(b.key);
+    });
+    std::vector<kcl_lib::JsonValue> items;
+    for (const kcl_lib::KeyValuePair& pair : pairs) {
+        items.push_back(make_array({ make_string(to_string(pair.key)), make_string(to_string(pair.value)) }));
+    }
+    return make_array(std::move(items));
+}
+
+} // namespace
 
 // ---------------------------------------------------------------------------
 // Cases
 // ---------------------------------------------------------------------------
 
+#define CHECK_SHAPE(case_name, actual) \
+    do { \
+        if (!shape_matches((case_name), *c.expect, (actual))) { \
+            return false; \
+        } \
+    } while (0)
+
+namespace {
+
 bool run_case(const std::string& name)
 {
+    executed.insert(name);
     const Case* found = find_case(name);
     if (found == nullptr) {
         std::cerr << "consistency case not found in manifest: " << name << std::endl;
         return false;
     }
     const Case& c = *found;
-    const kcl_lib::JsonValue& args = *c.args;
     require_supported(c);
+    if (c.args == nullptr || c.expect == nullptr) {
+        std::cerr << "consistency case `" << name << "` has no `args`/`expect` object"
+                  << std::endl;
+        return false;
+    }
+    const kcl_lib::JsonValue& args = *c.args;
 
     if (c.rpc == "KclService.Ping") {
         kcl_lib::PingArgs ping {};
         ping.value = rust::String(json_string_or(args, "value"));
-        const std::string expected = json_string_or(*c.expect, "value");
-        CHECK_FIELD(name, "value", expected, std::string(kcl_lib::ping(ping).value));
+        std::string expected;
+        CHECK(expect_string(c, "value", expected));
+        CHECK_FIELD(name, "value", expected, to_string(kcl_lib::ping(ping).value));
         return true;
     }
 
     if (c.rpc == "KclService.ExecProgram") {
-        const auto result = kcl_lib::exec_program(build_exec_args(args));
+        const auto result = kcl_lib::exec_program(build_exec_args(args, name));
         std::string expected;
         if (expect_has(c, "yaml_result")) {
             CHECK(expect_string(c, "yaml_result", expected));
-            CHECK_FIELD(name, "yaml_result", expected, std::string(result.yaml_result));
+            CHECK_FIELD(name, "yaml_result", expected, to_string(result.yaml_result));
         }
         if (expect_has(c, "json_result")) {
             CHECK(expect_string(c, "json_result", expected));
-            CHECK_FIELD(name, "json_result", expected, std::string(result.json_result));
+            CHECK_FIELD(name, "json_result", expected, to_string(result.json_result));
         }
         return true;
     }
@@ -477,7 +1148,7 @@ bool run_case(const std::string& name)
         const auto result = kcl_lib::format_code(format);
         std::string expected;
         CHECK(expect_string(c, "formatted", expected));
-        CHECK_FIELD(name, "formatted", expected, std::string(result.formatted));
+        CHECK_FIELD(name, "formatted", expected, to_string(result.formatted));
         return true;
     }
 
@@ -492,24 +1163,290 @@ bool run_case(const std::string& name)
         validate.format = rust::String(json_string_or(args, "format"));
         const auto result = kcl_lib::validate_code(validate);
 
-        const kcl_lib::JsonValue* want = member_or_null(*c.expect, "success");
-        CHECK(want != nullptr);
-        CHECK(value_is_bool(*want));
-        std::string want_text;
-        kcl_lib::detail::json_scalar_text(*want, want_text);
-        if (result.success != (want_text == "true")) {
-            std::cerr << "consistency case `" << name << "` field `success` mismatch:\n"
-                      << "--- expected\n" << want_text << "\n+++ actual\n"
-                      << (result.success ? "true" : "false") << std::endl;
-            return false;
-        }
-        // Only compare `err_message` when the manifest asks for it:
-        // `validate_code_invalid` pins the flag alone.
+        JsonMembers members;
+        put(members, "success", make_bool(result.success));
+        // The diagnostic carries ANSI colour escapes, a random temp path and a
+        // temp filename, so the string itself is not pinnable but its presence
+        // is.
+        put(members, "has_error_message", make_bool(!result.err_message.empty()));
         if (expect_has(c, "err_message")) {
-            std::string expected;
-            CHECK(expect_string(c, "err_message", expected));
-            CHECK_FIELD(name, "err_message", expected, std::string(result.err_message));
+            put(members, "err_message", make_string(to_string(result.err_message)));
         }
+        CHECK_SHAPE(name, make_object(std::move(members)));
+        return true;
+    }
+
+    if (c.rpc == "KclService.ParseFile") {
+        kcl_lib::ParseFileArgs parse {};
+        parse.path = rust::String(json_string_or(args, "path"));
+        parse.source = rust::String(json_string_or(args, "source"));
+        const auto result = kcl_lib::parse_file(parse);
+        JsonMembers members;
+        put(members, "body_count", make_number(body_count(result.ast_json)));
+        put(members, "error_count", make_number(static_cast<long long>(result.errors.size())));
+        put(members, "deps", make_string_array(result.deps));
+        CHECK_SHAPE(name, make_object(std::move(members)));
+        return true;
+    }
+
+    if (c.rpc == "KclService.ParseProgram") {
+        const auto result = kcl_lib::parse_program(build_parse_args(args, name));
+        std::vector<kcl_lib::JsonValue> basenames;
+        for (const rust::String& path : result.paths) {
+            basenames.push_back(make_string(fs::path(to_string(path)).filename().string()));
+        }
+        JsonMembers members;
+        put(members, "module_count", make_number(main_module_count(result.ast_json)));
+        put(members, "error_count", make_number(static_cast<long long>(result.errors.size())));
+        put(members, "paths", make_array(std::move(basenames)));
+        CHECK_SHAPE(name, make_object(std::move(members)));
+        return true;
+    }
+
+    if (c.rpc == "KclService.ListOptions") {
+        const auto result = kcl_lib::list_options(build_parse_args(args, name));
+        JsonMembers members;
+        put(members, "option_count", make_number(static_cast<long long>(result.options.size())));
+        put(members, "options", option_help_json(std::move(result.options)));
+        CHECK_SHAPE(name, make_object(std::move(members)));
+        return true;
+    }
+
+    if (c.rpc == "KclService.ListVariables") {
+        kcl_lib::ListVariablesArgs variables {};
+        variables.files = as_rust_strings(resolve_paths(args, "files", name));
+        variables.specs = as_rust_strings(json_string_array(args, "specs"));
+        const kcl_lib::JsonValue options = json_member_or_empty(args, "options");
+        variables.options.has_value = true;
+        variables.options.value.merge_program = json_bool_or(options, "merge_program");
+        const auto result = kcl_lib::list_variables(variables);
+
+        // `variables` is a protobuf map, so its keys arrive in an undefined
+        // order; sorting them is what makes the pinned document stable.
+        std::vector<std::pair<std::string, const rust::Vec<kcl_lib::Variable>*>> by_spec;
+        for (const kcl_lib::HashMapVariableListValue& entry : result.variables) {
+            by_spec.emplace_back(to_string(entry.key), &entry.value);
+        }
+        std::sort(by_spec.begin(), by_spec.end(),
+            [](const std::pair<std::string, const rust::Vec<kcl_lib::Variable>*>& a,
+                const std::pair<std::string, const rust::Vec<kcl_lib::Variable>*>& b) { return a.first < b.first; });
+        JsonMembers values;
+        for (const auto& entry : by_spec) {
+            std::vector<kcl_lib::JsonValue> items;
+            for (const kcl_lib::Variable& variable : *entry.second) {
+                items.push_back(make_string(to_string(variable.value)));
+            }
+            put(values, entry.first, make_array(std::move(items)));
+        }
+
+        JsonMembers members;
+        put(members, "values", make_object(std::move(values)));
+        put(members, "unsupported_codes", make_string_array(result.unsupported_codes));
+        put(members, "parse_error_count", make_number(static_cast<long long>(result.parse_errors.size())));
+        CHECK_SHAPE(name, make_object(std::move(members)));
+        return true;
+    }
+
+    if (c.rpc == "KclService.LoadPackage") {
+        kcl_lib::LoadPackageArgs load {};
+        load.parse_args.has_value = true;
+        load.parse_args.value = build_parse_args(json_member_or_empty(args, "parse_args"), name);
+        load.resolve_ast = json_bool_or(args, "resolve_ast");
+        load.load_builtin = json_bool_or(args, "load_builtin");
+        load.with_ast_index = json_bool_or(args, "with_ast_index");
+        const auto result = kcl_lib::load_package(load);
+
+        JsonMembers members;
+        put(members, "path_count", make_number(static_cast<long long>(result.paths.size())));
+        put(members, "type_error_count", make_number(static_cast<long long>(result.type_errors.size())));
+        put(members, "parse_error_count", make_number(static_cast<long long>(result.parse_errors.size())));
+        put(members, "symbol_count", make_number(static_cast<long long>(result.symbols.size())));
+        put(members, "scope_count", make_number(static_cast<long long>(result.scopes.size())));
+        put(members, "has_kcl_mod", make_bool(result.kcl_mod.has_value));
+        put(members, "kcl_mod_name",
+            make_string(result.kcl_mod.has_value ? to_string(result.kcl_mod.value.package.value.name)
+                                                 : std::string()));
+        put(members, "app_count", make_number(static_cast<long long>(result.apps.size())));
+        put(members, "import_count", make_number(static_cast<long long>(result.imports.size())));
+        CHECK_SHAPE(name, make_object(std::move(members)));
+        return true;
+    }
+
+    if (c.rpc == "KclService.GetSchemaTypeMapping"
+        || c.rpc == "KclService.GetSchemaTypeMappingUnderPath") {
+        kcl_lib::GetSchemaTypeMappingArgs schema {};
+        schema.exec_args.has_value = true;
+        schema.exec_args.value = build_exec_args(json_member_or_empty(args, "exec_args"), name);
+        schema.schema_name = rust::String(json_string_or(args, "schema_name"));
+        JsonMembers members;
+        if (c.rpc == "KclService.GetSchemaTypeMapping") {
+            put(members, "type_mapping",
+                schema_type_mapping_json(kcl_lib::get_schema_type_mapping(schema).schema_type_mapping));
+        } else {
+            put(members, "type_mapping",
+                schema_types_mapping_json(
+                    kcl_lib::get_schema_type_mapping_under_path(schema).schema_type_mapping));
+        }
+        CHECK_SHAPE(name, make_object(std::move(members)));
+        return true;
+    }
+
+    if (c.rpc == "KclService.GetVersion") {
+        const auto result = kcl_lib::get_version();
+        // Only the major.minor pair is pinnable: the patch level moves with the
+        // core's release, which is exactly the drift a shared manifest cannot
+        // carry.
+        const std::string version = to_string(result.version);
+        const size_t first = version.find('.');
+        const size_t second = first == std::string::npos ? std::string::npos : version.find('.', first + 1);
+        const std::string pinned
+            = second == std::string::npos ? version : version.substr(0, second);
+
+        JsonMembers members;
+        put(members, "version", make_string(pinned));
+        put(members, "has_checksum", make_bool(!result.checksum.empty()));
+        put(members, "has_git_sha", make_bool(!result.git_sha.empty()));
+        put(members, "has_version_info", make_bool(!result.version_info.empty()));
+        CHECK_SHAPE(name, make_object(std::move(members)));
+        return true;
+    }
+
+    if (c.rpc == "BuiltinService.ListMethod") {
+        const auto result = kcl_lib::list_method();
+        bool has_ping = false;
+        bool has_parse_program = false;
+        bool has_list_method = false;
+        bool has_empty_name = false;
+        for (const rust::String& method : result.method_name_list) {
+            const std::string entry = to_string(method);
+            has_ping = has_ping || entry == "KclService.Ping";
+            has_parse_program = has_parse_program || entry == "KclService.ParseProgram";
+            has_list_method = has_list_method || entry == "BuiltinService.ListMethod";
+            has_empty_name = has_empty_name || entry.empty();
+        }
+        JsonMembers members;
+        put(members, "has_kclservice_ping", make_bool(has_ping));
+        put(members, "has_kclservice_parse_program", make_bool(has_parse_program));
+        put(members, "has_builtinservice_list_method", make_bool(has_list_method));
+        put(members, "method_count", make_number(static_cast<long long>(result.method_name_list.size())));
+        put(members, "has_empty_name", make_bool(has_empty_name));
+        CHECK_SHAPE(name, make_object(std::move(members)));
+        return true;
+    }
+
+    if (c.rpc == "KclService.LintPath") {
+        kcl_lib::LintPathArgs lint {};
+        lint.paths = as_rust_strings(resolve_paths(args, "paths", name));
+        const auto result = kcl_lib::lint_path(lint);
+        JsonMembers members;
+        put(members, "result_count", make_number(static_cast<long long>(result.results.size())));
+        put(members, "has_result", make_bool(!result.results.empty()));
+        CHECK_SHAPE(name, make_object(std::move(members)));
+        return true;
+    }
+
+    if (c.rpc == "KclService.FormatPath") {
+        kcl_lib::FormatPathArgs format {};
+        format.path = rust::String(resolve_path(json_string_or(args, "path"), name).string());
+        format.dry_run = json_bool_or(args, "dry_run");
+        const auto result = kcl_lib::format_path(format);
+        // Only the basenames are pinnable: the RPC answers with the paths it
+        // touched, absolute on some cores and relative on others.
+        std::vector<std::string> basenames;
+        for (const rust::String& path : result.changed_paths) {
+            basenames.push_back(fs::path(to_string(path)).filename().string());
+        }
+        std::sort(basenames.begin(), basenames.end());
+        std::vector<kcl_lib::JsonValue> items;
+        for (const std::string& base : basenames) {
+            items.push_back(make_string(base));
+        }
+
+        JsonMembers members;
+        put(members, "changed_count", make_number(static_cast<long long>(result.changed_paths.size())));
+        put(members, "changed", make_array(std::move(items)));
+        CHECK_SHAPE(name, make_object(std::move(members)));
+        return true;
+    }
+
+    if (c.rpc == "KclService.Test") {
+        kcl_lib::TestArgs test {};
+        test.exec_args.has_value = true;
+        test.exec_args.value = build_exec_args(json_member_or_empty(args, "exec_args"), name);
+        test.pkg_list = as_rust_strings(resolve_paths(args, "pkg_list", name));
+        test.run_regexp = rust::String(json_string_or(args, "run_regexp"));
+        test.fail_fast = json_bool_or(args, "fail_fast");
+        test.coverage = json_bool_or(args, "coverage");
+        const auto result = kcl_lib::test(test);
+
+        std::vector<std::string> names;
+        std::vector<std::string> failed;
+        for (const kcl_lib::TestCaseInfo& info : result.info) {
+            names.push_back(to_string(info.name));
+            if (!info.error.empty()) {
+                failed.push_back(to_string(info.name));
+            }
+        }
+        std::sort(names.begin(), names.end());
+        std::sort(failed.begin(), failed.end());
+
+        JsonMembers members;
+        std::vector<kcl_lib::JsonValue> name_items;
+        for (const std::string& test_name : names) {
+            name_items.push_back(make_string(test_name));
+        }
+        put(members, "names", make_array(std::move(name_items)));
+        std::vector<kcl_lib::JsonValue> failed_items;
+        for (const std::string& test_name : failed) {
+            failed_items.push_back(make_string(test_name));
+        }
+        put(members, "failed", make_array(std::move(failed_items)));
+        CHECK_SHAPE(name, make_object(std::move(members)));
+        return true;
+    }
+
+    if (c.rpc == "KclService.OverrideFile") {
+        kcl_lib::OverrideFileArgs override_args {};
+        override_args.file = rust::String(resolve_path(json_string_or(args, "file"), name).string());
+        override_args.specs = as_rust_strings(json_string_array(args, "specs"));
+        override_args.import_paths = as_rust_strings(resolve_paths(args, "import_paths", name));
+        const auto result = kcl_lib::override_file(override_args);
+        JsonMembers members;
+        put(members, "result", make_bool(result.result));
+        put(members, "parse_error_count", make_number(static_cast<long long>(result.parse_errors.size())));
+        CHECK_SHAPE(name, make_object(std::move(members)));
+        return true;
+    }
+
+    if (c.rpc == "KclService.LoadSettingsFiles") {
+        kcl_lib::LoadSettingsFilesArgs settings {};
+        settings.work_dir = rust::String(resolve_path(json_string_or(args, "work_dir"), name).string());
+        settings.files = as_rust_strings(resolve_paths(args, "files", name));
+        const auto result = kcl_lib::load_settings_files(settings);
+
+        JsonMembers members;
+        put(members, "options", key_value_json(std::move(result.kcl_options)));
+        const kcl_lib::CliConfig& config = result.kcl_cli_configs.value;
+        put(members, "output", make_string(to_string(config.output)));
+        std::vector<kcl_lib::JsonValue> overrides;
+        for (const rust::String& override : config.overrides) {
+            overrides.push_back(make_string(to_string(override)));
+        }
+        put(members, "overrides", make_array(std::move(overrides)));
+        put(members, "strict_range_check", make_bool(config.strict_range_check));
+        put(members, "verbose", make_number(config.verbose));
+        CHECK_SHAPE(name, make_object(std::move(members)));
+        return true;
+    }
+
+    if (c.rpc == "KclService.UpdateDependencies") {
+        kcl_lib::UpdateDependenciesArgs dependencies {};
+        dependencies.manifest_path = rust::String(resolve_path(json_string_or(args, "manifest_path"), name).string());
+        dependencies.vendor = json_bool_or(args, "vendor");
+        const auto result = kcl_lib::update_dependencies(dependencies);
+        JsonMembers members;
+        put(members, "external_pkg_count", make_number(static_cast<long long>(result.external_pkgs.size())));
+        CHECK_SHAPE(name, make_object(std::move(members)));
         return true;
     }
 
@@ -533,20 +1470,18 @@ bool run_case(const std::string& name)
         });
         std::string expected;
         CHECK(expect_string(c, "report", expected));
-        CHECK_FIELD(name, "report", expected, std::string(kcl_lib::format_test_report(report).report));
+        CHECK_FIELD(name, "report", expected, to_string(kcl_lib::format_test_report(report).report));
         return true;
     }
 
     if (c.rpc == "KclService.GenerateToml") {
         kcl_lib::GenerateTomlArgs generate {};
         generate.exec_args.has_value = true;
-        const kcl_lib::JsonValue* exec = member_or_null(args, "exec_args");
-        CHECK(exec != nullptr);
-        generate.exec_args.value = build_exec_args(*exec);
+        generate.exec_args.value = build_exec_args(json_member_or_empty(args, "exec_args"), name);
         generate.sort_keys = json_bool_or(args, "sort_keys");
         std::string expected;
         CHECK(expect_string(c, "toml", expected));
-        CHECK_FIELD(name, "toml", expected, std::string(kcl_lib::generate_toml(generate).toml));
+        CHECK_FIELD(name, "toml", expected, to_string(kcl_lib::generate_toml(generate).toml));
         return true;
     }
 
@@ -557,7 +1492,7 @@ bool run_case(const std::string& name)
         generate.format = rust::String(json_string_or(args, "format"));
         std::string expected;
         CHECK(expect_string(c, "kcl", expected));
-        CHECK_FIELD(name, "kcl", expected, std::string(kcl_lib::generate_kcl(generate).kcl));
+        CHECK_FIELD(name, "kcl", expected, to_string(kcl_lib::generate_kcl(generate).kcl));
         return true;
     }
 
@@ -566,11 +1501,11 @@ bool run_case(const std::string& name)
         const kcl_lib::JsonValue* parse = member_or_null(args, "parse_args");
         CHECK(parse != nullptr);
         generate.parse_args.has_value = true;
-        generate.parse_args.value = build_parse_args(*parse);
+        generate.parse_args.value = build_parse_args(*parse, name);
         generate.version = rust::String(json_string_or(args, "version"));
         std::string expected;
         CHECK(expect_string(c, "spec", expected));
-        CHECK_FIELD(name, "spec", expected, std::string(kcl_lib::generate_openapi(generate).spec));
+        CHECK_FIELD(name, "spec", expected, to_string(kcl_lib::generate_openapi(generate).spec));
         return true;
     }
 
@@ -579,11 +1514,11 @@ bool run_case(const std::string& name)
         const kcl_lib::JsonValue* parse = member_or_null(args, "parse_args");
         CHECK(parse != nullptr);
         generate.parse_args.has_value = true;
-        generate.parse_args.value = build_parse_args(*parse);
+        generate.parse_args.value = build_parse_args(*parse, name);
         generate.package = rust::String(json_string_or(args, "package"));
         std::string expected;
         CHECK(expect_string(c, "proto", expected));
-        CHECK_FIELD(name, "proto", expected, std::string(kcl_lib::generate_proto(generate).proto));
+        CHECK_FIELD(name, "proto", expected, to_string(kcl_lib::generate_proto(generate).proto));
         return true;
     }
 
@@ -592,16 +1527,65 @@ bool run_case(const std::string& name)
         const kcl_lib::JsonValue* parse = member_or_null(args, "parse_args");
         CHECK(parse != nullptr);
         generate.parse_args.has_value = true;
-        generate.parse_args.value = build_parse_args(*parse);
+        generate.parse_args.value = build_parse_args(*parse, name);
         generate.format = rust::String(json_string_or(args, "format"));
         std::string expected;
         CHECK(expect_string(c, "content", expected));
-        CHECK_FIELD(
-            name, "content", expected, std::string(kcl_lib::generate_doc(generate).content));
+        CHECK_FIELD(name, "content", expected, to_string(kcl_lib::generate_doc(generate).content));
         return true;
     }
 
     std::cerr << "no runner support for rpc " << c.rpc << " (case " << name << ")" << std::endl;
+    unhandled.insert(name);
+    return false;
+}
+
+/// Two ways a manifest case can go uncovered, both of which are failures:
+///
+///   * the case loop never reached it, which means the manifest and the loop
+///     disagree about what exists;
+///   * `run_case` reached it and found no handler for its `rpc`, which is what
+///     a manifest grown by one binding produces in a runner that is not updated
+///     with it.
+///
+/// The second is the one that matters: without it, a runner covering half the
+/// spec is green on the half it covers, which is how this file could report 13
+/// executed cases against a 29 case manifest for as long as it did.
+bool every_manifest_case_has_a_runner()
+{
+    std::vector<std::string> unreached;
+    std::vector<std::string> unhandled_names;
+    for (const Case& c : cases) {
+        if (executed.count(c.name) == 0) {
+            unreached.push_back(c.name);
+        }
+        if (unhandled.count(c.name) != 0) {
+            unhandled_names.push_back(c.name);
+        }
+    }
+    if (unreached.empty() && unhandled_names.empty()) {
+        std::cout << "[PASS] manifest coverage (" << cases.size() << " cases executed)"
+                  << std::endl;
+        return true;
+    }
+    if (!unreached.empty()) {
+        std::cerr << "consistency cases the runner never reached:";
+        for (const std::string& name : unreached) {
+            std::cerr << ' ' << name;
+        }
+        std::cerr << std::endl;
+    }
+    if (!unhandled_names.empty()) {
+        std::cerr << "consistency cases this runner has no handler for; add a branch to "
+                     "run_case for each:"
+                  << std::endl;
+        for (const std::string& name : unhandled_names) {
+            const Case* c = find_case(name);
+            std::cerr << "  " << name << " (" << (c != nullptr ? c->rpc : "?") << ")" << std::endl;
+        }
+    }
+    std::cout << "[FAIL] manifest coverage (" << (unreached.size() + unhandled_names.size()) << " of "
+              << cases.size() << " cases not executed)" << std::endl;
     return false;
 }
 
@@ -609,55 +1593,49 @@ bool run_case(const std::string& name)
 
 int main()
 {
-    // Every case in the manifest, in manifest order, so a case added upstream
-    // is picked up without touching this file.
-    const std::vector<std::pair<std::string, bool (*)()>> tests = { {
-        "manifest", []() { return load_manifest(); },
-    } };
-
     int failed = 0;
     int skipped = 0;
     int passed = 0;
 
     try {
-        for (const auto& [name, fn] : tests) {
-            try {
-                if (fn()) {
-                    std::cout << "[PASS] " << name << std::endl;
-                } else {
-                    std::cout << "[FAIL] " << name << std::endl;
-                    ++failed;
-                }
-            } catch (const std::exception& e) {
-                std::cerr << "[FAIL] " << name << " threw: " << e.what() << std::endl;
-                ++failed;
-            }
-        }
-
-        if (failed == 0) {
-            for (const Case& c : cases) {
-                try {
-                    if (run_case(c.name)) {
-                        std::cout << "[PASS] " << c.name << " (" << c.rpc << ")" << std::endl;
-                        ++passed;
-                    } else {
-                        std::cout << "[FAIL] " << c.name << " (" << c.rpc << ")" << std::endl;
-                        ++failed;
-                    }
-                } catch (const SkipCase& e) {
-                    std::cout << "[SKIP] " << c.name << " (" << c.rpc << "): " << e.what()
-                              << std::endl;
-                    ++skipped;
-                } catch (const std::exception& e) {
-                    std::cerr << "[FAIL] " << c.name << " (" << c.rpc << ") threw: " << e.what()
-                              << std::endl;
-                    ++failed;
-                }
-            }
+        if (load_manifest()) {
+            std::cout << "[PASS] manifest" << std::endl;
+        } else {
+            std::cout << "[FAIL] manifest" << std::endl;
+            ++failed;
         }
     } catch (const std::exception& e) {
         std::cerr << "consistency manifest could not be loaded: " << e.what() << std::endl;
         return 1;
+    }
+
+    if (failed == 0) {
+        // Manifest order, so a case added upstream is picked up without
+        // touching this file.
+        for (const Case& c : cases) {
+            try {
+                if (run_case(c.name)) {
+                    std::cout << "[PASS] " << c.name << " (" << c.rpc << ")" << std::endl;
+                    ++passed;
+                } else {
+                    std::cout << "[FAIL] " << c.name << " (" << c.rpc << ")" << std::endl;
+                    ++failed;
+                }
+            } catch (const SkipCase& e) {
+                std::cout << "[SKIP] " << c.name << " (" << c.rpc << "): " << e.what() << std::endl;
+                ++skipped;
+            } catch (const std::exception& e) {
+                std::cerr << "[FAIL] " << c.name << " (" << c.rpc << ") threw: " << e.what()
+                          << std::endl;
+                ++failed;
+            }
+        }
+
+        // Reported after the cases so a half-covered manifest shows up as its
+        // own failure rather than as a mystery inside one case's output.
+        if (!every_manifest_case_has_a_runner()) {
+            ++failed;
+        }
     }
 
     std::cout << passed << " passed, " << skipped << " skipped, " << failed << " failed out of "

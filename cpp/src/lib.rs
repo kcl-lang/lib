@@ -224,12 +224,183 @@ mod ffi {
         pub fully_qualified_name_map: Vec<HashMapSymbolIndexValue>,
         /// Map of package scope with package path as key.
         pub pkg_scope_map: Vec<HashMapScopeIndexValue>,
+        /// Map of direct imports, keyed by the importing file's absolute path.
+        pub imports: Vec<HashMapFileImportsValue>,
+        /// Parsed kcl.mod manifest of the package root. Empty when the root
+        /// has no kcl.mod.
+        pub kcl_mod: OptionalKclMod,
+        /// Application directories discovered under the package root.
+        pub apps: Vec<AppInfo>,
     }
 
     #[derive(Debug, Default)]
     struct HashMapScopeValue {
         key: String,
         value: Scope,
+    }
+
+    #[derive(Debug, Default)]
+    struct HashMapFileImportsValue {
+        key: String,
+        value: FileImports,
+    }
+
+    /// Message representing the direct imports of a single file.
+    #[derive(Debug, Default)]
+    struct FileImports {
+        /// List of direct imports of the file.
+        pub imports: Vec<ImportInfo>,
+    }
+
+    /// Message representing a single direct import of a file.
+    #[derive(Debug, Default)]
+    struct ImportInfo {
+        /// Import specifier as written in the source.
+        pub path: String,
+        /// Resolved absolute file path of the import.
+        pub resolved: String,
+    }
+
+    #[derive(Debug, Default)]
+    struct OptionalKclMod {
+        has_value: bool,
+        value: KclMod,
+    }
+
+    /// Message representing a parsed kcl.mod manifest.
+    #[derive(Debug, Default)]
+    struct KclMod {
+        /// Package section of the manifest.
+        pub package: OptionalKclModPackage,
+        /// Profile section of the manifest.
+        pub profile: OptionalKclModProfile,
+        /// Dependencies keyed by package name.
+        pub dependencies: Vec<HashMapKclModDependencyValue>,
+    }
+
+    /// Message representing the package section of a kcl.mod manifest.
+    #[derive(Debug, Default)]
+    struct KclModPackage {
+        /// Name of the package.
+        pub name: String,
+        /// KCL compiler edition of the package.
+        pub edition: String,
+        /// Version of the package.
+        pub version: String,
+        /// Description of the package.
+        pub description: String,
+        /// Files to include when publishing.
+        pub include: Vec<String>,
+        /// Files to exclude when publishing.
+        pub exclude: Vec<String>,
+    }
+
+    #[derive(Debug, Default)]
+    struct OptionalKclModPackage {
+        has_value: bool,
+        value: KclModPackage,
+    }
+
+    /// Message representing the profile section of a kcl.mod manifest.
+    #[derive(Debug, Default)]
+    struct KclModProfile {
+        /// List of entry-point files.
+        pub entries: Vec<String>,
+        /// Flag that disables the emission of the special 'none' value.
+        pub disable_none: bool,
+        /// Flag that, when true, ensures keys in maps are sorted.
+        pub sort_keys: bool,
+        /// List of attribute selectors for conditional compilation.
+        pub selectors: Vec<String>,
+        /// List of override paths.
+        pub overrides: Vec<String>,
+        /// List of additional options for the KCL compiler.
+        pub options: Vec<String>,
+    }
+
+    #[derive(Debug, Default)]
+    struct OptionalKclModProfile {
+        has_value: bool,
+        value: KclModProfile,
+    }
+
+    #[derive(Debug, Default)]
+    struct HashMapKclModDependencyValue {
+        key: String,
+        value: KclModDependency,
+    }
+
+    /// Message representing a single dependency of a kcl.mod manifest. Exactly
+    /// one of the four source fields is set.
+    #[derive(Debug, Default)]
+    struct KclModDependency {
+        /// Version of the dependency, e.g. "1.0.0".
+        pub version: String,
+        /// Git source of the dependency.
+        pub git: OptionalKclModGitSource,
+        /// OCI source of the dependency.
+        pub oci: OptionalKclModOciSource,
+        /// Local path source of the dependency.
+        pub local: OptionalKclModLocalSource,
+    }
+
+    /// Message representing a Git source of a kcl.mod dependency.
+    #[derive(Debug, Default)]
+    struct KclModGitSource {
+        /// URL of the Git repository.
+        pub git: String,
+        /// Branch name within the Git repository.
+        pub branch: String,
+        /// Commit hash to check out from the Git repository.
+        pub commit: String,
+        /// Tag name to check out from the Git repository.
+        pub tag: String,
+        /// Version specification associated with the Git source.
+        pub version: String,
+    }
+
+    #[derive(Debug, Default)]
+    struct OptionalKclModGitSource {
+        has_value: bool,
+        value: KclModGitSource,
+    }
+
+    /// Message representing an OCI source of a kcl.mod dependency.
+    #[derive(Debug, Default)]
+    struct KclModOciSource {
+        /// URI of the OCI repository.
+        pub oci: String,
+        /// Tag of the OCI package in the registry.
+        pub tag: String,
+    }
+
+    #[derive(Debug, Default)]
+    struct OptionalKclModOciSource {
+        has_value: bool,
+        value: KclModOciSource,
+    }
+
+    /// Message representing a local path source of a kcl.mod dependency.
+    #[derive(Debug, Default)]
+    struct KclModLocalSource {
+        /// Path to the local directory or file.
+        pub path: String,
+    }
+
+    #[derive(Debug, Default)]
+    struct OptionalKclModLocalSource {
+        has_value: bool,
+        value: KclModLocalSource,
+    }
+
+    /// Message representing an application directory discovered under a package
+    /// root.
+    #[derive(Debug, Default)]
+    struct AppInfo {
+        /// Absolute path of the application directory.
+        pub path: String,
+        /// True when the directory contains a kcl.mod manifest.
+        pub has_kcl_mod: bool,
     }
 
     #[derive(Debug, Default)]
@@ -1337,6 +1508,171 @@ impl LoadPackageResult {
                     value: ScopeIndex::new(v),
                 })
                 .collect(),
+            imports: r
+                .imports
+                .iter()
+                .map(|(k, v)| HashMapFileImportsValue {
+                    key: k.to_string(),
+                    value: FileImports {
+                        imports: v
+                            .imports
+                            .iter()
+                            .map(|i| ImportInfo {
+                                path: i.path.clone(),
+                                resolved: i.resolved.clone(),
+                            })
+                            .collect(),
+                    },
+                })
+                .collect(),
+            kcl_mod: OptionalKclMod::new(r.kcl_mod.as_ref()),
+            apps: r
+                .apps
+                .iter()
+                .map(|a| AppInfo {
+                    path: a.path.clone(),
+                    has_kcl_mod: a.has_kcl_mod,
+                })
+                .collect(),
+        }
+    }
+}
+
+impl OptionalKclMod {
+    #[inline]
+    fn new(v: Option<&kcl_api::KclMod>) -> Self {
+        match v {
+            Some(v) => Self {
+                has_value: true,
+                value: KclMod {
+                    package: OptionalKclModPackage::new(v.package.as_ref()),
+                    profile: OptionalKclModProfile::new(v.profile.as_ref()),
+                    dependencies: v
+                        .dependencies
+                        .iter()
+                        .map(|(k, d)| HashMapKclModDependencyValue {
+                            key: k.to_string(),
+                            value: KclModDependency {
+                                version: d.version.clone(),
+                                git: OptionalKclModGitSource::new(d.git.as_ref()),
+                                oci: OptionalKclModOciSource::new(d.oci.as_ref()),
+                                local: OptionalKclModLocalSource::new(d.local.as_ref()),
+                            },
+                        })
+                        .collect(),
+                },
+            },
+            None => Self {
+                has_value: false,
+                value: KclMod::default(),
+            },
+        }
+    }
+}
+
+/// The five `OptionalKclMod*` wrappers are the same shape, so each gets its own
+/// constructor beside `OptionalScopeIndex::new` rather than a macro.
+impl OptionalKclModPackage {
+    #[inline]
+    fn new(v: Option<&kcl_api::KclModPackage>) -> Self {
+        match v {
+            Some(v) => Self {
+                has_value: true,
+                value: KclModPackage {
+                    name: v.name.clone(),
+                    edition: v.edition.clone(),
+                    version: v.version.clone(),
+                    description: v.description.clone(),
+                    include: v.include.clone(),
+                    exclude: v.exclude.clone(),
+                },
+            },
+            None => Self {
+                has_value: false,
+                value: KclModPackage::default(),
+            },
+        }
+    }
+}
+
+impl OptionalKclModProfile {
+    #[inline]
+    fn new(v: Option<&kcl_api::KclModProfile>) -> Self {
+        match v {
+            Some(v) => Self {
+                has_value: true,
+                value: KclModProfile {
+                    entries: v.entries.clone(),
+                    disable_none: v.disable_none,
+                    sort_keys: v.sort_keys,
+                    selectors: v.selectors.clone(),
+                    overrides: v.overrides.clone(),
+                    options: v.options.clone(),
+                },
+            },
+            None => Self {
+                has_value: false,
+                value: KclModProfile::default(),
+            },
+        }
+    }
+}
+
+impl OptionalKclModGitSource {
+    #[inline]
+    fn new(v: Option<&kcl_api::KclModGitSource>) -> Self {
+        match v {
+            Some(v) => Self {
+                has_value: true,
+                value: KclModGitSource {
+                    git: v.git.clone(),
+                    branch: v.branch.clone(),
+                    commit: v.commit.clone(),
+                    tag: v.tag.clone(),
+                    version: v.version.clone(),
+                },
+            },
+            None => Self {
+                has_value: false,
+                value: KclModGitSource::default(),
+            },
+        }
+    }
+}
+
+impl OptionalKclModOciSource {
+    #[inline]
+    fn new(v: Option<&kcl_api::KclModOciSource>) -> Self {
+        match v {
+            Some(v) => Self {
+                has_value: true,
+                value: KclModOciSource {
+                    oci: v.oci.clone(),
+                    tag: v.tag.clone(),
+                },
+            },
+            None => Self {
+                has_value: false,
+                value: KclModOciSource::default(),
+            },
+        }
+    }
+}
+
+impl OptionalKclModLocalSource {
+    #[inline]
+    fn new(v: Option<&kcl_api::KclModLocalSource>) -> Self {
+        match v {
+            Some(v) => Self {
+                has_value: true,
+                value: KclModLocalSource {
+                    path: v.path.clone(),
+                },
+            },
+            None => Self {
+                has_value: false,
+                value: KclModLocalSource::default(),
+            },
         }
     }
 }

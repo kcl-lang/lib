@@ -799,8 +799,10 @@ done:
 
 // Load a KCL package (AST + scopes/symbols/type info) and fill the
 // result buffers of `result`. Map and error fields are rendered as JSON
-// arrays of {"key": ..., "value": ...} entries. Returns false and copies
-// the error message into err_out on failure.
+// arrays of {"key": ..., "value": ...} entries. has_kcl_mod/kcl_mod_name,
+// app_count and import_count surface the kcl.mod manifest, the apps list
+// and the imports map. Returns false and copies the error message into
+// err_out on failure.
 static inline bool kcl_load_package(const char* const* paths, size_t path_count,
     bool resolve_ast, bool load_builtin, bool with_ast_index,
     struct KclLoadPackageResult* result, char* err_out, size_t err_out_size)
@@ -870,6 +872,9 @@ static inline bool kcl_load_package(const char* const* paths, size_t path_count,
     struct KclJsonSink symbol_node_map_sink;
     struct KclJsonSink fqn_map_sink;
     struct KclJsonSink pkg_scope_map_sink;
+    struct KclStringSlot mod_name_slot = { result->kcl_mod_name, sizeof(result->kcl_mod_name) };
+    size_t app_count = 0;
+    size_t import_count = 0;
 
     kcl_json_sink_init(&parse_errors_sink, result->parse_errors, result->parse_errors_size);
     kcl_json_sink_init(&type_errors_sink, result->type_errors, result->type_errors_size);
@@ -908,6 +913,15 @@ static inline bool kcl_load_package(const char* const* paths, size_t path_count,
     res.fully_qualified_name_map.arg = &fqn_map_sink;
     res.pkg_scope_map.funcs.decode = kcl_decode_scope_index_map_json;
     res.pkg_scope_map.arg = &pkg_scope_map_sink;
+    /* The kcl.mod manifest only needs its package name; the profile and
+     * dependencies members decode through their unset callbacks, which
+     * nanopb skips. apps and imports are counted, not rendered. */
+    res.kcl_mod.package.name.funcs.decode = kcl_decode_copy_string;
+    res.kcl_mod.package.name.arg = &mod_name_slot;
+    res.apps.funcs.decode = kcl_decode_count_only;
+    res.apps.arg = &app_count;
+    res.imports.funcs.decode = kcl_decode_count_only;
+    res.imports.arg = &import_count;
 
     if (!pb_decode(&istream, LoadPackageResult_fields, &res))
         goto done;
@@ -921,6 +935,9 @@ static inline bool kcl_load_package(const char* const* paths, size_t path_count,
         || !kcl_json_sink_finish(&pkg_scope_map_sink))
         goto done;
 
+    result->has_kcl_mod = res.has_kcl_mod;
+    result->app_count = app_count;
+    result->import_count = import_count;
     kcl_copy_string(result->program, result->program_size, program_buffer);
     status = true;
 

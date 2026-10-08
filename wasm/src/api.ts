@@ -87,6 +87,78 @@ export interface LoadPackageArgs {
   withAstIndex?: boolean;
 }
 
+/** A single direct import of a file, as written and as resolved. */
+export interface ImportInfo {
+  path: string;
+  resolved: string;
+}
+
+/** The direct imports of one file. */
+export interface FileImports {
+  imports: ImportInfo[];
+}
+
+/** The `[package]` section of a `kcl.mod`. */
+export interface KclModPackage {
+  name: string;
+  edition: string;
+  version: string;
+  description: string;
+  include: string[];
+  exclude: string[];
+}
+
+/** The `[profile]` section of a `kcl.mod`. */
+export interface KclModProfile {
+  entries: string[];
+  disableNone: boolean;
+  sortKeys: boolean;
+  selectors: string[];
+  overrides: string[];
+  options: string[];
+}
+
+/** The `[git]` source of a `kcl.mod` dependency. */
+export interface KclModGitSource {
+  git: string;
+  branch: string;
+  commit: string;
+  tag: string;
+  version: string;
+}
+
+/** The `[oci]` source of a `kcl.mod` dependency. */
+export interface KclModOciSource {
+  oci: string;
+  tag: string;
+}
+
+/** The `[local]` source of a `kcl.mod` dependency. */
+export interface KclModLocalSource {
+  path: string;
+}
+
+/** One `[dependencies]` entry: exactly one of the four sources is set. */
+export interface KclModDependency {
+  version: string;
+  git?: KclModGitSource;
+  oci?: KclModOciSource;
+  local?: KclModLocalSource;
+}
+
+/** A parsed `kcl.mod` manifest. */
+export interface KclMod {
+  pkg?: KclModPackage;
+  profile?: KclModProfile;
+  dependencies: Record<string, KclModDependency>;
+}
+
+/** An application directory discovered under a package root. */
+export interface AppInfo {
+  path: string;
+  hasKclMod: boolean;
+}
+
 export interface LoadPackageResult {
   program: string;
   paths: string[];
@@ -98,6 +170,9 @@ export interface LoadPackageResult {
   symbolNodeMap: Record<string, string>;
   fullyQualifiedNameMap: Record<string, SymbolIndex>;
   pkgScopeMap: Record<string, ScopeIndex>;
+  imports: Record<string, FileImports>;
+  kclMod?: KclMod;
+  apps: AppInfo[];
 }
 
 export interface OptionHelp {
@@ -980,6 +1055,237 @@ function decodeScope(r: ProtoReader): Scope {
   return scope;
 }
 
+/** A single direct import: the specifier as written and the resolved path. */
+function decodeImportInfo(r: ProtoReader): ImportInfo {
+  const info: ImportInfo = { path: "", resolved: "" };
+  while (!r.eof) {
+    const tag = r.readTag();
+    switch (tag >>> 3) {
+      case 1:
+        info.path = r.readString();
+        break;
+      case 2:
+        info.resolved = r.readString();
+        break;
+      default:
+        r.skip(tag & 7);
+    }
+  }
+  return info;
+}
+
+function decodeFileImports(r: ProtoReader): FileImports {
+  const out: FileImports = { imports: [] };
+  while (!r.eof) {
+    const tag = r.readTag();
+    if (tag >>> 3 === 1) out.imports.push(decodeImportInfo(r.readMessage()));
+    else r.skip(tag & 7);
+  }
+  return out;
+}
+
+function decodeKclModPackage(r: ProtoReader): KclModPackage {
+  const pkg: KclModPackage = {
+    name: "",
+    edition: "",
+    version: "",
+    description: "",
+    include: [],
+    exclude: [],
+  };
+  while (!r.eof) {
+    const tag = r.readTag();
+    switch (tag >>> 3) {
+      case 1:
+        pkg.name = r.readString();
+        break;
+      case 2:
+        pkg.edition = r.readString();
+        break;
+      case 3:
+        pkg.version = r.readString();
+        break;
+      case 4:
+        pkg.description = r.readString();
+        break;
+      case 5:
+        pkg.include.push(r.readString());
+        break;
+      case 6:
+        pkg.exclude.push(r.readString());
+        break;
+      default:
+        r.skip(tag & 7);
+    }
+  }
+  return pkg;
+}
+
+function decodeKclModProfile(r: ProtoReader): KclModProfile {
+  const profile: KclModProfile = {
+    entries: [],
+    disableNone: false,
+    sortKeys: false,
+    selectors: [],
+    overrides: [],
+    options: [],
+  };
+  while (!r.eof) {
+    const tag = r.readTag();
+    switch (tag >>> 3) {
+      case 1:
+        profile.entries.push(r.readString());
+        break;
+      case 2:
+        profile.disableNone = r.readBool();
+        break;
+      case 3:
+        profile.sortKeys = r.readBool();
+        break;
+      case 4:
+        profile.selectors.push(r.readString());
+        break;
+      case 5:
+        profile.overrides.push(r.readString());
+        break;
+      case 6:
+        profile.options.push(r.readString());
+        break;
+      default:
+        r.skip(tag & 7);
+    }
+  }
+  return profile;
+}
+
+function decodeKclModGitSource(r: ProtoReader): KclModGitSource {
+  const git: KclModGitSource = {
+    git: "",
+    branch: "",
+    commit: "",
+    tag: "",
+    version: "",
+  };
+  while (!r.eof) {
+    const tag = r.readTag();
+    switch (tag >>> 3) {
+      case 1:
+        git.git = r.readString();
+        break;
+      case 2:
+        git.branch = r.readString();
+        break;
+      case 3:
+        git.commit = r.readString();
+        break;
+      case 4:
+        git.tag = r.readString();
+        break;
+      case 5:
+        git.version = r.readString();
+        break;
+      default:
+        r.skip(tag & 7);
+    }
+  }
+  return git;
+}
+
+function decodeKclModOciSource(r: ProtoReader): KclModOciSource {
+  const oci: KclModOciSource = { oci: "", tag: "" };
+  while (!r.eof) {
+    const tag = r.readTag();
+    switch (tag >>> 3) {
+      case 1:
+        oci.oci = r.readString();
+        break;
+      case 2:
+        oci.tag = r.readString();
+        break;
+      default:
+        r.skip(tag & 7);
+    }
+  }
+  return oci;
+}
+
+function decodeKclModLocalSource(r: ProtoReader): KclModLocalSource {
+  const local: KclModLocalSource = { path: "" };
+  while (!r.eof) {
+    const tag = r.readTag();
+    if (tag >>> 3 === 1) local.path = r.readString();
+    else r.skip(tag & 7);
+  }
+  return local;
+}
+
+function decodeKclModDependency(r: ProtoReader): KclModDependency {
+  const dep: KclModDependency = { version: "" };
+  while (!r.eof) {
+    const tag = r.readTag();
+    switch (tag >>> 3) {
+      case 1:
+        dep.version = r.readString();
+        break;
+      case 2:
+        dep.git = decodeKclModGitSource(r.readMessage());
+        break;
+      case 3:
+        dep.oci = decodeKclModOciSource(r.readMessage());
+        break;
+      case 4:
+        dep.local = decodeKclModLocalSource(r.readMessage());
+        break;
+      default:
+        r.skip(tag & 7);
+    }
+  }
+  return dep;
+}
+
+function decodeKclMod(r: ProtoReader): KclMod {
+  const mod: KclMod = { dependencies: {} };
+  while (!r.eof) {
+    const tag = r.readTag();
+    switch (tag >>> 3) {
+      case 1:
+        mod.pkg = decodeKclModPackage(r.readMessage());
+        break;
+      case 2:
+        mod.profile = decodeKclModProfile(r.readMessage());
+        break;
+      case 3: {
+        const [k, v] = decodeStringMapEntry(r, (m) =>
+          decodeKclModDependency(m.readMessage())
+        );
+        mod.dependencies[k] = v;
+        break;
+      }
+      default:
+        r.skip(tag & 7);
+    }
+  }
+  return mod;
+}
+
+function decodeAppInfo(r: ProtoReader): AppInfo {
+  const app: AppInfo = { path: "", hasKclMod: false };
+  while (!r.eof) {
+    const tag = r.readTag();
+    switch (tag >>> 3) {
+      case 1:
+        app.path = r.readString();
+        break;
+      case 2:
+        app.hasKclMod = r.readBool();
+        break;
+      default:
+        r.skip(tag & 7);
+    }
+  }
+  return app;
+}
+
 function decodeOptionHelp(r: ProtoReader): OptionHelp {
   const opt: OptionHelp = {
     name: "",
@@ -1519,6 +1825,8 @@ export function loadPackage(
     symbolNodeMap: {},
     fullyQualifiedNameMap: {},
     pkgScopeMap: {},
+    imports: {},
+    apps: [],
   };
   while (!r.eof) {
     const tag = r.readTag();
@@ -1575,6 +1883,19 @@ export function loadPackage(
         out.pkgScopeMap[k] = v;
         break;
       }
+      case 11: {
+        const [k, v] = decodeStringMapEntry(r, (m) =>
+          decodeFileImports(m.readMessage())
+        );
+        out.imports[k] = v;
+        break;
+      }
+      case 12:
+        out.kclMod = decodeKclMod(r.readMessage());
+        break;
+      case 13:
+        out.apps.push(decodeAppInfo(r.readMessage()));
+        break;
       default:
         r.skip(tag & 7);
     }

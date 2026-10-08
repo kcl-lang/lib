@@ -20,27 +20,7 @@
       "args": {
         "k_code_list": [
           "alice = {age = 18}"
-        ],
-        "work_dir": "",
-        "k_filename_list": [],
-        "args": [],
-        "overrides": [],
-        "disable_yaml_result": false,
-        "print_override_ast": false,
-        "strict_range_check": false,
-        "disable_none": false,
-        "verbose": 0,
-        "debug": 0,
-        "sort_keys": false,
-        "external_pkgs": [],
-        "include_schema_type_path": false,
-        "compile_only": false,
-        "show_hidden": false,
-        "path_selector": [],
-        "fast_eval": false,
-        "error_format": "",
-        "format": "",
-        "emit_attribute_metadata": false
+        ]
       },
       "expect": {
         "yaml_result": "alice:\n  age: 18",
@@ -57,26 +37,7 @@
         ],
         "overrides": [
           "alice.age=18"
-        ],
-        "work_dir": "",
-        "k_filename_list": [],
-        "args": [],
-        "disable_yaml_result": false,
-        "print_override_ast": false,
-        "strict_range_check": false,
-        "disable_none": false,
-        "verbose": 0,
-        "debug": 0,
-        "sort_keys": false,
-        "external_pkgs": [],
-        "include_schema_type_path": false,
-        "compile_only": false,
-        "show_hidden": false,
-        "path_selector": [],
-        "fast_eval": false,
-        "error_format": "",
-        "format": "",
-        "emit_attribute_metadata": false
+        ]
       },
       "expect": {
         "yaml_result": "alice:\n  age: 18"
@@ -99,13 +60,7 @@
       "new_core": false,
       "args": {
         "data": "{\"name\": \"Alice\"}",
-        "code": "schema Person:\n    name: str\n    check:\n        len(name) > 0",
-        "datafile": "",
-        "file": "",
-        "schema": "",
-        "attribute_name": "",
-        "format": "",
-        "external_pkgs": []
+        "code": "schema Person:\n    name: str\n    check:\n        len(name) > 0"
       },
       "expect": {
         "success": true,
@@ -118,16 +73,11 @@
       "new_core": false,
       "args": {
         "data": "{\"name\": \"\"}",
-        "code": "schema Person:\n    name: str\n    check:\n        len(name) > 0",
-        "datafile": "",
-        "file": "",
-        "schema": "",
-        "attribute_name": "",
-        "format": "",
-        "external_pkgs": []
+        "code": "schema Person:\n    name: str\n    check:\n        len(name) > 0"
       },
       "expect": {
-        "success": false
+        "success": false,
+        "has_error_message": true
       }
     },
     {
@@ -136,8 +86,7 @@
       "new_core": true,
       "args": {
         "source": "{\"a\": {\"b\": 1}, \"c\": [1, 2.5, true, null], \"d-e\": \"x\"}",
-        "filename": "data.json",
-        "format": ""
+        "filename": "data.json"
       },
       "expect": {
         "kcl": "a = {\n    b = 1\n}\nc = [1, 2.5, true, None]\n\"d-e\" = \"x\"\n"
@@ -149,8 +98,7 @@
       "new_core": true,
       "args": {
         "source": "a: 1\nb:\n  - x\n  - y\n",
-        "filename": "data.yaml",
-        "format": ""
+        "filename": "data.yaml"
       },
       "expect": {
         "kcl": "a = 1\nb = [\"x\", \"y\"]\n"
@@ -164,29 +112,8 @@
         "exec_args": {
           "k_code_list": [
             "app = {name = \"demo\", ports = [80, 443], tls = {enabled = True}}"
-          ],
-          "work_dir": "",
-          "k_filename_list": [],
-          "args": [],
-          "overrides": [],
-          "disable_yaml_result": false,
-          "print_override_ast": false,
-          "strict_range_check": false,
-          "disable_none": false,
-          "verbose": 0,
-          "debug": 0,
-          "sort_keys": false,
-          "external_pkgs": [],
-          "include_schema_type_path": false,
-          "compile_only": false,
-          "show_hidden": false,
-          "path_selector": [],
-          "fast_eval": false,
-          "error_format": "",
-          "format": "",
-          "emit_attribute_metadata": false
-        },
-        "sort_keys": false
+          ]
+        }
       },
       "expect": {
         "toml": "[app]\nname = \"demo\"\nports = [80, 443]\n\n[app.tls]\nenabled = true\n"
@@ -201,24 +128,17 @@
           "info": [
             {
               "name": "test_pass",
-              "duration": "1500",
-              "error": "",
-              "log_message": "",
-              "line_hits": {}
+              "duration": "1500"
             },
             {
               "name": "test_log",
               "duration": "2500",
-              "log_message": "hello log",
-              "error": "",
-              "line_hits": {}
+              "log_message": "hello log"
             },
             {
               "name": "test_fail",
               "error": "Error: assert failed",
-              "duration": "1000",
-              "log_message": "",
-              "line_hits": {}
+              "duration": "1000"
             }
           ]
         }
@@ -235,9 +155,7 @@
         "parse_args": {
           "paths": [
             "tests/consistency/testdata/gen_openapi/main.k"
-          ],
-          "sources": [],
-          "external_pkgs": []
+          ]
         },
         "version": "v3"
       },
@@ -253,9 +171,7 @@
         "parse_args": {
           "paths": [
             "tests/consistency/testdata/gen_openapi/main.k"
-          ],
-          "sources": [],
-          "external_pkgs": []
+          ]
         },
         "package": "example.v1"
       },
@@ -271,14 +187,330 @@
         "parse_args": {
           "paths": [
             "tests/consistency/testdata/gen_openapi/main.k"
-          ],
-          "sources": [],
-          "external_pkgs": []
+          ]
         },
         "format": "md"
       },
       "expect": {
         "content": "# Schemas\n\n## Package __main__\n\n### Base\n\nBase schema carrying the shared identifier.\n\n| Name | Type | Required | Default | Description |\n| --- | --- | --- | --- | --- |\n| id | int | yes |  | The unique identifier. |\n\n### Address\n\nA postal address.\n\n| Name | Type | Required | Default | Description |\n| --- | --- | --- | --- | --- |\n| geo | {str:float} | yes |  | Arbitrary float coordinates keyed by name. |\n| street | str | yes |  | The street name. |\n| zipCode | str | yes |  | The ZIP code. |\n\n### Person\n\nA person in the address book.\n\n| Name | Type | Required | Default | Description |\n| --- | --- | --- | --- | --- |\n| address | Address | yes |  | The home address. |\n| age | int | no | 18 | The age in years. |\n| emails | [str] | no |  | Known email addresses. |\n| id | int | yes |  | The unique identifier. |\n| name | str | yes |  | The full name. |\n\n### UnionS\n\nA schema with a union attribute.\n\n| Name | Type | Required | Default | Description |\n| --- | --- | --- | --- | --- |\n| val | int \\| str | yes |  | An int or a str. |\n"
+      }
+    },
+    {
+      "name": "parse_file",
+      "rpc": "KclService.ParseFile",
+      "new_core": false,
+      "args": {
+        "path": "main.k",
+        "source": "schema Person:\n    name: str\n    age?: int = 18\n\nalice = Person {name = \"Alice\"}\nnums = [i * 2 for i in [1, 2, 3]]\ntotal = sum(nums)\n"
+      },
+      "expect": {
+        "body_count": 4,
+        "error_count": 0,
+        "deps": []
+      }
+    },
+    {
+      "name": "parse_program",
+      "rpc": "KclService.ParseProgram",
+      "new_core": false,
+      "args": {
+        "sources": [
+          "schema Person:\n    name: str\n    age?: int = 18\n\nalice = Person {name = \"Alice\"}\nnums = [i * 2 for i in [1, 2, 3]]\ntotal = sum(nums)\n"
+        ]
+      },
+      "expect": {
+        "module_count": 1,
+        "error_count": 0,
+        "paths": [
+          "__main__.k"
+        ]
+      }
+    },
+    {
+      "name": "list_options",
+      "rpc": "KclService.ListOptions",
+      "new_core": false,
+      "args": {
+        "sources": [
+          "a = option(\"key1\")\nb = option(\"key2\", required=True)\n"
+        ]
+      },
+      "expect": {
+        "option_count": 2,
+        "options": [
+          [
+            "key1",
+            false
+          ],
+          [
+            "key2",
+            true
+          ]
+        ]
+      }
+    },
+    {
+      "name": "list_variables",
+      "rpc": "KclService.ListVariables",
+      "new_core": false,
+      "args": {
+        "files": [
+          "tests/consistency/testdata/variables/main.k"
+        ],
+        "specs": [
+          "a",
+          "b"
+        ]
+      },
+      "expect": {
+        "values": {
+          "a": [
+            "1"
+          ],
+          "b": [
+            "{\n    c = 2\n}"
+          ]
+        },
+        "unsupported_codes": [],
+        "parse_error_count": 0
+      }
+    },
+    {
+      "name": "load_package",
+      "rpc": "KclService.LoadPackage",
+      "new_core": false,
+      "args": {
+        "parse_args": {
+          "paths": [
+            "tests/consistency/testdata/pkg"
+          ]
+        },
+        "resolve_ast": true
+      },
+      "expect": {
+        "path_count": 1,
+        "type_error_count": 0,
+        "parse_error_count": 0,
+        "symbol_count": 20,
+        "scope_count": 5,
+        "has_kcl_mod": true,
+        "kcl_mod_name": "consistency",
+        "app_count": 1,
+        "import_count": 1
+      }
+    },
+    {
+      "name": "get_schema_type_mapping",
+      "rpc": "KclService.GetSchemaTypeMapping",
+      "new_core": false,
+      "args": {
+        "exec_args": {
+          "k_code_list": [
+            "schema Person:\n    name: str\n    age?: int = 18\n\nalice = Person {name = \"Alice\"}\nnums = [i * 2 for i in [1, 2, 3]]\ntotal = sum(nums)\n"
+          ]
+        },
+        "schema_name": "Person"
+      },
+      "expect": {
+        "type_mapping": {
+          "Person": {
+            "pkg_path": "__main__",
+            "properties": {
+              "age": {
+                "default": "18",
+                "line": 2,
+                "type": "int"
+              },
+              "name": {
+                "line": 1,
+                "type": "str"
+              }
+            },
+            "required": [
+              "name"
+            ],
+            "schema_name": "Person",
+            "type": "schema"
+          }
+        }
+      }
+    },
+    {
+      "name": "get_schema_type_mapping_under_path",
+      "rpc": "KclService.GetSchemaTypeMappingUnderPath",
+      "new_core": false,
+      "args": {
+        "exec_args": {
+          "work_dir": "tests/consistency/testdata/schema",
+          "k_filename_list": [
+            "main.k"
+          ]
+        },
+        "schema_name": "Person"
+      },
+      "expect": {
+        "type_mapping": {
+          "__main__": {
+            "schema_type": [
+              {
+                "pkg_path": "__main__",
+                "properties": {
+                  "age": {
+                    "default": "18",
+                    "line": 2,
+                    "type": "int"
+                  },
+                  "name": {
+                    "line": 1,
+                    "type": "str"
+                  }
+                },
+                "required": [
+                  "name"
+                ],
+                "schema_name": "Person",
+                "type": "schema"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "name": "get_version",
+      "rpc": "KclService.GetVersion",
+      "new_core": false,
+      "args": {},
+      "expect": {
+        "version": "0.13",
+        "has_checksum": true,
+        "has_git_sha": true,
+        "has_version_info": true
+      }
+    },
+    {
+      "name": "list_method",
+      "rpc": "BuiltinService.ListMethod",
+      "new_core": false,
+      "args": {},
+      "expect": {
+        "has_kclservice_ping": true,
+        "has_kclservice_parse_program": true,
+        "has_builtinservice_list_method": true,
+        "method_count": 28,
+        "has_empty_name": false
+      }
+    },
+    {
+      "name": "lint_path_clean",
+      "rpc": "KclService.LintPath",
+      "new_core": false,
+      "args": {
+        "paths": [
+          "tests/consistency/testdata/pkg"
+        ]
+      },
+      "expect": {
+        "result_count": 0
+      }
+    },
+    {
+      "name": "lint_path_with_errors",
+      "rpc": "KclService.LintPath",
+      "new_core": false,
+      "args": {
+        "paths": [
+          "scratch:lint"
+        ]
+      },
+      "expect": {
+        "has_result": true
+      }
+    },
+    {
+      "name": "format_path_dry_run",
+      "rpc": "KclService.FormatPath",
+      "new_core": false,
+      "args": {
+        "path": "tests/consistency/testdata/pkg",
+        "dry_run": true
+      },
+      "expect": {
+        "changed_count": 1,
+        "changed": [
+          "main.k"
+        ]
+      }
+    },
+    {
+      "name": "test_run",
+      "rpc": "KclService.Test",
+      "new_core": false,
+      "args": {
+        "pkg_list": [
+          "tests/consistency/testdata/pkg"
+        ]
+      },
+      "expect": {
+        "names": [
+          "test_replicas_positive"
+        ],
+        "failed": []
+      }
+    },
+    {
+      "name": "override_file",
+      "rpc": "KclService.OverrideFile",
+      "new_core": false,
+      "args": {
+        "file": "scratch:override/main.k",
+        "specs": [
+          "app.name=overridden"
+        ]
+      },
+      "expect": {
+        "result": true,
+        "parse_error_count": 0
+      }
+    },
+    {
+      "name": "load_settings_files",
+      "rpc": "KclService.LoadSettingsFiles",
+      "new_core": false,
+      "args": {
+        "work_dir": "scratch:settings",
+        "files": [
+          "scratch:settings/kcl.yaml"
+        ]
+      },
+      "expect": {
+        "options": [
+          [
+            "myopt",
+            "\"myval\""
+          ],
+          [
+            "other",
+            "2"
+          ]
+        ],
+        "output": "out.yaml",
+        "overrides": [
+          "app.name=overridden"
+        ],
+        "strict_range_check": true,
+        "verbose": 1
+      }
+    },
+    {
+      "name": "update_dependencies_no_deps",
+      "rpc": "KclService.UpdateDependencies",
+      "new_core": false,
+      "args": {
+        "manifest_path": "scratch:update_dependencies"
+      },
+      "expect": {
+        "external_pkg_count": 0
       }
     }
   ]

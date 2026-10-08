@@ -239,15 +239,36 @@ MemFS()` instance to `load()` to set up the sandbox filesystem.
   [Plugins](#plugins) above: the callout path is fully implemented, and the
   `panic=abort` caveat above applies to plugin errors specifically, because
   the runtime reports them by panicking.
-- **`Generate*` and `FormatTestReport` are implemented but not yet
-  available from the bundled artifact.** The prebuilt `kcl.wasm` in this
-  package registers 24 RPC methods (see `listMethod`) and none of them is
-  `KclService.GenerateToml` / `GenerateKcl` / `GenerateOpenAPI` /
-  `GenerateProto` / `GenerateDoc` / `FormatTestReport`; it predates them.
-  The wrappers are complete and their request encoding is covered by
-  `tests/generate_api.test.ts`, but calling one against this artifact traps
-  the instance rather than returning an error. The cross-language
-  consistency runner reports those cases as skipped for the same reason.
+- **`Generate*` and `FormatTestReport` are registered and run.** The
+  bundled v0.13.1 artifact advertises them in `listMethod` and the
+  consistency runner asserts them for real. Two of them still diverge from
+  the native goldens and are reported as skips with the measured reason:
+  `GenerateProto` emits a referenced schema twice, and `GenerateDoc`
+  titles its section `## Package` where native titles it
+  `## Package __main__`.
+- **`KclService.Test` never returns.** The test runner blocks inside the
+  WASI sandbox and the pending call never settles, so the consistency
+  runner declares the limit statically and reports the case as skipped
+  rather than probing it — a probe on a throwaway instance would hang the
+  whole suite.
+- **`KclService.GetSchemaTypeMappingUnderPath` does not return.** The
+  sibling `KclService.GetSchemaTypeMapping` works; what does not terminate is
+  the walk over a sandbox directory once the arguments name a real package.
+  With no arguments at all the call reports `No input KCL files or paths`, so
+  the method is registered and reachable. The consistency runner therefore
+  skips this case rather than calling it — probing it would take the process
+  down with it.
+- **`LoadPackage` answers a thinner `kcl_mod` than native.** The
+  `kcl_mod` field (12) is emitted, but the sandboxed manifest parse leaves
+  its `package` section empty, so `kcl_mod.pkg.name` decodes as `""`; the
+  consistency runner reports those fields instead of asserting them. The
+  other wire fields follow `spec.proto`; earlier artifacts put only fields
+  1 to 10 on the wire and never emitted `imports` (11), `kcl_mod` (12) or
+  `apps` (13), so they
+  decode as absent rather than empty. The wrapper in `src/api.ts` does decode
+  all three, and the consistency runner reports the four pinned fields it
+  cannot read rather than comparing them against a core that never sent
+  them.
 
 ### Rust
 

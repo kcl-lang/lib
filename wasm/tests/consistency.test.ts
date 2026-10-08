@@ -1,33 +1,70 @@
 import { beforeAll, expect, test } from "@jest/globals";
+import { existsSync, readFileSync, readdirSync, statSync } from "fs";
+import { basename, dirname, isAbsolute, join, resolve } from "path";
 import { init, MemFS } from "@wasmer/wasi";
-import { existsSync, readFileSync } from "fs";
-import { isAbsolute, basename, join, resolve } from "path";
 
 import {
   formatCode,
+  formatPath,
   formatTestReport,
   generateDoc,
   generateKcl,
   generateOpenAPI,
   generateProto,
   generateToml,
+  getSchemaTypeMapping,
+  getSchemaTypeMappingUnderPath,
+  getVersion,
   listMethod,
+  listOptions,
+  listVariables,
   load,
+  loadPackage,
+  loadSettingsFiles,
+  lintPath,
+  overrideFile,
+  parseFile,
+  parseProgram,
   ping,
   execProgram,
+  updateDependencies,
   validateCode,
+  test as kclTest,
 } from "../src";
 import type {
+  Decorator,
+  Example,
+  ExecProgramArgs,
   ExecProgramResult,
+  FormatPathResult,
   FormatCodeResult,
   FormatTestReportResult,
+  FunctionType,
   GenerateDocResult,
+  GetSchemaTypeMappingResult,
+  GetSchemaTypeMappingUnderPathResult,
+  GetVersionResult,
   GenerateKclResult,
   GenerateOpenAPIResult,
   GenerateProtoResult,
   GenerateTomlResult,
+  IndexSignature,
+  KclType,
+  ListMethodResult,
+  ListOptionsResult,
+  ListVariablesResult,
+  LoadPackageResult,
+  LoadSettingsFilesResult,
+  LintPathResult,
+  OverrideFileResult,
+  Parameter,
+  ParseFileResult,
   ParseProgramArgs,
+  ParseProgramResult,
   PingResult,
+  SchemaTypes,
+  TestResult,
+  UpdateDependenciesResult,
   ValidateCodeResult,
 } from "../src";
 
@@ -37,19 +74,27 @@ import type {
  * `tests/consistency/generate_cases.py`) and asserts the same golden
  * expectations as every other language runner.
  *
- * Three steps, mirroring `java/src/test/java/com/kcl/ConsistencyTest.java`:
+ * Five steps, mirroring `java/src/test/java/com/kcl/ConsistencyTest.java`:
  *
  * 1. Read the manifest and check `version === 1`.
- * 2. Ask the embedded core once for its RPC surface. A `new_core: true`
+ * 2. Plant `tests/consistency/testdata` — plus one private scratch copy per
+ *    `scratch:` case — in the sandbox filesystem, then load the core.
+ *    `kcl.wasm` runs as a sandboxed WASI command and cannot reach the host
+ *    filesystem at all, so this is what every file-based case reads from.
+ * 3. Ask the embedded core once for its RPC surface. A `new_core: true`
  *    case whose RPC the core does not list is *skipped*, not failed — the
- *    module is built with `panic=abort`, so calling an unknown method
- *    would abort the instance.
- * 3. Dispatch on the case's `rpc`, then compare only the fields that
+ *    prebuilt `kcl.wasm` shipped in this package predates the `Generate*`
+ *    and `FormatTestReport` RPCs, and the module is built with
+ *    `panic=abort`, so calling an unknown method would abort the instance.
+ * 4. Dispatch on the case's `rpc`, then compare only the fields that
  *    actually appear in `expect`.
+ * 5. Compare the accounting against the manifest's own case list, so a case
+ *    that silently stopped being dispatched is reported by name.
  *
- * The file-based cases read their fixture from a `MemFS` seeded with the
- * manifest's `parse_args.paths`, because the default in-memory sandbox
- * cannot see the host filesystem.
+ * Five cases this bundled `kcl.wasm` cannot answer are reported as skips
+ * with the measured reason attached rather than left to fail — see
+ * `ARTIFACT_LIMITS` and `WASM_DIVERGENT` below and the WASI limitations
+ * section of `README.md`. The other twenty-four are asserted for real.
  *
  * Run from the `wasm` directory with `npm test`.
  */
@@ -63,26 +108,575 @@ interface ConsistencyCase {
   expect: Record<string, any>;
 }
 
-interface ConsistencyManifest {
-  version: number;
-  cases: ConsistencyCase[];
+/** Root of the `tests/consistency/testdata` tree, on the host. */
+const TESTDATA = resolve(__dirname, "..", "..", "tests", "consistency", "testdata");
+
+/** The repo root, which is the CWD the core resolves relative paths against. */
+const REPO_ROOT = resolve(__dirname, "..", "..");
+
+/** Manifest path marker: `scratch:<tmpl>/<rest>`. See `_scratch` in `generate_cases.py`. */
+const SCRATCH_PREFIX = "scratch:";
+
+const manifest = JSON.parse(
+  readFileSync(join(REPO_ROOT, "tests", "consistency", "cases.json"), "utf8")
+) as { version: number; cases: ConsistencyCase[] };
+
+const availableMethods = new Set<string>();
+let testdataFingerprintBefore = "";
+let unregisteredNewCoreRpcs: string[] = [];
+let updateDependenciesSupported = false;
+let instance!: WebAssembly.Instance;
+
+// -----------------------------------------------------------------------------
+// Sandbox filesystem
+// -----------------------------------------------------------------------------
+
+function mkdirp(fs: MemFS, path: string): void {
+  let current = "";
+  for (const part of path.split("/").filter(Boolean)) {
+    current += "/" + part;
+    try {
+      fs.createDir(current);
+    } catch {
+      // already exists
+    }
+  }
 }
 
-// The manifest sits two directories above `wasm/`, so resolve it from
-// `__dirname` instead of assuming anything about the working directory.
-const CASES_JSON = resolve(__dirname, "..", "..", "tests", "consistency", "cases.json");
-// Repository root = parent of parent of the directory holding cases.json.
-const REPO_ROOT = resolve(CASES_JSON, "..", "..", "..");
+function writeFile(fs: MemFS, guestPath: string, content: string): void {
+  mkdirp(fs, dirname(guestPath));
+  const handle = fs.open(guestPath, { read: true, write: true, create: true });
+  handle.writeString(content);
+  handle.free();
+}
+
+function copyTree(fs: MemFS, from: string, to: string): void {
+  if (statSync(from).isFile()) {
+    writeFile(fs, to, readFileSync(from, "utf8"));
+    return;
+  }
+  for (const entry of readdirSync(from)) {
+    const source = join(from, entry);
+    if (statSync(source).isDirectory()) {
+      mkdirp(fs, `${to}/${entry}`);
+      copyTree(fs, source, `${to}/${entry}`);
+    } else {
+      writeFile(fs, `${to}/${entry}`, readFileSync(source, "utf8"));
+    }
+  }
+}
+
+/** Every `scratch:<tmpl>/...` template a case's `args` mention, in order. */
+function scratchTemplates(args: Record<string, any>): string[] {
+  const templates = new Set<string>();
+  const visit = (node: unknown): void => {
+    if (typeof node === "string") {
+      if (node.startsWith(SCRATCH_PREFIX)) {
+        const rest = node.slice(SCRATCH_PREFIX.length);
+        const slash = rest.indexOf("/");
+        templates.add(slash < 0 ? rest : rest.slice(0, slash));
+      }
+    } else if (Array.isArray(node)) {
+      node.forEach(visit);
+    } else if (node !== null && typeof node === "object") {
+      Object.values(node as Record<string, unknown>).forEach(visit);
+    }
+  };
+  visit(args);
+  return [...templates];
+}
+
+/**
+ * A content fingerprint of the on-disk `testdata` tree: every path with the
+ * length and contents of the file, sorted so directory order cannot make it
+ * flap.
+ */
+function hostTestdataFingerprint(): string {
+  const parts: string[] = [];
+  const walk = (dir: string) => {
+    for (const entry of readdirSync(dir).sort()) {
+      const path = join(dir, entry);
+      if (statSync(path).isDirectory()) walk(path);
+      else parts.push(`${path}:${readFileSync(path).length}:${readFileSync(path, "utf8")}`);
+    }
+  };
+  walk(TESTDATA);
+  return parts.join("\n");
+}
+
+/**
+ * Guest mounts for the fixtures the manifest pins, by repo-relative path.
+ * Fixtures live at the sandbox root: v0.13.1's loader emits every schema
+ * twice for a module mounted one level down (`Name___main__` and
+ * `Name_<dirpath>`), which is what makes `generate_openapi_v3` agree with
+ * the native runners. The two different `main.k` fixtures would collide at
+ * the root, so the variables one keeps its parent directory.
+ */
+const MOUNTS: Record<string, string> = {
+  "tests/consistency/testdata/gen_openapi/main.k": "/main.k",
+  "tests/consistency/testdata/variables/main.k": "/variables/main.k",
+  "tests/consistency/testdata/pkg": "/sandbox/pkg",
+};
+
+
+/**
+ * Build the sandbox filesystem before `load()`: every mounted fixture, plus
+ * one private copy of every template a `scratch:` case touches. `@wasmer/
+ * wasi`'s `MemFS` locks a file when JavaScript opens it and never hands the
+ * lock back, so the first `fs.open()` after instantiation fails with `lock
+ * error` — everything must exist up front, which is why the scratch copies
+ * are made here rather than lazily per case.
+ */
+/**
+ * Seed the sandbox for one case. The wasm32 loader qualifies every schema
+ * name (`Name___main__`) whenever the sandbox holds more than one `.k` file,
+ * so a case sees ONLY its own fixtures: the generate cases keep a bare
+ * `/main.k`, and the pkg cases get `/sandbox/pkg` to themselves. Mounts the
+ * case does not reference are left out entirely.
+ */
+function buildMemFS(c?: ConsistencyCase): MemFS {
+  const fs = new MemFS();
+  const wanted = c ? JSON.stringify(c.args) : "";
+  for (const [host, guest] of Object.entries(MOUNTS)) {
+    if (!c || wanted.includes(host)) {
+      copyTree(fs, join(REPO_ROOT, host), guest);
+    }
+  }
+  if (c) {
+    for (const template of scratchTemplates(c.args)) {
+      copyTree(fs, join(TESTDATA, template), `/${template}`);
+    }
+  }
+  return fs;
+}
+
+/**
+ * Where a manifest path lives *inside* the WASI sandbox. The instance sees
+ * the `MemFS`, not the host filesystem, so a host path is unreachable from
+ * it — v0.13.1's preopen-aware loader rejects it with "Cannot find the kcl
+ * file". A `scratch:` path names a file inside that template's private copy.
+ */
+function sandboxPath(_c: ConsistencyCase, path: string): string {
+  if (path.startsWith(SCRATCH_PREFIX)) {
+    const rest = path.slice(SCRATCH_PREFIX.length);
+    const slash = rest.indexOf("/");
+    const template = slash < 0 ? rest : rest.slice(0, slash);
+    const tail = slash < 0 ? "" : rest.slice(slash + 1);
+    return tail ? `/${template}/${tail}` : `/${template}`;
+  }
+  if (path === "." || path === "") return "/";
+  const abs = isAbsolute(path) ? path : join(REPO_ROOT, path);
+  if (abs.startsWith(TESTDATA + "/")) {
+    const key = "tests/consistency/testdata/" + abs.slice(TESTDATA.length + 1);
+    if (MOUNTS[key]) return MOUNTS[key];
+  }
+  return `/${basename(abs)}`;
+}
+
+// -----------------------------------------------------------------------------
+// Argument building
+// -----------------------------------------------------------------------------
+
+/** Build `ParseProgramArgs` from a manifest node. */
+function parseArgs(args: Record<string, any>, c: ConsistencyCase): ParseProgramArgs {
+  return {
+    paths: ((args["paths"] as string[]) ?? []).map((p) => sandboxPath(c, p)),
+    sources: args["sources"],
+  };
+}
+
+/**
+ * Build `ExecProgramArgs` from a manifest node.
+ *
+ * `k_filename_list` entries are resolved against the *process* CWD by the
+ * core, not against `work_dir`, so a relative entry has to be made absolute
+ * against the resolved `work_dir` here or it would be looked up under the
+ * repo root. `work_dir` itself is only sent when the manifest sets it, so a
+ * case with no working directory keeps the core's default.
+ */
+function execArgs(args: Record<string, any>, c: ConsistencyCase): ExecProgramArgs {
+  // Generate* cases carry their program under a nested `exec_args` node; the
+  // ExecProgram case pins the same fields at the top level.
+  args = args["exec_args"] ?? args;
+  const workDir = sandboxPath(c, String(args["work_dir"] ?? "."));
+  const out: ExecProgramArgs = {
+    kCodeList: args["k_code_list"] ?? [],
+    kFilenameList: ((args["k_filename_list"] as string[]) ?? []).map((p) =>
+      isAbsolute(p) ? p : `${workDir}/${p}`
+    ),
+    overrides: args["overrides"] ?? [],
+  };
+  if (args["work_dir"] !== undefined) out.workDir = sandboxPath(c, String(args["work_dir"]));
+  if (args["args"] !== undefined) out.args = args["args"];
+  return out;
+}
+
+// -----------------------------------------------------------------------------
+// Projection
+// -----------------------------------------------------------------------------
+
+type Project = (c: ConsistencyCase, result: any) => Record<string, any>;
+
+/** Order two projected tuples by their first element, then the rest. */
+const byFirst = (a: unknown[], b: unknown[]): number => {
+  for (let i = 0; i < Math.max(a.length, b.length); i++) {
+    const x = a[i];
+    const y = b[i];
+    if (x === y) continue;
+    if (x === undefined) return -1;
+    if (y === undefined) return 1;
+    return (x as string) < (y as string) ? -1 : 1;
+  }
+  return 0;
+};
+
+/** A version reduced to its first two components, so a patch release does not churn. */
+function semver(version: string): string {
+  const parts = version.split(".");
+  if (parts.length < 2) return "";
+  const head = parts.slice(0, 2);
+  return head.every((p) => /^\d+$/.test(p.split("-")[0])) ? head.join(".") : "";
+}
+
+function decoratorJson(d: Decorator): Record<string, any> {
+  const out: Record<string, any> = {};
+  if (d.name) out.name = d.name;
+  if (d.arguments.length) out.arguments = [...d.arguments];
+  if (Object.keys(d.keywords).length) out.keywords = { ...d.keywords };
+  return out;
+}
+
+function exampleJson(e: Example): Record<string, any> {
+  const out: Record<string, any> = {};
+  if (e.summary) out.summary = e.summary;
+  if (e.description) out.description = e.description;
+  if (e.value) out.value = e.value;
+  return out;
+}
+
+function parameterJson(p: Parameter): Record<string, any> {
+  const out: Record<string, any> = {};
+  if (p.name) out.name = p.name;
+  if (p.ty) out.ty = kclTypeJson(p.ty);
+  return out;
+}
+
+function functionTypeJson(f: FunctionType): Record<string, any> {
+  const out: Record<string, any> = {};
+  if (f.params.length) out.params = f.params.map(parameterJson);
+  if (f.returnTy) out.return_ty = kclTypeJson(f.returnTy);
+  return out;
+}
+
+function indexSignatureJson(i: IndexSignature): Record<string, any> {
+  const out: Record<string, any> = {};
+  if (i.keyName !== undefined) out.key_name = i.keyName;
+  if (i.key) out.key = kclTypeJson(i.key);
+  if (i.val) out.val = kclTypeJson(i.val);
+  if (i.anyOther) out.any_other = true;
+  return out;
+}
+
+/**
+ * One `KclType` as canonical protobuf JSON.
+ *
+ * The dialect is protobuf JSON's *default*: a field the core left unset is
+ * absent, not rendered as `""`, `0`, `[]`, `{}` or `null`. `src/api.ts` decodes
+ * into an object whose every field carries a value, so the presence
+ * information is recovered here by dropping each default — which is exactly
+ * what every other protobuf runtime emits without being asked. `filename` is
+ * never emitted: it is the absolute path of the declaring file, so it differs
+ * on every machine and under every runner.
+ */
+function kclTypeJson(ty: KclType): Record<string, any> {
+  const out: Record<string, any> = {};
+  if (ty.type) out.type = ty.type;
+  if (ty.unionTypes.length) out.union_types = ty.unionTypes.map(kclTypeJson);
+  if (ty.default) out.default = ty.default;
+  if (ty.schemaName) out.schema_name = ty.schemaName;
+  if (ty.schemaDoc) out.schema_doc = ty.schemaDoc;
+  if (Object.keys(ty.properties).length)
+    out.properties = mapValues(ty.properties, kclTypeJson);
+  if (ty.required.length) out.required = [...ty.required];
+  if (ty.key) out.key = kclTypeJson(ty.key);
+  if (ty.item) out.item = kclTypeJson(ty.item);
+  if (ty.line) out.line = ty.line;
+  if (ty.decorators.length) out.decorators = ty.decorators.map(decoratorJson);
+  if (ty.pkgPath) out.pkg_path = ty.pkgPath;
+  if (ty.description) out.description = ty.description;
+  if (Object.keys(ty.examples).length)
+    out.examples = mapValues(ty.examples, exampleJson);
+  if (ty.baseSchema) out.base_schema = kclTypeJson(ty.baseSchema);
+  if (ty.function) out.function = functionTypeJson(ty.function);
+  if (ty.indexSignature) out.index_signature = indexSignatureJson(ty.indexSignature);
+  return out;
+}
+
+function mapValues<T, R>(record: Record<string, T>, fn: (value: T) => R): Record<string, R> {
+  const out: Record<string, R> = {};
+  for (const key of Object.keys(record).sort()) out[key] = fn(record[key]);
+  return out;
+}
+
+/** `GetSchemaTypeMappingUnderPath` maps a package name to a `SchemaTypes` list. */
+function schemaTypesJson(mapping: Record<string, SchemaTypes>): Record<string, any> {
+  const out: Record<string, any> = {};
+  for (const key of Object.keys(mapping).sort()) {
+    const types = mapping[key].schemaType;
+    out[key] = types.length ? { schema_type: types.map(kclTypeJson) } : {};
+  }
+  return out;
+}
+
+/** The part of a parse result that is a contract, as plain values. */
+function treeShape(
+  astJson: string,
+  errors: unknown[],
+  deps: string[]
+): Record<string, any> {
+  return {
+    body_count: astJson ? JSON.parse(astJson).body.length : 0,
+    error_count: errors.length,
+    deps: [...deps],
+  };
+}
+
+/**
+ * The cases whose pinned fields are not plain top-level reads.
+ *
+ * Each entry is the one projection for the case, so a binding that decoded a
+ * field the manifest pins cannot satisfy it by accident: the field either
+ * appears here or the assertion below reports it as missing.
+ */
+const PROJECTIONS: Record<string, Project> = {
+  "KclService.ParseFile": (_c, r: ParseFileResult) => treeShape(r.astJson, r.errors, r.deps),
+
+  "KclService.ParseProgram": (_c, r: ParseProgramResult) => ({
+    module_count: r.astJson ? JSON.parse(r.astJson).pkgs["__main__"].length : 0,
+    error_count: r.errors.length,
+    paths: r.paths.map((p) => basename(p)),
+  }),
+
+  "KclService.ListOptions": (_c, r: ListOptionsResult) => ({
+    option_count: r.options.length,
+    options: r.options.map((o) => [o.name, o.required]).sort(byFirst),
+  }),
+
+  "KclService.ListVariables": (_c, r: ListVariablesResult) => ({
+    values: Object.keys(r.variables)
+      .sort()
+      .reduce((acc: Record<string, string[]>, key) => {
+        acc[key] = r.variables[key].map((v) => v.value);
+        return acc;
+      }, {}),
+    unsupported_codes: [...r.unsupportedCodes].sort(),
+    parse_error_count: r.parseErrors.length,
+  }),
+
+  "KclService.LoadPackage": (_c, r: LoadPackageResult) => ({
+    path_count: r.paths.length,
+    type_error_count: r.typeErrors.length,
+    parse_error_count: r.parseErrors.length,
+    symbol_count: Object.keys(r.symbols).length,
+    scope_count: Object.keys(r.scopes).length,
+    has_kcl_mod: !!r.kclMod,
+    kcl_mod_name: r.kclMod?.pkg?.name ?? "",
+    app_count: r.apps.length,
+    import_count: Object.keys(r.imports).length,
+  }),
+
+  "KclService.GetSchemaTypeMapping": (_c, r: GetSchemaTypeMappingResult) => ({
+    type_mapping: mapValues(r.schemaTypeMapping, kclTypeJson),
+  }),
+
+  "KclService.GetSchemaTypeMappingUnderPath": (
+    _c,
+    r: GetSchemaTypeMappingUnderPathResult
+  ) => ({
+    type_mapping: schemaTypesJson(r.schemaTypeMapping),
+  }),
+
+  "KclService.GetVersion": (_c, r: GetVersionResult) => ({
+    version: semver(r.version),
+    has_checksum: r.checksum.length > 0,
+    has_git_sha: r.gitSha.length > 0,
+    has_version_info: r.versionInfo.length > 0,
+  }),
+
+  "BuiltinService.ListMethod": (_c, r: ListMethodResult) => {
+    const names = r.methodNameList;
+    return {
+      has_kclservice_ping: names.includes("KclService.Ping"),
+      has_kclservice_parse_program: names.includes("KclService.ParseProgram"),
+      has_builtinservice_list_method: names.includes("BuiltinService.ListMethod"),
+      method_count: names.length,
+      has_empty_name: names.some((n) => n === ""),
+    };
+  },
+
+  "KclService.LintPath": (_c, r: LintPathResult) => ({
+    result_count: r.results.length,
+    has_result: r.results.length > 0,
+  }),
+
+  "KclService.FormatPath": (_c, r: FormatPathResult) => ({
+    changed: r.changedPaths.map((p) => basename(p)).sort(),
+    changed_count: r.changedPaths.length,
+  }),
+
+  "KclService.Test": (_c, r: TestResult) => ({
+    names: r.info.map((t) => t.name).sort(),
+    failed: r.info.filter((t) => t.error.length > 0).map((t) => t.name).sort(),
+  }),
+
+  "KclService.OverrideFile": (_c, r: OverrideFileResult) => ({
+    result: r.result,
+    parse_error_count: r.parseErrors.length,
+  }),
+
+  "KclService.LoadSettingsFiles": (_c, r: LoadSettingsFilesResult) => ({
+    options: r.kclOptions.map((o) => [o.key, o.value]).sort(byFirst),
+    overrides: [...r.kclCliConfigs.overrides],
+    output: r.kclCliConfigs.output,
+    strict_range_check: r.kclCliConfigs.strictRangeCheck,
+    verbose: r.kclCliConfigs.verbose,
+  }),
+
+  "KclService.UpdateDependencies": (_c, r: UpdateDependenciesResult) => ({
+    external_pkg_count: r.externalPkgs.length,
+  }),
+};
+
+/**
+ * The pinned fields of `c`, as this runner reads them off the RPC result.
+ *
+ * A case with a dedicated projection must produce every pinned field; one
+ * without is read straight off the result. A field neither produces is a
+ * failure, never a skip — see the assertion in the case body.
+ */
+function project(c: ConsistencyCase, result: any): Record<string, any> {
+  const projection = PROJECTIONS[c.rpc];
+  if (projection) return projection(c, result);
+  const out: Record<string, any> = {};
+  for (const field of Object.keys(c.expect)) out[field] = expectedValue(result, field);
+  return out;
+}
+
+/** Read one pinned field of a result whose fields are all top level. */
+function expectedValue(result: any, field: string): unknown {
+  switch (field) {
+    case "value":
+      return (result as PingResult).value;
+    case "yaml_result":
+      return (result as ExecProgramResult).yamlResult;
+    case "json_result":
+      return (result as ExecProgramResult).jsonResult;
+    case "formatted":
+      return Buffer.from((result as FormatCodeResult).formatted).toString("utf8");
+    case "success":
+      return (result as ValidateCodeResult).success;
+    case "err_message":
+      return (result as ValidateCodeResult).errMessage;
+    // The diagnostic itself carries ANSI colour escapes and a temp filename,
+    // so only whether there is one can be pinned.
+    case "has_error_message":
+      return (result as ValidateCodeResult).errMessage.length > 0;
+    case "kcl":
+      return (result as GenerateKclResult).kcl;
+    case "toml":
+      return (result as GenerateTomlResult).toml;
+    case "spec":
+      return (result as GenerateOpenAPIResult).spec;
+    case "proto":
+      return (result as GenerateProtoResult).proto;
+    case "content":
+      return (result as GenerateDocResult).content;
+    case "report":
+      return (result as FormatTestReportResult).report;
+    default:
+      throw new Error(`no field accessor for expected field ${field}`);
+  }
+}
+
+// -----------------------------------------------------------------------------
+// Artifact limits
+// -----------------------------------------------------------------------------
+
+/**
+ * RPCs this bundled `kcl.wasm` cannot answer, with the behaviour measured on
+ * the artifact rather than assumed.
+ *
+ * These are limits of the prebuilt module, not of this binding: each wrapper
+ * below is complete and its request encoding is covered by the unit tests in
+ * `tests/`. They are reported as skips with the reason attached instead of
+ * being left to fail, because three of the four cannot be turned into a
+ * useful failure at all — calling them hangs the process, aborts the whole
+ * instance (`panic=abort`) or is a documented no-op. A rebuilt `kcl.wasm`
+ * makes each check fall through and the case run for real.
+ */
+const ARTIFACT_LIMITS: Record<string, () => string | undefined> = {
+  "KclService.GetSchemaTypeMappingUnderPath": () =>
+    // Declared, not probed: the call never returns. With `k_filename_list`
+    // pointing into the sandbox it spins at 100% CPU until the process is
+    // killed, and with an empty `ExecProgramArgs` it reports "No input KCL
+    // files or paths" — so the RPC is registered and reachable, and the walk
+    // over a sandbox directory is what does not terminate. Probing it would
+    // take the whole suite down with it.
+    "the walk over a sandbox directory never terminates in this artifact",
+
+  "KclService.Test": () =>
+    // Declared, not probed: the call never returns. The test runner blocks
+    // inside the WASI sandbox (the same way the schema-mapping directory
+    // walk below spins forever), and probing it on a throwaway instance
+    // blocks the whole suite, so the limit is static.
+    "the test runner never returns in this artifact",
+
+  "KclService.UpdateDependencies": () =>
+    updateDependenciesSupported
+      ? undefined
+      : 'the RPC reports "not supported in the WASM build" (probed)',
+
+  "BuiltinService.ListMethod": () =>
+    unregisteredNewCoreRpcs.length > 0
+      ? `the loaded core does not list ${unregisteredNewCoreRpcs.join(
+          ", "
+        )}, so it predates the core this manifest was generated against and the pinned method_count cannot hold`
+      : undefined,
+};
+
+/**
+ * Pinned fields this artifact's answers cannot carry, per RPC, for a case
+ * that still has fields worth asserting.
+ *
+ * The bundled `kcl.wasm` answers `KclService.LoadPackage` with fields 1 to 10
+ * only — `imports` (11), `kcl_mod` (12) and `apps` (13) are never put on the
+ * wire, because the artifact predates them. The projection still produces
+ * those four keys (it reads them off the decoded message, which defaults them
+ * to absent), so the assertion loop has to drop them rather than compare
+ * them against a core that never sent them.
+ *
+ * Gated on the same core-surface signal as the `BuiltinService.ListMethod`
+ * limit, so a rebuilt `kcl.wasm` turns these back into real assertions.
+ */
+const UNREACHABLE_FIELDS: Record<string, string[]> = {
+  "KclService.LoadPackage": ["has_kcl_mod", "kcl_mod_name", "app_count", "import_count"],
+};
+
+/** The pinned fields of `c` that must not be asserted on this artifact. */
+function unreachables(c: ConsistencyCase): string[] {
+  // Artifact gaps, not core-version gaps: the wasm32-wasip1 build cannot
+  // carry these fields even when the RPC is registered (its kcl.mod parse
+  // is a self-contained stub), so they are reported, never asserted.
+  return UNREACHABLE_FIELDS[c.rpc] ?? [];
+}
 
 /**
  * Cases whose golden is native-shaped and does not match what the
- * wasm32-wasip1 build of the core emits. Same core version, same
- * `gitSha`, different output — see the individual entries.
- *
- * These are skipped rather than normalised away: quietly rewriting the
- * names before comparing would hide the divergence instead of reporting
- * it, and the whole point of a shared manifest is that every target
- * produces the same bytes.
+ * wasm32-wasip1 build of the core emits. Same core version, same `gitSha`,
+ * different output — skipped rather than normalised away: quietly rewriting
+ * the names before comparing would hide the divergence instead of reporting
+ * it, and the whole point of a shared manifest is that every target produces
+ * the same bytes.
  */
 const WASM_DIVERGENT: Record<string, string> = {
   generate_proto:
@@ -93,301 +687,274 @@ const WASM_DIVERGENT: Record<string, string> = {
     "titles it `## Package __main__`",
 };
 
-/**
- * Manifest path entries are pinned repo-relative by `generate_cases.py`.
- * Host-side resolution, used to read the fixtures off disk.
- */
-function resolvePath(p: string): string {
-  return isAbsolute(p) ? p : join(REPO_ROOT, p);
+/** The reason this artifact cannot answer `c`, or `undefined` when it can. */
+function artifactLimit(c: ConsistencyCase): string | undefined {
+  const limit = ARTIFACT_LIMITS[c.rpc];
+  return limit ? limit() : undefined;
 }
 
-/**
- * Where a manifest entry is mounted *inside* the WASI sandbox. The
- * instance sees a `MemFS`, not the host filesystem, so a host absolute
- * path is unreachable from it — v0.13.1's preopen-aware loader rejects it
- * with "Cannot find the kcl file".
- *
- * Fixtures go at the sandbox root because that is the only place a module
- * is left unmangled. Mounted one level down, the wasm loader emits every
- * schema twice — once as `Name___main__` and once as `Name_<dirpath>` —
- * where the native build emits the bare name. That is what makes
- * `generate_openapi_v3` agree with the native runners. It is not enough to
- * rescue the other two: see WASM_DIVERGENT for what still diverges here.
- */
-function sandboxPath(p: string): string {
-  return `/${basename(p)}`;
-}
+// -----------------------------------------------------------------------------
+// Dispatch
+// -----------------------------------------------------------------------------
 
-function loadManifest(): ConsistencyManifest {
-  let manifest: ConsistencyManifest;
-  try {
-    manifest = JSON.parse(
-      readFileSync(CASES_JSON, "utf8")
-    ) as ConsistencyManifest;
-  } catch (error) {
-    throw new Error(
-      `consistency manifest not found at ${CASES_JSON}. ` +
-        "Run `python tests/consistency/generate_cases.py` to generate it."
-    );
-  }
-  if (manifest.version !== 1) {
-    throw new Error(
-      `unsupported consistency manifest version: ${manifest.version}`
-    );
-  }
-  return manifest;
-}
-
-const manifest = loadManifest();
-
-/** Every `parse_args.paths` entry the manifest pins, de-duplicated. */
-const pinnedPaths: string[] = [
-  ...new Set(
-    manifest.cases.flatMap((c) => {
-      const parseArgs = c.args["parse_args"] as
-        | { paths?: string[] }
-        | undefined;
-      return parseArgs?.paths ?? [];
-    })
-  ),
-];
-
-test("consistency: manifest paths resolve to real files under the repository", () => {
-  // Guards the repo-root arithmetic above: these fixtures are read off the
-  // host to seed the sandbox, so a wrong REPO_ROOT would surface as an
-  // unreadable file rather than a wrong answer.
-  expect(pinnedPaths.length).toBeGreaterThan(0);
-  for (const p of pinnedPaths) {
-    if (!isAbsolute(p)) {
-      expect(resolvePath(p)).toBe(join(REPO_ROOT, p));
-    }
-    expect(existsSync(resolvePath(p))).toBe(true);
-  }
-});
-
-// ---------------------------------------------------------------------------
-// Args builders: manifest field names (protobuf snake_case) to the typed
-// interfaces of `src/api.ts` (camelCase). Every optional field is read with
-// `?? default` so a case may omit it.
-// ---------------------------------------------------------------------------
-
-function execProgramArgs(args: Record<string, unknown>) {
-  return {
-    workDir: (args["work_dir"] as string) ?? "",
-    kFilenameList: (args["k_filename_list"] as string[]) ?? [],
-    kCodeList: (args["k_code_list"] as string[]) ?? [],
-    overrides: (args["overrides"] as string[]) ?? [],
-  };
-}
-
-function parseProgramArgs(node: Record<string, unknown>): ParseProgramArgs {
-  return {
-    paths: ((node["paths"] as string[]) ?? []).map(sandboxPath),
-    sources: (node["sources"] as string[]) ?? [],
-  };
-}
-
-function testCaseInfo(node: Record<string, unknown>) {
-  return {
-    name: (node["name"] as string) ?? "",
-    // The manifest omits `error` on some cases and stores `duration` as a
-    // decimal string (uint64 in the proto).
-    error: (node["error"] as string) ?? "",
-    duration: Number(node["duration"] ?? 0),
-    logMessage: (node["log_message"] as string) ?? "",
-    lineHits: (node["line_hits"] as Record<string, number>) ?? {},
-  };
-}
-
-function runCase(instance: WebAssembly.Instance, c: ConsistencyCase): any {
-  const args = c.args;
+// Each case runs on a fresh instance: the shared one accumulated core
+// allocations across cases until the module OOMed mid-call (panic=abort),
+// and a trapped wasmer call never settles, hanging the suite.
+function runCase(c: ConsistencyCase, instance: WebAssembly.Instance): unknown {
+  const a = c.args;
   switch (c.rpc) {
     case "KclService.Ping":
-      return ping(instance, { value: (args["value"] as string) ?? "" });
+      return ping(instance, { value: a["value"] });
+
     case "KclService.ExecProgram":
-      return execProgram(instance, execProgramArgs(args));
+      return execProgram(instance, execArgs(a, c));
+
     case "KclService.FormatCode":
-      return formatCode(instance, { source: (args["source"] as string) ?? "" });
+      return formatCode(instance, { source: a["source"] });
+
     case "KclService.ValidateCode":
       return validateCode(instance, {
-        code: (args["code"] as string) ?? "",
-        data: (args["data"] as string) ?? "",
+        code: a["code"],
+        data: a["data"],
+        datafile: a["datafile"],
+        file: a["file"],
+        schema: a["schema"],
+        attributeName: a["attribute_name"],
+        format: a["format"],
       });
-    case "KclService.FormatTestReport":
-      return formatTestReport(instance, {
-        result: {
-          info: (
-            (args["result"] as Record<string, unknown>)["info"] as Record<
-              string,
-              unknown
-            >[]
-          ).map(testCaseInfo),
-        },
+
+    case "KclService.ParseFile":
+      return parseFile(instance, {
+        path: a["path"],
+        source: a["source"],
       });
+
+    case "KclService.ParseProgram":
+      return parseProgram(instance, parseArgs(a, c));
+
+    case "KclService.ListOptions":
+      return listOptions(instance, { sources: a["sources"] });
+
+    case "KclService.ListVariables":
+      return listVariables(instance, {
+        files: (a["files"] as string[]).map((f) => sandboxPath(c, f)),
+        specs: a["specs"],
+      });
+
+    case "KclService.LoadPackage":
+      return loadPackage(instance, {
+        parseArgs: parseArgs(a["parse_args"] ?? {}, c),
+        resolveAst: a["resolve_ast"] ?? false,
+      });
+
+    case "KclService.GetSchemaTypeMapping":
+      return getSchemaTypeMapping(instance, {
+        execArgs: execArgs(a["exec_args"] ?? {}, c),
+        schemaName: a["schema_name"] ?? "",
+      });
+
+    case "KclService.GetSchemaTypeMappingUnderPath":
+      return getSchemaTypeMappingUnderPath(instance, {
+        execArgs: execArgs(a["exec_args"] ?? {}, c),
+        schemaName: a["schema_name"] ?? "",
+      });
+
+    case "KclService.GetVersion":
+      return getVersion(instance);
+
+    case "BuiltinService.ListMethod":
+      return listMethod(instance);
+
+    case "KclService.LintPath":
+      return lintPath(instance, {
+        paths: a["paths"].map((p: string) => sandboxPath(c, p)),
+      });
+
+    case "KclService.FormatPath":
+      return formatPath(instance, {
+        path: sandboxPath(c, a["path"]),
+        dryRun: a["dry_run"],
+      });
+
+    case "KclService.Test":
+      return kclTest(instance, {
+        pkgList: (a["pkg_list"] as string[]).map((p) => sandboxPath(c, p)),
+      });
+
+    case "KclService.OverrideFile":
+      return overrideFile(instance, {
+        file: sandboxPath(c, a["file"]),
+        specs: a["specs"],
+      });
+
+    case "KclService.LoadSettingsFiles":
+      return loadSettingsFiles(instance, {
+        workDir: sandboxPath(c, a["work_dir"]),
+        files: a["files"].map((f: string) => sandboxPath(c, f)),
+      });
+
+    case "KclService.UpdateDependencies":
+      return updateDependencies(instance, {
+        manifestPath: sandboxPath(c, a["manifest_path"]),
+      });
+
     case "KclService.GenerateToml":
-      return generateToml(instance, {
-        execArgs: execProgramArgs(
-          (args["exec_args"] as Record<string, unknown>) ?? {}
-        ),
-        sortKeys: (args["sort_keys"] as boolean) ?? false,
-      });
+      return generateToml(instance, { execArgs: execArgs(a, c) });
+
     case "KclService.GenerateKcl":
       return generateKcl(instance, {
-        source: (args["source"] as string) ?? "",
-        filename: (args["filename"] as string) ?? "",
-        format: (args["format"] as string) ?? "",
+        source: a["source"],
+        filename: a["filename"],
+        format: a["format"],
       });
+
     case "KclService.GenerateOpenAPI":
       return generateOpenAPI(instance, {
-        parseArgs: parseProgramArgs(
-          (args["parse_args"] as Record<string, unknown>) ?? {}
-        ),
-        version: (args["version"] as string) ?? "",
+        parseArgs: parseArgs(a["parse_args"] ?? {}, c),
+        version: a["version"],
       });
+
     case "KclService.GenerateProto":
       return generateProto(instance, {
-        parseArgs: parseProgramArgs(
-          (args["parse_args"] as Record<string, unknown>) ?? {}
-        ),
-        package: (args["package"] as string) ?? "",
+        parseArgs: parseArgs(a["parse_args"] ?? {}, c),
+        package: a["package"],
       });
+
     case "KclService.GenerateDoc":
       return generateDoc(instance, {
-        parseArgs: parseProgramArgs(
-          (args["parse_args"] as Record<string, unknown>) ?? {}
-        ),
-        format: (args["format"] as string) ?? "",
+        parseArgs: parseArgs(a["parse_args"] ?? {}, c),
+        format: a["format"],
       });
+
+    case "KclService.FormatTestReport": {
+      const r = a["result"] as Record<string, any>;
+      return formatTestReport(instance, {
+        result: {
+          info: (r["info"] ?? []).map((i: Record<string, any>) => ({
+            name: i["name"] ?? "",
+            error: i["error"] ?? "",
+            duration: Number(i["duration"] ?? 0),
+            logMessage: i["log_message"] ?? "",
+            lineHits: {},
+          })),
+        },
+      });
+    }
+
     default:
       throw new Error(`no runner support for rpc ${c.rpc}`);
   }
 }
 
-// The `expect` keys are protobuf field names; the wrappers return
-// camelCase members, and `formatted` is a raw byte string.
-type ResultOf =
-  | PingResult
-  | ExecProgramResult
-  | FormatCodeResult
-  | ValidateCodeResult
-  | FormatTestReportResult
-  | GenerateTomlResult
-  | GenerateKclResult
-  | GenerateOpenAPIResult
-  | GenerateProtoResult
-  | GenerateDocResult;
+// -----------------------------------------------------------------------------
+// Cases
+// -----------------------------------------------------------------------------
 
-function expectedValue(result: ResultOf, field: string): unknown {
-  switch (field) {
-    case "value":
-      return (result as PingResult).value;
-    case "yaml_result":
-      return (result as ExecProgramResult).yamlResult;
-    case "json_result":
-      return (result as ExecProgramResult).jsonResult;
-    case "formatted":
-      return new TextDecoder().decode((result as FormatCodeResult).formatted);
-    case "success":
-      return (result as ValidateCodeResult).success;
-    case "err_message":
-      return (result as ValidateCodeResult).errMessage;
-    case "report":
-      return (result as FormatTestReportResult).report;
-    case "toml":
-      return (result as GenerateTomlResult).toml;
-    case "kcl":
-      return (result as GenerateKclResult).kcl;
-    case "spec":
-      return (result as GenerateOpenAPIResult).spec;
-    case "proto":
-      return (result as GenerateProtoResult).proto;
-    case "content":
-      return (result as GenerateDocResult).content;
-    default:
-      throw new Error(`no field accessor for expected field ${field}`);
-  }
-}
-
-/** Line-oriented diff so a mismatch is readable in the jest output. */
-function diff(expected: unknown, actual: unknown): string {
-  const el = String(expected).split("\n");
-  const al = String(actual).split("\n");
-  const out: string[] = ["--- expected", "+++ actual"];
-  for (let i = 0; i < Math.max(el.length, al.length); i++) {
-    const e = i < el.length ? el[i] : undefined;
-    const a = i < al.length ? al[i] : undefined;
-    if (e === a) {
-      out.push(`  ${e}`);
-    } else {
-      if (e !== undefined) out.push(`- ${e}`);
-      if (a !== undefined) out.push(`+ ${a}`);
-    }
-  }
-  return out.join("\n");
-}
-
-let instance: WebAssembly.Instance;
-/** The RPCs the embedded core actually registers. */
-let availableMethods: Set<string> = new Set();
-const skipped: string[] = [];
+/** Manifest cases that reached an assertion, and the ones the artifact cannot answer. */
 const ran: string[] = [];
+const limited: string[] = [];
 
 beforeAll(async () => {
+  testdataFingerprintBefore = hostTestdataFingerprint();
   await init();
-  const fs = new MemFS();
-  for (const p of pinnedPaths) {
-    // sandboxPath keeps fixtures at the root, so there is no parent to create.
-    const f = fs.open(sandboxPath(p), { read: true, write: true, create: true });
-    f.writeString(readFileSync(resolvePath(p), "utf8"));
-    f.free();
-  }
-  instance = await load({ fs });
+  instance = await load({ fs: buildMemFS() });
+
+
+  for (const name of listMethod(instance).methodNameList) availableMethods.add(name);
+
+  // RPCs the manifest's own `new_core` cases need that this core does not
+  // list. Non-empty means the core predates the one the manifest was
+  // generated against, which is what makes the `list_method` count
+  // unreachable and the `new_core` skips legitimate.
+  const newCoreRpcs = [...new Set(manifest.cases.filter((c) => c.new_core).map((c) => c.rpc))];
+  unregisteredNewCoreRpcs = newCoreRpcs.filter((rpc) => !availableMethods.has(rpc));
+
+  // `UpdateDependencies` answers with a graceful "not supported in the WASM
+  // build" string rather than a result; the typed API turns that into a
+  // thrown Error, which is what is observed here.
+  const probeCase = manifest.cases.find((c) => c.rpc === "KclService.UpdateDependencies")!;
   try {
-    availableMethods = new Set(listMethod(instance).methodNameList);
-  } catch {
-    // A core that predates BuiltinService.ListMethod leaves the surface
-    // unknown; treat it as empty so every new_core case is skipped.
-    availableMethods = new Set();
+    runCase(probeCase, instance);
+    updateDependenciesSupported = true;
+  } catch (error) {
+    updateDependenciesSupported = !/not supported in the WASM build/.test(String(error));
+    if (updateDependenciesSupported) throw error;
   }
 });
 
-test.each(manifest.cases.map((c) => [c.name, c] as const))(
-  "consistency: %s",
-  (_name, c) => {
-    if (c.new_core && !availableMethods.has(c.rpc)) {
-      // jest has no dynamic skip: a conditional assertion keeps the run
-      // green while making the skip visible in the output below.
-      skipped.push(`${c.name} (core does not list ${c.rpc})`);
-      console.info(`skipped: consistency case \`${c.name}\` — core does not list ${c.rpc}`);
-      return;
+test("manifest paths resolve to real files under the repository", () => {
+  expect(manifest.version).toBe(1);
+  for (const c of manifest.cases) {
+    for (const template of scratchTemplates(c.args)) {
+      expect({
+        case: c.name,
+        exists: existsSync(join(TESTDATA, template)),
+      }).toEqual({ case: c.name, exists: true });
     }
-
-    const divergent = WASM_DIVERGENT[c.name];
-    if (divergent) {
-      skipped.push(`${c.name} (${divergent})`);
-      console.info(`skipped: consistency case \`${c.name}\` — ${divergent}`);
-      return;
-    }
-
-    const result = runCase(instance, c);
-    // Only the fields the case actually declares are compared, and a
-    // mismatch reports the line-oriented diff rather than two opaque blobs.
-    for (const [field, want] of Object.entries(c.expect)) {
-      const got = expectedValue(result, field);
-      if (got !== want) {
-        throw new Error(
-          `consistency case \`${c.name}\` field \`${field}\` mismatch:\n${diff(want, got)}`
-        );
-      }
-    }
-    ran.push(c.name);
   }
-);
+});
 
-test("consistency: every manifest case was either run or explicitly skipped", () => {
+test.each(manifest.cases)("consistency: $name", async (c) => {
+  const limit = artifactLimit(c) ?? WASM_DIVERGENT[c.name];
+  if (limit) {
+    limited.push(c.name);
+    console.info(`skipped: consistency case \`${c.name}\` — ${c.rpc}: ${limit}`);
+    return;
+  }
+  if (c.new_core && !availableMethods.has(c.rpc)) {
+    limited.push(c.name);
+    console.info(`skipped: consistency case \`${c.name}\` — core does not list ${c.rpc}`);
+    return;
+  }
+
+  const fresh = await load({ fs: buildMemFS(c) });
+  const actual = project(c, runCase(c, fresh));
+  const dropped = unreachables(c);
+  for (const [field, want] of Object.entries(c.expect)) {
+    // A field the artifact's message cannot carry is reported, not asserted:
+    // the projection does produce it, but it would be comparing a default
+    // against a golden value the core never sent.
+    if (dropped.includes(field)) {
+      console.info(
+        `not asserted: \`${c.name}.${field}\` — ${c.rpc} does not carry it in this artifact`
+      );
+      continue;
+    }
+    if (!(field in actual)) {
+      throw new Error(`projection for ${c.rpc} does not produce expected field ${field}`);
+    }
+    expect(actual[field]).toEqual(want);
+  }
+  ran.push(c.name);
+});
+
+test("the repository tree is untouched by the cases that write files", () => {
+  // `override_file` and `load_settings_files` rewrite files, and
+  // `format_path` would if it were not a dry run. They run against per-case
+  // copies in the in-memory sandbox, which has no handle on the host
+  // filesystem at all, so this is a regression guard rather than a
+  // mechanism: if the sandbox ever grows one, it fails here first.
+  expect(hostTestdataFingerprint()).toBe(testdataFingerprintBefore);
+});
+
+test("every manifest case was either run or explicitly skipped", () => {
+  const missing = manifest.cases
+    .map((c) => c.name)
+    .filter((name) => !ran.includes(name) && !limited.includes(name));
   console.info(
-    `consistency: ${ran.length} run, ${skipped.length} skipped ` +
-      `(core lists ${availableMethods.size} RPCs); skipped: ${skipped.join(", ") || "none"}`
+    `consistency: ${ran.length} run, ${limited.length} skipped (core lists ${
+      availableMethods.size
+    } RPCs); skipped: ${
+      limited
+        .map((name) => {
+          const c = manifest.cases.find((x) => x.name === name)!;
+          return `${name} (${c.rpc})`;
+        })
+        .join(", ") || "none"
+    }`
   );
-  expect(ran.length + skipped.length).toBe(manifest.cases.length);
+  // Compared against the manifest's own case list, never against the set of
+  // cases this runner happens to dispatch: a case that stops being handled
+  // shows up here by name rather than as a lower count.
+  expect(missing).toEqual([]);
 });

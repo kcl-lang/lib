@@ -74,6 +74,51 @@ export interface ParseProgramResult {
   /** List of parse errors. */
   errors: Array<Error>
 }
+/** Message representing the direct imports of a single file. */
+export interface FileImports {
+  /** List of direct imports of the file. */
+  imports: Array<ImportInfo>
+}
+/** Message representing a single direct import of a file. */
+export interface ImportInfo {
+  /** Import specifier as written in the source. */
+  path: string
+  /** Resolved absolute file path of the import. */
+  resolved: string
+}
+/** Message representing the package section of a `kcl.mod` manifest. */
+export interface KclModPackage {
+  /** Name of the package. */
+  name: string
+  /** KCL compiler edition of the package. */
+  edition: string
+  /** Version of the package. */
+  version: string
+  /** Description of the package. */
+  description: string
+  /** Files to include when publishing. */
+  include: Array<string>
+  /** Files to exclude when publishing. */
+  exclude: Array<string>
+}
+/**
+ * Message representing a parsed `kcl.mod` manifest.
+ *
+ * Only the package section is carried across. The profile and dependency
+ * sections are not part of this mirror, the same way the napi `Symbol` and
+ * `Scope` mirrors carry indexes rather than the whole `kcl_api` document.
+ */
+export interface KclMod {
+  /** Package section of the manifest. */
+  package?: KclModPackage
+}
+/** Message representing an application directory discovered under the root. */
+export interface AppInfo {
+  /** Absolute path of the application directory. */
+  path: string
+  /** True when the directory contains a `kcl.mod` manifest. */
+  hasKclMod: boolean
+}
 /** Message for load package response. */
 export interface LoadPackageResult {
   /** JSON string value */
@@ -96,6 +141,15 @@ export interface LoadPackageResult {
   fullyQualifiedNameMap: Record<string, SymbolIndex>
   /** Map key is the package path. */
   pkgScopeMap: Record<string, ScopeIndex>
+  /** Map of direct imports, keyed by the importing file's absolute path. */
+  imports: Record<string, FileImports>
+  /**
+   * Parsed `kcl.mod` manifest of the package root, absent when the root has
+   * no `kcl.mod`.
+   */
+  kclMod?: KclMod
+  /** Application directories discovered under the package root. */
+  apps: Array<AppInfo>
 }
 /** Message for list options response. */
 export interface ListOptionsResult {
@@ -222,10 +276,24 @@ export interface Variable {
 export interface GetSchemaTypeMappingResult {
   /** Map of schema type mappings. */
   schemaTypeMapping: Record<string, string>
+  /**
+   * The same map in canonical protobuf JSON: proto field names, and a field
+   * the core left unset absent rather than rendered as `""`/`0`/`[]`/`{}`.
+   * The summary above drops everything but the type name, and `KclType`
+   * recurses through plain message fields (`key`, `item`, `base_schema`,
+   * `function`), which a napi object cannot express, so the whole document
+   * travels as JSON instead.
+   */
+  schemaTypeMappingJson: string
 }
 export interface GetSchemaTypeMappingUnderPathResult {
   /** Map of package name to the schema names defined in that package. */
   schemaTypeMapping: Record<string, Array<string>>
+  /**
+   * The same map in canonical protobuf JSON, keyed by package name as
+   * above. See `GetSchemaTypeMappingResult::schema_type_mapping_json`.
+   */
+  schemaTypeMappingJson: string
 }
 /** Message for validate code response. */
 export interface ValidateCodeResult {
@@ -575,13 +643,14 @@ export declare class GetSchemaTypeMappingArgs {
     workDir?: string | undefined | null,
     schemaName?: string | undefined | null,
     externalPkgs?: Array<ExternalPkg> | undefined | null,
+    sources?: Array<string> | undefined | null,
   )
 }
 export declare class FormatCodeArgs {
   constructor(source: string)
 }
 export declare class FormatPathArgs {
-  constructor(path: string)
+  constructor(path: string, dryRun?: boolean | undefined | null)
 }
 export declare class LintPathArgs {
   constructor(paths: Array<string>)

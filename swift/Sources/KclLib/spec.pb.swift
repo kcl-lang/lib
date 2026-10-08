@@ -2892,6 +2892,9 @@ extension LoadPackageResult: SwiftProtobuf.Message, SwiftProtobuf._MessageImplem
     8: .standard(proto: "symbol_node_map"),
     9: .standard(proto: "fully_qualified_name_map"),
     10: .standard(proto: "pkg_scope_map"),
+    11: .same(proto: "imports"),
+    12: .standard(proto: "kcl_mod"),
+    13: .same(proto: "apps"),
   ]
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -2910,6 +2913,9 @@ extension LoadPackageResult: SwiftProtobuf.Message, SwiftProtobuf._MessageImplem
       case 8: try { try decoder.decodeMapField(fieldType: SwiftProtobuf._ProtobufMap<SwiftProtobuf.ProtobufString,SwiftProtobuf.ProtobufString>.self, value: &self.symbolNodeMap) }()
       case 9: try { try decoder.decodeMapField(fieldType: SwiftProtobuf._ProtobufMessageMap<SwiftProtobuf.ProtobufString,SymbolIndex>.self, value: &self.fullyQualifiedNameMap) }()
       case 10: try { try decoder.decodeMapField(fieldType: SwiftProtobuf._ProtobufMessageMap<SwiftProtobuf.ProtobufString,ScopeIndex>.self, value: &self.pkgScopeMap) }()
+      case 11: try { try decoder.decodeMapField(fieldType: SwiftProtobuf._ProtobufMessageMap<SwiftProtobuf.ProtobufString,FileImports>.self, value: &self.imports) }()
+      case 12: try { try decoder.decodeSingularMessageField(value: &self._kclMod) }()
+      case 13: try { try decoder.decodeRepeatedMessageField(value: &self.apps) }()
       default: break
       }
     }
@@ -2946,6 +2952,19 @@ extension LoadPackageResult: SwiftProtobuf.Message, SwiftProtobuf._MessageImplem
     if !self.pkgScopeMap.isEmpty {
       try visitor.visitMapField(fieldType: SwiftProtobuf._ProtobufMessageMap<SwiftProtobuf.ProtobufString,ScopeIndex>.self, value: self.pkgScopeMap, fieldNumber: 10)
     }
+    if !self.imports.isEmpty {
+      try visitor.visitMapField(fieldType: SwiftProtobuf._ProtobufMessageMap<SwiftProtobuf.ProtobufString,FileImports>.self, value: self.imports, fieldNumber: 11)
+    }
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
+    try { if let v = self._kclMod {
+      try visitor.visitSingularMessageField(value: v, fieldNumber: 12)
+    } }()
+    if !self.apps.isEmpty {
+      try visitor.visitRepeatedMessageField(value: self.apps, fieldNumber: 13)
+    }
     try unknownFields.traverse(visitor: &visitor)
   }
 
@@ -2960,6 +2979,475 @@ extension LoadPackageResult: SwiftProtobuf.Message, SwiftProtobuf._MessageImplem
     if lhs.symbolNodeMap != rhs.symbolNodeMap {return false}
     if lhs.fullyQualifiedNameMap != rhs.fullyQualifiedNameMap {return false}
     if lhs.pkgScopeMap != rhs.pkgScopeMap {return false}
+    if lhs.imports != rhs.imports {return false}
+    if lhs._kclMod != rhs._kclMod {return false}
+    if lhs.apps != rhs.apps {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+// Hand-added, not generated: see the note on the `FileImports` struct above.
+// The structs these extend are declared next to `LoadPackageResult` but their
+// `SwiftProtobuf.Message` conformances were never written, which left the last
+// three `LoadPackageResult` fields (`imports`, `kcl_mod`, `apps`) silently
+// dropped on decode — a message that has no conformance cannot be the value of
+// a map or repeated field.
+extension FileImports: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = _protobuf_package + ".FileImports"
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .same(proto: "imports"),
+  ]
+
+  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeRepeatedMessageField(value: &self.imports) }()
+      default: break
+      }
+    }
+  }
+
+  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    if !self.imports.isEmpty {
+      try visitor.visitRepeatedMessageField(value: self.imports, fieldNumber: 1)
+    }
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  public static func ==(lhs: FileImports, rhs: FileImports) -> Bool {
+    if lhs.imports != rhs.imports {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+extension ImportInfo: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = _protobuf_package + ".ImportInfo"
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .same(proto: "path"),
+    2: .same(proto: "resolved"),
+  ]
+
+  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeSingularStringField(value: &self.path) }()
+      case 2: try { try decoder.decodeSingularStringField(value: &self.resolved) }()
+      default: break
+      }
+    }
+  }
+
+  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    if !self.path.isEmpty {
+      try visitor.visitSingularStringField(value: self.path, fieldNumber: 1)
+    }
+    if !self.resolved.isEmpty {
+      try visitor.visitSingularStringField(value: self.resolved, fieldNumber: 2)
+    }
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  public static func ==(lhs: ImportInfo, rhs: ImportInfo) -> Bool {
+    if lhs.path != rhs.path {return false}
+    if lhs.resolved != rhs.resolved {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+extension AppInfo: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = _protobuf_package + ".AppInfo"
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .same(proto: "path"),
+    2: .standard(proto: "has_kcl_mod"),
+  ]
+
+  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeSingularStringField(value: &self.path) }()
+      case 2: try { try decoder.decodeSingularBoolField(value: &self.hasKclMod) }()
+      default: break
+      }
+    }
+  }
+
+  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    if !self.path.isEmpty {
+      try visitor.visitSingularStringField(value: self.path, fieldNumber: 1)
+    }
+    if self.hasKclMod != false {
+      try visitor.visitSingularBoolField(value: self.hasKclMod, fieldNumber: 2)
+    }
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  public static func ==(lhs: AppInfo, rhs: AppInfo) -> Bool {
+    if lhs.path != rhs.path {return false}
+    if lhs.hasKclMod != rhs.hasKclMod {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+extension KclMod: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = _protobuf_package + ".KclMod"
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .same(proto: "package"),
+    2: .same(proto: "profile"),
+    3: .same(proto: "dependencies"),
+  ]
+
+  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeSingularMessageField(value: &self._package) }()
+      case 2: try { try decoder.decodeSingularMessageField(value: &self._profile) }()
+      case 3: try { try decoder.decodeMapField(fieldType: SwiftProtobuf._ProtobufMessageMap<SwiftProtobuf.ProtobufString,KclModDependency>.self, value: &self.dependencies) }()
+      default: break
+      }
+    }
+  }
+
+  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
+    try { if let v = self._package {
+      try visitor.visitSingularMessageField(value: v, fieldNumber: 1)
+    } }()
+    try { if let v = self._profile {
+      try visitor.visitSingularMessageField(value: v, fieldNumber: 2)
+    } }()
+    if !self.dependencies.isEmpty {
+      try visitor.visitMapField(fieldType: SwiftProtobuf._ProtobufMessageMap<SwiftProtobuf.ProtobufString,KclModDependency>.self, value: self.dependencies, fieldNumber: 3)
+    }
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  public static func ==(lhs: KclMod, rhs: KclMod) -> Bool {
+    if lhs._package != rhs._package {return false}
+    if lhs._profile != rhs._profile {return false}
+    if lhs.dependencies != rhs.dependencies {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+extension KclModPackage: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = _protobuf_package + ".KclModPackage"
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .same(proto: "name"),
+    2: .same(proto: "edition"),
+    3: .same(proto: "version"),
+    4: .same(proto: "description"),
+    5: .same(proto: "include"),
+    6: .same(proto: "exclude"),
+  ]
+
+  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeSingularStringField(value: &self.name) }()
+      case 2: try { try decoder.decodeSingularStringField(value: &self.edition) }()
+      case 3: try { try decoder.decodeSingularStringField(value: &self.version) }()
+      case 4: try { try decoder.decodeSingularStringField(value: &self.description) }()
+      case 5: try { try decoder.decodeRepeatedStringField(value: &self.include) }()
+      case 6: try { try decoder.decodeRepeatedStringField(value: &self.exclude) }()
+      default: break
+      }
+    }
+  }
+
+  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    if !self.name.isEmpty {
+      try visitor.visitSingularStringField(value: self.name, fieldNumber: 1)
+    }
+    if !self.edition.isEmpty {
+      try visitor.visitSingularStringField(value: self.edition, fieldNumber: 2)
+    }
+    if !self.version.isEmpty {
+      try visitor.visitSingularStringField(value: self.version, fieldNumber: 3)
+    }
+    if !self.description.isEmpty {
+      try visitor.visitSingularStringField(value: self.description, fieldNumber: 4)
+    }
+    if !self.include.isEmpty {
+      try visitor.visitRepeatedStringField(value: self.include, fieldNumber: 5)
+    }
+    if !self.exclude.isEmpty {
+      try visitor.visitRepeatedStringField(value: self.exclude, fieldNumber: 6)
+    }
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  public static func ==(lhs: KclModPackage, rhs: KclModPackage) -> Bool {
+    if lhs.name != rhs.name {return false}
+    if lhs.edition != rhs.edition {return false}
+    if lhs.version != rhs.version {return false}
+    if lhs.description != rhs.description {return false}
+    if lhs.include != rhs.include {return false}
+    if lhs.exclude != rhs.exclude {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+extension KclModProfile: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = _protobuf_package + ".KclModProfile"
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .same(proto: "entries"),
+    2: .standard(proto: "disable_none"),
+    3: .standard(proto: "sort_keys"),
+    4: .same(proto: "selectors"),
+    5: .same(proto: "overrides"),
+    6: .same(proto: "options"),
+  ]
+
+  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeRepeatedStringField(value: &self.entries) }()
+      case 2: try { try decoder.decodeSingularBoolField(value: &self.disableNone) }()
+      case 3: try { try decoder.decodeSingularBoolField(value: &self.sortKeys) }()
+      case 4: try { try decoder.decodeRepeatedStringField(value: &self.selectors) }()
+      case 5: try { try decoder.decodeRepeatedStringField(value: &self.overrides) }()
+      case 6: try { try decoder.decodeRepeatedStringField(value: &self.options) }()
+      default: break
+      }
+    }
+  }
+
+  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    if !self.entries.isEmpty {
+      try visitor.visitRepeatedStringField(value: self.entries, fieldNumber: 1)
+    }
+    if self.disableNone != false {
+      try visitor.visitSingularBoolField(value: self.disableNone, fieldNumber: 2)
+    }
+    if self.sortKeys != false {
+      try visitor.visitSingularBoolField(value: self.sortKeys, fieldNumber: 3)
+    }
+    if !self.selectors.isEmpty {
+      try visitor.visitRepeatedStringField(value: self.selectors, fieldNumber: 4)
+    }
+    if !self.overrides.isEmpty {
+      try visitor.visitRepeatedStringField(value: self.overrides, fieldNumber: 5)
+    }
+    if !self.options.isEmpty {
+      try visitor.visitRepeatedStringField(value: self.options, fieldNumber: 6)
+    }
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  public static func ==(lhs: KclModProfile, rhs: KclModProfile) -> Bool {
+    if lhs.entries != rhs.entries {return false}
+    if lhs.disableNone != rhs.disableNone {return false}
+    if lhs.sortKeys != rhs.sortKeys {return false}
+    if lhs.selectors != rhs.selectors {return false}
+    if lhs.overrides != rhs.overrides {return false}
+    if lhs.options != rhs.options {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+extension KclModDependency: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = _protobuf_package + ".KclModDependency"
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .same(proto: "version"),
+    2: .same(proto: "git"),
+    3: .same(proto: "oci"),
+    4: .same(proto: "local"),
+  ]
+
+  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeSingularStringField(value: &self.version) }()
+      case 2: try { try decoder.decodeSingularMessageField(value: &self._git) }()
+      case 3: try { try decoder.decodeSingularMessageField(value: &self._oci) }()
+      case 4: try { try decoder.decodeSingularMessageField(value: &self._local) }()
+      default: break
+      }
+    }
+  }
+
+  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    if !self.version.isEmpty {
+      try visitor.visitSingularStringField(value: self.version, fieldNumber: 1)
+    }
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
+    try { if let v = self._git {
+      try visitor.visitSingularMessageField(value: v, fieldNumber: 2)
+    } }()
+    try { if let v = self._oci {
+      try visitor.visitSingularMessageField(value: v, fieldNumber: 3)
+    } }()
+    try { if let v = self._local {
+      try visitor.visitSingularMessageField(value: v, fieldNumber: 4)
+    } }()
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  public static func ==(lhs: KclModDependency, rhs: KclModDependency) -> Bool {
+    if lhs.version != rhs.version {return false}
+    if lhs._git != rhs._git {return false}
+    if lhs._oci != rhs._oci {return false}
+    if lhs._local != rhs._local {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+extension KclModGitSource: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = _protobuf_package + ".KclModGitSource"
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .same(proto: "git"),
+    2: .same(proto: "branch"),
+    3: .same(proto: "commit"),
+    4: .same(proto: "tag"),
+    5: .same(proto: "version"),
+  ]
+
+  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeSingularStringField(value: &self.git) }()
+      case 2: try { try decoder.decodeSingularStringField(value: &self.branch) }()
+      case 3: try { try decoder.decodeSingularStringField(value: &self.commit) }()
+      case 4: try { try decoder.decodeSingularStringField(value: &self.tag) }()
+      case 5: try { try decoder.decodeSingularStringField(value: &self.version) }()
+      default: break
+      }
+    }
+  }
+
+  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    if !self.git.isEmpty {
+      try visitor.visitSingularStringField(value: self.git, fieldNumber: 1)
+    }
+    if !self.branch.isEmpty {
+      try visitor.visitSingularStringField(value: self.branch, fieldNumber: 2)
+    }
+    if !self.commit.isEmpty {
+      try visitor.visitSingularStringField(value: self.commit, fieldNumber: 3)
+    }
+    if !self.tag.isEmpty {
+      try visitor.visitSingularStringField(value: self.tag, fieldNumber: 4)
+    }
+    if !self.version.isEmpty {
+      try visitor.visitSingularStringField(value: self.version, fieldNumber: 5)
+    }
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  public static func ==(lhs: KclModGitSource, rhs: KclModGitSource) -> Bool {
+    if lhs.git != rhs.git {return false}
+    if lhs.branch != rhs.branch {return false}
+    if lhs.commit != rhs.commit {return false}
+    if lhs.tag != rhs.tag {return false}
+    if lhs.version != rhs.version {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+extension KclModOciSource: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = _protobuf_package + ".KclModOciSource"
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .same(proto: "oci"),
+    2: .same(proto: "tag"),
+  ]
+
+  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeSingularStringField(value: &self.oci) }()
+      case 2: try { try decoder.decodeSingularStringField(value: &self.tag) }()
+      default: break
+      }
+    }
+  }
+
+  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    if !self.oci.isEmpty {
+      try visitor.visitSingularStringField(value: self.oci, fieldNumber: 1)
+    }
+    if !self.tag.isEmpty {
+      try visitor.visitSingularStringField(value: self.tag, fieldNumber: 2)
+    }
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  public static func ==(lhs: KclModOciSource, rhs: KclModOciSource) -> Bool {
+    if lhs.oci != rhs.oci {return false}
+    if lhs.tag != rhs.tag {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+extension KclModLocalSource: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = _protobuf_package + ".KclModLocalSource"
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .same(proto: "path"),
+  ]
+
+  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeSingularStringField(value: &self.path) }()
+      default: break
+      }
+    }
+  }
+
+  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    if !self.path.isEmpty {
+      try visitor.visitSingularStringField(value: self.path, fieldNumber: 1)
+    }
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  public static func ==(lhs: KclModLocalSource, rhs: KclModLocalSource) -> Bool {
+    if lhs.path != rhs.path {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }

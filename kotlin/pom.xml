@@ -46,6 +46,17 @@
             <artifactId>protobuf-kotlin</artifactId>
             <version>${protobuf.version}</version>
         </dependency>
+        <!-- `com.google.protobuf.util.JsonFormat`, the canonical protobuf-JSON
+             printer. Only the consistency runner needs it (it renders the
+             schema-type-mapping documents in the default dialect, so an unset
+             field is absent rather than rendered as an empty value), which is
+             why it is test-scoped rather than part of the published API. -->
+        <dependency>
+            <groupId>com.google.protobuf</groupId>
+            <artifactId>protobuf-java-util</artifactId>
+            <version>${protobuf.version}</version>
+            <scope>test</scope>
+        </dependency>
         <!-- Kotlin -->
         <dependency>
           <groupId>org.jetbrains.kotlin</groupId>

@@ -14,24 +14,46 @@ package com.kcl
 
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.databind.node.ObjectNode
+import com.google.protobuf.Message
+import com.google.protobuf.util.JsonFormat
 import com.kcl.api.API
 import com.kcl.api.Spec.ParseProgramArgs
+import com.kcl.api.argument
 import com.kcl.api.execProgramArgs
 import com.kcl.api.formatCodeArgs
+import com.kcl.api.formatPathArgs
 import com.kcl.api.formatTestReportArgs
 import com.kcl.api.generateDocArgs
 import com.kcl.api.generateKclArgs
 import com.kcl.api.generateOpenAPIArgs
 import com.kcl.api.generateProtoArgs
 import com.kcl.api.generateTomlArgs
+import com.kcl.api.getSchemaTypeMappingArgs
+import com.kcl.api.getVersionArgs
+import com.kcl.api.lintPathArgs
+import com.kcl.api.listVariablesArgs
+import com.kcl.api.listVariablesOptions
+import com.kcl.api.loadPackageArgs
+import com.kcl.api.loadSettingsFilesArgs
+import com.kcl.api.overrideFileArgs
+import com.kcl.api.parseFileArgs
 import com.kcl.api.parseProgramArgs
 import com.kcl.api.pingArgs
+import com.kcl.api.testArgs
 import com.kcl.api.testCaseInfo
 import com.kcl.api.testResult
+import com.kcl.api.updateDependenciesArgs
 import com.kcl.api.validateCodeArgs
+import java.io.IOException
+import java.nio.file.FileVisitResult
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths
+import java.nio.file.SimpleFileVisitor
+import java.nio.file.StandardCopyOption
+import java.nio.file.attribute.BasicFileAttributes
+import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assumptions.assumeTrue
 import org.junit.jupiter.api.Test
@@ -60,6 +82,17 @@ class ConsistencyTest {
         /** Repo root: the parent of the parent of the directory holding `cases.json`. */
         private val REPO_ROOT: Path = CASES_JSON.toAbsolutePath().normalize().parent.parent.parent
 
+        private val TESTDATA: Path = REPO_ROOT.resolve("tests").resolve("consistency").resolve("testdata")
+
+        /**
+         * The marker `generate_cases.py` writes into a path that names a template
+         * rather than a file. `scratch:a/b.k` means "b.k inside a copy of
+         * testdata/a"; the copy is what makes the RPCs that write files safe to
+         * run, and it is also why the expectations for those cases pin the RPC's
+         * answer rather than a path.
+         */
+        private const val SCRATCH_PREFIX = "scratch:"
+
         @Volatile
         private var manifest: JsonNode? = null
 
@@ -68,6 +101,15 @@ class ConsistencyTest {
 
         @Volatile
         private var availableMethods: Set<String>? = null
+
+        /**
+         * Every case this class executes, recorded at the top of [runCase]
+         * rather than at the end so a case that fails is not additionally
+         * reported as unexecuted. [everyManifestCaseHasARunner] fails if the
+         * manifest grows a case this runner does not dispatch -- the check that
+         * turns "this runner quietly covers half the spec" into a build failure.
+         */
+        private val executed: MutableSet<String> = java.util.Collections.synchronizedSet(mutableSetOf())
 
         private fun manifest(): JsonNode {
             manifest?.let { return it }
@@ -144,30 +186,192 @@ class ConsistencyTest {
         }
 
         /**
-         * Build `ParseProgramArgs` from the manifest. Path entries are pinned
-         * repo-relative by `generate_cases.py`; they are resolved against the
-         * repository root (the parent of the directory holding cases.json),
-         * while absolute entries are kept as-is.
+         * Assert that a projection matches the pinned fields of the manifest.
+         * Only the fields the manifest pins are compared, so adding a field to
+         * `expect` is the only way to start asserting on it -- and a pinned
+         * field the projection does not produce is still a failure, because the
+         * key is missing either way. Both sides go through [canonical] so the
+         * comparison does not depend on protobuf map iteration order or on an
+         * absolute path.
          */
-        private fun parseArgs(node: JsonNode): ParseProgramArgs = parseProgramArgs {
-            for (path in node.path("paths")) {
-                val p = path.asText()
-                paths += if (Paths.get(p).isAbsolute) p else REPO_ROOT.resolve(p).toString()
+        private fun assertShape(caseName: String, expect: JsonNode, actual: ObjectNode) {
+            val trimmed = MAPPER.createObjectNode()
+            val names = actual.fieldNames()
+            while (names.hasNext()) {
+                val field = names.next()
+                if (expect.has(field)) {
+                    trimmed.set<JsonNode>(field, actual.get(field))
+                }
             }
+            val want = render(expect)
+            val got = render(trimmed)
+            assertEquals(want, got, "consistency case `$caseName` mismatch:\n" + diff(want, got))
+        }
+
+        /**
+         * Sort every object key and drop `filename`. The schema-mapping
+         * documents hold two protobuf maps whose iteration order is undefined,
+         * and `filename` is an absolute path that differs on every machine, so
+         * neither can be pinned as they arrive. Scalars are passed through
+         * untouched rather than round-tripped, so a number stays the same
+         * Jackson node type on both sides.
+         */
+        private fun canonical(node: JsonNode): JsonNode {
+            if (node.isObject) {
+                val keys = mutableListOf<String>()
+                val names = node.fieldNames()
+                while (names.hasNext()) {
+                    keys.add(names.next())
+                }
+                keys.sort()
+                val out = MAPPER.createObjectNode()
+                for (key in keys) {
+                    if (key == "filename") {
+                        continue
+                    }
+                    val child = node.get(key) ?: continue
+                    out.set<JsonNode>(key, canonical(child))
+                }
+                return out
+            }
+            if (node.isArray) {
+                val out = MAPPER.createArrayNode()
+                for (item in node) {
+                    out.add(canonical(item))
+                }
+                return out
+            }
+            return node
+        }
+
+        private fun render(node: JsonNode): String {
+            return try {
+                MAPPER.writeValueAsString(canonical(node))
+            } catch (e: Exception) {
+                throw AssertionError("could not render $node", e)
+            }
+        }
+
+        private fun obj(): ObjectNode = MAPPER.createObjectNode()
+
+        /** The manifest omits default-valued fields, so an absent array and an empty one are the same input. */
+        private fun textList(node: JsonNode): List<String> =
+            (0 until node.size()).map { node.get(it).asText() }
+
+        /**
+         * Copy a scratch template and return the path inside the copy. Each case
+         * gets its own temporary directory, so two cases -- and two runs --
+         * never observe each other's writes and the repository is never the
+         * target of an RPC that rewrites files.
+         */
+        private fun scratch(rest: String): String {
+            val cut = rest.indexOf('/')
+            val template = if (cut < 0) rest else rest.substring(0, cut)
+            val tail = if (cut < 0) "" else rest.substring(cut + 1)
+            val src = TESTDATA.resolve(template)
+            if (!Files.isDirectory(src)) {
+                throw AssertionError("scratch template is not a directory: $src")
+            }
+            val dest = Files.createTempDirectory("kcl-consistency-").resolve(template)
+            copyTree(src, dest)
+            return if (tail.isEmpty()) dest.toString() else dest.resolve(tail).toString()
+        }
+
+        @Throws(Exception::class)
+        private fun copyTree(src: Path, dest: Path) {
+            Files.walkFileTree(
+                src,
+                object : SimpleFileVisitor<Path>() {
+                    @Throws(IOException::class)
+                    override fun preVisitDirectory(dir: Path, attrs: BasicFileAttributes): FileVisitResult {
+                        Files.createDirectories(dest.resolve(src.relativize(dir).toString()))
+                        return FileVisitResult.CONTINUE
+                    }
+
+                    @Throws(IOException::class)
+                    override fun visitFile(file: Path, attrs: BasicFileAttributes): FileVisitResult {
+                        Files.copy(file, dest.resolve(src.relativize(file).toString()), StandardCopyOption.REPLACE_EXISTING)
+                        return FileVisitResult.CONTINUE
+                    }
+                }
+            )
+        }
+
+        /**
+         * Manifest path entries are repo-relative (pinned by
+         * `generate_cases.py`); absolute entries are kept as-is.
+         */
+        private fun resolvePath(p: String): String {
+            if (p.startsWith(SCRATCH_PREFIX)) {
+                return scratch(p.substring(SCRATCH_PREFIX.length))
+            }
+            val path = Paths.get(p)
+            return if (path.isAbsolute) p else REPO_ROOT.resolve(path).toString()
+        }
+
+        private fun resolvePaths(values: JsonNode): List<String> =
+            (0 until values.size()).map { resolvePath(values.get(it).asText()) }
+
+        /**
+         * Build `ExecProgramArgs` from the manifest. `k_filename_list` is
+         * resolved by the core against the process working directory rather
+         * than against `work_dir`, so it has to be made absolute here or it will
+         * not survive being run from another directory.
+         */
+        private fun execArgs(a: JsonNode) = execProgramArgs {
+            textList(a.path("k_code_list")).forEach { kCodeList += it }
+            val workDir = resolvePath(a.path("work_dir").asText("."))
+            for (name in a.path("k_filename_list")) {
+                val n = name.asText()
+                kFilenameList += if (Paths.get(n).isAbsolute) n else Paths.get(workDir).resolve(n).toString()
+            }
+            if (a.hasNonNull("work_dir")) {
+                this.workDir = workDir
+            }
+            for (arg in a.path("args")) {
+                this.args += argument {
+                    name = arg.path("name").asText("")
+                    value = arg.path("value").asText("")
+                }
+            }
+            for (override in a.path("overrides")) {
+                overrides += override.asText()
+            }
+        }
+
+        private fun parseArgs(node: JsonNode): ParseProgramArgs = parseProgramArgs {
+            resolvePaths(node.path("paths")).forEach { paths += it }
             for (source in node.path("sources")) {
                 sources += source.asText()
             }
         }
 
-        private fun textList(node: JsonNode): List<String> =
-            (0 until node.size()).map { node.get(it).asText() }
+        /** The schema-mapping documents, in the form every binding can produce. */
+        private fun kclTypes(mapping: Map<String, *>): JsonNode {
+            val printer = JsonFormat.printer().preservingProtoFieldNames()
+            val document = obj()
+            for (entry in mapping.entries) {
+                document.set<JsonNode>(entry.key, MAPPER.readTree(printer.print(entry.value as Message)))
+            }
+            return document
+        }
 
         @Throws(Exception::class)
         private fun runCase(name: String) {
+            executed.add(name)
             val c = findCase(name)
             val rpc = c.get("rpc").asText()
             val args = c.get("args")
             val expect = c.get("expect")
+
+            // A `new_core` case asks for an RPC the loaded core may predate, so
+            // it is skipped rather than failed when `ListMethod` does not answer
+            // for it. Driven by the manifest flag rather than by the branch, so
+            // adding a new RPC to the manifest can never turn a skip into a
+            // failure here while the java runner skips.
+            if (c.get("new_core").asBoolean()) {
+                skipUnlessSupported(rpc)
+            }
 
             when (rpc) {
                 "KclService.Ping" -> {
@@ -175,13 +379,7 @@ class ConsistencyTest {
                     assertField(name, "value", expect.get("value").asText(), result.value)
                 }
                 "KclService.ExecProgram" -> {
-                    val execArgs = execProgramArgs {
-                        textList(args.get("k_code_list")).forEach { kCodeList += it }
-                        if (args.has("overrides")) {
-                            textList(args.get("overrides")).forEach { overrides += it }
-                        }
-                    }
-                    val result = api().execProgram(execArgs)
+                    val result = api().execProgram(execArgs(args))
                     if (expect.has("yaml_result")) {
                         assertField(name, "yaml_result", expect.get("yaml_result").asText(), result.yamlResult)
                     }
@@ -198,19 +396,227 @@ class ConsistencyTest {
                         validateCodeArgs {
                             code = args.get("code").asText()
                             data = args.get("data").asText()
+                            format = args.path("format").asText("")
                         }
                     )
-                    assertEquals(
-                        expect.get("success").asBoolean(),
-                        result.success,
-                        "consistency case `$name` field `success`"
-                    )
+                    val actual = obj()
+                    actual.put("success", result.success)
+                    // The diagnostic carries ANSI colour escapes, a random temp
+                    // path and a temp filename, so the string itself is not
+                    // pinnable but its presence is.
+                    actual.put("has_error_message", result.errMessage.isNotEmpty())
                     if (expect.has("err_message")) {
-                        assertField(name, "err_message", expect.get("err_message").asText(), result.errMessage)
+                        actual.put("err_message", result.errMessage)
                     }
+                    assertShape(name, expect, actual)
+                }
+                "KclService.ParseFile" -> {
+                    val result = api().parseFile(
+                        parseFileArgs {
+                            path = args.path("path").asText("")
+                            source = args.path("source").asText("")
+                        }
+                    )
+                    val actual = obj()
+                    // A bare `Module` document, so the statements are at `body`.
+                    val module = if (result.astJson.isEmpty()) null else MAPPER.readTree(result.astJson)
+                    actual.put("body_count", if (module == null) 0 else module.path("body").size())
+                    actual.put("error_count", result.errorsCount)
+                    val deps = actual.putArray("deps")
+                    result.depsList.forEach { deps.add(it) }
+                    assertShape(name, expect, actual)
+                }
+                "KclService.ParseProgram" -> {
+                    val result = api().parseProgram(parseArgs(args))
+                    val actual = obj()
+                    // `ParseProgram` returns a `pkgs` document, not a module:
+                    // one Module per file, keyed by package path.
+                    val doc = if (result.astJson.isEmpty()) null else MAPPER.readTree(result.astJson)
+                    actual.put("module_count", if (doc == null) 0 else doc.path("pkgs").path("__main__").size())
+                    actual.put("error_count", result.errorsCount)
+                    val paths = actual.putArray("paths")
+                    for (p in result.pathsList) {
+                        paths.add(Paths.get(p).fileName.toString())
+                    }
+                    assertShape(name, expect, actual)
+                }
+                "KclService.ListOptions" -> {
+                    val result = api().listOptions(parseArgs(args))
+                    val actual = obj()
+                    actual.put("option_count", result.optionsCount)
+                    val options = result.optionsList.sortedBy { it.name }
+                    val pinned = actual.putArray("options")
+                    for (option in options) {
+                        pinned.add(MAPPER.createArrayNode().add(option.name).add(option.required))
+                    }
+                    assertShape(name, expect, actual)
+                }
+                "KclService.ListVariables" -> {
+                    val result = api().listVariables(
+                        listVariablesArgs {
+                            resolvePaths(args.path("files")).forEach { files += it }
+                            textList(args.path("specs")).forEach { specs += it }
+                            options = listVariablesOptions {
+                                mergeProgram = args.path("options").path("merge_program").asBoolean()
+                            }
+                        }
+                    )
+                    val actual = obj()
+                    val values = actual.putObject("values")
+                    for (spec in result.variablesMap.keys.sorted()) {
+                        val items = values.putArray(spec)
+                        result.variablesMap[spec]?.variablesList?.forEach { items.add(it.value) }
+                    }
+                    val unsupported = actual.putArray("unsupported_codes")
+                    result.unsupportedCodesList.forEach { unsupported.add(it) }
+                    actual.put("parse_error_count", result.parseErrorsCount)
+                    assertShape(name, expect, actual)
+                }
+                "KclService.LoadPackage" -> {
+                    val result = api().loadPackage(
+                        loadPackageArgs {
+                            parseArgs = parseArgs(args.get("parse_args"))
+                            resolveAst = args.path("resolve_ast").asBoolean()
+                            loadBuiltin = args.path("load_builtin").asBoolean()
+                            withAstIndex = args.path("with_ast_index").asBoolean()
+                        }
+                    )
+                    val actual = obj()
+                    actual.put("path_count", result.pathsCount)
+                    actual.put("type_error_count", result.typeErrorsCount)
+                    actual.put("parse_error_count", result.parseErrorsCount)
+                    actual.put("symbol_count", result.symbolsCount)
+                    actual.put("scope_count", result.scopesCount)
+                    actual.put("has_kcl_mod", result.hasKclMod())
+                    actual.put("kcl_mod_name", if (result.hasKclMod()) result.kclMod.`package`.name else "")
+                    actual.put("app_count", result.appsCount)
+                    actual.put("import_count", result.importsCount)
+                    assertShape(name, expect, actual)
+                }
+                "KclService.GetSchemaTypeMapping", "KclService.GetSchemaTypeMappingUnderPath" -> {
+                    val a = getSchemaTypeMappingArgs {
+                        execArgs = execArgs(args.get("exec_args"))
+                        schemaName = args.path("schema_name").asText("")
+                    }
+                    val mapping = if (rpc == "KclService.GetSchemaTypeMapping") {
+                        api().getSchemaTypeMapping(a).schemaTypeMappingMap
+                    } else {
+                        api().getSchemaTypeMappingUnderPath(a).schemaTypeMappingMap
+                    }
+                    val actual = obj()
+                    actual.set<JsonNode>("type_mapping", kclTypes(mapping))
+                    assertShape(name, expect, actual)
+                }
+                "KclService.GetVersion" -> {
+                    val result = api().getVersion(getVersionArgs { })
+                    val actual = obj()
+                    val version = result.version
+                    val parts = version.split(".")
+                    actual.put(
+                        "version",
+                        if (parts.size >= 2) parts[0] + "." + parts[1] else version
+                    )
+                    actual.put("has_checksum", result.checksum.isNotEmpty())
+                    actual.put("has_git_sha", result.gitSha.isNotEmpty())
+                    actual.put("has_version_info", result.versionInfo.isNotEmpty())
+                    assertShape(name, expect, actual)
+                }
+                "BuiltinService.ListMethod" -> {
+                    val names = api().listMethod().methodNameListList
+                    val actual = obj()
+                    actual.put("has_kclservice_ping", names.contains("KclService.Ping"))
+                    actual.put("has_kclservice_parse_program", names.contains("KclService.ParseProgram"))
+                    actual.put("has_builtinservice_list_method", names.contains("BuiltinService.ListMethod"))
+                    actual.put("method_count", names.size)
+                    actual.put("has_empty_name", names.any { it.isEmpty() })
+                    assertShape(name, expect, actual)
+                }
+                "KclService.LintPath" -> {
+                    val result = api().lintPath(lintPathArgs { resolvePaths(args.path("paths")).forEach { paths += it } })
+                    val actual = obj()
+                    actual.put("result_count", result.resultsCount)
+                    actual.put("has_result", result.resultsCount > 0)
+                    assertShape(name, expect, actual)
+                }
+                "KclService.FormatPath" -> {
+                    val result = api().formatPath(
+                        formatPathArgs {
+                            path = resolvePath(args.path("path").asText(""))
+                            dryRun = args.path("dry_run").asBoolean()
+                        }
+                    )
+                    val actual = obj()
+                    actual.put("changed_count", result.changedPathsCount)
+                    val changed = actual.putArray("changed")
+                    result.changedPathsList
+                        .map { Paths.get(it).fileName.toString() }
+                        .sorted()
+                        .forEach { changed.add(it) }
+                    assertShape(name, expect, actual)
+                }
+                "KclService.Test" -> {
+                    val result = api().test(
+                        testArgs {
+                            execArgs = execArgs(args.path("exec_args"))
+                            resolvePaths(args.path("pkg_list")).forEach { pkgList += it }
+                            runRegexp = args.path("run_regexp").asText("")
+                            failFast = args.path("fail_fast").asBoolean()
+                            coverage = args.path("coverage").asBoolean()
+                        }
+                    )
+                    val actual = obj()
+                    val names = result.infoList.map { it.name }.sorted()
+                    val failed = result.infoList.filter { it.error.isNotEmpty() }.map { it.name }.sorted()
+                    val all = actual.putArray("names")
+                    names.forEach { all.add(it) }
+                    val bad = actual.putArray("failed")
+                    failed.forEach { bad.add(it) }
+                    assertShape(name, expect, actual)
+                }
+                "KclService.OverrideFile" -> {
+                    val result = api().overrideFile(
+                        overrideFileArgs {
+                            file = resolvePath(args.path("file").asText(""))
+                            textList(args.path("specs")).forEach { specs += it }
+                            resolvePaths(args.path("import_paths")).forEach { importPaths += it }
+                        }
+                    )
+                    val actual = obj()
+                    actual.put("result", result.result)
+                    actual.put("parse_error_count", result.parseErrorsCount)
+                    assertShape(name, expect, actual)
+                }
+                "KclService.LoadSettingsFiles" -> {
+                    val result = api().loadSettingsFiles(
+                        loadSettingsFilesArgs {
+                            workDir = resolvePath(args.path("work_dir").asText(""))
+                            resolvePaths(args.path("files")).forEach { files += it }
+                        }
+                    )
+                    val actual = obj()
+                    val pinned = actual.putArray("options")
+                    result.kclOptionsList
+                        .sortedBy { it.key }
+                        .forEach { pinned.add(MAPPER.createArrayNode().add(it.key).add(it.value)) }
+                    actual.put("output", result.kclCliConfigs.output)
+                    val overrides = actual.putArray("overrides")
+                    result.kclCliConfigs.overridesList.forEach { overrides.add(it) }
+                    actual.put("strict_range_check", result.kclCliConfigs.strictRangeCheck)
+                    actual.put("verbose", result.kclCliConfigs.verbose)
+                    assertShape(name, expect, actual)
+                }
+                "KclService.UpdateDependencies" -> {
+                    val result = api().updateDependencies(
+                        updateDependenciesArgs {
+                            manifestPath = resolvePath(args.path("manifest_path").asText(""))
+                            vendor = args.path("vendor").asBoolean()
+                        }
+                    )
+                    val actual = obj()
+                    actual.put("external_pkg_count", result.externalPkgsCount)
+                    assertShape(name, expect, actual)
                 }
                 "KclService.FormatTestReport" -> {
-                    skipUnlessSupported(rpc)
                     val infos = args.get("result").get("info").map { info ->
                         testCaseInfo {
                             this.name = info.get("name").asText()
@@ -225,26 +631,28 @@ class ConsistencyTest {
                     assertField(name, "report", expect.get("report").asText(), result.report)
                 }
                 "KclService.GenerateToml" -> {
-                    skipUnlessSupported(rpc)
                     val execArgs = execProgramArgs {
                         textList(args.get("exec_args").get("k_code_list")).forEach { kCodeList += it }
                     }
-                    val result = api().generateToml(generateTomlArgs { this.execArgs = execArgs })
+                    val result = api().generateToml(
+                        generateTomlArgs {
+                            this.execArgs = execArgs
+                            sortKeys = args.path("sort_keys").asBoolean()
+                        }
+                    )
                     assertField(name, "toml", expect.get("toml").asText(), result.toml)
                 }
                 "KclService.GenerateKcl" -> {
-                    skipUnlessSupported(rpc)
                     val result = api().generateKcl(
                         generateKclArgs {
                             source = args.get("source").asText()
                             filename = args.get("filename").asText()
-                            format = args.get("format").asText()
+                            format = args.path("format").asText("")
                         }
                     )
                     assertField(name, "kcl", expect.get("kcl").asText(), result.kcl)
                 }
                 "KclService.GenerateOpenAPI" -> {
-                    skipUnlessSupported(rpc)
                     val result = api().generateOpenAPI(
                         generateOpenAPIArgs {
                             this.parseArgs = parseArgs(args.get("parse_args"))
@@ -254,7 +662,6 @@ class ConsistencyTest {
                     assertField(name, "spec", expect.get("spec").asText(), result.spec)
                 }
                 "KclService.GenerateProto" -> {
-                    skipUnlessSupported(rpc)
                     val result = api().generateProto(
                         generateProtoArgs {
                             this.parseArgs = parseArgs(args.get("parse_args"))
@@ -266,7 +673,6 @@ class ConsistencyTest {
                     assertField(name, "proto", expect.get("proto").asText(), result.proto)
                 }
                 "KclService.GenerateDoc" -> {
-                    skipUnlessSupported(rpc)
                     val result = api().generateDoc(
                         generateDocArgs {
                             this.parseArgs = parseArgs(args.get("parse_args"))
@@ -277,6 +683,35 @@ class ConsistencyTest {
                 }
                 else -> throw AssertionError("no runner support for rpc $rpc")
             }
+        }
+
+        /**
+         * Every case in the manifest must be dispatched by a `@Test` in this
+         * class. Without this, a runner that covers half the spec passes
+         * silently -- which is exactly how this class went from 13 cases to 29
+         * in the manifest while still only running 13.
+         *
+         * An `@AfterAll` rather than a `@Test` because JUnit does not order
+         * methods: run last or it would report a half-covered manifest as a
+         * failure on a green run. The comparison is against the manifest's own
+         * case list, never against the set this class believes it executed, so
+         * the guard cannot agree with itself.
+         */
+        @JvmStatic
+        @AfterAll
+        fun everyManifestCaseHasARunner() {
+            val missing = mutableListOf<String>()
+            for (c in manifest().get("cases")) {
+                val name = c.get("name").asText()
+                if (!executed.contains(name)) {
+                    missing.add(name)
+                }
+            }
+            assertEquals(
+                emptyList<String>(),
+                missing,
+                "cases.json has cases this runner does not execute; add a test method for each"
+            )
         }
     }
 
@@ -318,4 +753,52 @@ class ConsistencyTest {
 
     @Test
     fun testGenerateDocMd() = runCase("generate_doc_md")
+
+    @Test
+    fun testParseFile() = runCase("parse_file")
+
+    @Test
+    fun testParseProgram() = runCase("parse_program")
+
+    @Test
+    fun testListOptions() = runCase("list_options")
+
+    @Test
+    fun testListVariables() = runCase("list_variables")
+
+    @Test
+    fun testLoadPackage() = runCase("load_package")
+
+    @Test
+    fun testGetSchemaTypeMapping() = runCase("get_schema_type_mapping")
+
+    @Test
+    fun testGetSchemaTypeMappingUnderPath() = runCase("get_schema_type_mapping_under_path")
+
+    @Test
+    fun testGetVersion() = runCase("get_version")
+
+    @Test
+    fun testListMethod() = runCase("list_method")
+
+    @Test
+    fun testLintPathClean() = runCase("lint_path_clean")
+
+    @Test
+    fun testLintPathWithErrors() = runCase("lint_path_with_errors")
+
+    @Test
+    fun testFormatPathDryRun() = runCase("format_path_dry_run")
+
+    @Test
+    fun testTestRun() = runCase("test_run")
+
+    @Test
+    fun testOverrideFile() = runCase("override_file")
+
+    @Test
+    fun testLoadSettingsFiles() = runCase("load_settings_files")
+
+    @Test
+    fun testUpdateDependenciesNoDeps() = runCase("update_dependencies_no_deps")
 }

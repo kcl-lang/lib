@@ -90,6 +90,14 @@ struct KclLoadPackageResult {
     size_t fully_qualified_name_map_size;
     char* pkg_scope_map;
     size_t pkg_scope_map_size;
+    /* kcl.mod manifest of the package root: has_kcl_mod mirrors the
+     * message's presence on the wire and kcl_mod_name carries the
+     * package section's name ("" when either is absent). */
+    bool has_kcl_mod;
+    char kcl_mod_name[128];
+    /* Number of entries in the apps list and the imports map. */
+    size_t app_count;
+    size_t import_count;
 };
 
 struct KclListVariablesResult {
@@ -212,6 +220,22 @@ struct KclKeyValueCollector {
     size_t max_count;
     size_t count;
 };
+
+/* Fixed-size string slot for bounded decode callbacks (the collectors
+ * below, and one-off captures such as the kcl.mod package name inside
+ * LoadPackageResult). */
+struct KclStringSlot {
+    char* buffer;
+    size_t size;
+};
+
+/* Copy one string field into the caller's slot, truncating to the slot
+ * size. arg = struct KclStringSlot*. */
+bool kcl_decode_copy_string(pb_istream_t* stream, const pb_field_t* field, void** arg);
+
+/* Count one repeated/map entry without decoding its payload.
+ * arg = size_t*. */
+bool kcl_decode_count_only(pb_istream_t* stream, const pb_field_t* field, void** arg);
 
 bool kcl_decode_option_help_list(pb_istream_t* stream, const pb_field_t* field, void** arg);
 bool kcl_decode_test_case_info_list(pb_istream_t* stream, const pb_field_t* field, void** arg);
