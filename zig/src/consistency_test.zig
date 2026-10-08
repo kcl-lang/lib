@@ -70,12 +70,25 @@ const Cache = struct {
 /// after the last one. It must outlive `load`, so never store an
 /// `std.mem.Allocator` taken from it — call `arena.allocator()` at each use
 /// site, otherwise the cached `ptr` dangles the moment `load` returns.
+///
+/// The runner executes tests on a thread pool, so this state is written only
+/// under `load_mutex` and is read-only afterwards; request building does not
+/// use it (see `runCase`).
 var arena: std.heap.ArenaAllocator = .init(std.heap.page_allocator);
 var cache: ?Cache = null;
+/// Single-owner spinlock guarding the one-time initialisation below; the
+/// critical section runs once per process, so contention is a few threads
+/// yielding for the length of a single manifest load.
+var load_mutex: std.atomic.Mutex = .unlocked;
 
 /// Loads the manifest, resolves the repository root and probes the core's
-/// RPC surface. Called once; every test then reuses the result.
+/// RPC surface. Called once; every test then reuses the result. The pool
+/// starts every test at once, so without the mutex the first callers would
+/// race on the arena (overlapping allocations) and on the `listMethod` FFI
+/// probe.
 fn load() !*Cache {
+    while (!load_mutex.tryLock()) std.Thread.yield() catch {};
+    defer load_mutex.unlock();
     if (cache) |*c| return c;
     const a = arena.allocator();
 
@@ -244,27 +257,36 @@ fn resolvePath(a: std.mem.Allocator, repo_root: []const u8, path: []const u8) ![
 /// answer rather than a path.
 const scratch_prefix = "scratch:";
 
-/// Monotonic id for scratch directories. The tests in this file run one at a
-/// time, so a plain counter is enough to keep every `scratch:` path in a case
-/// -- and every case in a run -- on its own directory. Sharing one would let
-/// the second copy wipe the first, which is exactly what `load_settings_files`
-/// does: it names a template in both `work_dir` and `files`.
-var scratch_seq: usize = 0;
+/// Per-thread state for scratch directories. The test runner executes the
+/// cases in this file on a pool of threads, and a test owns its thread for
+/// its whole run, so `scratch-{thread}-{n}` names every `scratch:` path in a
+/// case -- and every case in a run -- onto a directory no other test can
+/// name, delete or clean up. Sharing one counter would let the second copy
+/// wipe the first, which is exactly what `load_settings_files` does: it
+/// names a template in both `work_dir` and `files`.
+threadlocal var scratch_seq: usize = 0;
+
+/// Formats the name of the `n`-th scratch directory of the calling thread.
+fn scratchName(buf: []u8, n: usize) ![]const u8 {
+    return std.fmt.bufPrint(buf, "scratch-{d}-{d}", .{ std.Thread.getCurrentId(), n });
+}
 
 /// Root of the scratch tree, under the build cache so a run never writes
 /// anything the repository tracks.
 const scratch_root = ".zig-cache/kcl-consistency";
 
-/// Removes every scratch directory created at or after `mark`, so a run leaves
-/// nothing for the next one. Called from `runCase`, which is the last point
-/// where a case's directories are still observable.
+/// Removes every scratch directory this thread created at or after `mark`,
+/// so a run leaves nothing for the next one. Called from `runCase`, which is
+/// the last point where a case's directories are still observable. The names
+/// carry the calling thread's id, so the range can only cover directories
+/// the calling test created itself.
 fn scratchCleanup(mark: usize) void {
     var root_dir = std.Io.Dir.cwd().openDir(testing.io, scratch_root, .{}) catch return;
     defer root_dir.close(testing.io);
     var n = mark;
     while (n < scratch_seq) : (n += 1) {
         var buf: [64]u8 = undefined;
-        const name = std.fmt.bufPrint(&buf, "scratch-{d}", .{n}) catch return;
+        const name = scratchName(&buf, n) catch return;
         deleteTreeIfPresent(testing.io, root_dir, name);
     }
 }
@@ -279,7 +301,10 @@ fn scratchPath(a: std.mem.Allocator, testdata: []const u8, rest: []const u8) ![]
     const tail = if (slash) |i| rest[i + 1 ..] else "";
 
     const src = try std.fs.path.join(a, &.{ testdata, template });
-    var src_dir = std.Io.Dir.cwd().openDir(testing.io, src, .{}) catch |err| {
+    // The directory is iterated by `copyDir`; on Linux an `openDir` without
+    // `.iterate` hands back an `O_PATH` fd, which `lseek`/`getdents64` refuse
+    // with EBADF, so the capability has to be requested up front.
+    var src_dir = std.Io.Dir.cwd().openDir(testing.io, src, .{ .iterate = true }) catch |err| {
         std.debug.print("scratch template is not a directory: {s} ({s})\n", .{ src, @errorName(err) });
         return err;
     };
@@ -293,7 +318,7 @@ fn scratchPath(a: std.mem.Allocator, testdata: []const u8, rest: []const u8) ![]
     defer root_dir.close(testing.io);
 
     var buf: [64]u8 = undefined;
-    const name = try std.fmt.bufPrint(&buf, "scratch-{d}", .{scratch_seq});
+    const name = try scratchName(&buf, scratch_seq);
     // A directory left by a run that died before its cleanup would otherwise be
     // adopted here, and a reused copy is not a copy.
     deleteTreeIfPresent(testing.io, root_dir, name);
@@ -317,7 +342,9 @@ fn scratchPath(a: std.mem.Allocator, testdata: []const u8, rest: []const u8) ![]
 /// only ever holds copies the runner made, and a directory this run created is
 /// never revisited, so a plain recursive delete is enough.
 fn deleteTreeIfPresent(io: std.Io, dir: std.Io.Dir, name: []const u8) void {
-    var sub = dir.openDir(io, name, .{}) catch return;
+    // Iterated below, so the open has to request `.iterate` (see `scratchPath`
+    // for why): on Linux the default would be an `O_PATH` fd.
+    var sub = dir.openDir(io, name, .{ .iterate = true }) catch return;
     defer sub.close(io);
     var it = sub.iterate();
     while (it.next(io) catch return) |entry| {
@@ -340,7 +367,7 @@ fn copyDir(a: std.mem.Allocator, src: std.Io.Dir, dest: std.Io.Dir) !void {
                 try dest.createDirPath(testing.io, entry.name);
                 var sub = try dest.openDir(testing.io, entry.name, .{});
                 defer sub.close(testing.io);
-                var parent = try src.openDir(testing.io, entry.name, .{});
+                var parent = try src.openDir(testing.io, entry.name, .{ .iterate = true });
                 defer parent.close(testing.io);
                 try copyDir(a, parent, sub);
             },
@@ -382,8 +409,8 @@ fn repoRootOf(cases_path: []const u8) ?[]const u8 {
 // ---------------------------------------------------------------------------
 // Request builders.
 //
-// These three functions populate messages whose string fields *borrow* from
-// the parsed manifest, so they must be built with the cache arena and are
+// These functions populate messages whose string fields *borrow* from the
+// parsed manifest, so they are built on a per-test arena (see `runCase`) and
 // never deinitialised: `protobuf.deinit` would try to free the borrowed
 // bytes. Only the decoded results below are owned by the caller.
 // ---------------------------------------------------------------------------
@@ -871,12 +898,18 @@ fn findCase(c: *const Cache, name: []const u8) !*const Case {
 /// RPC, otherwise dispatches on `rpc` and compares `expect`.
 ///
 /// `a` owns the decoded results and must free them; the request messages are
-/// built from the manifest arena (see the request-builder section) and live
-/// for the whole process.
+/// built on a per-test arena (see the request-builder section) and die with
+/// the case.
 fn runCase(a: std.mem.Allocator, name: []const u8) !void {
     const c = try load();
     const case = try findCase(c, name);
-    const args = arena.allocator();
+    // Request messages borrow from the parsed manifest, so `protobuf.deinit`
+    // cannot own them; a per-test arena gets the same leak-free lifetime
+    // without sharing an allocator across the runner's test threads (the
+    // cache arena is not thread-safe).
+    var request_arena = std.heap.ArenaAllocator.init(a);
+    defer request_arena.deinit();
+    const args = request_arena.allocator();
 
     if (case.new_core and !c.methods.contains(case.rpc)) {
         std.debug.print(
