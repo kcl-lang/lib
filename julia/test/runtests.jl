@@ -315,27 +315,16 @@ end
             coverage=true,
         ))
         @test length(result.info) == 2
-        # Coverage collection was added to the runtime after the prebuilt
-        # libkcl v0.13.0 binary; only assert the report when the runtime
-        # emits one, but the call itself must always succeed.
-        if result.coverage !== nothing
-            @test !isempty(result.coverage.files)
-            @test result.coverage.summary.executable > 0
-        end
+        @test !isempty(result.coverage.files)
+        @test result.coverage.summary.executable > 0
     end
 
     @testset "format_test_report" begin
         result = test(TestArgs(pkg_list=[joinpath(TEST_DATA, "testing", "module", "...")]))
         report = format_test_report(FormatTestReportArgs(result))
-        # FormatTestReport landed in the runtime after the prebuilt libkcl
-        # v0.13.0 binary, whose dispatcher answers with an empty payload;
-        # accept that and only assert the report format when the runtime
-        # actually formats one.
-        if !isempty(report.report)
-            @test endswith(report.report, "\n")
-            @test occursin("PASS: 2/2", report.report)
-            @test count(==('-'), report.report) >= 80
-        end
+        @test endswith(report.report, "\n")
+        @test occursin("PASS: 2/2", report.report)
+        @test count(==('-'), report.report) >= 80
     end
 
     @testset "update_dependencies (dependency-free module)" begin
@@ -373,22 +362,19 @@ end
         # Routed through BuiltinService.ListMethod: spec.proto declares it
         # there, and that is where the core registers it.
         #
-        # Not every prebuilt core has it. darwin-arm64 was rebuilt with the
-        # RPCs; the other platforms still ship a runtime that predates them,
-        # so the dispatcher answers `unknown method name` and the table comes
-        # back empty. Hence the split: the KclService.ListMethod check runs
-        # either way, since a table naming it would mean this wrapper is
-        # pointed at the wrong service again — the bug this pins down, which
-        # failed silently by decoding that empty payload into a default-valued
-        # message. The rest only mean something once there is a table.
+        # `KclService.ListMethod` is not an alias: a table naming it would mean
+        # this wrapper is pointed at the wrong service, which used to fail
+        # silently by decoding an empty payload into a default-valued message.
         result = list_method()
         names = result.method_name_list
         @test !("KclService.ListMethod" in names)
-        if !isempty(names)
-            @test "KclService.ExecProgram" in names
-            @test "KclService.Ping" in names
-            @test "BuiltinService.ListMethod" in names
-        end
+        @test "KclService.ExecProgram" in names
+        @test "KclService.Ping" in names
+        @test "BuiltinService.ListMethod" in names
+        # Pin the registry size so a method cannot be dropped from the core
+        # without this binding noticing -- `KclService.ListDepFiles` was removed
+        # in v0.13.1, replaced by `LoadPackageResult.imports` / `kcl_mod` / `apps`.
+        @test length(names) == 28
     end
 
     @testset "raw call escape hatch" begin

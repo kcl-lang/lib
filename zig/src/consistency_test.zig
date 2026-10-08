@@ -534,12 +534,8 @@ test "consistency: the core advertises its RPC surface" {
     // Without this, a `listMethod` pointed at the wrong service degrades every
     // `new_core` case into a skip, and the whole runner goes quietly green.
     //
-    // An empty table is allowed, though: it means this platform's prebuilt
-    // runtime predates ListMethod — darwin-arm64 was rebuilt with it, the
-    // others were not — and the dispatcher answers `unknown method name`. The
-    // `KclService.ListMethod` check runs either way, since a table naming it
-    // would mean the wrapper regressed to the wrong service. The rest only
-    // mean something once there is a table.
+    // `KclService.ListMethod` is not an alias: a table naming it would mean the
+    // wrapper regressed to the wrong service.
     //
     // `listMethods` allocates through the given allocator (the decode and the
     // hash map alike) and hands back no way to free the result, so hand it an
@@ -548,9 +544,12 @@ test "consistency: the core advertises its RPC surface" {
     defer arena_state.deinit();
     const methods = try listMethods(arena_state.allocator());
     try std.testing.expect(!methods.contains("KclService.ListMethod"));
-    if (methods.count() == 0) return;
     try std.testing.expect(methods.contains("KclService.ExecProgram"));
     try std.testing.expect(methods.contains("BuiltinService.ListMethod"));
+    // Pin the registry size so a method cannot be dropped from the core
+    // without this binding noticing -- `KclService.ListDepFiles` was removed
+    // in v0.13.1, replaced by `LoadPackageResult.imports` / `kcl_mod` / `apps`.
+    try std.testing.expectEqual(@as(usize, 28), methods.count());
 }
 
 test "consistency: ping" {

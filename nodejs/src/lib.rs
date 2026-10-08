@@ -759,13 +759,13 @@ pub fn list_method() -> Result<ListMethodResult> {
 * FormatTestReport API
 *
 * Like `list_method` above, this routes through the universal `kcl_api::call`
-* dispatcher: the `kcl-api` revision this crate pins predates
-* `KclService.FormatTestReport`, so neither the typed `KclServiceImpl` wrapper
-* nor the generated request/response messages exist there. The request is
-* encoded by hand instead — `FormatTestReportArgs` is a single length-delimited
-* field 1 carrying a `TestResult`, and `FormatTestReportResult` a single
-* length-delimited field 1 carrying a `string` — which keeps this compiling
-* against the pin and collapses to the typed call once the pin moves.
+* dispatcher rather than a typed `KclServiceImpl` wrapper. It was written when
+* the pinned `kcl-api` revision predated `KclService.FormatTestReport`. The pin
+* is now 0.13.1, which has both the typed wrapper and the generated messages;
+* the hand-rolled encoding is kept because it is already covered by tests, and
+* it collapses to the typed call wherever that is tidier. `FormatTestReportArgs`
+* is a single length-delimited field 1 carrying a `TestResult`, and
+* `FormatTestReportResult` a single length-delimited field 1 carrying a `string`.
 */
 
 /// Format a test result into a human-readable report.
@@ -835,14 +835,14 @@ pub fn format_test_report(args: FormatTestReportArgs) -> Result<FormatTestReport
 * GenerateToml / GenerateKcl / GenerateOpenAPI / GenerateProto / GenerateDoc APIs
 *
 * Like `format_test_report` above, these route through the universal
-* `kcl_api::call` dispatcher: the `kcl-api` revision this crate pins predates
-* these RPCs, so neither the typed `KclServiceImpl` wrappers nor the generated
-* request/response messages exist there. The request envelopes are encoded by
-* hand -- a leading length-delimited field carrying the nested message for the
-* args that embed one, plain string/bool fields otherwise -- and each response
-* is a single length-delimited string at field 1, decoded with the same strict
-* key/length/truncation checks as `format_test_report`. This collapses to the
-* typed calls once the pin moves.
+* `kcl_api::call` dispatcher. They were written when the pinned `kcl-api`
+* revision predated these RPCs; the pin is now 0.13.1, which has the typed
+* `KclServiceImpl` wrappers and the generated messages, and the hand-rolled
+* envelopes are kept for the same reason. A leading length-delimited field
+* carries the nested message for the args that embed one, plain string/bool
+* fields otherwise, and each response is a single length-delimited string at
+* field 1, decoded with the same strict key/length/truncation checks as
+* `format_test_report`.
 */
 
 use ::prost::encoding::{

@@ -280,13 +280,12 @@ pub fn listMethod(allocator: std.mem.Allocator) Error!spec.ListMethodResult {
     return rpc(allocator, "BuiltinService.ListMethod", spec.ListMethodArgs{}, spec.ListMethodResult);
 }
 
-test "universal call dispatcher dispatches to KclService.Ping" {
+test "universal call dispatcher dispatches to BuiltinService.Ping" {
     const allocator = testing.allocator;
-    // `BuiltinService.Ping` is registered alongside the dispatcher in the
-    // matching kcl PR but kcl-api v0.13.0 only knows about `KclService.Ping`,
-    // so route the smoke test through the KclService alias that ships in
-    // the released binary.
-    const name = "KclService.Ping";
+    // `BuiltinService.Ping` and `BuiltinService.ListMethod` are the two RPCs
+    // the core registers under `BuiltinService` rather than `KclService`;
+    // there is no `KclService.ListMethod` alias.
+    const name = "BuiltinService.Ping";
     // protobuf encoded PingArgs{value: "hello-kcl"} is 12 bytes long
     // (1-byte field tag + 1-byte length + 9-byte string "hello-kcl").
     const args = "\x0a\x09hello-kcl";

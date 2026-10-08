@@ -10,13 +10,11 @@
 // field names are snake_case — for example `kFilenameList` on the message
 // class but `execProgram(ExecProgramArgs(kFilenameList: ...))` here.
 //
-// **Service-name divergence:** `spec.proto` declares `FormatCode`,
-// `FormatPath`, `LintPath`, `ValidateCode`, `LoadSettingsFiles`, `Rename`,
-// `RenameCode`, `Test`, `UpdateDependencies`, `Ping`, and `ListMethod`
-// under `service BuiltinService`, but the prebuilt `libkcl` v0.13.0 ships
-// every RPC under `service KclService` (the `BuiltinService.*` dispatch
-// path panics with `unknown method name`). The wrappers therefore route
-// every call through `KclService.*`. See `dart/README.md` for details.
+// **Service names:** the core registers every RPC under `service KclService`
+// except the two `spec.proto` puts in `service BuiltinService` — `Ping` and
+// `ListMethod`. There is no `KclService.ListMethod` alias, so `listMethod()`
+// below has to use the `BuiltinService` name; every other wrapper uses
+// `KclService.*`. See `dart/README.md` for details.
 
 import 'dart:convert';
 import 'dart:typed_data';
@@ -258,29 +256,27 @@ GenerateDocResult generateDoc(GenerateDocArgs args) => _invoke(
     );
 
 // ---------------------------------------------------------------------------
-// The bundled libkcl v0.13.0 registers every RPC under `KclService` regardless
-// of the service declared in spec.proto, so the wrappers above follow the
-// implementation rather than the spec; see dart/README for details.
+// The bundled libkcl registers every RPC under `KclService` except the two
+// `spec.proto` declares in `BuiltinService`, so the wrappers above follow the
+// registration rather than a blanket rule; see dart/README for details.
 //
-// `ListMethod` is the one exception: spec.proto declares it under
-// `BuiltinService`, and that is where the core actually registers it.
-// `KclService.ListMethod` is unknown to the dispatcher, which raises
-// `unknown method name` and prints a Rust panic on the way out.
+// `ListMethod` is one of those two: `KclService.ListMethod` is unknown to the
+// dispatcher, which raises `unknown method name` and prints a Rust panic on
+// the way out.
 // ---------------------------------------------------------------------------
 
 /// Round-trips a value through the KCL dispatcher — useful as a smoke test.
 ///
-/// `Ping` is declared in *both* services in spec.proto and is registered under
-/// `KclService`, like the other RPCs above.
+/// `Ping` is declared in *both* services in spec.proto, and the core registers
+/// it under both names; this wrapper uses `KclService.Ping`.
 PingResult ping(PingArgs args) =>
     _invoke('KclService.Ping', args, PingResult.fromBuffer);
 
-/// Lists every RPC name known to the dispatcher.
+/// Lists every RPC name known to the dispatcher — 28 of them.
 ///
 /// Reports the fully-qualified names, e.g. `KclService.ExecProgram` and
 /// `BuiltinService.ListMethod` — i.e. its own entry appears under the
-/// `BuiltinService` prefix, which is what makes the divergence above
-/// observable from the outside.
+/// `BuiltinService` prefix.
 ListMethodResult listMethod() => _invoke(
       'BuiltinService.ListMethod',
       ListMethodArgs(),

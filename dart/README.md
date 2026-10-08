@@ -133,16 +133,13 @@ Every wrapper below is a top-level function and is equivalent to
 by fully-qualified name and raw protobuf bytes.
 
 > **Note on service names:** [`spec/spec.proto`](../spec/spec.proto) declares
-> `FormatCode`, `FormatPath`, `LintPath`, `ValidateCode`, `LoadSettingsFiles`,
-> `Rename`, `RenameCode`, `Test`, `UpdateDependencies`, `Ping`, and
-> `ListMethod` under `service BuiltinService`, but the prebuilt `libkcl`
-> v0.13.0 ships all of them under `service KclService` (and those
-> `BuiltinService.*` calls panic with `unknown method name`). The wrapper layer
-> routes every call through `KclService.*`, matching the implementation.
+> `Ping` and `ListMethod` under `service BuiltinService` and everything else
+> under `service KclService`, and the core registers each RPC under the name
+> its service gives it. The wrapper layer follows that split.
 >
-> **`ListMethod` is the one exception**, and it is worth calling out because it
-> is the only way to ask a core which RPCs it supports. Verified against the
-> prebuilt `darwin-arm64/libkcl.dylib`:
+> **`ListMethod` is worth calling out** because it is the only way to ask a
+> core which RPCs it supports. Verified against the prebuilt
+> `darwin-arm64/libkcl.dylib`:
 >
 > - `BuiltinService.ListMethod` → returns the full 28-entry method table.
 > - `KclService.ListMethod` → **not registered**; the native dispatcher panics
@@ -151,8 +148,7 @@ by fully-qualified name and raw protobuf bytes.
 > `listMethod()` therefore dispatches to `BuiltinService.ListMethod`, matching
 > the Java binding (`java/.../api/API.java`). The method table it returns
 > reports the fully-qualified names, so its own entry appears there as
-> `BuiltinService.ListMethod` — which is what makes the divergence above
-> observable from the outside.
+> `BuiltinService.ListMethod`.
 
 | Wrapper                          | RPC                                              |
 |----------------------------------|--------------------------------------------------|

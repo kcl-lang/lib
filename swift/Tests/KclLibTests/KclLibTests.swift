@@ -386,11 +386,6 @@ final class KClLibTests: XCTestCase {
         args.result = try API().test(testArgs)
 
         let report = try API().formatTestReport(args).report
-        // The pinned kcl runtime does not register KclService.FormatTestReport
-        // yet — the dispatcher answers with an empty payload, so there is
-        // nothing to assert against (the python/dart/julia suites skip the
-        // same way). The assertions below take over once the pin moves.
-        try XCTSkipIf(report.isEmpty, "the pinned kcl runtime does not implement KclService.FormatTestReport")
         let lines = report.split(separator: "\n", omittingEmptySubsequences: false)
 
         // One line per case in result order, then the 80-dash separator, then
@@ -419,7 +414,6 @@ final class KClLibTests: XCTestCase {
     // "no test files" line.
     func testFormatTestReportEmpty() throws {
         let report = try API().formatTestReport(FormatTestReportArgs()).report
-        try XCTSkipIf(report.isEmpty, "the pinned kcl runtime does not implement KclService.FormatTestReport")
         XCTAssertEqual("no test files\n", report)
     }
 

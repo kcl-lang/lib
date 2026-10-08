@@ -178,13 +178,15 @@ so the reply is identical either way.
 
 ### Notes
 
-+ The bindings cover the full 20-RPC `KclService` surface from
-  `../spec/spec.proto` plus `BuiltinService.ListMethod`, with the
++ The bindings cover the full 26-RPC `KclService` surface from
+  `../spec/spec.proto` plus the two `BuiltinService` methods, with the
   high-level facade and the typed AST package built on top.
-+ `listMethod` dispatches to `BuiltinService.ListMethod`, the one RPC the
-  core registers under the service name `spec.proto` gives it rather than
-  under `KclService`. Against the pinned libkcl v0.13.0 it returns all 28
-  names.
++ `listMethod` dispatches to `BuiltinService.ListMethod` and `ping` to
+  `KclService.Ping`. The core registers exactly two RPCs under the
+  `BuiltinService` name `spec.proto` gives them — `Ping` and `ListMethod` —
+  and every other RPC under `KclService`. There is no `KclService.ListMethod`
+  alias, so that wrapper cannot fall back to it; `listMethod` returns all 28
+  registered names.
 + `execProgram`, `validateCode`, and the `KclService.Test` wrapper
   (`@"test"`) are not thread safe, mirroring the spec. The plugin
   registry is process-wide for the same reason; the runtime releases its

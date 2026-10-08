@@ -12,14 +12,11 @@ public class ListMethodTest {
         API api = new API();
         ListMethodResult result = api.listMethod();
         Assert.assertNotNull(result.getMethodNameListList());
-        // The list_method RPC isn't registered in kcl-api v0.13.0, so the
-        // dispatcher panics and we end up with an empty result. Once the
-        // kcl side that exposes BuiltinService.ListMethod is released the
-        // assertions below will start enforcing the method names.
-        if (result.getMethodNameListList().isEmpty()) {
-            return;
-        }
         Assert.assertTrue(result.getMethodNameListList().contains("KclService.ExecProgram"));
         Assert.assertTrue(result.getMethodNameListList().contains("KclService.GetVersion"));
+        // Pin the registry size so a method cannot be dropped from the core
+        // without this binding noticing -- `KclService.ListDepFiles` was removed
+        // in v0.13.1, replaced by `LoadPackageResult.imports` / `kcl_mod` / `apps`.
+        Assert.assertEquals(28, result.getMethodNameListList().size());
     }
 }

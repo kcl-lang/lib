@@ -80,42 +80,6 @@ def _yaml_available() -> bool:
         return False
 
 
-# Tests exercising RPCs that are newer than the kcl-api release pinned in
-# python/Cargo.toml. The prebuilt native core predates those RPCs until the
-# dependency is bumped, so they are skipped instead of failing.
-_NEW_CORE_TESTS = {
-    "test_generate_toml",
-    "test_generate_toml_sort_keys",
-    "test_generate_kcl",
-    "test_generate_kcl_infers_format_from_filename",
-    "test_generate_openapi",
-    "test_generate_openapi_v2",
-    "test_generate_proto",
-    "test_generate_doc",
-    "test_format_test_report",
-}
-
-
-def pytest_collection_modifyitems(items):
-    from kcl_lib.api.service import API
-
-    try:
-        methods = set(API().list_method().method_name_list)
-    except Exception:
-        methods = set()
-    if {
-        "KclService.GenerateToml",
-        "KclService.FormatTestReport",
-    } <= methods:
-        return
-    skip = pytest.mark.skip(
-        reason="requires a native core with the Generate*/FormatTestReport RPCs"
-    )
-    for item in items:
-        if item.name in _NEW_CORE_TESTS:
-            item.add_marker(skip)
-
-
 @pytest.fixture
 def tmp_k(tmp_path):
     """Yield a temp ``.k`` file with a simple schema and instance."""
@@ -246,8 +210,6 @@ def test_load_package_reports_imports_kcl_mod_and_apps(dep_pkg):
     """``load_package`` exposes the import graph, manifest and app scan."""
     root, main, base = dep_pkg
     result = load_package(LoadPackageArgs(parse_args=ParseProgramArgs(paths=[main])))
-    if not result.imports:
-        pytest.skip("the pinned kcl runtime does not populate the LoadPackage info fields")
     main_k = os.path.realpath(main)
     base_k = os.path.realpath(base)
 
@@ -272,8 +234,6 @@ def test_list_dep_files_resolves_imports(dep_pkg):
     """``list_dep_files`` on the entry file lists its deps, not itself."""
     _, main, base = dep_pkg
     files = list_dep_files(main)
-    if not files:
-        pytest.skip("the pinned kcl runtime does not populate the LoadPackage info fields")
     assert os.path.realpath(base) in files
     assert os.path.realpath(main) not in files
 
@@ -282,8 +242,6 @@ def test_list_dep_files_dir_input(dep_pkg):
     """``list_dep_files`` on the package dir lists every resolved dep."""
     root, main, base = dep_pkg
     files = list_dep_files(root)
-    if not files:
-        pytest.skip("the pinned kcl runtime does not populate the LoadPackage info fields")
     assert os.path.realpath(base) in files
     assert os.path.realpath(main) not in files
 
@@ -292,8 +250,6 @@ def test_list_upstream_files(dep_pkg):
     """``list_upstream_files`` on the entry file lists its imports."""
     _, main, base = dep_pkg
     files = list_upstream_files(main)
-    if not files:
-        pytest.skip("the pinned kcl runtime does not populate the LoadPackage info fields")
     assert os.path.realpath(base) in files
     assert os.path.realpath(main) not in files
 
@@ -302,8 +258,6 @@ def test_list_upstream_files_dir_input(dep_pkg):
     """Dir input: union of the closures of the files directly under it."""
     root, main, base = dep_pkg
     files = list_upstream_files(root)
-    if not files:
-        pytest.skip("the pinned kcl runtime does not populate the LoadPackage info fields")
     assert os.path.realpath(base) in files
     assert os.path.realpath(main) not in files
 
@@ -312,8 +266,6 @@ def test_list_downstream_files(dep_pkg):
     """``list_downstream_files`` walks the import graph backwards."""
     _, main, base = dep_pkg
     files = list_downstream_files(base)
-    if not files:
-        pytest.skip("the pinned kcl runtime does not populate the LoadPackage info fields")
     assert os.path.realpath(main) in files
     assert os.path.realpath(base) not in files
 
@@ -728,8 +680,6 @@ def test_generate_toml():
     result = generate_toml(
         GenerateTomlArgs(exec_args=ExecProgramArgs(k_code_list=["a = {b = 1, c = [1, 2]}"]))
     )
-    if not result.toml:
-        pytest.skip("the pinned kcl runtime does not implement KclService.GenerateToml")
     assert "[a]" in result.toml
     assert "b = 1" in result.toml
 
@@ -739,8 +689,6 @@ def test_generate_toml_sort_keys():
     plain = generate_toml(
         GenerateTomlArgs(exec_args=ExecProgramArgs(k_code_list=["a = {c = [1, 2], b = 1}"]))
     )
-    if not plain.toml:
-        pytest.skip("the pinned kcl runtime does not implement KclService.GenerateToml")
     assert plain.toml.index("c") < plain.toml.index("b = 1")
 
     sorted_result = generate_toml(
@@ -755,8 +703,6 @@ def test_generate_toml_sort_keys():
 def test_generate_kcl():
     """``generate_kcl`` converts inline JSON data to KCL source."""
     result = generate_kcl(GenerateKclArgs(source='{"a": {"b": 1}}'))
-    if not result.kcl:
-        pytest.skip("the pinned kcl runtime does not implement KclService.GenerateKcl")
     assert "a = {" in result.kcl
     assert "b = 1" in result.kcl
 
@@ -764,8 +710,6 @@ def test_generate_kcl():
 def test_generate_kcl_infers_format_from_filename():
     """A ``.yaml`` filename selects the YAML parser without an explicit format."""
     result = generate_kcl(GenerateKclArgs(source="a:\n  b: 1\n", filename="data.yaml"))
-    if not result.kcl:
-        pytest.skip("the pinned kcl runtime does not implement KclService.GenerateKcl")
     assert "a = {" in result.kcl
     assert "b = 1" in result.kcl
 
@@ -798,8 +742,6 @@ def test_generate_openapi(schema_pkg):
     result = generate_openapi(
         GenerateOpenAPIArgs(parse_args=ParseProgramArgs(paths=[main]), version="v3")
     )
-    if not result.spec:
-        pytest.skip("the pinned kcl runtime does not implement KclService.GenerateOpenAPI")
     assert '"openapi": "3.0.0"' in result.spec
     assert "Container" in result.spec
     assert "Image" in result.spec
@@ -811,8 +753,6 @@ def test_generate_openapi_v2(schema_pkg):
     result = generate_openapi(
         GenerateOpenAPIArgs(parse_args=ParseProgramArgs(paths=[main]), version="v2")
     )
-    if not result.spec:
-        pytest.skip("the pinned kcl runtime does not implement KclService.GenerateOpenAPI")
     assert '"swagger": "2.0"' in result.spec
 
 
@@ -824,8 +764,6 @@ def test_generate_proto(schema_pkg):
             parse_args=ParseProgramArgs(paths=[main]), package="example.v1"
         )
     )
-    if not result.proto:
-        pytest.skip("the pinned kcl runtime does not implement KclService.GenerateProto")
     assert 'syntax = "proto3";' in result.proto
     assert "package example.v1;" in result.proto
     assert "message Container" in result.proto
@@ -838,8 +776,6 @@ def test_generate_doc(schema_pkg):
     result = generate_doc(
         GenerateDocArgs(parse_args=ParseProgramArgs(paths=[main]), format="md")
     )
-    if not result.content:
-        pytest.skip("the pinned kcl runtime does not implement KclService.GenerateDoc")
     assert "## " in result.content
     assert "Container" in result.content
     assert "Image" in result.content
@@ -861,8 +797,6 @@ def test_format_test_report():
         ]
     )
     report = format_test_report(FormatTestReportArgs(result=result)).report
-    if not report:
-        pytest.skip("the pinned kcl runtime does not implement KclService.FormatTestReport")
     assert "test_ok: PASS (1ms)" in report
     assert "test_bad: FAIL (2ms)" in report
     assert "PASS: 1/2" in report
