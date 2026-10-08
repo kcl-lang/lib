@@ -31,6 +31,7 @@ on:
       - "zig/src/ast/**"
       - "swift/Sources/KclLibAST/**"
       - "go/ast/**"
+      - "php/src/Ast/**"
       - "java/src/main/java/com/kcl/ast/**"
       - "kotlin/src/main/kotlin/com/kcl/ast/**"
       - "c/include/kcl_lib_ast.h"

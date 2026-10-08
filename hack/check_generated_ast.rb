@@ -4,15 +4,16 @@
 # check_generated_ast.rb — are the generated AST bindings still what the
 # generator produces, and does the generator still believe what it emits?
 #
-# `python/kcl_lib/ast/`, `wasm/src/ast/` and `go/ast/` used to be hand-written,
-# and every binding's copy of the same declarations drifted from `ast.rs` on
-# its own schedule. They are now generated from the Rust source by
-# `tools/generate_ast.py`, which replaces them rather than sitting beside them.
-# That solves the drift and creates one new way for it to come back: a
-# generated file that nobody regenerates. A checked-in generated file is still
-# a hand-written file the moment anyone edits it without re-running the tool,
-# and nothing in any of the three builds notices — `tsc` is perfectly happy
-# with a stale interface, and so is `pytest` and so is `go vet`.
+# `python/kcl_lib/ast/`, `wasm/src/ast/`, `go/ast/` and `php/src/Ast/` used
+# to be hand-written, and every binding's copy of the same declarations
+# drifted from `ast.rs` on its own schedule. They are now generated from the
+# Rust source by `tools/generate_ast.py`, which replaces them rather than
+# sitting beside them. That solves the drift and creates one new way for it
+# to come back: a generated file that nobody regenerates. A checked-in
+# generated file is still a hand-written file the moment anyone edits it
+# without re-running the tool, and nothing in any of the builds notices —
+# `tsc` is perfectly happy with a stale interface, and so is `pytest`, and
+# so is `php -l` and so is `go vet`.
 #
 # So this is a "regenerate and diff" check, run over the *bytes*:
 #

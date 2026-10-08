@@ -17,6 +17,7 @@ import sys
 from typing import Dict, List
 
 from .emit_go import GO_FILES, GoEmitter
+from .emit_php import PHP_AST_DIR, PhpEmitter
 from .emit_python import PY_MODULES, PythonEmitter
 from .emit_typescript import TS_FILES, TypeScriptEmitter
 from .model import build
@@ -53,6 +54,7 @@ DEFAULT_AST_RS = os.environ.get("KCL_AST_RS") or os.path.join(
 PYTHON_DIR = os.path.join("python", "kcl_lib", "ast")
 TYPESCRIPT_DIR = os.path.join("wasm", "src", "ast")
 GO_DIR = os.path.join("go", "ast")
+PHP_DIR = PHP_AST_DIR
 
 
 def generate() -> Dict[str, str]:
@@ -73,6 +75,10 @@ def generate() -> Dict[str, str]:
     go = GoEmitter(model)
     for name in GO_FILES:
         files[os.path.join(GO_DIR, name)] = gofmt(go.emit(name))
+
+    php = PhpEmitter(model)
+    for name in php.file_names():
+        files[os.path.join(PHP_DIR, name)] = php.emit(name)
     return files
 
 
@@ -112,6 +118,7 @@ def check() -> int:
         (PYTHON_DIR, (".py",)),
         (TYPESCRIPT_DIR, (".ts",)),
         (GO_DIR, ("_gen.go",)),
+        (PHP_DIR, (".php",)),
     ):
         abs_dir = os.path.join(REPO_ROOT, directory)
         if not os.path.isdir(abs_dir):

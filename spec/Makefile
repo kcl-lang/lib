@@ -26,6 +26,12 @@
 # - go: the checked-in stub was produced by protoc-gen-go v1.36.10, recorded in
 #   its own header. `@latest` will silently bump that; pin it:
 #       go install google.golang.org/protobuf/cmd/protoc-gen-go@v1.36.10
+# - php: requires protoc 36.2, the release whose `--php_out` gencode matches
+#   the pinned google/protobuf PHP runtime 4.33.x in php/composer.json:
+#       protoc --php_out=../php/src/Api -I . spec.proto
+#   The gencode lands under `Com/Kcl/Api` + `GPBMetadata` and is vendored with
+#   PSR-4 mappings in php/composer.json (see also the pinned-tools note in
+#   php/Makefile).
 # - Not covered here: c/ (c/scripts/generate.sh, nanopb — it git-clones nanopb
 #   and needs network), lua/ (lua/hack/generate_pb.lua), zig/ (zig build
 #   gen-proto — codegen runs at build time), nodejs/ and wasm/ (hand-written

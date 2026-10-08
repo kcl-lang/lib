@@ -1,0 +1,58 @@
+name: php-test
+
+# The PHP binding is a pure-FFI consumer of the prebuilt libkcl: the matrix
+# needs PHP with the FFI extension (always enabled on CLI) and composer, and
+# `composer install && ./vendor/bin/phpunit` in php/ is the whole build.
+on:
+  push:
+    branches:
+      - main
+      - master
+    tags:
+      - '*'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "php/**"
+      # The consistency runner reads this shared manifest, so a golden-only
+      # change must re-run this workflow.
+      - "tests/consistency/**"
+      - "spec/**"
+      - "go/lib/**"
+      - ".github/workflows/php-test.yaml"
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}-${{ github.event_name }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  build-and-test:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+        php_version: ["8.3", "8.4"]
+    defaults:
+      run:
+        working-directory: "php"
+    runs-on: ${{ matrix.os }}
+    steps:
+    - uses: actions/checkout@v7
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: ${{ matrix.php_version }}
+        # FFI is enabled by default on CLI; the extension is pinned here so a
+        # runner image that changes the default fails loudly rather than
+        # skipping every FFI call.
+        extensions: ffi
+        tools: composer
+    - name: Install dependencies
+      run: composer install
+    - name: Test
+      run: ./vendor/bin/phpunit

@@ -1,10 +1,10 @@
 name: ast-codegen
 
-# `python/kcl_lib/ast/`, `wasm/src/ast/` and `go/ast/` are generated from
-# `kcl-lang/kcl`'s `crates/ast/src/ast.rs` by `tools/generate_ast.py`. They
-# used to be hand-written, and every binding's copy of the same declarations
-# drifted from the Rust on its own schedule — which is the whole reason the
-# generator exists.
+# `python/kcl_lib/ast/`, `wasm/src/ast/`, `go/ast/` and `php/src/Ast/` are
+# generated from `kcl-lang/kcl`'s `crates/ast/src/ast.rs` by
+# `tools/generate_ast.py`. They used to be hand-written, and every binding's
+# copy of the same declarations drifted from the Rust on its own schedule —
+# which is the whole reason the generator exists.
 #
 # That creates one new way for the drift to come back: a checked-in generated
 # file that nobody regenerates. Nothing in either language's build notices a
@@ -35,6 +35,8 @@ on:
       - "wasm/src/ast/**"
       - "wasm/tests/ast_contract.test.ts"
       - "go/ast/**"
+      - "php/src/Ast/**"
+      - "php/tests/AstContractTest.php"
       - ".github/workflows/ast-codegen.yaml"
   workflow_dispatch:
 
@@ -120,3 +122,19 @@ jobs:
       - name: Run the Go AST contract test
         working-directory: "lib/go"
         run: go test ./ast/
+
+      # The PHP leg: the emitter needs no PHP toolchain (the freshness check
+      # diffs bytes), but the contract test decodes the capture through the
+      # composer autoloader. AstContractTest is pure AST — no FFI, no libkcl —
+      # which is why it can run here and not only in php-test.yaml.
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.4"
+          extensions: ffi
+          tools: composer
+      - name: Install php dependencies
+        working-directory: "lib/php"
+        run: composer install
+      - name: Run the PHP AST contract test
+        working-directory: "lib/php"
+        run: ./vendor/bin/phpunit --filter AstContractTest

@@ -68,6 +68,42 @@ module AstDiff
 
   def bindings
     @bindings ||= [
+      # ---------------------------------------------------------------- php
+      Binding.new(
+        name: "php",
+        mode: :reflect,
+        probe: lambda {
+          php = which("php")
+          return "no `php` interpreter on PATH" unless php
+
+          return "php dependencies are not resolved (no php/vendor/autoload.php — run `composer install` in php/)" \
+            unless File.file?(File.join(ROOT, "php", "vendor", "autoload.php"))
+
+          run_probe([php, "-r", "require 'php/vendor/autoload.php'; new KclLib\\Ast\\Identifier();"])
+        },
+        argv: ->(golden, out) { ["php", "hack/dump/php.php", golden, out] },
+        extra_ok: {
+          # `LiteralType::inner_tag()` — the tag *inside* the verbatim payload
+          # (`value.type`), exposed so a caller can ask "which literal kind"
+          # without walking in. `ast.rs:LiteralType` has `pub value` and
+          # nothing else.
+          "innertag" => "a copy of value.type that the wire does not carry"
+        },
+        class_renames: {
+          # `NumberLitValue` and `MemberOrIndex` are their own `tag + content`
+          # enums; the PHP classes carry the tag in `kind` and the payload in
+          # `value` / `node`, so the fields are mapped back to the wire's
+          # spelling before the values are compared.
+          "numberlitvalue" => { "kind" => "type" },
+          "memberorindex" => { "kind" => "type", "node" => "value" }
+        },
+        note: "Class-based decoder walked by reflection; the tag is the " \
+              "binding's own class-to-tag table in hack/dump/php.php, and " \
+              "@cls is cross-checked against it by CLASS_TAGS. Position is " \
+              "flat on NodeRef, which is the wire shape. The dumper loads " \
+              "the composer autoloader, so php/ needs `composer install`."
+      ),
+
       # --------------------------------------------------------------- ruby
       Binding.new(
         name: "ruby",
