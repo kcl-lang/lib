@@ -41,21 +41,16 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # The 5 desktop platforms that have matching prebuilt libkcl binaries
+        # The desktop platforms that have matching prebuilt libkcl binaries
         # under go/lib/. Mobile (Android/iOS) is exercised by a separate
         # workflow — see dart/README.md.
-        #
-        # We don't include windows-11-arm: the committed prebuilt at
-        # go/lib/windows-arm64/kcl.dll is the same x86_64 PE32+ image as
-        # windows-amd64/kcl.dll, so the Dart FFI loader fails with
-        # "%1 is not a valid Win32 application" on the ARM64 runner. Fixing
-        # that requires cross-building libkcl for `aarch64-pc-windows-msvc`
-        # (out of scope for this PR — same matrix shape as c-test/dotnet-test).
         os:
           - ubuntu-latest        # linux-amd64
           - ubuntu-22.04-arm     # linux-arm64
           - macos-latest         # darwin-arm64
           - macos-15-intel       # darwin-amd64
+          - windows-latest       # windows-amd64
+          - windows-11-arm       # windows-arm64
           - windows-latest       # windows-amd64
     runs-on: ${{ matrix.os }}
     steps:
