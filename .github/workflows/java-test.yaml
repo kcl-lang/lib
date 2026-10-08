@@ -265,14 +265,23 @@ jobs:
 
       - name: Set up JDK 8 + Central Portal credentials + GPG key
         uses: actions/setup-java@v6.0.1
+        env:
+          # setup-java v6 treats server-username/server-password as *names of
+          # environment variables to read*, not as literal credentials. The
+          # deprecated inputs take the value here, emit ${env.<value>} into
+          # settings.xml, and Maven then resolves an empty user and password —
+          # which Central Portal rejects with an empty-bodied 401. The v6
+          # inputs below need the variables above to actually be exported.
+          MAVEN_CENTRAL_USERNAME: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
+          MAVEN_CENTRAL_TOKEN: ${{ secrets.MAVEN_CENTRAL_TOKEN }}
         with:
           distribution: 'temurin'
           java-version: '8'
           # Writes <server id="central"> into $GITHUB_WORKSPACE/settings.xml
-          # with username/password from the env vars below.
+          # with username/password read from the env vars above.
           server-id: central
-          server-username: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
-          server-password: ${{ secrets.MAVEN_CENTRAL_TOKEN }}
+          server-username-env-var: MAVEN_CENTRAL_USERNAME
+          server-password-env-var: MAVEN_CENTRAL_TOKEN
           settings-path: ${{ github.workspace }}
           # Imports the GPG key into the runner's keyring and stores the
           # passphrase where maven-gpg-plugin picks it up.
@@ -292,6 +301,12 @@ jobs:
 
       - name: Build, sign, and publish to Maven Central
         working-directory: java
+        env:
+          # settings.xml references these by name; Maven expands ${env.X}
+          # when it reads the file, so they must be exported here too, not
+          # just during the setup-java step that wrote the file.
+          MAVEN_CENTRAL_USERNAME: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
+          MAVEN_CENTRAL_TOKEN: ${{ secrets.MAVEN_CENTRAL_TOKEN }}
         run: |
           # -P central activates maven-gpg-plugin (signs all artifacts)
           # and central-publishing-maven-plugin (uploads via Central

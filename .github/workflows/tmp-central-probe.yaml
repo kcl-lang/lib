@@ -17,14 +17,17 @@ jobs:
   probe:
     runs-on: ubuntu-latest
     steps:
-      - name: Set up JDK (same inputs as deploy-central)
+      - name: Set up JDK (same inputs as deploy-central, post-fix)
         uses: actions/setup-java@v6.0.1
+        env:
+          MAVEN_CENTRAL_USERNAME: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
+          MAVEN_CENTRAL_TOKEN: ${{ secrets.MAVEN_CENTRAL_TOKEN }}
         with:
           distribution: 'temurin'
           java-version: '8'
           server-id: central
-          server-username: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
-          server-password: ${{ secrets.MAVEN_CENTRAL_TOKEN }}
+          server-username-env-var: MAVEN_CENTRAL_USERNAME
+          server-password-env-var: MAVEN_CENTRAL_TOKEN
           settings-path: ${{ github.workspace }}
 
       - name: Inspect the generated settings.xml
@@ -59,6 +62,9 @@ jobs:
           PY
 
       - name: Maven's view of the settings (no build)
+        env:
+          MAVEN_CENTRAL_USERNAME: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
+          MAVEN_CENTRAL_TOKEN: ${{ secrets.MAVEN_CENTRAL_TOKEN }}
         run: |
           set -uo pipefail
           cd /tmp && rm -rf mvnx && mkdir mvnx && cd mvnx
@@ -71,7 +77,20 @@ jobs:
           mvn -q -s "$GITHUB_WORKSPACE/settings.xml" \
             -Dmaven.repo.local=/tmp/mvnrepo help:effective-settings -Doutput=/tmp/eff.xml >/dev/null 2>&1
           if [ -f /tmp/eff.xml ]; then
-            grep -A4 '<server>' /tmp/eff.xml | grep -E '<id>|<username>' || echo "(no server in effective settings)"
+            # Maven expands ${env.X} at read time, so this shows what the
+            # central-publishing plugin would actually send.
+            python3 - /tmp/eff.xml <<'PY'
+          import hashlib, sys, xml.etree.ElementTree as ET
+          root = ET.parse(sys.argv[1]).getroot()
+          for s in root.iter():
+              if s.tag.split("}")[-1] != "server":
+                  continue
+              g = lambda t: (s.findtext(t) or "")
+              # ET resolves ${env.X} only if the raw text is kept; check both.
+              print(f"server id={g('id')!r} username={g('username')!r} "
+                    f"password_len={len(g('password'))} "
+                    f"password_sha256_8={hashlib.sha256(g('password').encode()).hexdigest()[:8]}")
+          PY
           else
             echo "help:effective-settings produced no output"
           fi
