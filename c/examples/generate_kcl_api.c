@@ -10,13 +10,6 @@ static int check_format(const char* label, const char* source, const char* filen
         return 1;
     }
 
-    // An empty reply means the runtime does not register
-    // KclService.GenerateKcl; a successful conversion is never empty.
-    if (kcl[0] == '\0') {
-        printf("runtime does not implement KclService.GenerateKcl; skipping\n");
-        return 0;
-    }
-
     printf("--- %s ---\n%s", label, kcl);
     if (strcmp(kcl, expected) != 0) {
         printf("GenerateKcl(%s) expected:\n%s\ngot:\n%s\n", label, expected, kcl);

@@ -15,16 +15,6 @@ int main()
         return 1;
     }
 
-    // A core that does not register KclService.GenerateToml makes kcl_call
-    // return an empty reply, which decodes into an empty toml string
-    // rather than an error. A real TOML export of a config assignment is
-    // never empty, so an empty reply means the RPC is unavailable —
-    // skip instead of failing until the kcl-api pin moves.
-    if (toml[0] == '\0') {
-        printf("runtime does not implement KclService.GenerateToml; skipping\n");
-        return 0;
-    }
-
     printf("%s", toml);
     if (strstr(toml, "[app]") == NULL) {
         printf("Expected an [app] table in the TOML output: %s\n", toml);

@@ -31,13 +31,8 @@ int main()
     // report rather than an error.
     size_t len = strlen(report);
     if (len == 0) {
-        // The kcl-api revision pinned in Cargo.lock does not register
-        // KclService.FormatTestReport yet: the dispatcher panics on a
-        // background thread and the wrapper decodes an empty reply. Skip
-        // like the dart/julia suites do — the assertions below start
-        // enforcing once the pin moves.
-        printf("runtime does not implement KclService.FormatTestReport; skipping\n");
-        return 0;
+        printf("FormatTestReport returned an empty report\n");
+        return 1;
     }
     if (report[len - 1] != '\n') {
         printf("FormatTestReport did not return a newline-terminated report: %s\n", report);

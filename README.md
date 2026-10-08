@@ -95,7 +95,7 @@ This way you'll be able to import the above dependency to use the SDK.
 <dependency>
     <groupId>com.kcl</groupId>
     <artifactId>kcl-lib</artifactId>
-    <version>0.13.0</version>
+    <version>0.13.1</version>
 </dependency>
 ```
 
@@ -248,7 +248,7 @@ This way you'll be able to import the above dependency to use the SDK.
 <dependency>
     <groupId>com.kcl</groupId>
     <artifactId>kcl-lib</artifactId>
-    <version>0.13.0</version>
+    <version>0.13.1</version>
 </dependency>
 ```
 
@@ -332,7 +332,7 @@ For CMake, you can use FetchContent to add KCL C++ Lib to your project.
 FetchContent_Declare(
   kcl-lib
   GIT_REPOSITORY https://github.com/kcl-lang/lib.git
-  GIT_TAG        v0.13.0
+  GIT_TAG        v0.13.1
   SOURCE_SUBDIR  cpp
 )
 FetchContent_MakeAvailable(kcl-lib)

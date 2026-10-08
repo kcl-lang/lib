@@ -1,6 +1,6 @@
 name = "KclLib"
 uuid = "739c31e6-accf-4447-b2e8-a9920cc4cdad"
-version = "0.13.0"
+version = "0.13.1"
 
 [deps]
 Libdl = "8f399da3-3557-5675-b5ff-fb832c97cbdb"

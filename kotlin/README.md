@@ -26,7 +26,7 @@ This way you'll be able to import the above dependency to use the SDK.
 <dependency>
     <groupId>io.kcl-lang</groupId>
     <artifactId>kcl-lib-kotlin</artifactId>
-    <version>0.13.0</version>
+    <version>0.13.1</version>
 </dependency>
 ```
 

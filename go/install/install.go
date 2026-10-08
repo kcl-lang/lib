@@ -9,7 +9,7 @@ import (
 	"github.com/gofrs/flock"
 )
 
-const KCL_VERSION = "v0.13.0"
+const KCL_VERSION = "v0.13.1"
 
 func getVersion() string {
 	return fmt.Sprintf("%s-%s-%s", KCL_VERSION, runtime.GOOS, runtime.GOARCH)
