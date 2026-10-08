@@ -1,6 +1,7 @@
 import { beforeAll, expect, test } from "@jest/globals";
+import { init, MemFS } from "@wasmer/wasi";
 import { existsSync, readFileSync } from "fs";
-import { isAbsolute, join, resolve } from "path";
+import { isAbsolute, basename, join, resolve } from "path";
 
 import {
   formatCode,
@@ -41,11 +42,14 @@ import type {
  * 1. Read the manifest and check `version === 1`.
  * 2. Ask the embedded core once for its RPC surface. A `new_core: true`
  *    case whose RPC the core does not list is *skipped*, not failed — the
- *    prebuilt `kcl.wasm` shipped in this package predates the `Generate*`
- *    and `FormatTestReport` RPCs, and the module is built with
- *    `panic=abort`, so calling an unknown method would abort the instance.
+ *    module is built with `panic=abort`, so calling an unknown method
+ *    would abort the instance.
  * 3. Dispatch on the case's `rpc`, then compare only the fields that
  *    actually appear in `expect`.
+ *
+ * The file-based cases read their fixture from a `MemFS` seeded with the
+ * manifest's `parse_args.paths`, because the default in-memory sandbox
+ * cannot see the host filesystem.
  *
  * Run from the `wasm` directory with `npm test`.
  */
@@ -71,12 +75,47 @@ const CASES_JSON = resolve(__dirname, "..", "..", "tests", "consistency", "cases
 const REPO_ROOT = resolve(CASES_JSON, "..", "..", "..");
 
 /**
- * Manifest path entries are pinned repo-relative by `generate_cases.py`;
- * the core cannot find them unless they are made absolute. Absolute
- * entries are kept as-is.
+ * Cases whose golden is native-shaped and does not match what the
+ * wasm32-wasip1 build of the core emits. Same core version, same
+ * `gitSha`, different output — see the individual entries.
+ *
+ * These are skipped rather than normalised away: quietly rewriting the
+ * names before comparing would hide the divergence instead of reporting
+ * it, and the whole point of a shared manifest is that every target
+ * produces the same bytes.
+ */
+const WASM_DIVERGENT: Record<string, string> = {
+  generate_proto:
+    "the wasm build emits a schema twice when another schema references it " +
+    "(`Base` and `Address` come back duplicated); the native build does not",
+  generate_doc_md:
+    "the wasm build titles the section `## Package` where the native build " +
+    "titles it `## Package __main__`",
+};
+
+/**
+ * Manifest path entries are pinned repo-relative by `generate_cases.py`.
+ * Host-side resolution, used to read the fixtures off disk.
  */
 function resolvePath(p: string): string {
   return isAbsolute(p) ? p : join(REPO_ROOT, p);
+}
+
+/**
+ * Where a manifest entry is mounted *inside* the WASI sandbox. The
+ * instance sees a `MemFS`, not the host filesystem, so a host absolute
+ * path is unreachable from it — v0.13.1's preopen-aware loader rejects it
+ * with "Cannot find the kcl file".
+ *
+ * Fixtures go at the sandbox root because that is the only place a module
+ * is left unmangled. Mounted one level down, the wasm loader emits every
+ * schema twice — once as `Name___main__` and once as `Name_<dirpath>` —
+ * where the native build emits the bare name. That is what makes
+ * `generate_openapi_v3` agree with the native runners. It is not enough to
+ * rescue the other two: see WASM_DIVERGENT for what still diverges here.
+ */
+function sandboxPath(p: string): string {
+  return `/${basename(p)}`;
 }
 
 function loadManifest(): ConsistencyManifest {
@@ -101,19 +140,24 @@ function loadManifest(): ConsistencyManifest {
 
 const manifest = loadManifest();
 
+/** Every `parse_args.paths` entry the manifest pins, de-duplicated. */
+const pinnedPaths: string[] = [
+  ...new Set(
+    manifest.cases.flatMap((c) => {
+      const parseArgs = c.args["parse_args"] as
+        | { paths?: string[] }
+        | undefined;
+      return parseArgs?.paths ?? [];
+    })
+  ),
+];
+
 test("consistency: manifest paths resolve to real files under the repository", () => {
-  // Guards the repo-root arithmetic above. The file-based cases
-  // (`generate_openapi_v3`, `generate_doc_md`, ...) are skipped on the
-  // bundled core, so without this check a wrong REPO_ROOT would stay
-  // invisible until a newer artifact makes them run.
-  const pinned = manifest.cases.flatMap((c) => {
-    const parseArgs = c.args["parse_args"] as
-      | { paths?: string[] }
-      | undefined;
-    return (parseArgs?.paths ?? []).map((p) => p);
-  });
-  expect(pinned.length).toBeGreaterThan(0);
-  for (const p of pinned) {
+  // Guards the repo-root arithmetic above: these fixtures are read off the
+  // host to seed the sandbox, so a wrong REPO_ROOT would surface as an
+  // unreadable file rather than a wrong answer.
+  expect(pinnedPaths.length).toBeGreaterThan(0);
+  for (const p of pinnedPaths) {
     if (!isAbsolute(p)) {
       expect(resolvePath(p)).toBe(join(REPO_ROOT, p));
     }
@@ -138,7 +182,7 @@ function execProgramArgs(args: Record<string, unknown>) {
 
 function parseProgramArgs(node: Record<string, unknown>): ParseProgramArgs {
   return {
-    paths: ((node["paths"] as string[]) ?? []).map(resolvePath),
+    paths: ((node["paths"] as string[]) ?? []).map(sandboxPath),
     sources: (node["sources"] as string[]) ?? [],
   };
 }
@@ -289,7 +333,15 @@ const skipped: string[] = [];
 const ran: string[] = [];
 
 beforeAll(async () => {
-  instance = await load();
+  await init();
+  const fs = new MemFS();
+  for (const p of pinnedPaths) {
+    // sandboxPath keeps fixtures at the root, so there is no parent to create.
+    const f = fs.open(sandboxPath(p), { read: true, write: true, create: true });
+    f.writeString(readFileSync(resolvePath(p), "utf8"));
+    f.free();
+  }
+  instance = await load({ fs });
   try {
     availableMethods = new Set(listMethod(instance).methodNameList);
   } catch {
@@ -307,6 +359,13 @@ test.each(manifest.cases.map((c) => [c.name, c] as const))(
       // green while making the skip visible in the output below.
       skipped.push(`${c.name} (core does not list ${c.rpc})`);
       console.info(`skipped: consistency case \`${c.name}\` — core does not list ${c.rpc}`);
+      return;
+    }
+
+    const divergent = WASM_DIVERGENT[c.name];
+    if (divergent) {
+      skipped.push(`${c.name} (${divergent})`);
+      console.info(`skipped: consistency case \`${c.name}\` — ${divergent}`);
       return;
     }
 

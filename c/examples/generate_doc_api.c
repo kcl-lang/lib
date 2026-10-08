@@ -14,13 +14,6 @@ int main()
         return 1;
     }
 
-    // A core that does not register KclService.GenerateDoc answers with an
-    // empty reply, which decodes into an empty content string.
-    if (content[0] == '\0') {
-        printf("runtime does not implement KclService.GenerateDoc; skipping\n");
-        return 0;
-    }
-
     printf("%s", content);
     if (strstr(content, "### AppConfig") == NULL) {
         printf("Expected a Markdown document with an AppConfig section\n");
