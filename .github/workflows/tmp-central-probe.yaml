@@ -31,6 +31,9 @@ jobs:
         run: |
           set -uo pipefail
           echo "settings.xml present: $(test -f "$GITHUB_WORKSPACE/settings.xml" && echo yes || echo NO)"
+          echo "--- RAW settings.xml (GitHub masks any secret value) ---"
+          cat "$GITHUB_WORKSPACE/settings.xml"
+          echo "--- end raw ---"
           echo "--- server blocks (structure only) ---"
           # Print ids/usernames but never passwords; hash them instead.
           python3 - "$GITHUB_WORKSPACE/settings.xml" <<'PY'
