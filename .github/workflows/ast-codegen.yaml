@@ -113,7 +113,7 @@ jobs:
       # what decides the generated layout, so a generator run without it either
       # fails loudly or — worse, on a machine that happens to have it — writes
       # a file the freshness check then reads back differently.
-      - uses: actions/setup-go@v6
+      - uses: actions/setup-go@v7
         with:
           go-version: "1.25"
       - name: Vet the generated Go
