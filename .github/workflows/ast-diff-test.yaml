@@ -231,7 +231,7 @@ jobs:
     # --- julia ------------------------------------------------------------
     - name: Setup Julia
       if: matrix.binding == 'julia'
-      uses: julia-actions/setup-julia@v2
+      uses: julia-actions/setup-julia@v3
     - name: Instantiate the julia project
       if: matrix.binding == 'julia'
       working-directory: "lib/julia"
