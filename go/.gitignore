@@ -1,6 +1,15 @@
-!lib/**/*.dylib
-!lib/**/*.dll
-!lib/**/*.lib
-!lib/**/*.so
-!lib/**/*.exe
-!lib/**/*.a
+# Prebuilt libkcl binaries are not tracked on the development branches. They
+# are ~350MB of compiled artifacts that only carry value for a pinned release,
+# and every one of them is reproducible from the kcl-lang/kcl release of the
+# same version. See docs/lib-vendoring.md.
+#
+#   local build / CI on main : hack/download-libs.sh
+#   release/* branch         : .github/workflows/vendor-libs.yaml stages them
+#   release tags             : cut from a release/* branch, so they travel
+#                              with the tag
+#
+# The per-platform dummy.go files stay tracked so the packages still exist.
+lib/*/libkcl.so
+lib/*/libkcl.dylib
+lib/*/kcl.dll
+lib/*/libkcl.a

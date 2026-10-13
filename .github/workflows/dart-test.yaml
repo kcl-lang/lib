@@ -50,7 +50,15 @@ jobs:
           - macos-latest         # darwin-arm64
           - macos-15-intel       # darwin-amd64
           - windows-latest       # windows-amd64
-          - windows-11-arm       # windows-arm64
+          # windows-11-arm is out until kcl-lang/kcl publishes a
+          # kcl-lib-<version>-windows-arm64.zip: kcl-lang/kcl#2219 adds the
+          # target to that repo's release matrix, but no released version has
+          # the asset yet, so hack/download-libs.sh 404s and the leg fails.
+          # This leg used to pass only because go/lib/windows-arm64/kcl.dll was
+          # committed here, which is exactly what #207 stops doing. Re-add the
+          # line once the first kcl release carrying the asset is out and
+          # KCL_VERSION in go/install/install.go points at it.
+          # - windows-11-arm     # windows-arm64
           - windows-latest       # windows-amd64
     runs-on: ${{ matrix.os }}
     steps:
@@ -120,6 +128,13 @@ jobs:
         echo "dir=$dir"   >> "$GITHUB_OUTPUT"
         echo "name=$name" >> "$GITHUB_OUTPUT"
         echo "ext=$ext"   >> "$GITHUB_OUTPUT"
+
+    - name: Download the prebuilt libkcl runtime
+      shell: bash
+      run: |
+        # Not tracked on the development branches; see docs/lib-vendoring.md.
+        # The platform key mapped above is also the kcl release target name.
+        ../hack/download-libs.sh "${{ steps.arch.outputs.dir }}"
 
     - name: Set KCL_DART_LIB
       shell: bash

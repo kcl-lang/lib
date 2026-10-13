@@ -250,6 +250,8 @@ jobs:
       if: matrix.binding == 'dart'
       shell: bash
       run: |
+        # Not tracked on the development branches; see docs/lib-vendoring.md.
+        "$GITHUB_WORKSPACE/lib/hack/download-libs.sh" linux-amd64
         lib="$GITHUB_WORKSPACE/lib/go/lib/linux-amd64/libkcl.so"
         test -f "$lib" || (echo "missing prebuilt libkcl at $lib"; exit 1)
         echo "KCL_DART_LIB=$lib" >> "$GITHUB_ENV"

@@ -32,9 +32,11 @@ dependencies:
 Requirements:
 
 - **Dart SDK 3.0 or later** (developed and tested on Dart 3.13).
-- **`libkcl` prebuilt binary for your platform.** Out of the box the binding
-  locates it through the `KCL_DART_LIB` environment variable. Point it at
-  either the shared library file itself or at a directory whose layout
+- **`libkcl` prebuilt binary for your platform.** Run `hack/download-libs.sh`
+  from the repository root first — the development branches do not track it
+  (see [docs/lib-vendoring.md](../docs/lib-vendoring.md)). Out of the box the
+  binding locates it through the `KCL_DART_LIB` environment variable. Point it
+  at either the shared library file itself or at a directory whose layout
   matches the platform key in [`go/lib/`](../go/lib/) (the CI matrix
   installs `protoc` and `protoc-gen-dart` and runs the same way):
 

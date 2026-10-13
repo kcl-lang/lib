@@ -75,8 +75,20 @@ contract test is for.
 
 ### Build and Test
 
+The SDK embeds the prebuilt `libkcl` for the host platform with `//go:embed`,
+so fetch it first — the development branches do not track it:
+
 ```shell
+../hack/download-libs.sh
 go test ./...
 ```
+
+To type-check or vet without downloading the binary:
+
+```shell
+go build -tags no_libembed ./...
+```
+
+Both are covered in [docs/lib-vendoring.md](../docs/lib-vendoring.md).
 
 Note: Full Go SDK can be found [here](https://github.com/kcl-lang/kcl-go), which depends on the kcl-lang/lib Go bindings.

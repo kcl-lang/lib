@@ -14,10 +14,13 @@ with typed wrappers generated from `../spec/spec.proto`.
 ## Build and Test
 
 ```shell
+../hack/download-libs.sh   # not tracked on the development branches
 zig build test
 ```
 
 The native library is linked from `../go/lib/<platform>/` (no Rust build).
+Those binaries are vendored onto release branches and tags only — see
+[docs/lib-vendoring.md](../docs/lib-vendoring.md).
 
 ## API
 

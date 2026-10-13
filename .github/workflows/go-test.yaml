@@ -88,7 +88,29 @@ jobs:
             musl-dev \
             gcc \
             git \
-            make
+            make \
+            bash \
+            curl
+
+      # The prebuilt libkcl binaries are not tracked on the development
+      # branches (docs/lib-vendoring.md). The //go:embed in go/lib needs this
+      # platform's copy to compile at all. The script resolves the repository
+      # root from its own path, so the `go` working-directory is fine.
+      #
+      # The musl leg is the odd one out: `go test` there builds for two
+      # platforms at once — the linux/amd64 test binaries the runner executes,
+      # and the musl cross-compile. So it needs BOTH the linux-amd64 shared
+      # library (selected by the implicit _GOOS_GOARCH constraint on
+      # kcl_lib_linux_amd64.go) and the linux-musl-amd64 static archive that
+      # the cgo LDFLAGS in go/lib link against.
+      - name: Download the prebuilt libkcl runtime
+        shell: bash
+        run: |
+          if [ -n "${{ matrix.container }}" ]; then
+            ../hack/download-libs.sh linux-amd64 linux-musl-amd64
+          else
+            ../hack/download-libs.sh
+          fi
 
       - name: Go mod tidy
         run: go mod tidy

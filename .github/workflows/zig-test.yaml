@@ -36,6 +36,12 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
     - uses: actions/checkout@v7
+    - name: Download the prebuilt libkcl runtime
+      shell: bash
+      run: |
+        # zig/build.zig links ../go/lib/<platform>/; not tracked on the
+        # development branches. See docs/lib-vendoring.md.
+        ../hack/download-libs.sh
     - uses: korandoru/setup-zig@v1
       with:
         zig-version: 0.16.0

@@ -2,6 +2,14 @@
 
 This repo mainly includes the binding of the low-level API and spec of the [KCL language core](https://github.com/kcl-lang/kcl), and the SDKs of various languages are based on this to encapsulate higher-level APIs.
 
+> **The prebuilt native runtimes are not on `main`.** `go/lib/<platform>/` and
+> `wasm/kcl.wasm` are ~370MB of compiled binaries, reproducible from the
+> [kcl-lang/kcl](https://github.com/kcl-lang/kcl) release of the same version.
+> Development branches do not carry them; run `hack/download-libs.sh` (add
+> `--wasm` for the npm package) before building anything that links against the
+> runtime. Release branches and release tags do carry them — see
+> [docs/lib-vendoring.md](./docs/lib-vendoring.md).
+
 ## Bindings
 
 ### Rust
