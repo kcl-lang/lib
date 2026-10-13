@@ -108,6 +108,8 @@ jobs:
         uses: actions/checkout@v7
         with:
           repository: kcl-lang/lib
+          # Release tags carry the vendored go/lib binaries; the development
+          # branches do not. See docs/lib-vendoring.md.
           ref: ${{ env.KCL_LIB_REF }}
           path: lib-src
 

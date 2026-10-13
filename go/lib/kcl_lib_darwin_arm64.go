@@ -1,3 +1,6 @@
+//go:build !no_libembed
+// +build !no_libembed
+
 package lib
 
 import (

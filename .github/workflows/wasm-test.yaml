@@ -36,6 +36,13 @@ jobs:
         with:
           node-version: 22.x
 
+      # kcl.wasm is the runtime this package wraps: it is listed in
+      # package.json "files", so it is both what the tests execute and what
+      # `npm publish` ships. It is not tracked on the development branches —
+      # see docs/lib-vendoring.md.
+      - name: Download kcl.wasm
+        run: ../hack/download-libs.sh --wasm
+
       - name: Install dependencies
         run: npm install
 

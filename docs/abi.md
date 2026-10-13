@@ -157,8 +157,8 @@ cast to `u64`:
 
 ## 8. Prebuilt shared libraries
 
-Precompiled native libraries are vendored in this repository under
-`go/lib/<platform>/` and are what most bindings load at run time:
+Precompiled native libraries live under `go/lib/<platform>/` and are what most
+bindings load at run time:
 
 | Directory                    | Artifact       | Platform             |
 |------------------------------|----------------|----------------------|
@@ -170,6 +170,12 @@ Precompiled native libraries are vendored in this repository under
 | `go/lib/linux-musl-amd64/`   | `libkcl.a`     | Linux, x86-64 (musl) |
 | `go/lib/windows-arm64/`      | `kcl.dll`      | Windows, arm64       |
 | `go/lib/windows-amd64/`      | `kcl.dll`      | Windows, x86-64      |
+
+They are vendored onto `release/*` branches and onto release tags, **not** onto
+the development branches. Fetch them for a local build with
+`hack/download-libs.sh`; see [lib-vendoring.md](lib-vendoring.md) for the
+release procedure and for the `no_libembed` build tag the Go SDK accepts
+instead.
 
 The C/C++ bindings instead build the cdylib from `c/` (`cargo build -r`
 produces `target/release/libkcl_lib_c.{so,dylib}`), which re-exports the

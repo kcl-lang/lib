@@ -40,6 +40,11 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
     - uses: actions/checkout@v7
+    - name: Download the prebuilt libkcl runtime
+      shell: bash
+      run: |
+        # Not tracked on the development branches; see docs/lib-vendoring.md.
+        ../hack/download-libs.sh
     - name: Setup Julia
       uses: julia-actions/setup-julia@v2
       with:

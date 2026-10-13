@@ -323,9 +323,15 @@ func main() {
 ## Developing
 
 - Install `node.js`
+- Fetch the WASM runtime. `kcl.wasm` is a compiled ~11MB artifact
+  reproducible from the [kcl-lang/kcl](https://github.com/kcl-lang/kcl) release
+  of the same version, and the development branches do not track it — see
+  [docs/lib-vendoring.md](../docs/lib-vendoring.md). It is both what the tests
+  execute and what `npm publish` ships, since it is in `package.json` `files`.
 - Install dependencies
 
 ```shell
+../hack/download-libs.sh --wasm
 npm install
 ```
 

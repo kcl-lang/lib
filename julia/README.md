@@ -30,8 +30,11 @@ Pkg.add(url="https://github.com/kcl-lang/lib.git", subdir="julia")
 Requirements:
 
 - **Julia** 1.6 or later (developed and tested on 1.13).
-- **libkcl** prebuilt binary for your platform. Out of the box the package
-  locates it in the repository layout (`go/lib/<platform>/libkcl.{dylib,so,dll}`).
+- **libkcl** prebuilt binary for your platform. Run `hack/download-libs.sh`
+  from the repository root first — the development branches do not track it
+  (see [docs/lib-vendoring.md](../docs/lib-vendoring.md)). Out of the box the
+  package locates it in the repository layout
+  (`go/lib/<platform>/libkcl.{dylib,so,dll}`).
   If you use the package outside this repository layout, point the
   `KCL_JL_LIB` environment variable at the shared library (or at a directory
   containing the platform subdirectory):

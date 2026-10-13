@@ -197,3 +197,10 @@ Cargo.lock
 !.yarn/versions
 
 *.node
+
+### Vendored KCL runtime ###
+# kcl.wasm is a compiled ~11MB artifact reproducible from the kcl-lang/kcl
+# release of the same version. It is vendored onto release/* branches only,
+# see docs/lib-vendoring.md; fetch it with hack/download-libs.sh.
+/kcl.wasm
+/examples/browser/kcl.wasm

@@ -25,8 +25,10 @@ Requirements:
 - **PHP 8.1 or later** with the FFI extension. On the CLI SAPI FFI is always
   enabled; under a web SAPI set `ffi.enable=true` in `php.ini` (the binding
   uses `FFI::cdef` at runtime, so `preload` is not enough there).
-- **`libkcl` prebuilt binary for your platform.** By default the binding
-  walks up from `src/KclLib.php` looking for the platform file under
+- **`libkcl` prebuilt binary for your platform.** Run `hack/download-libs.sh`
+  from the repository root first — the development branches do not track it
+  (see [docs/lib-vendoring.md](../docs/lib-vendoring.md)). By default the
+  binding walks up from `src/KclLib.php` looking for the platform file under
   `go/lib/` in this checkout (`go/lib/darwin-arm64/libkcl.dylib` on Apple
   silicon, `go/lib/linux-amd64/libkcl.so` on Linux, …). Set the
   `KCL_PHP_LIB` environment variable to override it — either the shared
