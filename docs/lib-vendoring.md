@@ -41,6 +41,11 @@ leg of `dart-test.yaml` is commented out for the same reason — it used to pass
 only because the binary was committed here, which is what this change stops
 doing. Re-enable it once the asset ships.
 
+`vendor-libs.yaml` fetches that platform on a best-effort basis, so cutting a
+release against a kcl version that predates the asset still vendors every
+other runtime instead of failing the run; the omission is reported as a
+warning on the vendoring commit.
+
 [kcl-lang/kcl#2219]: https://github.com/kcl-lang/kcl/pull/2219
 
 ## The Go build tag
