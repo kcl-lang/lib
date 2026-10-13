@@ -93,11 +93,24 @@ jobs:
           } >> "$GITHUB_OUTPUT"
 
       - name: Download and stage
+        env:
+          KCL_VERSION: ${{ steps.vars.outputs.kcl_version }}
         run: |
-          ./hack/download-libs.sh --version "${{ steps.vars.outputs.kcl_version }}" \
+          set -euo pipefail
+          ./hack/download-libs.sh --version "$KCL_VERSION" \
             linux-amd64 linux-arm64 linux-musl-amd64 linux-musl-arm64 \
-            darwin-amd64 darwin-arm64 windows-amd64 windows-arm64 \
+            darwin-amd64 darwin-arm64 windows-amd64 \
             wasm32-wasip1
+
+          # windows-arm64 is fetched on a best-effort basis: kcl-lang/kcl#2219
+          # added the target to that repo's release matrix, but no tag cut
+          # before it carries a kcl-lib-<version>-windows-arm64.zip, so this
+          # 404s for older kcl versions. Once the asset is published this
+          # stages it like any other platform and stops being a no-op; until
+          # then the sanity check in the vendor job reports the omission
+          # rather than failing the whole run.
+          ./hack/download-libs.sh --version "$KCL_VERSION" windows-arm64 \
+            || echo "::warning title=No windows-arm64 asset::kcl-lang/kcl ${KCL_VERSION} publishes no kcl-lib-${KCL_VERSION}-windows-arm64.zip; go/lib/windows-arm64/kcl.dll will not be vendored"
 
       - name: Inventory
         run: |
@@ -175,6 +188,8 @@ jobs:
           install -m 0755 staged/wasm/kcl.wasm wasm/kcl.wasm
 
       - name: Sanity-check the staged tree
+        env:
+          KCL_VERSION: ${{ needs.prebuilt.outputs.kcl_version }}
         run: |
           set -euo pipefail
           missing=0
@@ -182,7 +197,7 @@ jobs:
             go/lib/darwin-amd64/libkcl.dylib go/lib/darwin-arm64/libkcl.dylib \
             go/lib/linux-amd64/libkcl.so    go/lib/linux-arm64/libkcl.so \
             go/lib/linux-musl-amd64/libkcl.a go/lib/linux-musl-arm64/libkcl.a \
-            go/lib/windows-amd64/kcl.dll    go/lib/windows-arm64/kcl.dll \
+            go/lib/windows-amd64/kcl.dll \
             go/lib/ios-arm64/libkcl.a       go/lib/ios-arm64-sim/libkcl.a \
             wasm/kcl.wasm ; do
             if [ ! -s "$f" ]; then
@@ -191,6 +206,13 @@ jobs:
             fi
           done
           [ "$missing" -eq 0 ] || exit 1
+
+          # windows-arm64 is expected to be absent for every kcl release
+          # older than the one that first ships the asset; see the note in
+          # the prebuilt job. Report it, but do not fail the run.
+          if [ ! -s go/lib/windows-arm64/kcl.dll ]; then
+            echo "::warning::go/lib/windows-arm64/kcl.dll not vendored: kcl-lang/kcl ${KCL_VERSION} publishes no such asset"
+          fi
           du -sh go/lib wasm/kcl.wasm
 
       - name: Commit the binaries onto the branch
@@ -205,13 +227,23 @@ jobs:
           # go/.gitignore and wasm/.gitignore exclude these on purpose so the
           # development branches stay small. Force-add: this is the one place
           # the artifacts are meant to be tracked.
-          git add -f \
-            go/lib/darwin-amd64/libkcl.dylib go/lib/darwin-arm64/libkcl.dylib \
-            go/lib/linux-amd64/libkcl.so    go/lib/linux-arm64/libkcl.so \
-            go/lib/linux-musl-amd64/libkcl.a go/lib/linux-musl-arm64/libkcl.a \
-            go/lib/windows-amd64/kcl.dll    go/lib/windows-arm64/kcl.dll \
-            go/lib/ios-arm64/libkcl.a       go/lib/ios-arm64-sim/libkcl.a \
+          #
+          # Filtered through -s because git add fails outright on a pathspec
+          # that matches nothing, and go/lib/windows-arm64/kcl.dll legitimately
+          # does not exist for kcl releases that predate the asset.
+          artifacts=(
+            go/lib/darwin-amd64/libkcl.dylib go/lib/darwin-arm64/libkcl.dylib
+            go/lib/linux-amd64/libkcl.so    go/lib/linux-arm64/libkcl.so
+            go/lib/linux-musl-amd64/libkcl.a go/lib/linux-musl-arm64/libkcl.a
+            go/lib/windows-amd64/kcl.dll    go/lib/windows-arm64/kcl.dll
+            go/lib/ios-arm64/libkcl.a       go/lib/ios-arm64-sim/libkcl.a
             wasm/kcl.wasm
+          )
+          present=()
+          for f in "${artifacts[@]}"; do
+            [ -s "$f" ] && present+=("$f")
+          done
+          git add -f -- "${present[@]}"
 
           if git diff --cached --quiet; then
             echo "Already vendored; nothing to commit."
