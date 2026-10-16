@@ -40,7 +40,7 @@ import { load, invokeKCLCall, invokeKCLVersion } from "@kcl-lib/wasm";
 const inst = await load();
 
 // Read the KCL version baked into the artifact.
-console.log(invokeKCLVersion(inst)); // -> "0.13.1"
+console.log(invokeKCLVersion(inst)); // -> "0.13.2"
 
 // Dispatch any KclService.* RPC by name. The `args` field must be the
 // protobuf-encoded `<Method>Args` message, and the returned string is
@@ -74,7 +74,7 @@ import { load, ping, lintPath, getVersion } from "@kcl-lib/wasm";
 const inst = await load();
 
 console.log(ping(inst, { value: "hello" }).value); // -> "hello"
-console.log(getVersion(inst).version); // -> "0.13.1"
+console.log(getVersion(inst).version); // -> "0.13.2"
 
 // File-based methods operate on the WASI sandbox filesystem.
 const result = lintPath(inst, { paths: ["/test.k"] });
@@ -240,7 +240,7 @@ MemFS()` instance to `load()` to set up the sandbox filesystem.
   `panic=abort` caveat above applies to plugin errors specifically, because
   the runtime reports them by panicking.
 - **`Generate*` and `FormatTestReport` are registered and run.** The
-  bundled v0.13.1 artifact advertises them in `listMethod` and the
+  bundled v0.13.2 artifact advertises them in `listMethod` and the
   consistency runner asserts them for real. Two of them still diverge from
   the native goldens and are reported as skips with the measured reason:
   `GenerateProto` emits a referenced schema twice, and `GenerateDoc`

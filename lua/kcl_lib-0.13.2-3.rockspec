@@ -1,4 +1,4 @@
-local package_version = "0.13.1"
+local package_version = "0.13.2"
 local rockspec_revision = "3"
 
 rockspec_format = "3.0"

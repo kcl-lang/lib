@@ -13,7 +13,7 @@
 #   hack/download-libs.sh linux-arm64 darwin-arm64 # named platforms
 #   hack/download-libs.sh --wasm                   # kcl.wasm (npm package)
 #   hack/download-libs.sh --all                    # every platform, incl. iOS
-#   hack/download-libs.sh --version v0.13.1        # pin a version
+#   hack/download-libs.sh --version v0.13.2        # pin a version
 #
 # --all includes the two iOS static archives, which have no prebuilt source
 # and are cross-compiled from c/ with cargo (macOS hosts only).

@@ -21,7 +21,7 @@ hack/download-libs.sh linux-arm64  # named platforms
 ```
 
 The version defaults to `KCL_VERSION` in `go/install/install.go`; pass
-`--version v0.13.1` to pin a different one. Platforms that
+`--version v0.13.2` to pin a different one. Platforms that
 [kcl-lang/kcl][kcl] publishes are downloaded from its release; the two iOS
 static archives are cross-compiled from this repository's `c/` crate with
 cargo, so `--all` needs a macOS host.
