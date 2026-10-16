@@ -21,7 +21,7 @@ fn call_with_plugin_agent<'a>(
 
 /// A Python module implemented in Rust.
 #[pymodule]
-fn _kcl_lib(_py: Python, m: &PyModule) -> PyResult<()> {
+fn _kcl_lib(m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(call, m)?)?;
     m.add_function(wrap_pyfunction!(call_with_plugin_agent, m)?)?;
     Ok(())

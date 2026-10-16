@@ -1,6 +1,6 @@
 [package]
 name = "kcl-lib-ruby"
-version = "0.13.1"
+version = "0.13.2"
 edition = "2024"
 publish = false
 
@@ -10,5 +10,5 @@ crate-type = ["cdylib"]
 
 [dependencies]
 anyhow = "1"
-kcl-api = { git = "https://github.com/kcl-lang/kcl", version = "0.13.1" }
+kcl-api = { git = "https://github.com/kcl-lang/kcl", version = "0.13.2" }
 magnus = "0.7"

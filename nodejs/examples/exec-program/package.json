@@ -12,6 +12,6 @@
     "dist/"
   ],
   "dependencies": {
-    "@kcl-lib/native": "0.13.1"
+    "@kcl-lib/native": "0.13.2"
   }
 }
