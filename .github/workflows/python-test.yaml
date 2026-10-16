@@ -51,8 +51,10 @@ jobs:
   #
   # Linux builds inside a maturin-managed manylinux container, so `-i` is the
   # only thing that selects the interpreter there -- installing Python on the
-  # runner would have no effect on the build. macOS and Windows build on the
-  # host, so those jobs select it with actions/setup-python instead.
+  # runner would have no effect on the build. maturin rejects `-i` together
+  # with `--find-interpreter`, so each leg passes exactly one. macOS and
+  # Windows build on the host, so those jobs select it with
+  # actions/setup-python and let `--find-interpreter` resolve it.
   linux:
     runs-on: ubuntu-latest
     strategy:
@@ -68,7 +70,7 @@ jobs:
           manylinux: auto
           working-directory: "python"
           command: build
-          args: --release -o dist --find-interpreter ${{ matrix.python != 'default' && format('-i python{0}', matrix.python) || '' }}
+          args: --release -o dist ${{ matrix.python != 'default' && format('-i python{0}', matrix.python) || '--find-interpreter' }}
         env:
           # Workaround ring 0.17 build issue
           CFLAGS_aarch64_unknown_linux_gnu: "-D__ARM_ARCH=8"
