@@ -71,7 +71,11 @@ jobs:
           # run and InstallKcl keys its cache directory off it, so vendoring a
           # libkcl from a different version than the SDK claims would be a
           # silent ABI mismatch. Same guard as publish-kcltool.yaml.
-          lib_version="v${branch#release/}"
+          #
+          # `${branch#release/}` already carries the leading `v` — the regex
+          # above guarantees it — so prepending another one yields `vv0.13.1`
+          # and fails the comparison against KCL_VERSION below.
+          lib_version="${branch#release/}"
           sdk_version="$(sed -nE 's/^const KCL_VERSION[[:space:]]*=[[:space:]]*"([^"]+)".*/\1/p' go/install/install.go)"
           echo "branch:          $branch"
           echo "lib version:     $lib_version"
@@ -153,10 +157,18 @@ jobs:
           lipo -info go/lib/ios-arm64/libkcl.a
           lipo -info go/lib/ios-arm64-sim/libkcl.a
 
+      # `path: .` + `include:` rather than a bare path list. upload-artifact
+      # roots an archive at the least common ancestor of everything it
+      # uploads, and the LCA of the two archives is go/lib -- so listing them
+      # directly stores them as ios-arm64/libkcl.a and ios-arm64-sim/libkcl.a,
+      # and the vendor job's `staged/go/lib/` merge finds nothing. Anchoring
+      # the search at the repository root keeps both artifacts rooted the same
+      # way, whatever platforms a job happens to build.
       - uses: actions/upload-artifact@v7
         with:
           name: ios-libs
-          path: |
+          path: .
+          include: |
             go/lib/ios-arm64/libkcl.a
             go/lib/ios-arm64-sim/libkcl.a
           if-no-files-found: error
@@ -175,6 +187,12 @@ jobs:
       - uses: actions/download-artifact@v8
         with:
           path: staged
+          # Without this, downloading every artifact lands each one in its own
+          # staged/<artifact-name>/ subdirectory, so the tree below would be
+          # staged/prebuilt-libs/go/lib/... rather than staged/go/lib/...
+          # Both artifacts are rooted at the repository and cover disjoint
+          # platforms, so merging them cannot collide on a path.
+          merge-multiple: true
 
       # Both artifacts are rooted at the repository, so they merge into one
       # staged/ tree without colliding on a path.
