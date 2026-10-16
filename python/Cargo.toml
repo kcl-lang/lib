@@ -9,6 +9,6 @@ crate-type = ["cdylib"]
 
 [dependencies]
 kcl-api = { git = "https://github.com/kcl-lang/kcl", version = "0.13.2" }
-# fix the pyos version to 0.20.1
-# because https://github.com/PyO3/maturin/issues/1960
-pyo3 = "=0.20.2"
+# 0.30 is the first line with final Python 3.15 support (0.29 had it as beta).
+# It requires Python >=3.9, which is why `requires-python` is not lower.
+pyo3 = "0.30"
