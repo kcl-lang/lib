@@ -125,7 +125,10 @@ try {
 ```
 
 `exec_program` and `validate_code` are **not thread-safe**, mirroring the
-spec.
+spec. Call them from a single isolate: the shared runtime keeps process-global
+state, and overlapping calls can lose a panic payload — the KCL error then
+comes back with an empty message. The test suite runs one file at a time for
+the same reason; see [`dart_test.yaml`](dart_test.yaml).
 
 ## API reference
 
