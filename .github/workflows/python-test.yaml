@@ -45,22 +45,23 @@ jobs:
           name: sdist-${{ github.run_id }}
           path: python/dist
 
-  # The `python` dimension selects the interpreter each wheel is built against;
-  # `default` keeps whatever the runner ships, which is what produced every
-  # wheel up to cp314. Add a leg here for a new CPython.
+  # These jobs build a wheel for *every* interpreter available to maturin,
+  # not one -- `--find-interpreter` means "find them all", and it picks up
+  # whatever the image ships plus anything on PATH. That is where the
+  # cp310..cp315 / pp311 spread comes from; there is no version matrix here
+  # and adding one would only duplicate wheels the default build already
+  # produces.
   #
-  # Linux builds inside a maturin-managed manylinux container, so `-i` is the
-  # only thing that selects the interpreter there -- installing Python on the
-  # runner would have no effect on the build. maturin rejects `-i` together
-  # with `--find-interpreter`, so each leg passes exactly one. macOS and
-  # Windows build on the host, so those jobs select it with
-  # actions/setup-python and let `--find-interpreter` resolve it.
+  # Linux runs inside the manylinux container, which ships 3.9 through 3.15
+  # (plus free-threaded 3.14t/3.15t and PyPy 3.11), so its cp315 comes for
+  # free. The macOS runner image also carries 3.15. The Windows image stops
+  # at 3.14, so that job installs 3.15 explicitly below -- setup-python adds
+  # to what maturin discovers rather than replacing it.
   linux:
     runs-on: ubuntu-latest
     strategy:
       matrix:
         target: [ x86_64, aarch64 ]
-        python: [ default, "3.15" ]
     steps:
       - uses: actions/checkout@v7
       - uses: PyO3/maturin-action@v1
@@ -70,52 +71,43 @@ jobs:
           manylinux: auto
           working-directory: "python"
           command: build
-          args: --release -o dist ${{ matrix.python != 'default' && format('-i python{0}', matrix.python) || '--find-interpreter' }}
+          args: --release -o dist --find-interpreter
         env:
           # Workaround ring 0.17 build issue
           CFLAGS_aarch64_unknown_linux_gnu: "-D__ARM_ARCH=8"
-      - name: Upload wheels-linux-${{ matrix.target }}-${{ matrix.python }}-${{ github.run_id }}
+      - name: Upload wheels-linux-${{ matrix.target }}-${{ github.run_id }}
         uses: actions/upload-artifact@v7
         with:
-          name: wheels-linux-${{ matrix.target }}-${{ matrix.python }}-${{ github.run_id }}
+          name: wheels-linux-${{ matrix.target }}-${{ github.run_id }}
           path: python/dist
 
   windows:
     runs-on: windows-latest
-    strategy:
-      matrix:
-        python: [ default, "3.15" ]
     steps:
       - uses: actions/checkout@v7
-      - name: Set up Python ${{ matrix.python }}
-        if: matrix.python != 'default'
+      # The Windows image tops out at 3.14. Without this the cp315 wheel
+      # never gets built; with it maturin finds 3.10-3.14 from the image
+      # plus 3.15 here.
+      - name: Set up Python 3.15
         uses: actions/setup-python@v7
         with:
-          python-version: ${{ matrix.python }}
+          python-version: "3.15"
       - uses: PyO3/maturin-action@v1
         with:
           maturin-version: v1.15.0
           working-directory: "python"
           command: build
           args: --release -o dist --find-interpreter
-      - name: Upload wheels-windows-${{ matrix.python }}-${{ github.run_id }}
+      - name: Upload wheels-windows-${{ github.run_id }}
         uses: actions/upload-artifact@v7
         with:
-          name: wheels-windows-${{ matrix.python }}-${{ github.run_id }}
+          name: wheels-windows-${{ github.run_id }}
           path: python/dist
 
   macos:
     runs-on: macos-latest
-    strategy:
-      matrix:
-        python: [ default, "3.15" ]
     steps:
       - uses: actions/checkout@v7
-      - name: Set up Python ${{ matrix.python }}
-        if: matrix.python != 'default'
-        uses: actions/setup-python@v7
-        with:
-          python-version: ${{ matrix.python }}
       - uses: PyO3/maturin-action@v1
         with:
           maturin-version: v1.15.0
@@ -123,10 +115,10 @@ jobs:
           command: build
           target: universal2-apple-darwin
           args: --release -o dist --find-interpreter
-      - name: Upload wheels-macos-${{ matrix.python }}-${{ github.run_id }}
+      - name: Upload wheels-macos-${{ github.run_id }}
         uses: actions/upload-artifact@v7
         with:
-          name: wheels-macos-${{ matrix.python }}-${{ github.run_id }}
+          name: wheels-macos-${{ github.run_id }}
           path: python/dist
 
   test:
