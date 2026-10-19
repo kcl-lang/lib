@@ -52,11 +52,11 @@ jobs:
   # and adding one would only duplicate wheels the default build already
   # produces.
   #
-  # Linux runs inside the manylinux container, which ships 3.9 through 3.15
-  # (plus free-threaded 3.14t/3.15t and PyPy 3.11), so its cp315 comes for
-  # free. The macOS runner image also carries 3.15. The Windows image stops
-  # at 3.14, so that job installs 3.15 explicitly below -- setup-python adds
-  # to what maturin discovers rather than replacing it.
+  # Linux x86_64 runs in the native manylinux image, which ships 3.9 through
+  # 3.15 (plus free-threaded 3.14t/3.15t and PyPy 3.11), so its cp315 comes
+  # for free. The macOS runner image also carries 3.15. The Windows image
+  # stops at 3.14, so that job installs 3.15 explicitly below -- setup-python
+  # adds to what maturin discovers rather than replacing it.
   linux:
     runs-on: ubuntu-latest
     strategy:
@@ -72,6 +72,45 @@ jobs:
           working-directory: "python"
           command: build
           args: --release -o dist --find-interpreter
+        env:
+          # Workaround ring 0.17 build issue
+          CFLAGS_aarch64_unknown_linux_gnu: "-D__ARM_ARCH=8"
+      # aarch64 is a cross build, so maturin-action runs it in
+      # ghcr.io/rust-cross/manylinux2014-cross:aarch64 rather than the native
+      # quay.io/pypa/manylinux2014_x86_64 image the x86_64 leg uses. That
+      # cross image's /opt/python stops at CPython 3.14, so --find-interpreter
+      # never offers 3.15 there -- it reports 3.9 through 3.14, 3.14t and
+      # PyPy 3.11 and stops. The interpreter itself is present, so naming it
+      # explicitly works. Without this step aarch64 Linux ships no 3.15 wheel
+      # at all, which is the gap #404 is about.
+      - name: Build the aarch64 CPython 3.15 wheel
+        if: matrix.target == 'aarch64'
+        uses: PyO3/maturin-action@v1
+        with:
+          maturin-version: v1.15.0
+          target: aarch64
+          manylinux: auto
+          working-directory: "python"
+          command: build
+          args: --release -o dist -i python3.15
+        env:
+          # Workaround ring 0.17 build issue
+          CFLAGS_aarch64_unknown_linux_gnu: "-D__ARM_ARCH=8"
+      # Free-threaded 3.15 on aarch64, if the cross image has it. The x86_64
+      # leg gets cp315t from the native image; this is the same question asked
+      # of the cross image, and it is allowed to fail so that a missing 3.15t
+      # cannot take the cp315 wheel above down with it.
+      - name: Build the aarch64 free-threaded 3.15 wheel
+        if: matrix.target == 'aarch64'
+        continue-on-error: true
+        uses: PyO3/maturin-action@v1
+        with:
+          maturin-version: v1.15.0
+          target: aarch64
+          manylinux: auto
+          working-directory: "python"
+          command: build
+          args: --release -o dist -i python3.15t
         env:
           # Workaround ring 0.17 build issue
           CFLAGS_aarch64_unknown_linux_gnu: "-D__ARM_ARCH=8"
