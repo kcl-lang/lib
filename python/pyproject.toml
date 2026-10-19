@@ -8,7 +8,9 @@ build-backend = "maturin"
 [project]
 name = "kcl_lib"
 version = "0.13.2"
-requires-python = ">=3.9"
+# protobuf 7.x needs Python >=3.10, so a 3.9 build of this wheel could never
+# install. pyo3 0.30 would support 3.9, but that would be a lie.
+requires-python = ">=3.10"
 classifiers = [
     "Programming Language :: Rust",
     "Programming Language :: Python :: Implementation :: CPython",

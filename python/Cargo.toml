@@ -10,5 +10,6 @@ crate-type = ["cdylib"]
 [dependencies]
 kcl-api = { git = "https://github.com/kcl-lang/kcl", version = "0.13.2" }
 # 0.30 is the first line with final Python 3.15 support (0.29 had it as beta).
-# It requires Python >=3.9, which is why `requires-python` is not lower.
+# It supports Python 3.9, but `requires-python` is 3.10 -- protobuf 7.x, which
+# this wheel depends on, needs 3.10 -- so a 3.9 build would be unusable.
 pyo3 = "0.30"
