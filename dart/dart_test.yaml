@@ -1,0 +1,17 @@
+# Run one test file at a time.
+#
+# `dart test` normally loads and runs test *files* concurrently, each in its
+# own isolate — but every isolate shares the one loaded `libkcl`, and the KCL
+# runtime keeps process-global state its own C API declares not thread-safe.
+# The sharpest edge is the panic hook: the Rust side takes, replaces and
+# restores the *process-global* `std::panic` hook around every evaluation
+# (`FastRunner::run` in kcl_runner) and records the panic payload into a
+# thread-local. Two overlapping evaluations can clobber each other's hook, so
+# the panicking thread's payload never reaches its own record and the KCL error
+# comes back with an empty message — the plugin tests in kcl_lib_test.dart
+# then fail on `expect(errMessage, contains(...))`, with the real text showing
+# up only in the runtime's stderr.
+#
+# Serial execution costs ~0.1s on this package, so the suite stays honest
+# about what it exercises instead of racing the runtime.
+concurrency: 1

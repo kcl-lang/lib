@@ -49,7 +49,6 @@ jobs:
           - ubuntu-22.04-arm     # linux-arm64
           - macos-latest         # darwin-arm64
           - macos-15-intel       # darwin-amd64
-          - windows-latest       # windows-amd64
           # windows-11-arm is out until kcl-lang/kcl publishes a
           # kcl-lib-<version>-windows-arm64.zip: kcl-lang/kcl#2219 adds the
           # target to that repo's release matrix, but no released version has
