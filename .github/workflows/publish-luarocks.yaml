@@ -3,15 +3,118 @@ on:
   release:
     types:
       - published
+  # Runs the credential probe alone, without publishing. The secret only
+  # resolves on CI, so this is the only way to find out *why* a key is being
+  # rejected without cutting a release to find out.
+  workflow_dispatch:
+    inputs:
+      kcl_version:
+        description: >-
+          Version the credential probe asks about, e.g. 0.13.2. Only affects
+          the probe; a dispatch never publishes.
+        required: false
+        type: string
 permissions:
   contents: read
 concurrency:
-  group: luarocks-${{ github.event.release.tag_name }}
+  group: luarocks-${{ github.event.release.tag_name || github.run_id }}
   cancel-in-progress: false
 jobs:
+  # The publish below can only fail here for want of a credential, and when it
+  # does, luarocks redacts the key out of its own error:
+  #
+  #   Error: API failure: failed downloading
+  #   https://luarocks.org/api/1/***/check_rockspec?... - /check_rockspec?...
+  #
+  # which says nothing about whether the secret is missing, empty, malformed
+  # or rejected. Every release since this workflow was added (bf46a94,
+  # 2026-07-28) has failed exactly this way — v0.12.5, v0.13.0, v0.13.1 and
+  # v0.13.2 — so it has never once published. Probing the credential up front
+  # turns that into one unambiguous line before anything is built.
+  #
+  # Same shape as check-central-secrets in java-test.yaml.
+  check-credentials:
+    name: Check LuaRocks credentials
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Probe the LuaRocks API key
+        env:
+          LUAROCKS_API_KEY: ${{ secrets.LUAROCKS_API_KEY }}
+          RELEASE_TAG: ${{ github.event.release.tag_name }}
+          INPUT_VERSION: ${{ inputs.kcl_version }}
+        run: |
+          set -uo pipefail
+
+          # Diagnostics only — never prints the secret. Byte count, a short
+          # digest and a whitespace check tell a malformed secret apart from a
+          # rejected one without exposing either value.
+          echo "::group::LUAROCKS_API_KEY"
+          echo "bytes: $(printf %s "$LUAROCKS_API_KEY" | wc -c | tr -d ' ')"
+          echo "sha256[0:8]: $(printf %s "$LUAROCKS_API_KEY" | sha256sum | cut -c1-8)"
+          if [ -z "$LUAROCKS_API_KEY" ]; then
+            echo "state: EMPTY"
+          elif [ "$LUAROCKS_API_KEY" != "$(printf %s "$LUAROCKS_API_KEY" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')" ]; then
+            echo "state: leading/trailing WHITESPACE — luarocks url-escapes the key into the request path, so this 401s"
+          else
+            echo "state: clean"
+          fi
+          echo "::endgroup::"
+
+          if [ -z "$LUAROCKS_API_KEY" ]; then
+            echo "::error::LUAROCKS_API_KEY is not set. Generate one at https://luarocks.org/settings and add it as a repository secret named LUAROCKS_API_KEY."
+            exit 1
+          fi
+
+          # check_rockspec is the first call luarocks upload makes, so probe
+          # the same endpoint with the same package the publish will use: that
+          # exercises the key *and* this module's upload permission, which are
+          # separate grants on luarocks.org.
+          #
+          # On a dispatch there is no release to read the version off; the
+          # input is optional and only decides what the probe asks about, so
+          # anything the caller cares to name is good enough.
+          if [ -n "$RELEASE_TAG" ]; then
+            case "$RELEASE_TAG" in
+              v*) package_version="${RELEASE_TAG#v}" ;;
+              *)
+                echo "::error::Release tag must start with 'v', got '$RELEASE_TAG'"
+                exit 1
+                ;;
+            esac
+          elif [ -n "$INPUT_VERSION" ]; then
+            package_version="${INPUT_VERSION#v}"
+          else
+            package_version="0.0.0-probe"
+          fi
+          code=$(curl -sS -o /dev/null -w '%{http_code}' --max-time 20 \
+            "https://luarocks.org/api/1/${LUAROCKS_API_KEY}/check_rockspec?package=kcl_lib&version=${package_version}") \
+            || code="000"
+          echo "LuaRocks credential probe: HTTP $code (200 = accepted, 401 = rejected, 000 = unreachable)"
+          case "$code" in
+            200) ;;
+            000)
+              echo "::error::Could not reach luarocks.org (HTTP 000) — this is a network failure, not a credential problem."
+              exit 1
+              ;;
+            401)
+              echo "::error::luarocks.org rejected LUAROCKS_API_KEY for kcl_lib ${package_version}."
+              echo "::error::The key must come from https://luarocks.org/settings under an account allowed to publish the kcl_lib module."
+              exit 1
+              ;;
+            *)
+              echo "::error::Unexpected HTTP $code from https://luarocks.org/api/1/.../check_rockspec for kcl_lib ${package_version}."
+              exit 1
+              ;;
+          esac
+
   publish:
     name: Publish to LuaRocks
     runs-on: ubuntu-24.04
+    needs: [check-credentials]
+    # A dispatch runs the probe only. The publish steps below resolve their
+    # rockspec from `github.event.release.tag_name`, which a dispatch does not
+    # set, so letting one through would fail on a missing variable instead.
+    if: github.event_name == 'release'
     steps:
       - name: Check out release tag
         uses: actions/checkout@v7
