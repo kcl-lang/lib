@@ -181,9 +181,13 @@ build_ios() {
     echo "==> ${rust_target}: cargo build --target ${rust_target}" >&2
     rustup target add "$rust_target" >/dev/null
     cargo build --release --target "$rust_target" --manifest-path c/Cargo.toml
-    mkdir -p "${dest%%:*}"
-    install -m 0644 "c/target/${rust_target}/release/libkcl_lib_c.a" "$dest"
-    echo "    staged ${dest} ($(du -h "$dest" | cut -f1))" >&2
+    # Split the "dir:file" dest the way stage() does. Using it whole writes the
+    # archive to a file literally named `ios-arm64:libkcl.a` sitting beside the
+    # directory, which no later step looks at.
+    local dir="${dest%%:*}" name="${dest##*:}"
+    mkdir -p "$dir"
+    install -m 0644 "c/target/${rust_target}/release/libkcl_lib_c.a" "${dir}/${name}"
+    echo "    staged ${dir}/${name} ($(du -h "${dir}/${name}" | cut -f1))" >&2
 }
 
 # Guarded rather than iterated bare: an empty array under `set -u` is an
