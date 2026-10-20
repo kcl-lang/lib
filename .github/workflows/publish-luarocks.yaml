@@ -86,10 +86,16 @@ jobs:
           else
             package_version="0.0.0-probe"
           fi
-          code=$(curl -sS -o /dev/null -w '%{http_code}' --max-time 20 \
+          code=$(curl -sS -o /tmp/probe_body -w '%{http_code}' --max-time 20 \
             "https://luarocks.org/api/1/${LUAROCKS_API_KEY}/check_rockspec?package=kcl_lib&version=${package_version}") \
             || code="000"
-          echo "LuaRocks credential probe: HTTP $code (200 = accepted, 401 = rejected, 000 = unreachable)"
+          echo "LuaRocks credential probe: HTTP $code (200 = accepted, 401 = key rejected, 403 = key accepted but not authorized, 000 = unreachable)"
+          # The status alone does not say *which* grant is missing, so print the
+          # server's own words. It is a JSON object of error strings and says
+          # nothing about the key.
+          if [ "$code" != "200" ]; then
+            echo "server said: $(head -c 500 /tmp/probe_body)"
+          fi
           case "$code" in
             200) ;;
             000)
@@ -97,8 +103,13 @@ jobs:
               exit 1
               ;;
             401)
-              echo "::error::luarocks.org rejected LUAROCKS_API_KEY for kcl_lib ${package_version}."
-              echo "::error::The key must come from https://luarocks.org/settings under an account allowed to publish the kcl_lib module."
+              echo "::error::luarocks.org rejected LUAROCKS_API_KEY for kcl_lib ${package_version} — the key itself is not recognised."
+              echo "::error::Generate a fresh one at https://luarocks.org/settings and update the repository secret."
+              exit 1
+              ;;
+            403)
+              echo "::error::luarocks.org accepted LUAROCKS_API_KEY but refused kcl_lib ${package_version} — the key is valid, the account behind it may not publish this module."
+              echo "::error::Sign in at https://luarocks.org as that account and add yourself as a maintainer of the kcl_lib module, or use a key from an account that already is."
               exit 1
               ;;
             *)
