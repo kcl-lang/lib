@@ -2,9 +2,21 @@
 
 ## Installation
 
-Refer to [this](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-apache-maven-registry#authenticating-to-github-packages) to configure your Maven; set up your GitHub account and Token in the `settings.xml`.
+### Maven Central
 
-### Maven
+The library is published to Maven Central, so no extra repository configuration is needed — just declare the dependency:
+
+```xml
+<dependency>
+    <groupId>io.kcl-lang</groupId>
+    <artifactId>kcl-lib-kotlin</artifactId>
+    <version>0.13.2</version>
+</dependency>
+```
+
+### GitHub Packages
+
+The same artifact is also published to GitHub Packages. Refer to [this](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-apache-maven-registry#authenticating-to-github-packages) to configure your Maven; set up your GitHub account and Token in the `settings.xml`.
 
 In your project's `pom.xml`, configure our repository as follows:
 
