@@ -16,6 +16,8 @@ on:
       # change must re-run this workflow.
       - "tests/consistency/**"
       - ".github/workflows/kotlin-test.yaml"
+      - "hack/check_central_bundle.py"
+      - "hack/test_check_central_bundle.py"
   workflow_dispatch:
 
 jobs:
@@ -172,7 +174,7 @@ jobs:
         if: "startsWith(github.ref, 'refs/tags/')"
         working-directory: kotlin
         run: |
-          JAR_FILE=$(find ./release -name "*.jar" ! -name "*sources.jar")
+          JAR_FILE=$(find ./release -name "*.jar" ! -name "*-sources.jar" ! -name "*-javadoc.jar")
           echo "Deploying $JAR_FILE"
           mvn deploy:deploy-file \
             -Dfile=$JAR_FILE \
@@ -183,6 +185,57 @@ jobs:
 
         env:
           GITHUB_TOKEN: ${{ github.token }}
+
+  # Builds the bundle that would be sent to Central, without uploading it, so
+  # a malformed bundle is caught on a pull request instead of on release day.
+  # This is exactly how the v0.13.2 release died: the runner image moved to
+  # Maven 3.10.0, whose Resolver bookkeeping files (MNG-13388) ended up in the
+  # bundle and made Central reject it. Nothing in the repository changed, so
+  # only an automated check could have caught it.
+  check-central-bundle:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: 'Set up JDK 8'
+        uses: actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad
+        with:
+          java-version: 8
+          distribution: 'zulu'
+          cache: 'maven'
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.10'
+
+      # The checker is what makes the next step meaningful, so it is tested
+      # first: a checker that quietly reports "ok" over a broken bundle
+      # would turn this job into a rubber stamp.
+      - name: Test the bundle checker
+        run: |
+          python3 -m pip install --quiet pytest
+          python3 -m pytest hack/test_check_central_bundle.py -q
+
+      - name: Build the Central bundle
+        working-directory: kotlin
+        run: |
+          # -DskipUpload=true stops the plugin right after it assembles
+          # central-bundle.zip, so this job needs no credentials and uploads
+          # nothing. -Dexec.skip=true skips the Rust cross-compile: the
+          # native library does not change the layout of the bundle.
+          # -Dgpg.skip=true skips the signing, whose .asc files are not part
+          # of what this job inspects.
+          mvn deploy -P central \
+            -DskipUpload=true \
+            -DskipTests=true \
+            -Dexec.skip=true \
+            -Dgpg.skip=true
+
+      - name: Check the bundle
+        run: python3 hack/check_central_bundle.py kotlin/target/central-publishing/central-bundle.zip
 
   # Maven Central publishing. Requires the four secrets listed in
   # kotlin/pom.xml's `central` profile comment to be set in repo settings.
@@ -317,3 +370,30 @@ jobs:
             -DskipTests=true \
             -Dcargo-build.profile=release \
             -s $GITHUB_WORKSPACE/settings.xml
+
+      # Runs even when the publish failed: the bundle is still on disk, and
+      # checking it locally turns Central's opaque "Bundle has content that
+      # does NOT have a .pom file" rejection into a precise diagnosis.
+      - name: Check the bundle sent to Central
+        if: always()
+        run: python3 hack/check_central_bundle.py kotlin/target/central-publishing/central-bundle.zip --optional
+
+      - name: Verify the release is resolvable from Maven Central
+        working-directory: kotlin
+        run: |
+          VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+          # The portal syncs to repo1 with a delay, so poll before resolving.
+          for attempt in $(seq 1 10); do
+            if curl -fsSL -o /dev/null \
+                "https://repo1.maven.org/maven2/io/kcl-lang/kcl-lib-kotlin/${VERSION}/kcl-lib-kotlin-${VERSION}.jar"; then
+              break
+            fi
+            echo "attempt ${attempt}: not on repo1 yet, retrying in 30s"
+            sleep 30
+          done
+          # A fresh local repository, so the artifact is really fetched from
+          # Central instead of the copy the build just installed.
+          mvn dependency:get \
+            -Dartifact=io.kcl-lang:kcl-lib-kotlin:${VERSION} \
+            -Dtransitive=false \
+            -Dmaven.repo.local=$(mktemp -d)
