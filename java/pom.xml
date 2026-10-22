@@ -13,6 +13,24 @@
     </description>
     <url>https://kcl-lang.io</url>
 
+    <licenses>
+        <license>
+            <name>Apache License, Version 2.0</name>
+            <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <id>kcl-lang</id>
+            <name>KCL Authors</name>
+            <email>kcl-lang.io@domainsbyproxy.com</email>
+            <organization>KCL</organization>
+            <organizationUrl>https://kcl-lang.io</organizationUrl>
+        </developer>
+    </developers>
+
     <scm>
         <connection>scm:git:git://github.com/kcl-lang/lib.git</connection>
         <developerConnection>scm:git:ssh://github.com/kcl-lang/lib.git</developerConnection>
@@ -55,7 +73,7 @@
         <protobuf-maven-plugin.version>0.6.1</protobuf-maven-plugin.version>
         <!-- Maven Central publishing toolchain. Activated by `-P central`
              in the deploy-central workflow job. -->
-        <central-publishing-maven-plugin.version>0.7.0</central-publishing-maven-plugin.version>
+        <central-publishing-maven-plugin.version>0.12.0</central-publishing-maven-plugin.version>
         <maven-gpg-plugin.version>3.2.7</maven-gpg-plugin.version>
     </properties>
     <dependencies>
@@ -273,11 +291,6 @@
                 </configuration>
             </plugin>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <version>${maven-javadoc-plugin.version}</version>
-            </plugin>
-            <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>buildnumber-maven-plugin</artifactId>
                 <version>${buildnumber-maven-plugin.version}</version>
@@ -340,6 +353,35 @@
             <id>central</id>
             <build>
                 <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <version>${maven-javadoc-plugin.version}</version>
+                        <configuration>
+                            <!-- The codebase is not javadoc-clean. Central only
+                                 requires that a javadoc jar exists next to the
+                                 main jar, not that it is warning-free, so
+                                 neither doclint nor a javadoc error should be
+                                 able to fail a release build. -->
+                            <doclint>none</doclint>
+                            <failOnError>false</failOnError>
+                        </configuration>
+                        <executions>
+                            <!-- Maven Central rejects a deployment that ships a
+                                 main jar without a matching -javadoc.jar. The
+                                 execution lives in this profile rather than in
+                                 the main build so that the GitHub Packages
+                                 release, which does not need a javadoc jar,
+                                 keeps building exactly as it did before. -->
+                            <execution>
+                                <id>attach-javadocs</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-gpg-plugin</artifactId>
