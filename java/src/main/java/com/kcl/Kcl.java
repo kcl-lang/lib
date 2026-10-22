@@ -31,7 +31,7 @@ import com.kcl.api.Spec.ExternalPkg;
  * {
  *     &#64;code
  *     KCLResultList result = Kcl.run("a = 1\nb = {c = 2}", Kcl.withSortKeys(true));
- *     Optional<Integer> c = result.first().getInt("b.c");
+ *     Optional&lt;Integer&gt; c = result.first().getInt("b.c");
  *
  *     KCLResultList files = Kcl.runFiles(Arrays.asList("main.k"), Kcl.withWorkDir("."),
  *             Kcl.withOverrides("name=\"bob\""));

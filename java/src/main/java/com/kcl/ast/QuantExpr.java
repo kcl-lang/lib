@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 import java.util.List;
 
 /**
- * QuantExpr, <op> <variables> in <target> {<test> <if_cond>} e.g.
+ * QuantExpr, &lt;op&gt; &lt;variables&gt; in &lt;target&gt; {&lt;test&gt; &lt;if_cond&gt;} e.g.
  *
  * <pre>
  * {@code
