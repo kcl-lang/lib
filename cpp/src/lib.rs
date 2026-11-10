@@ -2339,6 +2339,7 @@ fn build_test_args(args: &TestArgs) -> kcl_api::TestArgs {
         run_regexp: args.run_regexp.clone(),
         fail_fast: args.fail_fast,
         coverage: args.coverage,
+        eval_once: false,
     }
 }
 
