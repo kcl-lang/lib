@@ -24,4 +24,4 @@ mlua = { version = "0.12", features = [
   "module",
   "macros",
 ], default-features = false, optional = true }
-kcl-api = { git = "https://github.com/kcl-lang/kcl", version = "0.13.2" }
+kcl-api = { git = "https://github.com/kcl-lang/kcl", version = "0.13.2", tag = "v0.13.2" }
