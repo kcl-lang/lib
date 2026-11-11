@@ -9,4 +9,4 @@ crate-type = ["cdylib"]
 doc = false
 
 [dependencies]
-kcl-api = { git = "https://github.com/kcl-lang/kcl", version = "0.13.2" }
+kcl-api = { git = "https://github.com/kcl-lang/kcl", version = "0.13.2", tag = "v0.13.2" }
