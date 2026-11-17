@@ -58,9 +58,12 @@ jobs:
           distribution: 'zulu'
           cache: 'maven'
 
+      # 3.12, not 3.10: setup-python's Windows installer for 3.10 leaves
+      # python.exe off PATH on windows-2025, so the JDK 8 classifier job
+      # dies in "Install and upgrade Pip" before Maven runs.
       - uses: actions/setup-python@v7
         with:
-          python-version: '3.10'
+          python-version: '3.12'
 
       - name: Install rust nightly toolchain
         uses: actions-rs/toolchain@v1
@@ -209,7 +212,7 @@ jobs:
 
       - uses: actions/setup-python@v7
         with:
-          python-version: '3.10'
+          python-version: '3.12'
 
       # The checker is what makes the next step meaningful, so it is tested
       # first: a checker that quietly reports "ok" over a broken bundle
@@ -350,7 +353,7 @@ jobs:
       - name: Install Python (build.py runs under python3)
         uses: actions/setup-python@v7
         with:
-          python-version: '3.10'
+          python-version: '3.12'
 
       - name: Build, sign, and publish to Maven Central
         working-directory: java
