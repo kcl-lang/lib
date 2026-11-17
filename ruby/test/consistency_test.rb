@@ -247,7 +247,8 @@ class ConsistencyTest < Minitest::Test
         pkg_list: resolve_paths(a.fetch("pkg_list", [])),
         run_regexp: a.fetch("run_regexp", ""),
         fail_fast: a.fetch("fail_fast", false),
-        coverage: a.fetch("coverage", false)
+        coverage: a.fetch("coverage", false),
+        eval_once: a.fetch("eval_once", false)
       )
     when "KclService.OverrideFile"
       KclLib::OverrideFileArgs.new(

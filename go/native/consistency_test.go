@@ -325,6 +325,7 @@ func buildConsistencyArgs(t *testing.T, c consistencyCase) interface{} {
 			RunRegexp: jsonString(a, "run_regexp"),
 			FailFast:  jsonBool(a, "fail_fast"),
 			Coverage:  jsonBool(a, "coverage"),
+			EvalOnce:  jsonBool(a, "eval_once"),
 		}
 	case "KclService.OverrideFile":
 		return &api.OverrideFileArgs{

@@ -246,6 +246,7 @@ const CALLS = {
         e.work_dir === undefined ? null : resolvePath(e.work_dir),
         execFileNames(e),
         a.coverage ?? false,
+        a.eval_once ?? false,
       )
     },
   },

@@ -1610,6 +1610,11 @@ public struct TestArgs: Sendable {
   /// in [TestResult.coverage]. Defaults to false.
   public var coverage: Bool = false
 
+  /// Evaluate each test package once and run all of its test cases in that
+  /// one evaluation. Opt-in; defaults to false. Cases then share the values
+  /// the package defines — see `TestArgs.eval_once` in `spec.proto`.
+  public var evalOnce: Bool = false
+
   public var unknownFields = SwiftProtobuf.UnknownStorage()
 
   public init() {}
@@ -5275,6 +5280,7 @@ extension TestArgs: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationB
     3: .standard(proto: "run_regexp"),
     4: .standard(proto: "fail_fast"),
     5: .same(proto: "coverage"),
+    6: .standard(proto: "eval_once"),
   ]
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -5288,6 +5294,7 @@ extension TestArgs: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationB
       case 3: try { try decoder.decodeSingularStringField(value: &self.runRegexp) }()
       case 4: try { try decoder.decodeSingularBoolField(value: &self.failFast) }()
       case 5: try { try decoder.decodeSingularBoolField(value: &self.coverage) }()
+      case 6: try { try decoder.decodeSingularBoolField(value: &self.evalOnce) }()
       default: break
       }
     }
@@ -5313,6 +5320,9 @@ extension TestArgs: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationB
     if self.coverage != false {
       try visitor.visitSingularBoolField(value: self.coverage, fieldNumber: 5)
     }
+    if self.evalOnce != false {
+      try visitor.visitSingularBoolField(value: self.evalOnce, fieldNumber: 6)
+    }
     try unknownFields.traverse(visitor: &visitor)
   }
 
@@ -5322,6 +5332,7 @@ extension TestArgs: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationB
     if lhs.runRegexp != rhs.runRegexp {return false}
     if lhs.failFast != rhs.failFast {return false}
     if lhs.coverage != rhs.coverage {return false}
+    if lhs.evalOnce != rhs.evalOnce {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }

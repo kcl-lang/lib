@@ -5388,6 +5388,7 @@ pub const TestArgs = struct {
     run_regexp: []const u8 = &.{},
     fail_fast: bool = false,
     coverage: bool = false,
+    eval_once: bool = false,
 
     pub const _desc_table = .{
         .exec_args = fd(1, .submessage),
@@ -5395,6 +5396,7 @@ pub const TestArgs = struct {
         .run_regexp = fd(3, .{ .scalar = .string }),
         .fail_fast = fd(4, .{ .scalar = .bool }),
         .coverage = fd(5, .{ .scalar = .bool }),
+        .eval_once = fd(6, .{ .scalar = .bool }),
     };
 
     /// Encodes the message to the writer

@@ -5296,6 +5296,7 @@ class TestArgs extends $pb.GeneratedMessage {
     $core.String? runRegexp,
     $core.bool? failFast,
     $core.bool? coverage,
+    $core.bool? evalOnce,
   }) {
     final result = TestArgs._();
     if (execArgs != null) result.execArgs = execArgs;
@@ -5303,6 +5304,7 @@ class TestArgs extends $pb.GeneratedMessage {
     if (runRegexp != null) result.runRegexp = runRegexp;
     if (failFast != null) result.failFast = failFast;
     if (coverage != null) result.coverage = coverage;
+    if (evalOnce != null) result.evalOnce = evalOnce;
     return result;
   }
 
@@ -5325,6 +5327,7 @@ class TestArgs extends $pb.GeneratedMessage {
     ..aOS(3, _omitFieldNames ? '' : 'runRegexp')
     ..aOB(4, _omitFieldNames ? '' : 'failFast')
     ..aOB(5, _omitFieldNames ? '' : 'coverage')
+    ..aOB(6, _omitFieldNames ? '' : 'evalOnce')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -5395,6 +5398,18 @@ class TestArgs extends $pb.GeneratedMessage {
   $core.bool hasCoverage() => $_has(4);
   @$pb.TagNumber(5)
   void clearCoverage() => $_clearField(5);
+
+  /// Evaluate each test package once and run all of its test cases in that
+  /// one evaluation. Opt-in; defaults to false. Cases then share the values
+  /// the package defines.
+  @$pb.TagNumber(6)
+  $core.bool get evalOnce => $_getBF(5);
+  @$pb.TagNumber(6)
+  set evalOnce($core.bool value) => $_setBool(5, value);
+  @$pb.TagNumber(6)
+  $core.bool hasEvalOnce() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearEvalOnce() => $_clearField(6);
 }
 
 /// Message for test response.

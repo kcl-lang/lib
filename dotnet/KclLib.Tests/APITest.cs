@@ -420,6 +420,12 @@ schema Person:
 
         var unset = new TestArgs();
         Assert.AreEqual(false, unset.Coverage);
+        Assert.AreEqual(false, unset.EvalOnce);
+
+        var once = new TestArgs { EvalOnce = true };
+        var onceDecoded = TestArgs.Parser.ParseFrom(once.ToByteArray());
+        Assert.AreEqual(true, onceDecoded.EvalOnce);
+        Assert.AreEqual(6, TestArgs.Descriptor.FindFieldByName("eval_once").FieldNumber);
     }
 
     // Pure protobuf round-trip — covers TestResult.coverage (field 3,

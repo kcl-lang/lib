@@ -49,6 +49,24 @@ class TestArgs extends \Google\Protobuf\Internal\Message
      * Generated from protobuf field <code>bool coverage = 5;</code>
      */
     protected $coverage = false;
+    /**
+     * Flag to evaluate each test package once and run all of its test cases in
+     * that one evaluation, instead of evaluating the package again for every
+     * case. Each case still reports its own result, error and log, and a case
+     * that fails hands the next one a freshly evaluated package.
+     * NOTE: cases share the values the package defines. A case that passes
+     * after mutating one in place, e.g. a schema instance it got as a lambda
+     * argument, changes what the cases after it see, and planning, which runs
+     * before the cases, does not see the change; a suite whose cases rely on
+     * starting from the package as it is defined must not set this flag.
+     * Case durations then exclude the evaluation of the package, a planning
+     * error is always reported at the end of the generated main file, and
+     * that file selects no case, so the coverage counts each of its lines
+     * once. Defaults to false.
+     *
+     * Generated from protobuf field <code>bool eval_once = 6;</code>
+     */
+    protected $eval_once = false;
 
     /**
      * Constructor.
@@ -69,6 +87,20 @@ class TestArgs extends \Google\Protobuf\Internal\Message
      *           the test tool records, for every top-level KCL statement that executes,
      *           the source file path and line number. The aggregated result is returned
      *           in [TestResult.coverage]. Defaults to false.
+     *     @type bool $eval_once
+     *           Flag to evaluate each test package once and run all of its test cases in
+     *           that one evaluation, instead of evaluating the package again for every
+     *           case. Each case still reports its own result, error and log, and a case
+     *           that fails hands the next one a freshly evaluated package.
+     *           NOTE: cases share the values the package defines. A case that passes
+     *           after mutating one in place, e.g. a schema instance it got as a lambda
+     *           argument, changes what the cases after it see, and planning, which runs
+     *           before the cases, does not see the change; a suite whose cases rely on
+     *           starting from the package as it is defined must not set this flag.
+     *           Case durations then exclude the evaluation of the package, a planning
+     *           error is always reported at the end of the generated main file, and
+     *           that file selects no case, so the coverage counts each of its lines
+     *           once. Defaults to false.
      * }
      */
     public function __construct($data = null)
@@ -216,6 +248,55 @@ class TestArgs extends \Google\Protobuf\Internal\Message
     public function setCoverage(bool $var)
     {
         $this->coverage = $var;
+
+        return $this;
+    }
+
+    /**
+     * Flag to evaluate each test package once and run all of its test cases in
+     * that one evaluation, instead of evaluating the package again for every
+     * case. Each case still reports its own result, error and log, and a case
+     * that fails hands the next one a freshly evaluated package.
+     * NOTE: cases share the values the package defines. A case that passes
+     * after mutating one in place, e.g. a schema instance it got as a lambda
+     * argument, changes what the cases after it see, and planning, which runs
+     * before the cases, does not see the change; a suite whose cases rely on
+     * starting from the package as it is defined must not set this flag.
+     * Case durations then exclude the evaluation of the package, a planning
+     * error is always reported at the end of the generated main file, and
+     * that file selects no case, so the coverage counts each of its lines
+     * once. Defaults to false.
+     *
+     * Generated from protobuf field <code>bool eval_once = 6;</code>
+     * @return bool
+     */
+    public function getEvalOnce()
+    {
+        return $this->eval_once;
+    }
+
+    /**
+     * Flag to evaluate each test package once and run all of its test cases in
+     * that one evaluation, instead of evaluating the package again for every
+     * case. Each case still reports its own result, error and log, and a case
+     * that fails hands the next one a freshly evaluated package.
+     * NOTE: cases share the values the package defines. A case that passes
+     * after mutating one in place, e.g. a schema instance it got as a lambda
+     * argument, changes what the cases after it see, and planning, which runs
+     * before the cases, does not see the change; a suite whose cases rely on
+     * starting from the package as it is defined must not set this flag.
+     * Case durations then exclude the evaluation of the package, a planning
+     * error is always reported at the end of the generated main file, and
+     * that file selects no case, so the coverage counts each of its lines
+     * once. Defaults to false.
+     *
+     * Generated from protobuf field <code>bool eval_once = 6;</code>
+     * @param bool $var
+     * @return $this
+     */
+    public function setEvalOnce(bool $var)
+    {
+        $this->eval_once = $var;
 
         return $this;
     }

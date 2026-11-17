@@ -1723,6 +1723,7 @@ const TestArgs$json = {
     {'1': 'run_regexp', '3': 3, '4': 1, '5': 9, '10': 'runRegexp'},
     {'1': 'fail_fast', '3': 4, '4': 1, '5': 8, '10': 'failFast'},
     {'1': 'coverage', '3': 5, '4': 1, '5': 8, '10': 'coverage'},
+    {'1': 'eval_once', '3': 6, '4': 1, '5': 8, '10': 'evalOnce'},
   ],
 };
 
@@ -1731,7 +1732,7 @@ final $typed_data.Uint8List testArgsDescriptor = $convert.base64Decode(
     'CghUZXN0QXJncxI5CglleGVjX2FyZ3MYASABKAsyHC5jb20ua2NsLmFwaS5FeGVjUHJvZ3JhbU'
     'FyZ3NSCGV4ZWNBcmdzEhkKCHBrZ19saXN0GAIgAygJUgdwa2dMaXN0Eh0KCnJ1bl9yZWdleHAY'
     'AyABKAlSCXJ1blJlZ2V4cBIbCglmYWlsX2Zhc3QYBCABKAhSCGZhaWxGYXN0EhoKCGNvdmVyYW'
-    'dlGAUgASgIUghjb3ZlcmFnZQ==');
+    'dlGAUgASgIUghjb3ZlcmFnZRIbCglldmFsX29uY2UYBiABKAhSCGV2YWxPbmNl');
 
 @$core.Deprecated('Use testResultDescriptor instead')
 const TestResult$json = {

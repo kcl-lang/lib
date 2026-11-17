@@ -1377,6 +1377,7 @@ bool run_case(const std::string& name)
         test.run_regexp = rust::String(json_string_or(args, "run_regexp"));
         test.fail_fast = json_bool_or(args, "fail_fast");
         test.coverage = json_bool_or(args, "coverage");
+        test.eval_once = json_bool_or(args, "eval_once");
         const auto result = kcl_lib::test(test);
 
         std::vector<std::string> names;

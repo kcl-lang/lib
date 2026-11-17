@@ -414,7 +414,7 @@ test "ExecProgramArgs emit_attribute_metadata round-trip on the wire" {
 test "TestArgs coverage round-trips on the wire" {
     const allocator = testing.allocator;
 
-    var args: spec.TestArgs = .{ .coverage = true };
+    var args: spec.TestArgs = .{ .coverage = true, .eval_once = true };
 
     var writer: std.Io.Writer.Allocating = .init(allocator);
     defer writer.deinit();
@@ -425,6 +425,9 @@ test "TestArgs coverage round-trips on the wire" {
     defer decoded.deinit(allocator);
 
     try testing.expect(decoded.coverage);
+    try testing.expect(decoded.eval_once);
+    const unset: spec.TestArgs = .{};
+    try testing.expect(!unset.eval_once);
 }
 
 // Pure protobuf round-trip for TestResult.coverage (3) carrying a full

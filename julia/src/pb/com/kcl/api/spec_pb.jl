@@ -2737,10 +2737,11 @@ struct TestArgs
     run_regexp::String
     fail_fast::Bool
     coverage::Bool
+    eval_once::Bool
 end
-TestArgs(;exec_args = nothing, pkg_list = Vector{String}(), run_regexp = "", fail_fast = false, coverage = false) = TestArgs(exec_args, pkg_list, run_regexp, fail_fast, coverage)
-PB.default_values(::Type{TestArgs}) = (;exec_args = nothing, pkg_list = Vector{String}(), run_regexp = "", fail_fast = false, coverage = false)
-PB.field_numbers(::Type{TestArgs}) = (;exec_args = 1, pkg_list = 2, run_regexp = 3, fail_fast = 4, coverage = 5)
+TestArgs(;exec_args = nothing, pkg_list = Vector{String}(), run_regexp = "", fail_fast = false, coverage = false, eval_once = false) = TestArgs(exec_args, pkg_list, run_regexp, fail_fast, coverage, eval_once)
+PB.default_values(::Type{TestArgs}) = (;exec_args = nothing, pkg_list = Vector{String}(), run_regexp = "", fail_fast = false, coverage = false, eval_once = false)
+PB.field_numbers(::Type{TestArgs}) = (;exec_args = 1, pkg_list = 2, run_regexp = 3, fail_fast = 4, coverage = 5, eval_once = 6)
 
 function PB.decode(d::PB.AbstractProtoDecoder, ::Type{<:TestArgs}, _endpos::Int=0, _group::Bool=false)
     exec_args = Ref{Union{Nothing,ExecProgramArgs}}(nothing)
@@ -2748,6 +2749,7 @@ function PB.decode(d::PB.AbstractProtoDecoder, ::Type{<:TestArgs}, _endpos::Int=
     run_regexp = ""
     fail_fast = false
     coverage = false
+    eval_once = false
     while !PB.message_done(d, _endpos, _group)
         field_number, wire_type = PB.decode_tag(d)
         if field_number == 1
@@ -2760,11 +2762,13 @@ function PB.decode(d::PB.AbstractProtoDecoder, ::Type{<:TestArgs}, _endpos::Int=
             fail_fast = PB.decode(d, Bool)
         elseif field_number == 5
             coverage = PB.decode(d, Bool)
+        elseif field_number == 6
+            eval_once = PB.decode(d, Bool)
         else
             Base.skip(d, wire_type)
         end
     end
-    return TestArgs(exec_args[], pkg_list[], run_regexp, fail_fast, coverage)
+    return TestArgs(exec_args[], pkg_list[], run_regexp, fail_fast, coverage, eval_once)
 end
 
 function PB.encode(e::PB.AbstractProtoEncoder, x::TestArgs)
@@ -2774,6 +2778,7 @@ function PB.encode(e::PB.AbstractProtoEncoder, x::TestArgs)
     !isempty(x.run_regexp) && PB.encode(e, 3, x.run_regexp)
     x.fail_fast != false && PB.encode(e, 4, x.fail_fast)
     x.coverage != false && PB.encode(e, 5, x.coverage)
+    x.eval_once != false && PB.encode(e, 6, x.eval_once)
     return position(e.io) - initpos
 end
 function PB._encoded_size(x::TestArgs)
@@ -2783,6 +2788,7 @@ function PB._encoded_size(x::TestArgs)
     !isempty(x.run_regexp) && (encoded_size += PB._encoded_size(x.run_regexp, 3))
     x.fail_fast != false && (encoded_size += PB._encoded_size(x.fail_fast, 4))
     x.coverage != false && (encoded_size += PB._encoded_size(x.coverage, 5))
+    x.eval_once != false && (encoded_size += PB._encoded_size(x.eval_once, 6))
     return encoded_size
 end
 

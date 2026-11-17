@@ -912,6 +912,7 @@ final class ConsistencyTest extends TestCase
                     'run_regexp' => $case['args']['run_regexp'] ?? '',
                     'fail_fast' => $case['args']['fail_fast'] ?? false,
                     'coverage' => $case['args']['coverage'] ?? false,
+                    'eval_once' => $case['args']['eval_once'] ?? false,
                 ]);
                 return [
                     'names' => self::sortedList($result->getInfo(), 'getName'),

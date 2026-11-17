@@ -643,6 +643,7 @@ impl TestArgs {
         work_dir: Option<String>,
         paths: Option<Vec<String>>,
         coverage: Option<bool>,
+        eval_once: Option<bool>,
     ) -> Result<Self> {
         Ok(Self(kcl_api::TestArgs {
             exec_args: Some(kcl_api::ExecProgramArgs {
@@ -654,6 +655,9 @@ impl TestArgs {
             fail_fast: fail_fast.unwrap_or_default(),
             run_regexp: run_regexp.unwrap_or_default(),
             coverage: coverage.unwrap_or_default(),
+            // Opt-in. A missing field here fails the Node binding compile
+            // the same way the C++ binding did (issue #421).
+            eval_once: eval_once.unwrap_or_default(),
         }))
     }
 }

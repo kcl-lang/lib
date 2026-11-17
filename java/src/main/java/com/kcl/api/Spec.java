@@ -76319,6 +76319,29 @@ public final class Spec {
          * @return The coverage.
          */
         boolean getCoverage();
+
+        /**
+         * <pre>
+         * Flag to evaluate each test package once and run all of its test cases in
+         * that one evaluation, instead of evaluating the package again for every
+         * case. Each case still reports its own result, error and log, and a case
+         * that fails hands the next one a freshly evaluated package.
+         * NOTE: cases share the values the package defines. A case that passes
+         * after mutating one in place, e.g. a schema instance it got as a lambda
+         * argument, changes what the cases after it see, and planning, which runs
+         * before the cases, does not see the change; a suite whose cases rely on
+         * starting from the package as it is defined must not set this flag.
+         * Case durations then exclude the evaluation of the package, a planning
+         * error is always reported at the end of the generated main file, and
+         * that file selects no case, so the coverage counts each of its lines
+         * once. Defaults to false.
+         * </pre>
+         *
+         * <code>bool eval_once = 6;</code>
+         * 
+         * @return The evalOnce.
+         */
+        boolean getEvalOnce();
     }
 
     /**
@@ -76550,6 +76573,35 @@ public final class Spec {
             return coverage_;
         }
 
+        public static final int EVAL_ONCE_FIELD_NUMBER = 6;
+        private boolean evalOnce_ = false;
+
+        /**
+         * <pre>
+         * Flag to evaluate each test package once and run all of its test cases in
+         * that one evaluation, instead of evaluating the package again for every
+         * case. Each case still reports its own result, error and log, and a case
+         * that fails hands the next one a freshly evaluated package.
+         * NOTE: cases share the values the package defines. A case that passes
+         * after mutating one in place, e.g. a schema instance it got as a lambda
+         * argument, changes what the cases after it see, and planning, which runs
+         * before the cases, does not see the change; a suite whose cases rely on
+         * starting from the package as it is defined must not set this flag.
+         * Case durations then exclude the evaluation of the package, a planning
+         * error is always reported at the end of the generated main file, and
+         * that file selects no case, so the coverage counts each of its lines
+         * once. Defaults to false.
+         * </pre>
+         *
+         * <code>bool eval_once = 6;</code>
+         * 
+         * @return The evalOnce.
+         */
+        @java.lang.Override
+        public boolean getEvalOnce() {
+            return evalOnce_;
+        }
+
         private byte memoizedIsInitialized = -1;
 
         @java.lang.Override
@@ -76581,6 +76633,9 @@ public final class Spec {
             if (coverage_ != false) {
                 output.writeBool(5, coverage_);
             }
+            if (evalOnce_ != false) {
+                output.writeBool(6, evalOnce_);
+            }
             getUnknownFields().writeTo(output);
         }
 
@@ -76611,6 +76666,9 @@ public final class Spec {
             if (coverage_ != false) {
                 size += com.google.protobuf.CodedOutputStream.computeBoolSize(5, coverage_);
             }
+            if (evalOnce_ != false) {
+                size += com.google.protobuf.CodedOutputStream.computeBoolSize(6, evalOnce_);
+            }
             size += getUnknownFields().getSerializedSize();
             memoizedSize = size;
             return size;
@@ -76640,6 +76698,8 @@ public final class Spec {
                 return false;
             if (getCoverage() != other.getCoverage())
                 return false;
+            if (getEvalOnce() != other.getEvalOnce())
+                return false;
             if (!getUnknownFields().equals(other.getUnknownFields()))
                 return false;
             return true;
@@ -76666,6 +76726,8 @@ public final class Spec {
             hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(getFailFast());
             hash = (37 * hash) + COVERAGE_FIELD_NUMBER;
             hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(getCoverage());
+            hash = (37 * hash) + EVAL_ONCE_FIELD_NUMBER;
+            hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(getEvalOnce());
             hash = (29 * hash) + getUnknownFields().hashCode();
             memoizedHashCode = hash;
             return hash;
@@ -76808,6 +76870,7 @@ public final class Spec {
                 runRegexp_ = "";
                 failFast_ = false;
                 coverage_ = false;
+                evalOnce_ = false;
                 return this;
             }
 
@@ -76859,6 +76922,9 @@ public final class Spec {
                 }
                 if (((from_bitField0_ & 0x00000010) != 0)) {
                     result.coverage_ = coverage_;
+                }
+                if (((from_bitField0_ & 0x00000020) != 0)) {
+                    result.evalOnce_ = evalOnce_;
                 }
                 result.bitField0_ |= to_bitField0_;
             }
@@ -76932,6 +76998,9 @@ public final class Spec {
                 if (other.getCoverage() != false) {
                     setCoverage(other.getCoverage());
                 }
+                if (other.getEvalOnce() != false) {
+                    setEvalOnce(other.getEvalOnce());
+                }
                 this.mergeUnknownFields(other.getUnknownFields());
                 onChanged();
                 return this;
@@ -76982,6 +77051,11 @@ public final class Spec {
                             bitField0_ |= 0x00000010;
                             break;
                         } // case 40
+                        case 48: {
+                            evalOnce_ = input.readBool();
+                            bitField0_ |= 0x00000020;
+                            break;
+                        } // case 48
                         default: {
                             if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                                 done = true; // was an endgroup tag
@@ -77551,6 +77625,94 @@ public final class Spec {
             public Builder clearCoverage() {
                 bitField0_ = (bitField0_ & ~0x00000010);
                 coverage_ = false;
+                onChanged();
+                return this;
+            }
+
+            private boolean evalOnce_;
+
+            /**
+             * <pre>
+             * Flag to evaluate each test package once and run all of its test cases in
+             * that one evaluation, instead of evaluating the package again for every
+             * case. Each case still reports its own result, error and log, and a case
+             * that fails hands the next one a freshly evaluated package.
+             * NOTE: cases share the values the package defines. A case that passes
+             * after mutating one in place, e.g. a schema instance it got as a lambda
+             * argument, changes what the cases after it see, and planning, which runs
+             * before the cases, does not see the change; a suite whose cases rely on
+             * starting from the package as it is defined must not set this flag.
+             * Case durations then exclude the evaluation of the package, a planning
+             * error is always reported at the end of the generated main file, and
+             * that file selects no case, so the coverage counts each of its lines
+             * once. Defaults to false.
+             * </pre>
+             *
+             * <code>bool eval_once = 6;</code>
+             * 
+             * @return The evalOnce.
+             */
+            @java.lang.Override
+            public boolean getEvalOnce() {
+                return evalOnce_;
+            }
+
+            /**
+             * <pre>
+             * Flag to evaluate each test package once and run all of its test cases in
+             * that one evaluation, instead of evaluating the package again for every
+             * case. Each case still reports its own result, error and log, and a case
+             * that fails hands the next one a freshly evaluated package.
+             * NOTE: cases share the values the package defines. A case that passes
+             * after mutating one in place, e.g. a schema instance it got as a lambda
+             * argument, changes what the cases after it see, and planning, which runs
+             * before the cases, does not see the change; a suite whose cases rely on
+             * starting from the package as it is defined must not set this flag.
+             * Case durations then exclude the evaluation of the package, a planning
+             * error is always reported at the end of the generated main file, and
+             * that file selects no case, so the coverage counts each of its lines
+             * once. Defaults to false.
+             * </pre>
+             *
+             * <code>bool eval_once = 6;</code>
+             * 
+             * @param value
+             *            The evalOnce to set.
+             * 
+             * @return This builder for chaining.
+             */
+            public Builder setEvalOnce(boolean value) {
+
+                evalOnce_ = value;
+                bitField0_ |= 0x00000020;
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <pre>
+             * Flag to evaluate each test package once and run all of its test cases in
+             * that one evaluation, instead of evaluating the package again for every
+             * case. Each case still reports its own result, error and log, and a case
+             * that fails hands the next one a freshly evaluated package.
+             * NOTE: cases share the values the package defines. A case that passes
+             * after mutating one in place, e.g. a schema instance it got as a lambda
+             * argument, changes what the cases after it see, and planning, which runs
+             * before the cases, does not see the change; a suite whose cases rely on
+             * starting from the package as it is defined must not set this flag.
+             * Case durations then exclude the evaluation of the package, a planning
+             * error is always reported at the end of the generated main file, and
+             * that file selects no case, so the coverage counts each of its lines
+             * once. Defaults to false.
+             * </pre>
+             *
+             * <code>bool eval_once = 6;</code>
+             * 
+             * @return This builder for chaining.
+             */
+            public Builder clearEvalOnce() {
+                bitField0_ = (bitField0_ & ~0x00000020);
+                evalOnce_ = false;
                 onChanged();
                 return this;
             }
@@ -105107,130 +105269,131 @@ public final class Spec {
                 + "eCodeResult\022F\n\rchanged_codes\030\001 \003(\0132/.com"
                 + ".kcl.api.RenameCodeResult.ChangedCodesEn"
                 + "try\0323\n\021ChangedCodesEntry\022\013\n\003key\030\001 \001(\t\022\r\n"
-                + "\005value\030\002 \001(\t:\0028\001\"\206\001\n\010TestArgs\022/\n\texec_ar"
+                + "\005value\030\002 \001(\t:\0028\001\"\231\001\n\010TestArgs\022/\n\texec_ar"
                 + "gs\030\001 \001(\0132\034.com.kcl.api.ExecProgramArgs\022\020"
                 + "\n\010pkg_list\030\002 \003(\t\022\022\n\nrun_regexp\030\003 \001(\t\022\021\n\t"
-                + "fail_fast\030\004 \001(\010\022\020\n\010coverage\030\005 \001(\010\"h\n\nTes"
-                + "tResult\022\'\n\004info\030\002 \003(\0132\031.com.kcl.api.Test"
-                + "CaseInfo\0221\n\010coverage\030\003 \001(\0132\037.com.kcl.api"
-                + ".TestCoverageReport\"\277\001\n\014TestCaseInfo\022\014\n\004"
-                + "name\030\001 \001(\t\022\r\n\005error\030\002 \001(\t\022\020\n\010duration\030\003 "
-                + "\001(\004\022\023\n\013log_message\030\004 \001(\t\022:\n\tline_hits\030\005 "
-                + "\003(\0132\'.com.kcl.api.TestCaseInfo.LineHitsE"
-                + "ntry\032/\n\rLineHitsEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005va"
-                + "lue\030\002 \001(\004:\0028\001\"\276\001\n\014FileCoverage\022\020\n\010filena"
-                + "me\030\001 \001(\t\022\025\n\rcovered_lines\030\002 \003(\004\022\030\n\020execu"
-                + "table_lines\030\003 \003(\004\022:\n\tline_hits\030\004 \003(\0132\'.c"
-                + "om.kcl.api.FileCoverage.LineHitsEntry\032/\n"
-                + "\rLineHitsEntry\022\013\n\003key\030\001 \001(\004\022\r\n\005value\030\002 \001"
-                + "(\004:\0028\001\"\307\001\n\022TestCoverageReport\0229\n\005files\030\001"
-                + " \003(\0132*.com.kcl.api.TestCoverageReport.Fi"
-                + "lesEntry\022-\n\007summary\030\002 \001(\0132\034.com.kcl.api."
-                + "CoverageSummary\032G\n\nFilesEntry\022\013\n\003key\030\001 \001"
-                + "(\t\022(\n\005value\030\002 \001(\0132\031.com.kcl.api.FileCove"
-                + "rage:\0028\001\"G\n\017CoverageSummary\022\017\n\007covered\030\001"
-                + " \001(\004\022\022\n\nexecutable\030\002 \001(\004\022\017\n\007percent\030\003 \001("
-                + "\001\"?\n\024FormatTestReportArgs\022\'\n\006result\030\001 \001("
-                + "\0132\027.com.kcl.api.TestResult\"(\n\026FormatTest"
-                + "ReportResult\022\016\n\006report\030\001 \001(\t\"?\n\026UpdateDe"
-                + "pendenciesArgs\022\025\n\rmanifest_path\030\001 \001(\t\022\016\n"
-                + "\006vendor\030\002 \001(\010\"K\n\030UpdateDependenciesResul"
-                + "t\022/\n\rexternal_pkgs\030\003 \003(\0132\030.com.kcl.api.E"
-                + "xternalPkg\"V\n\020GenerateTomlArgs\022/\n\texec_a"
-                + "rgs\030\001 \001(\0132\034.com.kcl.api.ExecProgramArgs\022"
-                + "\021\n\tsort_keys\030\002 \001(\010\"\"\n\022GenerateTomlResult"
-                + "\022\014\n\004toml\030\001 \001(\t\"C\n\017GenerateKclArgs\022\016\n\006sou"
-                + "rce\030\001 \001(\t\022\020\n\010filename\030\002 \001(\t\022\016\n\006format\030\003 "
-                + "\001(\t\" \n\021GenerateKclResult\022\013\n\003kcl\030\001 \001(\t\"Y\n"
-                + "\023GenerateOpenAPIArgs\0221\n\nparse_args\030\001 \001(\013"
-                + "2\035.com.kcl.api.ParseProgramArgs\022\017\n\007versi"
-                + "on\030\002 \001(\t\"%\n\025GenerateOpenAPIResult\022\014\n\004spe"
-                + "c\030\001 \001(\t\"W\n\021GenerateProtoArgs\0221\n\nparse_ar"
-                + "gs\030\001 \001(\0132\035.com.kcl.api.ParseProgramArgs\022"
-                + "\017\n\007package\030\002 \001(\t\"$\n\023GenerateProtoResult\022"
-                + "\r\n\005proto\030\001 \001(\t\"T\n\017GenerateDocArgs\0221\n\npar"
-                + "se_args\030\001 \001(\0132\035.com.kcl.api.ParseProgram"
-                + "Args\022\016\n\006format\030\002 \001(\t\"$\n\021GenerateDocResul"
-                + "t\022\017\n\007content\030\001 \001(\t\"\201\006\n\007KclType\022\014\n\004type\030\001"
-                + " \001(\t\022)\n\013union_types\030\002 \003(\0132\024.com.kcl.api."
-                + "KclType\022\017\n\007default\030\003 \001(\t\022\023\n\013schema_name\030"
-                + "\004 \001(\t\022\022\n\nschema_doc\030\005 \001(\t\0228\n\nproperties\030"
-                + "\006 \003(\0132$.com.kcl.api.KclType.PropertiesEn"
-                + "try\022\020\n\010required\030\007 \003(\t\022!\n\003key\030\010 \001(\0132\024.com"
-                + ".kcl.api.KclType\022\"\n\004item\030\t \001(\0132\024.com.kcl"
-                + ".api.KclType\022\014\n\004line\030\n \001(\005\022*\n\ndecorators"
-                + "\030\013 \003(\0132\026.com.kcl.api.Decorator\022\020\n\010filena"
-                + "me\030\014 \001(\t\022\020\n\010pkg_path\030\r \001(\t\022\023\n\013descriptio"
-                + "n\030\016 \001(\t\0224\n\010examples\030\017 \003(\0132\".com.kcl.api."
-                + "KclType.ExamplesEntry\022)\n\013base_schema\030\020 \001"
-                + "(\0132\024.com.kcl.api.KclType\0220\n\010function\030\021 \001"
-                + "(\0132\031.com.kcl.api.FunctionTypeH\000\210\001\001\0229\n\017in"
-                + "dex_signature\030\022 \001(\0132\033.com.kcl.api.IndexS"
-                + "ignatureH\001\210\001\001\032G\n\017PropertiesEntry\022\013\n\003key\030"
-                + "\001 \001(\t\022#\n\005value\030\002 \001(\0132\024.com.kcl.api.KclTy"
-                + "pe:\0028\001\032E\n\rExamplesEntry\022\013\n\003key\030\001 \001(\t\022#\n\005"
-                + "value\030\002 \001(\0132\024.com.kcl.api.Example:\0028\001B\013\n"
-                + "\t_functionB\022\n\020_index_signature\"_\n\014Functi"
-                + "onType\022&\n\006params\030\001 \003(\0132\026.com.kcl.api.Par"
-                + "ameter\022\'\n\treturn_ty\030\002 \001(\0132\024.com.kcl.api."
-                + "KclType\";\n\tParameter\022\014\n\004name\030\001 \001(\t\022 \n\002ty"
-                + "\030\002 \001(\0132\024.com.kcl.api.KclType\"\215\001\n\016IndexSi"
-                + "gnature\022\025\n\010key_name\030\001 \001(\tH\000\210\001\001\022!\n\003key\030\002 "
-                + "\001(\0132\024.com.kcl.api.KclType\022!\n\003val\030\003 \001(\0132\024"
-                + ".com.kcl.api.KclType\022\021\n\tany_other\030\004 \001(\010B"
-                + "\013\n\t_key_name\"\225\001\n\tDecorator\022\014\n\004name\030\001 \001(\t"
-                + "\022\021\n\targuments\030\002 \003(\t\0226\n\010keywords\030\003 \003(\0132$."
-                + "com.kcl.api.Decorator.KeywordsEntry\032/\n\rK"
-                + "eywordsEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t"
-                + ":\0028\001\">\n\007Example\022\017\n\007summary\030\001 \001(\t\022\023\n\013desc"
-                + "ription\030\002 \001(\t\022\r\n\005value\030\003 \001(\t2\222\001\n\016Builtin"
-                + "Service\0226\n\004Ping\022\025.com.kcl.api.PingArgs\032\027"
-                + ".com.kcl.api.PingResult\022H\n\nListMethod\022\033."
-                + "com.kcl.api.ListMethodArgs\032\035.com.kcl.api"
-                + ".ListMethodResult2\255\020\n\nKclService\0226\n\004Ping"
-                + "\022\025.com.kcl.api.PingArgs\032\027.com.kcl.api.Pi"
-                + "ngResult\022H\n\nGetVersion\022\033.com.kcl.api.Get"
-                + "VersionArgs\032\035.com.kcl.api.GetVersionResu"
-                + "lt\022N\n\014ParseProgram\022\035.com.kcl.api.ParsePr"
-                + "ogramArgs\032\037.com.kcl.api.ParseProgramResu"
-                + "lt\022E\n\tParseFile\022\032.com.kcl.api.ParseFileA"
-                + "rgs\032\034.com.kcl.api.ParseFileResult\022K\n\013Loa"
-                + "dPackage\022\034.com.kcl.api.LoadPackageArgs\032\036"
-                + ".com.kcl.api.LoadPackageResult\022L\n\013ListOp"
-                + "tions\022\035.com.kcl.api.ParseProgramArgs\032\036.c"
-                + "om.kcl.api.ListOptionsResult\022Q\n\rListVari" + "ables\022\036.com.kcl.api.ListVariablesArgs\032 ."
-                + "com.kcl.api.ListVariablesResult\022K\n\013ExecP"
-                + "rogram\022\034.com.kcl.api.ExecProgramArgs\032\036.c"
-                + "om.kcl.api.ExecProgramResult\022N\n\014Override"
-                + "File\022\035.com.kcl.api.OverrideFileArgs\032\037.co"
-                + "m.kcl.api.OverrideFileResult\022f\n\024GetSchem" + "aTypeMapping\022%.com.kcl.api.GetSchemaType"
-                + "MappingArgs\032\'.com.kcl.api.GetSchemaTypeM" + "appingResult\022x\n\035GetSchemaTypeMappingUnde"
-                + "rPath\022%.com.kcl.api.GetSchemaTypeMapping" + "Args\0320.com.kcl.api.GetSchemaTypeMappingU"
-                + "nderPathResult\022H\n\nFormatCode\022\033.com.kcl.a"
-                + "pi.FormatCodeArgs\032\035.com.kcl.api.FormatCo"
-                + "deResult\022H\n\nFormatPath\022\033.com.kcl.api.For"
-                + "matPathArgs\032\035.com.kcl.api.FormatPathResu"
-                + "lt\022B\n\010LintPath\022\031.com.kcl.api.LintPathArg"
-                + "s\032\033.com.kcl.api.LintPathResult\022N\n\014Valida"
-                + "teCode\022\035.com.kcl.api.ValidateCodeArgs\032\037."
-                + "com.kcl.api.ValidateCodeResult\022]\n\021LoadSe" + "ttingsFiles\022\".com.kcl.api.LoadSettingsFi"
-                + "lesArgs\032$.com.kcl.api.LoadSettingsFilesR"
-                + "esult\022<\n\006Rename\022\027.com.kcl.api.RenameArgs"
-                + "\032\031.com.kcl.api.RenameResult\022H\n\nRenameCod"
-                + "e\022\033.com.kcl.api.RenameCodeArgs\032\035.com.kcl"
-                + ".api.RenameCodeResult\0226\n\004Test\022\025.com.kcl."
-                + "api.TestArgs\032\027.com.kcl.api.TestResult\022Z\n"
-                + "\020FormatTestReport\022!.com.kcl.api.FormatTe" + "stReportArgs\032#.com.kcl.api.FormatTestRep"
-                + "ortResult\022`\n\022UpdateDependencies\022#.com.kc" + "l.api.UpdateDependenciesArgs\032%.com.kcl.a"
-                + "pi.UpdateDependenciesResult\022N\n\014GenerateT"
-                + "oml\022\035.com.kcl.api.GenerateTomlArgs\032\037.com"
-                + ".kcl.api.GenerateTomlResult\022K\n\013GenerateK"
-                + "cl\022\034.com.kcl.api.GenerateKclArgs\032\036.com.k"
-                + "cl.api.GenerateKclResult\022W\n\017GenerateOpen" + "API\022 .com.kcl.api.GenerateOpenAPIArgs\032\"."
-                + "com.kcl.api.GenerateOpenAPIResult\022Q\n\rGen" + "erateProto\022\036.com.kcl.api.GenerateProtoAr"
-                + "gs\032 .com.kcl.api.GenerateProtoResult\022K\n\013"
-                + "GenerateDoc\022\034.com.kcl.api.GenerateDocArg"
-                + "s\032\036.com.kcl.api.GenerateDocResultB\024Z\005.;a" + "pi\252\002\nKclLib.APIb\006proto3" };
+                + "fail_fast\030\004 \001(\010\022\020\n\010coverage\030\005 \001(\010\022\021\n\teva"
+                + "l_once\030\006 \001(\010\"h\n\nTestResult\022\'\n\004info\030\002 \003(\013"
+                + "2\031.com.kcl.api.TestCaseInfo\0221\n\010coverage\030"
+                + "\003 \001(\0132\037.com.kcl.api.TestCoverageReport\"\277"
+                + "\001\n\014TestCaseInfo\022\014\n\004name\030\001 \001(\t\022\r\n\005error\030\002"
+                + " \001(\t\022\020\n\010duration\030\003 \001(\004\022\023\n\013log_message\030\004 "
+                + "\001(\t\022:\n\tline_hits\030\005 \003(\0132\'.com.kcl.api.Tes"
+                + "tCaseInfo.LineHitsEntry\032/\n\rLineHitsEntry"
+                + "\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\004:\0028\001\"\276\001\n\014Fil"
+                + "eCoverage\022\020\n\010filename\030\001 \001(\t\022\025\n\rcovered_l"
+                + "ines\030\002 \003(\004\022\030\n\020executable_lines\030\003 \003(\004\022:\n\t"
+                + "line_hits\030\004 \003(\0132\'.com.kcl.api.FileCovera"
+                + "ge.LineHitsEntry\032/\n\rLineHitsEntry\022\013\n\003key"
+                + "\030\001 \001(\004\022\r\n\005value\030\002 \001(\004:\0028\001\"\307\001\n\022TestCovera"
+                + "geReport\0229\n\005files\030\001 \003(\0132*.com.kcl.api.Te"
+                + "stCoverageReport.FilesEntry\022-\n\007summary\030\002"
+                + " \001(\0132\034.com.kcl.api.CoverageSummary\032G\n\nFi"
+                + "lesEntry\022\013\n\003key\030\001 \001(\t\022(\n\005value\030\002 \001(\0132\031.c"
+                + "om.kcl.api.FileCoverage:\0028\001\"G\n\017CoverageS"
+                + "ummary\022\017\n\007covered\030\001 \001(\004\022\022\n\nexecutable\030\002 "
+                + "\001(\004\022\017\n\007percent\030\003 \001(\001\"?\n\024FormatTestReport"
+                + "Args\022\'\n\006result\030\001 \001(\0132\027.com.kcl.api.TestR"
+                + "esult\"(\n\026FormatTestReportResult\022\016\n\006repor"
+                + "t\030\001 \001(\t\"?\n\026UpdateDependenciesArgs\022\025\n\rman"
+                + "ifest_path\030\001 \001(\t\022\016\n\006vendor\030\002 \001(\010\"K\n\030Upda"
+                + "teDependenciesResult\022/\n\rexternal_pkgs\030\003 "
+                + "\003(\0132\030.com.kcl.api.ExternalPkg\"V\n\020Generat"
+                + "eTomlArgs\022/\n\texec_args\030\001 \001(\0132\034.com.kcl.a"
+                + "pi.ExecProgramArgs\022\021\n\tsort_keys\030\002 \001(\010\"\"\n"
+                + "\022GenerateTomlResult\022\014\n\004toml\030\001 \001(\t\"C\n\017Gen"
+                + "erateKclArgs\022\016\n\006source\030\001 \001(\t\022\020\n\010filename"
+                + "\030\002 \001(\t\022\016\n\006format\030\003 \001(\t\" \n\021GenerateKclRes"
+                + "ult\022\013\n\003kcl\030\001 \001(\t\"Y\n\023GenerateOpenAPIArgs\022"
+                + "1\n\nparse_args\030\001 \001(\0132\035.com.kcl.api.ParseP"
+                + "rogramArgs\022\017\n\007version\030\002 \001(\t\"%\n\025GenerateO"
+                + "penAPIResult\022\014\n\004spec\030\001 \001(\t\"W\n\021GeneratePr"
+                + "otoArgs\0221\n\nparse_args\030\001 \001(\0132\035.com.kcl.ap"
+                + "i.ParseProgramArgs\022\017\n\007package\030\002 \001(\t\"$\n\023G"
+                + "enerateProtoResult\022\r\n\005proto\030\001 \001(\t\"T\n\017Gen"
+                + "erateDocArgs\0221\n\nparse_args\030\001 \001(\0132\035.com.k"
+                + "cl.api.ParseProgramArgs\022\016\n\006format\030\002 \001(\t\""
+                + "$\n\021GenerateDocResult\022\017\n\007content\030\001 \001(\t\"\201\006"
+                + "\n\007KclType\022\014\n\004type\030\001 \001(\t\022)\n\013union_types\030\002"
+                + " \003(\0132\024.com.kcl.api.KclType\022\017\n\007default\030\003 "
+                + "\001(\t\022\023\n\013schema_name\030\004 \001(\t\022\022\n\nschema_doc\030\005"
+                + " \001(\t\0228\n\nproperties\030\006 \003(\0132$.com.kcl.api.K"
+                + "clType.PropertiesEntry\022\020\n\010required\030\007 \003(\t"
+                + "\022!\n\003key\030\010 \001(\0132\024.com.kcl.api.KclType\022\"\n\004i"
+                + "tem\030\t \001(\0132\024.com.kcl.api.KclType\022\014\n\004line\030"
+                + "\n \001(\005\022*\n\ndecorators\030\013 \003(\0132\026.com.kcl.api."
+                + "Decorator\022\020\n\010filename\030\014 \001(\t\022\020\n\010pkg_path\030"
+                + "\r \001(\t\022\023\n\013description\030\016 \001(\t\0224\n\010examples\030\017"
+                + " \003(\0132\".com.kcl.api.KclType.ExamplesEntry"
+                + "\022)\n\013base_schema\030\020 \001(\0132\024.com.kcl.api.KclT"
+                + "ype\0220\n\010function\030\021 \001(\0132\031.com.kcl.api.Func"
+                + "tionTypeH\000\210\001\001\0229\n\017index_signature\030\022 \001(\0132\033"
+                + ".com.kcl.api.IndexSignatureH\001\210\001\001\032G\n\017Prop"
+                + "ertiesEntry\022\013\n\003key\030\001 \001(\t\022#\n\005value\030\002 \001(\0132"
+                + "\024.com.kcl.api.KclType:\0028\001\032E\n\rExamplesEnt"
+                + "ry\022\013\n\003key\030\001 \001(\t\022#\n\005value\030\002 \001(\0132\024.com.kcl"
+                + ".api.Example:\0028\001B\013\n\t_functionB\022\n\020_index_"
+                + "signature\"_\n\014FunctionType\022&\n\006params\030\001 \003("
+                + "\0132\026.com.kcl.api.Parameter\022\'\n\treturn_ty\030\002"
+                + " \001(\0132\024.com.kcl.api.KclType\";\n\tParameter\022"
+                + "\014\n\004name\030\001 \001(\t\022 \n\002ty\030\002 \001(\0132\024.com.kcl.api."
+                + "KclType\"\215\001\n\016IndexSignature\022\025\n\010key_name\030\001"
+                + " \001(\tH\000\210\001\001\022!\n\003key\030\002 \001(\0132\024.com.kcl.api.Kcl"
+                + "Type\022!\n\003val\030\003 \001(\0132\024.com.kcl.api.KclType\022"
+                + "\021\n\tany_other\030\004 \001(\010B\013\n\t_key_name\"\225\001\n\tDeco"
+                + "rator\022\014\n\004name\030\001 \001(\t\022\021\n\targuments\030\002 \003(\t\0226"
+                + "\n\010keywords\030\003 \003(\0132$.com.kcl.api.Decorator"
+                + ".KeywordsEntry\032/\n\rKeywordsEntry\022\013\n\003key\030\001"
+                + " \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\">\n\007Example\022\017\n\007su"
+                + "mmary\030\001 \001(\t\022\023\n\013description\030\002 \001(\t\022\r\n\005valu"
+                + "e\030\003 \001(\t2\222\001\n\016BuiltinService\0226\n\004Ping\022\025.com"
+                + ".kcl.api.PingArgs\032\027.com.kcl.api.PingResu"
+                + "lt\022H\n\nListMethod\022\033.com.kcl.api.ListMetho"
+                + "dArgs\032\035.com.kcl.api.ListMethodResult2\255\020\n"
+                + "\nKclService\0226\n\004Ping\022\025.com.kcl.api.PingAr"
+                + "gs\032\027.com.kcl.api.PingResult\022H\n\nGetVersio"
+                + "n\022\033.com.kcl.api.GetVersionArgs\032\035.com.kcl"
+                + ".api.GetVersionResult\022N\n\014ParseProgram\022\035."
+                + "com.kcl.api.ParseProgramArgs\032\037.com.kcl.a"
+                + "pi.ParseProgramResult\022E\n\tParseFile\022\032.com"
+                + ".kcl.api.ParseFileArgs\032\034.com.kcl.api.Par"
+                + "seFileResult\022K\n\013LoadPackage\022\034.com.kcl.ap"
+                + "i.LoadPackageArgs\032\036.com.kcl.api.LoadPack"
+                + "ageResult\022L\n\013ListOptions\022\035.com.kcl.api.P"
+                + "arseProgramArgs\032\036.com.kcl.api.ListOption"
+                + "sResult\022Q\n\rListVariables\022\036.com.kcl.api.L" + "istVariablesArgs\032 .com.kcl.api.ListVaria"
+                + "blesResult\022K\n\013ExecProgram\022\034.com.kcl.api."
+                + "ExecProgramArgs\032\036.com.kcl.api.ExecProgra"
+                + "mResult\022N\n\014OverrideFile\022\035.com.kcl.api.Ov"
+                + "errideFileArgs\032\037.com.kcl.api.OverrideFil"
+                + "eResult\022f\n\024GetSchemaTypeMapping\022%.com.kc" + "l.api.GetSchemaTypeMappingArgs\032\'.com.kcl"
+                + ".api.GetSchemaTypeMappingResult\022x\n\035GetSc" + "hemaTypeMappingUnderPath\022%.com.kcl.api.G"
+                + "etSchemaTypeMappingArgs\0320.com.kcl.api.Ge" + "tSchemaTypeMappingUnderPathResult\022H\n\nFor"
+                + "matCode\022\033.com.kcl.api.FormatCodeArgs\032\035.c"
+                + "om.kcl.api.FormatCodeResult\022H\n\nFormatPat"
+                + "h\022\033.com.kcl.api.FormatPathArgs\032\035.com.kcl"
+                + ".api.FormatPathResult\022B\n\010LintPath\022\031.com."
+                + "kcl.api.LintPathArgs\032\033.com.kcl.api.LintP"
+                + "athResult\022N\n\014ValidateCode\022\035.com.kcl.api."
+                + "ValidateCodeArgs\032\037.com.kcl.api.ValidateC"
+                + "odeResult\022]\n\021LoadSettingsFiles\022\".com.kcl" + ".api.LoadSettingsFilesArgs\032$.com.kcl.api"
+                + ".LoadSettingsFilesResult\022<\n\006Rename\022\027.com"
+                + ".kcl.api.RenameArgs\032\031.com.kcl.api.Rename"
+                + "Result\022H\n\nRenameCode\022\033.com.kcl.api.Renam"
+                + "eCodeArgs\032\035.com.kcl.api.RenameCodeResult"
+                + "\0226\n\004Test\022\025.com.kcl.api.TestArgs\032\027.com.kc"
+                + "l.api.TestResult\022Z\n\020FormatTestReport\022!.c" + "om.kcl.api.FormatTestReportArgs\032#.com.kc"
+                + "l.api.FormatTestReportResult\022`\n\022UpdateDe" + "pendencies\022#.com.kcl.api.UpdateDependenc"
+                + "iesArgs\032%.com.kcl.api.UpdateDependencies"
+                + "Result\022N\n\014GenerateToml\022\035.com.kcl.api.Gen"
+                + "erateTomlArgs\032\037.com.kcl.api.GenerateToml"
+                + "Result\022K\n\013GenerateKcl\022\034.com.kcl.api.Gene"
+                + "rateKclArgs\032\036.com.kcl.api.GenerateKclRes"
+                + "ult\022W\n\017GenerateOpenAPI\022 .com.kcl.api.Gen" + "erateOpenAPIArgs\032\".com.kcl.api.GenerateO"
+                + "penAPIResult\022Q\n\rGenerateProto\022\036.com.kcl." + "api.GenerateProtoArgs\032 .com.kcl.api.Gene"
+                + "rateProtoResult\022K\n\013GenerateDoc\022\034.com.kcl"
+                + ".api.GenerateDocArgs\032\036.com.kcl.api.Gener"
+                + "ateDocResultB\024Z\005.;api\252\002\nKclLib.APIb\006prot" + "o3" };
         descriptor = com.google.protobuf.Descriptors.FileDescriptor.internalBuildGeneratedFileFrom(descriptorData,
                 new com.google.protobuf.Descriptors.FileDescriptor[] {});
         internal_static_com_kcl_api_ExternalPkg_descriptor = getDescriptor().getMessageTypes().get(0);
@@ -105533,7 +105696,7 @@ public final class Spec {
         internal_static_com_kcl_api_TestArgs_descriptor = getDescriptor().getMessageTypes().get(63);
         internal_static_com_kcl_api_TestArgs_fieldAccessorTable = new com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
                 internal_static_com_kcl_api_TestArgs_descriptor,
-                new java.lang.String[] { "ExecArgs", "PkgList", "RunRegexp", "FailFast", "Coverage", });
+                new java.lang.String[] { "ExecArgs", "PkgList", "RunRegexp", "FailFast", "Coverage", "EvalOnce", });
         internal_static_com_kcl_api_TestResult_descriptor = getDescriptor().getMessageTypes().get(64);
         internal_static_com_kcl_api_TestResult_fieldAccessorTable = new com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
                 internal_static_com_kcl_api_TestResult_descriptor, new java.lang.String[] { "Info", "Coverage", });

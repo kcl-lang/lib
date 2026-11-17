@@ -206,6 +206,8 @@ final class KClLibTests: XCTestCase {
 
         var testArgs = TestArgs()
         testArgs.coverage = true
+        XCTAssertFalse(testArgs.evalOnce)
+        testArgs.evalOnce = true
 
         var result = TestResult()
         var caseInfo = TestCaseInfo()
@@ -227,7 +229,11 @@ final class KClLibTests: XCTestCase {
         let argsWire = try args.serializedData()
         XCTAssertTrue(try ExecProgramArgs(serializedData: argsWire).emitAttributeMetadata)
         let testArgsWire = try testArgs.serializedData()
-        XCTAssertTrue(try TestArgs(serializedData: testArgsWire).coverage)
+        let decodedTestArgs = try TestArgs(serializedData: testArgsWire)
+        XCTAssertTrue(decodedTestArgs.coverage)
+        XCTAssertTrue(decodedTestArgs.evalOnce)
+        var unsetTestArgs = TestArgs()
+        XCTAssertFalse(unsetTestArgs.evalOnce)
 
         let resultWire = try result.serializedData()
         let roundTripped = try TestResult(serializedData: resultWire)

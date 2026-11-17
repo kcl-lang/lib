@@ -762,8 +762,11 @@ typedef struct _TestArgs {
     /* Flag to collect line-level coverage data while running tests. When true,
  the test tool records, for every top-level KCL statement that executes,
  the source file path and line number. The aggregated result is returned
- in [TestResult.coverage]. Defaults to false. */
+    in [TestResult.coverage]. Defaults to false. */
     bool coverage;
+    /* Evaluate each test package once and run all of its test cases in that
+ one evaluation. Opt-in; defaults to false. */
+    bool eval_once;
 } TestArgs;
 
 /* Message representing information about a single test case. */
@@ -1164,7 +1167,7 @@ extern "C" {
 #define RenameCodeArgs_SourceCodesEntry_init_default {{{NULL}, NULL}, {{NULL}, NULL}}
 #define RenameCodeResult_init_default            {{{NULL}, NULL}}
 #define RenameCodeResult_ChangedCodesEntry_init_default {{{NULL}, NULL}, {{NULL}, NULL}}
-#define TestArgs_init_default                    {false, ExecProgramArgs_init_default, {{NULL}, NULL}, {{NULL}, NULL}, 0, 0}
+#define TestArgs_init_default                    {false, ExecProgramArgs_init_default, {{NULL}, NULL}, {{NULL}, NULL}, 0, 0, 0}
 #define TestResult_init_default                  {{{NULL}, NULL}, false, TestCoverageReport_init_default}
 #define TestCaseInfo_init_default                {{{NULL}, NULL}, {{NULL}, NULL}, 0, {{NULL}, NULL}, {{NULL}, NULL}}
 #define TestCaseInfo_LineHitsEntry_init_default  {{{NULL}, NULL}, 0}
@@ -1272,7 +1275,7 @@ extern "C" {
 #define RenameCodeArgs_SourceCodesEntry_init_zero {{{NULL}, NULL}, {{NULL}, NULL}}
 #define RenameCodeResult_init_zero               {{{NULL}, NULL}}
 #define RenameCodeResult_ChangedCodesEntry_init_zero {{{NULL}, NULL}, {{NULL}, NULL}}
-#define TestArgs_init_zero                       {false, ExecProgramArgs_init_zero, {{NULL}, NULL}, {{NULL}, NULL}, 0, 0}
+#define TestArgs_init_zero                       {false, ExecProgramArgs_init_zero, {{NULL}, NULL}, {{NULL}, NULL}, 0, 0, 0}
 #define TestResult_init_zero                     {{{NULL}, NULL}, false, TestCoverageReport_init_zero}
 #define TestCaseInfo_init_zero                   {{{NULL}, NULL}, {{NULL}, NULL}, 0, {{NULL}, NULL}, {{NULL}, NULL}}
 #define TestCaseInfo_LineHitsEntry_init_zero     {{{NULL}, NULL}, 0}
@@ -1527,6 +1530,7 @@ extern "C" {
 #define TestArgs_run_regexp_tag                  3
 #define TestArgs_fail_fast_tag                   4
 #define TestArgs_coverage_tag                    5
+#define TestArgs_eval_once_tag                   6
 #define TestCaseInfo_name_tag                    1
 #define TestCaseInfo_error_tag                   2
 #define TestCaseInfo_duration_tag                3
@@ -2220,7 +2224,8 @@ X(a, STATIC,   OPTIONAL, MESSAGE,  exec_args,         1) \
 X(a, CALLBACK, REPEATED, STRING,   pkg_list,          2) \
 X(a, CALLBACK, SINGULAR, STRING,   run_regexp,        3) \
 X(a, STATIC,   SINGULAR, BOOL,     fail_fast,         4) \
-X(a, STATIC,   SINGULAR, BOOL,     coverage,          5)
+X(a, STATIC,   SINGULAR, BOOL,     coverage,          5) \
+X(a, STATIC,   SINGULAR, BOOL,     eval_once,         6)
 #define TestArgs_CALLBACK pb_default_field_callback
 #define TestArgs_DEFAULT NULL
 #define TestArgs_exec_args_MSGTYPE ExecProgramArgs

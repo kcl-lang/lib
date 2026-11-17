@@ -513,6 +513,7 @@ final class ConsistencyTest: XCTestCase {
             request.runRegexp = string(args, "run_regexp")
             request.failFast = boolean(args, "fail_fast")
             request.coverage = boolean(args, "coverage")
+            request.evalOnce = boolean(args, "eval_once")
             let info = try api.test(request).info
             return [
                 "names": info.map(\.name).sorted(),
