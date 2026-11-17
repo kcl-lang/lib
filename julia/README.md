@@ -51,6 +51,8 @@ Requirements:
 | macOS   | x86_64  | `darwin-amd64`     | `libkcl.dylib`|
 | Linux   | x86_64  | `linux-amd64`      | `libkcl.so`   |
 | Linux   | arm64   | `linux-arm64`      | `libkcl.so`   |
+| FreeBSD | x86_64  | `freebsd-amd64`    | `libkcl.so`   |
+| FreeBSD | arm64   | `freebsd-arm64`    | `libkcl.so`   |
 | Windows | x86_64  | `windows-amd64`    | `libkcl.dll`  |
 | Windows | arm64   | `windows-arm64`    | `libkcl.dll`  |
 

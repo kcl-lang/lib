@@ -19,6 +19,12 @@
 # would turn a warning in `kcl_lib_ast.c` itself into a harness failure,
 # which is not a finding about the decoder. Warnings the *dumper* earns are
 # still visible in the log.
+#
+# `-std=c99` does not define a feature-test macro, so current glibc hides
+# `strdup` (POSIX.1-2008, declared in `<string.h>` only when the macro is
+# set). GCC 14 and later, which ubuntu-26.04 ships, rejects that implicit
+# declaration. `_POSIX_C_SOURCE=200809L` is applied on the command line so
+# it is defined before either translation unit's includes.
 set -euo pipefail
 
 if [ "$#" -ne 2 ]; then
@@ -45,7 +51,7 @@ fi
 build="$(mktemp -d "${TMPDIR:-/tmp}/kcl-ast-dump-c.XXXXXX")"
 trap 'rm -rf "$build"' EXIT
 
-"$cc" -std=c99 -Wall -Wextra \
+"$cc" -std=c99 -D_POSIX_C_SOURCE=200809L -Wall -Wextra \
   -Ic/include \
   -o "$build/dump" \
   hack/dump/c/Dump.c c/lib/kcl_lib_ast.c
