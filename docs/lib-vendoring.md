@@ -32,7 +32,7 @@ script itself.
 
 ### Platforms with no published asset
 
-`windows-arm64` is the one platform `go/lib` ships a binary for that no kcl
+`windows-arm64` is one platform `go/lib` ships a binary for that no kcl
 release publishes yet. [kcl-lang/kcl#2219][] adds it to that repository's
 release matrix, but only the first kcl tag cut after that lands will carry a
 `kcl-lib-<version>-windows-arm64.zip`, and until `KCL_VERSION` here points at
@@ -41,10 +41,49 @@ leg of `dart-test.yaml` is commented out for the same reason — it used to pass
 only because the binary was committed here, which is what this change stops
 doing. Re-enable it once the asset ships.
 
-`vendor-libs.yaml` fetches that platform on a best-effort basis, so cutting a
-release against a kcl version that predates the asset still vendors every
-other runtime instead of failing the run; the omission is reported as a
-warning on the vendoring commit.
+`freebsd-amd64` and `freebsd-arm64` are the same kind of gap, and
+[kcl-lang/kcl#1029][] is still open. `hack/download-libs.sh` accepts both
+names. They are not part of `--all`, because `--all` is the set kcl publishes
+plus the iOS archives this repo cross-compiles. `vendor-libs.yaml` fetches
+them best-effort, like `windows-arm64`, so the first kcl tag that publishes
+`kcl-lib-<version>-freebsd-<arch>.tar.gz` is vendored without a further
+change here.
+
+Until that tag exists, build the library from this repository and then
+compile the SDK against it:
+
+```shell
+hack/build-freebsd-lib.sh freebsd-amd64   # and freebsd-arm64
+```
+
+On FreeBSD that is a native `cargo build --release` of `c/`. On Linux and
+macOS it cross-compiles with `cargo-zigbuild` (Zig supplies the FreeBSD
+libc). GitHub-hosted runners have no FreeBSD VM, so
+[`.github/workflows/build-libkcl-freebsd.yaml`](../.github/workflows/build-libkcl-freebsd.yaml)
+checks that the Go install and loader packages compile for `freebsd/amd64`
+and `freebsd/arm64`. It does not produce `libkcl.so`.
+
+The staged file is `go/lib/freebsd-<arch>/libkcl.so`. The Go loader dlopens
+that name and resolves `kcl_service_new`, `kcl_service_delete`,
+`kcl_service_call_with_length`, and `kcl_free`. A checkout built with
+`-tags no_libembed` can skip the embed and point `KCL_LIB_HOME` at a
+directory that already contains `libkcl.so`.
+
+On a FreeBSD host with a C compiler, `CGO_ENABLED` defaults to 1 and
+`go build` needs nothing extra. A `CGO_ENABLED=0` build (and the Linux
+cross-compile this repo's CI runs) has to mark purego's fakecgo package as
+cgo-generated, which is how that package exports `environ`:
+
+```shell
+CGO_ENABLED=0 go build -gcflags=github.com/ebitengine/purego/internal/fakecgo=-std ./...
+```
+
+`vendor-libs.yaml` fetches `windows-arm64` and the two FreeBSD libraries on a
+best-effort basis, so cutting a release against a kcl version that predates
+the asset still vendors every other runtime instead of failing the run; the
+omission is reported as a warning on the vendoring commit.
+
+[kcl-lang/kcl#1029]: https://github.com/kcl-lang/kcl/issues/1029
 
 [kcl-lang/kcl#2219]: https://github.com/kcl-lang/kcl/pull/2219
 

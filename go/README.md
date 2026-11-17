@@ -89,6 +89,15 @@ To type-check or vet without downloading the binary:
 go build -tags no_libembed ./...
 ```
 
+FreeBSD is not in the published runtime set yet. `installLib` is implemented
+for `freebsd/amd64` and `freebsd/arm64`, and the loader looks up
+`kcl_service_new` in `libkcl.so` (the same symbol Linux uses). Produce the
+library with `../hack/build-freebsd-lib.sh`. A `-tags no_libembed` build can
+instead point `KCL_LIB_HOME` at a directory that already contains it. A
+`CGO_ENABLED=0` FreeBSD build also needs
+`-gcflags=github.com/ebitengine/purego/internal/fakecgo=-std`; see
+[docs/lib-vendoring.md](../docs/lib-vendoring.md).
+
 Both are covered in [docs/lib-vendoring.md](../docs/lib-vendoring.md).
 
 Note: Full Go SDK can be found [here](https://github.com/kcl-lang/kcl-go), which depends on the kcl-lang/lib Go bindings.

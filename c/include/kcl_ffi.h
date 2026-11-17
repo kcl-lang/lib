@@ -31,6 +31,11 @@ const uint8_t* kcl_service_call_with_length(KclServiceHandle svc,
                                            size_t* out_len);
 void kcl_service_free_string(const uint8_t* ptr);
 
+// Frees a buffer returned by `kcl_service_call_with_length`. Same contract as
+// `kcl_free` in the published libkcl.so. The Go loader resolves this symbol;
+// `kcl_service_free_string` is the one-argument variant the C binding uses.
+void kcl_free(uint8_t* ptr, size_t size);
+
 // Implemented by `kcl_lib_plugin.c`; returns the handle bound to the
 // registered plugin methods, or 0 when no plugin is bound. Declared weak so
 // that builds which do not compile the plugin shim still link — the symbol

@@ -302,6 +302,17 @@ fn kclLibPath(b: *std.Build, target: *const std.Build.ResolvedTarget) std.Build.
                 else => @panic("Unsupported macOS architecture"),
             }
         },
+        .freebsd => {
+            switch (arch) {
+                .x86_64 => {
+                    return b.path("../go/lib/freebsd-amd64/");
+                },
+                .aarch64 => {
+                    return b.path("../go/lib/freebsd-arm64/");
+                },
+                else => @panic("Unsupported FreeBSD architecture"),
+            }
+        },
         else => @panic("Unsupported operating system"),
     }
 }
