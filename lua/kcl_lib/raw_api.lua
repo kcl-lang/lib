@@ -198,10 +198,12 @@ RawAPI.generate_doc =
 -- The `BuiltinService.*` names are the exception to the "everything is
 -- `KclService.*`" rule: the core registers `BuiltinService.Ping` and
 -- `BuiltinService.ListMethod` under exactly those names, and there is no
--- `KclService.ListMethod` alias. The registry has 28 entries; it grew in
--- v0.13.1, which added `FormatTestReport` and the five `Generate*` RPCs and
--- dropped `KclService.ListDepFiles` (dependency data now rides on
--- `LoadPackageResult.imports` / `kcl_mod` / `apps`).
+-- `KclService.ListMethod` alias. The registry has 33 entries on kcl v0.13.3.
+-- v0.13.1 added `FormatTestReport` and the five `Generate*` RPCs and dropped
+-- `KclService.ListDepFiles` (dependency data now rides on
+-- `LoadPackageResult.imports` / `kcl_mod` / `apps`). v0.13.3 added
+-- `GenerateRust`, `GeneratePython`, `GenerateGo`, `GenerateJava` and
+-- `GenerateTypeScript`.
 RawAPI.list_method =
   add_method("BuiltinService.ListMethod", "ListMethodArgs", "ListMethodResult")
 

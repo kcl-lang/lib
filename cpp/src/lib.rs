@@ -2339,6 +2339,8 @@ fn build_test_args(args: &TestArgs) -> kcl_api::TestArgs {
         run_regexp: args.run_regexp.clone(),
         fail_fast: args.fail_fast,
         coverage: args.coverage,
+        // Opt-in on kcl 0.13.3. The C++ TestArgs struct does not set it.
+        eval_once: false,
     }
 }
 

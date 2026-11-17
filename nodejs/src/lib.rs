@@ -654,6 +654,8 @@ impl TestArgs {
             fail_fast: fail_fast.unwrap_or_default(),
             run_regexp: run_regexp.unwrap_or_default(),
             coverage: coverage.unwrap_or_default(),
+            // Opt-in on kcl 0.13.3. The Node constructor does not set it.
+            eval_once: false,
         }))
     }
 }
@@ -763,7 +765,7 @@ pub fn list_method() -> Result<ListMethodResult> {
 * Like `list_method` above, this routes through the universal `kcl_api::call`
 * dispatcher rather than a typed `KclServiceImpl` wrapper. It was written when
 * the pinned `kcl-api` revision predated `KclService.FormatTestReport`. The pin
-* is now 0.13.2, which has both the typed wrapper and the generated messages;
+* is now 0.13.3, which has both the typed wrapper and the generated messages;
 * the hand-rolled encoding is kept because it is already covered by tests, and
 * it collapses to the typed call wherever that is tidier. `FormatTestReportArgs`
 * is a single length-delimited field 1 carrying a `TestResult`, and
@@ -838,7 +840,7 @@ pub fn format_test_report(args: FormatTestReportArgs) -> Result<FormatTestReport
 *
 * Like `format_test_report` above, these route through the universal
 * `kcl_api::call` dispatcher. They were written when the pinned `kcl-api`
-* revision predated these RPCs; the pin is now 0.13.2, which has the typed
+* revision predated these RPCs; the pin is now 0.13.3, which has the typed
 * `KclServiceImpl` wrappers and the generated messages, and the hand-rolled
 * envelopes are kept for the same reason. A leading length-delimited field
 * carries the nested message for the args that embed one, plain string/bool

@@ -764,26 +764,18 @@ UNCOVERED_RPCS = {
 }
 
 
-# The bindings must all run the same `kcl-api`, and this manifest is why that
-# is enforced rather than assumed. `kcl-api` is a git dependency, so "which
-# revision" is a choice: `ruby/Cargo.lock` pinned `931e6a9` and `c/Cargo.toml`
-# pinned `rev = "842b02b"`, both of which predate the six RPCs added after
-# `FormatTestReport` (`GenerateToml`, `GenerateKcl`, `GenerateOpenAPI`,
-# `GenerateProto`, `GenerateDoc`, `FormatTestReport`). Every other binding
-# resolved the branch head, which is what this manifest is generated against.
+# The bindings must all run the same `kcl-api`. Every Cargo.toml pins
+# kcl-lang/kcl tag v0.13.3, and `go/install/install.go` downloads that release.
+# `list_method` pins `method_count` at 33: the 28 names from kcl v0.13.2 plus
+# GenerateRust, GeneratePython, GenerateGo, GenerateJava and GenerateTypeScript.
+# `load_package` pins `kcl_mod`, `apps` and `imports`. A runner built against an
+# older pin fails those cases, which is otherwise a failure nobody notices until
+# a user calls an RPC that binding cannot dispatch at all.
 #
-# So `list_method` pins `method_count` and `load_package` pins `kcl_mod`,
-# `apps` and `imports`, and a runner built against either old pin fails both.
-# That is the intent: these two cases are the ones that go red when a binding
-# drifts off the shared core, which is otherwise a failure nobody notices until
-# a user calls an RPC that binding cannot dispatch at all. The RPCs themselves
-# are covered the softer way, through `new_core` and a skip, because an old
-# core genuinely has no answer to give for them.
-#
-# If you bump `kcl-api` in one binding, run `cargo update -p kcl-api` in the
-# rest and regenerate this file in the same commit. Do not widen the tolerance
-# in the runners instead -- that is the failure mode this note exists to stop.
-CORE_REVISION = "3ec296a910e811945b384f2958ab352f148b571a"
+# If you bump `kcl-api` in one binding, bump it in the rest and regenerate this
+# file in the same commit. Do not widen the tolerance in the runners instead --
+# that is the failure mode this note exists to stop.
+CORE_REVISION = "b7779caeb161b18fa13f600145a0d352b7499933"
 
 # Every field of every args message that holds a repo-relative or `scratch:`
 # path, as (field name, kind). Hand-written rather than reflected over the
