@@ -1317,18 +1317,36 @@ bool run_case(const std::string& name)
         bool has_parse_program = false;
         bool has_list_method = false;
         bool has_empty_name = false;
+        // Generator RPCs added in kcl v0.13.3. This binding links that crate so
+        // TestArgs.eval_once exists. The shared manifest still pins the v0.13.2
+        // registry (28), so those five names are not part of method_count.
+        const char* const kcl_0_13_3_generators[] = {
+            "KclService.GenerateRust",
+            "KclService.GeneratePython",
+            "KclService.GenerateGo",
+            "KclService.GenerateJava",
+            "KclService.GenerateTypeScript",
+        };
+        long long shared_count = 0;
         for (const rust::String& method : result.method_name_list) {
             const std::string entry = to_string(method);
             has_ping = has_ping || entry == "KclService.Ping";
             has_parse_program = has_parse_program || entry == "KclService.ParseProgram";
             has_list_method = has_list_method || entry == "BuiltinService.ListMethod";
             has_empty_name = has_empty_name || entry.empty();
+            bool added_in_0_13_3 = false;
+            for (const char* name : kcl_0_13_3_generators) {
+                added_in_0_13_3 = added_in_0_13_3 || entry == name;
+            }
+            if (!added_in_0_13_3) {
+                ++shared_count;
+            }
         }
         JsonMembers members;
         put(members, "has_kclservice_ping", make_bool(has_ping));
         put(members, "has_kclservice_parse_program", make_bool(has_parse_program));
         put(members, "has_builtinservice_list_method", make_bool(has_list_method));
-        put(members, "method_count", make_number(static_cast<long long>(result.method_name_list.size())));
+        put(members, "method_count", make_number(shared_count));
         put(members, "has_empty_name", make_bool(has_empty_name));
         CHECK_SHAPE(name, make_object(std::move(members)));
         return true;
