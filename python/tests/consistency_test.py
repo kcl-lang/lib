@@ -180,6 +180,7 @@ def _build_args(case):
             run_regexp=a.get("run_regexp", ""),
             fail_fast=a.get("fail_fast", False),
             coverage=a.get("coverage", False),
+            eval_once=a.get("eval_once", False),
         )
     if rpc == "KclService.OverrideFile":
         return api.OverrideFileArgs(

@@ -561,7 +561,7 @@ function API:lint_path(paths)
 end
 
 ---Run KCL unit tests via the Test RPC.
----`opts` accepts `pkg_list`, `run_regexp`, `fail_fast` and `coverage`;
+---`opts` accepts `pkg_list`, `run_regexp`, `fail_fast`, `coverage` and `eval_once`;
 ---each `info[i].error` is empty exactly when that case passed.
 ---@param opts table|nil
 ---@return table The decoded TestResult (`info`).
@@ -572,6 +572,7 @@ function API:test(opts)
     run_regexp = opts.run_regexp,
     fail_fast = opts.fail_fast,
     coverage = opts.coverage,
+    eval_once = opts.eval_once,
   })
 end
 

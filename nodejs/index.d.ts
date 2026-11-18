@@ -684,6 +684,7 @@ export declare class TestArgs {
     workDir?: string | undefined | null,
     paths?: Array<string> | undefined | null,
     coverage?: boolean | undefined | null,
+    evalOnce?: boolean | undefined | null,
   )
 }
 export declare class UpdateDependenciesArgs {

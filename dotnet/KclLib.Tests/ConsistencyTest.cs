@@ -621,6 +621,7 @@ public class ConsistencyTest
                     RunRegexp = Text(Field(args, "run_regexp")),
                     FailFast = Flag(Field(args, "fail_fast")),
                     Coverage = Flag(Field(args, "coverage")),
+                    EvalOnce = Flag(Field(args, "eval_once")),
                 };
                 foreach (var pkg in ResolvePaths(Field(args, "pkg_list")))
                 {

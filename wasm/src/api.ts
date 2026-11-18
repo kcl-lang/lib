@@ -380,6 +380,8 @@ export interface TestArgs {
   runRegexp?: string;
   failFast?: boolean;
   coverage?: boolean;
+  /** Opt-in. Defaults to false; cases then share package values. */
+  evalOnce?: boolean;
 }
 
 export interface TestCaseInfo {
@@ -2293,7 +2295,8 @@ export function test(
     encodeStringList(2, args.pkgList),
     stringField(3, args.runRegexp ?? ""),
     boolField(4, args.failFast ?? false),
-    boolField(5, args.coverage ?? false)
+    boolField(5, args.coverage ?? false),
+    boolField(6, args.evalOnce ?? false)
   );
   const result = callService(instance, "Test", encoded);
   return decodeTestResult(result);

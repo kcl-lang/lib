@@ -562,6 +562,7 @@ class ConsistencyTest {
                             runRegexp = args.path("run_regexp").asText("")
                             failFast = args.path("fail_fast").asBoolean()
                             coverage = args.path("coverage").asBoolean()
+                            evalOnce = args.path("eval_once").asBoolean()
                         }
                     )
                     val actual = obj()

@@ -749,18 +749,20 @@ class RenameCodeResult(_message.Message):
     def __init__(self, changed_codes: _Optional[_Mapping[str, str]] = ...) -> None: ...
 
 class TestArgs(_message.Message):
-    __slots__ = ("exec_args", "pkg_list", "run_regexp", "fail_fast", "coverage")
+    __slots__ = ("exec_args", "pkg_list", "run_regexp", "fail_fast", "coverage", "eval_once")
     EXEC_ARGS_FIELD_NUMBER: _ClassVar[int]
     PKG_LIST_FIELD_NUMBER: _ClassVar[int]
     RUN_REGEXP_FIELD_NUMBER: _ClassVar[int]
     FAIL_FAST_FIELD_NUMBER: _ClassVar[int]
     COVERAGE_FIELD_NUMBER: _ClassVar[int]
+    EVAL_ONCE_FIELD_NUMBER: _ClassVar[int]
     exec_args: ExecProgramArgs
     pkg_list: _containers.RepeatedScalarFieldContainer[str]
     run_regexp: str
     fail_fast: bool
     coverage: bool
-    def __init__(self, exec_args: _Optional[_Union[ExecProgramArgs, _Mapping]] = ..., pkg_list: _Optional[_Iterable[str]] = ..., run_regexp: _Optional[str] = ..., fail_fast: _Optional[bool] = ..., coverage: _Optional[bool] = ...) -> None: ...
+    eval_once: bool
+    def __init__(self, exec_args: _Optional[_Union[ExecProgramArgs, _Mapping]] = ..., pkg_list: _Optional[_Iterable[str]] = ..., run_regexp: _Optional[str] = ..., fail_fast: _Optional[bool] = ..., coverage: _Optional[bool] = ..., eval_once: _Optional[bool] = ...) -> None: ...
 
 class TestResult(_message.Message):
     __slots__ = ("info", "coverage")

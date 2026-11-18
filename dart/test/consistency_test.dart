@@ -585,6 +585,7 @@ Map<String, Object?> _dispatch(String rpc, Map<String, Object?> args) {
         runRegexp: _optStr(args, 'run_regexp'),
         failFast: _optBool(args, 'fail_fast'),
         coverage: _optBool(args, 'coverage'),
+        evalOnce: _optBool(args, 'eval_once'),
       ));
       // Durations are wall-clock and would make the case fail at random, so
       // only the names are pinned.

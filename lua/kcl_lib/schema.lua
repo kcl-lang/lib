@@ -9,7 +9,7 @@
 -- treats as semantically irrelevant, so re-running the target on an unchanged
 -- `spec/spec.proto` is safe but produces a noisy diff.
 return "\
-ˆd2’\1\
+›d2’\1\
 \14BuiltinService\0186\26\23.com.kcl.api.PingResult\18\21.com.kcl.api.PingArgs\
 \4Ping\18H\26\29.com.kcl.api.ListMethodResult\18\27.com.kcl.api.ListMethodArgs\
 \
@@ -361,14 +361,15 @@ file_paths \3\18\16\24\4(\9\
 \16RenameCodeResult\0263\18\11\24\1(\9\
 \3key \1\18\13\24\2(\9\
 \5value \1\
-\17ChangedCodesEntry:\0028\1\"†\1\
+\17ChangedCodesEntry:\0028\1\"™\1\
 \8TestArgs\18/\24\0012\28.com.kcl.api.ExecProgramArgs(\11\
 \9exec_args \1\18\16\24\2(\9\
 \8pkg_list \3\18\18\24\3(\9\
 \
 run_regexp \1\18\17\24\4(\8\
 \9fail_fast \1\18\16\24\5(\8\
-\8coverage \1\"h\
+\8coverage \1\18\17\24\6(\8\
+\9eval_once \1\"h\
 \
 TestResult\18'\24\0022\25.com.kcl.api.TestCaseInfo(\11\
 \4info \3\0181\24\0032\31.com.kcl.api.TestCoverageReport(\11\

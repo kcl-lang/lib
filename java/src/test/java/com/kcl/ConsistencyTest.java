@@ -543,7 +543,8 @@ public class ConsistencyTest {
         case "KclService.Test": {
             TestArgs.Builder builder = TestArgs.newBuilder().setExecArgs(execArgs(args.path("exec_args")))
                     .addAllPkgList(resolvePaths(args.path("pkg_list"))).setRunRegexp(args.path("run_regexp").asText(""))
-                    .setFailFast(args.path("fail_fast").asBoolean()).setCoverage(args.path("coverage").asBoolean());
+                    .setFailFast(args.path("fail_fast").asBoolean()).setCoverage(args.path("coverage").asBoolean())
+                    .setEvalOnce(args.path("eval_once").asBoolean());
             TestResult result = api().test(builder.build());
             ObjectNode actual = obj();
             List<String> names = new ArrayList<>();

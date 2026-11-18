@@ -959,6 +959,7 @@ local function dispatch()
         run_regexp = field(case.args, "run_regexp", ""),
         fail_fast = field(case.args, "fail_fast", false),
         coverage = field(case.args, "coverage", false),
+        eval_once = field(case.args, "eval_once", false),
       })
       local names, failed = {}, {}
       for _, info in ipairs(result.info or {}) do

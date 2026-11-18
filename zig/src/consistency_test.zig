@@ -1197,6 +1197,7 @@ fn runCase(a: std.mem.Allocator, name: []const u8) !void {
                 .run_regexp = text(case.args, "run_regexp"),
                 .fail_fast = boolean(case.args, "fail_fast"),
                 .coverage = boolean(case.args, "coverage"),
+                .eval_once = boolean(case.args, "eval_once"),
             };
             try appendResolved(s, &arg.pkg_list, c.repo_root, c.testdata, case.args, "pkg_list");
             var result = try root.@"test"(a, arg);

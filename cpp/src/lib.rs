@@ -847,6 +847,10 @@ mod ffi {
         pub fail_fast: bool,
         /// Flag to collect line-level coverage data while running tests.
         pub coverage: bool,
+        /// Evaluate each test package once and run every case in that
+        /// evaluation. Opt-in; defaults to false. Cases then share the values
+        /// the package defines — see `TestArgs.eval_once` in `spec.proto`.
+        pub eval_once: bool,
     }
     /// Message for test response.
     #[derive(Debug, Default)]
@@ -2339,6 +2343,9 @@ fn build_test_args(args: &TestArgs) -> kcl_api::TestArgs {
         run_regexp: args.run_regexp.clone(),
         fail_fast: args.fail_fast,
         coverage: args.coverage,
+        // Every `kcl_api::TestArgs` field belongs here. A new field left out
+        // fails the C++ binding compile (E0063); see issue #421.
+        eval_once: args.eval_once,
     }
 }
 

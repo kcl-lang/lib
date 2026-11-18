@@ -1039,6 +1039,8 @@ class TestOptions:
     pkg_list: List[str] = field(default_factory=list)
     run_regexp: str = ""
     fail_fast: bool = False
+    # Opt-in. Defaults to false; cases then share the values the package defines.
+    eval_once: bool = False
 
 
 def test(
@@ -1072,6 +1074,7 @@ def test(
         pkg_list=list(test_opts.pkg_list),
         run_regexp=test_opts.run_regexp,
         fail_fast=test_opts.fail_fast,
+        eval_once=test_opts.eval_once,
     )
     return api.test(args)
 

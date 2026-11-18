@@ -36,6 +36,13 @@ public class CoverageFieldsTest {
         Assert.assertEquals(args, parsed);
         Assert.assertTrue(parsed.getCoverage());
         Assert.assertFalse(TestArgs.getDefaultInstance().getCoverage());
+        Assert.assertFalse(parsed.getEvalOnce());
+        Assert.assertFalse(TestArgs.getDefaultInstance().getEvalOnce());
+
+        TestArgs once = TestArgs.newBuilder().setEvalOnce(true).build();
+        TestArgs onceParsed = TestArgs.parseFrom(once.toByteArray());
+        Assert.assertTrue(onceParsed.getEvalOnce());
+        Assert.assertEquals(6, TestArgs.getDescriptor().findFieldByName("eval_once").getNumber());
     }
 
     @Test

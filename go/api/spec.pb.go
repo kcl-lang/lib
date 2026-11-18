@@ -4194,7 +4194,21 @@ type TestArgs struct {
 	// the test tool records, for every top-level KCL statement that executes,
 	// the source file path and line number. The aggregated result is returned
 	// in [TestResult.coverage]. Defaults to false.
-	Coverage      bool `protobuf:"varint,5,opt,name=coverage,proto3" json:"coverage,omitempty"`
+	Coverage bool `protobuf:"varint,5,opt,name=coverage,proto3" json:"coverage,omitempty"`
+	// Flag to evaluate each test package once and run all of its test cases in
+	// that one evaluation, instead of evaluating the package again for every
+	// case. Each case still reports its own result, error and log, and a case
+	// that fails hands the next one a freshly evaluated package.
+	// NOTE: cases share the values the package defines. A case that passes
+	// after mutating one in place, e.g. a schema instance it got as a lambda
+	// argument, changes what the cases after it see, and planning, which runs
+	// before the cases, does not see the change; a suite whose cases rely on
+	// starting from the package as it is defined must not set this flag.
+	// Case durations then exclude the evaluation of the package, a planning
+	// error is always reported at the end of the generated main file, and
+	// that file selects no case, so the coverage counts each of its lines
+	// once. Defaults to false.
+	EvalOnce      bool `protobuf:"varint,6,opt,name=eval_once,json=evalOnce,proto3" json:"eval_once,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -4260,6 +4274,13 @@ func (x *TestArgs) GetFailFast() bool {
 func (x *TestArgs) GetCoverage() bool {
 	if x != nil {
 		return x.Coverage
+	}
+	return false
+}
+
+func (x *TestArgs) GetEvalOnce() bool {
+	if x != nil {
+		return x.EvalOnce
 	}
 	return false
 }
@@ -6148,14 +6169,15 @@ const file_spec_proto_rawDesc = "" +
 	"\rchanged_codes\x18\x01 \x03(\v2/.com.kcl.api.RenameCodeResult.ChangedCodesEntryR\fchangedCodes\x1a?\n" +
 	"\x11ChangedCodesEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
-	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"\xb8\x01\n" +
+	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"\xd5\x01\n" +
 	"\bTestArgs\x129\n" +
 	"\texec_args\x18\x01 \x01(\v2\x1c.com.kcl.api.ExecProgramArgsR\bexecArgs\x12\x19\n" +
 	"\bpkg_list\x18\x02 \x03(\tR\apkgList\x12\x1d\n" +
 	"\n" +
 	"run_regexp\x18\x03 \x01(\tR\trunRegexp\x12\x1b\n" +
 	"\tfail_fast\x18\x04 \x01(\bR\bfailFast\x12\x1a\n" +
-	"\bcoverage\x18\x05 \x01(\bR\bcoverage\"x\n" +
+	"\bcoverage\x18\x05 \x01(\bR\bcoverage\x12\x1b\n" +
+	"\teval_once\x18\x06 \x01(\bR\bevalOnce\"x\n" +
 	"\n" +
 	"TestResult\x12-\n" +
 	"\x04info\x18\x02 \x03(\v2\x19.com.kcl.api.TestCaseInfoR\x04info\x12;\n" +

@@ -246,7 +246,8 @@ function _consistency_test_args(node)
         pkg_list = _consistency_paths(get(node, "pkg_list", Any[])),
         run_regexp = _consistency_string(get(node, "run_regexp", "")),
         fail_fast = _consistency_flag(node, "fail_fast"),
-        coverage = _consistency_flag(node, "coverage"))
+        coverage = _consistency_flag(node, "coverage"),
+        eval_once = _consistency_flag(node, "eval_once"))
 end
 
 const _CONSISTENCY_ARG_BUILDERS = Dict{String,Function}(
