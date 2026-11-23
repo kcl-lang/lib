@@ -1,7 +1,6 @@
 name: nuget-oidc-check
 
 on:
-  push:
   workflow_dispatch:
 
 permissions:
