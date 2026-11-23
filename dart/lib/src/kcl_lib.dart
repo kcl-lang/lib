@@ -194,8 +194,9 @@ UpdateDependenciesResult updateDependencies(UpdateDependenciesArgs args) =>
 // ---------------------------------------------------------------------------
 // KclService.Generate* — the schema / data generator RPCs.
 //
-// These five only exist on runtimes built after the `Generate*` family was
-// added to spec.proto. Every one of them takes its input as protobuf payload
+// These ten only exist on runtimes built after the `Generate*` family was
+// added to spec.proto; the five DTO generators arrived with kcl v0.13.3.
+// Every one of them takes its input as protobuf payload
 // (`ExecProgramArgs` or `ParseProgramArgs`) rather than as a CLI argv, so the
 // wrappers below are thin: they encode, dispatch and decode like the rest.
 // A runtime that predates an RPC answers with an `ERROR:`-prefixed payload,
@@ -244,6 +245,69 @@ GenerateProtoResult generateProto(GenerateProtoArgs args) => _invoke(
       GenerateProtoResult.fromBuffer,
     );
 
+/// Generates Rust DTOs from the schemas of a KCL package.
+///
+/// [GenerateRustArgs.parseArgs] holds the arguments for parsing the program
+/// whose schemas are exported; the generated source comes back in
+/// [GenerateRustResult.rustSource].
+GenerateRustResult generateRust(GenerateRustArgs args) => _invoke(
+      'KclService.GenerateRust',
+      args,
+      GenerateRustResult.fromBuffer,
+    );
+
+/// Generates Python DTOs from the schemas of a KCL package.
+///
+/// [GeneratePythonArgs.parseArgs] holds the arguments for parsing the program
+/// whose schemas are exported; the generated source comes back in
+/// [GeneratePythonResult.pythonSource].
+GeneratePythonResult generatePython(GeneratePythonArgs args) => _invoke(
+      'KclService.GeneratePython',
+      args,
+      GeneratePythonResult.fromBuffer,
+    );
+
+/// Generates Go DTOs from the schemas of a KCL package.
+///
+/// [GenerateGoArgs.parseArgs] holds the arguments for parsing the program
+/// whose schemas are exported; [GenerateGoArgs.package] is the Go package
+/// name of the generated file's `package` clause, e.g. `"dto"`. An empty
+/// package defaults to `"generated"` — Go requires a package clause, unlike
+/// GenerateProto's optional `package` field. The generated source comes back
+/// in [GenerateGoResult.goSource].
+GenerateGoResult generateGo(GenerateGoArgs args) => _invoke(
+      'KclService.GenerateGo',
+      args,
+      GenerateGoResult.fromBuffer,
+    );
+
+/// Generates Java DTOs from the schemas of a KCL package.
+///
+/// [GenerateJavaArgs.parseArgs] holds the arguments for parsing the program
+/// whose schemas are exported; [GenerateJavaArgs.package] is the Java package
+/// name of the generated file's `package` clause, e.g. `"com.example.dto"`.
+/// An empty package omits the package clause entirely (valid Java — the
+/// "default package") rather than defaulting to a synthetic name as
+/// GenerateGo does, since Java (unlike Go) does not require one. The
+/// generated source comes back in [GenerateJavaResult.javaSource].
+GenerateJavaResult generateJava(GenerateJavaArgs args) => _invoke(
+      'KclService.GenerateJava',
+      args,
+      GenerateJavaResult.fromBuffer,
+    );
+
+/// Generates TypeScript DTOs from the schemas of a KCL package.
+///
+/// [GenerateTypeScriptArgs.parseArgs] holds the arguments for parsing the
+/// program whose schemas are exported; the generated source comes back in
+/// [GenerateTypeScriptResult.typescriptSource].
+GenerateTypeScriptResult generateTypeScript(GenerateTypeScriptArgs args) =>
+    _invoke(
+      'KclService.GenerateTypeScript',
+      args,
+      GenerateTypeScriptResult.fromBuffer,
+    );
+
 /// Generates documentation for the schemas of a KCL package.
 ///
 /// [GenerateDocArgs.format] is `"md"` (the runtime default) for Markdown,
@@ -263,6 +327,11 @@ GenerateDocResult generateDoc(GenerateDocArgs args) => _invoke(
 // `ListMethod` is one of those two: `KclService.ListMethod` is unknown to the
 // dispatcher, which raises `unknown method name` and prints a Rust panic on
 // the way out.
+//
+// `BuildProgram` and `ExecArtifact` are the other way round: `spec.proto`
+// declares them, but the core deliberately keeps them out of its registry,
+// so the dispatcher answers `unknown method name` for them. They have no
+// wrapper here on purpose.
 // ---------------------------------------------------------------------------
 
 /// Round-trips a value through the KCL dispatcher — useful as a smoke test.

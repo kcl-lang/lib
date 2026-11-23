@@ -30,6 +30,21 @@ PERSON_SCHEMA = "schema Person:\n    name: str\n    check:\n        len(name) > 
 # root (the parent of the directory holding cases.json).
 SCHEMA_FIXTURE = "tests/consistency/testdata/gen_openapi/main.k"
 
+# The fixture the five DTO generators read. It is a fixture of its own rather
+# than SCHEMA_FIXTURE because the wasm32 build of the core lists a schema
+# *twice* once another schema references it — the same divergence
+# `generate_proto` and `generate_doc_md` are skipped for in the wasm runner.
+# The core rejects that duplicate itself ("schema name collision after
+# normalization"), so a fixture with a base schema or a schema-typed
+# attribute cannot be generated from in the WASI sandbox at all. This one
+# declares its schemas flat — no inheritance, no schema-typed attributes —
+# which the wasm build agrees with the native build on byte for byte.
+#
+# Flat is not the same as trivial: the attributes still cover the shapes the
+# generators have to render differently (ints, floats, bools, optional
+# attributes, defaults, a union, a list and a dict).
+DTO_FIXTURE = "tests/consistency/testdata/dto/main.k"
+
 # A whole package — module, manifest and a test file — for the RPCs that take a
 # package root rather than a single file. It is a fixture rather than a
 # temporary directory because `LoadPackage` and `Test` are the RPCs whose
@@ -734,16 +749,86 @@ def build_cases():
         lambda a: a.UpdateDependenciesArgs(manifest_path=_scratch("update_dependencies")),
         lambda r: {"external_pkg_count": len(r.external_pkgs)},
     )
+
+    # 30-34. The five DTO generators kcl v0.13.3 added to the service
+    #     registry: `GenerateRust`, `GeneratePython`, `GenerateGo`,
+    #     `GenerateJava` and `GenerateTypeScript`. Each turns the schemas of a
+    #     package into source in one language, and each returns the whole
+    #     document it produced, so the document itself is the contract and is
+    #     pinned in full — the same rule `generate_proto` and `generate_doc_md`
+    #     follow. These are the only cases whose output is code rather than
+    #     data, which is why they are worth pinning byte-for-byte: a binding
+    #     that dropped a field would produce source that still compiles.
+    #
+    #     `GenerateGo` and `GenerateJava` take a package name, and it is
+    #     pinned to a non-default value on purpose. Go requires a package
+    #     clause and defaults an empty one to "generated"; Java omits the
+    #     clause entirely for an empty package. A binding that dropped the
+    #     field would send an empty string and get the default, which is a
+    #     different document — so the argument is what makes these two cases
+    #     catch that, rather than merely restating the output.
+    case(
+        "generate_rust",
+        "KclService.GenerateRust",
+        True,
+        lambda a: a.GenerateRustArgs(
+            parse_args=a.ParseProgramArgs(paths=[DTO_FIXTURE]),
+        ),
+        lambda r: {"rust_source": r.rust_source},
+    )
+
+    case(
+        "generate_python",
+        "KclService.GeneratePython",
+        True,
+        lambda a: a.GeneratePythonArgs(
+            parse_args=a.ParseProgramArgs(paths=[DTO_FIXTURE]),
+        ),
+        lambda r: {"python_source": r.python_source},
+    )
+
+    case(
+        "generate_go",
+        "KclService.GenerateGo",
+        True,
+        lambda a: a.GenerateGoArgs(
+            parse_args=a.ParseProgramArgs(paths=[DTO_FIXTURE]),
+            package="dto",
+        ),
+        lambda r: {"go_source": r.go_source},
+    )
+
+    case(
+        "generate_java",
+        "KclService.GenerateJava",
+        True,
+        lambda a: a.GenerateJavaArgs(
+            parse_args=a.ParseProgramArgs(paths=[DTO_FIXTURE]),
+            package="com.example.dto",
+        ),
+        lambda r: {"java_source": r.java_source},
+    )
+
+    case(
+        "generate_typescript",
+        "KclService.GenerateTypeScript",
+        True,
+        lambda a: a.GenerateTypeScriptArgs(
+            parse_args=a.ParseProgramArgs(paths=[DTO_FIXTURE]),
+        ),
+        lambda r: {"typescript_source": r.typescript_source},
+    )
+
     return cases
 
 
 
 
 
-# The two RPCs of the 27 that no case covers, and why.
+# The RPCs that no case covers, and why.
 #
-# `spec.proto` declares 28 rpc lines over two services; 27 distinct methods are
-# reachable through a client. The 28th, `BuiltinService.Ping`, is listed by the
+# `spec.proto` declares 35 rpc lines over two services; 34 distinct methods are
+# reachable through a client. The 35th, `BuiltinService.Ping`, is listed by the
 # core's own `ListMethod` but rejected by every binding's dispatcher as an
 # unknown method, so there is nothing for a runner to compare against.
 #
@@ -757,10 +842,28 @@ def build_cases():
 # no case: it fails in all thirteen runners for a reason that has nothing to do
 # with them. They are listed here so the gap is a decision on the record rather
 # than an oversight, and so a future version can add them by deleting two lines.
+#
+# The two that kcl v0.13.3's `spec.proto` still declares but whose
+# implementation the core removed: `BuildProgram` and `ExecArtifact`. The core
+# keeps one registry behind `BuiltinService.ListMethod` and the native
+# dispatch table (`crates/api/src/service/mod.rs`), and those two names are
+# deliberately not in it -- the core has a regression test, `registry_excludes_
+# removed_methods`, that asserts they stay out. The declaration survives in the
+# proto, so `spec.proto` here carries it too, but a call reaches no
+# implementation: the dispatcher's lookup returns None and the call comes back
+# as `ERROR:unknown method name : KclService.BuildProgram`. There is nothing
+# for a runner to compare against, and a binding that exposed them would be
+# exposing a method that can only fail. They are listed here so the gap is a
+# decision on the record rather than an oversight.
+#
+# The five `Generate*` DTO generators that v0.13.3 added *are* in the
+# registry, so they are covered by cases rather than listed here.
 UNCOVERED_RPCS = {
     "BuiltinService.Ping": "listed by ListMethod but not dispatchable by any binding",
     "KclService.Rename": "core resolves no symbol path; see above",
     "KclService.RenameCode": "core resolves no symbol path; see above",
+    "KclService.BuildProgram": "declared in spec.proto but removed from the core's service registry",
+    "KclService.ExecArtifact": "declared in spec.proto but removed from the core's service registry",
 }
 
 
@@ -814,6 +917,11 @@ PATH_FIELDS = {
     "GenerateOpenAPIArgs": [("parse_args", "Nested")],
     "GenerateProtoArgs": [("parse_args", "Nested")],
     "GenerateDocArgs": [("parse_args", "Nested")],
+    "GenerateRustArgs": [("parse_args", "Nested")],
+    "GeneratePythonArgs": [("parse_args", "Nested")],
+    "GenerateGoArgs": [("parse_args", "Nested")],
+    "GenerateJavaArgs": [("parse_args", "Nested")],
+    "GenerateTypeScriptArgs": [("parse_args", "Nested")],
 }
 
 SCRATCH_PREFIX = "scratch:"
@@ -1075,6 +1183,11 @@ _METHOD_ATTR = {
     "KclService.GenerateOpenAPI": "generate_openapi",
     "KclService.GenerateProto": "generate_proto",
     "KclService.GenerateDoc": "generate_doc",
+    "KclService.GenerateRust": "generate_rust",
+    "KclService.GeneratePython": "generate_python",
+    "KclService.GenerateGo": "generate_go",
+    "KclService.GenerateJava": "generate_java",
+    "KclService.GenerateTypeScript": "generate_typescript",
     "KclService.UpdateDependencies": "update_dependencies",
     "KclService.GetVersion": "get_version",
     "BuiltinService.ListMethod": "list_method",

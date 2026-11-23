@@ -1541,6 +1541,68 @@ bool run_case(const std::string& name)
         return true;
     }
 
+    if (c.rpc == "KclService.GenerateRust") {
+        kcl_lib::GenerateRustArgs generate {};
+        const kcl_lib::JsonValue* parse = member_or_null(args, "parse_args");
+        CHECK(parse != nullptr);
+        generate.parse_args.has_value = true;
+        generate.parse_args.value = build_parse_args(*parse, name);
+        std::string expected;
+        CHECK(expect_string(c, "rust_source", expected));
+        CHECK_FIELD(name, "rust_source", expected, to_string(kcl_lib::generate_rust(generate).rust_source));
+        return true;
+    }
+
+    if (c.rpc == "KclService.GeneratePython") {
+        kcl_lib::GeneratePythonArgs generate {};
+        const kcl_lib::JsonValue* parse = member_or_null(args, "parse_args");
+        CHECK(parse != nullptr);
+        generate.parse_args.has_value = true;
+        generate.parse_args.value = build_parse_args(*parse, name);
+        std::string expected;
+        CHECK(expect_string(c, "python_source", expected));
+        CHECK_FIELD(name, "python_source", expected, to_string(kcl_lib::generate_python(generate).python_source));
+        return true;
+    }
+
+    if (c.rpc == "KclService.GenerateGo") {
+        kcl_lib::GenerateGoArgs generate {};
+        const kcl_lib::JsonValue* parse = member_or_null(args, "parse_args");
+        CHECK(parse != nullptr);
+        generate.parse_args.has_value = true;
+        generate.parse_args.value = build_parse_args(*parse, name);
+        generate.package = rust::String(json_string_or(args, "package"));
+        std::string expected;
+        CHECK(expect_string(c, "go_source", expected));
+        CHECK_FIELD(name, "go_source", expected, to_string(kcl_lib::generate_go(generate).go_source));
+        return true;
+    }
+
+    if (c.rpc == "KclService.GenerateJava") {
+        kcl_lib::GenerateJavaArgs generate {};
+        const kcl_lib::JsonValue* parse = member_or_null(args, "parse_args");
+        CHECK(parse != nullptr);
+        generate.parse_args.has_value = true;
+        generate.parse_args.value = build_parse_args(*parse, name);
+        generate.package = rust::String(json_string_or(args, "package"));
+        std::string expected;
+        CHECK(expect_string(c, "java_source", expected));
+        CHECK_FIELD(name, "java_source", expected, to_string(kcl_lib::generate_java(generate).java_source));
+        return true;
+    }
+
+    if (c.rpc == "KclService.GenerateTypeScript") {
+        kcl_lib::GenerateTypeScriptArgs generate {};
+        const kcl_lib::JsonValue* parse = member_or_null(args, "parse_args");
+        CHECK(parse != nullptr);
+        generate.parse_args.has_value = true;
+        generate.parse_args.value = build_parse_args(*parse, name);
+        std::string expected;
+        CHECK(expect_string(c, "typescript_source", expected));
+        CHECK_FIELD(name, "typescript_source", expected, to_string(kcl_lib::generate_typescript(generate).typescript_source));
+        return true;
+    }
+
     std::cerr << "no runner support for rpc " << c.rpc << " (case " << name << ")" << std::endl;
     unhandled.insert(name);
     return false;

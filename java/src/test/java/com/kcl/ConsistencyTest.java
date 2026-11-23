@@ -36,14 +36,24 @@ import com.kcl.api.Spec.FormatTestReportArgs;
 import com.kcl.api.Spec.FormatTestReportResult;
 import com.kcl.api.Spec.GenerateDocArgs;
 import com.kcl.api.Spec.GenerateDocResult;
+import com.kcl.api.Spec.GenerateGoArgs;
+import com.kcl.api.Spec.GenerateGoResult;
+import com.kcl.api.Spec.GenerateJavaArgs;
+import com.kcl.api.Spec.GenerateJavaResult;
 import com.kcl.api.Spec.GenerateKclArgs;
 import com.kcl.api.Spec.GenerateKclResult;
 import com.kcl.api.Spec.GenerateOpenAPIArgs;
 import com.kcl.api.Spec.GenerateOpenAPIResult;
 import com.kcl.api.Spec.GenerateProtoArgs;
 import com.kcl.api.Spec.GenerateProtoResult;
+import com.kcl.api.Spec.GeneratePythonArgs;
+import com.kcl.api.Spec.GeneratePythonResult;
+import com.kcl.api.Spec.GenerateRustArgs;
+import com.kcl.api.Spec.GenerateRustResult;
 import com.kcl.api.Spec.GenerateTomlArgs;
 import com.kcl.api.Spec.GenerateTomlResult;
+import com.kcl.api.Spec.GenerateTypeScriptArgs;
+import com.kcl.api.Spec.GenerateTypeScriptResult;
 import com.kcl.api.Spec.GetSchemaTypeMappingArgs;
 import com.kcl.api.Spec.KeyValuePair;
 import com.kcl.api.Spec.GetSchemaTypeMappingResult;
@@ -655,6 +665,44 @@ public class ConsistencyTest {
             assertField(name, "content", expect.get("content").asText(), result.getContent());
             break;
         }
+        case "KclService.GenerateRust": {
+            Assume.assumeTrue("core does not list " + rpc + " (old core)", methods().contains(rpc));
+            GenerateRustResult result = api().generateRust(
+                    GenerateRustArgs.newBuilder().setParseArgs(parseArgs(args.get("parse_args"))).build());
+            assertField(name, "rust_source", expect.get("rust_source").asText(), result.getRustSource());
+            break;
+        }
+        case "KclService.GeneratePython": {
+            Assume.assumeTrue("core does not list " + rpc + " (old core)", methods().contains(rpc));
+            GeneratePythonResult result = api().generatePython(
+                    GeneratePythonArgs.newBuilder().setParseArgs(parseArgs(args.get("parse_args"))).build());
+            assertField(name, "python_source", expect.get("python_source").asText(), result.getPythonSource());
+            break;
+        }
+        case "KclService.GenerateGo": {
+            Assume.assumeTrue("core does not list " + rpc + " (old core)", methods().contains(rpc));
+            GenerateGoResult result = api()
+                    .generateGo(GenerateGoArgs.newBuilder().setParseArgs(parseArgs(args.get("parse_args")))
+                            .setPackage(args.path("package").asText("")).build());
+            assertField(name, "go_source", expect.get("go_source").asText(), result.getGoSource());
+            break;
+        }
+        case "KclService.GenerateJava": {
+            Assume.assumeTrue("core does not list " + rpc + " (old core)", methods().contains(rpc));
+            GenerateJavaResult result = api()
+                    .generateJava(GenerateJavaArgs.newBuilder().setParseArgs(parseArgs(args.get("parse_args")))
+                            .setPackage(args.path("package").asText("")).build());
+            assertField(name, "java_source", expect.get("java_source").asText(), result.getJavaSource());
+            break;
+        }
+        case "KclService.GenerateTypeScript": {
+            Assume.assumeTrue("core does not list " + rpc + " (old core)", methods().contains(rpc));
+            GenerateTypeScriptResult result = api().generateTypeScript(
+                    GenerateTypeScriptArgs.newBuilder().setParseArgs(parseArgs(args.get("parse_args"))).build());
+            assertField(name, "typescript_source", expect.get("typescript_source").asText(),
+                    result.getTypescriptSource());
+            break;
+        }
         default:
             Assert.fail("no runner support for rpc " + rpc);
         }
@@ -744,6 +792,31 @@ public class ConsistencyTest {
     @Test
     public void testGenerateDocMd() throws Exception {
         runCase("generate_doc_md");
+    }
+
+    @Test
+    public void testGenerateRust() throws Exception {
+        runCase("generate_rust");
+    }
+
+    @Test
+    public void testGeneratePython() throws Exception {
+        runCase("generate_python");
+    }
+
+    @Test
+    public void testGenerateGo() throws Exception {
+        runCase("generate_go");
+    }
+
+    @Test
+    public void testGenerateJava() throws Exception {
+        runCase("generate_java");
+    }
+
+    @Test
+    public void testGenerateTypeScript() throws Exception {
+        runCase("generate_typescript");
     }
 
     @Test

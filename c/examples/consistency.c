@@ -101,6 +101,11 @@ static const char* const DISPATCHED_CASES[] = {
     "override_file",
     "load_settings_files",
     "update_dependencies_no_deps",
+    "generate_rust",
+    "generate_python",
+    "generate_go",
+    "generate_java",
+    "generate_typescript",
 };
 
 /* The manifest is located relative to the working directory rather than
@@ -1644,6 +1649,36 @@ static enum case_status run_case(struct runner* r, const kcl_json_value_t* node)
             goto args_failed;
         call_ok = kcl_generate_doc(&request, json_field(args, "format", ""), result_primary, sizeof(result_primary));
         fields[field_count++] = (struct projected_field){ "content", jb_string(result_primary) };
+    } else if (strcmp(rpc, "KclService.GenerateRust") == 0) {
+        struct KclParseProgramArgs request;
+        if (!json_parse_args(r, kcl_json_object_get(args, "parse_args"), &request))
+            goto args_failed;
+        call_ok = kcl_generate_rust(&request, result_primary, sizeof(result_primary));
+        fields[field_count++] = (struct projected_field){ "rust_source", jb_string(result_primary) };
+    } else if (strcmp(rpc, "KclService.GeneratePython") == 0) {
+        struct KclParseProgramArgs request;
+        if (!json_parse_args(r, kcl_json_object_get(args, "parse_args"), &request))
+            goto args_failed;
+        call_ok = kcl_generate_python(&request, result_primary, sizeof(result_primary));
+        fields[field_count++] = (struct projected_field){ "python_source", jb_string(result_primary) };
+    } else if (strcmp(rpc, "KclService.GenerateGo") == 0) {
+        struct KclParseProgramArgs request;
+        if (!json_parse_args(r, kcl_json_object_get(args, "parse_args"), &request))
+            goto args_failed;
+        call_ok = kcl_generate_go(&request, json_field(args, "package", ""), result_primary, sizeof(result_primary));
+        fields[field_count++] = (struct projected_field){ "go_source", jb_string(result_primary) };
+    } else if (strcmp(rpc, "KclService.GenerateJava") == 0) {
+        struct KclParseProgramArgs request;
+        if (!json_parse_args(r, kcl_json_object_get(args, "parse_args"), &request))
+            goto args_failed;
+        call_ok = kcl_generate_java(&request, json_field(args, "package", ""), result_primary, sizeof(result_primary));
+        fields[field_count++] = (struct projected_field){ "java_source", jb_string(result_primary) };
+    } else if (strcmp(rpc, "KclService.GenerateTypeScript") == 0) {
+        struct KclParseProgramArgs request;
+        if (!json_parse_args(r, kcl_json_object_get(args, "parse_args"), &request))
+            goto args_failed;
+        call_ok = kcl_generate_typescript(&request, result_primary, sizeof(result_primary));
+        fields[field_count++] = (struct projected_field){ "typescript_source", jb_string(result_primary) };
     } else if (strcmp(rpc, "KclService.ParseFile") == 0) {
         call_ok = call_parse_file(args, result_primary, sizeof(result_primary),
             collected_paths, sizeof(collected_paths), parse_errors_doc, sizeof(parse_errors_doc),

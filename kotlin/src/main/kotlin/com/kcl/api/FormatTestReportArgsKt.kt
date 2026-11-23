@@ -71,7 +71,6 @@ public object FormatTestReportArgsKt {
 
     public val FormatTestReportArgsKt.Dsl.resultOrNull: com.kcl.api.Spec.TestResult?
       get() = _builder.resultOrNull
-
   }
 }
 @kotlin.jvm.JvmSynthetic

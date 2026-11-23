@@ -202,6 +202,31 @@ public class API : IService
         return GenerateProtoResult.Parser.ParseFrom(Call("KclService.GenerateProto", args.ToByteArray()));
     }
 
+    public GenerateRustResult GenerateRust(GenerateRustArgs args)
+    {
+        return GenerateRustResult.Parser.ParseFrom(Call("KclService.GenerateRust", args.ToByteArray()));
+    }
+
+    public GeneratePythonResult GeneratePython(GeneratePythonArgs args)
+    {
+        return GeneratePythonResult.Parser.ParseFrom(Call("KclService.GeneratePython", args.ToByteArray()));
+    }
+
+    public GenerateGoResult GenerateGo(GenerateGoArgs args)
+    {
+        return GenerateGoResult.Parser.ParseFrom(Call("KclService.GenerateGo", args.ToByteArray()));
+    }
+
+    public GenerateJavaResult GenerateJava(GenerateJavaArgs args)
+    {
+        return GenerateJavaResult.Parser.ParseFrom(Call("KclService.GenerateJava", args.ToByteArray()));
+    }
+
+    public GenerateTypeScriptResult GenerateTypeScript(GenerateTypeScriptArgs args)
+    {
+        return GenerateTypeScriptResult.Parser.ParseFrom(Call("KclService.GenerateTypeScript", args.ToByteArray()));
+    }
+
     public GenerateDocResult GenerateDoc(GenerateDocArgs args)
     {
         return GenerateDocResult.Parser.ParseFrom(Call("KclService.GenerateDoc", args.ToByteArray()));

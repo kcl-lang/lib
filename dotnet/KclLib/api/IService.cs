@@ -168,6 +168,41 @@ public interface IService
     GenerateProtoResult GenerateProto(GenerateProtoArgs args);
 
     /// <summary>
+    /// Generates Rust DTOs from the schemas of a KCL package.
+    /// </summary>
+    /// <param name="args">Arguments for parsing the program whose schemas are exported (<c>parse_args</c>).</param>
+    /// <returns>The generated Rust source.</returns>
+    GenerateRustResult GenerateRust(GenerateRustArgs args);
+
+    /// <summary>
+    /// Generates Python DTOs from the schemas of a KCL package.
+    /// </summary>
+    /// <param name="args">Arguments for parsing the program whose schemas are exported (<c>parse_args</c>).</param>
+    /// <returns>The generated Python source.</returns>
+    GeneratePythonResult GeneratePython(GeneratePythonArgs args);
+
+    /// <summary>
+    /// Generates Go DTOs from the schemas of a KCL package.
+    /// </summary>
+    /// <param name="args">Arguments for parsing the program whose schemas are exported (<c>parse_args</c>) and the Go package name for the generated file's <c>package</c> clause, e.g. "dto". Empty defaults to "generated" — Go requires a package clause, unlike GenerateProto's optional <c>package</c> field.</param>
+    /// <returns>The generated Go source.</returns>
+    GenerateGoResult GenerateGo(GenerateGoArgs args);
+
+    /// <summary>
+    /// Generates Java DTOs from the schemas of a KCL package.
+    /// </summary>
+    /// <param name="args">Arguments for parsing the program whose schemas are exported (<c>parse_args</c>) and the Java package name for the generated file's <c>package</c> clause, e.g. "com.example.dto". Empty omits the package clause entirely (valid Java — the "default package") rather than defaulting to a synthetic name as GenerateGo does, since Java (unlike Go) does not require one.</param>
+    /// <returns>The generated Java source.</returns>
+    GenerateJavaResult GenerateJava(GenerateJavaArgs args);
+
+    /// <summary>
+    /// Generates TypeScript DTOs from the schemas of a KCL package.
+    /// </summary>
+    /// <param name="args">Arguments for parsing the program whose schemas are exported (<c>parse_args</c>).</param>
+    /// <returns>The generated TypeScript source.</returns>
+    GenerateTypeScriptResult GenerateTypeScript(GenerateTypeScriptArgs args);
+
+    /// <summary>
     /// Generates documentation from the schemas of a KCL package.
     /// </summary>
     /// <param name="args">Arguments identifying the package to document.</param>

@@ -25,10 +25,15 @@ import com.kcl.api.formatCodeArgs
 import com.kcl.api.formatPathArgs
 import com.kcl.api.formatTestReportArgs
 import com.kcl.api.generateDocArgs
+import com.kcl.api.generateGoArgs
+import com.kcl.api.generateJavaArgs
 import com.kcl.api.generateKclArgs
 import com.kcl.api.generateOpenAPIArgs
 import com.kcl.api.generateProtoArgs
+import com.kcl.api.generatePythonArgs
+import com.kcl.api.generateRustArgs
 import com.kcl.api.generateTomlArgs
+import com.kcl.api.generateTypeScriptArgs
 import com.kcl.api.getSchemaTypeMappingArgs
 import com.kcl.api.getVersionArgs
 import com.kcl.api.lintPathArgs
@@ -666,9 +671,10 @@ class ConsistencyTest {
                     val result = api().generateProto(
                         generateProtoArgs {
                             this.parseArgs = parseArgs(args.get("parse_args"))
-                            // `package` is a Kotlin keyword, so the generated DSL
-                            // property needs the backtick form.
-                            `package` = args.path("package").asText("")
+                            // `package` is a Kotlin keyword, so protoc's Kotlin
+                            // generator appends an underscore to the DSL
+                            // property: `package_`.
+                            package_ = args.path("package").asText("")
                         }
                     )
                     assertField(name, "proto", expect.get("proto").asText(), result.proto)
@@ -681,6 +687,54 @@ class ConsistencyTest {
                         }
                     )
                     assertField(name, "content", expect.get("content").asText(), result.content)
+                }
+                "KclService.GenerateRust" -> {
+                    val result = api().generateRust(
+                        generateRustArgs {
+                            this.parseArgs = parseArgs(args.get("parse_args"))
+                        }
+                    )
+                    assertField(name, "rust_source", expect.get("rust_source").asText(), result.rustSource)
+                }
+                "KclService.GeneratePython" -> {
+                    val result = api().generatePython(
+                        generatePythonArgs {
+                            this.parseArgs = parseArgs(args.get("parse_args"))
+                        }
+                    )
+                    assertField(name, "python_source", expect.get("python_source").asText(), result.pythonSource)
+                }
+                "KclService.GenerateGo" -> {
+                    val result = api().generateGo(
+                        generateGoArgs {
+                            this.parseArgs = parseArgs(args.get("parse_args"))
+                            // `package` is a Kotlin keyword, so protoc's Kotlin
+                            // generator appends an underscore to the DSL
+                            // property: `package_`.
+                            package_ = args.path("package").asText("")
+                        }
+                    )
+                    assertField(name, "go_source", expect.get("go_source").asText(), result.goSource)
+                }
+                "KclService.GenerateJava" -> {
+                    val result = api().generateJava(
+                        generateJavaArgs {
+                            this.parseArgs = parseArgs(args.get("parse_args"))
+                            // `package` is a Kotlin keyword, so protoc's Kotlin
+                            // generator appends an underscore to the DSL
+                            // property: `package_`.
+                            package_ = args.path("package").asText("")
+                        }
+                    )
+                    assertField(name, "java_source", expect.get("java_source").asText(), result.javaSource)
+                }
+                "KclService.GenerateTypeScript" -> {
+                    val result = api().generateTypeScript(
+                        generateTypeScriptArgs {
+                            this.parseArgs = parseArgs(args.get("parse_args"))
+                        }
+                    )
+                    assertField(name, "typescript_source", expect.get("typescript_source").asText(), result.typescriptSource)
                 }
                 else -> throw AssertionError("no runner support for rpc $rpc")
             }
@@ -754,6 +808,21 @@ class ConsistencyTest {
 
     @Test
     fun testGenerateDocMd() = runCase("generate_doc_md")
+
+    @Test
+    fun testGenerateRust() = runCase("generate_rust")
+
+    @Test
+    fun testGeneratePython() = runCase("generate_python")
+
+    @Test
+    fun testGenerateGo() = runCase("generate_go")
+
+    @Test
+    fun testGenerateJava() = runCase("generate_java")
+
+    @Test
+    fun testGenerateTypeScript() = runCase("generate_typescript")
 
     @Test
     fun testParseFile() = runCase("parse_file")

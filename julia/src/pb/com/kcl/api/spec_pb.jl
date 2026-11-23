@@ -6,19 +6,23 @@ using ProtoBuf: OneOf
 using ProtoBuf.EnumX: @enumx
 
 export GetVersionResult, GenerateTomlResult, FormatPathArgs, RenameCodeArgs, AppInfo
-export PingResult, Decorator, OverrideFileArgs, Example, ListMethodArgs, KclModGitSource
-export KclModOciSource, GetVersionArgs, ValidateCodeResult, TestCaseInfo, GenerateDocResult
-export FileCoverage, Argument, ListMethodResult, LintPathResult, GenerateKclArgs
-export GenerateOpenAPIResult, SymbolIndex, KclModLocalSource, CliConfig, KeyValuePair
+export PingResult, GeneratePythonResult, Decorator, OverrideFileArgs, Example
+export ListMethodArgs, KclModGitSource, KclModOciSource, GenerateGoResult, GetVersionArgs
+export ValidateCodeResult, TestCaseInfo, GenerateDocResult, FileCoverage, Argument
+export ListMethodResult, LintPathResult, GenerateKclArgs, GenerateOpenAPIResult
+export SymbolIndex, GenerateJavaResult, KclModLocalSource, CliConfig, KeyValuePair
 export PingArgs, ScopeIndex, GenerateProtoResult, GenerateKclResult, KclModPackage
 export LintPathArgs, RenameResult, UpdateDependenciesArgs, ExternalPkg, KclModProfile
 export FormatCodeResult, FormatCodeArgs, FormatTestReportResult, LoadSettingsFilesArgs
-export RenameCodeResult, Position, RenameArgs, CoverageSummary, FormatPathResult
-export OptionHelp, ExecProgramResult, ListVariablesOptions, ImportInfo, KclModDependency
+export RenameCodeResult, BuildProgramResult, GenerateRustResult, Position, RenameArgs
+export CoverageSummary, FormatPathResult, OptionHelp, ExecProgramResult
+export ListVariablesOptions, GenerateTypeScriptResult, ImportInfo, KclModDependency
 export LoadSettingsFilesResult, Scope, ParseFileArgs, ValidateCodeArgs, ExecProgramArgs
 export UpdateDependenciesResult, ParseProgramArgs, Message, TestCoverageReport
-export ListOptionsResult, ListVariablesArgs, FileImports, KclMod, GetSchemaTypeMappingArgs
-export TestArgs, GenerateTomlArgs, LoadPackageArgs, GenerateDocArgs, GenerateProtoArgs
+export ListOptionsResult, ListVariablesArgs, FileImports, KclMod, ExecArtifactArgs
+export GetSchemaTypeMappingArgs, TestArgs, BuildProgramArgs, GenerateTomlArgs
+export GenerateRustArgs, GenerateGoArgs, LoadPackageArgs, GeneratePythonArgs
+export GenerateDocArgs, GenerateProtoArgs, GenerateJavaArgs, GenerateTypeScriptArgs
 export GenerateOpenAPIArgs, Error, TestResult, OverrideFileResult, ParseProgramResult
 export ParseFileResult, FormatTestReportArgs, GetSchemaTypeMappingResult
 export GetSchemaTypeMappingUnderPathResult, IndexSignature, ListVariablesResult
@@ -273,6 +277,37 @@ function PB._encoded_size(x::PingResult)
     return encoded_size
 end
 
+struct GeneratePythonResult
+    python_source::String
+end
+GeneratePythonResult(;python_source = "") = GeneratePythonResult(python_source)
+PB.default_values(::Type{GeneratePythonResult}) = (;python_source = "")
+PB.field_numbers(::Type{GeneratePythonResult}) = (;python_source = 1)
+
+function PB.decode(d::PB.AbstractProtoDecoder, ::Type{<:GeneratePythonResult}, _endpos::Int=0, _group::Bool=false)
+    python_source = ""
+    while !PB.message_done(d, _endpos, _group)
+        field_number, wire_type = PB.decode_tag(d)
+        if field_number == 1
+            python_source = PB.decode(d, String)
+        else
+            Base.skip(d, wire_type)
+        end
+    end
+    return GeneratePythonResult(python_source)
+end
+
+function PB.encode(e::PB.AbstractProtoEncoder, x::GeneratePythonResult)
+    initpos = position(e.io)
+    !isempty(x.python_source) && PB.encode(e, 1, x.python_source)
+    return position(e.io) - initpos
+end
+function PB._encoded_size(x::GeneratePythonResult)
+    encoded_size = 0
+    !isempty(x.python_source) && (encoded_size += PB._encoded_size(x.python_source, 1))
+    return encoded_size
+end
+
 struct Decorator
     name::String
     arguments::Vector{String}
@@ -510,6 +545,37 @@ function PB._encoded_size(x::KclModOciSource)
     encoded_size = 0
     !isempty(x.oci) && (encoded_size += PB._encoded_size(x.oci, 1))
     !isempty(x.tag) && (encoded_size += PB._encoded_size(x.tag, 2))
+    return encoded_size
+end
+
+struct GenerateGoResult
+    go_source::String
+end
+GenerateGoResult(;go_source = "") = GenerateGoResult(go_source)
+PB.default_values(::Type{GenerateGoResult}) = (;go_source = "")
+PB.field_numbers(::Type{GenerateGoResult}) = (;go_source = 1)
+
+function PB.decode(d::PB.AbstractProtoDecoder, ::Type{<:GenerateGoResult}, _endpos::Int=0, _group::Bool=false)
+    go_source = ""
+    while !PB.message_done(d, _endpos, _group)
+        field_number, wire_type = PB.decode_tag(d)
+        if field_number == 1
+            go_source = PB.decode(d, String)
+        else
+            Base.skip(d, wire_type)
+        end
+    end
+    return GenerateGoResult(go_source)
+end
+
+function PB.encode(e::PB.AbstractProtoEncoder, x::GenerateGoResult)
+    initpos = position(e.io)
+    !isempty(x.go_source) && PB.encode(e, 1, x.go_source)
+    return position(e.io) - initpos
+end
+function PB._encoded_size(x::GenerateGoResult)
+    encoded_size = 0
+    !isempty(x.go_source) && (encoded_size += PB._encoded_size(x.go_source, 1))
     return encoded_size
 end
 
@@ -917,6 +983,37 @@ function PB._encoded_size(x::SymbolIndex)
     x.i != zero(UInt64) && (encoded_size += PB._encoded_size(x.i, 1))
     x.g != zero(UInt64) && (encoded_size += PB._encoded_size(x.g, 2))
     !isempty(x.kind) && (encoded_size += PB._encoded_size(x.kind, 3))
+    return encoded_size
+end
+
+struct GenerateJavaResult
+    java_source::String
+end
+GenerateJavaResult(;java_source = "") = GenerateJavaResult(java_source)
+PB.default_values(::Type{GenerateJavaResult}) = (;java_source = "")
+PB.field_numbers(::Type{GenerateJavaResult}) = (;java_source = 1)
+
+function PB.decode(d::PB.AbstractProtoDecoder, ::Type{<:GenerateJavaResult}, _endpos::Int=0, _group::Bool=false)
+    java_source = ""
+    while !PB.message_done(d, _endpos, _group)
+        field_number, wire_type = PB.decode_tag(d)
+        if field_number == 1
+            java_source = PB.decode(d, String)
+        else
+            Base.skip(d, wire_type)
+        end
+    end
+    return GenerateJavaResult(java_source)
+end
+
+function PB.encode(e::PB.AbstractProtoEncoder, x::GenerateJavaResult)
+    initpos = position(e.io)
+    !isempty(x.java_source) && PB.encode(e, 1, x.java_source)
+    return position(e.io) - initpos
+end
+function PB._encoded_size(x::GenerateJavaResult)
+    encoded_size = 0
+    !isempty(x.java_source) && (encoded_size += PB._encoded_size(x.java_source, 1))
     return encoded_size
 end
 
@@ -1640,6 +1737,68 @@ function PB._encoded_size(x::RenameCodeResult)
     return encoded_size
 end
 
+struct BuildProgramResult
+    path::String
+end
+BuildProgramResult(;path = "") = BuildProgramResult(path)
+PB.default_values(::Type{BuildProgramResult}) = (;path = "")
+PB.field_numbers(::Type{BuildProgramResult}) = (;path = 1)
+
+function PB.decode(d::PB.AbstractProtoDecoder, ::Type{<:BuildProgramResult}, _endpos::Int=0, _group::Bool=false)
+    path = ""
+    while !PB.message_done(d, _endpos, _group)
+        field_number, wire_type = PB.decode_tag(d)
+        if field_number == 1
+            path = PB.decode(d, String)
+        else
+            Base.skip(d, wire_type)
+        end
+    end
+    return BuildProgramResult(path)
+end
+
+function PB.encode(e::PB.AbstractProtoEncoder, x::BuildProgramResult)
+    initpos = position(e.io)
+    !isempty(x.path) && PB.encode(e, 1, x.path)
+    return position(e.io) - initpos
+end
+function PB._encoded_size(x::BuildProgramResult)
+    encoded_size = 0
+    !isempty(x.path) && (encoded_size += PB._encoded_size(x.path, 1))
+    return encoded_size
+end
+
+struct GenerateRustResult
+    rust_source::String
+end
+GenerateRustResult(;rust_source = "") = GenerateRustResult(rust_source)
+PB.default_values(::Type{GenerateRustResult}) = (;rust_source = "")
+PB.field_numbers(::Type{GenerateRustResult}) = (;rust_source = 1)
+
+function PB.decode(d::PB.AbstractProtoDecoder, ::Type{<:GenerateRustResult}, _endpos::Int=0, _group::Bool=false)
+    rust_source = ""
+    while !PB.message_done(d, _endpos, _group)
+        field_number, wire_type = PB.decode_tag(d)
+        if field_number == 1
+            rust_source = PB.decode(d, String)
+        else
+            Base.skip(d, wire_type)
+        end
+    end
+    return GenerateRustResult(rust_source)
+end
+
+function PB.encode(e::PB.AbstractProtoEncoder, x::GenerateRustResult)
+    initpos = position(e.io)
+    !isempty(x.rust_source) && PB.encode(e, 1, x.rust_source)
+    return position(e.io) - initpos
+end
+function PB._encoded_size(x::GenerateRustResult)
+    encoded_size = 0
+    !isempty(x.rust_source) && (encoded_size += PB._encoded_size(x.rust_source, 1))
+    return encoded_size
+end
+
 struct Position
     line::Int64
     column::Int64
@@ -1944,6 +2103,37 @@ end
 function PB._encoded_size(x::ListVariablesOptions)
     encoded_size = 0
     x.merge_program != false && (encoded_size += PB._encoded_size(x.merge_program, 1))
+    return encoded_size
+end
+
+struct GenerateTypeScriptResult
+    typescript_source::String
+end
+GenerateTypeScriptResult(;typescript_source = "") = GenerateTypeScriptResult(typescript_source)
+PB.default_values(::Type{GenerateTypeScriptResult}) = (;typescript_source = "")
+PB.field_numbers(::Type{GenerateTypeScriptResult}) = (;typescript_source = 1)
+
+function PB.decode(d::PB.AbstractProtoDecoder, ::Type{<:GenerateTypeScriptResult}, _endpos::Int=0, _group::Bool=false)
+    typescript_source = ""
+    while !PB.message_done(d, _endpos, _group)
+        field_number, wire_type = PB.decode_tag(d)
+        if field_number == 1
+            typescript_source = PB.decode(d, String)
+        else
+            Base.skip(d, wire_type)
+        end
+    end
+    return GenerateTypeScriptResult(typescript_source)
+end
+
+function PB.encode(e::PB.AbstractProtoEncoder, x::GenerateTypeScriptResult)
+    initpos = position(e.io)
+    !isempty(x.typescript_source) && PB.encode(e, 1, x.typescript_source)
+    return position(e.io) - initpos
+end
+function PB._encoded_size(x::GenerateTypeScriptResult)
+    encoded_size = 0
+    !isempty(x.typescript_source) && (encoded_size += PB._encoded_size(x.typescript_source, 1))
     return encoded_size
 end
 
@@ -2694,6 +2884,43 @@ function PB._encoded_size(x::KclMod)
     return encoded_size
 end
 
+struct ExecArtifactArgs
+    path::String
+    exec_args::Union{Nothing,ExecProgramArgs}
+end
+ExecArtifactArgs(;path = "", exec_args = nothing) = ExecArtifactArgs(path, exec_args)
+PB.default_values(::Type{ExecArtifactArgs}) = (;path = "", exec_args = nothing)
+PB.field_numbers(::Type{ExecArtifactArgs}) = (;path = 1, exec_args = 2)
+
+function PB.decode(d::PB.AbstractProtoDecoder, ::Type{<:ExecArtifactArgs}, _endpos::Int=0, _group::Bool=false)
+    path = ""
+    exec_args = Ref{Union{Nothing,ExecProgramArgs}}(nothing)
+    while !PB.message_done(d, _endpos, _group)
+        field_number, wire_type = PB.decode_tag(d)
+        if field_number == 1
+            path = PB.decode(d, String)
+        elseif field_number == 2
+            PB.decode!(d, exec_args)
+        else
+            Base.skip(d, wire_type)
+        end
+    end
+    return ExecArtifactArgs(path, exec_args[])
+end
+
+function PB.encode(e::PB.AbstractProtoEncoder, x::ExecArtifactArgs)
+    initpos = position(e.io)
+    !isempty(x.path) && PB.encode(e, 1, x.path)
+    !isnothing(x.exec_args) && PB.encode(e, 2, x.exec_args)
+    return position(e.io) - initpos
+end
+function PB._encoded_size(x::ExecArtifactArgs)
+    encoded_size = 0
+    !isempty(x.path) && (encoded_size += PB._encoded_size(x.path, 1))
+    !isnothing(x.exec_args) && (encoded_size += PB._encoded_size(x.exec_args, 2))
+    return encoded_size
+end
+
 struct GetSchemaTypeMappingArgs
     exec_args::Union{Nothing,ExecProgramArgs}
     schema_name::String
@@ -2792,6 +3019,43 @@ function PB._encoded_size(x::TestArgs)
     return encoded_size
 end
 
+struct BuildProgramArgs
+    exec_args::Union{Nothing,ExecProgramArgs}
+    output::String
+end
+BuildProgramArgs(;exec_args = nothing, output = "") = BuildProgramArgs(exec_args, output)
+PB.default_values(::Type{BuildProgramArgs}) = (;exec_args = nothing, output = "")
+PB.field_numbers(::Type{BuildProgramArgs}) = (;exec_args = 1, output = 2)
+
+function PB.decode(d::PB.AbstractProtoDecoder, ::Type{<:BuildProgramArgs}, _endpos::Int=0, _group::Bool=false)
+    exec_args = Ref{Union{Nothing,ExecProgramArgs}}(nothing)
+    output = ""
+    while !PB.message_done(d, _endpos, _group)
+        field_number, wire_type = PB.decode_tag(d)
+        if field_number == 1
+            PB.decode!(d, exec_args)
+        elseif field_number == 2
+            output = PB.decode(d, String)
+        else
+            Base.skip(d, wire_type)
+        end
+    end
+    return BuildProgramArgs(exec_args[], output)
+end
+
+function PB.encode(e::PB.AbstractProtoEncoder, x::BuildProgramArgs)
+    initpos = position(e.io)
+    !isnothing(x.exec_args) && PB.encode(e, 1, x.exec_args)
+    !isempty(x.output) && PB.encode(e, 2, x.output)
+    return position(e.io) - initpos
+end
+function PB._encoded_size(x::BuildProgramArgs)
+    encoded_size = 0
+    !isnothing(x.exec_args) && (encoded_size += PB._encoded_size(x.exec_args, 1))
+    !isempty(x.output) && (encoded_size += PB._encoded_size(x.output, 2))
+    return encoded_size
+end
+
 struct GenerateTomlArgs
     exec_args::Union{Nothing,ExecProgramArgs}
     sort_keys::Bool
@@ -2826,6 +3090,74 @@ function PB._encoded_size(x::GenerateTomlArgs)
     encoded_size = 0
     !isnothing(x.exec_args) && (encoded_size += PB._encoded_size(x.exec_args, 1))
     x.sort_keys != false && (encoded_size += PB._encoded_size(x.sort_keys, 2))
+    return encoded_size
+end
+
+struct GenerateRustArgs
+    parse_args::Union{Nothing,ParseProgramArgs}
+end
+GenerateRustArgs(;parse_args = nothing) = GenerateRustArgs(parse_args)
+PB.default_values(::Type{GenerateRustArgs}) = (;parse_args = nothing)
+PB.field_numbers(::Type{GenerateRustArgs}) = (;parse_args = 1)
+
+function PB.decode(d::PB.AbstractProtoDecoder, ::Type{<:GenerateRustArgs}, _endpos::Int=0, _group::Bool=false)
+    parse_args = Ref{Union{Nothing,ParseProgramArgs}}(nothing)
+    while !PB.message_done(d, _endpos, _group)
+        field_number, wire_type = PB.decode_tag(d)
+        if field_number == 1
+            PB.decode!(d, parse_args)
+        else
+            Base.skip(d, wire_type)
+        end
+    end
+    return GenerateRustArgs(parse_args[])
+end
+
+function PB.encode(e::PB.AbstractProtoEncoder, x::GenerateRustArgs)
+    initpos = position(e.io)
+    !isnothing(x.parse_args) && PB.encode(e, 1, x.parse_args)
+    return position(e.io) - initpos
+end
+function PB._encoded_size(x::GenerateRustArgs)
+    encoded_size = 0
+    !isnothing(x.parse_args) && (encoded_size += PB._encoded_size(x.parse_args, 1))
+    return encoded_size
+end
+
+struct GenerateGoArgs
+    parse_args::Union{Nothing,ParseProgramArgs}
+    package::String
+end
+GenerateGoArgs(;parse_args = nothing, package = "") = GenerateGoArgs(parse_args, package)
+PB.default_values(::Type{GenerateGoArgs}) = (;parse_args = nothing, package = "")
+PB.field_numbers(::Type{GenerateGoArgs}) = (;parse_args = 1, package = 2)
+
+function PB.decode(d::PB.AbstractProtoDecoder, ::Type{<:GenerateGoArgs}, _endpos::Int=0, _group::Bool=false)
+    parse_args = Ref{Union{Nothing,ParseProgramArgs}}(nothing)
+    package = ""
+    while !PB.message_done(d, _endpos, _group)
+        field_number, wire_type = PB.decode_tag(d)
+        if field_number == 1
+            PB.decode!(d, parse_args)
+        elseif field_number == 2
+            package = PB.decode(d, String)
+        else
+            Base.skip(d, wire_type)
+        end
+    end
+    return GenerateGoArgs(parse_args[], package)
+end
+
+function PB.encode(e::PB.AbstractProtoEncoder, x::GenerateGoArgs)
+    initpos = position(e.io)
+    !isnothing(x.parse_args) && PB.encode(e, 1, x.parse_args)
+    !isempty(x.package) && PB.encode(e, 2, x.package)
+    return position(e.io) - initpos
+end
+function PB._encoded_size(x::GenerateGoArgs)
+    encoded_size = 0
+    !isnothing(x.parse_args) && (encoded_size += PB._encoded_size(x.parse_args, 1))
+    !isempty(x.package) && (encoded_size += PB._encoded_size(x.package, 2))
     return encoded_size
 end
 
@@ -2875,6 +3207,37 @@ function PB._encoded_size(x::LoadPackageArgs)
     x.resolve_ast != false && (encoded_size += PB._encoded_size(x.resolve_ast, 2))
     x.load_builtin != false && (encoded_size += PB._encoded_size(x.load_builtin, 3))
     x.with_ast_index != false && (encoded_size += PB._encoded_size(x.with_ast_index, 4))
+    return encoded_size
+end
+
+struct GeneratePythonArgs
+    parse_args::Union{Nothing,ParseProgramArgs}
+end
+GeneratePythonArgs(;parse_args = nothing) = GeneratePythonArgs(parse_args)
+PB.default_values(::Type{GeneratePythonArgs}) = (;parse_args = nothing)
+PB.field_numbers(::Type{GeneratePythonArgs}) = (;parse_args = 1)
+
+function PB.decode(d::PB.AbstractProtoDecoder, ::Type{<:GeneratePythonArgs}, _endpos::Int=0, _group::Bool=false)
+    parse_args = Ref{Union{Nothing,ParseProgramArgs}}(nothing)
+    while !PB.message_done(d, _endpos, _group)
+        field_number, wire_type = PB.decode_tag(d)
+        if field_number == 1
+            PB.decode!(d, parse_args)
+        else
+            Base.skip(d, wire_type)
+        end
+    end
+    return GeneratePythonArgs(parse_args[])
+end
+
+function PB.encode(e::PB.AbstractProtoEncoder, x::GeneratePythonArgs)
+    initpos = position(e.io)
+    !isnothing(x.parse_args) && PB.encode(e, 1, x.parse_args)
+    return position(e.io) - initpos
+end
+function PB._encoded_size(x::GeneratePythonArgs)
+    encoded_size = 0
+    !isnothing(x.parse_args) && (encoded_size += PB._encoded_size(x.parse_args, 1))
     return encoded_size
 end
 
@@ -2949,6 +3312,74 @@ function PB._encoded_size(x::GenerateProtoArgs)
     encoded_size = 0
     !isnothing(x.parse_args) && (encoded_size += PB._encoded_size(x.parse_args, 1))
     !isempty(x.package) && (encoded_size += PB._encoded_size(x.package, 2))
+    return encoded_size
+end
+
+struct GenerateJavaArgs
+    parse_args::Union{Nothing,ParseProgramArgs}
+    package::String
+end
+GenerateJavaArgs(;parse_args = nothing, package = "") = GenerateJavaArgs(parse_args, package)
+PB.default_values(::Type{GenerateJavaArgs}) = (;parse_args = nothing, package = "")
+PB.field_numbers(::Type{GenerateJavaArgs}) = (;parse_args = 1, package = 2)
+
+function PB.decode(d::PB.AbstractProtoDecoder, ::Type{<:GenerateJavaArgs}, _endpos::Int=0, _group::Bool=false)
+    parse_args = Ref{Union{Nothing,ParseProgramArgs}}(nothing)
+    package = ""
+    while !PB.message_done(d, _endpos, _group)
+        field_number, wire_type = PB.decode_tag(d)
+        if field_number == 1
+            PB.decode!(d, parse_args)
+        elseif field_number == 2
+            package = PB.decode(d, String)
+        else
+            Base.skip(d, wire_type)
+        end
+    end
+    return GenerateJavaArgs(parse_args[], package)
+end
+
+function PB.encode(e::PB.AbstractProtoEncoder, x::GenerateJavaArgs)
+    initpos = position(e.io)
+    !isnothing(x.parse_args) && PB.encode(e, 1, x.parse_args)
+    !isempty(x.package) && PB.encode(e, 2, x.package)
+    return position(e.io) - initpos
+end
+function PB._encoded_size(x::GenerateJavaArgs)
+    encoded_size = 0
+    !isnothing(x.parse_args) && (encoded_size += PB._encoded_size(x.parse_args, 1))
+    !isempty(x.package) && (encoded_size += PB._encoded_size(x.package, 2))
+    return encoded_size
+end
+
+struct GenerateTypeScriptArgs
+    parse_args::Union{Nothing,ParseProgramArgs}
+end
+GenerateTypeScriptArgs(;parse_args = nothing) = GenerateTypeScriptArgs(parse_args)
+PB.default_values(::Type{GenerateTypeScriptArgs}) = (;parse_args = nothing)
+PB.field_numbers(::Type{GenerateTypeScriptArgs}) = (;parse_args = 1)
+
+function PB.decode(d::PB.AbstractProtoDecoder, ::Type{<:GenerateTypeScriptArgs}, _endpos::Int=0, _group::Bool=false)
+    parse_args = Ref{Union{Nothing,ParseProgramArgs}}(nothing)
+    while !PB.message_done(d, _endpos, _group)
+        field_number, wire_type = PB.decode_tag(d)
+        if field_number == 1
+            PB.decode!(d, parse_args)
+        else
+            Base.skip(d, wire_type)
+        end
+    end
+    return GenerateTypeScriptArgs(parse_args[])
+end
+
+function PB.encode(e::PB.AbstractProtoEncoder, x::GenerateTypeScriptArgs)
+    initpos = position(e.io)
+    !isnothing(x.parse_args) && PB.encode(e, 1, x.parse_args)
+    return position(e.io) - initpos
+end
+function PB._encoded_size(x::GenerateTypeScriptArgs)
+    encoded_size = 0
+    !isnothing(x.parse_args) && (encoded_size += PB._encoded_size(x.parse_args, 1))
     return encoded_size
 end
 
@@ -3320,6 +3751,7 @@ struct var"##Stub#KclType" <: var"##Abstract#KclType"
     base_schema::Union{Nothing,var"##Stub#KclType"}
     function_::Union{Nothing,var"##Stub#FunctionType"{var"##Stub#KclType"}}
     index_signature::Union{Nothing,var"##Stub#IndexSignature"{var"##Stub#KclType"}}
+    checks_json::Vector{String}
 end
 
 const GetSchemaTypeMappingResult = var"##Stub#GetSchemaTypeMappingResult"{var"##Stub#KclType"}
@@ -3816,9 +4248,9 @@ function PB._encoded_size(x::FunctionType)
 end
 
 const KclType = var"##Stub#KclType"
-KclType(;type_ = "", union_types = Vector{KclType}(), default = "", schema_name = "", schema_doc = "", properties = Dict{String,KclType}(), required = Vector{String}(), key = nothing, item = nothing, line = zero(Int32), decorators = Vector{Decorator}(), filename = "", pkg_path = "", description = "", examples = Dict{String,Example}(), base_schema = nothing, function_ = nothing, index_signature = nothing) = KclType(type_, union_types, default, schema_name, schema_doc, properties, required, key, item, line, decorators, filename, pkg_path, description, examples, base_schema, function_, index_signature)
-PB.default_values(::Type{KclType}) = (;type_ = "", union_types = Vector{KclType}(), default = "", schema_name = "", schema_doc = "", properties = Dict{String,KclType}(), required = Vector{String}(), key = nothing, item = nothing, line = zero(Int32), decorators = Vector{Decorator}(), filename = "", pkg_path = "", description = "", examples = Dict{String,Example}(), base_schema = nothing, function_ = nothing, index_signature = nothing)
-PB.field_numbers(::Type{KclType}) = (;type_ = 1, union_types = 2, default = 3, schema_name = 4, schema_doc = 5, properties = 6, required = 7, key = 8, item = 9, line = 10, decorators = 11, filename = 12, pkg_path = 13, description = 14, examples = 15, base_schema = 16, function_ = 17, index_signature = 18)
+KclType(;type_ = "", union_types = Vector{KclType}(), default = "", schema_name = "", schema_doc = "", properties = Dict{String,KclType}(), required = Vector{String}(), key = nothing, item = nothing, line = zero(Int32), decorators = Vector{Decorator}(), filename = "", pkg_path = "", description = "", examples = Dict{String,Example}(), base_schema = nothing, function_ = nothing, index_signature = nothing, checks_json = Vector{String}()) = KclType(type_, union_types, default, schema_name, schema_doc, properties, required, key, item, line, decorators, filename, pkg_path, description, examples, base_schema, function_, index_signature, checks_json)
+PB.default_values(::Type{KclType}) = (;type_ = "", union_types = Vector{KclType}(), default = "", schema_name = "", schema_doc = "", properties = Dict{String,KclType}(), required = Vector{String}(), key = nothing, item = nothing, line = zero(Int32), decorators = Vector{Decorator}(), filename = "", pkg_path = "", description = "", examples = Dict{String,Example}(), base_schema = nothing, function_ = nothing, index_signature = nothing, checks_json = Vector{String}())
+PB.field_numbers(::Type{KclType}) = (;type_ = 1, union_types = 2, default = 3, schema_name = 4, schema_doc = 5, properties = 6, required = 7, key = 8, item = 9, line = 10, decorators = 11, filename = 12, pkg_path = 13, description = 14, examples = 15, base_schema = 16, function_ = 17, index_signature = 18, checks_json = 19)
 
 function PB.decode(d::PB.AbstractProtoDecoder, ::Type{<:KclType}, _endpos::Int=0, _group::Bool=false)
     type_ = ""
@@ -3839,6 +4271,7 @@ function PB.decode(d::PB.AbstractProtoDecoder, ::Type{<:KclType}, _endpos::Int=0
     base_schema = Ref{Union{Nothing,KclType}}(nothing)
     function_ = Ref{Union{Nothing,FunctionType}}(nothing)
     index_signature = Ref{Union{Nothing,IndexSignature}}(nothing)
+    checks_json = PB.BufferedVector{String}()
     while !PB.message_done(d, _endpos, _group)
         field_number, wire_type = PB.decode_tag(d)
         if field_number == 1
@@ -3877,11 +4310,13 @@ function PB.decode(d::PB.AbstractProtoDecoder, ::Type{<:KclType}, _endpos::Int=0
             PB.decode!(d, function_)
         elseif field_number == 18
             PB.decode!(d, index_signature)
+        elseif field_number == 19
+            PB.decode!(d, checks_json)
         else
             Base.skip(d, wire_type)
         end
     end
-    return KclType(type_, union_types[], default, schema_name, schema_doc, properties, required[], key[], item[], line, decorators[], filename, pkg_path, description, examples, base_schema[], function_[], index_signature[])
+    return KclType(type_, union_types[], default, schema_name, schema_doc, properties, required[], key[], item[], line, decorators[], filename, pkg_path, description, examples, base_schema[], function_[], index_signature[], checks_json[])
 end
 
 function PB.encode(e::PB.AbstractProtoEncoder, x::KclType)
@@ -3904,6 +4339,7 @@ function PB.encode(e::PB.AbstractProtoEncoder, x::KclType)
     !isnothing(x.base_schema) && PB.encode(e, 16, x.base_schema)
     !isnothing(x.function_) && PB.encode(e, 17, x.function_)
     !isnothing(x.index_signature) && PB.encode(e, 18, x.index_signature)
+    !isempty(x.checks_json) && PB.encode(e, 19, x.checks_json)
     return position(e.io) - initpos
 end
 function PB._encoded_size(x::KclType)
@@ -3926,5 +4362,6 @@ function PB._encoded_size(x::KclType)
     !isnothing(x.base_schema) && (encoded_size += PB._encoded_size(x.base_schema, 16))
     !isnothing(x.function_) && (encoded_size += PB._encoded_size(x.function_, 17))
     !isnothing(x.index_signature) && (encoded_size += PB._encoded_size(x.index_signature, 18))
+    !isempty(x.checks_json) && (encoded_size += PB._encoded_size(x.checks_json, 19))
     return encoded_size
 end
