@@ -2,7 +2,7 @@
 name = "kcl-lib-cpp"
 publish = false
 edition = "2024"
-version = "0.13.2"
+version = "0.13.3"
 
 [lib]
 crate-type = ["staticlib"]
