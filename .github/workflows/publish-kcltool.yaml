@@ -157,6 +157,9 @@ jobs:
     permissions:
       contents: read
       packages: write
+      # Trusted Publishing exchanges a short-lived OIDC token for a
+      # temporary API key, so the job has to be allowed to ask for one.
+      id-token: write
     needs: [ build ]
     steps:
       - uses: actions/checkout@v7
@@ -263,12 +266,42 @@ jobs:
             dotnet/local-feed/*.nupkg
             dotnet/local-feed/*.snupkg
 
+      # Trusted Publishing: nuget.org exchanges a short-lived OIDC token
+      # for an API key that is valid for an hour, so nothing long-lived has
+      # to be stored in the repository. The policy on the nuget.org side
+      # names this repository, this workflow file and the account that owns
+      # the packages.
+      #
+      # The API key in the repository secrets is the fallback for the case
+      # where the policy on the nuget.org side is not set up yet.
+      - name: NuGet login (OIDC -> temporary API key)
+        id: nuget-login
+        continue-on-error: true
+        uses: NuGet/login@v1
+        with:
+          # The profile name on nuget.org, not the email address.
+          user: Peefy
+
       - name: Release to NuGet
         if: "startsWith(github.ref, 'refs/tags/')"
         working-directory: dotnet/local-feed
+        env:
+          NUGET_OIDC_API_KEY: ${{ steps.nuget-login.outputs.NUGET_API_KEY }}
+          NUGET_FALLBACK_API_KEY: ${{ secrets.NUGET_API_KEY }}
         run: |
           set -euo pipefail
+          key="${NUGET_OIDC_API_KEY:-${NUGET_FALLBACK_API_KEY:-}}"
+          if [ -z "${key}" ]; then
+            echo "::error::no NuGet API key: the OIDC login failed and no fallback key is set"
+            exit 1
+          fi
+          if [ -n "${NUGET_OIDC_API_KEY}" ]; then
+            echo "publishing with the temporary key from the OIDC exchange"
+          else
+            echo "::warning::the OIDC exchange failed, falling back to the stored API key"
+            echo "::warning::if that key is rejected as expired, the trusted publishing policy on the nuget.org side is not set up"
+          fi
           for pkg in *.nupkg; do
             echo "---- pushing ${pkg} ----"
-            dotnet nuget push "${pkg}" -k ${{ secrets.NUGET_API_KEY }} -s https://api.nuget.org/v3/index.json
+            dotnet nuget push "${pkg}" -k "${key}" -s https://api.nuget.org/v3/index.json
           done

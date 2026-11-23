@@ -1,0 +1,30 @@
+name: nuget-oidc-check
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: NuGet login (OIDC -> temporary API key)
+        id: nuget-login
+        continue-on-error: true
+        uses: NuGet/login@v1
+        with:
+          user: Peefy
+
+      - name: Report
+        env:
+          NUGET_OIDC_API_KEY: ${{ steps.nuget-login.outputs.NUGET_API_KEY }}
+        run: |
+          set -uo pipefail
+          if [ -n "${NUGET_OIDC_API_KEY}" ]; then
+            echo "the trusted publishing policy works: a temporary key was issued"
+          else
+            echo "the trusted publishing policy is not active yet"
+          fi
