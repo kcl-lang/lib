@@ -151,6 +151,42 @@ jobs:
           if-no-files-found: error
           path: dotnet/KclTool.runtime.${{ matrix.dotnet-rid }}/
 
+  # Trusted Publishing: nuget.org binds a policy to one workflow file, so the
+  # OIDC exchange has to happen in a job of THIS workflow -- a separate check
+  # workflow can never match the policy. This job runs in parallel with the
+  # build, so a misconfigured policy fails in seconds instead of after the
+  # (slow) cross-platform build.
+  nuget-login:
+    name: NuGet login (Trusted Publishing)
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      # The exchange trades a short-lived OIDC token for a temporary API key.
+      id-token: write
+    # Fork pull requests cannot ask for an OIDC token, so the exchange is
+    # limited to the events that can actually publish.
+    if: >-
+      github.event_name != 'pull_request' ||
+      github.event.pull_request.head.repo.full_name == github.repository
+    steps:
+      - name: NuGet login (OIDC -> temporary API key)
+        id: login
+        uses: NuGet/login@v1
+        with:
+          # The profile name on nuget.org, not the email address.
+          user: Peefy
+
+      - name: Report
+        env:
+          NUGET_API_KEY: ${{ steps.login.outputs.NUGET_API_KEY }}
+        run: |
+          set -euo pipefail
+          if [ -z "${NUGET_API_KEY}" ]; then
+            echo "::error::nuget.org did not issue a temporary API key for this workflow"
+            exit 1
+          fi
+          echo "nuget.org issued a temporary API key for this workflow"
+
   deploy:
     name: Deploy KclTool to NuGet
     runs-on: ubuntu-latest
@@ -270,13 +306,10 @@ jobs:
       # for an API key that is valid for an hour, so nothing long-lived has
       # to be stored in the repository. The policy on the nuget.org side
       # names this repository, this workflow file and the account that owns
-      # the packages.
-      #
-      # The API key in the repository secrets is the fallback for the case
-      # where the policy on the nuget.org side is not set up yet.
+      # the packages. The exchange only runs when the push does.
       - name: NuGet login (OIDC -> temporary API key)
-        id: nuget-login
-        continue-on-error: true
+        id: login
+        if: "startsWith(github.ref, 'refs/tags/')"
         uses: NuGet/login@v1
         with:
           # The profile name on nuget.org, not the email address.
@@ -286,22 +319,14 @@ jobs:
         if: "startsWith(github.ref, 'refs/tags/')"
         working-directory: dotnet/local-feed
         env:
-          NUGET_OIDC_API_KEY: ${{ steps.nuget-login.outputs.NUGET_API_KEY }}
-          NUGET_FALLBACK_API_KEY: ${{ secrets.NUGET_API_KEY }}
+          NUGET_API_KEY: ${{ steps.login.outputs.NUGET_API_KEY }}
         run: |
           set -euo pipefail
-          key="${NUGET_OIDC_API_KEY:-${NUGET_FALLBACK_API_KEY:-}}"
-          if [ -z "${key}" ]; then
-            echo "::error::no NuGet API key: the OIDC login failed and no fallback key is set"
+          if [ -z "${NUGET_API_KEY}" ]; then
+            echo "::error::no NuGet API key: the trusted publishing exchange did not issue one"
             exit 1
-          fi
-          if [ -n "${NUGET_OIDC_API_KEY}" ]; then
-            echo "publishing with the temporary key from the OIDC exchange"
-          else
-            echo "::warning::the OIDC exchange failed, falling back to the stored API key"
-            echo "::warning::if that key is rejected as expired, the trusted publishing policy on the nuget.org side is not set up"
           fi
           for pkg in *.nupkg; do
             echo "---- pushing ${pkg} ----"
-            dotnet nuget push "${pkg}" -k "${key}" -s https://api.nuget.org/v3/index.json
+            dotnet nuget push "${pkg}" -k "${NUGET_API_KEY}" -s https://api.nuget.org/v3/index.json
           done

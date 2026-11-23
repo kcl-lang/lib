@@ -116,6 +116,43 @@ jobs:
         if-no-files-found: error
         path: ${{ github.workspace }}/dotnet/target/${{ matrix.target }}/release/${{ matrix.lib-name }}
 
+  # Trusted Publishing: nuget.org binds a policy to one workflow file, so the
+  # OIDC exchange has to happen in a job of THIS workflow -- a separate check
+  # workflow can never match the policy. This job runs in parallel with the
+  # build, so a misconfigured policy fails in seconds instead of after the
+  # (slow) cross-platform build.
+  nuget-login:
+    name: NuGet login (Trusted Publishing)
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      # The exchange trades a short-lived OIDC token for a temporary API key.
+      id-token: write
+    # Fork pull requests cannot ask for an OIDC token, so the exchange is
+    # limited to the events that can actually publish.
+    if: >-
+      github.event_name != 'pull_request' ||
+      github.event.pull_request.head.repo.full_name == github.repository
+    steps:
+      - name: NuGet login (OIDC -> temporary API key)
+        id: login
+        uses: NuGet/login@v1
+        with:
+          # The profile name on nuget.org, not the email address.
+          user: Peefy
+
+      - name: Report
+        env:
+          NUGET_API_KEY: ${{ steps.login.outputs.NUGET_API_KEY }}
+        run: |
+          set -euo pipefail
+          if [ -z "${NUGET_API_KEY}" ]; then
+            echo "::error::nuget.org did not issue a temporary API key for this workflow"
+            exit 1
+          fi
+          echo "nuget.org issued a temporary API key for this workflow"
+
   deploy:
     name: Deploy KCL .NET Library to Nuget
     runs-on: ubuntu-latest
@@ -123,6 +160,8 @@ jobs:
     permissions:
       contents: read
       packages: write
+      # The exchange trades a short-lived OIDC token for a temporary API key.
+      id-token: write
     needs: [ build-and-test ]
     steps:
       - name: Checkout
@@ -181,8 +220,26 @@ jobs:
             dotnet/KclLib/bin/Release/*.nupkg
             dotnet/KclLib/bin/Release/*.snupkg
 
+      # Trusted Publishing: the policy on the nuget.org side names this
+      # repository, this workflow file and the account that owns the package.
+      # The exchange only runs when the push does.
+      - name: NuGet login (OIDC -> temporary API key)
+        id: login
+        if: "startsWith(github.ref, 'refs/tags/')"
+        uses: NuGet/login@v1
+        with:
+          # The profile name on nuget.org, not the email address.
+          user: Peefy
+
       - name: Release to Nuget
         if: "startsWith(github.ref, 'refs/tags/')"
+        env:
+          NUGET_API_KEY: ${{ steps.login.outputs.NUGET_API_KEY }}
         run: |
+          set -euo pipefail
           cd dotnet/KclLib/bin/Release
-          dotnet nuget push KclLib.0.13.3.nupkg -k ${{ secrets.NUGET_API_KEY }} -s https://api.nuget.org/v3/index.json
+          if [ -z "${NUGET_API_KEY}" ]; then
+            echo "::error::no NuGet API key: the trusted publishing exchange did not issue one"
+            exit 1
+          fi
+          dotnet nuget push KclLib.0.13.3.nupkg -k "${NUGET_API_KEY}" -s https://api.nuget.org/v3/index.json
