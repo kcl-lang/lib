@@ -21,7 +21,7 @@ hack/download-libs.sh linux-arm64  # named platforms
 ```
 
 The version defaults to `KCL_VERSION` in `go/install/install.go`; pass
-`--version v0.13.2` to pin a different one. Platforms that
+`--version v0.13.3` to pin a different one. Platforms that
 [kcl-lang/kcl][kcl] publishes are downloaded from its release; the two iOS
 static archives are cross-compiled from this repository's `c/` crate with
 cargo, so `--all` needs a macOS host.
@@ -90,8 +90,8 @@ come from.
    the branch name and refuses to run if it disagrees with `KCL_VERSION`:
 
    ```shell
-   git switch -c release/v0.13.2 origin/main
-   git push origin release/v0.13.2
+   git switch -c release/v0.13.3 origin/main
+   git push origin release/v0.13.3
    ```
 
    `vendor-libs.yaml` then downloads every published platform, cross-compiles
@@ -99,8 +99,8 @@ come from.
 4. **Cut the tag from the release branch**, not from `main`:
 
    ```shell
-   git tag v0.13.2 release/v0.13.2
-   git push origin v0.13.2
+   git tag v0.13.3 release/v0.13.3
+   git push origin v0.13.3
    ```
 
 ## Why a branch and not a force-moved tag
