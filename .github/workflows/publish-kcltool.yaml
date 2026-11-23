@@ -55,7 +55,7 @@ jobs:
             lib-name: libkcl.so
             lib-platform-dir: linux-arm64
           - classifier: osx-x64
-            os: macos-14
+            os: macos-15-intel
             dotnet-rid: osx-x64
             archive: kcl-v0.12.10-darwin-amd64.tar.gz
             archive-format: targz
