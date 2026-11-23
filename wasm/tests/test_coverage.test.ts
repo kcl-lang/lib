@@ -89,4 +89,13 @@ describe("TestResult coverage decoding", () => {
     expect(bytes[1]).toBe(1);
     expect(boolField(5, false).length).toBe(0);
   });
+
+  test("boolField encodes TestArgs.evalOnce (6) with wire tag 0x30 and omits false", () => {
+    const bytes = boolField(6, true);
+    expect(bytes.length).toBe(2);
+    // Tag = (6 << 3) | 0 = 48 → 0x30, value 1. False is the default and is omitted.
+    expect(bytes[0]).toBe(0x30);
+    expect(bytes[1]).toBe(1);
+    expect(boolField(6, false).length).toBe(0);
+  });
 });

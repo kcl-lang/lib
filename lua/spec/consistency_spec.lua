@@ -793,6 +793,38 @@ local function dispatch()
       })
       return { proto = result.proto }
     end,
+    ["KclService.GenerateRust"] = function(case)
+      local result = api:generate_rust({
+        parse_args = parse_args(field(case.args, "parse_args", {})),
+      })
+      return { rust_source = result.rust_source }
+    end,
+    ["KclService.GeneratePython"] = function(case)
+      local result = api:generate_python({
+        parse_args = parse_args(field(case.args, "parse_args", {})),
+      })
+      return { python_source = result.python_source }
+    end,
+    ["KclService.GenerateGo"] = function(case)
+      local result = api:generate_go({
+        parse_args = parse_args(field(case.args, "parse_args", {})),
+        package = field(case.args, "package", ""),
+      })
+      return { go_source = result.go_source }
+    end,
+    ["KclService.GenerateJava"] = function(case)
+      local result = api:generate_java({
+        parse_args = parse_args(field(case.args, "parse_args", {})),
+        package = field(case.args, "package", ""),
+      })
+      return { java_source = result.java_source }
+    end,
+    ["KclService.GenerateTypeScript"] = function(case)
+      local result = api:generate_typescript({
+        parse_args = parse_args(field(case.args, "parse_args", {})),
+      })
+      return { typescript_source = result.typescript_source }
+    end,
     ["KclService.GenerateDoc"] = function(case)
       local result = api:generate_doc({
         parse_args = parse_args(field(case.args, "parse_args", {})),
@@ -959,6 +991,7 @@ local function dispatch()
         run_regexp = field(case.args, "run_regexp", ""),
         fail_fast = field(case.args, "fail_fast", false),
         coverage = field(case.args, "coverage", false),
+        eval_once = field(case.args, "eval_once", false),
       })
       local names, failed = {}, {}
       for _, info in ipairs(result.info or {}) do
@@ -1096,6 +1129,11 @@ describe("consistency", function()
     "override_file",
     "load_settings_files",
     "update_dependencies_no_deps",
+    "generate_rust",
+    "generate_python",
+    "generate_go",
+    "generate_java",
+    "generate_typescript",
   }
 
   for _, name in ipairs(case_names) do

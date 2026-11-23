@@ -124,6 +124,12 @@ class KclType extends \Google\Protobuf\Internal\Message
      * Generated from protobuf field <code>optional .com.kcl.api.IndexSignature index_signature = 18;</code>
      */
     protected $index_signature = null;
+    /**
+     * Schema CheckExpr AST nodes serialized as JSON for code generators.
+     *
+     * Generated from protobuf field <code>repeated string checks_json = 19;</code>
+     */
+    private $checks_json;
 
     /**
      * Constructor.
@@ -167,6 +173,8 @@ class KclType extends \Google\Protobuf\Internal\Message
      *           Function type if the KclType is a function.
      *     @type \Com\Kcl\Api\IndexSignature $index_signature
      *           Optional schema index signature
+     *     @type string[] $checks_json
+     *           Schema CheckExpr AST nodes serialized as JSON for code generators.
      * }
      */
     public function __construct($data = null)
@@ -684,6 +692,32 @@ class KclType extends \Google\Protobuf\Internal\Message
     public function setIndexSignature(\Com\Kcl\Api\IndexSignature|null $var)
     {
         $this->index_signature = $var;
+
+        return $this;
+    }
+
+    /**
+     * Schema CheckExpr AST nodes serialized as JSON for code generators.
+     *
+     * Generated from protobuf field <code>repeated string checks_json = 19;</code>
+     * @return RepeatedField<string>
+     */
+    public function getChecksJson()
+    {
+        return $this->checks_json;
+    }
+
+    /**
+     * Schema CheckExpr AST nodes serialized as JSON for code generators.
+     *
+     * Generated from protobuf field <code>repeated string checks_json = 19;</code>
+     * @param string[] $var
+     * @return $this
+     */
+    public function setChecksJson(array|RepeatedField $var)
+    {
+        $arr = GPBUtil::checkRepeatedField($var, \Google\Protobuf\Internal\GPBType::STRING);
+        $this->checks_json = $arr;
 
         return $this;
     }

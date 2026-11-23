@@ -847,6 +847,10 @@ mod ffi {
         pub fail_fast: bool,
         /// Flag to collect line-level coverage data while running tests.
         pub coverage: bool,
+        /// Evaluate each test package once and run every case in that
+        /// evaluation. Opt-in; defaults to false. Cases then share the values
+        /// the package defines — see `TestArgs.eval_once` in `spec.proto`.
+        pub eval_once: bool,
     }
     /// Message for test response.
     #[derive(Debug, Default)]
@@ -1025,6 +1029,85 @@ mod ffi {
     pub struct GenerateProtoResult {
         /// The generated proto3 definitions.
         pub proto: String,
+    }
+
+    /// Message for generate Rust request arguments.
+    #[derive(Debug, Default)]
+    pub struct GenerateRustArgs {
+        /// Arguments for parsing the program whose schemas are exported.
+        pub parse_args: OptionalParseProgramArgs,
+    }
+
+    /// Message for generate Rust response.
+    #[derive(Debug, Default)]
+    pub struct GenerateRustResult {
+        /// The generated Rust source.
+        pub rust_source: String,
+    }
+
+    /// Message for generate Python request arguments.
+    #[derive(Debug, Default)]
+    pub struct GeneratePythonArgs {
+        /// Arguments for parsing the program whose schemas are exported.
+        pub parse_args: OptionalParseProgramArgs,
+    }
+
+    /// Message for generate Python response.
+    #[derive(Debug, Default)]
+    pub struct GeneratePythonResult {
+        /// The generated Python source.
+        pub python_source: String,
+    }
+
+    /// Message for generate Go request arguments.
+    #[derive(Debug, Default)]
+    pub struct GenerateGoArgs {
+        /// Arguments for parsing the program whose schemas are exported.
+        pub parse_args: OptionalParseProgramArgs,
+        /// Go package name for the generated file's `package` clause, e.g.
+        /// "dto". Empty defaults to "generated" — Go requires a package clause,
+        /// unlike GenerateProto's optional `package` field.
+        pub package: String,
+    }
+
+    /// Message for generate Go response.
+    #[derive(Debug, Default)]
+    pub struct GenerateGoResult {
+        /// The generated Go source.
+        pub go_source: String,
+    }
+
+    /// Message for generate Java request arguments.
+    #[derive(Debug, Default)]
+    pub struct GenerateJavaArgs {
+        /// Arguments for parsing the program whose schemas are exported.
+        pub parse_args: OptionalParseProgramArgs,
+        /// Java package name for the generated file's `package` clause, e.g.
+        /// "com.example.dto". Empty omits the package clause entirely (valid
+        /// Java — the "default package") rather than defaulting to a synthetic
+        /// name as GenerateGo does, since Java (unlike Go) does not require one.
+        pub package: String,
+    }
+
+    /// Message for generate Java response.
+    #[derive(Debug, Default)]
+    pub struct GenerateJavaResult {
+        /// The generated Java source.
+        pub java_source: String,
+    }
+
+    /// Message for generate TypeScript request arguments.
+    #[derive(Debug, Default)]
+    pub struct GenerateTypeScriptArgs {
+        /// Arguments for parsing the program whose schemas are exported.
+        pub parse_args: OptionalParseProgramArgs,
+    }
+
+    /// Message for generate TypeScript response.
+    #[derive(Debug, Default)]
+    pub struct GenerateTypeScriptResult {
+        /// The generated TypeScript source.
+        pub typescript_source: String,
     }
 
     /// Message for generate doc request arguments.
@@ -1228,6 +1311,16 @@ mod ffi {
         fn generate_openapi(args: &GenerateOpenAPIArgs) -> Result<GenerateOpenAPIResult>;
         /// Generate proto3 definitions from the schemas of a KCL package.
         fn generate_proto(args: &GenerateProtoArgs) -> Result<GenerateProtoResult>;
+        /// Generate Rust DTOs from the schemas of a KCL package.
+        fn generate_rust(args: &GenerateRustArgs) -> Result<GenerateRustResult>;
+        /// Generate Python DTOs from the schemas of a KCL package.
+        fn generate_python(args: &GeneratePythonArgs) -> Result<GeneratePythonResult>;
+        /// Generate Go DTOs from the schemas of a KCL package.
+        fn generate_go(args: &GenerateGoArgs) -> Result<GenerateGoResult>;
+        /// Generate Java DTOs from the schemas of a KCL package.
+        fn generate_java(args: &GenerateJavaArgs) -> Result<GenerateJavaResult>;
+        /// Generate TypeScript DTOs from the schemas of a KCL package.
+        fn generate_typescript(args: &GenerateTypeScriptArgs) -> Result<GenerateTypeScriptResult>;
         /// Generate documentation from the schemas of a KCL package.
         fn generate_doc(args: &GenerateDocArgs) -> Result<GenerateDocResult>;
         /// Return the KCL service version information.
@@ -2339,6 +2432,9 @@ fn build_test_args(args: &TestArgs) -> kcl_api::TestArgs {
         run_regexp: args.run_regexp.clone(),
         fail_fast: args.fail_fast,
         coverage: args.coverage,
+        // Every `kcl_api::TestArgs` field belongs here. A new field left out
+        // fails the C++ binding compile (E0063); see issue #421.
+        eval_once: args.eval_once,
     }
 }
 
@@ -2624,6 +2720,99 @@ fn generate_proto(args: &GenerateProtoArgs) -> Result<GenerateProtoResult> {
     let response: kcl_api::GenerateProtoResult = call_rpc(b"KclService.GenerateProto", &request)?;
     Ok(GenerateProtoResult {
         proto: response.proto,
+    })
+}
+
+impl From<&GenerateRustArgs> for kcl_api::GenerateRustArgs {
+    #[inline]
+    fn from(args: &GenerateRustArgs) -> Self {
+        Self {
+            parse_args: build_optional_parse_program_args(&args.parse_args),
+        }
+    }
+}
+
+/// Generate Rust DTOs from the schemas of a KCL package.
+fn generate_rust(args: &GenerateRustArgs) -> Result<GenerateRustResult> {
+    let request: kcl_api::GenerateRustArgs = args.into();
+    let response: kcl_api::GenerateRustResult = call_rpc(b"KclService.GenerateRust", &request)?;
+    Ok(GenerateRustResult {
+        rust_source: response.rust_source,
+    })
+}
+
+impl From<&GeneratePythonArgs> for kcl_api::GeneratePythonArgs {
+    #[inline]
+    fn from(args: &GeneratePythonArgs) -> Self {
+        Self {
+            parse_args: build_optional_parse_program_args(&args.parse_args),
+        }
+    }
+}
+
+/// Generate Python DTOs from the schemas of a KCL package.
+fn generate_python(args: &GeneratePythonArgs) -> Result<GeneratePythonResult> {
+    let request: kcl_api::GeneratePythonArgs = args.into();
+    let response: kcl_api::GeneratePythonResult = call_rpc(b"KclService.GeneratePython", &request)?;
+    Ok(GeneratePythonResult {
+        python_source: response.python_source,
+    })
+}
+
+impl From<&GenerateGoArgs> for kcl_api::GenerateGoArgs {
+    #[inline]
+    fn from(args: &GenerateGoArgs) -> Self {
+        Self {
+            parse_args: build_optional_parse_program_args(&args.parse_args),
+            package: args.package.clone(),
+        }
+    }
+}
+
+/// Generate Go DTOs from the schemas of a KCL package.
+fn generate_go(args: &GenerateGoArgs) -> Result<GenerateGoResult> {
+    let request: kcl_api::GenerateGoArgs = args.into();
+    let response: kcl_api::GenerateGoResult = call_rpc(b"KclService.GenerateGo", &request)?;
+    Ok(GenerateGoResult {
+        go_source: response.go_source,
+    })
+}
+
+impl From<&GenerateJavaArgs> for kcl_api::GenerateJavaArgs {
+    #[inline]
+    fn from(args: &GenerateJavaArgs) -> Self {
+        Self {
+            parse_args: build_optional_parse_program_args(&args.parse_args),
+            package: args.package.clone(),
+        }
+    }
+}
+
+/// Generate Java DTOs from the schemas of a KCL package.
+fn generate_java(args: &GenerateJavaArgs) -> Result<GenerateJavaResult> {
+    let request: kcl_api::GenerateJavaArgs = args.into();
+    let response: kcl_api::GenerateJavaResult = call_rpc(b"KclService.GenerateJava", &request)?;
+    Ok(GenerateJavaResult {
+        java_source: response.java_source,
+    })
+}
+
+impl From<&GenerateTypeScriptArgs> for kcl_api::GenerateTypeScriptArgs {
+    #[inline]
+    fn from(args: &GenerateTypeScriptArgs) -> Self {
+        Self {
+            parse_args: build_optional_parse_program_args(&args.parse_args),
+        }
+    }
+}
+
+/// Generate TypeScript DTOs from the schemas of a KCL package.
+fn generate_typescript(args: &GenerateTypeScriptArgs) -> Result<GenerateTypeScriptResult> {
+    let request: kcl_api::GenerateTypeScriptArgs = args.into();
+    let response: kcl_api::GenerateTypeScriptResult =
+        call_rpc(b"KclService.GenerateTypeScript", &request)?;
+    Ok(GenerateTypeScriptResult {
+        typescript_source: response.typescript_source,
     })
 }
 

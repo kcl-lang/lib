@@ -146,7 +146,7 @@ by fully-qualified name and raw protobuf bytes.
 > core which RPCs it supports. Verified against the prebuilt
 > `darwin-arm64/libkcl.dylib`:
 >
-> - `BuiltinService.ListMethod` → returns the full 28-entry method table.
+> - `BuiltinService.ListMethod` → returns the full 33-entry method table.
 > - `KclService.ListMethod` → **not registered**; the native dispatcher panics
 >   with `unknown method name` and answers with an empty payload.
 >

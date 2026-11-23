@@ -58,9 +58,12 @@ jobs:
           distribution: 'zulu'
           cache: 'maven'
 
+      # 3.12, not 3.10: setup-python's Windows installer for 3.10 leaves
+      # python.exe off PATH on windows-2025, so the JDK 8 classifier job
+      # dies in "Install and upgrade Pip" before Maven runs.
       - uses: actions/setup-python@v7
         with:
-          python-version: '3.10'
+          python-version: '3.12'
 
       - name: Install rust nightly toolchain
         uses: actions-rs/toolchain@v1
@@ -94,18 +97,51 @@ jobs:
           path: |
             java/target/classes/native
 
-  build-centos7:
+  # The published linux-x86_64 JNI library has to load on glibc 2.17
+  # (CentOS 7 / RHEL 7). That used to mean compiling inside
+  # kcllang/kcl-java-builder-centos7. Rust 1.91's x86_64-unknown-linux-gnu
+  # std is already built for glibc 2.17, and zig can link the cdylib to that
+  # same floor on ubuntu-latest. The job still fails if the .so references
+  # GLIBC newer than 2.17 or any GLIBCXX symbol. The other classifiers come
+  # from test-and-build and are only assembled here.
+  build-linux-glibc217:
     runs-on: ubuntu-latest
 
     permissions:
       contents: read
-      packages: write
     needs: [ test-and-build ]
-    env:
-      ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
     steps:
       - name: Checkout
         uses: actions/checkout@v7
+
+      - name: Set up JDK 8
+        uses: actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad
+        with:
+          java-version: 8
+          distribution: 'zulu'
+          cache: 'maven'
+
+      - name: Install Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: 1.91
+          override: true
+
+      - uses: korandoru/setup-zig@v1
+        with:
+          zig-version: 0.16.0
+
+      - name: Install cargo-zigbuild
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release download v0.24.1 --repo rust-cross/cargo-zigbuild \
+            --pattern 'cargo-zigbuild-x86_64-unknown-linux-gnu.tar.xz' \
+            --dir "$RUNNER_TEMP/cargo-zigbuild"
+          tar -xJf "$RUNNER_TEMP/cargo-zigbuild/cargo-zigbuild-x86_64-unknown-linux-gnu.tar.xz" \
+            -C "$RUNNER_TEMP/cargo-zigbuild"
+          sudo install -m 0755 "$RUNNER_TEMP/cargo-zigbuild/cargo-zigbuild-x86_64-unknown-linux-gnu/cargo-zigbuild" /usr/local/bin/cargo-zigbuild
+          cargo-zigbuild --version
 
       - name: Download windows x86_64 lib
         uses: actions/download-artifact@v8
@@ -131,13 +167,8 @@ jobs:
           name: kcl-lib-osx-aarch_64
           path: java/native
 
-      - name: Run tests and package in CentOS 7 container
-        run: |
-          docker run --rm -v ${{ github.workspace }}/java:/work kcllang/kcl-java-builder-centos7:latest bash -c "
-            cd /work &&
-            rustup default stable &&
-            mvn package -DskipTests=true -Dcargo-build.profile=release
-          "
+      - name: Build linux-x86_64 JNI for glibc 2.17 and package
+        run: hack/package-jni-glibc217.sh java
 
       - name: Upload artifact
         uses: actions/upload-artifact@v7
@@ -151,7 +182,7 @@ jobs:
     permissions:
       contents: read
       packages: write
-    needs: [ test-and-build, build-centos7 ]
+    needs: [ test-and-build, build-linux-glibc217 ]
     steps:
       - name: Checkout
         uses: actions/checkout@v7
@@ -209,7 +240,7 @@ jobs:
 
       - uses: actions/setup-python@v7
         with:
-          python-version: '3.10'
+          python-version: '3.12'
 
       # The checker is what makes the next step meaningful, so it is tested
       # first: a checker that quietly reports "ok" over a broken bundle
@@ -308,7 +339,7 @@ jobs:
 
     permissions:
       contents: read
-    needs: [ test-and-build, build-centos7, check-central-secrets ]
+    needs: [ test-and-build, build-linux-glibc217, check-central-secrets ]
     if: >-
       startsWith(github.ref, 'refs/tags/') &&
       needs.check-central-secrets.outputs.present == 'true'
@@ -350,7 +381,19 @@ jobs:
       - name: Install Python (build.py runs under python3)
         uses: actions/setup-python@v7
         with:
-          python-version: '3.10'
+          python-version: '3.12'
+
+      # Central looks the public key up on a key server instead of taking
+      # it from the bundle, so the key has to be published before the
+      # upload. Without this the publish fails with "Could not find a
+      # public key by the key fingerprint".
+      - name: Publish the signing key to the key servers
+        env:
+          MAVEN_CENTRAL_GPG_PRIVATE_KEY: ${{ secrets.MAVEN_CENTRAL_GPG_PRIVATE_KEY }}
+          MAVEN_CENTRAL_GPG_PASSPHRASE: ${{ secrets.MAVEN_CENTRAL_GPG_PASSPHRASE }}
+        run: |
+          set -euo pipefail
+          hack/publish_central_gpg_key.sh central-signing-key.asc
 
       - name: Build, sign, and publish to Maven Central
         working-directory: java

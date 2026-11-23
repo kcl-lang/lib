@@ -621,6 +621,7 @@ public class ConsistencyTest
                     RunRegexp = Text(Field(args, "run_regexp")),
                     FailFast = Flag(Field(args, "fail_fast")),
                     Coverage = Flag(Field(args, "coverage")),
+                    EvalOnce = Flag(Field(args, "eval_once")),
                 };
                 foreach (var pkg in ResolvePaths(Field(args, "pkg_list")))
                 {
@@ -776,6 +777,73 @@ public class ConsistencyTest
                 AssertField(name, "proto", expect.GetProperty("proto").GetString()!, result.Proto);
                 break;
             }
+            case "KclService.GenerateRust":
+            {
+                if (newCore && !AvailableMethods.Value.Contains(rpc))
+                {
+                    Skip($"core does not list {rpc} (old core)");
+                }
+                var result = ApiInstance.Value.GenerateRust(new GenerateRustArgs
+                {
+                    ParseArgs = ParseArgs(args.GetProperty("parse_args")),
+                });
+                AssertField(name, "rust_source", expect.GetProperty("rust_source").GetString()!, result.RustSource);
+                break;
+            }
+            case "KclService.GeneratePython":
+            {
+                if (newCore && !AvailableMethods.Value.Contains(rpc))
+                {
+                    Skip($"core does not list {rpc} (old core)");
+                }
+                var result = ApiInstance.Value.GeneratePython(new GeneratePythonArgs
+                {
+                    ParseArgs = ParseArgs(args.GetProperty("parse_args")),
+                });
+                AssertField(name, "python_source", expect.GetProperty("python_source").GetString()!, result.PythonSource);
+                break;
+            }
+            case "KclService.GenerateGo":
+            {
+                if (newCore && !AvailableMethods.Value.Contains(rpc))
+                {
+                    Skip($"core does not list {rpc} (old core)");
+                }
+                var result = ApiInstance.Value.GenerateGo(new GenerateGoArgs
+                {
+                    ParseArgs = ParseArgs(args.GetProperty("parse_args")),
+                    Package = args.TryGetProperty("package", out var p) ? p.GetString() : "",
+                });
+                AssertField(name, "go_source", expect.GetProperty("go_source").GetString()!, result.GoSource);
+                break;
+            }
+            case "KclService.GenerateJava":
+            {
+                if (newCore && !AvailableMethods.Value.Contains(rpc))
+                {
+                    Skip($"core does not list {rpc} (old core)");
+                }
+                var result = ApiInstance.Value.GenerateJava(new GenerateJavaArgs
+                {
+                    ParseArgs = ParseArgs(args.GetProperty("parse_args")),
+                    Package = args.TryGetProperty("package", out var p) ? p.GetString() : "",
+                });
+                AssertField(name, "java_source", expect.GetProperty("java_source").GetString()!, result.JavaSource);
+                break;
+            }
+            case "KclService.GenerateTypeScript":
+            {
+                if (newCore && !AvailableMethods.Value.Contains(rpc))
+                {
+                    Skip($"core does not list {rpc} (old core)");
+                }
+                var result = ApiInstance.Value.GenerateTypeScript(new GenerateTypeScriptArgs
+                {
+                    ParseArgs = ParseArgs(args.GetProperty("parse_args")),
+                });
+                AssertField(name, "typescript_source", expect.GetProperty("typescript_source").GetString()!, result.TypescriptSource);
+                break;
+            }
             case "KclService.GenerateDoc":
             {
                 if (newCore && !AvailableMethods.Value.Contains(rpc))
@@ -862,6 +930,21 @@ public class ConsistencyTest
 
     [TestMethod]
     public void TestGenerateProto() => RunCase("generate_proto");
+
+    [TestMethod]
+    public void TestGenerateRust() => RunCase("generate_rust");
+
+    [TestMethod]
+    public void TestGeneratePython() => RunCase("generate_python");
+
+    [TestMethod]
+    public void TestGenerateGo() => RunCase("generate_go");
+
+    [TestMethod]
+    public void TestGenerateJava() => RunCase("generate_java");
+
+    [TestMethod]
+    public void TestGenerateTypeScript() => RunCase("generate_typescript");
 
     [TestMethod]
     public void TestGenerateDocMd() => RunCase("generate_doc_md");
