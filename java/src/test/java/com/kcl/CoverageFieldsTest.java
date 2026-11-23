@@ -83,9 +83,6 @@ public class CoverageFieldsTest {
     @Test
     public void testCoverageMessagesRegisteredInDescriptor() {
         Descriptors.FileDescriptor descriptor = Spec.getDescriptor();
-        // 89 message types after the spec sync that added the LoadPackage info
-        // fields and the FormatTestReport/Generate* RPC messages (#375).
-        Assert.assertEquals(89, descriptor.getMessageTypes().size());
         Descriptors.Descriptor fileCoverageDesc = descriptor.findMessageTypeByName("FileCoverage");
         Descriptors.Descriptor reportDesc = descriptor.findMessageTypeByName("TestCoverageReport");
         Descriptors.Descriptor summaryDesc = descriptor.findMessageTypeByName("CoverageSummary");
@@ -95,6 +92,35 @@ public class CoverageFieldsTest {
         Assert.assertTrue(reportDesc.findFieldByName("files").isMapField());
         Assert.assertTrue(fileCoverageDesc.findFieldByName("line_hits").isMapField());
         Assert.assertTrue(fileCoverageDesc.findFieldByName("covered_lines").isRepeated());
+    }
+
+    /**
+     * `Spec.java` is a checked-in protoc artifact, so it can silently fall behind `spec.proto` — and it did: the
+     * generated stub was missing every message added for `LoadPackageResult.imports`/`kcl_mod`/`apps`, so a caller
+     * could not read those fields at all. This used to be guarded by asserting an absolute `messageTypes.size`, which
+     * is the wrong shape for a canary: the stub and the number were both stale and therefore agreed, so the test passed
+     * while the binding was broken. Asserting that each message the spec declares is present fails on the real
+     * condition instead, and does not need editing when one is added.
+     */
+    @Test
+    public void testGeneratedStubCoversEveryMessageInSpec() throws Exception {
+        java.io.File spec = new java.io.File("../spec/spec.proto");
+        Assert.assertTrue("spec.proto not found at " + spec.getAbsolutePath(), spec.isFile());
+        java.util.Set<String> declared = new java.util.LinkedHashSet<>();
+        java.util.regex.Matcher matcher = java.util.regex.Pattern.compile("(?m)^message (\\w+)")
+                .matcher(new String(java.nio.file.Files.readAllBytes(spec.toPath()), "UTF-8"));
+        while (matcher.find()) {
+            declared.add(matcher.group(1));
+        }
+        Assert.assertTrue("expected the spec to declare many messages, found " + declared.size(), declared.size() > 50);
+
+        java.util.Set<String> present = new java.util.HashSet<>();
+        for (Descriptors.Descriptor message : Spec.getDescriptor().getMessageTypes()) {
+            present.add(message.getName());
+        }
+        java.util.Set<String> missing = new java.util.LinkedHashSet<>(declared);
+        missing.removeAll(present);
+        Assert.assertTrue("spec.proto declares messages absent from the generated stub: " + missing, missing.isEmpty());
     }
 
     @Test
