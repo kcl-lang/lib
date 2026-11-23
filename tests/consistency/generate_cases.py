@@ -30,6 +30,21 @@ PERSON_SCHEMA = "schema Person:\n    name: str\n    check:\n        len(name) > 
 # root (the parent of the directory holding cases.json).
 SCHEMA_FIXTURE = "tests/consistency/testdata/gen_openapi/main.k"
 
+# The fixture the five DTO generators read. It is a fixture of its own rather
+# than SCHEMA_FIXTURE because the wasm32 build of the core lists a schema
+# *twice* once another schema references it — the same divergence
+# `generate_proto` and `generate_doc_md` are skipped for in the wasm runner.
+# The core rejects that duplicate itself ("schema name collision after
+# normalization"), so a fixture with a base schema or a schema-typed
+# attribute cannot be generated from in the WASI sandbox at all. This one
+# declares its schemas flat — no inheritance, no schema-typed attributes —
+# which the wasm build agrees with the native build on byte for byte.
+#
+# Flat is not the same as trivial: the attributes still cover the shapes the
+# generators have to render differently (ints, floats, bools, optional
+# attributes, defaults, a union, a list and a dict).
+DTO_FIXTURE = "tests/consistency/testdata/dto/main.k"
+
 # A whole package — module, manifest and a test file — for the RPCs that take a
 # package root rather than a single file. It is a fixture rather than a
 # temporary directory because `LoadPackage` and `Test` are the RPCs whose
@@ -757,7 +772,7 @@ def build_cases():
         "KclService.GenerateRust",
         True,
         lambda a: a.GenerateRustArgs(
-            parse_args=a.ParseProgramArgs(paths=[SCHEMA_FIXTURE]),
+            parse_args=a.ParseProgramArgs(paths=[DTO_FIXTURE]),
         ),
         lambda r: {"rust_source": r.rust_source},
     )
@@ -767,7 +782,7 @@ def build_cases():
         "KclService.GeneratePython",
         True,
         lambda a: a.GeneratePythonArgs(
-            parse_args=a.ParseProgramArgs(paths=[SCHEMA_FIXTURE]),
+            parse_args=a.ParseProgramArgs(paths=[DTO_FIXTURE]),
         ),
         lambda r: {"python_source": r.python_source},
     )
@@ -777,7 +792,7 @@ def build_cases():
         "KclService.GenerateGo",
         True,
         lambda a: a.GenerateGoArgs(
-            parse_args=a.ParseProgramArgs(paths=[SCHEMA_FIXTURE]),
+            parse_args=a.ParseProgramArgs(paths=[DTO_FIXTURE]),
             package="dto",
         ),
         lambda r: {"go_source": r.go_source},
@@ -788,7 +803,7 @@ def build_cases():
         "KclService.GenerateJava",
         True,
         lambda a: a.GenerateJavaArgs(
-            parse_args=a.ParseProgramArgs(paths=[SCHEMA_FIXTURE]),
+            parse_args=a.ParseProgramArgs(paths=[DTO_FIXTURE]),
             package="com.example.dto",
         ),
         lambda r: {"java_source": r.java_source},
@@ -799,7 +814,7 @@ def build_cases():
         "KclService.GenerateTypeScript",
         True,
         lambda a: a.GenerateTypeScriptArgs(
-            parse_args=a.ParseProgramArgs(paths=[SCHEMA_FIXTURE]),
+            parse_args=a.ParseProgramArgs(paths=[DTO_FIXTURE]),
         ),
         lambda r: {"typescript_source": r.typescript_source},
     )

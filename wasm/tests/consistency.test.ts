@@ -219,11 +219,17 @@ function hostTestdataFingerprint(): string {
  * Fixtures live at the sandbox root: v0.13.1's loader emits every schema
  * twice for a module mounted one level down (`Name___main__` and
  * `Name_<dirpath>`), which is what makes `generate_openapi_v3` agree with
- * the native runners. The two different `main.k` fixtures would collide at
- * the root, so the variables one keeps its parent directory.
+ * the native runners. The three different `main.k` fixtures would collide at
+ * the root, so the variables one keeps its parent directory and the DTO one
+ * — which the five generator cases read — takes a name of its own.
+ *
+ * The DTO fixture has to sit at the root for the same reason: mounted one
+ * level down, the loader qualifies every schema name (`User___main__`), so
+ * the generated source would not match the native runners' byte for byte.
  */
 const MOUNTS: Record<string, string> = {
   "tests/consistency/testdata/gen_openapi/main.k": "/main.k",
+  "tests/consistency/testdata/dto/main.k": "/dto.k",
   "tests/consistency/testdata/variables/main.k": "/variables/main.k",
   "tests/consistency/testdata/pkg": "/sandbox/pkg",
 };
