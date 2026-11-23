@@ -3102,6 +3102,215 @@ class ExecProgramResult extends $pb.GeneratedMessage {
   void clearSourcemap() => $_clearField(5);
 }
 
+/// Message for build program request arguments.
+class BuildProgramArgs extends $pb.GeneratedMessage {
+  factory BuildProgramArgs({
+    ExecProgramArgs? execArgs,
+    $core.String? output,
+  }) {
+    final result = BuildProgramArgs._();
+    if (execArgs != null) result.execArgs = execArgs;
+    if (output != null) result.output = output;
+    return result;
+  }
+
+  BuildProgramArgs._();
+
+  factory BuildProgramArgs.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      BuildProgramArgs()..mergeFromBuffer(data, registry);
+  factory BuildProgramArgs.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      BuildProgramArgs()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'BuildProgramArgs',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'com.kcl.api'),
+      createEmptyInstance: BuildProgramArgs.$_createMessage)
+    ..aOM<ExecProgramArgs>(1, _omitFieldNames ? '' : 'execArgs',
+        subBuilder: ExecProgramArgs.$_createMessage)
+    ..aOS(2, _omitFieldNames ? '' : 'output')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  BuildProgramArgs clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  BuildProgramArgs copyWith(void Function(BuildProgramArgs) updates) =>
+      super.copyWith((message) => updates(message as BuildProgramArgs))
+          as BuildProgramArgs;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  @$core.Deprecated('Use BuildProgramArgs() / BuildProgramArgs.new instead')
+  static BuildProgramArgs create() => BuildProgramArgs._();
+  static $pb.GeneratedMessage $_createMessage() => BuildProgramArgs._();
+  @$core.override
+  BuildProgramArgs createEmptyInstance() => BuildProgramArgs._();
+  @$core.pragma('dart2js:noInline')
+  static BuildProgramArgs getDefault() =>
+      _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<BuildProgramArgs>(
+          BuildProgramArgs.$_createMessage);
+  static BuildProgramArgs? _defaultInstance;
+
+  /// Arguments for executing the program.
+  @$pb.TagNumber(1)
+  ExecProgramArgs get execArgs => $_getN(0);
+  @$pb.TagNumber(1)
+  set execArgs(ExecProgramArgs value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasExecArgs() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearExecArgs() => $_clearField(1);
+  @$pb.TagNumber(1)
+  ExecProgramArgs ensureExecArgs() => $_ensure(0);
+
+  /// Output path.
+  @$pb.TagNumber(2)
+  $core.String get output => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set output($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasOutput() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearOutput() => $_clearField(2);
+}
+
+/// Message for build program response.
+class BuildProgramResult extends $pb.GeneratedMessage {
+  factory BuildProgramResult({
+    $core.String? path,
+  }) {
+    final result = BuildProgramResult._();
+    if (path != null) result.path = path;
+    return result;
+  }
+
+  BuildProgramResult._();
+
+  factory BuildProgramResult.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      BuildProgramResult()..mergeFromBuffer(data, registry);
+  factory BuildProgramResult.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      BuildProgramResult()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'BuildProgramResult',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'com.kcl.api'),
+      createEmptyInstance: BuildProgramResult.$_createMessage)
+    ..aOS(1, _omitFieldNames ? '' : 'path')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  BuildProgramResult clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  BuildProgramResult copyWith(void Function(BuildProgramResult) updates) =>
+      super.copyWith((message) => updates(message as BuildProgramResult))
+          as BuildProgramResult;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  @$core.Deprecated('Use BuildProgramResult() / BuildProgramResult.new instead')
+  static BuildProgramResult create() => BuildProgramResult._();
+  static $pb.GeneratedMessage $_createMessage() => BuildProgramResult._();
+  @$core.override
+  BuildProgramResult createEmptyInstance() => BuildProgramResult._();
+  @$core.pragma('dart2js:noInline')
+  static BuildProgramResult getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<BuildProgramResult>(
+          BuildProgramResult.$_createMessage);
+  static BuildProgramResult? _defaultInstance;
+
+  /// Path of the built program.
+  @$pb.TagNumber(1)
+  $core.String get path => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set path($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasPath() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearPath() => $_clearField(1);
+}
+
+/// Message for execute artifact request arguments.
+class ExecArtifactArgs extends $pb.GeneratedMessage {
+  factory ExecArtifactArgs({
+    $core.String? path,
+    ExecProgramArgs? execArgs,
+  }) {
+    final result = ExecArtifactArgs._();
+    if (path != null) result.path = path;
+    if (execArgs != null) result.execArgs = execArgs;
+    return result;
+  }
+
+  ExecArtifactArgs._();
+
+  factory ExecArtifactArgs.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      ExecArtifactArgs()..mergeFromBuffer(data, registry);
+  factory ExecArtifactArgs.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      ExecArtifactArgs()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ExecArtifactArgs',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'com.kcl.api'),
+      createEmptyInstance: ExecArtifactArgs.$_createMessage)
+    ..aOS(1, _omitFieldNames ? '' : 'path')
+    ..aOM<ExecProgramArgs>(2, _omitFieldNames ? '' : 'execArgs',
+        subBuilder: ExecProgramArgs.$_createMessage)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ExecArtifactArgs clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ExecArtifactArgs copyWith(void Function(ExecArtifactArgs) updates) =>
+      super.copyWith((message) => updates(message as ExecArtifactArgs))
+          as ExecArtifactArgs;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  @$core.Deprecated('Use ExecArtifactArgs() / ExecArtifactArgs.new instead')
+  static ExecArtifactArgs create() => ExecArtifactArgs._();
+  static $pb.GeneratedMessage $_createMessage() => ExecArtifactArgs._();
+  @$core.override
+  ExecArtifactArgs createEmptyInstance() => ExecArtifactArgs._();
+  @$core.pragma('dart2js:noInline')
+  static ExecArtifactArgs getDefault() =>
+      _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<ExecArtifactArgs>(
+          ExecArtifactArgs.$_createMessage);
+  static ExecArtifactArgs? _defaultInstance;
+
+  /// Path of the artifact.
+  @$pb.TagNumber(1)
+  $core.String get path => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set path($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasPath() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearPath() => $_clearField(1);
+
+  /// Arguments for executing the program.
+  @$pb.TagNumber(2)
+  ExecProgramArgs get execArgs => $_getN(1);
+  @$pb.TagNumber(2)
+  set execArgs(ExecProgramArgs value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasExecArgs() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearExecArgs() => $_clearField(2);
+  @$pb.TagNumber(2)
+  ExecProgramArgs ensureExecArgs() => $_ensure(1);
+}
+
 /// Message for format code request arguments.
 class FormatCodeArgs extends $pb.GeneratedMessage {
   factory FormatCodeArgs({
@@ -5399,9 +5608,19 @@ class TestArgs extends $pb.GeneratedMessage {
   @$pb.TagNumber(5)
   void clearCoverage() => $_clearField(5);
 
-  /// Evaluate each test package once and run all of its test cases in that
-  /// one evaluation. Opt-in; defaults to false. Cases then share the values
-  /// the package defines.
+  /// Flag to evaluate each test package once and run all of its test cases in
+  /// that one evaluation, instead of evaluating the package again for every
+  /// case. Each case still reports its own result, error and log, and a case
+  /// that fails hands the next one a freshly evaluated package.
+  /// NOTE: cases share the values the package defines. A case that passes
+  /// after mutating one in place, e.g. a schema instance it got as a lambda
+  /// argument, changes what the cases after it see, and planning, which runs
+  /// before the cases, does not see the change; a suite whose cases rely on
+  /// starting from the package as it is defined must not set this flag.
+  /// Case durations then exclude the evaluation of the package, a planning
+  /// error is always reported at the end of the generated main file, and
+  /// that file selects no case, so the coverage counts each of its lines
+  /// once. Defaults to false.
   @$pb.TagNumber(6)
   $core.bool get evalOnce => $_getBF(5);
   @$pb.TagNumber(6)
@@ -6653,6 +6872,648 @@ class GenerateProtoResult extends $pb.GeneratedMessage {
   void clearProto() => $_clearField(1);
 }
 
+/// Message for Rust DTO generation request arguments.
+class GenerateRustArgs extends $pb.GeneratedMessage {
+  factory GenerateRustArgs({
+    ParseProgramArgs? parseArgs,
+  }) {
+    final result = GenerateRustArgs._();
+    if (parseArgs != null) result.parseArgs = parseArgs;
+    return result;
+  }
+
+  GenerateRustArgs._();
+
+  factory GenerateRustArgs.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      GenerateRustArgs()..mergeFromBuffer(data, registry);
+  factory GenerateRustArgs.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      GenerateRustArgs()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'GenerateRustArgs',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'com.kcl.api'),
+      createEmptyInstance: GenerateRustArgs.$_createMessage)
+    ..aOM<ParseProgramArgs>(1, _omitFieldNames ? '' : 'parseArgs',
+        subBuilder: ParseProgramArgs.$_createMessage)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GenerateRustArgs clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GenerateRustArgs copyWith(void Function(GenerateRustArgs) updates) =>
+      super.copyWith((message) => updates(message as GenerateRustArgs))
+          as GenerateRustArgs;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  @$core.Deprecated('Use GenerateRustArgs() / GenerateRustArgs.new instead')
+  static GenerateRustArgs create() => GenerateRustArgs._();
+  static $pb.GeneratedMessage $_createMessage() => GenerateRustArgs._();
+  @$core.override
+  GenerateRustArgs createEmptyInstance() => GenerateRustArgs._();
+  @$core.pragma('dart2js:noInline')
+  static GenerateRustArgs getDefault() =>
+      _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<GenerateRustArgs>(
+          GenerateRustArgs.$_createMessage);
+  static GenerateRustArgs? _defaultInstance;
+
+  /// Arguments for parsing the program whose schemas are exported.
+  @$pb.TagNumber(1)
+  ParseProgramArgs get parseArgs => $_getN(0);
+  @$pb.TagNumber(1)
+  set parseArgs(ParseProgramArgs value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasParseArgs() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearParseArgs() => $_clearField(1);
+  @$pb.TagNumber(1)
+  ParseProgramArgs ensureParseArgs() => $_ensure(0);
+}
+
+/// Message for Rust DTO generation response.
+class GenerateRustResult extends $pb.GeneratedMessage {
+  factory GenerateRustResult({
+    $core.String? rustSource,
+  }) {
+    final result = GenerateRustResult._();
+    if (rustSource != null) result.rustSource = rustSource;
+    return result;
+  }
+
+  GenerateRustResult._();
+
+  factory GenerateRustResult.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      GenerateRustResult()..mergeFromBuffer(data, registry);
+  factory GenerateRustResult.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      GenerateRustResult()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'GenerateRustResult',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'com.kcl.api'),
+      createEmptyInstance: GenerateRustResult.$_createMessage)
+    ..aOS(1, _omitFieldNames ? '' : 'rustSource')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GenerateRustResult clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GenerateRustResult copyWith(void Function(GenerateRustResult) updates) =>
+      super.copyWith((message) => updates(message as GenerateRustResult))
+          as GenerateRustResult;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  @$core.Deprecated('Use GenerateRustResult() / GenerateRustResult.new instead')
+  static GenerateRustResult create() => GenerateRustResult._();
+  static $pb.GeneratedMessage $_createMessage() => GenerateRustResult._();
+  @$core.override
+  GenerateRustResult createEmptyInstance() => GenerateRustResult._();
+  @$core.pragma('dart2js:noInline')
+  static GenerateRustResult getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<GenerateRustResult>(
+          GenerateRustResult.$_createMessage);
+  static GenerateRustResult? _defaultInstance;
+
+  /// The generated Rust source.
+  @$pb.TagNumber(1)
+  $core.String get rustSource => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set rustSource($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasRustSource() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearRustSource() => $_clearField(1);
+}
+
+/// Message for Python DTO generation request arguments.
+class GeneratePythonArgs extends $pb.GeneratedMessage {
+  factory GeneratePythonArgs({
+    ParseProgramArgs? parseArgs,
+  }) {
+    final result = GeneratePythonArgs._();
+    if (parseArgs != null) result.parseArgs = parseArgs;
+    return result;
+  }
+
+  GeneratePythonArgs._();
+
+  factory GeneratePythonArgs.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      GeneratePythonArgs()..mergeFromBuffer(data, registry);
+  factory GeneratePythonArgs.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      GeneratePythonArgs()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'GeneratePythonArgs',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'com.kcl.api'),
+      createEmptyInstance: GeneratePythonArgs.$_createMessage)
+    ..aOM<ParseProgramArgs>(1, _omitFieldNames ? '' : 'parseArgs',
+        subBuilder: ParseProgramArgs.$_createMessage)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GeneratePythonArgs clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GeneratePythonArgs copyWith(void Function(GeneratePythonArgs) updates) =>
+      super.copyWith((message) => updates(message as GeneratePythonArgs))
+          as GeneratePythonArgs;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  @$core.Deprecated('Use GeneratePythonArgs() / GeneratePythonArgs.new instead')
+  static GeneratePythonArgs create() => GeneratePythonArgs._();
+  static $pb.GeneratedMessage $_createMessage() => GeneratePythonArgs._();
+  @$core.override
+  GeneratePythonArgs createEmptyInstance() => GeneratePythonArgs._();
+  @$core.pragma('dart2js:noInline')
+  static GeneratePythonArgs getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<GeneratePythonArgs>(
+          GeneratePythonArgs.$_createMessage);
+  static GeneratePythonArgs? _defaultInstance;
+
+  /// Arguments for parsing the program whose schemas are exported.
+  @$pb.TagNumber(1)
+  ParseProgramArgs get parseArgs => $_getN(0);
+  @$pb.TagNumber(1)
+  set parseArgs(ParseProgramArgs value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasParseArgs() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearParseArgs() => $_clearField(1);
+  @$pb.TagNumber(1)
+  ParseProgramArgs ensureParseArgs() => $_ensure(0);
+}
+
+/// Message for Python DTO generation response.
+class GeneratePythonResult extends $pb.GeneratedMessage {
+  factory GeneratePythonResult({
+    $core.String? pythonSource,
+  }) {
+    final result = GeneratePythonResult._();
+    if (pythonSource != null) result.pythonSource = pythonSource;
+    return result;
+  }
+
+  GeneratePythonResult._();
+
+  factory GeneratePythonResult.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      GeneratePythonResult()..mergeFromBuffer(data, registry);
+  factory GeneratePythonResult.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      GeneratePythonResult()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'GeneratePythonResult',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'com.kcl.api'),
+      createEmptyInstance: GeneratePythonResult.$_createMessage)
+    ..aOS(1, _omitFieldNames ? '' : 'pythonSource')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GeneratePythonResult clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GeneratePythonResult copyWith(void Function(GeneratePythonResult) updates) =>
+      super.copyWith((message) => updates(message as GeneratePythonResult))
+          as GeneratePythonResult;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  @$core.Deprecated(
+      'Use GeneratePythonResult() / GeneratePythonResult.new instead')
+  static GeneratePythonResult create() => GeneratePythonResult._();
+  static $pb.GeneratedMessage $_createMessage() => GeneratePythonResult._();
+  @$core.override
+  GeneratePythonResult createEmptyInstance() => GeneratePythonResult._();
+  @$core.pragma('dart2js:noInline')
+  static GeneratePythonResult getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<GeneratePythonResult>(
+          GeneratePythonResult.$_createMessage);
+  static GeneratePythonResult? _defaultInstance;
+
+  /// The generated Python source.
+  @$pb.TagNumber(1)
+  $core.String get pythonSource => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set pythonSource($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasPythonSource() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearPythonSource() => $_clearField(1);
+}
+
+/// Message for Go DTO generation request arguments.
+class GenerateGoArgs extends $pb.GeneratedMessage {
+  factory GenerateGoArgs({
+    ParseProgramArgs? parseArgs,
+    $core.String? package,
+  }) {
+    final result = GenerateGoArgs._();
+    if (parseArgs != null) result.parseArgs = parseArgs;
+    if (package != null) result.package = package;
+    return result;
+  }
+
+  GenerateGoArgs._();
+
+  factory GenerateGoArgs.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      GenerateGoArgs()..mergeFromBuffer(data, registry);
+  factory GenerateGoArgs.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      GenerateGoArgs()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'GenerateGoArgs',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'com.kcl.api'),
+      createEmptyInstance: GenerateGoArgs.$_createMessage)
+    ..aOM<ParseProgramArgs>(1, _omitFieldNames ? '' : 'parseArgs',
+        subBuilder: ParseProgramArgs.$_createMessage)
+    ..aOS(2, _omitFieldNames ? '' : 'package')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GenerateGoArgs clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GenerateGoArgs copyWith(void Function(GenerateGoArgs) updates) =>
+      super.copyWith((message) => updates(message as GenerateGoArgs))
+          as GenerateGoArgs;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  @$core.Deprecated('Use GenerateGoArgs() / GenerateGoArgs.new instead')
+  static GenerateGoArgs create() => GenerateGoArgs._();
+  static $pb.GeneratedMessage $_createMessage() => GenerateGoArgs._();
+  @$core.override
+  GenerateGoArgs createEmptyInstance() => GenerateGoArgs._();
+  @$core.pragma('dart2js:noInline')
+  static GenerateGoArgs getDefault() =>
+      _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<GenerateGoArgs>(
+          GenerateGoArgs.$_createMessage);
+  static GenerateGoArgs? _defaultInstance;
+
+  /// Arguments for parsing the program whose schemas are exported.
+  @$pb.TagNumber(1)
+  ParseProgramArgs get parseArgs => $_getN(0);
+  @$pb.TagNumber(1)
+  set parseArgs(ParseProgramArgs value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasParseArgs() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearParseArgs() => $_clearField(1);
+  @$pb.TagNumber(1)
+  ParseProgramArgs ensureParseArgs() => $_ensure(0);
+
+  /// Go package name for the generated file's `package` clause, e.g.
+  /// "dto". Empty defaults to "generated" — Go requires a package clause,
+  /// unlike GenerateProto's optional `package` field.
+  @$pb.TagNumber(2)
+  $core.String get package => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set package($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasPackage() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearPackage() => $_clearField(2);
+}
+
+/// Message for Go DTO generation response.
+class GenerateGoResult extends $pb.GeneratedMessage {
+  factory GenerateGoResult({
+    $core.String? goSource,
+  }) {
+    final result = GenerateGoResult._();
+    if (goSource != null) result.goSource = goSource;
+    return result;
+  }
+
+  GenerateGoResult._();
+
+  factory GenerateGoResult.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      GenerateGoResult()..mergeFromBuffer(data, registry);
+  factory GenerateGoResult.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      GenerateGoResult()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'GenerateGoResult',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'com.kcl.api'),
+      createEmptyInstance: GenerateGoResult.$_createMessage)
+    ..aOS(1, _omitFieldNames ? '' : 'goSource')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GenerateGoResult clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GenerateGoResult copyWith(void Function(GenerateGoResult) updates) =>
+      super.copyWith((message) => updates(message as GenerateGoResult))
+          as GenerateGoResult;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  @$core.Deprecated('Use GenerateGoResult() / GenerateGoResult.new instead')
+  static GenerateGoResult create() => GenerateGoResult._();
+  static $pb.GeneratedMessage $_createMessage() => GenerateGoResult._();
+  @$core.override
+  GenerateGoResult createEmptyInstance() => GenerateGoResult._();
+  @$core.pragma('dart2js:noInline')
+  static GenerateGoResult getDefault() =>
+      _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<GenerateGoResult>(
+          GenerateGoResult.$_createMessage);
+  static GenerateGoResult? _defaultInstance;
+
+  /// The generated Go source.
+  @$pb.TagNumber(1)
+  $core.String get goSource => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set goSource($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasGoSource() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearGoSource() => $_clearField(1);
+}
+
+/// Message for Java DTO generation request arguments.
+class GenerateJavaArgs extends $pb.GeneratedMessage {
+  factory GenerateJavaArgs({
+    ParseProgramArgs? parseArgs,
+    $core.String? package,
+  }) {
+    final result = GenerateJavaArgs._();
+    if (parseArgs != null) result.parseArgs = parseArgs;
+    if (package != null) result.package = package;
+    return result;
+  }
+
+  GenerateJavaArgs._();
+
+  factory GenerateJavaArgs.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      GenerateJavaArgs()..mergeFromBuffer(data, registry);
+  factory GenerateJavaArgs.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      GenerateJavaArgs()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'GenerateJavaArgs',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'com.kcl.api'),
+      createEmptyInstance: GenerateJavaArgs.$_createMessage)
+    ..aOM<ParseProgramArgs>(1, _omitFieldNames ? '' : 'parseArgs',
+        subBuilder: ParseProgramArgs.$_createMessage)
+    ..aOS(2, _omitFieldNames ? '' : 'package')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GenerateJavaArgs clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GenerateJavaArgs copyWith(void Function(GenerateJavaArgs) updates) =>
+      super.copyWith((message) => updates(message as GenerateJavaArgs))
+          as GenerateJavaArgs;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  @$core.Deprecated('Use GenerateJavaArgs() / GenerateJavaArgs.new instead')
+  static GenerateJavaArgs create() => GenerateJavaArgs._();
+  static $pb.GeneratedMessage $_createMessage() => GenerateJavaArgs._();
+  @$core.override
+  GenerateJavaArgs createEmptyInstance() => GenerateJavaArgs._();
+  @$core.pragma('dart2js:noInline')
+  static GenerateJavaArgs getDefault() =>
+      _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<GenerateJavaArgs>(
+          GenerateJavaArgs.$_createMessage);
+  static GenerateJavaArgs? _defaultInstance;
+
+  /// Arguments for parsing the program whose schemas are exported.
+  @$pb.TagNumber(1)
+  ParseProgramArgs get parseArgs => $_getN(0);
+  @$pb.TagNumber(1)
+  set parseArgs(ParseProgramArgs value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasParseArgs() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearParseArgs() => $_clearField(1);
+  @$pb.TagNumber(1)
+  ParseProgramArgs ensureParseArgs() => $_ensure(0);
+
+  /// Java package name for the generated file's `package` clause, e.g.
+  /// "com.example.dto". Empty omits the package clause entirely (valid
+  /// Java — the "default package") rather than defaulting to a synthetic
+  /// name as GenerateGo does, since Java (unlike Go) does not require one.
+  @$pb.TagNumber(2)
+  $core.String get package => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set package($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasPackage() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearPackage() => $_clearField(2);
+}
+
+/// Message for Java DTO generation response.
+class GenerateJavaResult extends $pb.GeneratedMessage {
+  factory GenerateJavaResult({
+    $core.String? javaSource,
+  }) {
+    final result = GenerateJavaResult._();
+    if (javaSource != null) result.javaSource = javaSource;
+    return result;
+  }
+
+  GenerateJavaResult._();
+
+  factory GenerateJavaResult.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      GenerateJavaResult()..mergeFromBuffer(data, registry);
+  factory GenerateJavaResult.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      GenerateJavaResult()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'GenerateJavaResult',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'com.kcl.api'),
+      createEmptyInstance: GenerateJavaResult.$_createMessage)
+    ..aOS(1, _omitFieldNames ? '' : 'javaSource')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GenerateJavaResult clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GenerateJavaResult copyWith(void Function(GenerateJavaResult) updates) =>
+      super.copyWith((message) => updates(message as GenerateJavaResult))
+          as GenerateJavaResult;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  @$core.Deprecated('Use GenerateJavaResult() / GenerateJavaResult.new instead')
+  static GenerateJavaResult create() => GenerateJavaResult._();
+  static $pb.GeneratedMessage $_createMessage() => GenerateJavaResult._();
+  @$core.override
+  GenerateJavaResult createEmptyInstance() => GenerateJavaResult._();
+  @$core.pragma('dart2js:noInline')
+  static GenerateJavaResult getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<GenerateJavaResult>(
+          GenerateJavaResult.$_createMessage);
+  static GenerateJavaResult? _defaultInstance;
+
+  /// The generated Java source.
+  @$pb.TagNumber(1)
+  $core.String get javaSource => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set javaSource($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasJavaSource() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearJavaSource() => $_clearField(1);
+}
+
+/// Message for TypeScript DTO generation request arguments.
+class GenerateTypeScriptArgs extends $pb.GeneratedMessage {
+  factory GenerateTypeScriptArgs({
+    ParseProgramArgs? parseArgs,
+  }) {
+    final result = GenerateTypeScriptArgs._();
+    if (parseArgs != null) result.parseArgs = parseArgs;
+    return result;
+  }
+
+  GenerateTypeScriptArgs._();
+
+  factory GenerateTypeScriptArgs.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      GenerateTypeScriptArgs()..mergeFromBuffer(data, registry);
+  factory GenerateTypeScriptArgs.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      GenerateTypeScriptArgs()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'GenerateTypeScriptArgs',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'com.kcl.api'),
+      createEmptyInstance: GenerateTypeScriptArgs.$_createMessage)
+    ..aOM<ParseProgramArgs>(1, _omitFieldNames ? '' : 'parseArgs',
+        subBuilder: ParseProgramArgs.$_createMessage)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GenerateTypeScriptArgs clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GenerateTypeScriptArgs copyWith(
+          void Function(GenerateTypeScriptArgs) updates) =>
+      super.copyWith((message) => updates(message as GenerateTypeScriptArgs))
+          as GenerateTypeScriptArgs;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  @$core.Deprecated(
+      'Use GenerateTypeScriptArgs() / GenerateTypeScriptArgs.new instead')
+  static GenerateTypeScriptArgs create() => GenerateTypeScriptArgs._();
+  static $pb.GeneratedMessage $_createMessage() => GenerateTypeScriptArgs._();
+  @$core.override
+  GenerateTypeScriptArgs createEmptyInstance() => GenerateTypeScriptArgs._();
+  @$core.pragma('dart2js:noInline')
+  static GenerateTypeScriptArgs getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<GenerateTypeScriptArgs>(
+          GenerateTypeScriptArgs.$_createMessage);
+  static GenerateTypeScriptArgs? _defaultInstance;
+
+  /// Arguments for parsing the program whose schemas are exported.
+  @$pb.TagNumber(1)
+  ParseProgramArgs get parseArgs => $_getN(0);
+  @$pb.TagNumber(1)
+  set parseArgs(ParseProgramArgs value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasParseArgs() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearParseArgs() => $_clearField(1);
+  @$pb.TagNumber(1)
+  ParseProgramArgs ensureParseArgs() => $_ensure(0);
+}
+
+/// Message for TypeScript DTO generation response.
+class GenerateTypeScriptResult extends $pb.GeneratedMessage {
+  factory GenerateTypeScriptResult({
+    $core.String? typescriptSource,
+  }) {
+    final result = GenerateTypeScriptResult._();
+    if (typescriptSource != null) result.typescriptSource = typescriptSource;
+    return result;
+  }
+
+  GenerateTypeScriptResult._();
+
+  factory GenerateTypeScriptResult.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      GenerateTypeScriptResult()..mergeFromBuffer(data, registry);
+  factory GenerateTypeScriptResult.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      GenerateTypeScriptResult()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'GenerateTypeScriptResult',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'com.kcl.api'),
+      createEmptyInstance: GenerateTypeScriptResult.$_createMessage)
+    ..aOS(1, _omitFieldNames ? '' : 'typescriptSource')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GenerateTypeScriptResult clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GenerateTypeScriptResult copyWith(
+          void Function(GenerateTypeScriptResult) updates) =>
+      super.copyWith((message) => updates(message as GenerateTypeScriptResult))
+          as GenerateTypeScriptResult;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  @$core.Deprecated(
+      'Use GenerateTypeScriptResult() / GenerateTypeScriptResult.new instead')
+  static GenerateTypeScriptResult create() => GenerateTypeScriptResult._();
+  static $pb.GeneratedMessage $_createMessage() => GenerateTypeScriptResult._();
+  @$core.override
+  GenerateTypeScriptResult createEmptyInstance() =>
+      GenerateTypeScriptResult._();
+  @$core.pragma('dart2js:noInline')
+  static GenerateTypeScriptResult getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<GenerateTypeScriptResult>(
+          GenerateTypeScriptResult.$_createMessage);
+  static GenerateTypeScriptResult? _defaultInstance;
+
+  /// The generated TypeScript source.
+  @$pb.TagNumber(1)
+  $core.String get typescriptSource => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set typescriptSource($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasTypescriptSource() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearTypescriptSource() => $_clearField(1);
+}
+
 /// Message for generate doc request arguments.
 class GenerateDocArgs extends $pb.GeneratedMessage {
   factory GenerateDocArgs({
@@ -6810,6 +7671,7 @@ class KclType extends $pb.GeneratedMessage {
     KclType? baseSchema,
     FunctionType? function,
     IndexSignature? indexSignature,
+    $core.Iterable<$core.String>? checksJson,
   }) {
     final result = KclType._();
     if (type != null) result.type = type;
@@ -6830,6 +7692,7 @@ class KclType extends $pb.GeneratedMessage {
     if (baseSchema != null) result.baseSchema = baseSchema;
     if (function != null) result.function = function;
     if (indexSignature != null) result.indexSignature = indexSignature;
+    if (checksJson != null) result.checksJson.addAll(checksJson);
     return result;
   }
 
@@ -6883,6 +7746,7 @@ class KclType extends $pb.GeneratedMessage {
         subBuilder: FunctionType.$_createMessage)
     ..aOM<IndexSignature>(18, _omitFieldNames ? '' : 'indexSignature',
         subBuilder: IndexSignature.$_createMessage)
+    ..pPS(19, _omitFieldNames ? '' : 'checksJson')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -7064,6 +7928,10 @@ class KclType extends $pb.GeneratedMessage {
   void clearIndexSignature() => $_clearField(18);
   @$pb.TagNumber(18)
   IndexSignature ensureIndexSignature() => $_ensure(17);
+
+  /// Schema CheckExpr AST nodes serialized as JSON for code generators.
+  @$pb.TagNumber(19)
+  $pb.PbList<$core.String> get checksJson => $_getList(18);
 }
 
 class FunctionType extends $pb.GeneratedMessage {
@@ -7818,6 +8686,75 @@ class KclServiceApi {
       _client.invoke<ExecProgramResult>(
           ctx, 'KclService', 'ExecProgram', request, ExecProgramResult());
 
+  /// / Build the KCL program to an artifact.
+  /// /
+  /// / # Examples
+  /// /
+  /// / ```jsonrpc
+  /// / // Request
+  /// / {
+  /// /     "jsonrpc": "2.0",
+  /// /     "method": "BuildProgram",
+  /// /     "params": {
+  /// /         "exec_args": {
+  /// /             "work_dir": "./src/testdata",
+  /// /             "k_filename_list": ["test.k"]
+  /// /         },
+  /// /         "output": "./build"
+  /// /     },
+  /// /     "id": 1
+  /// / }
+  /// /
+  /// / // Response
+  /// / {
+  /// /     "jsonrpc": "2.0",
+  /// /     "result": {
+  /// /         "path": "./build/test.k"
+  /// /     },
+  /// /     "id": 1
+  /// / }
+  /// / ```
+  $async.Future<BuildProgramResult> buildProgram(
+          $pb.ClientContext? ctx, BuildProgramArgs request) =>
+      _client.invoke<BuildProgramResult>(
+          ctx, 'KclService', 'BuildProgram', request, BuildProgramResult());
+
+  /// / Execute the KCL artifact with args. **Note that it is not thread safe.**
+  /// /
+  /// / # Examples
+  /// /
+  /// / ```jsonrpc
+  /// / // Request
+  /// / {
+  /// /     "jsonrpc": "2.0",
+  /// /     "method": "ExecArtifact",
+  /// /     "params": {
+  /// /         "path": "./artifact_path",
+  /// /         "exec_args": {
+  /// /             "work_dir": "./src/testdata",
+  /// /             "k_filename_list": ["test.k"]
+  /// /         }
+  /// /     },
+  /// /     "id": 1
+  /// / }
+  /// /
+  /// / // Response
+  /// / {
+  /// /     "jsonrpc": "2.0",
+  /// /     "result": {
+  /// /         "json_result": "{\"alice\": {\"age\": 18}}",
+  /// /         "yaml_result": "alice:\n  age: 18",
+  /// /         "log_message": "",
+  /// /         "err_message": ""
+  /// /     },
+  /// /     "id": 1
+  /// / }
+  /// / ```
+  $async.Future<ExecProgramResult> execArtifact(
+          $pb.ClientContext? ctx, ExecArtifactArgs request) =>
+      _client.invoke<ExecProgramResult>(
+          ctx, 'KclService', 'ExecArtifact', request, ExecProgramResult());
+
   /// / Override KCL file with args.
   /// /
   /// / # Examples
@@ -8449,6 +9386,36 @@ class KclServiceApi {
           $pb.ClientContext? ctx, GenerateProtoArgs request) =>
       _client.invoke<GenerateProtoResult>(
           ctx, 'KclService', 'GenerateProto', request, GenerateProtoResult());
+
+  /// / Generate Rust DTOs from the schemas of a KCL package.
+  $async.Future<GenerateRustResult> generateRust(
+          $pb.ClientContext? ctx, GenerateRustArgs request) =>
+      _client.invoke<GenerateRustResult>(
+          ctx, 'KclService', 'GenerateRust', request, GenerateRustResult());
+
+  /// / Generate Python DTOs from the schemas of a KCL package.
+  $async.Future<GeneratePythonResult> generatePython(
+          $pb.ClientContext? ctx, GeneratePythonArgs request) =>
+      _client.invoke<GeneratePythonResult>(
+          ctx, 'KclService', 'GeneratePython', request, GeneratePythonResult());
+
+  /// / Generate Go DTOs from the schemas of a KCL package.
+  $async.Future<GenerateGoResult> generateGo(
+          $pb.ClientContext? ctx, GenerateGoArgs request) =>
+      _client.invoke<GenerateGoResult>(
+          ctx, 'KclService', 'GenerateGo', request, GenerateGoResult());
+
+  /// / Generate Java DTOs from the schemas of a KCL package.
+  $async.Future<GenerateJavaResult> generateJava(
+          $pb.ClientContext? ctx, GenerateJavaArgs request) =>
+      _client.invoke<GenerateJavaResult>(
+          ctx, 'KclService', 'GenerateJava', request, GenerateJavaResult());
+
+  /// / Generate TypeScript DTOs from the schemas of a KCL package.
+  $async.Future<GenerateTypeScriptResult> generateTypeScript(
+          $pb.ClientContext? ctx, GenerateTypeScriptArgs request) =>
+      _client.invoke<GenerateTypeScriptResult>(ctx, 'KclService',
+          'GenerateTypeScript', request, GenerateTypeScriptResult());
 
   /// / Generate documentation from the schemas of a KCL package.
   /// /

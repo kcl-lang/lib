@@ -666,9 +666,10 @@ class ConsistencyTest {
                     val result = api().generateProto(
                         generateProtoArgs {
                             this.parseArgs = parseArgs(args.get("parse_args"))
-                            // `package` is a Kotlin keyword, so the generated DSL
-                            // property needs the backtick form.
-                            `package` = args.path("package").asText("")
+                            // `package` is a Kotlin keyword, so protoc's Kotlin
+                            // generator appends an underscore to the DSL
+                            // property: `package_`.
+                            package_ = args.path("package").asText("")
                         }
                     )
                     assertField(name, "proto", expect.get("proto").asText(), result.proto)

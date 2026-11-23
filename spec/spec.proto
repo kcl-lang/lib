@@ -370,6 +370,69 @@ service KclService {
 	/// ```
 	rpc ExecProgram(ExecProgramArgs) returns (ExecProgramResult);
 
+	/// Build the KCL program to an artifact.
+	///
+	/// # Examples
+	///
+	/// ```jsonrpc
+	/// // Request
+	/// {
+	///     "jsonrpc": "2.0",
+	///     "method": "BuildProgram",
+	///     "params": {
+	///         "exec_args": {
+	///             "work_dir": "./src/testdata",
+	///             "k_filename_list": ["test.k"]
+	///         },
+	///         "output": "./build"
+	///     },
+	///     "id": 1
+	/// }
+	///
+	/// // Response
+	/// {
+	///     "jsonrpc": "2.0",
+	///     "result": {
+	///         "path": "./build/test.k"
+	///     },
+	///     "id": 1
+	/// }
+	/// ```
+	rpc BuildProgram(BuildProgramArgs) returns (BuildProgramResult);
+
+	/// Execute the KCL artifact with args. **Note that it is not thread safe.**
+	///
+	/// # Examples
+	///
+	/// ```jsonrpc
+	/// // Request
+	/// {
+	///     "jsonrpc": "2.0",
+	///     "method": "ExecArtifact",
+	///     "params": {
+	///         "path": "./artifact_path",
+	///         "exec_args": {
+	///             "work_dir": "./src/testdata",
+	///             "k_filename_list": ["test.k"]
+	///         }
+	///     },
+	///     "id": 1
+	/// }
+	///
+	/// // Response
+	/// {
+	///     "jsonrpc": "2.0",
+	///     "result": {
+	///         "json_result": "{\"alice\": {\"age\": 18}}",
+	///         "yaml_result": "alice:\n  age: 18",
+	///         "log_message": "",
+	///         "err_message": ""
+	///     },
+	///     "id": 1
+	/// }
+	/// ```
+	rpc ExecArtifact(ExecArtifactArgs) returns (ExecProgramResult);
+
 	/// Override KCL file with args.
 	///
 	/// # Examples
@@ -947,6 +1010,21 @@ service KclService {
 	/// ```
 	rpc GenerateProto(GenerateProtoArgs) returns (GenerateProtoResult);
 
+	/// Generate Rust DTOs from the schemas of a KCL package.
+	rpc GenerateRust(GenerateRustArgs) returns (GenerateRustResult);
+
+	/// Generate Python DTOs from the schemas of a KCL package.
+	rpc GeneratePython(GeneratePythonArgs) returns (GeneratePythonResult);
+
+	/// Generate Go DTOs from the schemas of a KCL package.
+	rpc GenerateGo(GenerateGoArgs) returns (GenerateGoResult);
+
+	/// Generate Java DTOs from the schemas of a KCL package.
+	rpc GenerateJava(GenerateJavaArgs) returns (GenerateJavaResult);
+
+	/// Generate TypeScript DTOs from the schemas of a KCL package.
+	rpc GenerateTypeScript(GenerateTypeScriptArgs) returns (GenerateTypeScriptResult);
+
 	/// Generate documentation from the schemas of a KCL package.
 	///
 	/// # Examples
@@ -1351,6 +1429,28 @@ message ExecProgramResult {
 	// back to the originating KCL source. Populated only when the caller
 	// requests a source map; empty otherwise.
 	optional string sourcemap = 5;
+}
+
+// Message for build program request arguments.
+message BuildProgramArgs {
+	// Arguments for executing the program.
+	ExecProgramArgs exec_args = 1;
+	// Output path.
+	string output = 2;
+}
+
+// Message for build program response.
+message BuildProgramResult {
+	// Path of the built program.
+	string path = 1;
+}
+
+// Message for execute artifact request arguments.
+message ExecArtifactArgs {
+	// Path of the artifact.
+	string path = 1;
+	// Arguments for executing the program.
+	ExecProgramArgs exec_args = 2;
 }
 
 // Message for format code request arguments.
@@ -1816,6 +1916,75 @@ message GenerateProtoResult {
 	string proto = 1;
 }
 
+// Message for Rust DTO generation request arguments.
+message GenerateRustArgs {
+	// Arguments for parsing the program whose schemas are exported.
+	ParseProgramArgs parse_args = 1;
+}
+
+// Message for Rust DTO generation response.
+message GenerateRustResult {
+	// The generated Rust source.
+	string rust_source = 1;
+}
+
+// Message for Python DTO generation request arguments.
+message GeneratePythonArgs {
+	// Arguments for parsing the program whose schemas are exported.
+	ParseProgramArgs parse_args = 1;
+}
+
+// Message for Python DTO generation response.
+message GeneratePythonResult {
+	// The generated Python source.
+	string python_source = 1;
+}
+
+// Message for Go DTO generation request arguments.
+message GenerateGoArgs {
+	// Arguments for parsing the program whose schemas are exported.
+	ParseProgramArgs parse_args = 1;
+	// Go package name for the generated file's `package` clause, e.g.
+	// "dto". Empty defaults to "generated" — Go requires a package clause,
+	// unlike GenerateProto's optional `package` field.
+	string package = 2;
+}
+
+// Message for Go DTO generation response.
+message GenerateGoResult {
+	// The generated Go source.
+	string go_source = 1;
+}
+
+// Message for Java DTO generation request arguments.
+message GenerateJavaArgs {
+	// Arguments for parsing the program whose schemas are exported.
+	ParseProgramArgs parse_args = 1;
+	// Java package name for the generated file's `package` clause, e.g.
+	// "com.example.dto". Empty omits the package clause entirely (valid
+	// Java — the "default package") rather than defaulting to a synthetic
+	// name as GenerateGo does, since Java (unlike Go) does not require one.
+	string package = 2;
+}
+
+// Message for Java DTO generation response.
+message GenerateJavaResult {
+	// The generated Java source.
+	string java_source = 1;
+}
+
+// Message for TypeScript DTO generation request arguments.
+message GenerateTypeScriptArgs {
+	// Arguments for parsing the program whose schemas are exported.
+	ParseProgramArgs parse_args = 1;
+}
+
+// Message for TypeScript DTO generation response.
+message GenerateTypeScriptResult {
+	// The generated TypeScript source.
+	string typescript_source = 1;
+}
+
 // Message for generate doc request arguments.
 message GenerateDocArgs {
 	// Arguments for parsing the program whose schemas are documented.
@@ -1874,6 +2043,8 @@ message KclType {
 	optional FunctionType function = 17;
 	// Optional schema index signature
 	optional IndexSignature index_signature = 18;
+	// Schema CheckExpr AST nodes serialized as JSON for code generators.
+	repeated string checks_json = 19;
 }
 
 message FunctionType {

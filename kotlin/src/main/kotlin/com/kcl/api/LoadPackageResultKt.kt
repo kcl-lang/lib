@@ -863,9 +863,269 @@ public object LoadPackageResultKt {
       .clear() {
          _builder.clearPkgScopeMap()
        }
+
+    /**
+     * An uninstantiable, behaviorless type to represent the field in
+     * generics.
+     */
+    @kotlin.OptIn(com.google.protobuf.kotlin.OnlyForUseByGeneratedProtoCode::class)
+    public class ImportsProxy private constructor() : com.google.protobuf.kotlin.DslProxy()
+    /**
+     * ```
+     * Map of direct imports, keyed by the importing file's absolute path.
+     * `path` is the import specifier as written in the source; `resolved` is
+     * the resolved absolute file path (empty for builtins/unresolved imports).
+     * Upstream files = transitive closure; downstream = reverse closure; this
+     * replaces the removed ListDep* RPCs.
+     * ```
+     *
+     * `map<string, .com.kcl.api.FileImports> imports = 11;`
+     */
+     public val imports: com.google.protobuf.kotlin.DslMap<kotlin.String, com.kcl.api.Spec.FileImports, ImportsProxy>
+      @kotlin.jvm.JvmSynthetic
+@kotlin.jvm.JvmName("getImportsMap")
+      get() = com.google.protobuf.kotlin.DslMap(
+        _builder.importsMap
+      )
+    /**
+     * ```
+     * Map of direct imports, keyed by the importing file's absolute path.
+     * `path` is the import specifier as written in the source; `resolved` is
+     * the resolved absolute file path (empty for builtins/unresolved imports).
+     * Upstream files = transitive closure; downstream = reverse closure; this
+     * replaces the removed ListDep* RPCs.
+     * ```
+     *
+     * `map<string, .com.kcl.api.FileImports> imports = 11;`
+     */
+    @kotlin.jvm.JvmName("putImports")
+    public fun com.google.protobuf.kotlin.DslMap<kotlin.String, com.kcl.api.Spec.FileImports, ImportsProxy>
+      .put(key: kotlin.String, value: com.kcl.api.Spec.FileImports) {
+         _builder.putImports(key, value)
+       }
+    /**
+     * ```
+     * Map of direct imports, keyed by the importing file's absolute path.
+     * `path` is the import specifier as written in the source; `resolved` is
+     * the resolved absolute file path (empty for builtins/unresolved imports).
+     * Upstream files = transitive closure; downstream = reverse closure; this
+     * replaces the removed ListDep* RPCs.
+     * ```
+     *
+     * `map<string, .com.kcl.api.FileImports> imports = 11;`
+     */
+    @kotlin.jvm.JvmSynthetic
+@kotlin.jvm.JvmName("setImports")
+    @Suppress("NOTHING_TO_INLINE")
+    public inline operator fun com.google.protobuf.kotlin.DslMap<kotlin.String, com.kcl.api.Spec.FileImports, ImportsProxy>
+      .set(key: kotlin.String, value: com.kcl.api.Spec.FileImports) {
+         put(key, value)
+       }
+    /**
+     * ```
+     * Map of direct imports, keyed by the importing file's absolute path.
+     * `path` is the import specifier as written in the source; `resolved` is
+     * the resolved absolute file path (empty for builtins/unresolved imports).
+     * Upstream files = transitive closure; downstream = reverse closure; this
+     * replaces the removed ListDep* RPCs.
+     * ```
+     *
+     * `map<string, .com.kcl.api.FileImports> imports = 11;`
+     */
+    @kotlin.jvm.JvmSynthetic
+@kotlin.jvm.JvmName("removeImports")
+    public fun com.google.protobuf.kotlin.DslMap<kotlin.String, com.kcl.api.Spec.FileImports, ImportsProxy>
+      .remove(key: kotlin.String) {
+         _builder.removeImports(key)
+       }
+    /**
+     * ```
+     * Map of direct imports, keyed by the importing file's absolute path.
+     * `path` is the import specifier as written in the source; `resolved` is
+     * the resolved absolute file path (empty for builtins/unresolved imports).
+     * Upstream files = transitive closure; downstream = reverse closure; this
+     * replaces the removed ListDep* RPCs.
+     * ```
+     *
+     * `map<string, .com.kcl.api.FileImports> imports = 11;`
+     */
+    @kotlin.jvm.JvmSynthetic
+@kotlin.jvm.JvmName("putAllImports")
+    public fun com.google.protobuf.kotlin.DslMap<kotlin.String, com.kcl.api.Spec.FileImports, ImportsProxy>
+      .putAll(map: kotlin.collections.Map<kotlin.String, com.kcl.api.Spec.FileImports>) {
+         _builder.putAllImports(map)
+       }
+    /**
+     * ```
+     * Map of direct imports, keyed by the importing file's absolute path.
+     * `path` is the import specifier as written in the source; `resolved` is
+     * the resolved absolute file path (empty for builtins/unresolved imports).
+     * Upstream files = transitive closure; downstream = reverse closure; this
+     * replaces the removed ListDep* RPCs.
+     * ```
+     *
+     * `map<string, .com.kcl.api.FileImports> imports = 11;`
+     */
+    @kotlin.jvm.JvmSynthetic
+@kotlin.jvm.JvmName("clearImports")
+    public fun com.google.protobuf.kotlin.DslMap<kotlin.String, com.kcl.api.Spec.FileImports, ImportsProxy>
+      .clear() {
+         _builder.clearImports()
+       }
+
+    /**
+     * ```
+     * Parsed kcl.mod manifest of the package root. Empty when the root has no
+     * kcl.mod.
+     * ```
+     *
+     * `.com.kcl.api.KclMod kcl_mod = 12;`
+     */
+    public var kclMod: com.kcl.api.Spec.KclMod
+      @kotlin.jvm.JvmName("getKclMod")
+        get() = _builder.kclMod
+      @kotlin.jvm.JvmName("setKclMod")
+        set(value) {
+        _builder.kclMod = value
+      }
+    /**
+     * ```
+     * Parsed kcl.mod manifest of the package root. Empty when the root has no
+     * kcl.mod.
+     * ```
+     *
+     * `.com.kcl.api.KclMod kcl_mod = 12;`
+     */
+    public fun clearKclMod() {
+      _builder.clearKclMod()
+    }
+    /**
+     * ```
+     * Parsed kcl.mod manifest of the package root. Empty when the root has no
+     * kcl.mod.
+     * ```
+     *
+     * `.com.kcl.api.KclMod kcl_mod = 12;`
+     * @return Whether the kclMod field is set.
+     */
+    public fun hasKclMod(): kotlin.Boolean {
+      return _builder.hasKclMod()
+    }
+
+    public val LoadPackageResultKt.Dsl.kclModOrNull: com.kcl.api.Spec.KclMod?
+      get() = _builder.kclModOrNull
+
+    /**
+     * An uninstantiable, behaviorless type to represent the field in
+     * generics.
+     */
+    @kotlin.OptIn(com.google.protobuf.kotlin.OnlyForUseByGeneratedProtoCode::class)
+    public class AppsProxy private constructor() : com.google.protobuf.kotlin.DslProxy()
+    /**
+     * ```
+     * Application directories discovered under the package root: every
+     * directory that directly contains at least one .k file. Sorted by path.
+     * ```
+     *
+     * `repeated .com.kcl.api.AppInfo apps = 13;`
+     */
+     public val apps: com.google.protobuf.kotlin.DslList<com.kcl.api.Spec.AppInfo, AppsProxy>
+      @kotlin.jvm.JvmSynthetic
+  get() = com.google.protobuf.kotlin.DslList(
+        _builder.appsList
+      )
+    /**
+     * ```
+     * Application directories discovered under the package root: every
+     * directory that directly contains at least one .k file. Sorted by path.
+     * ```
+     *
+     * `repeated .com.kcl.api.AppInfo apps = 13;`
+     * @param value The apps to add.
+     */
+    @kotlin.jvm.JvmSynthetic
+@kotlin.jvm.JvmName("addApps")
+    public fun com.google.protobuf.kotlin.DslList<com.kcl.api.Spec.AppInfo, AppsProxy>.add(value: com.kcl.api.Spec.AppInfo) {
+      _builder.addApps(value)
+    }
+    /**
+     * ```
+     * Application directories discovered under the package root: every
+     * directory that directly contains at least one .k file. Sorted by path.
+     * ```
+     *
+     * `repeated .com.kcl.api.AppInfo apps = 13;`
+     * @param value The apps to add.
+     */
+    @kotlin.jvm.JvmSynthetic
+@kotlin.jvm.JvmName("plusAssignApps")
+    @Suppress("NOTHING_TO_INLINE")
+    public inline operator fun com.google.protobuf.kotlin.DslList<com.kcl.api.Spec.AppInfo, AppsProxy>.plusAssign(value: com.kcl.api.Spec.AppInfo) {
+      add(value)
+    }
+    /**
+     * ```
+     * Application directories discovered under the package root: every
+     * directory that directly contains at least one .k file. Sorted by path.
+     * ```
+     *
+     * `repeated .com.kcl.api.AppInfo apps = 13;`
+     * @param values The apps to add.
+     */
+    @kotlin.jvm.JvmSynthetic
+@kotlin.jvm.JvmName("addAllApps")
+    public fun com.google.protobuf.kotlin.DslList<com.kcl.api.Spec.AppInfo, AppsProxy>.addAll(values: kotlin.collections.Iterable<com.kcl.api.Spec.AppInfo>) {
+      _builder.addAllApps(values)
+    }
+    /**
+     * ```
+     * Application directories discovered under the package root: every
+     * directory that directly contains at least one .k file. Sorted by path.
+     * ```
+     *
+     * `repeated .com.kcl.api.AppInfo apps = 13;`
+     * @param values The apps to add.
+     */
+    @kotlin.jvm.JvmSynthetic
+@kotlin.jvm.JvmName("plusAssignAllApps")
+    @Suppress("NOTHING_TO_INLINE")
+    public inline operator fun com.google.protobuf.kotlin.DslList<com.kcl.api.Spec.AppInfo, AppsProxy>.plusAssign(values: kotlin.collections.Iterable<com.kcl.api.Spec.AppInfo>) {
+      addAll(values)
+    }
+    /**
+     * ```
+     * Application directories discovered under the package root: every
+     * directory that directly contains at least one .k file. Sorted by path.
+     * ```
+     *
+     * `repeated .com.kcl.api.AppInfo apps = 13;`
+     * @param index The index to set the value at.
+     * @param value The apps to set.
+     */
+    @kotlin.jvm.JvmSynthetic
+@kotlin.jvm.JvmName("setApps")
+    public operator fun com.google.protobuf.kotlin.DslList<com.kcl.api.Spec.AppInfo, AppsProxy>.set(index: kotlin.Int, value: com.kcl.api.Spec.AppInfo) {
+      _builder.setApps(index, value)
+    }
+    /**
+     * ```
+     * Application directories discovered under the package root: every
+     * directory that directly contains at least one .k file. Sorted by path.
+     * ```
+     *
+     * `repeated .com.kcl.api.AppInfo apps = 13;`
+     */
+    @kotlin.jvm.JvmSynthetic
+@kotlin.jvm.JvmName("clearApps")
+    public fun com.google.protobuf.kotlin.DslList<com.kcl.api.Spec.AppInfo, AppsProxy>.clear() {
+      _builder.clearApps()
+    }
   }
 }
 @kotlin.jvm.JvmSynthetic
 public inline fun com.kcl.api.Spec.LoadPackageResult.copy(block: `com.kcl.api`.LoadPackageResultKt.Dsl.() -> kotlin.Unit): com.kcl.api.Spec.LoadPackageResult =
   `com.kcl.api`.LoadPackageResultKt.Dsl._create(this.toBuilder()).apply { block() }._build()
+
+public val com.kcl.api.Spec.LoadPackageResultOrBuilder.kclModOrNull: com.kcl.api.Spec.KclMod?
+  get() = if (hasKclMod()) getKclMod() else null
 

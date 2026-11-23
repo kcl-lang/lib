@@ -79,10 +79,10 @@ public object GenerateProtoArgsKt {
      *
      * `string package = 2;`
      */
-    public var `package`: kotlin.String
-      @kotlin.jvm.JvmName("getPackage")
+    public var package_: kotlin.String
+      @kotlin.jvm.JvmName("getPackage_")
         get() = _builder.`package`
-      @kotlin.jvm.JvmName("setPackage")
+      @kotlin.jvm.JvmName("setPackage_")
         set(value) {
         _builder.`package` = value
       }
@@ -93,7 +93,7 @@ public object GenerateProtoArgsKt {
      *
      * `string package = 2;`
      */
-    public fun clearPackage() {
+    public fun clearPackage_() {
       _builder.clearPackage()
     }
   }

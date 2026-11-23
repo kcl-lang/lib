@@ -740,10 +740,10 @@ def build_cases():
 
 
 
-# The two RPCs of the 27 that no case covers, and why.
+# The RPCs that no case covers, and why.
 #
-# `spec.proto` declares 28 rpc lines over two services; 27 distinct methods are
-# reachable through a client. The 28th, `BuiltinService.Ping`, is listed by the
+# `spec.proto` declares 35 rpc lines over two services; 34 distinct methods are
+# reachable through a client. The 35th, `BuiltinService.Ping`, is listed by the
 # core's own `ListMethod` but rejected by every binding's dispatcher as an
 # unknown method, so there is nothing for a runner to compare against.
 #
@@ -757,10 +757,24 @@ def build_cases():
 # no case: it fails in all thirteen runners for a reason that has nothing to do
 # with them. They are listed here so the gap is a decision on the record rather
 # than an oversight, and so a future version can add them by deleting two lines.
+#
+# The seven that kcl v0.13.3 added to the core registry -- `BuildProgram`,
+# `ExecArtifact` and the five `Generate*` DTO generators -- are declared in
+# `spec.proto` and in the core, but no binding exposes a typed wrapper for them
+# yet, so no runner can dispatch them. They are listed here for the same reason
+# as the other three: the gap is a decision on the record, and adding the
+# wrappers turns each line into a case.
 UNCOVERED_RPCS = {
     "BuiltinService.Ping": "listed by ListMethod but not dispatchable by any binding",
     "KclService.Rename": "core resolves no symbol path; see above",
     "KclService.RenameCode": "core resolves no symbol path; see above",
+    "KclService.BuildProgram": "declared in spec.proto but no binding exposes it yet",
+    "KclService.ExecArtifact": "declared in spec.proto but no binding exposes it yet",
+    "KclService.GenerateRust": "declared in spec.proto but no binding exposes it yet",
+    "KclService.GeneratePython": "declared in spec.proto but no binding exposes it yet",
+    "KclService.GenerateGo": "declared in spec.proto but no binding exposes it yet",
+    "KclService.GenerateJava": "declared in spec.proto but no binding exposes it yet",
+    "KclService.GenerateTypeScript": "declared in spec.proto but no binding exposes it yet",
 }
 
 
