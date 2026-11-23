@@ -1,0 +1,35 @@
+name: test-args-fields
+
+# Catches a TestArgs field added to spec.proto but not mirrored into a
+# binding. The C++ crate's manual initializer failed this way for eval_once
+# (issue #421). The Rust test in src/tests.rs names every field as well, so
+# a new field also fails `cargo test` at compile time.
+on:
+  push:
+    branches:
+      - main
+      - master
+    tags:
+      - '*'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "spec/spec.proto"
+      - "hack/check_test_args_fields.py"
+      - "cpp/src/lib.rs"
+      - "nodejs/src/lib.rs"
+      - "src/tests.rs"
+      - ".github/workflows/test-args-fields.yaml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Check TestArgs fields across bindings
+        run: python3 hack/check_test_args_fields.py

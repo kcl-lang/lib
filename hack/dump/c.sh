@@ -51,6 +51,10 @@ fi
 build="$(mktemp -d "${TMPDIR:-/tmp}/kcl-ast-dump-c.XXXXXX")"
 trap 'rm -rf "$build"' EXIT
 
+# `-std=c99` hides POSIX.1-2008 `strdup` (used in `kcl_lib_ast.c`) unless a
+# feature-test macro is set. Ubuntu 26.04's cc turns that implicit
+# declaration into an error. `_POSIX_C_SOURCE=200809L` declares it from
+# `<string.h>` without leaving C99.
 "$cc" -std=c99 -D_POSIX_C_SOURCE=200809L -Wall -Wextra \
   -Ic/include \
   -o "$build/dump" \

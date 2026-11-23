@@ -792,6 +792,11 @@ const Rpc = enum {
     generate_kcl,
     generate_openapi,
     generate_proto,
+    generate_rust,
+    generate_python,
+    generate_go,
+    generate_java,
+    generate_typescript,
     generate_doc,
     parse_file,
     parse_program,
@@ -820,6 +825,11 @@ const Rpc = enum {
             .{ "KclService.GenerateKcl", Rpc.generate_kcl },
             .{ "KclService.GenerateOpenAPI", Rpc.generate_openapi },
             .{ "KclService.GenerateProto", Rpc.generate_proto },
+            .{ "KclService.GenerateRust", Rpc.generate_rust },
+            .{ "KclService.GeneratePython", Rpc.generate_python },
+            .{ "KclService.GenerateGo", Rpc.generate_go },
+            .{ "KclService.GenerateJava", Rpc.generate_java },
+            .{ "KclService.GenerateTypeScript", Rpc.generate_typescript },
             .{ "KclService.GenerateDoc", Rpc.generate_doc },
             .{ "KclService.ParseFile", Rpc.parse_file },
             .{ "KclService.ParseProgram", Rpc.parse_program },
@@ -1017,6 +1027,48 @@ fn runCase(a: std.mem.Allocator, name: []const u8) !void {
             defer result.deinit(a);
             try expectFields(case.*, &.{.{ .name = "proto", .value = .{ .text = result.proto } }});
         },
+        .generate_rust => {
+            const parse_arg = try parseArgs(args, c.repo_root, field(case.args, "parse_args") orelse absent);
+            var result = try root.generateRust(a, .{
+                .parse_args = parse_arg,
+            });
+            defer result.deinit(a);
+            try expectFields(case.*, &.{.{ .name = "rust_source", .value = .{ .text = result.rust_source } }});
+        },
+        .generate_python => {
+            const parse_arg = try parseArgs(args, c.repo_root, field(case.args, "parse_args") orelse absent);
+            var result = try root.generatePython(a, .{
+                .parse_args = parse_arg,
+            });
+            defer result.deinit(a);
+            try expectFields(case.*, &.{.{ .name = "python_source", .value = .{ .text = result.python_source } }});
+        },
+        .generate_go => {
+            const parse_arg = try parseArgs(args, c.repo_root, field(case.args, "parse_args") orelse absent);
+            var result = try root.generateGo(a, .{
+                .parse_args = parse_arg,
+                .package = text(case.args, "package"),
+            });
+            defer result.deinit(a);
+            try expectFields(case.*, &.{.{ .name = "go_source", .value = .{ .text = result.go_source } }});
+        },
+        .generate_java => {
+            const parse_arg = try parseArgs(args, c.repo_root, field(case.args, "parse_args") orelse absent);
+            var result = try root.generateJava(a, .{
+                .parse_args = parse_arg,
+                .package = text(case.args, "package"),
+            });
+            defer result.deinit(a);
+            try expectFields(case.*, &.{.{ .name = "java_source", .value = .{ .text = result.java_source } }});
+        },
+        .generate_typescript => {
+            const parse_arg = try parseArgs(args, c.repo_root, field(case.args, "parse_args") orelse absent);
+            var result = try root.generateTypeScript(a, .{
+                .parse_args = parse_arg,
+            });
+            defer result.deinit(a);
+            try expectFields(case.*, &.{.{ .name = "typescript_source", .value = .{ .text = result.typescript_source } }});
+        },
         .generate_doc => {
             const parse_arg = try parseArgs(args, c.repo_root, field(case.args, "parse_args") orelse absent);
             var result = try root.generateDoc(a, .{
@@ -1197,6 +1249,7 @@ fn runCase(a: std.mem.Allocator, name: []const u8) !void {
                 .run_regexp = text(case.args, "run_regexp"),
                 .fail_fast = boolean(case.args, "fail_fast"),
                 .coverage = boolean(case.args, "coverage"),
+                .eval_once = boolean(case.args, "eval_once"),
             };
             try appendResolved(s, &arg.pkg_list, c.repo_root, c.testdata, case.args, "pkg_list");
             var result = try root.@"test"(a, arg);
@@ -1283,7 +1336,7 @@ test "consistency: the core advertises its RPC surface" {
     // Pin the registry size so a method cannot be dropped from the core
     // without this binding noticing -- `KclService.ListDepFiles` was removed
     // in v0.13.1, replaced by `LoadPackageResult.imports` / `kcl_mod` / `apps`.
-    try std.testing.expectEqual(@as(usize, 28), methods.count());
+    try std.testing.expectEqual(@as(usize, 33), methods.count());
 }
 
 test "consistency: ping" {
@@ -1334,6 +1387,26 @@ test "consistency: generate_proto" {
     try runCase(testing.allocator, "generate_proto");
 }
 
+test "consistency: generate_rust" {
+    try runCase(testing.allocator, "generate_rust");
+}
+
+test "consistency: generate_python" {
+    try runCase(testing.allocator, "generate_python");
+}
+
+test "consistency: generate_go" {
+    try runCase(testing.allocator, "generate_go");
+}
+
+test "consistency: generate_java" {
+    try runCase(testing.allocator, "generate_java");
+}
+
+test "consistency: generate_typescript" {
+    try runCase(testing.allocator, "generate_typescript");
+}
+
 test "consistency: generate_doc_md" {
     try runCase(testing.allocator, "generate_doc_md");
 }
@@ -1379,6 +1452,11 @@ const test_case_names = [_][]const u8{
     "format_test_report",
     "generate_openapi_v3",
     "generate_proto",
+    "generate_rust",
+    "generate_python",
+    "generate_go",
+    "generate_java",
+    "generate_typescript",
     "generate_doc_md",
     "parse_file",
     "parse_program",

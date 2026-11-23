@@ -2450,6 +2450,162 @@ func (x *ExecProgramResult) GetSourcemap() string {
 	return ""
 }
 
+// Message for build program request arguments.
+type BuildProgramArgs struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// Arguments for executing the program.
+	ExecArgs *ExecProgramArgs `protobuf:"bytes,1,opt,name=exec_args,json=execArgs,proto3" json:"exec_args,omitempty"`
+	// Output path.
+	Output        string `protobuf:"bytes,2,opt,name=output,proto3" json:"output,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *BuildProgramArgs) Reset() {
+	*x = BuildProgramArgs{}
+	mi := &file_spec_proto_msgTypes[34]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *BuildProgramArgs) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*BuildProgramArgs) ProtoMessage() {}
+
+func (x *BuildProgramArgs) ProtoReflect() protoreflect.Message {
+	mi := &file_spec_proto_msgTypes[34]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use BuildProgramArgs.ProtoReflect.Descriptor instead.
+func (*BuildProgramArgs) Descriptor() ([]byte, []int) {
+	return file_spec_proto_rawDescGZIP(), []int{34}
+}
+
+func (x *BuildProgramArgs) GetExecArgs() *ExecProgramArgs {
+	if x != nil {
+		return x.ExecArgs
+	}
+	return nil
+}
+
+func (x *BuildProgramArgs) GetOutput() string {
+	if x != nil {
+		return x.Output
+	}
+	return ""
+}
+
+// Message for build program response.
+type BuildProgramResult struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// Path of the built program.
+	Path          string `protobuf:"bytes,1,opt,name=path,proto3" json:"path,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *BuildProgramResult) Reset() {
+	*x = BuildProgramResult{}
+	mi := &file_spec_proto_msgTypes[35]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *BuildProgramResult) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*BuildProgramResult) ProtoMessage() {}
+
+func (x *BuildProgramResult) ProtoReflect() protoreflect.Message {
+	mi := &file_spec_proto_msgTypes[35]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use BuildProgramResult.ProtoReflect.Descriptor instead.
+func (*BuildProgramResult) Descriptor() ([]byte, []int) {
+	return file_spec_proto_rawDescGZIP(), []int{35}
+}
+
+func (x *BuildProgramResult) GetPath() string {
+	if x != nil {
+		return x.Path
+	}
+	return ""
+}
+
+// Message for execute artifact request arguments.
+type ExecArtifactArgs struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// Path of the artifact.
+	Path string `protobuf:"bytes,1,opt,name=path,proto3" json:"path,omitempty"`
+	// Arguments for executing the program.
+	ExecArgs      *ExecProgramArgs `protobuf:"bytes,2,opt,name=exec_args,json=execArgs,proto3" json:"exec_args,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ExecArtifactArgs) Reset() {
+	*x = ExecArtifactArgs{}
+	mi := &file_spec_proto_msgTypes[36]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ExecArtifactArgs) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ExecArtifactArgs) ProtoMessage() {}
+
+func (x *ExecArtifactArgs) ProtoReflect() protoreflect.Message {
+	mi := &file_spec_proto_msgTypes[36]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ExecArtifactArgs.ProtoReflect.Descriptor instead.
+func (*ExecArtifactArgs) Descriptor() ([]byte, []int) {
+	return file_spec_proto_rawDescGZIP(), []int{36}
+}
+
+func (x *ExecArtifactArgs) GetPath() string {
+	if x != nil {
+		return x.Path
+	}
+	return ""
+}
+
+func (x *ExecArtifactArgs) GetExecArgs() *ExecProgramArgs {
+	if x != nil {
+		return x.ExecArgs
+	}
+	return nil
+}
+
 // Message for format code request arguments.
 type FormatCodeArgs struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
@@ -2461,7 +2617,7 @@ type FormatCodeArgs struct {
 
 func (x *FormatCodeArgs) Reset() {
 	*x = FormatCodeArgs{}
-	mi := &file_spec_proto_msgTypes[34]
+	mi := &file_spec_proto_msgTypes[37]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2473,7 +2629,7 @@ func (x *FormatCodeArgs) String() string {
 func (*FormatCodeArgs) ProtoMessage() {}
 
 func (x *FormatCodeArgs) ProtoReflect() protoreflect.Message {
-	mi := &file_spec_proto_msgTypes[34]
+	mi := &file_spec_proto_msgTypes[37]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2486,7 +2642,7 @@ func (x *FormatCodeArgs) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use FormatCodeArgs.ProtoReflect.Descriptor instead.
 func (*FormatCodeArgs) Descriptor() ([]byte, []int) {
-	return file_spec_proto_rawDescGZIP(), []int{34}
+	return file_spec_proto_rawDescGZIP(), []int{37}
 }
 
 func (x *FormatCodeArgs) GetSource() string {
@@ -2507,7 +2663,7 @@ type FormatCodeResult struct {
 
 func (x *FormatCodeResult) Reset() {
 	*x = FormatCodeResult{}
-	mi := &file_spec_proto_msgTypes[35]
+	mi := &file_spec_proto_msgTypes[38]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2519,7 +2675,7 @@ func (x *FormatCodeResult) String() string {
 func (*FormatCodeResult) ProtoMessage() {}
 
 func (x *FormatCodeResult) ProtoReflect() protoreflect.Message {
-	mi := &file_spec_proto_msgTypes[35]
+	mi := &file_spec_proto_msgTypes[38]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2532,7 +2688,7 @@ func (x *FormatCodeResult) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use FormatCodeResult.ProtoReflect.Descriptor instead.
 func (*FormatCodeResult) Descriptor() ([]byte, []int) {
-	return file_spec_proto_rawDescGZIP(), []int{35}
+	return file_spec_proto_rawDescGZIP(), []int{38}
 }
 
 func (x *FormatCodeResult) GetFormatted() []byte {
@@ -2555,7 +2711,7 @@ type FormatPathArgs struct {
 
 func (x *FormatPathArgs) Reset() {
 	*x = FormatPathArgs{}
-	mi := &file_spec_proto_msgTypes[36]
+	mi := &file_spec_proto_msgTypes[39]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2567,7 +2723,7 @@ func (x *FormatPathArgs) String() string {
 func (*FormatPathArgs) ProtoMessage() {}
 
 func (x *FormatPathArgs) ProtoReflect() protoreflect.Message {
-	mi := &file_spec_proto_msgTypes[36]
+	mi := &file_spec_proto_msgTypes[39]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2580,7 +2736,7 @@ func (x *FormatPathArgs) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use FormatPathArgs.ProtoReflect.Descriptor instead.
 func (*FormatPathArgs) Descriptor() ([]byte, []int) {
-	return file_spec_proto_rawDescGZIP(), []int{36}
+	return file_spec_proto_rawDescGZIP(), []int{39}
 }
 
 func (x *FormatPathArgs) GetPath() string {
@@ -2608,7 +2764,7 @@ type FormatPathResult struct {
 
 func (x *FormatPathResult) Reset() {
 	*x = FormatPathResult{}
-	mi := &file_spec_proto_msgTypes[37]
+	mi := &file_spec_proto_msgTypes[40]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2620,7 +2776,7 @@ func (x *FormatPathResult) String() string {
 func (*FormatPathResult) ProtoMessage() {}
 
 func (x *FormatPathResult) ProtoReflect() protoreflect.Message {
-	mi := &file_spec_proto_msgTypes[37]
+	mi := &file_spec_proto_msgTypes[40]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2633,7 +2789,7 @@ func (x *FormatPathResult) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use FormatPathResult.ProtoReflect.Descriptor instead.
 func (*FormatPathResult) Descriptor() ([]byte, []int) {
-	return file_spec_proto_rawDescGZIP(), []int{37}
+	return file_spec_proto_rawDescGZIP(), []int{40}
 }
 
 func (x *FormatPathResult) GetChangedPaths() []string {
@@ -2654,7 +2810,7 @@ type LintPathArgs struct {
 
 func (x *LintPathArgs) Reset() {
 	*x = LintPathArgs{}
-	mi := &file_spec_proto_msgTypes[38]
+	mi := &file_spec_proto_msgTypes[41]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2666,7 +2822,7 @@ func (x *LintPathArgs) String() string {
 func (*LintPathArgs) ProtoMessage() {}
 
 func (x *LintPathArgs) ProtoReflect() protoreflect.Message {
-	mi := &file_spec_proto_msgTypes[38]
+	mi := &file_spec_proto_msgTypes[41]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2679,7 +2835,7 @@ func (x *LintPathArgs) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use LintPathArgs.ProtoReflect.Descriptor instead.
 func (*LintPathArgs) Descriptor() ([]byte, []int) {
-	return file_spec_proto_rawDescGZIP(), []int{38}
+	return file_spec_proto_rawDescGZIP(), []int{41}
 }
 
 func (x *LintPathArgs) GetPaths() []string {
@@ -2700,7 +2856,7 @@ type LintPathResult struct {
 
 func (x *LintPathResult) Reset() {
 	*x = LintPathResult{}
-	mi := &file_spec_proto_msgTypes[39]
+	mi := &file_spec_proto_msgTypes[42]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2712,7 +2868,7 @@ func (x *LintPathResult) String() string {
 func (*LintPathResult) ProtoMessage() {}
 
 func (x *LintPathResult) ProtoReflect() protoreflect.Message {
-	mi := &file_spec_proto_msgTypes[39]
+	mi := &file_spec_proto_msgTypes[42]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2725,7 +2881,7 @@ func (x *LintPathResult) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use LintPathResult.ProtoReflect.Descriptor instead.
 func (*LintPathResult) Descriptor() ([]byte, []int) {
-	return file_spec_proto_rawDescGZIP(), []int{39}
+	return file_spec_proto_rawDescGZIP(), []int{42}
 }
 
 func (x *LintPathResult) GetResults() []string {
@@ -2750,7 +2906,7 @@ type OverrideFileArgs struct {
 
 func (x *OverrideFileArgs) Reset() {
 	*x = OverrideFileArgs{}
-	mi := &file_spec_proto_msgTypes[40]
+	mi := &file_spec_proto_msgTypes[43]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2762,7 +2918,7 @@ func (x *OverrideFileArgs) String() string {
 func (*OverrideFileArgs) ProtoMessage() {}
 
 func (x *OverrideFileArgs) ProtoReflect() protoreflect.Message {
-	mi := &file_spec_proto_msgTypes[40]
+	mi := &file_spec_proto_msgTypes[43]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2775,7 +2931,7 @@ func (x *OverrideFileArgs) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use OverrideFileArgs.ProtoReflect.Descriptor instead.
 func (*OverrideFileArgs) Descriptor() ([]byte, []int) {
-	return file_spec_proto_rawDescGZIP(), []int{40}
+	return file_spec_proto_rawDescGZIP(), []int{43}
 }
 
 func (x *OverrideFileArgs) GetFile() string {
@@ -2812,7 +2968,7 @@ type OverrideFileResult struct {
 
 func (x *OverrideFileResult) Reset() {
 	*x = OverrideFileResult{}
-	mi := &file_spec_proto_msgTypes[41]
+	mi := &file_spec_proto_msgTypes[44]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2824,7 +2980,7 @@ func (x *OverrideFileResult) String() string {
 func (*OverrideFileResult) ProtoMessage() {}
 
 func (x *OverrideFileResult) ProtoReflect() protoreflect.Message {
-	mi := &file_spec_proto_msgTypes[41]
+	mi := &file_spec_proto_msgTypes[44]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2837,7 +2993,7 @@ func (x *OverrideFileResult) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use OverrideFileResult.ProtoReflect.Descriptor instead.
 func (*OverrideFileResult) Descriptor() ([]byte, []int) {
-	return file_spec_proto_rawDescGZIP(), []int{41}
+	return file_spec_proto_rawDescGZIP(), []int{44}
 }
 
 func (x *OverrideFileResult) GetResult() bool {
@@ -2865,7 +3021,7 @@ type ListVariablesOptions struct {
 
 func (x *ListVariablesOptions) Reset() {
 	*x = ListVariablesOptions{}
-	mi := &file_spec_proto_msgTypes[42]
+	mi := &file_spec_proto_msgTypes[45]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2877,7 +3033,7 @@ func (x *ListVariablesOptions) String() string {
 func (*ListVariablesOptions) ProtoMessage() {}
 
 func (x *ListVariablesOptions) ProtoReflect() protoreflect.Message {
-	mi := &file_spec_proto_msgTypes[42]
+	mi := &file_spec_proto_msgTypes[45]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2890,7 +3046,7 @@ func (x *ListVariablesOptions) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListVariablesOptions.ProtoReflect.Descriptor instead.
 func (*ListVariablesOptions) Descriptor() ([]byte, []int) {
-	return file_spec_proto_rawDescGZIP(), []int{42}
+	return file_spec_proto_rawDescGZIP(), []int{45}
 }
 
 func (x *ListVariablesOptions) GetMergeProgram() bool {
@@ -2911,7 +3067,7 @@ type VariableList struct {
 
 func (x *VariableList) Reset() {
 	*x = VariableList{}
-	mi := &file_spec_proto_msgTypes[43]
+	mi := &file_spec_proto_msgTypes[46]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2923,7 +3079,7 @@ func (x *VariableList) String() string {
 func (*VariableList) ProtoMessage() {}
 
 func (x *VariableList) ProtoReflect() protoreflect.Message {
-	mi := &file_spec_proto_msgTypes[43]
+	mi := &file_spec_proto_msgTypes[46]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2936,7 +3092,7 @@ func (x *VariableList) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use VariableList.ProtoReflect.Descriptor instead.
 func (*VariableList) Descriptor() ([]byte, []int) {
-	return file_spec_proto_rawDescGZIP(), []int{43}
+	return file_spec_proto_rawDescGZIP(), []int{46}
 }
 
 func (x *VariableList) GetVariables() []*Variable {
@@ -2961,7 +3117,7 @@ type ListVariablesArgs struct {
 
 func (x *ListVariablesArgs) Reset() {
 	*x = ListVariablesArgs{}
-	mi := &file_spec_proto_msgTypes[44]
+	mi := &file_spec_proto_msgTypes[47]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2973,7 +3129,7 @@ func (x *ListVariablesArgs) String() string {
 func (*ListVariablesArgs) ProtoMessage() {}
 
 func (x *ListVariablesArgs) ProtoReflect() protoreflect.Message {
-	mi := &file_spec_proto_msgTypes[44]
+	mi := &file_spec_proto_msgTypes[47]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2986,7 +3142,7 @@ func (x *ListVariablesArgs) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListVariablesArgs.ProtoReflect.Descriptor instead.
 func (*ListVariablesArgs) Descriptor() ([]byte, []int) {
-	return file_spec_proto_rawDescGZIP(), []int{44}
+	return file_spec_proto_rawDescGZIP(), []int{47}
 }
 
 func (x *ListVariablesArgs) GetFiles() []string {
@@ -3025,7 +3181,7 @@ type ListVariablesResult struct {
 
 func (x *ListVariablesResult) Reset() {
 	*x = ListVariablesResult{}
-	mi := &file_spec_proto_msgTypes[45]
+	mi := &file_spec_proto_msgTypes[48]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3037,7 +3193,7 @@ func (x *ListVariablesResult) String() string {
 func (*ListVariablesResult) ProtoMessage() {}
 
 func (x *ListVariablesResult) ProtoReflect() protoreflect.Message {
-	mi := &file_spec_proto_msgTypes[45]
+	mi := &file_spec_proto_msgTypes[48]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3050,7 +3206,7 @@ func (x *ListVariablesResult) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListVariablesResult.ProtoReflect.Descriptor instead.
 func (*ListVariablesResult) Descriptor() ([]byte, []int) {
-	return file_spec_proto_rawDescGZIP(), []int{45}
+	return file_spec_proto_rawDescGZIP(), []int{48}
 }
 
 func (x *ListVariablesResult) GetVariables() map[string]*VariableList {
@@ -3093,7 +3249,7 @@ type Variable struct {
 
 func (x *Variable) Reset() {
 	*x = Variable{}
-	mi := &file_spec_proto_msgTypes[46]
+	mi := &file_spec_proto_msgTypes[49]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3105,7 +3261,7 @@ func (x *Variable) String() string {
 func (*Variable) ProtoMessage() {}
 
 func (x *Variable) ProtoReflect() protoreflect.Message {
-	mi := &file_spec_proto_msgTypes[46]
+	mi := &file_spec_proto_msgTypes[49]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3118,7 +3274,7 @@ func (x *Variable) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Variable.ProtoReflect.Descriptor instead.
 func (*Variable) Descriptor() ([]byte, []int) {
-	return file_spec_proto_rawDescGZIP(), []int{46}
+	return file_spec_proto_rawDescGZIP(), []int{49}
 }
 
 func (x *Variable) GetValue() string {
@@ -3169,7 +3325,7 @@ type MapEntry struct {
 
 func (x *MapEntry) Reset() {
 	*x = MapEntry{}
-	mi := &file_spec_proto_msgTypes[47]
+	mi := &file_spec_proto_msgTypes[50]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3181,7 +3337,7 @@ func (x *MapEntry) String() string {
 func (*MapEntry) ProtoMessage() {}
 
 func (x *MapEntry) ProtoReflect() protoreflect.Message {
-	mi := &file_spec_proto_msgTypes[47]
+	mi := &file_spec_proto_msgTypes[50]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3194,7 +3350,7 @@ func (x *MapEntry) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MapEntry.ProtoReflect.Descriptor instead.
 func (*MapEntry) Descriptor() ([]byte, []int) {
-	return file_spec_proto_rawDescGZIP(), []int{47}
+	return file_spec_proto_rawDescGZIP(), []int{50}
 }
 
 func (x *MapEntry) GetKey() string {
@@ -3224,7 +3380,7 @@ type GetSchemaTypeMappingArgs struct {
 
 func (x *GetSchemaTypeMappingArgs) Reset() {
 	*x = GetSchemaTypeMappingArgs{}
-	mi := &file_spec_proto_msgTypes[48]
+	mi := &file_spec_proto_msgTypes[51]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3236,7 +3392,7 @@ func (x *GetSchemaTypeMappingArgs) String() string {
 func (*GetSchemaTypeMappingArgs) ProtoMessage() {}
 
 func (x *GetSchemaTypeMappingArgs) ProtoReflect() protoreflect.Message {
-	mi := &file_spec_proto_msgTypes[48]
+	mi := &file_spec_proto_msgTypes[51]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3249,7 +3405,7 @@ func (x *GetSchemaTypeMappingArgs) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetSchemaTypeMappingArgs.ProtoReflect.Descriptor instead.
 func (*GetSchemaTypeMappingArgs) Descriptor() ([]byte, []int) {
-	return file_spec_proto_rawDescGZIP(), []int{48}
+	return file_spec_proto_rawDescGZIP(), []int{51}
 }
 
 func (x *GetSchemaTypeMappingArgs) GetExecArgs() *ExecProgramArgs {
@@ -3277,7 +3433,7 @@ type GetSchemaTypeMappingResult struct {
 
 func (x *GetSchemaTypeMappingResult) Reset() {
 	*x = GetSchemaTypeMappingResult{}
-	mi := &file_spec_proto_msgTypes[49]
+	mi := &file_spec_proto_msgTypes[52]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3289,7 +3445,7 @@ func (x *GetSchemaTypeMappingResult) String() string {
 func (*GetSchemaTypeMappingResult) ProtoMessage() {}
 
 func (x *GetSchemaTypeMappingResult) ProtoReflect() protoreflect.Message {
-	mi := &file_spec_proto_msgTypes[49]
+	mi := &file_spec_proto_msgTypes[52]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3302,7 +3458,7 @@ func (x *GetSchemaTypeMappingResult) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetSchemaTypeMappingResult.ProtoReflect.Descriptor instead.
 func (*GetSchemaTypeMappingResult) Descriptor() ([]byte, []int) {
-	return file_spec_proto_rawDescGZIP(), []int{49}
+	return file_spec_proto_rawDescGZIP(), []int{52}
 }
 
 func (x *GetSchemaTypeMappingResult) GetSchemaTypeMapping() map[string]*KclType {
@@ -3323,7 +3479,7 @@ type GetSchemaTypeMappingUnderPathResult struct {
 
 func (x *GetSchemaTypeMappingUnderPathResult) Reset() {
 	*x = GetSchemaTypeMappingUnderPathResult{}
-	mi := &file_spec_proto_msgTypes[50]
+	mi := &file_spec_proto_msgTypes[53]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3335,7 +3491,7 @@ func (x *GetSchemaTypeMappingUnderPathResult) String() string {
 func (*GetSchemaTypeMappingUnderPathResult) ProtoMessage() {}
 
 func (x *GetSchemaTypeMappingUnderPathResult) ProtoReflect() protoreflect.Message {
-	mi := &file_spec_proto_msgTypes[50]
+	mi := &file_spec_proto_msgTypes[53]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3348,7 +3504,7 @@ func (x *GetSchemaTypeMappingUnderPathResult) ProtoReflect() protoreflect.Messag
 
 // Deprecated: Use GetSchemaTypeMappingUnderPathResult.ProtoReflect.Descriptor instead.
 func (*GetSchemaTypeMappingUnderPathResult) Descriptor() ([]byte, []int) {
-	return file_spec_proto_rawDescGZIP(), []int{50}
+	return file_spec_proto_rawDescGZIP(), []int{53}
 }
 
 func (x *GetSchemaTypeMappingUnderPathResult) GetSchemaTypeMapping() map[string]*SchemaTypes {
@@ -3368,7 +3524,7 @@ type SchemaTypes struct {
 
 func (x *SchemaTypes) Reset() {
 	*x = SchemaTypes{}
-	mi := &file_spec_proto_msgTypes[51]
+	mi := &file_spec_proto_msgTypes[54]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3380,7 +3536,7 @@ func (x *SchemaTypes) String() string {
 func (*SchemaTypes) ProtoMessage() {}
 
 func (x *SchemaTypes) ProtoReflect() protoreflect.Message {
-	mi := &file_spec_proto_msgTypes[51]
+	mi := &file_spec_proto_msgTypes[54]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3393,7 +3549,7 @@ func (x *SchemaTypes) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SchemaTypes.ProtoReflect.Descriptor instead.
 func (*SchemaTypes) Descriptor() ([]byte, []int) {
-	return file_spec_proto_rawDescGZIP(), []int{51}
+	return file_spec_proto_rawDescGZIP(), []int{54}
 }
 
 func (x *SchemaTypes) GetSchemaType() []*KclType {
@@ -3428,7 +3584,7 @@ type ValidateCodeArgs struct {
 
 func (x *ValidateCodeArgs) Reset() {
 	*x = ValidateCodeArgs{}
-	mi := &file_spec_proto_msgTypes[52]
+	mi := &file_spec_proto_msgTypes[55]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3440,7 +3596,7 @@ func (x *ValidateCodeArgs) String() string {
 func (*ValidateCodeArgs) ProtoMessage() {}
 
 func (x *ValidateCodeArgs) ProtoReflect() protoreflect.Message {
-	mi := &file_spec_proto_msgTypes[52]
+	mi := &file_spec_proto_msgTypes[55]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3453,7 +3609,7 @@ func (x *ValidateCodeArgs) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ValidateCodeArgs.ProtoReflect.Descriptor instead.
 func (*ValidateCodeArgs) Descriptor() ([]byte, []int) {
-	return file_spec_proto_rawDescGZIP(), []int{52}
+	return file_spec_proto_rawDescGZIP(), []int{55}
 }
 
 func (x *ValidateCodeArgs) GetDatafile() string {
@@ -3525,7 +3681,7 @@ type ValidateCodeResult struct {
 
 func (x *ValidateCodeResult) Reset() {
 	*x = ValidateCodeResult{}
-	mi := &file_spec_proto_msgTypes[53]
+	mi := &file_spec_proto_msgTypes[56]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3537,7 +3693,7 @@ func (x *ValidateCodeResult) String() string {
 func (*ValidateCodeResult) ProtoMessage() {}
 
 func (x *ValidateCodeResult) ProtoReflect() protoreflect.Message {
-	mi := &file_spec_proto_msgTypes[53]
+	mi := &file_spec_proto_msgTypes[56]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3550,7 +3706,7 @@ func (x *ValidateCodeResult) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ValidateCodeResult.ProtoReflect.Descriptor instead.
 func (*ValidateCodeResult) Descriptor() ([]byte, []int) {
-	return file_spec_proto_rawDescGZIP(), []int{53}
+	return file_spec_proto_rawDescGZIP(), []int{56}
 }
 
 func (x *ValidateCodeResult) GetSuccess() bool {
@@ -3582,7 +3738,7 @@ type Position struct {
 
 func (x *Position) Reset() {
 	*x = Position{}
-	mi := &file_spec_proto_msgTypes[54]
+	mi := &file_spec_proto_msgTypes[57]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3594,7 +3750,7 @@ func (x *Position) String() string {
 func (*Position) ProtoMessage() {}
 
 func (x *Position) ProtoReflect() protoreflect.Message {
-	mi := &file_spec_proto_msgTypes[54]
+	mi := &file_spec_proto_msgTypes[57]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3607,7 +3763,7 @@ func (x *Position) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Position.ProtoReflect.Descriptor instead.
 func (*Position) Descriptor() ([]byte, []int) {
-	return file_spec_proto_rawDescGZIP(), []int{54}
+	return file_spec_proto_rawDescGZIP(), []int{57}
 }
 
 func (x *Position) GetLine() int64 {
@@ -3644,7 +3800,7 @@ type LoadSettingsFilesArgs struct {
 
 func (x *LoadSettingsFilesArgs) Reset() {
 	*x = LoadSettingsFilesArgs{}
-	mi := &file_spec_proto_msgTypes[55]
+	mi := &file_spec_proto_msgTypes[58]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3656,7 +3812,7 @@ func (x *LoadSettingsFilesArgs) String() string {
 func (*LoadSettingsFilesArgs) ProtoMessage() {}
 
 func (x *LoadSettingsFilesArgs) ProtoReflect() protoreflect.Message {
-	mi := &file_spec_proto_msgTypes[55]
+	mi := &file_spec_proto_msgTypes[58]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3669,7 +3825,7 @@ func (x *LoadSettingsFilesArgs) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use LoadSettingsFilesArgs.ProtoReflect.Descriptor instead.
 func (*LoadSettingsFilesArgs) Descriptor() ([]byte, []int) {
-	return file_spec_proto_rawDescGZIP(), []int{55}
+	return file_spec_proto_rawDescGZIP(), []int{58}
 }
 
 func (x *LoadSettingsFilesArgs) GetWorkDir() string {
@@ -3699,7 +3855,7 @@ type LoadSettingsFilesResult struct {
 
 func (x *LoadSettingsFilesResult) Reset() {
 	*x = LoadSettingsFilesResult{}
-	mi := &file_spec_proto_msgTypes[56]
+	mi := &file_spec_proto_msgTypes[59]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3711,7 +3867,7 @@ func (x *LoadSettingsFilesResult) String() string {
 func (*LoadSettingsFilesResult) ProtoMessage() {}
 
 func (x *LoadSettingsFilesResult) ProtoReflect() protoreflect.Message {
-	mi := &file_spec_proto_msgTypes[56]
+	mi := &file_spec_proto_msgTypes[59]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3724,7 +3880,7 @@ func (x *LoadSettingsFilesResult) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use LoadSettingsFilesResult.ProtoReflect.Descriptor instead.
 func (*LoadSettingsFilesResult) Descriptor() ([]byte, []int) {
-	return file_spec_proto_rawDescGZIP(), []int{56}
+	return file_spec_proto_rawDescGZIP(), []int{59}
 }
 
 func (x *LoadSettingsFilesResult) GetKclCliConfigs() *CliConfig {
@@ -3774,7 +3930,7 @@ type CliConfig struct {
 
 func (x *CliConfig) Reset() {
 	*x = CliConfig{}
-	mi := &file_spec_proto_msgTypes[57]
+	mi := &file_spec_proto_msgTypes[60]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3786,7 +3942,7 @@ func (x *CliConfig) String() string {
 func (*CliConfig) ProtoMessage() {}
 
 func (x *CliConfig) ProtoReflect() protoreflect.Message {
-	mi := &file_spec_proto_msgTypes[57]
+	mi := &file_spec_proto_msgTypes[60]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3799,7 +3955,7 @@ func (x *CliConfig) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CliConfig.ProtoReflect.Descriptor instead.
 func (*CliConfig) Descriptor() ([]byte, []int) {
-	return file_spec_proto_rawDescGZIP(), []int{57}
+	return file_spec_proto_rawDescGZIP(), []int{60}
 }
 
 func (x *CliConfig) GetFiles() []string {
@@ -3899,7 +4055,7 @@ type KeyValuePair struct {
 
 func (x *KeyValuePair) Reset() {
 	*x = KeyValuePair{}
-	mi := &file_spec_proto_msgTypes[58]
+	mi := &file_spec_proto_msgTypes[61]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3911,7 +4067,7 @@ func (x *KeyValuePair) String() string {
 func (*KeyValuePair) ProtoMessage() {}
 
 func (x *KeyValuePair) ProtoReflect() protoreflect.Message {
-	mi := &file_spec_proto_msgTypes[58]
+	mi := &file_spec_proto_msgTypes[61]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3924,7 +4080,7 @@ func (x *KeyValuePair) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use KeyValuePair.ProtoReflect.Descriptor instead.
 func (*KeyValuePair) Descriptor() ([]byte, []int) {
-	return file_spec_proto_rawDescGZIP(), []int{58}
+	return file_spec_proto_rawDescGZIP(), []int{61}
 }
 
 func (x *KeyValuePair) GetKey() string {
@@ -3958,7 +4114,7 @@ type RenameArgs struct {
 
 func (x *RenameArgs) Reset() {
 	*x = RenameArgs{}
-	mi := &file_spec_proto_msgTypes[59]
+	mi := &file_spec_proto_msgTypes[62]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3970,7 +4126,7 @@ func (x *RenameArgs) String() string {
 func (*RenameArgs) ProtoMessage() {}
 
 func (x *RenameArgs) ProtoReflect() protoreflect.Message {
-	mi := &file_spec_proto_msgTypes[59]
+	mi := &file_spec_proto_msgTypes[62]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3983,7 +4139,7 @@ func (x *RenameArgs) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RenameArgs.ProtoReflect.Descriptor instead.
 func (*RenameArgs) Descriptor() ([]byte, []int) {
-	return file_spec_proto_rawDescGZIP(), []int{59}
+	return file_spec_proto_rawDescGZIP(), []int{62}
 }
 
 func (x *RenameArgs) GetPackageRoot() string {
@@ -4025,7 +4181,7 @@ type RenameResult struct {
 
 func (x *RenameResult) Reset() {
 	*x = RenameResult{}
-	mi := &file_spec_proto_msgTypes[60]
+	mi := &file_spec_proto_msgTypes[63]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4037,7 +4193,7 @@ func (x *RenameResult) String() string {
 func (*RenameResult) ProtoMessage() {}
 
 func (x *RenameResult) ProtoReflect() protoreflect.Message {
-	mi := &file_spec_proto_msgTypes[60]
+	mi := &file_spec_proto_msgTypes[63]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4050,7 +4206,7 @@ func (x *RenameResult) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RenameResult.ProtoReflect.Descriptor instead.
 func (*RenameResult) Descriptor() ([]byte, []int) {
-	return file_spec_proto_rawDescGZIP(), []int{60}
+	return file_spec_proto_rawDescGZIP(), []int{63}
 }
 
 func (x *RenameResult) GetChangedFiles() []string {
@@ -4077,7 +4233,7 @@ type RenameCodeArgs struct {
 
 func (x *RenameCodeArgs) Reset() {
 	*x = RenameCodeArgs{}
-	mi := &file_spec_proto_msgTypes[61]
+	mi := &file_spec_proto_msgTypes[64]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4089,7 +4245,7 @@ func (x *RenameCodeArgs) String() string {
 func (*RenameCodeArgs) ProtoMessage() {}
 
 func (x *RenameCodeArgs) ProtoReflect() protoreflect.Message {
-	mi := &file_spec_proto_msgTypes[61]
+	mi := &file_spec_proto_msgTypes[64]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4102,7 +4258,7 @@ func (x *RenameCodeArgs) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RenameCodeArgs.ProtoReflect.Descriptor instead.
 func (*RenameCodeArgs) Descriptor() ([]byte, []int) {
-	return file_spec_proto_rawDescGZIP(), []int{61}
+	return file_spec_proto_rawDescGZIP(), []int{64}
 }
 
 func (x *RenameCodeArgs) GetPackageRoot() string {
@@ -4144,7 +4300,7 @@ type RenameCodeResult struct {
 
 func (x *RenameCodeResult) Reset() {
 	*x = RenameCodeResult{}
-	mi := &file_spec_proto_msgTypes[62]
+	mi := &file_spec_proto_msgTypes[65]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4156,7 +4312,7 @@ func (x *RenameCodeResult) String() string {
 func (*RenameCodeResult) ProtoMessage() {}
 
 func (x *RenameCodeResult) ProtoReflect() protoreflect.Message {
-	mi := &file_spec_proto_msgTypes[62]
+	mi := &file_spec_proto_msgTypes[65]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4169,7 +4325,7 @@ func (x *RenameCodeResult) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RenameCodeResult.ProtoReflect.Descriptor instead.
 func (*RenameCodeResult) Descriptor() ([]byte, []int) {
-	return file_spec_proto_rawDescGZIP(), []int{62}
+	return file_spec_proto_rawDescGZIP(), []int{65}
 }
 
 func (x *RenameCodeResult) GetChangedCodes() map[string]string {
@@ -4194,14 +4350,28 @@ type TestArgs struct {
 	// the test tool records, for every top-level KCL statement that executes,
 	// the source file path and line number. The aggregated result is returned
 	// in [TestResult.coverage]. Defaults to false.
-	Coverage      bool `protobuf:"varint,5,opt,name=coverage,proto3" json:"coverage,omitempty"`
+	Coverage bool `protobuf:"varint,5,opt,name=coverage,proto3" json:"coverage,omitempty"`
+	// Flag to evaluate each test package once and run all of its test cases in
+	// that one evaluation, instead of evaluating the package again for every
+	// case. Each case still reports its own result, error and log, and a case
+	// that fails hands the next one a freshly evaluated package.
+	// NOTE: cases share the values the package defines. A case that passes
+	// after mutating one in place, e.g. a schema instance it got as a lambda
+	// argument, changes what the cases after it see, and planning, which runs
+	// before the cases, does not see the change; a suite whose cases rely on
+	// starting from the package as it is defined must not set this flag.
+	// Case durations then exclude the evaluation of the package, a planning
+	// error is always reported at the end of the generated main file, and
+	// that file selects no case, so the coverage counts each of its lines
+	// once. Defaults to false.
+	EvalOnce      bool `protobuf:"varint,6,opt,name=eval_once,json=evalOnce,proto3" json:"eval_once,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *TestArgs) Reset() {
 	*x = TestArgs{}
-	mi := &file_spec_proto_msgTypes[63]
+	mi := &file_spec_proto_msgTypes[66]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4213,7 +4383,7 @@ func (x *TestArgs) String() string {
 func (*TestArgs) ProtoMessage() {}
 
 func (x *TestArgs) ProtoReflect() protoreflect.Message {
-	mi := &file_spec_proto_msgTypes[63]
+	mi := &file_spec_proto_msgTypes[66]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4226,7 +4396,7 @@ func (x *TestArgs) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use TestArgs.ProtoReflect.Descriptor instead.
 func (*TestArgs) Descriptor() ([]byte, []int) {
-	return file_spec_proto_rawDescGZIP(), []int{63}
+	return file_spec_proto_rawDescGZIP(), []int{66}
 }
 
 func (x *TestArgs) GetExecArgs() *ExecProgramArgs {
@@ -4264,6 +4434,13 @@ func (x *TestArgs) GetCoverage() bool {
 	return false
 }
 
+func (x *TestArgs) GetEvalOnce() bool {
+	if x != nil {
+		return x.EvalOnce
+	}
+	return false
+}
+
 // Message for test response.
 type TestResult struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
@@ -4278,7 +4455,7 @@ type TestResult struct {
 
 func (x *TestResult) Reset() {
 	*x = TestResult{}
-	mi := &file_spec_proto_msgTypes[64]
+	mi := &file_spec_proto_msgTypes[67]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4290,7 +4467,7 @@ func (x *TestResult) String() string {
 func (*TestResult) ProtoMessage() {}
 
 func (x *TestResult) ProtoReflect() protoreflect.Message {
-	mi := &file_spec_proto_msgTypes[64]
+	mi := &file_spec_proto_msgTypes[67]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4303,7 +4480,7 @@ func (x *TestResult) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use TestResult.ProtoReflect.Descriptor instead.
 func (*TestResult) Descriptor() ([]byte, []int) {
-	return file_spec_proto_rawDescGZIP(), []int{64}
+	return file_spec_proto_rawDescGZIP(), []int{67}
 }
 
 func (x *TestResult) GetInfo() []*TestCaseInfo {
@@ -4341,7 +4518,7 @@ type TestCaseInfo struct {
 
 func (x *TestCaseInfo) Reset() {
 	*x = TestCaseInfo{}
-	mi := &file_spec_proto_msgTypes[65]
+	mi := &file_spec_proto_msgTypes[68]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4353,7 +4530,7 @@ func (x *TestCaseInfo) String() string {
 func (*TestCaseInfo) ProtoMessage() {}
 
 func (x *TestCaseInfo) ProtoReflect() protoreflect.Message {
-	mi := &file_spec_proto_msgTypes[65]
+	mi := &file_spec_proto_msgTypes[68]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4366,7 +4543,7 @@ func (x *TestCaseInfo) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use TestCaseInfo.ProtoReflect.Descriptor instead.
 func (*TestCaseInfo) Descriptor() ([]byte, []int) {
-	return file_spec_proto_rawDescGZIP(), []int{65}
+	return file_spec_proto_rawDescGZIP(), []int{68}
 }
 
 func (x *TestCaseInfo) GetName() string {
@@ -4425,7 +4602,7 @@ type FileCoverage struct {
 
 func (x *FileCoverage) Reset() {
 	*x = FileCoverage{}
-	mi := &file_spec_proto_msgTypes[66]
+	mi := &file_spec_proto_msgTypes[69]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4437,7 +4614,7 @@ func (x *FileCoverage) String() string {
 func (*FileCoverage) ProtoMessage() {}
 
 func (x *FileCoverage) ProtoReflect() protoreflect.Message {
-	mi := &file_spec_proto_msgTypes[66]
+	mi := &file_spec_proto_msgTypes[69]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4450,7 +4627,7 @@ func (x *FileCoverage) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use FileCoverage.ProtoReflect.Descriptor instead.
 func (*FileCoverage) Descriptor() ([]byte, []int) {
-	return file_spec_proto_rawDescGZIP(), []int{66}
+	return file_spec_proto_rawDescGZIP(), []int{69}
 }
 
 func (x *FileCoverage) GetFilename() string {
@@ -4494,7 +4671,7 @@ type TestCoverageReport struct {
 
 func (x *TestCoverageReport) Reset() {
 	*x = TestCoverageReport{}
-	mi := &file_spec_proto_msgTypes[67]
+	mi := &file_spec_proto_msgTypes[70]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4506,7 +4683,7 @@ func (x *TestCoverageReport) String() string {
 func (*TestCoverageReport) ProtoMessage() {}
 
 func (x *TestCoverageReport) ProtoReflect() protoreflect.Message {
-	mi := &file_spec_proto_msgTypes[67]
+	mi := &file_spec_proto_msgTypes[70]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4519,7 +4696,7 @@ func (x *TestCoverageReport) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use TestCoverageReport.ProtoReflect.Descriptor instead.
 func (*TestCoverageReport) Descriptor() ([]byte, []int) {
-	return file_spec_proto_rawDescGZIP(), []int{67}
+	return file_spec_proto_rawDescGZIP(), []int{70}
 }
 
 func (x *TestCoverageReport) GetFiles() map[string]*FileCoverage {
@@ -4551,7 +4728,7 @@ type CoverageSummary struct {
 
 func (x *CoverageSummary) Reset() {
 	*x = CoverageSummary{}
-	mi := &file_spec_proto_msgTypes[68]
+	mi := &file_spec_proto_msgTypes[71]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4563,7 +4740,7 @@ func (x *CoverageSummary) String() string {
 func (*CoverageSummary) ProtoMessage() {}
 
 func (x *CoverageSummary) ProtoReflect() protoreflect.Message {
-	mi := &file_spec_proto_msgTypes[68]
+	mi := &file_spec_proto_msgTypes[71]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4576,7 +4753,7 @@ func (x *CoverageSummary) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CoverageSummary.ProtoReflect.Descriptor instead.
 func (*CoverageSummary) Descriptor() ([]byte, []int) {
-	return file_spec_proto_rawDescGZIP(), []int{68}
+	return file_spec_proto_rawDescGZIP(), []int{71}
 }
 
 func (x *CoverageSummary) GetCovered() uint64 {
@@ -4611,7 +4788,7 @@ type FormatTestReportArgs struct {
 
 func (x *FormatTestReportArgs) Reset() {
 	*x = FormatTestReportArgs{}
-	mi := &file_spec_proto_msgTypes[69]
+	mi := &file_spec_proto_msgTypes[72]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4623,7 +4800,7 @@ func (x *FormatTestReportArgs) String() string {
 func (*FormatTestReportArgs) ProtoMessage() {}
 
 func (x *FormatTestReportArgs) ProtoReflect() protoreflect.Message {
-	mi := &file_spec_proto_msgTypes[69]
+	mi := &file_spec_proto_msgTypes[72]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4636,7 +4813,7 @@ func (x *FormatTestReportArgs) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use FormatTestReportArgs.ProtoReflect.Descriptor instead.
 func (*FormatTestReportArgs) Descriptor() ([]byte, []int) {
-	return file_spec_proto_rawDescGZIP(), []int{69}
+	return file_spec_proto_rawDescGZIP(), []int{72}
 }
 
 func (x *FormatTestReportArgs) GetResult() *TestResult {
@@ -4657,7 +4834,7 @@ type FormatTestReportResult struct {
 
 func (x *FormatTestReportResult) Reset() {
 	*x = FormatTestReportResult{}
-	mi := &file_spec_proto_msgTypes[70]
+	mi := &file_spec_proto_msgTypes[73]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4669,7 +4846,7 @@ func (x *FormatTestReportResult) String() string {
 func (*FormatTestReportResult) ProtoMessage() {}
 
 func (x *FormatTestReportResult) ProtoReflect() protoreflect.Message {
-	mi := &file_spec_proto_msgTypes[70]
+	mi := &file_spec_proto_msgTypes[73]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4682,7 +4859,7 @@ func (x *FormatTestReportResult) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use FormatTestReportResult.ProtoReflect.Descriptor instead.
 func (*FormatTestReportResult) Descriptor() ([]byte, []int) {
-	return file_spec_proto_rawDescGZIP(), []int{70}
+	return file_spec_proto_rawDescGZIP(), []int{73}
 }
 
 func (x *FormatTestReportResult) GetReport() string {
@@ -4705,7 +4882,7 @@ type UpdateDependenciesArgs struct {
 
 func (x *UpdateDependenciesArgs) Reset() {
 	*x = UpdateDependenciesArgs{}
-	mi := &file_spec_proto_msgTypes[71]
+	mi := &file_spec_proto_msgTypes[74]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4717,7 +4894,7 @@ func (x *UpdateDependenciesArgs) String() string {
 func (*UpdateDependenciesArgs) ProtoMessage() {}
 
 func (x *UpdateDependenciesArgs) ProtoReflect() protoreflect.Message {
-	mi := &file_spec_proto_msgTypes[71]
+	mi := &file_spec_proto_msgTypes[74]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4730,7 +4907,7 @@ func (x *UpdateDependenciesArgs) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateDependenciesArgs.ProtoReflect.Descriptor instead.
 func (*UpdateDependenciesArgs) Descriptor() ([]byte, []int) {
-	return file_spec_proto_rawDescGZIP(), []int{71}
+	return file_spec_proto_rawDescGZIP(), []int{74}
 }
 
 func (x *UpdateDependenciesArgs) GetManifestPath() string {
@@ -4758,7 +4935,7 @@ type UpdateDependenciesResult struct {
 
 func (x *UpdateDependenciesResult) Reset() {
 	*x = UpdateDependenciesResult{}
-	mi := &file_spec_proto_msgTypes[72]
+	mi := &file_spec_proto_msgTypes[75]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4770,7 +4947,7 @@ func (x *UpdateDependenciesResult) String() string {
 func (*UpdateDependenciesResult) ProtoMessage() {}
 
 func (x *UpdateDependenciesResult) ProtoReflect() protoreflect.Message {
-	mi := &file_spec_proto_msgTypes[72]
+	mi := &file_spec_proto_msgTypes[75]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4783,7 +4960,7 @@ func (x *UpdateDependenciesResult) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateDependenciesResult.ProtoReflect.Descriptor instead.
 func (*UpdateDependenciesResult) Descriptor() ([]byte, []int) {
-	return file_spec_proto_rawDescGZIP(), []int{72}
+	return file_spec_proto_rawDescGZIP(), []int{75}
 }
 
 func (x *UpdateDependenciesResult) GetExternalPkgs() []*ExternalPkg {
@@ -4806,7 +4983,7 @@ type GenerateTomlArgs struct {
 
 func (x *GenerateTomlArgs) Reset() {
 	*x = GenerateTomlArgs{}
-	mi := &file_spec_proto_msgTypes[73]
+	mi := &file_spec_proto_msgTypes[76]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4818,7 +4995,7 @@ func (x *GenerateTomlArgs) String() string {
 func (*GenerateTomlArgs) ProtoMessage() {}
 
 func (x *GenerateTomlArgs) ProtoReflect() protoreflect.Message {
-	mi := &file_spec_proto_msgTypes[73]
+	mi := &file_spec_proto_msgTypes[76]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4831,7 +5008,7 @@ func (x *GenerateTomlArgs) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GenerateTomlArgs.ProtoReflect.Descriptor instead.
 func (*GenerateTomlArgs) Descriptor() ([]byte, []int) {
-	return file_spec_proto_rawDescGZIP(), []int{73}
+	return file_spec_proto_rawDescGZIP(), []int{76}
 }
 
 func (x *GenerateTomlArgs) GetExecArgs() *ExecProgramArgs {
@@ -4859,7 +5036,7 @@ type GenerateTomlResult struct {
 
 func (x *GenerateTomlResult) Reset() {
 	*x = GenerateTomlResult{}
-	mi := &file_spec_proto_msgTypes[74]
+	mi := &file_spec_proto_msgTypes[77]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4871,7 +5048,7 @@ func (x *GenerateTomlResult) String() string {
 func (*GenerateTomlResult) ProtoMessage() {}
 
 func (x *GenerateTomlResult) ProtoReflect() protoreflect.Message {
-	mi := &file_spec_proto_msgTypes[74]
+	mi := &file_spec_proto_msgTypes[77]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4884,7 +5061,7 @@ func (x *GenerateTomlResult) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GenerateTomlResult.ProtoReflect.Descriptor instead.
 func (*GenerateTomlResult) Descriptor() ([]byte, []int) {
-	return file_spec_proto_rawDescGZIP(), []int{74}
+	return file_spec_proto_rawDescGZIP(), []int{77}
 }
 
 func (x *GenerateTomlResult) GetToml() string {
@@ -4910,7 +5087,7 @@ type GenerateKclArgs struct {
 
 func (x *GenerateKclArgs) Reset() {
 	*x = GenerateKclArgs{}
-	mi := &file_spec_proto_msgTypes[75]
+	mi := &file_spec_proto_msgTypes[78]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4922,7 +5099,7 @@ func (x *GenerateKclArgs) String() string {
 func (*GenerateKclArgs) ProtoMessage() {}
 
 func (x *GenerateKclArgs) ProtoReflect() protoreflect.Message {
-	mi := &file_spec_proto_msgTypes[75]
+	mi := &file_spec_proto_msgTypes[78]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4935,7 +5112,7 @@ func (x *GenerateKclArgs) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GenerateKclArgs.ProtoReflect.Descriptor instead.
 func (*GenerateKclArgs) Descriptor() ([]byte, []int) {
-	return file_spec_proto_rawDescGZIP(), []int{75}
+	return file_spec_proto_rawDescGZIP(), []int{78}
 }
 
 func (x *GenerateKclArgs) GetSource() string {
@@ -4970,7 +5147,7 @@ type GenerateKclResult struct {
 
 func (x *GenerateKclResult) Reset() {
 	*x = GenerateKclResult{}
-	mi := &file_spec_proto_msgTypes[76]
+	mi := &file_spec_proto_msgTypes[79]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4982,7 +5159,7 @@ func (x *GenerateKclResult) String() string {
 func (*GenerateKclResult) ProtoMessage() {}
 
 func (x *GenerateKclResult) ProtoReflect() protoreflect.Message {
-	mi := &file_spec_proto_msgTypes[76]
+	mi := &file_spec_proto_msgTypes[79]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4995,7 +5172,7 @@ func (x *GenerateKclResult) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GenerateKclResult.ProtoReflect.Descriptor instead.
 func (*GenerateKclResult) Descriptor() ([]byte, []int) {
-	return file_spec_proto_rawDescGZIP(), []int{76}
+	return file_spec_proto_rawDescGZIP(), []int{79}
 }
 
 func (x *GenerateKclResult) GetKcl() string {
@@ -5018,7 +5195,7 @@ type GenerateOpenAPIArgs struct {
 
 func (x *GenerateOpenAPIArgs) Reset() {
 	*x = GenerateOpenAPIArgs{}
-	mi := &file_spec_proto_msgTypes[77]
+	mi := &file_spec_proto_msgTypes[80]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -5030,7 +5207,7 @@ func (x *GenerateOpenAPIArgs) String() string {
 func (*GenerateOpenAPIArgs) ProtoMessage() {}
 
 func (x *GenerateOpenAPIArgs) ProtoReflect() protoreflect.Message {
-	mi := &file_spec_proto_msgTypes[77]
+	mi := &file_spec_proto_msgTypes[80]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5043,7 +5220,7 @@ func (x *GenerateOpenAPIArgs) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GenerateOpenAPIArgs.ProtoReflect.Descriptor instead.
 func (*GenerateOpenAPIArgs) Descriptor() ([]byte, []int) {
-	return file_spec_proto_rawDescGZIP(), []int{77}
+	return file_spec_proto_rawDescGZIP(), []int{80}
 }
 
 func (x *GenerateOpenAPIArgs) GetParseArgs() *ParseProgramArgs {
@@ -5071,7 +5248,7 @@ type GenerateOpenAPIResult struct {
 
 func (x *GenerateOpenAPIResult) Reset() {
 	*x = GenerateOpenAPIResult{}
-	mi := &file_spec_proto_msgTypes[78]
+	mi := &file_spec_proto_msgTypes[81]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -5083,7 +5260,7 @@ func (x *GenerateOpenAPIResult) String() string {
 func (*GenerateOpenAPIResult) ProtoMessage() {}
 
 func (x *GenerateOpenAPIResult) ProtoReflect() protoreflect.Message {
-	mi := &file_spec_proto_msgTypes[78]
+	mi := &file_spec_proto_msgTypes[81]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5096,7 +5273,7 @@ func (x *GenerateOpenAPIResult) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GenerateOpenAPIResult.ProtoReflect.Descriptor instead.
 func (*GenerateOpenAPIResult) Descriptor() ([]byte, []int) {
-	return file_spec_proto_rawDescGZIP(), []int{78}
+	return file_spec_proto_rawDescGZIP(), []int{81}
 }
 
 func (x *GenerateOpenAPIResult) GetSpec() string {
@@ -5119,7 +5296,7 @@ type GenerateProtoArgs struct {
 
 func (x *GenerateProtoArgs) Reset() {
 	*x = GenerateProtoArgs{}
-	mi := &file_spec_proto_msgTypes[79]
+	mi := &file_spec_proto_msgTypes[82]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -5131,7 +5308,7 @@ func (x *GenerateProtoArgs) String() string {
 func (*GenerateProtoArgs) ProtoMessage() {}
 
 func (x *GenerateProtoArgs) ProtoReflect() protoreflect.Message {
-	mi := &file_spec_proto_msgTypes[79]
+	mi := &file_spec_proto_msgTypes[82]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5144,7 +5321,7 @@ func (x *GenerateProtoArgs) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GenerateProtoArgs.ProtoReflect.Descriptor instead.
 func (*GenerateProtoArgs) Descriptor() ([]byte, []int) {
-	return file_spec_proto_rawDescGZIP(), []int{79}
+	return file_spec_proto_rawDescGZIP(), []int{82}
 }
 
 func (x *GenerateProtoArgs) GetParseArgs() *ParseProgramArgs {
@@ -5172,7 +5349,7 @@ type GenerateProtoResult struct {
 
 func (x *GenerateProtoResult) Reset() {
 	*x = GenerateProtoResult{}
-	mi := &file_spec_proto_msgTypes[80]
+	mi := &file_spec_proto_msgTypes[83]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -5184,7 +5361,7 @@ func (x *GenerateProtoResult) String() string {
 func (*GenerateProtoResult) ProtoMessage() {}
 
 func (x *GenerateProtoResult) ProtoReflect() protoreflect.Message {
-	mi := &file_spec_proto_msgTypes[80]
+	mi := &file_spec_proto_msgTypes[83]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5197,12 +5374,495 @@ func (x *GenerateProtoResult) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GenerateProtoResult.ProtoReflect.Descriptor instead.
 func (*GenerateProtoResult) Descriptor() ([]byte, []int) {
-	return file_spec_proto_rawDescGZIP(), []int{80}
+	return file_spec_proto_rawDescGZIP(), []int{83}
 }
 
 func (x *GenerateProtoResult) GetProto() string {
 	if x != nil {
 		return x.Proto
+	}
+	return ""
+}
+
+// Message for Rust DTO generation request arguments.
+type GenerateRustArgs struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// Arguments for parsing the program whose schemas are exported.
+	ParseArgs     *ParseProgramArgs `protobuf:"bytes,1,opt,name=parse_args,json=parseArgs,proto3" json:"parse_args,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GenerateRustArgs) Reset() {
+	*x = GenerateRustArgs{}
+	mi := &file_spec_proto_msgTypes[84]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GenerateRustArgs) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GenerateRustArgs) ProtoMessage() {}
+
+func (x *GenerateRustArgs) ProtoReflect() protoreflect.Message {
+	mi := &file_spec_proto_msgTypes[84]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GenerateRustArgs.ProtoReflect.Descriptor instead.
+func (*GenerateRustArgs) Descriptor() ([]byte, []int) {
+	return file_spec_proto_rawDescGZIP(), []int{84}
+}
+
+func (x *GenerateRustArgs) GetParseArgs() *ParseProgramArgs {
+	if x != nil {
+		return x.ParseArgs
+	}
+	return nil
+}
+
+// Message for Rust DTO generation response.
+type GenerateRustResult struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// The generated Rust source.
+	RustSource    string `protobuf:"bytes,1,opt,name=rust_source,json=rustSource,proto3" json:"rust_source,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GenerateRustResult) Reset() {
+	*x = GenerateRustResult{}
+	mi := &file_spec_proto_msgTypes[85]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GenerateRustResult) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GenerateRustResult) ProtoMessage() {}
+
+func (x *GenerateRustResult) ProtoReflect() protoreflect.Message {
+	mi := &file_spec_proto_msgTypes[85]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GenerateRustResult.ProtoReflect.Descriptor instead.
+func (*GenerateRustResult) Descriptor() ([]byte, []int) {
+	return file_spec_proto_rawDescGZIP(), []int{85}
+}
+
+func (x *GenerateRustResult) GetRustSource() string {
+	if x != nil {
+		return x.RustSource
+	}
+	return ""
+}
+
+// Message for Python DTO generation request arguments.
+type GeneratePythonArgs struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// Arguments for parsing the program whose schemas are exported.
+	ParseArgs     *ParseProgramArgs `protobuf:"bytes,1,opt,name=parse_args,json=parseArgs,proto3" json:"parse_args,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GeneratePythonArgs) Reset() {
+	*x = GeneratePythonArgs{}
+	mi := &file_spec_proto_msgTypes[86]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GeneratePythonArgs) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GeneratePythonArgs) ProtoMessage() {}
+
+func (x *GeneratePythonArgs) ProtoReflect() protoreflect.Message {
+	mi := &file_spec_proto_msgTypes[86]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GeneratePythonArgs.ProtoReflect.Descriptor instead.
+func (*GeneratePythonArgs) Descriptor() ([]byte, []int) {
+	return file_spec_proto_rawDescGZIP(), []int{86}
+}
+
+func (x *GeneratePythonArgs) GetParseArgs() *ParseProgramArgs {
+	if x != nil {
+		return x.ParseArgs
+	}
+	return nil
+}
+
+// Message for Python DTO generation response.
+type GeneratePythonResult struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// The generated Python source.
+	PythonSource  string `protobuf:"bytes,1,opt,name=python_source,json=pythonSource,proto3" json:"python_source,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GeneratePythonResult) Reset() {
+	*x = GeneratePythonResult{}
+	mi := &file_spec_proto_msgTypes[87]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GeneratePythonResult) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GeneratePythonResult) ProtoMessage() {}
+
+func (x *GeneratePythonResult) ProtoReflect() protoreflect.Message {
+	mi := &file_spec_proto_msgTypes[87]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GeneratePythonResult.ProtoReflect.Descriptor instead.
+func (*GeneratePythonResult) Descriptor() ([]byte, []int) {
+	return file_spec_proto_rawDescGZIP(), []int{87}
+}
+
+func (x *GeneratePythonResult) GetPythonSource() string {
+	if x != nil {
+		return x.PythonSource
+	}
+	return ""
+}
+
+// Message for Go DTO generation request arguments.
+type GenerateGoArgs struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// Arguments for parsing the program whose schemas are exported.
+	ParseArgs *ParseProgramArgs `protobuf:"bytes,1,opt,name=parse_args,json=parseArgs,proto3" json:"parse_args,omitempty"`
+	// Go package name for the generated file's `package` clause, e.g.
+	// "dto". Empty defaults to "generated" — Go requires a package clause,
+	// unlike GenerateProto's optional `package` field.
+	Package       string `protobuf:"bytes,2,opt,name=package,proto3" json:"package,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GenerateGoArgs) Reset() {
+	*x = GenerateGoArgs{}
+	mi := &file_spec_proto_msgTypes[88]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GenerateGoArgs) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GenerateGoArgs) ProtoMessage() {}
+
+func (x *GenerateGoArgs) ProtoReflect() protoreflect.Message {
+	mi := &file_spec_proto_msgTypes[88]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GenerateGoArgs.ProtoReflect.Descriptor instead.
+func (*GenerateGoArgs) Descriptor() ([]byte, []int) {
+	return file_spec_proto_rawDescGZIP(), []int{88}
+}
+
+func (x *GenerateGoArgs) GetParseArgs() *ParseProgramArgs {
+	if x != nil {
+		return x.ParseArgs
+	}
+	return nil
+}
+
+func (x *GenerateGoArgs) GetPackage() string {
+	if x != nil {
+		return x.Package
+	}
+	return ""
+}
+
+// Message for Go DTO generation response.
+type GenerateGoResult struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// The generated Go source.
+	GoSource      string `protobuf:"bytes,1,opt,name=go_source,json=goSource,proto3" json:"go_source,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GenerateGoResult) Reset() {
+	*x = GenerateGoResult{}
+	mi := &file_spec_proto_msgTypes[89]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GenerateGoResult) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GenerateGoResult) ProtoMessage() {}
+
+func (x *GenerateGoResult) ProtoReflect() protoreflect.Message {
+	mi := &file_spec_proto_msgTypes[89]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GenerateGoResult.ProtoReflect.Descriptor instead.
+func (*GenerateGoResult) Descriptor() ([]byte, []int) {
+	return file_spec_proto_rawDescGZIP(), []int{89}
+}
+
+func (x *GenerateGoResult) GetGoSource() string {
+	if x != nil {
+		return x.GoSource
+	}
+	return ""
+}
+
+// Message for Java DTO generation request arguments.
+type GenerateJavaArgs struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// Arguments for parsing the program whose schemas are exported.
+	ParseArgs *ParseProgramArgs `protobuf:"bytes,1,opt,name=parse_args,json=parseArgs,proto3" json:"parse_args,omitempty"`
+	// Java package name for the generated file's `package` clause, e.g.
+	// "com.example.dto". Empty omits the package clause entirely (valid
+	// Java — the "default package") rather than defaulting to a synthetic
+	// name as GenerateGo does, since Java (unlike Go) does not require one.
+	Package       string `protobuf:"bytes,2,opt,name=package,proto3" json:"package,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GenerateJavaArgs) Reset() {
+	*x = GenerateJavaArgs{}
+	mi := &file_spec_proto_msgTypes[90]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GenerateJavaArgs) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GenerateJavaArgs) ProtoMessage() {}
+
+func (x *GenerateJavaArgs) ProtoReflect() protoreflect.Message {
+	mi := &file_spec_proto_msgTypes[90]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GenerateJavaArgs.ProtoReflect.Descriptor instead.
+func (*GenerateJavaArgs) Descriptor() ([]byte, []int) {
+	return file_spec_proto_rawDescGZIP(), []int{90}
+}
+
+func (x *GenerateJavaArgs) GetParseArgs() *ParseProgramArgs {
+	if x != nil {
+		return x.ParseArgs
+	}
+	return nil
+}
+
+func (x *GenerateJavaArgs) GetPackage() string {
+	if x != nil {
+		return x.Package
+	}
+	return ""
+}
+
+// Message for Java DTO generation response.
+type GenerateJavaResult struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// The generated Java source.
+	JavaSource    string `protobuf:"bytes,1,opt,name=java_source,json=javaSource,proto3" json:"java_source,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GenerateJavaResult) Reset() {
+	*x = GenerateJavaResult{}
+	mi := &file_spec_proto_msgTypes[91]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GenerateJavaResult) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GenerateJavaResult) ProtoMessage() {}
+
+func (x *GenerateJavaResult) ProtoReflect() protoreflect.Message {
+	mi := &file_spec_proto_msgTypes[91]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GenerateJavaResult.ProtoReflect.Descriptor instead.
+func (*GenerateJavaResult) Descriptor() ([]byte, []int) {
+	return file_spec_proto_rawDescGZIP(), []int{91}
+}
+
+func (x *GenerateJavaResult) GetJavaSource() string {
+	if x != nil {
+		return x.JavaSource
+	}
+	return ""
+}
+
+// Message for TypeScript DTO generation request arguments.
+type GenerateTypeScriptArgs struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// Arguments for parsing the program whose schemas are exported.
+	ParseArgs     *ParseProgramArgs `protobuf:"bytes,1,opt,name=parse_args,json=parseArgs,proto3" json:"parse_args,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GenerateTypeScriptArgs) Reset() {
+	*x = GenerateTypeScriptArgs{}
+	mi := &file_spec_proto_msgTypes[92]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GenerateTypeScriptArgs) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GenerateTypeScriptArgs) ProtoMessage() {}
+
+func (x *GenerateTypeScriptArgs) ProtoReflect() protoreflect.Message {
+	mi := &file_spec_proto_msgTypes[92]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GenerateTypeScriptArgs.ProtoReflect.Descriptor instead.
+func (*GenerateTypeScriptArgs) Descriptor() ([]byte, []int) {
+	return file_spec_proto_rawDescGZIP(), []int{92}
+}
+
+func (x *GenerateTypeScriptArgs) GetParseArgs() *ParseProgramArgs {
+	if x != nil {
+		return x.ParseArgs
+	}
+	return nil
+}
+
+// Message for TypeScript DTO generation response.
+type GenerateTypeScriptResult struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// The generated TypeScript source.
+	TypescriptSource string `protobuf:"bytes,1,opt,name=typescript_source,json=typescriptSource,proto3" json:"typescript_source,omitempty"`
+	unknownFields    protoimpl.UnknownFields
+	sizeCache        protoimpl.SizeCache
+}
+
+func (x *GenerateTypeScriptResult) Reset() {
+	*x = GenerateTypeScriptResult{}
+	mi := &file_spec_proto_msgTypes[93]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GenerateTypeScriptResult) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GenerateTypeScriptResult) ProtoMessage() {}
+
+func (x *GenerateTypeScriptResult) ProtoReflect() protoreflect.Message {
+	mi := &file_spec_proto_msgTypes[93]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GenerateTypeScriptResult.ProtoReflect.Descriptor instead.
+func (*GenerateTypeScriptResult) Descriptor() ([]byte, []int) {
+	return file_spec_proto_rawDescGZIP(), []int{93}
+}
+
+func (x *GenerateTypeScriptResult) GetTypescriptSource() string {
+	if x != nil {
+		return x.TypescriptSource
 	}
 	return ""
 }
@@ -5222,7 +5882,7 @@ type GenerateDocArgs struct {
 
 func (x *GenerateDocArgs) Reset() {
 	*x = GenerateDocArgs{}
-	mi := &file_spec_proto_msgTypes[81]
+	mi := &file_spec_proto_msgTypes[94]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -5234,7 +5894,7 @@ func (x *GenerateDocArgs) String() string {
 func (*GenerateDocArgs) ProtoMessage() {}
 
 func (x *GenerateDocArgs) ProtoReflect() protoreflect.Message {
-	mi := &file_spec_proto_msgTypes[81]
+	mi := &file_spec_proto_msgTypes[94]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5247,7 +5907,7 @@ func (x *GenerateDocArgs) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GenerateDocArgs.ProtoReflect.Descriptor instead.
 func (*GenerateDocArgs) Descriptor() ([]byte, []int) {
-	return file_spec_proto_rawDescGZIP(), []int{81}
+	return file_spec_proto_rawDescGZIP(), []int{94}
 }
 
 func (x *GenerateDocArgs) GetParseArgs() *ParseProgramArgs {
@@ -5275,7 +5935,7 @@ type GenerateDocResult struct {
 
 func (x *GenerateDocResult) Reset() {
 	*x = GenerateDocResult{}
-	mi := &file_spec_proto_msgTypes[82]
+	mi := &file_spec_proto_msgTypes[95]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -5287,7 +5947,7 @@ func (x *GenerateDocResult) String() string {
 func (*GenerateDocResult) ProtoMessage() {}
 
 func (x *GenerateDocResult) ProtoReflect() protoreflect.Message {
-	mi := &file_spec_proto_msgTypes[82]
+	mi := &file_spec_proto_msgTypes[95]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5300,7 +5960,7 @@ func (x *GenerateDocResult) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GenerateDocResult.ProtoReflect.Descriptor instead.
 func (*GenerateDocResult) Descriptor() ([]byte, []int) {
-	return file_spec_proto_rawDescGZIP(), []int{82}
+	return file_spec_proto_rawDescGZIP(), []int{95}
 }
 
 func (x *GenerateDocResult) GetContent() string {
@@ -5349,13 +6009,15 @@ type KclType struct {
 	Function *FunctionType `protobuf:"bytes,17,opt,name=function,proto3,oneof" json:"function,omitempty"`
 	// Optional schema index signature
 	IndexSignature *IndexSignature `protobuf:"bytes,18,opt,name=index_signature,json=indexSignature,proto3,oneof" json:"index_signature,omitempty"`
-	unknownFields  protoimpl.UnknownFields
-	sizeCache      protoimpl.SizeCache
+	// Schema CheckExpr AST nodes serialized as JSON for code generators.
+	ChecksJson    []string `protobuf:"bytes,19,rep,name=checks_json,json=checksJson,proto3" json:"checks_json,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *KclType) Reset() {
 	*x = KclType{}
-	mi := &file_spec_proto_msgTypes[83]
+	mi := &file_spec_proto_msgTypes[96]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -5367,7 +6029,7 @@ func (x *KclType) String() string {
 func (*KclType) ProtoMessage() {}
 
 func (x *KclType) ProtoReflect() protoreflect.Message {
-	mi := &file_spec_proto_msgTypes[83]
+	mi := &file_spec_proto_msgTypes[96]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5380,7 +6042,7 @@ func (x *KclType) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use KclType.ProtoReflect.Descriptor instead.
 func (*KclType) Descriptor() ([]byte, []int) {
-	return file_spec_proto_rawDescGZIP(), []int{83}
+	return file_spec_proto_rawDescGZIP(), []int{96}
 }
 
 func (x *KclType) GetType() string {
@@ -5509,6 +6171,13 @@ func (x *KclType) GetIndexSignature() *IndexSignature {
 	return nil
 }
 
+func (x *KclType) GetChecksJson() []string {
+	if x != nil {
+		return x.ChecksJson
+	}
+	return nil
+}
+
 type FunctionType struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Params        []*Parameter           `protobuf:"bytes,1,rep,name=params,proto3" json:"params,omitempty"`
@@ -5519,7 +6188,7 @@ type FunctionType struct {
 
 func (x *FunctionType) Reset() {
 	*x = FunctionType{}
-	mi := &file_spec_proto_msgTypes[84]
+	mi := &file_spec_proto_msgTypes[97]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -5531,7 +6200,7 @@ func (x *FunctionType) String() string {
 func (*FunctionType) ProtoMessage() {}
 
 func (x *FunctionType) ProtoReflect() protoreflect.Message {
-	mi := &file_spec_proto_msgTypes[84]
+	mi := &file_spec_proto_msgTypes[97]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5544,7 +6213,7 @@ func (x *FunctionType) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use FunctionType.ProtoReflect.Descriptor instead.
 func (*FunctionType) Descriptor() ([]byte, []int) {
-	return file_spec_proto_rawDescGZIP(), []int{84}
+	return file_spec_proto_rawDescGZIP(), []int{97}
 }
 
 func (x *FunctionType) GetParams() []*Parameter {
@@ -5571,7 +6240,7 @@ type Parameter struct {
 
 func (x *Parameter) Reset() {
 	*x = Parameter{}
-	mi := &file_spec_proto_msgTypes[85]
+	mi := &file_spec_proto_msgTypes[98]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -5583,7 +6252,7 @@ func (x *Parameter) String() string {
 func (*Parameter) ProtoMessage() {}
 
 func (x *Parameter) ProtoReflect() protoreflect.Message {
-	mi := &file_spec_proto_msgTypes[85]
+	mi := &file_spec_proto_msgTypes[98]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5596,7 +6265,7 @@ func (x *Parameter) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Parameter.ProtoReflect.Descriptor instead.
 func (*Parameter) Descriptor() ([]byte, []int) {
-	return file_spec_proto_rawDescGZIP(), []int{85}
+	return file_spec_proto_rawDescGZIP(), []int{98}
 }
 
 func (x *Parameter) GetName() string {
@@ -5629,7 +6298,7 @@ type IndexSignature struct {
 
 func (x *IndexSignature) Reset() {
 	*x = IndexSignature{}
-	mi := &file_spec_proto_msgTypes[86]
+	mi := &file_spec_proto_msgTypes[99]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -5641,7 +6310,7 @@ func (x *IndexSignature) String() string {
 func (*IndexSignature) ProtoMessage() {}
 
 func (x *IndexSignature) ProtoReflect() protoreflect.Message {
-	mi := &file_spec_proto_msgTypes[86]
+	mi := &file_spec_proto_msgTypes[99]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5654,7 +6323,7 @@ func (x *IndexSignature) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use IndexSignature.ProtoReflect.Descriptor instead.
 func (*IndexSignature) Descriptor() ([]byte, []int) {
-	return file_spec_proto_rawDescGZIP(), []int{86}
+	return file_spec_proto_rawDescGZIP(), []int{99}
 }
 
 func (x *IndexSignature) GetKeyName() string {
@@ -5700,7 +6369,7 @@ type Decorator struct {
 
 func (x *Decorator) Reset() {
 	*x = Decorator{}
-	mi := &file_spec_proto_msgTypes[87]
+	mi := &file_spec_proto_msgTypes[100]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -5712,7 +6381,7 @@ func (x *Decorator) String() string {
 func (*Decorator) ProtoMessage() {}
 
 func (x *Decorator) ProtoReflect() protoreflect.Message {
-	mi := &file_spec_proto_msgTypes[87]
+	mi := &file_spec_proto_msgTypes[100]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5725,7 +6394,7 @@ func (x *Decorator) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Decorator.ProtoReflect.Descriptor instead.
 func (*Decorator) Descriptor() ([]byte, []int) {
-	return file_spec_proto_rawDescGZIP(), []int{87}
+	return file_spec_proto_rawDescGZIP(), []int{100}
 }
 
 func (x *Decorator) GetName() string {
@@ -5764,7 +6433,7 @@ type Example struct {
 
 func (x *Example) Reset() {
 	*x = Example{}
-	mi := &file_spec_proto_msgTypes[88]
+	mi := &file_spec_proto_msgTypes[101]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -5776,7 +6445,7 @@ func (x *Example) String() string {
 func (*Example) ProtoMessage() {}
 
 func (x *Example) ProtoReflect() protoreflect.Message {
-	mi := &file_spec_proto_msgTypes[88]
+	mi := &file_spec_proto_msgTypes[101]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5789,7 +6458,7 @@ func (x *Example) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Example.ProtoReflect.Descriptor instead.
 func (*Example) Descriptor() ([]byte, []int) {
-	return file_spec_proto_rawDescGZIP(), []int{88}
+	return file_spec_proto_rawDescGZIP(), []int{101}
 }
 
 func (x *Example) GetSummary() string {
@@ -6020,7 +6689,15 @@ const file_spec_proto_rawDesc = "" +
 	"errMessage\x12!\n" +
 	"\tsourcemap\x18\x05 \x01(\tH\x00R\tsourcemap\x88\x01\x01B\f\n" +
 	"\n" +
-	"_sourcemap\"(\n" +
+	"_sourcemap\"e\n" +
+	"\x10BuildProgramArgs\x129\n" +
+	"\texec_args\x18\x01 \x01(\v2\x1c.com.kcl.api.ExecProgramArgsR\bexecArgs\x12\x16\n" +
+	"\x06output\x18\x02 \x01(\tR\x06output\"(\n" +
+	"\x12BuildProgramResult\x12\x12\n" +
+	"\x04path\x18\x01 \x01(\tR\x04path\"a\n" +
+	"\x10ExecArtifactArgs\x12\x12\n" +
+	"\x04path\x18\x01 \x01(\tR\x04path\x129\n" +
+	"\texec_args\x18\x02 \x01(\v2\x1c.com.kcl.api.ExecProgramArgsR\bexecArgs\"(\n" +
 	"\x0eFormatCodeArgs\x12\x16\n" +
 	"\x06source\x18\x01 \x01(\tR\x06source\"0\n" +
 	"\x10FormatCodeResult\x12\x1c\n" +
@@ -6148,14 +6825,15 @@ const file_spec_proto_rawDesc = "" +
 	"\rchanged_codes\x18\x01 \x03(\v2/.com.kcl.api.RenameCodeResult.ChangedCodesEntryR\fchangedCodes\x1a?\n" +
 	"\x11ChangedCodesEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
-	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"\xb8\x01\n" +
+	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"\xd5\x01\n" +
 	"\bTestArgs\x129\n" +
 	"\texec_args\x18\x01 \x01(\v2\x1c.com.kcl.api.ExecProgramArgsR\bexecArgs\x12\x19\n" +
 	"\bpkg_list\x18\x02 \x03(\tR\apkgList\x12\x1d\n" +
 	"\n" +
 	"run_regexp\x18\x03 \x01(\tR\trunRegexp\x12\x1b\n" +
 	"\tfail_fast\x18\x04 \x01(\bR\bfailFast\x12\x1a\n" +
-	"\bcoverage\x18\x05 \x01(\bR\bcoverage\"x\n" +
+	"\bcoverage\x18\x05 \x01(\bR\bcoverage\x12\x1b\n" +
+	"\teval_once\x18\x06 \x01(\bR\bevalOnce\"x\n" +
 	"\n" +
 	"TestResult\x12-\n" +
 	"\x04info\x18\x02 \x03(\v2\x19.com.kcl.api.TestCaseInfoR\x04info\x12;\n" +
@@ -6222,13 +6900,42 @@ const file_spec_proto_rawDesc = "" +
 	"parse_args\x18\x01 \x01(\v2\x1d.com.kcl.api.ParseProgramArgsR\tparseArgs\x12\x18\n" +
 	"\apackage\x18\x02 \x01(\tR\apackage\"+\n" +
 	"\x13GenerateProtoResult\x12\x14\n" +
-	"\x05proto\x18\x01 \x01(\tR\x05proto\"g\n" +
+	"\x05proto\x18\x01 \x01(\tR\x05proto\"P\n" +
+	"\x10GenerateRustArgs\x12<\n" +
+	"\n" +
+	"parse_args\x18\x01 \x01(\v2\x1d.com.kcl.api.ParseProgramArgsR\tparseArgs\"5\n" +
+	"\x12GenerateRustResult\x12\x1f\n" +
+	"\vrust_source\x18\x01 \x01(\tR\n" +
+	"rustSource\"R\n" +
+	"\x12GeneratePythonArgs\x12<\n" +
+	"\n" +
+	"parse_args\x18\x01 \x01(\v2\x1d.com.kcl.api.ParseProgramArgsR\tparseArgs\";\n" +
+	"\x14GeneratePythonResult\x12#\n" +
+	"\rpython_source\x18\x01 \x01(\tR\fpythonSource\"h\n" +
+	"\x0eGenerateGoArgs\x12<\n" +
+	"\n" +
+	"parse_args\x18\x01 \x01(\v2\x1d.com.kcl.api.ParseProgramArgsR\tparseArgs\x12\x18\n" +
+	"\apackage\x18\x02 \x01(\tR\apackage\"/\n" +
+	"\x10GenerateGoResult\x12\x1b\n" +
+	"\tgo_source\x18\x01 \x01(\tR\bgoSource\"j\n" +
+	"\x10GenerateJavaArgs\x12<\n" +
+	"\n" +
+	"parse_args\x18\x01 \x01(\v2\x1d.com.kcl.api.ParseProgramArgsR\tparseArgs\x12\x18\n" +
+	"\apackage\x18\x02 \x01(\tR\apackage\"5\n" +
+	"\x12GenerateJavaResult\x12\x1f\n" +
+	"\vjava_source\x18\x01 \x01(\tR\n" +
+	"javaSource\"V\n" +
+	"\x16GenerateTypeScriptArgs\x12<\n" +
+	"\n" +
+	"parse_args\x18\x01 \x01(\v2\x1d.com.kcl.api.ParseProgramArgsR\tparseArgs\"G\n" +
+	"\x18GenerateTypeScriptResult\x12+\n" +
+	"\x11typescript_source\x18\x01 \x01(\tR\x10typescriptSource\"g\n" +
 	"\x0fGenerateDocArgs\x12<\n" +
 	"\n" +
 	"parse_args\x18\x01 \x01(\v2\x1d.com.kcl.api.ParseProgramArgsR\tparseArgs\x12\x16\n" +
 	"\x06format\x18\x02 \x01(\tR\x06format\"-\n" +
 	"\x11GenerateDocResult\x12\x18\n" +
-	"\acontent\x18\x01 \x01(\tR\acontent\"\xce\a\n" +
+	"\acontent\x18\x01 \x01(\tR\acontent\"\xef\a\n" +
 	"\aKclType\x12\x12\n" +
 	"\x04type\x18\x01 \x01(\tR\x04type\x125\n" +
 	"\vunion_types\x18\x02 \x03(\v2\x14.com.kcl.api.KclTypeR\n" +
@@ -6256,7 +6963,9 @@ const file_spec_proto_rawDesc = "" +
 	"\vbase_schema\x18\x10 \x01(\v2\x14.com.kcl.api.KclTypeR\n" +
 	"baseSchema\x12:\n" +
 	"\bfunction\x18\x11 \x01(\v2\x19.com.kcl.api.FunctionTypeH\x00R\bfunction\x88\x01\x01\x12I\n" +
-	"\x0findex_signature\x18\x12 \x01(\v2\x1b.com.kcl.api.IndexSignatureH\x01R\x0eindexSignature\x88\x01\x01\x1aS\n" +
+	"\x0findex_signature\x18\x12 \x01(\v2\x1b.com.kcl.api.IndexSignatureH\x01R\x0eindexSignature\x88\x01\x01\x12\x1f\n" +
+	"\vchecks_json\x18\x13 \x03(\tR\n" +
+	"checksJson\x1aS\n" +
 	"\x0fPropertiesEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12*\n" +
 	"\x05value\x18\x02 \x01(\v2\x14.com.kcl.api.KclTypeR\x05value:\x028\x01\x1aQ\n" +
@@ -6291,7 +7000,7 @@ const file_spec_proto_rawDesc = "" +
 	"\x0eBuiltinService\x126\n" +
 	"\x04Ping\x12\x15.com.kcl.api.PingArgs\x1a\x17.com.kcl.api.PingResult\x12H\n" +
 	"\n" +
-	"ListMethod\x12\x1b.com.kcl.api.ListMethodArgs\x1a\x1d.com.kcl.api.ListMethodResult2\xad\x10\n" +
+	"ListMethod\x12\x1b.com.kcl.api.ListMethodArgs\x1a\x1d.com.kcl.api.ListMethodResult2\xee\x14\n" +
 	"\n" +
 	"KclService\x126\n" +
 	"\x04Ping\x12\x15.com.kcl.api.PingArgs\x1a\x17.com.kcl.api.PingResult\x12H\n" +
@@ -6303,6 +7012,8 @@ const file_spec_proto_rawDesc = "" +
 	"\vListOptions\x12\x1d.com.kcl.api.ParseProgramArgs\x1a\x1e.com.kcl.api.ListOptionsResult\x12Q\n" +
 	"\rListVariables\x12\x1e.com.kcl.api.ListVariablesArgs\x1a .com.kcl.api.ListVariablesResult\x12K\n" +
 	"\vExecProgram\x12\x1c.com.kcl.api.ExecProgramArgs\x1a\x1e.com.kcl.api.ExecProgramResult\x12N\n" +
+	"\fBuildProgram\x12\x1d.com.kcl.api.BuildProgramArgs\x1a\x1f.com.kcl.api.BuildProgramResult\x12M\n" +
+	"\fExecArtifact\x12\x1d.com.kcl.api.ExecArtifactArgs\x1a\x1e.com.kcl.api.ExecProgramResult\x12N\n" +
 	"\fOverrideFile\x12\x1d.com.kcl.api.OverrideFileArgs\x1a\x1f.com.kcl.api.OverrideFileResult\x12f\n" +
 	"\x14GetSchemaTypeMapping\x12%.com.kcl.api.GetSchemaTypeMappingArgs\x1a'.com.kcl.api.GetSchemaTypeMappingResult\x12x\n" +
 	"\x1dGetSchemaTypeMappingUnderPath\x12%.com.kcl.api.GetSchemaTypeMappingArgs\x1a0.com.kcl.api.GetSchemaTypeMappingUnderPathResult\x12H\n" +
@@ -6322,7 +7033,13 @@ const file_spec_proto_rawDesc = "" +
 	"\fGenerateToml\x12\x1d.com.kcl.api.GenerateTomlArgs\x1a\x1f.com.kcl.api.GenerateTomlResult\x12K\n" +
 	"\vGenerateKcl\x12\x1c.com.kcl.api.GenerateKclArgs\x1a\x1e.com.kcl.api.GenerateKclResult\x12W\n" +
 	"\x0fGenerateOpenAPI\x12 .com.kcl.api.GenerateOpenAPIArgs\x1a\".com.kcl.api.GenerateOpenAPIResult\x12Q\n" +
-	"\rGenerateProto\x12\x1e.com.kcl.api.GenerateProtoArgs\x1a .com.kcl.api.GenerateProtoResult\x12K\n" +
+	"\rGenerateProto\x12\x1e.com.kcl.api.GenerateProtoArgs\x1a .com.kcl.api.GenerateProtoResult\x12N\n" +
+	"\fGenerateRust\x12\x1d.com.kcl.api.GenerateRustArgs\x1a\x1f.com.kcl.api.GenerateRustResult\x12T\n" +
+	"\x0eGeneratePython\x12\x1f.com.kcl.api.GeneratePythonArgs\x1a!.com.kcl.api.GeneratePythonResult\x12H\n" +
+	"\n" +
+	"GenerateGo\x12\x1b.com.kcl.api.GenerateGoArgs\x1a\x1d.com.kcl.api.GenerateGoResult\x12N\n" +
+	"\fGenerateJava\x12\x1d.com.kcl.api.GenerateJavaArgs\x1a\x1f.com.kcl.api.GenerateJavaResult\x12`\n" +
+	"\x12GenerateTypeScript\x12#.com.kcl.api.GenerateTypeScriptArgs\x1a%.com.kcl.api.GenerateTypeScriptResult\x12K\n" +
 	"\vGenerateDoc\x12\x1c.com.kcl.api.GenerateDocArgs\x1a\x1e.com.kcl.api.GenerateDocResultB\x14Z\x05.;api\xaa\x02\n" +
 	"KclLib.APIb\x06proto3"
 
@@ -6338,7 +7055,7 @@ func file_spec_proto_rawDescGZIP() []byte {
 	return file_spec_proto_rawDescData
 }
 
-var file_spec_proto_msgTypes = make([]protoimpl.MessageInfo, 108)
+var file_spec_proto_msgTypes = make([]protoimpl.MessageInfo, 121)
 var file_spec_proto_goTypes = []any{
 	(*ExternalPkg)(nil),                         // 0: com.kcl.api.ExternalPkg
 	(*Argument)(nil),                            // 1: com.kcl.api.Argument
@@ -6374,84 +7091,97 @@ var file_spec_proto_goTypes = []any{
 	(*ScopeIndex)(nil),                          // 31: com.kcl.api.ScopeIndex
 	(*ExecProgramArgs)(nil),                     // 32: com.kcl.api.ExecProgramArgs
 	(*ExecProgramResult)(nil),                   // 33: com.kcl.api.ExecProgramResult
-	(*FormatCodeArgs)(nil),                      // 34: com.kcl.api.FormatCodeArgs
-	(*FormatCodeResult)(nil),                    // 35: com.kcl.api.FormatCodeResult
-	(*FormatPathArgs)(nil),                      // 36: com.kcl.api.FormatPathArgs
-	(*FormatPathResult)(nil),                    // 37: com.kcl.api.FormatPathResult
-	(*LintPathArgs)(nil),                        // 38: com.kcl.api.LintPathArgs
-	(*LintPathResult)(nil),                      // 39: com.kcl.api.LintPathResult
-	(*OverrideFileArgs)(nil),                    // 40: com.kcl.api.OverrideFileArgs
-	(*OverrideFileResult)(nil),                  // 41: com.kcl.api.OverrideFileResult
-	(*ListVariablesOptions)(nil),                // 42: com.kcl.api.ListVariablesOptions
-	(*VariableList)(nil),                        // 43: com.kcl.api.VariableList
-	(*ListVariablesArgs)(nil),                   // 44: com.kcl.api.ListVariablesArgs
-	(*ListVariablesResult)(nil),                 // 45: com.kcl.api.ListVariablesResult
-	(*Variable)(nil),                            // 46: com.kcl.api.Variable
-	(*MapEntry)(nil),                            // 47: com.kcl.api.MapEntry
-	(*GetSchemaTypeMappingArgs)(nil),            // 48: com.kcl.api.GetSchemaTypeMappingArgs
-	(*GetSchemaTypeMappingResult)(nil),          // 49: com.kcl.api.GetSchemaTypeMappingResult
-	(*GetSchemaTypeMappingUnderPathResult)(nil), // 50: com.kcl.api.GetSchemaTypeMappingUnderPathResult
-	(*SchemaTypes)(nil),                         // 51: com.kcl.api.SchemaTypes
-	(*ValidateCodeArgs)(nil),                    // 52: com.kcl.api.ValidateCodeArgs
-	(*ValidateCodeResult)(nil),                  // 53: com.kcl.api.ValidateCodeResult
-	(*Position)(nil),                            // 54: com.kcl.api.Position
-	(*LoadSettingsFilesArgs)(nil),               // 55: com.kcl.api.LoadSettingsFilesArgs
-	(*LoadSettingsFilesResult)(nil),             // 56: com.kcl.api.LoadSettingsFilesResult
-	(*CliConfig)(nil),                           // 57: com.kcl.api.CliConfig
-	(*KeyValuePair)(nil),                        // 58: com.kcl.api.KeyValuePair
-	(*RenameArgs)(nil),                          // 59: com.kcl.api.RenameArgs
-	(*RenameResult)(nil),                        // 60: com.kcl.api.RenameResult
-	(*RenameCodeArgs)(nil),                      // 61: com.kcl.api.RenameCodeArgs
-	(*RenameCodeResult)(nil),                    // 62: com.kcl.api.RenameCodeResult
-	(*TestArgs)(nil),                            // 63: com.kcl.api.TestArgs
-	(*TestResult)(nil),                          // 64: com.kcl.api.TestResult
-	(*TestCaseInfo)(nil),                        // 65: com.kcl.api.TestCaseInfo
-	(*FileCoverage)(nil),                        // 66: com.kcl.api.FileCoverage
-	(*TestCoverageReport)(nil),                  // 67: com.kcl.api.TestCoverageReport
-	(*CoverageSummary)(nil),                     // 68: com.kcl.api.CoverageSummary
-	(*FormatTestReportArgs)(nil),                // 69: com.kcl.api.FormatTestReportArgs
-	(*FormatTestReportResult)(nil),              // 70: com.kcl.api.FormatTestReportResult
-	(*UpdateDependenciesArgs)(nil),              // 71: com.kcl.api.UpdateDependenciesArgs
-	(*UpdateDependenciesResult)(nil),            // 72: com.kcl.api.UpdateDependenciesResult
-	(*GenerateTomlArgs)(nil),                    // 73: com.kcl.api.GenerateTomlArgs
-	(*GenerateTomlResult)(nil),                  // 74: com.kcl.api.GenerateTomlResult
-	(*GenerateKclArgs)(nil),                     // 75: com.kcl.api.GenerateKclArgs
-	(*GenerateKclResult)(nil),                   // 76: com.kcl.api.GenerateKclResult
-	(*GenerateOpenAPIArgs)(nil),                 // 77: com.kcl.api.GenerateOpenAPIArgs
-	(*GenerateOpenAPIResult)(nil),               // 78: com.kcl.api.GenerateOpenAPIResult
-	(*GenerateProtoArgs)(nil),                   // 79: com.kcl.api.GenerateProtoArgs
-	(*GenerateProtoResult)(nil),                 // 80: com.kcl.api.GenerateProtoResult
-	(*GenerateDocArgs)(nil),                     // 81: com.kcl.api.GenerateDocArgs
-	(*GenerateDocResult)(nil),                   // 82: com.kcl.api.GenerateDocResult
-	(*KclType)(nil),                             // 83: com.kcl.api.KclType
-	(*FunctionType)(nil),                        // 84: com.kcl.api.FunctionType
-	(*Parameter)(nil),                           // 85: com.kcl.api.Parameter
-	(*IndexSignature)(nil),                      // 86: com.kcl.api.IndexSignature
-	(*Decorator)(nil),                           // 87: com.kcl.api.Decorator
-	(*Example)(nil),                             // 88: com.kcl.api.Example
-	nil,                                         // 89: com.kcl.api.LoadPackageResult.ScopesEntry
-	nil,                                         // 90: com.kcl.api.LoadPackageResult.SymbolsEntry
-	nil,                                         // 91: com.kcl.api.LoadPackageResult.NodeSymbolMapEntry
-	nil,                                         // 92: com.kcl.api.LoadPackageResult.SymbolNodeMapEntry
-	nil,                                         // 93: com.kcl.api.LoadPackageResult.FullyQualifiedNameMapEntry
-	nil,                                         // 94: com.kcl.api.LoadPackageResult.PkgScopeMapEntry
-	nil,                                         // 95: com.kcl.api.LoadPackageResult.ImportsEntry
-	nil,                                         // 96: com.kcl.api.KclMod.DependenciesEntry
-	nil,                                         // 97: com.kcl.api.ListVariablesResult.VariablesEntry
-	nil,                                         // 98: com.kcl.api.GetSchemaTypeMappingResult.SchemaTypeMappingEntry
-	nil,                                         // 99: com.kcl.api.GetSchemaTypeMappingUnderPathResult.SchemaTypeMappingEntry
-	nil,                                         // 100: com.kcl.api.RenameCodeArgs.SourceCodesEntry
-	nil,                                         // 101: com.kcl.api.RenameCodeResult.ChangedCodesEntry
-	nil,                                         // 102: com.kcl.api.TestCaseInfo.LineHitsEntry
-	nil,                                         // 103: com.kcl.api.FileCoverage.LineHitsEntry
-	nil,                                         // 104: com.kcl.api.TestCoverageReport.FilesEntry
-	nil,                                         // 105: com.kcl.api.KclType.PropertiesEntry
-	nil,                                         // 106: com.kcl.api.KclType.ExamplesEntry
-	nil,                                         // 107: com.kcl.api.Decorator.KeywordsEntry
+	(*BuildProgramArgs)(nil),                    // 34: com.kcl.api.BuildProgramArgs
+	(*BuildProgramResult)(nil),                  // 35: com.kcl.api.BuildProgramResult
+	(*ExecArtifactArgs)(nil),                    // 36: com.kcl.api.ExecArtifactArgs
+	(*FormatCodeArgs)(nil),                      // 37: com.kcl.api.FormatCodeArgs
+	(*FormatCodeResult)(nil),                    // 38: com.kcl.api.FormatCodeResult
+	(*FormatPathArgs)(nil),                      // 39: com.kcl.api.FormatPathArgs
+	(*FormatPathResult)(nil),                    // 40: com.kcl.api.FormatPathResult
+	(*LintPathArgs)(nil),                        // 41: com.kcl.api.LintPathArgs
+	(*LintPathResult)(nil),                      // 42: com.kcl.api.LintPathResult
+	(*OverrideFileArgs)(nil),                    // 43: com.kcl.api.OverrideFileArgs
+	(*OverrideFileResult)(nil),                  // 44: com.kcl.api.OverrideFileResult
+	(*ListVariablesOptions)(nil),                // 45: com.kcl.api.ListVariablesOptions
+	(*VariableList)(nil),                        // 46: com.kcl.api.VariableList
+	(*ListVariablesArgs)(nil),                   // 47: com.kcl.api.ListVariablesArgs
+	(*ListVariablesResult)(nil),                 // 48: com.kcl.api.ListVariablesResult
+	(*Variable)(nil),                            // 49: com.kcl.api.Variable
+	(*MapEntry)(nil),                            // 50: com.kcl.api.MapEntry
+	(*GetSchemaTypeMappingArgs)(nil),            // 51: com.kcl.api.GetSchemaTypeMappingArgs
+	(*GetSchemaTypeMappingResult)(nil),          // 52: com.kcl.api.GetSchemaTypeMappingResult
+	(*GetSchemaTypeMappingUnderPathResult)(nil), // 53: com.kcl.api.GetSchemaTypeMappingUnderPathResult
+	(*SchemaTypes)(nil),                         // 54: com.kcl.api.SchemaTypes
+	(*ValidateCodeArgs)(nil),                    // 55: com.kcl.api.ValidateCodeArgs
+	(*ValidateCodeResult)(nil),                  // 56: com.kcl.api.ValidateCodeResult
+	(*Position)(nil),                            // 57: com.kcl.api.Position
+	(*LoadSettingsFilesArgs)(nil),               // 58: com.kcl.api.LoadSettingsFilesArgs
+	(*LoadSettingsFilesResult)(nil),             // 59: com.kcl.api.LoadSettingsFilesResult
+	(*CliConfig)(nil),                           // 60: com.kcl.api.CliConfig
+	(*KeyValuePair)(nil),                        // 61: com.kcl.api.KeyValuePair
+	(*RenameArgs)(nil),                          // 62: com.kcl.api.RenameArgs
+	(*RenameResult)(nil),                        // 63: com.kcl.api.RenameResult
+	(*RenameCodeArgs)(nil),                      // 64: com.kcl.api.RenameCodeArgs
+	(*RenameCodeResult)(nil),                    // 65: com.kcl.api.RenameCodeResult
+	(*TestArgs)(nil),                            // 66: com.kcl.api.TestArgs
+	(*TestResult)(nil),                          // 67: com.kcl.api.TestResult
+	(*TestCaseInfo)(nil),                        // 68: com.kcl.api.TestCaseInfo
+	(*FileCoverage)(nil),                        // 69: com.kcl.api.FileCoverage
+	(*TestCoverageReport)(nil),                  // 70: com.kcl.api.TestCoverageReport
+	(*CoverageSummary)(nil),                     // 71: com.kcl.api.CoverageSummary
+	(*FormatTestReportArgs)(nil),                // 72: com.kcl.api.FormatTestReportArgs
+	(*FormatTestReportResult)(nil),              // 73: com.kcl.api.FormatTestReportResult
+	(*UpdateDependenciesArgs)(nil),              // 74: com.kcl.api.UpdateDependenciesArgs
+	(*UpdateDependenciesResult)(nil),            // 75: com.kcl.api.UpdateDependenciesResult
+	(*GenerateTomlArgs)(nil),                    // 76: com.kcl.api.GenerateTomlArgs
+	(*GenerateTomlResult)(nil),                  // 77: com.kcl.api.GenerateTomlResult
+	(*GenerateKclArgs)(nil),                     // 78: com.kcl.api.GenerateKclArgs
+	(*GenerateKclResult)(nil),                   // 79: com.kcl.api.GenerateKclResult
+	(*GenerateOpenAPIArgs)(nil),                 // 80: com.kcl.api.GenerateOpenAPIArgs
+	(*GenerateOpenAPIResult)(nil),               // 81: com.kcl.api.GenerateOpenAPIResult
+	(*GenerateProtoArgs)(nil),                   // 82: com.kcl.api.GenerateProtoArgs
+	(*GenerateProtoResult)(nil),                 // 83: com.kcl.api.GenerateProtoResult
+	(*GenerateRustArgs)(nil),                    // 84: com.kcl.api.GenerateRustArgs
+	(*GenerateRustResult)(nil),                  // 85: com.kcl.api.GenerateRustResult
+	(*GeneratePythonArgs)(nil),                  // 86: com.kcl.api.GeneratePythonArgs
+	(*GeneratePythonResult)(nil),                // 87: com.kcl.api.GeneratePythonResult
+	(*GenerateGoArgs)(nil),                      // 88: com.kcl.api.GenerateGoArgs
+	(*GenerateGoResult)(nil),                    // 89: com.kcl.api.GenerateGoResult
+	(*GenerateJavaArgs)(nil),                    // 90: com.kcl.api.GenerateJavaArgs
+	(*GenerateJavaResult)(nil),                  // 91: com.kcl.api.GenerateJavaResult
+	(*GenerateTypeScriptArgs)(nil),              // 92: com.kcl.api.GenerateTypeScriptArgs
+	(*GenerateTypeScriptResult)(nil),            // 93: com.kcl.api.GenerateTypeScriptResult
+	(*GenerateDocArgs)(nil),                     // 94: com.kcl.api.GenerateDocArgs
+	(*GenerateDocResult)(nil),                   // 95: com.kcl.api.GenerateDocResult
+	(*KclType)(nil),                             // 96: com.kcl.api.KclType
+	(*FunctionType)(nil),                        // 97: com.kcl.api.FunctionType
+	(*Parameter)(nil),                           // 98: com.kcl.api.Parameter
+	(*IndexSignature)(nil),                      // 99: com.kcl.api.IndexSignature
+	(*Decorator)(nil),                           // 100: com.kcl.api.Decorator
+	(*Example)(nil),                             // 101: com.kcl.api.Example
+	nil,                                         // 102: com.kcl.api.LoadPackageResult.ScopesEntry
+	nil,                                         // 103: com.kcl.api.LoadPackageResult.SymbolsEntry
+	nil,                                         // 104: com.kcl.api.LoadPackageResult.NodeSymbolMapEntry
+	nil,                                         // 105: com.kcl.api.LoadPackageResult.SymbolNodeMapEntry
+	nil,                                         // 106: com.kcl.api.LoadPackageResult.FullyQualifiedNameMapEntry
+	nil,                                         // 107: com.kcl.api.LoadPackageResult.PkgScopeMapEntry
+	nil,                                         // 108: com.kcl.api.LoadPackageResult.ImportsEntry
+	nil,                                         // 109: com.kcl.api.KclMod.DependenciesEntry
+	nil,                                         // 110: com.kcl.api.ListVariablesResult.VariablesEntry
+	nil,                                         // 111: com.kcl.api.GetSchemaTypeMappingResult.SchemaTypeMappingEntry
+	nil,                                         // 112: com.kcl.api.GetSchemaTypeMappingUnderPathResult.SchemaTypeMappingEntry
+	nil,                                         // 113: com.kcl.api.RenameCodeArgs.SourceCodesEntry
+	nil,                                         // 114: com.kcl.api.RenameCodeResult.ChangedCodesEntry
+	nil,                                         // 115: com.kcl.api.TestCaseInfo.LineHitsEntry
+	nil,                                         // 116: com.kcl.api.FileCoverage.LineHitsEntry
+	nil,                                         // 117: com.kcl.api.TestCoverageReport.FilesEntry
+	nil,                                         // 118: com.kcl.api.KclType.PropertiesEntry
+	nil,                                         // 119: com.kcl.api.KclType.ExamplesEntry
+	nil,                                         // 120: com.kcl.api.Decorator.KeywordsEntry
 }
 var file_spec_proto_depIdxs = []int32{
 	3,   // 0: com.kcl.api.Error.messages:type_name -> com.kcl.api.Message
-	54,  // 1: com.kcl.api.Message.pos:type_name -> com.kcl.api.Position
+	57,  // 1: com.kcl.api.Message.pos:type_name -> com.kcl.api.Position
 	0,   // 2: com.kcl.api.ParseFileArgs.external_pkgs:type_name -> com.kcl.api.ExternalPkg
 	2,   // 3: com.kcl.api.ParseFileResult.errors:type_name -> com.kcl.api.Error
 	0,   // 4: com.kcl.api.ParseProgramArgs.external_pkgs:type_name -> com.kcl.api.ExternalPkg
@@ -6459,24 +7189,24 @@ var file_spec_proto_depIdxs = []int32{
 	12,  // 6: com.kcl.api.LoadPackageArgs.parse_args:type_name -> com.kcl.api.ParseProgramArgs
 	2,   // 7: com.kcl.api.LoadPackageResult.parse_errors:type_name -> com.kcl.api.Error
 	2,   // 8: com.kcl.api.LoadPackageResult.type_errors:type_name -> com.kcl.api.Error
-	89,  // 9: com.kcl.api.LoadPackageResult.scopes:type_name -> com.kcl.api.LoadPackageResult.ScopesEntry
-	90,  // 10: com.kcl.api.LoadPackageResult.symbols:type_name -> com.kcl.api.LoadPackageResult.SymbolsEntry
-	91,  // 11: com.kcl.api.LoadPackageResult.node_symbol_map:type_name -> com.kcl.api.LoadPackageResult.NodeSymbolMapEntry
-	92,  // 12: com.kcl.api.LoadPackageResult.symbol_node_map:type_name -> com.kcl.api.LoadPackageResult.SymbolNodeMapEntry
-	93,  // 13: com.kcl.api.LoadPackageResult.fully_qualified_name_map:type_name -> com.kcl.api.LoadPackageResult.FullyQualifiedNameMapEntry
-	94,  // 14: com.kcl.api.LoadPackageResult.pkg_scope_map:type_name -> com.kcl.api.LoadPackageResult.PkgScopeMapEntry
-	95,  // 15: com.kcl.api.LoadPackageResult.imports:type_name -> com.kcl.api.LoadPackageResult.ImportsEntry
+	102, // 9: com.kcl.api.LoadPackageResult.scopes:type_name -> com.kcl.api.LoadPackageResult.ScopesEntry
+	103, // 10: com.kcl.api.LoadPackageResult.symbols:type_name -> com.kcl.api.LoadPackageResult.SymbolsEntry
+	104, // 11: com.kcl.api.LoadPackageResult.node_symbol_map:type_name -> com.kcl.api.LoadPackageResult.NodeSymbolMapEntry
+	105, // 12: com.kcl.api.LoadPackageResult.symbol_node_map:type_name -> com.kcl.api.LoadPackageResult.SymbolNodeMapEntry
+	106, // 13: com.kcl.api.LoadPackageResult.fully_qualified_name_map:type_name -> com.kcl.api.LoadPackageResult.FullyQualifiedNameMapEntry
+	107, // 14: com.kcl.api.LoadPackageResult.pkg_scope_map:type_name -> com.kcl.api.LoadPackageResult.PkgScopeMapEntry
+	108, // 15: com.kcl.api.LoadPackageResult.imports:type_name -> com.kcl.api.LoadPackageResult.ImportsEntry
 	18,  // 16: com.kcl.api.LoadPackageResult.kcl_mod:type_name -> com.kcl.api.KclMod
 	25,  // 17: com.kcl.api.LoadPackageResult.apps:type_name -> com.kcl.api.AppInfo
 	17,  // 18: com.kcl.api.FileImports.imports:type_name -> com.kcl.api.ImportInfo
 	19,  // 19: com.kcl.api.KclMod.package:type_name -> com.kcl.api.KclModPackage
 	20,  // 20: com.kcl.api.KclMod.profile:type_name -> com.kcl.api.KclModProfile
-	96,  // 21: com.kcl.api.KclMod.dependencies:type_name -> com.kcl.api.KclMod.DependenciesEntry
+	109, // 21: com.kcl.api.KclMod.dependencies:type_name -> com.kcl.api.KclMod.DependenciesEntry
 	22,  // 22: com.kcl.api.KclModDependency.git:type_name -> com.kcl.api.KclModGitSource
 	23,  // 23: com.kcl.api.KclModDependency.oci:type_name -> com.kcl.api.KclModOciSource
 	24,  // 24: com.kcl.api.KclModDependency.local:type_name -> com.kcl.api.KclModLocalSource
 	27,  // 25: com.kcl.api.ListOptionsResult.options:type_name -> com.kcl.api.OptionHelp
-	83,  // 26: com.kcl.api.Symbol.ty:type_name -> com.kcl.api.KclType
+	96,  // 26: com.kcl.api.Symbol.ty:type_name -> com.kcl.api.KclType
 	30,  // 27: com.kcl.api.Symbol.owner:type_name -> com.kcl.api.SymbolIndex
 	30,  // 28: com.kcl.api.Symbol.def:type_name -> com.kcl.api.SymbolIndex
 	30,  // 29: com.kcl.api.Symbol.attrs:type_name -> com.kcl.api.SymbolIndex
@@ -6486,125 +7216,146 @@ var file_spec_proto_depIdxs = []int32{
 	30,  // 33: com.kcl.api.Scope.defs:type_name -> com.kcl.api.SymbolIndex
 	1,   // 34: com.kcl.api.ExecProgramArgs.args:type_name -> com.kcl.api.Argument
 	0,   // 35: com.kcl.api.ExecProgramArgs.external_pkgs:type_name -> com.kcl.api.ExternalPkg
-	2,   // 36: com.kcl.api.OverrideFileResult.parse_errors:type_name -> com.kcl.api.Error
-	46,  // 37: com.kcl.api.VariableList.variables:type_name -> com.kcl.api.Variable
-	42,  // 38: com.kcl.api.ListVariablesArgs.options:type_name -> com.kcl.api.ListVariablesOptions
-	97,  // 39: com.kcl.api.ListVariablesResult.variables:type_name -> com.kcl.api.ListVariablesResult.VariablesEntry
-	2,   // 40: com.kcl.api.ListVariablesResult.parse_errors:type_name -> com.kcl.api.Error
-	46,  // 41: com.kcl.api.Variable.list_items:type_name -> com.kcl.api.Variable
-	47,  // 42: com.kcl.api.Variable.dict_entries:type_name -> com.kcl.api.MapEntry
-	46,  // 43: com.kcl.api.MapEntry.value:type_name -> com.kcl.api.Variable
-	32,  // 44: com.kcl.api.GetSchemaTypeMappingArgs.exec_args:type_name -> com.kcl.api.ExecProgramArgs
-	98,  // 45: com.kcl.api.GetSchemaTypeMappingResult.schema_type_mapping:type_name -> com.kcl.api.GetSchemaTypeMappingResult.SchemaTypeMappingEntry
-	99,  // 46: com.kcl.api.GetSchemaTypeMappingUnderPathResult.schema_type_mapping:type_name -> com.kcl.api.GetSchemaTypeMappingUnderPathResult.SchemaTypeMappingEntry
-	83,  // 47: com.kcl.api.SchemaTypes.schema_type:type_name -> com.kcl.api.KclType
-	0,   // 48: com.kcl.api.ValidateCodeArgs.external_pkgs:type_name -> com.kcl.api.ExternalPkg
-	57,  // 49: com.kcl.api.LoadSettingsFilesResult.kcl_cli_configs:type_name -> com.kcl.api.CliConfig
-	58,  // 50: com.kcl.api.LoadSettingsFilesResult.kcl_options:type_name -> com.kcl.api.KeyValuePair
-	100, // 51: com.kcl.api.RenameCodeArgs.source_codes:type_name -> com.kcl.api.RenameCodeArgs.SourceCodesEntry
-	101, // 52: com.kcl.api.RenameCodeResult.changed_codes:type_name -> com.kcl.api.RenameCodeResult.ChangedCodesEntry
-	32,  // 53: com.kcl.api.TestArgs.exec_args:type_name -> com.kcl.api.ExecProgramArgs
-	65,  // 54: com.kcl.api.TestResult.info:type_name -> com.kcl.api.TestCaseInfo
-	67,  // 55: com.kcl.api.TestResult.coverage:type_name -> com.kcl.api.TestCoverageReport
-	102, // 56: com.kcl.api.TestCaseInfo.line_hits:type_name -> com.kcl.api.TestCaseInfo.LineHitsEntry
-	103, // 57: com.kcl.api.FileCoverage.line_hits:type_name -> com.kcl.api.FileCoverage.LineHitsEntry
-	104, // 58: com.kcl.api.TestCoverageReport.files:type_name -> com.kcl.api.TestCoverageReport.FilesEntry
-	68,  // 59: com.kcl.api.TestCoverageReport.summary:type_name -> com.kcl.api.CoverageSummary
-	64,  // 60: com.kcl.api.FormatTestReportArgs.result:type_name -> com.kcl.api.TestResult
-	0,   // 61: com.kcl.api.UpdateDependenciesResult.external_pkgs:type_name -> com.kcl.api.ExternalPkg
-	32,  // 62: com.kcl.api.GenerateTomlArgs.exec_args:type_name -> com.kcl.api.ExecProgramArgs
-	12,  // 63: com.kcl.api.GenerateOpenAPIArgs.parse_args:type_name -> com.kcl.api.ParseProgramArgs
-	12,  // 64: com.kcl.api.GenerateProtoArgs.parse_args:type_name -> com.kcl.api.ParseProgramArgs
-	12,  // 65: com.kcl.api.GenerateDocArgs.parse_args:type_name -> com.kcl.api.ParseProgramArgs
-	83,  // 66: com.kcl.api.KclType.union_types:type_name -> com.kcl.api.KclType
-	105, // 67: com.kcl.api.KclType.properties:type_name -> com.kcl.api.KclType.PropertiesEntry
-	83,  // 68: com.kcl.api.KclType.key:type_name -> com.kcl.api.KclType
-	83,  // 69: com.kcl.api.KclType.item:type_name -> com.kcl.api.KclType
-	87,  // 70: com.kcl.api.KclType.decorators:type_name -> com.kcl.api.Decorator
-	106, // 71: com.kcl.api.KclType.examples:type_name -> com.kcl.api.KclType.ExamplesEntry
-	83,  // 72: com.kcl.api.KclType.base_schema:type_name -> com.kcl.api.KclType
-	84,  // 73: com.kcl.api.KclType.function:type_name -> com.kcl.api.FunctionType
-	86,  // 74: com.kcl.api.KclType.index_signature:type_name -> com.kcl.api.IndexSignature
-	85,  // 75: com.kcl.api.FunctionType.params:type_name -> com.kcl.api.Parameter
-	83,  // 76: com.kcl.api.FunctionType.return_ty:type_name -> com.kcl.api.KclType
-	83,  // 77: com.kcl.api.Parameter.ty:type_name -> com.kcl.api.KclType
-	83,  // 78: com.kcl.api.IndexSignature.key:type_name -> com.kcl.api.KclType
-	83,  // 79: com.kcl.api.IndexSignature.val:type_name -> com.kcl.api.KclType
-	107, // 80: com.kcl.api.Decorator.keywords:type_name -> com.kcl.api.Decorator.KeywordsEntry
-	29,  // 81: com.kcl.api.LoadPackageResult.ScopesEntry.value:type_name -> com.kcl.api.Scope
-	28,  // 82: com.kcl.api.LoadPackageResult.SymbolsEntry.value:type_name -> com.kcl.api.Symbol
-	30,  // 83: com.kcl.api.LoadPackageResult.NodeSymbolMapEntry.value:type_name -> com.kcl.api.SymbolIndex
-	30,  // 84: com.kcl.api.LoadPackageResult.FullyQualifiedNameMapEntry.value:type_name -> com.kcl.api.SymbolIndex
-	31,  // 85: com.kcl.api.LoadPackageResult.PkgScopeMapEntry.value:type_name -> com.kcl.api.ScopeIndex
-	16,  // 86: com.kcl.api.LoadPackageResult.ImportsEntry.value:type_name -> com.kcl.api.FileImports
-	21,  // 87: com.kcl.api.KclMod.DependenciesEntry.value:type_name -> com.kcl.api.KclModDependency
-	43,  // 88: com.kcl.api.ListVariablesResult.VariablesEntry.value:type_name -> com.kcl.api.VariableList
-	83,  // 89: com.kcl.api.GetSchemaTypeMappingResult.SchemaTypeMappingEntry.value:type_name -> com.kcl.api.KclType
-	51,  // 90: com.kcl.api.GetSchemaTypeMappingUnderPathResult.SchemaTypeMappingEntry.value:type_name -> com.kcl.api.SchemaTypes
-	66,  // 91: com.kcl.api.TestCoverageReport.FilesEntry.value:type_name -> com.kcl.api.FileCoverage
-	83,  // 92: com.kcl.api.KclType.PropertiesEntry.value:type_name -> com.kcl.api.KclType
-	88,  // 93: com.kcl.api.KclType.ExamplesEntry.value:type_name -> com.kcl.api.Example
-	4,   // 94: com.kcl.api.BuiltinService.Ping:input_type -> com.kcl.api.PingArgs
-	8,   // 95: com.kcl.api.BuiltinService.ListMethod:input_type -> com.kcl.api.ListMethodArgs
-	4,   // 96: com.kcl.api.KclService.Ping:input_type -> com.kcl.api.PingArgs
-	6,   // 97: com.kcl.api.KclService.GetVersion:input_type -> com.kcl.api.GetVersionArgs
-	12,  // 98: com.kcl.api.KclService.ParseProgram:input_type -> com.kcl.api.ParseProgramArgs
-	10,  // 99: com.kcl.api.KclService.ParseFile:input_type -> com.kcl.api.ParseFileArgs
-	14,  // 100: com.kcl.api.KclService.LoadPackage:input_type -> com.kcl.api.LoadPackageArgs
-	12,  // 101: com.kcl.api.KclService.ListOptions:input_type -> com.kcl.api.ParseProgramArgs
-	44,  // 102: com.kcl.api.KclService.ListVariables:input_type -> com.kcl.api.ListVariablesArgs
-	32,  // 103: com.kcl.api.KclService.ExecProgram:input_type -> com.kcl.api.ExecProgramArgs
-	40,  // 104: com.kcl.api.KclService.OverrideFile:input_type -> com.kcl.api.OverrideFileArgs
-	48,  // 105: com.kcl.api.KclService.GetSchemaTypeMapping:input_type -> com.kcl.api.GetSchemaTypeMappingArgs
-	48,  // 106: com.kcl.api.KclService.GetSchemaTypeMappingUnderPath:input_type -> com.kcl.api.GetSchemaTypeMappingArgs
-	34,  // 107: com.kcl.api.KclService.FormatCode:input_type -> com.kcl.api.FormatCodeArgs
-	36,  // 108: com.kcl.api.KclService.FormatPath:input_type -> com.kcl.api.FormatPathArgs
-	38,  // 109: com.kcl.api.KclService.LintPath:input_type -> com.kcl.api.LintPathArgs
-	52,  // 110: com.kcl.api.KclService.ValidateCode:input_type -> com.kcl.api.ValidateCodeArgs
-	55,  // 111: com.kcl.api.KclService.LoadSettingsFiles:input_type -> com.kcl.api.LoadSettingsFilesArgs
-	59,  // 112: com.kcl.api.KclService.Rename:input_type -> com.kcl.api.RenameArgs
-	61,  // 113: com.kcl.api.KclService.RenameCode:input_type -> com.kcl.api.RenameCodeArgs
-	63,  // 114: com.kcl.api.KclService.Test:input_type -> com.kcl.api.TestArgs
-	69,  // 115: com.kcl.api.KclService.FormatTestReport:input_type -> com.kcl.api.FormatTestReportArgs
-	71,  // 116: com.kcl.api.KclService.UpdateDependencies:input_type -> com.kcl.api.UpdateDependenciesArgs
-	73,  // 117: com.kcl.api.KclService.GenerateToml:input_type -> com.kcl.api.GenerateTomlArgs
-	75,  // 118: com.kcl.api.KclService.GenerateKcl:input_type -> com.kcl.api.GenerateKclArgs
-	77,  // 119: com.kcl.api.KclService.GenerateOpenAPI:input_type -> com.kcl.api.GenerateOpenAPIArgs
-	79,  // 120: com.kcl.api.KclService.GenerateProto:input_type -> com.kcl.api.GenerateProtoArgs
-	81,  // 121: com.kcl.api.KclService.GenerateDoc:input_type -> com.kcl.api.GenerateDocArgs
-	5,   // 122: com.kcl.api.BuiltinService.Ping:output_type -> com.kcl.api.PingResult
-	9,   // 123: com.kcl.api.BuiltinService.ListMethod:output_type -> com.kcl.api.ListMethodResult
-	5,   // 124: com.kcl.api.KclService.Ping:output_type -> com.kcl.api.PingResult
-	7,   // 125: com.kcl.api.KclService.GetVersion:output_type -> com.kcl.api.GetVersionResult
-	13,  // 126: com.kcl.api.KclService.ParseProgram:output_type -> com.kcl.api.ParseProgramResult
-	11,  // 127: com.kcl.api.KclService.ParseFile:output_type -> com.kcl.api.ParseFileResult
-	15,  // 128: com.kcl.api.KclService.LoadPackage:output_type -> com.kcl.api.LoadPackageResult
-	26,  // 129: com.kcl.api.KclService.ListOptions:output_type -> com.kcl.api.ListOptionsResult
-	45,  // 130: com.kcl.api.KclService.ListVariables:output_type -> com.kcl.api.ListVariablesResult
-	33,  // 131: com.kcl.api.KclService.ExecProgram:output_type -> com.kcl.api.ExecProgramResult
-	41,  // 132: com.kcl.api.KclService.OverrideFile:output_type -> com.kcl.api.OverrideFileResult
-	49,  // 133: com.kcl.api.KclService.GetSchemaTypeMapping:output_type -> com.kcl.api.GetSchemaTypeMappingResult
-	50,  // 134: com.kcl.api.KclService.GetSchemaTypeMappingUnderPath:output_type -> com.kcl.api.GetSchemaTypeMappingUnderPathResult
-	35,  // 135: com.kcl.api.KclService.FormatCode:output_type -> com.kcl.api.FormatCodeResult
-	37,  // 136: com.kcl.api.KclService.FormatPath:output_type -> com.kcl.api.FormatPathResult
-	39,  // 137: com.kcl.api.KclService.LintPath:output_type -> com.kcl.api.LintPathResult
-	53,  // 138: com.kcl.api.KclService.ValidateCode:output_type -> com.kcl.api.ValidateCodeResult
-	56,  // 139: com.kcl.api.KclService.LoadSettingsFiles:output_type -> com.kcl.api.LoadSettingsFilesResult
-	60,  // 140: com.kcl.api.KclService.Rename:output_type -> com.kcl.api.RenameResult
-	62,  // 141: com.kcl.api.KclService.RenameCode:output_type -> com.kcl.api.RenameCodeResult
-	64,  // 142: com.kcl.api.KclService.Test:output_type -> com.kcl.api.TestResult
-	70,  // 143: com.kcl.api.KclService.FormatTestReport:output_type -> com.kcl.api.FormatTestReportResult
-	72,  // 144: com.kcl.api.KclService.UpdateDependencies:output_type -> com.kcl.api.UpdateDependenciesResult
-	74,  // 145: com.kcl.api.KclService.GenerateToml:output_type -> com.kcl.api.GenerateTomlResult
-	76,  // 146: com.kcl.api.KclService.GenerateKcl:output_type -> com.kcl.api.GenerateKclResult
-	78,  // 147: com.kcl.api.KclService.GenerateOpenAPI:output_type -> com.kcl.api.GenerateOpenAPIResult
-	80,  // 148: com.kcl.api.KclService.GenerateProto:output_type -> com.kcl.api.GenerateProtoResult
-	82,  // 149: com.kcl.api.KclService.GenerateDoc:output_type -> com.kcl.api.GenerateDocResult
-	122, // [122:150] is the sub-list for method output_type
-	94,  // [94:122] is the sub-list for method input_type
-	94,  // [94:94] is the sub-list for extension type_name
-	94,  // [94:94] is the sub-list for extension extendee
-	0,   // [0:94] is the sub-list for field type_name
+	32,  // 36: com.kcl.api.BuildProgramArgs.exec_args:type_name -> com.kcl.api.ExecProgramArgs
+	32,  // 37: com.kcl.api.ExecArtifactArgs.exec_args:type_name -> com.kcl.api.ExecProgramArgs
+	2,   // 38: com.kcl.api.OverrideFileResult.parse_errors:type_name -> com.kcl.api.Error
+	49,  // 39: com.kcl.api.VariableList.variables:type_name -> com.kcl.api.Variable
+	45,  // 40: com.kcl.api.ListVariablesArgs.options:type_name -> com.kcl.api.ListVariablesOptions
+	110, // 41: com.kcl.api.ListVariablesResult.variables:type_name -> com.kcl.api.ListVariablesResult.VariablesEntry
+	2,   // 42: com.kcl.api.ListVariablesResult.parse_errors:type_name -> com.kcl.api.Error
+	49,  // 43: com.kcl.api.Variable.list_items:type_name -> com.kcl.api.Variable
+	50,  // 44: com.kcl.api.Variable.dict_entries:type_name -> com.kcl.api.MapEntry
+	49,  // 45: com.kcl.api.MapEntry.value:type_name -> com.kcl.api.Variable
+	32,  // 46: com.kcl.api.GetSchemaTypeMappingArgs.exec_args:type_name -> com.kcl.api.ExecProgramArgs
+	111, // 47: com.kcl.api.GetSchemaTypeMappingResult.schema_type_mapping:type_name -> com.kcl.api.GetSchemaTypeMappingResult.SchemaTypeMappingEntry
+	112, // 48: com.kcl.api.GetSchemaTypeMappingUnderPathResult.schema_type_mapping:type_name -> com.kcl.api.GetSchemaTypeMappingUnderPathResult.SchemaTypeMappingEntry
+	96,  // 49: com.kcl.api.SchemaTypes.schema_type:type_name -> com.kcl.api.KclType
+	0,   // 50: com.kcl.api.ValidateCodeArgs.external_pkgs:type_name -> com.kcl.api.ExternalPkg
+	60,  // 51: com.kcl.api.LoadSettingsFilesResult.kcl_cli_configs:type_name -> com.kcl.api.CliConfig
+	61,  // 52: com.kcl.api.LoadSettingsFilesResult.kcl_options:type_name -> com.kcl.api.KeyValuePair
+	113, // 53: com.kcl.api.RenameCodeArgs.source_codes:type_name -> com.kcl.api.RenameCodeArgs.SourceCodesEntry
+	114, // 54: com.kcl.api.RenameCodeResult.changed_codes:type_name -> com.kcl.api.RenameCodeResult.ChangedCodesEntry
+	32,  // 55: com.kcl.api.TestArgs.exec_args:type_name -> com.kcl.api.ExecProgramArgs
+	68,  // 56: com.kcl.api.TestResult.info:type_name -> com.kcl.api.TestCaseInfo
+	70,  // 57: com.kcl.api.TestResult.coverage:type_name -> com.kcl.api.TestCoverageReport
+	115, // 58: com.kcl.api.TestCaseInfo.line_hits:type_name -> com.kcl.api.TestCaseInfo.LineHitsEntry
+	116, // 59: com.kcl.api.FileCoverage.line_hits:type_name -> com.kcl.api.FileCoverage.LineHitsEntry
+	117, // 60: com.kcl.api.TestCoverageReport.files:type_name -> com.kcl.api.TestCoverageReport.FilesEntry
+	71,  // 61: com.kcl.api.TestCoverageReport.summary:type_name -> com.kcl.api.CoverageSummary
+	67,  // 62: com.kcl.api.FormatTestReportArgs.result:type_name -> com.kcl.api.TestResult
+	0,   // 63: com.kcl.api.UpdateDependenciesResult.external_pkgs:type_name -> com.kcl.api.ExternalPkg
+	32,  // 64: com.kcl.api.GenerateTomlArgs.exec_args:type_name -> com.kcl.api.ExecProgramArgs
+	12,  // 65: com.kcl.api.GenerateOpenAPIArgs.parse_args:type_name -> com.kcl.api.ParseProgramArgs
+	12,  // 66: com.kcl.api.GenerateProtoArgs.parse_args:type_name -> com.kcl.api.ParseProgramArgs
+	12,  // 67: com.kcl.api.GenerateRustArgs.parse_args:type_name -> com.kcl.api.ParseProgramArgs
+	12,  // 68: com.kcl.api.GeneratePythonArgs.parse_args:type_name -> com.kcl.api.ParseProgramArgs
+	12,  // 69: com.kcl.api.GenerateGoArgs.parse_args:type_name -> com.kcl.api.ParseProgramArgs
+	12,  // 70: com.kcl.api.GenerateJavaArgs.parse_args:type_name -> com.kcl.api.ParseProgramArgs
+	12,  // 71: com.kcl.api.GenerateTypeScriptArgs.parse_args:type_name -> com.kcl.api.ParseProgramArgs
+	12,  // 72: com.kcl.api.GenerateDocArgs.parse_args:type_name -> com.kcl.api.ParseProgramArgs
+	96,  // 73: com.kcl.api.KclType.union_types:type_name -> com.kcl.api.KclType
+	118, // 74: com.kcl.api.KclType.properties:type_name -> com.kcl.api.KclType.PropertiesEntry
+	96,  // 75: com.kcl.api.KclType.key:type_name -> com.kcl.api.KclType
+	96,  // 76: com.kcl.api.KclType.item:type_name -> com.kcl.api.KclType
+	100, // 77: com.kcl.api.KclType.decorators:type_name -> com.kcl.api.Decorator
+	119, // 78: com.kcl.api.KclType.examples:type_name -> com.kcl.api.KclType.ExamplesEntry
+	96,  // 79: com.kcl.api.KclType.base_schema:type_name -> com.kcl.api.KclType
+	97,  // 80: com.kcl.api.KclType.function:type_name -> com.kcl.api.FunctionType
+	99,  // 81: com.kcl.api.KclType.index_signature:type_name -> com.kcl.api.IndexSignature
+	98,  // 82: com.kcl.api.FunctionType.params:type_name -> com.kcl.api.Parameter
+	96,  // 83: com.kcl.api.FunctionType.return_ty:type_name -> com.kcl.api.KclType
+	96,  // 84: com.kcl.api.Parameter.ty:type_name -> com.kcl.api.KclType
+	96,  // 85: com.kcl.api.IndexSignature.key:type_name -> com.kcl.api.KclType
+	96,  // 86: com.kcl.api.IndexSignature.val:type_name -> com.kcl.api.KclType
+	120, // 87: com.kcl.api.Decorator.keywords:type_name -> com.kcl.api.Decorator.KeywordsEntry
+	29,  // 88: com.kcl.api.LoadPackageResult.ScopesEntry.value:type_name -> com.kcl.api.Scope
+	28,  // 89: com.kcl.api.LoadPackageResult.SymbolsEntry.value:type_name -> com.kcl.api.Symbol
+	30,  // 90: com.kcl.api.LoadPackageResult.NodeSymbolMapEntry.value:type_name -> com.kcl.api.SymbolIndex
+	30,  // 91: com.kcl.api.LoadPackageResult.FullyQualifiedNameMapEntry.value:type_name -> com.kcl.api.SymbolIndex
+	31,  // 92: com.kcl.api.LoadPackageResult.PkgScopeMapEntry.value:type_name -> com.kcl.api.ScopeIndex
+	16,  // 93: com.kcl.api.LoadPackageResult.ImportsEntry.value:type_name -> com.kcl.api.FileImports
+	21,  // 94: com.kcl.api.KclMod.DependenciesEntry.value:type_name -> com.kcl.api.KclModDependency
+	46,  // 95: com.kcl.api.ListVariablesResult.VariablesEntry.value:type_name -> com.kcl.api.VariableList
+	96,  // 96: com.kcl.api.GetSchemaTypeMappingResult.SchemaTypeMappingEntry.value:type_name -> com.kcl.api.KclType
+	54,  // 97: com.kcl.api.GetSchemaTypeMappingUnderPathResult.SchemaTypeMappingEntry.value:type_name -> com.kcl.api.SchemaTypes
+	69,  // 98: com.kcl.api.TestCoverageReport.FilesEntry.value:type_name -> com.kcl.api.FileCoverage
+	96,  // 99: com.kcl.api.KclType.PropertiesEntry.value:type_name -> com.kcl.api.KclType
+	101, // 100: com.kcl.api.KclType.ExamplesEntry.value:type_name -> com.kcl.api.Example
+	4,   // 101: com.kcl.api.BuiltinService.Ping:input_type -> com.kcl.api.PingArgs
+	8,   // 102: com.kcl.api.BuiltinService.ListMethod:input_type -> com.kcl.api.ListMethodArgs
+	4,   // 103: com.kcl.api.KclService.Ping:input_type -> com.kcl.api.PingArgs
+	6,   // 104: com.kcl.api.KclService.GetVersion:input_type -> com.kcl.api.GetVersionArgs
+	12,  // 105: com.kcl.api.KclService.ParseProgram:input_type -> com.kcl.api.ParseProgramArgs
+	10,  // 106: com.kcl.api.KclService.ParseFile:input_type -> com.kcl.api.ParseFileArgs
+	14,  // 107: com.kcl.api.KclService.LoadPackage:input_type -> com.kcl.api.LoadPackageArgs
+	12,  // 108: com.kcl.api.KclService.ListOptions:input_type -> com.kcl.api.ParseProgramArgs
+	47,  // 109: com.kcl.api.KclService.ListVariables:input_type -> com.kcl.api.ListVariablesArgs
+	32,  // 110: com.kcl.api.KclService.ExecProgram:input_type -> com.kcl.api.ExecProgramArgs
+	34,  // 111: com.kcl.api.KclService.BuildProgram:input_type -> com.kcl.api.BuildProgramArgs
+	36,  // 112: com.kcl.api.KclService.ExecArtifact:input_type -> com.kcl.api.ExecArtifactArgs
+	43,  // 113: com.kcl.api.KclService.OverrideFile:input_type -> com.kcl.api.OverrideFileArgs
+	51,  // 114: com.kcl.api.KclService.GetSchemaTypeMapping:input_type -> com.kcl.api.GetSchemaTypeMappingArgs
+	51,  // 115: com.kcl.api.KclService.GetSchemaTypeMappingUnderPath:input_type -> com.kcl.api.GetSchemaTypeMappingArgs
+	37,  // 116: com.kcl.api.KclService.FormatCode:input_type -> com.kcl.api.FormatCodeArgs
+	39,  // 117: com.kcl.api.KclService.FormatPath:input_type -> com.kcl.api.FormatPathArgs
+	41,  // 118: com.kcl.api.KclService.LintPath:input_type -> com.kcl.api.LintPathArgs
+	55,  // 119: com.kcl.api.KclService.ValidateCode:input_type -> com.kcl.api.ValidateCodeArgs
+	58,  // 120: com.kcl.api.KclService.LoadSettingsFiles:input_type -> com.kcl.api.LoadSettingsFilesArgs
+	62,  // 121: com.kcl.api.KclService.Rename:input_type -> com.kcl.api.RenameArgs
+	64,  // 122: com.kcl.api.KclService.RenameCode:input_type -> com.kcl.api.RenameCodeArgs
+	66,  // 123: com.kcl.api.KclService.Test:input_type -> com.kcl.api.TestArgs
+	72,  // 124: com.kcl.api.KclService.FormatTestReport:input_type -> com.kcl.api.FormatTestReportArgs
+	74,  // 125: com.kcl.api.KclService.UpdateDependencies:input_type -> com.kcl.api.UpdateDependenciesArgs
+	76,  // 126: com.kcl.api.KclService.GenerateToml:input_type -> com.kcl.api.GenerateTomlArgs
+	78,  // 127: com.kcl.api.KclService.GenerateKcl:input_type -> com.kcl.api.GenerateKclArgs
+	80,  // 128: com.kcl.api.KclService.GenerateOpenAPI:input_type -> com.kcl.api.GenerateOpenAPIArgs
+	82,  // 129: com.kcl.api.KclService.GenerateProto:input_type -> com.kcl.api.GenerateProtoArgs
+	84,  // 130: com.kcl.api.KclService.GenerateRust:input_type -> com.kcl.api.GenerateRustArgs
+	86,  // 131: com.kcl.api.KclService.GeneratePython:input_type -> com.kcl.api.GeneratePythonArgs
+	88,  // 132: com.kcl.api.KclService.GenerateGo:input_type -> com.kcl.api.GenerateGoArgs
+	90,  // 133: com.kcl.api.KclService.GenerateJava:input_type -> com.kcl.api.GenerateJavaArgs
+	92,  // 134: com.kcl.api.KclService.GenerateTypeScript:input_type -> com.kcl.api.GenerateTypeScriptArgs
+	94,  // 135: com.kcl.api.KclService.GenerateDoc:input_type -> com.kcl.api.GenerateDocArgs
+	5,   // 136: com.kcl.api.BuiltinService.Ping:output_type -> com.kcl.api.PingResult
+	9,   // 137: com.kcl.api.BuiltinService.ListMethod:output_type -> com.kcl.api.ListMethodResult
+	5,   // 138: com.kcl.api.KclService.Ping:output_type -> com.kcl.api.PingResult
+	7,   // 139: com.kcl.api.KclService.GetVersion:output_type -> com.kcl.api.GetVersionResult
+	13,  // 140: com.kcl.api.KclService.ParseProgram:output_type -> com.kcl.api.ParseProgramResult
+	11,  // 141: com.kcl.api.KclService.ParseFile:output_type -> com.kcl.api.ParseFileResult
+	15,  // 142: com.kcl.api.KclService.LoadPackage:output_type -> com.kcl.api.LoadPackageResult
+	26,  // 143: com.kcl.api.KclService.ListOptions:output_type -> com.kcl.api.ListOptionsResult
+	48,  // 144: com.kcl.api.KclService.ListVariables:output_type -> com.kcl.api.ListVariablesResult
+	33,  // 145: com.kcl.api.KclService.ExecProgram:output_type -> com.kcl.api.ExecProgramResult
+	35,  // 146: com.kcl.api.KclService.BuildProgram:output_type -> com.kcl.api.BuildProgramResult
+	33,  // 147: com.kcl.api.KclService.ExecArtifact:output_type -> com.kcl.api.ExecProgramResult
+	44,  // 148: com.kcl.api.KclService.OverrideFile:output_type -> com.kcl.api.OverrideFileResult
+	52,  // 149: com.kcl.api.KclService.GetSchemaTypeMapping:output_type -> com.kcl.api.GetSchemaTypeMappingResult
+	53,  // 150: com.kcl.api.KclService.GetSchemaTypeMappingUnderPath:output_type -> com.kcl.api.GetSchemaTypeMappingUnderPathResult
+	38,  // 151: com.kcl.api.KclService.FormatCode:output_type -> com.kcl.api.FormatCodeResult
+	40,  // 152: com.kcl.api.KclService.FormatPath:output_type -> com.kcl.api.FormatPathResult
+	42,  // 153: com.kcl.api.KclService.LintPath:output_type -> com.kcl.api.LintPathResult
+	56,  // 154: com.kcl.api.KclService.ValidateCode:output_type -> com.kcl.api.ValidateCodeResult
+	59,  // 155: com.kcl.api.KclService.LoadSettingsFiles:output_type -> com.kcl.api.LoadSettingsFilesResult
+	63,  // 156: com.kcl.api.KclService.Rename:output_type -> com.kcl.api.RenameResult
+	65,  // 157: com.kcl.api.KclService.RenameCode:output_type -> com.kcl.api.RenameCodeResult
+	67,  // 158: com.kcl.api.KclService.Test:output_type -> com.kcl.api.TestResult
+	73,  // 159: com.kcl.api.KclService.FormatTestReport:output_type -> com.kcl.api.FormatTestReportResult
+	75,  // 160: com.kcl.api.KclService.UpdateDependencies:output_type -> com.kcl.api.UpdateDependenciesResult
+	77,  // 161: com.kcl.api.KclService.GenerateToml:output_type -> com.kcl.api.GenerateTomlResult
+	79,  // 162: com.kcl.api.KclService.GenerateKcl:output_type -> com.kcl.api.GenerateKclResult
+	81,  // 163: com.kcl.api.KclService.GenerateOpenAPI:output_type -> com.kcl.api.GenerateOpenAPIResult
+	83,  // 164: com.kcl.api.KclService.GenerateProto:output_type -> com.kcl.api.GenerateProtoResult
+	85,  // 165: com.kcl.api.KclService.GenerateRust:output_type -> com.kcl.api.GenerateRustResult
+	87,  // 166: com.kcl.api.KclService.GeneratePython:output_type -> com.kcl.api.GeneratePythonResult
+	89,  // 167: com.kcl.api.KclService.GenerateGo:output_type -> com.kcl.api.GenerateGoResult
+	91,  // 168: com.kcl.api.KclService.GenerateJava:output_type -> com.kcl.api.GenerateJavaResult
+	93,  // 169: com.kcl.api.KclService.GenerateTypeScript:output_type -> com.kcl.api.GenerateTypeScriptResult
+	95,  // 170: com.kcl.api.KclService.GenerateDoc:output_type -> com.kcl.api.GenerateDocResult
+	136, // [136:171] is the sub-list for method output_type
+	101, // [101:136] is the sub-list for method input_type
+	101, // [101:101] is the sub-list for extension type_name
+	101, // [101:101] is the sub-list for extension extendee
+	0,   // [0:101] is the sub-list for field type_name
 }
 
 func init() { file_spec_proto_init() }
@@ -6614,15 +7365,15 @@ func file_spec_proto_init() {
 	}
 	file_spec_proto_msgTypes[32].OneofWrappers = []any{}
 	file_spec_proto_msgTypes[33].OneofWrappers = []any{}
-	file_spec_proto_msgTypes[83].OneofWrappers = []any{}
-	file_spec_proto_msgTypes[86].OneofWrappers = []any{}
+	file_spec_proto_msgTypes[96].OneofWrappers = []any{}
+	file_spec_proto_msgTypes[99].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_spec_proto_rawDesc), len(file_spec_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   108,
+			NumMessages:   121,
 			NumExtensions: 0,
 			NumServices:   2,
 		},

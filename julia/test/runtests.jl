@@ -374,7 +374,7 @@ end
         # Pin the registry size so a method cannot be dropped from the core
         # without this binding noticing -- `KclService.ListDepFiles` was removed
         # in v0.13.1, replaced by `LoadPackageResult.imports` / `kcl_mod` / `apps`.
-        @test length(names) == 28
+        @test length(names) == 33
     end
 
     @testset "raw call escape hatch" begin

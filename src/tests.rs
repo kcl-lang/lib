@@ -535,3 +535,29 @@ fn test_update_dependencies() -> Result<()> {
     assert!(result.external_pkgs.is_empty());
     Ok(())
 }
+
+/// Every `TestArgs` field is named here. Adding a field upstream fails this
+/// test at compile time (E0063) until the initializer is updated — the same
+/// error that broke the C++ binding when `eval_once` landed. The flag stays
+/// opt-in: the default is false.
+#[test]
+fn test_args_eval_once_is_opt_in() {
+    let unset = TestArgs {
+        exec_args: None,
+        pkg_list: vec![],
+        run_regexp: String::new(),
+        fail_fast: false,
+        coverage: false,
+        eval_once: false,
+    };
+    assert!(!unset.eval_once);
+    assert!(!TestArgs::default().eval_once);
+
+    let enabled = TestArgs {
+        eval_once: true,
+        ..TestArgs::default()
+    };
+    assert!(enabled.eval_once);
+    assert!(!enabled.coverage);
+    assert!(!enabled.fail_fast);
+}

@@ -451,6 +451,28 @@ class ExecProgramResult(_message.Message):
     sourcemap: str
     def __init__(self, json_result: _Optional[str] = ..., yaml_result: _Optional[str] = ..., log_message: _Optional[str] = ..., err_message: _Optional[str] = ..., sourcemap: _Optional[str] = ...) -> None: ...
 
+class BuildProgramArgs(_message.Message):
+    __slots__ = ("exec_args", "output")
+    EXEC_ARGS_FIELD_NUMBER: _ClassVar[int]
+    OUTPUT_FIELD_NUMBER: _ClassVar[int]
+    exec_args: ExecProgramArgs
+    output: str
+    def __init__(self, exec_args: _Optional[_Union[ExecProgramArgs, _Mapping]] = ..., output: _Optional[str] = ...) -> None: ...
+
+class BuildProgramResult(_message.Message):
+    __slots__ = ("path",)
+    PATH_FIELD_NUMBER: _ClassVar[int]
+    path: str
+    def __init__(self, path: _Optional[str] = ...) -> None: ...
+
+class ExecArtifactArgs(_message.Message):
+    __slots__ = ("path", "exec_args")
+    PATH_FIELD_NUMBER: _ClassVar[int]
+    EXEC_ARGS_FIELD_NUMBER: _ClassVar[int]
+    path: str
+    exec_args: ExecProgramArgs
+    def __init__(self, path: _Optional[str] = ..., exec_args: _Optional[_Union[ExecProgramArgs, _Mapping]] = ...) -> None: ...
+
 class FormatCodeArgs(_message.Message):
     __slots__ = ("source",)
     SOURCE_FIELD_NUMBER: _ClassVar[int]
@@ -749,18 +771,20 @@ class RenameCodeResult(_message.Message):
     def __init__(self, changed_codes: _Optional[_Mapping[str, str]] = ...) -> None: ...
 
 class TestArgs(_message.Message):
-    __slots__ = ("exec_args", "pkg_list", "run_regexp", "fail_fast", "coverage")
+    __slots__ = ("exec_args", "pkg_list", "run_regexp", "fail_fast", "coverage", "eval_once")
     EXEC_ARGS_FIELD_NUMBER: _ClassVar[int]
     PKG_LIST_FIELD_NUMBER: _ClassVar[int]
     RUN_REGEXP_FIELD_NUMBER: _ClassVar[int]
     FAIL_FAST_FIELD_NUMBER: _ClassVar[int]
     COVERAGE_FIELD_NUMBER: _ClassVar[int]
+    EVAL_ONCE_FIELD_NUMBER: _ClassVar[int]
     exec_args: ExecProgramArgs
     pkg_list: _containers.RepeatedScalarFieldContainer[str]
     run_regexp: str
     fail_fast: bool
     coverage: bool
-    def __init__(self, exec_args: _Optional[_Union[ExecProgramArgs, _Mapping]] = ..., pkg_list: _Optional[_Iterable[str]] = ..., run_regexp: _Optional[str] = ..., fail_fast: _Optional[bool] = ..., coverage: _Optional[bool] = ...) -> None: ...
+    eval_once: bool
+    def __init__(self, exec_args: _Optional[_Union[ExecProgramArgs, _Mapping]] = ..., pkg_list: _Optional[_Iterable[str]] = ..., run_regexp: _Optional[str] = ..., fail_fast: _Optional[bool] = ..., coverage: _Optional[bool] = ..., eval_once: _Optional[bool] = ...) -> None: ...
 
 class TestResult(_message.Message):
     __slots__ = ("info", "coverage")
@@ -919,6 +943,70 @@ class GenerateProtoResult(_message.Message):
     proto: str
     def __init__(self, proto: _Optional[str] = ...) -> None: ...
 
+class GenerateRustArgs(_message.Message):
+    __slots__ = ("parse_args",)
+    PARSE_ARGS_FIELD_NUMBER: _ClassVar[int]
+    parse_args: ParseProgramArgs
+    def __init__(self, parse_args: _Optional[_Union[ParseProgramArgs, _Mapping]] = ...) -> None: ...
+
+class GenerateRustResult(_message.Message):
+    __slots__ = ("rust_source",)
+    RUST_SOURCE_FIELD_NUMBER: _ClassVar[int]
+    rust_source: str
+    def __init__(self, rust_source: _Optional[str] = ...) -> None: ...
+
+class GeneratePythonArgs(_message.Message):
+    __slots__ = ("parse_args",)
+    PARSE_ARGS_FIELD_NUMBER: _ClassVar[int]
+    parse_args: ParseProgramArgs
+    def __init__(self, parse_args: _Optional[_Union[ParseProgramArgs, _Mapping]] = ...) -> None: ...
+
+class GeneratePythonResult(_message.Message):
+    __slots__ = ("python_source",)
+    PYTHON_SOURCE_FIELD_NUMBER: _ClassVar[int]
+    python_source: str
+    def __init__(self, python_source: _Optional[str] = ...) -> None: ...
+
+class GenerateGoArgs(_message.Message):
+    __slots__ = ("parse_args", "package")
+    PARSE_ARGS_FIELD_NUMBER: _ClassVar[int]
+    PACKAGE_FIELD_NUMBER: _ClassVar[int]
+    parse_args: ParseProgramArgs
+    package: str
+    def __init__(self, parse_args: _Optional[_Union[ParseProgramArgs, _Mapping]] = ..., package: _Optional[str] = ...) -> None: ...
+
+class GenerateGoResult(_message.Message):
+    __slots__ = ("go_source",)
+    GO_SOURCE_FIELD_NUMBER: _ClassVar[int]
+    go_source: str
+    def __init__(self, go_source: _Optional[str] = ...) -> None: ...
+
+class GenerateJavaArgs(_message.Message):
+    __slots__ = ("parse_args", "package")
+    PARSE_ARGS_FIELD_NUMBER: _ClassVar[int]
+    PACKAGE_FIELD_NUMBER: _ClassVar[int]
+    parse_args: ParseProgramArgs
+    package: str
+    def __init__(self, parse_args: _Optional[_Union[ParseProgramArgs, _Mapping]] = ..., package: _Optional[str] = ...) -> None: ...
+
+class GenerateJavaResult(_message.Message):
+    __slots__ = ("java_source",)
+    JAVA_SOURCE_FIELD_NUMBER: _ClassVar[int]
+    java_source: str
+    def __init__(self, java_source: _Optional[str] = ...) -> None: ...
+
+class GenerateTypeScriptArgs(_message.Message):
+    __slots__ = ("parse_args",)
+    PARSE_ARGS_FIELD_NUMBER: _ClassVar[int]
+    parse_args: ParseProgramArgs
+    def __init__(self, parse_args: _Optional[_Union[ParseProgramArgs, _Mapping]] = ...) -> None: ...
+
+class GenerateTypeScriptResult(_message.Message):
+    __slots__ = ("typescript_source",)
+    TYPESCRIPT_SOURCE_FIELD_NUMBER: _ClassVar[int]
+    typescript_source: str
+    def __init__(self, typescript_source: _Optional[str] = ...) -> None: ...
+
 class GenerateDocArgs(_message.Message):
     __slots__ = ("parse_args", "format")
     PARSE_ARGS_FIELD_NUMBER: _ClassVar[int]
@@ -934,7 +1022,7 @@ class GenerateDocResult(_message.Message):
     def __init__(self, content: _Optional[str] = ...) -> None: ...
 
 class KclType(_message.Message):
-    __slots__ = ("type", "union_types", "default", "schema_name", "schema_doc", "properties", "required", "key", "item", "line", "decorators", "filename", "pkg_path", "description", "examples", "base_schema", "function", "index_signature")
+    __slots__ = ("type", "union_types", "default", "schema_name", "schema_doc", "properties", "required", "key", "item", "line", "decorators", "filename", "pkg_path", "description", "examples", "base_schema", "function", "index_signature", "checks_json")
     class PropertiesEntry(_message.Message):
         __slots__ = ("key", "value")
         KEY_FIELD_NUMBER: _ClassVar[int]
@@ -967,6 +1055,7 @@ class KclType(_message.Message):
     BASE_SCHEMA_FIELD_NUMBER: _ClassVar[int]
     FUNCTION_FIELD_NUMBER: _ClassVar[int]
     INDEX_SIGNATURE_FIELD_NUMBER: _ClassVar[int]
+    CHECKS_JSON_FIELD_NUMBER: _ClassVar[int]
     type: str
     union_types: _containers.RepeatedCompositeFieldContainer[KclType]
     default: str
@@ -985,7 +1074,8 @@ class KclType(_message.Message):
     base_schema: KclType
     function: FunctionType
     index_signature: IndexSignature
-    def __init__(self, type: _Optional[str] = ..., union_types: _Optional[_Iterable[_Union[KclType, _Mapping]]] = ..., default: _Optional[str] = ..., schema_name: _Optional[str] = ..., schema_doc: _Optional[str] = ..., properties: _Optional[_Mapping[str, KclType]] = ..., required: _Optional[_Iterable[str]] = ..., key: _Optional[_Union[KclType, _Mapping]] = ..., item: _Optional[_Union[KclType, _Mapping]] = ..., line: _Optional[int] = ..., decorators: _Optional[_Iterable[_Union[Decorator, _Mapping]]] = ..., filename: _Optional[str] = ..., pkg_path: _Optional[str] = ..., description: _Optional[str] = ..., examples: _Optional[_Mapping[str, Example]] = ..., base_schema: _Optional[_Union[KclType, _Mapping]] = ..., function: _Optional[_Union[FunctionType, _Mapping]] = ..., index_signature: _Optional[_Union[IndexSignature, _Mapping]] = ...) -> None: ...
+    checks_json: _containers.RepeatedScalarFieldContainer[str]
+    def __init__(self, type: _Optional[str] = ..., union_types: _Optional[_Iterable[_Union[KclType, _Mapping]]] = ..., default: _Optional[str] = ..., schema_name: _Optional[str] = ..., schema_doc: _Optional[str] = ..., properties: _Optional[_Mapping[str, KclType]] = ..., required: _Optional[_Iterable[str]] = ..., key: _Optional[_Union[KclType, _Mapping]] = ..., item: _Optional[_Union[KclType, _Mapping]] = ..., line: _Optional[int] = ..., decorators: _Optional[_Iterable[_Union[Decorator, _Mapping]]] = ..., filename: _Optional[str] = ..., pkg_path: _Optional[str] = ..., description: _Optional[str] = ..., examples: _Optional[_Mapping[str, Example]] = ..., base_schema: _Optional[_Union[KclType, _Mapping]] = ..., function: _Optional[_Union[FunctionType, _Mapping]] = ..., index_signature: _Optional[_Union[IndexSignature, _Mapping]] = ..., checks_json: _Optional[_Iterable[str]] = ...) -> None: ...
 
 class FunctionType(_message.Message):
     __slots__ = ("params", "return_ty")

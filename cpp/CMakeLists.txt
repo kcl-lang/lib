@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.10)
-project(kcl-lib VERSION 0.13.2 LANGUAGES C CXX)
+project(kcl-lib VERSION 0.13.3 LANGUAGES C CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -45,6 +45,9 @@ set(KCL_AST_SOURCE ${KCL_AST_C_DIR}/lib/kcl_lib_ast.c)
 add_library(kcl-lib-ast STATIC ${KCL_AST_SOURCE})
 target_include_directories(kcl-lib-ast PUBLIC ${KCL_AST_INCLUDE_DIR})
 set_target_properties(kcl-lib-ast PROPERTIES C_STANDARD 99)
+# C99 does not declare POSIX `strdup`. The same macro `hack/dump/c.sh` passes
+# so the AST diff builds on Ubuntu 26.04.
+target_compile_definitions(kcl-lib-ast PRIVATE _POSIX_C_SOURCE=200809L)
 
 add_custom_command(
     OUTPUT ${RUST_BRIDGE_CPP} ${RUST_LIB} ${RUST_HEADER_FILE}

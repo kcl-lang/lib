@@ -380,6 +380,8 @@ export interface TestArgs {
   runRegexp?: string;
   failFast?: boolean;
   coverage?: boolean;
+  /** Opt-in. Defaults to false; cases then share package values. */
+  evalOnce?: boolean;
 }
 
 export interface TestCaseInfo {
@@ -474,6 +476,48 @@ export interface GenerateDocArgs {
 
 export interface GenerateDocResult {
   content: string;
+}
+
+export interface GenerateRustArgs {
+  parseArgs?: ParseProgramArgs;
+}
+
+export interface GenerateRustResult {
+  rustSource: string;
+}
+
+export interface GeneratePythonArgs {
+  parseArgs?: ParseProgramArgs;
+}
+
+export interface GeneratePythonResult {
+  pythonSource: string;
+}
+
+export interface GenerateGoArgs {
+  parseArgs?: ParseProgramArgs;
+  package?: string;
+}
+
+export interface GenerateGoResult {
+  goSource: string;
+}
+
+export interface GenerateJavaArgs {
+  parseArgs?: ParseProgramArgs;
+  package?: string;
+}
+
+export interface GenerateJavaResult {
+  javaSource: string;
+}
+
+export interface GenerateTypeScriptArgs {
+  parseArgs?: ParseProgramArgs;
+}
+
+export interface GenerateTypeScriptResult {
+  typescriptSource: string;
 }
 
 export interface SymbolIndex {
@@ -2293,7 +2337,8 @@ export function test(
     encodeStringList(2, args.pkgList),
     stringField(3, args.runRegexp ?? ""),
     boolField(4, args.failFast ?? false),
-    boolField(5, args.coverage ?? false)
+    boolField(5, args.coverage ?? false),
+    boolField(6, args.evalOnce ?? false)
   );
   const result = callService(instance, "Test", encoded);
   return decodeTestResult(result);
@@ -2467,4 +2512,97 @@ export function generateDoc(
   );
   const result = callService(instance, "GenerateDoc", encoded);
   return { content: decodeStringResult(result) };
+}
+
+/**
+ * Export the schemas of the parsed program as Rust source.
+ */
+export function generateRust(
+  instance: WebAssembly.Instance,
+  args: GenerateRustArgs
+): GenerateRustResult {
+  const encoded = bytesField(
+    1,
+    args.parseArgs ? encodeParseProgramArgs(args.parseArgs) : new Uint8Array(0)
+  );
+  const result = callService(instance, "GenerateRust", encoded);
+  return { rustSource: decodeStringResult(result) };
+}
+
+/**
+ * Export the schemas of the parsed program as Python source.
+ */
+export function generatePython(
+  instance: WebAssembly.Instance,
+  args: GeneratePythonArgs
+): GeneratePythonResult {
+  const encoded = bytesField(
+    1,
+    args.parseArgs ? encodeParseProgramArgs(args.parseArgs) : new Uint8Array(0)
+  );
+  const result = callService(instance, "GeneratePython", encoded);
+  return { pythonSource: decodeStringResult(result) };
+}
+
+/**
+ * Export the schemas of the parsed program as Go source.
+ *
+ * `package` is the package name of the generated file's `package` clause,
+ * e.g. `"dto"`; an empty value defaults to `"generated"`, because Go requires
+ * a package clause.
+ */
+export function generateGo(
+  instance: WebAssembly.Instance,
+  args: GenerateGoArgs
+): GenerateGoResult {
+  const encoded = concatBytes(
+    bytesField(
+      1,
+      args.parseArgs
+        ? encodeParseProgramArgs(args.parseArgs)
+        : new Uint8Array(0)
+    ),
+    stringField(2, args.package ?? "")
+  );
+  const result = callService(instance, "GenerateGo", encoded);
+  return { goSource: decodeStringResult(result) };
+}
+
+/**
+ * Export the schemas of the parsed program as Java source.
+ *
+ * `package` is the package name of the generated file's `package` clause,
+ * e.g. `"com.example.dto"`; an empty value omits the clause entirely (the
+ * Java default package), because Java does not require one.
+ */
+export function generateJava(
+  instance: WebAssembly.Instance,
+  args: GenerateJavaArgs
+): GenerateJavaResult {
+  const encoded = concatBytes(
+    bytesField(
+      1,
+      args.parseArgs
+        ? encodeParseProgramArgs(args.parseArgs)
+        : new Uint8Array(0)
+    ),
+    stringField(2, args.package ?? "")
+  );
+  const result = callService(instance, "GenerateJava", encoded);
+  return { javaSource: decodeStringResult(result) };
+}
+
+/**
+ * Export the schemas of the parsed program as TypeScript source.
+ */
+export function generateTypeScript(
+  instance: WebAssembly.Instance,
+  args: GenerateTypeScriptArgs
+): GenerateTypeScriptResult {
+  const encoded = bytesField(
+    1,
+    args.parseArgs ? encodeParseProgramArgs(args.parseArgs) : new Uint8Array(0)
+  );
+  const result = callService(instance, "GenerateTypeScript", encoded);
+  return { typescriptSource: decodeStringResult(result) };
 }

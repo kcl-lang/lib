@@ -14,14 +14,24 @@ use Com\Kcl\Api\FormatTestReportArgs;
 use Com\Kcl\Api\FormatTestReportResult;
 use Com\Kcl\Api\GenerateDocArgs;
 use Com\Kcl\Api\GenerateDocResult;
+use Com\Kcl\Api\GenerateGoArgs;
+use Com\Kcl\Api\GenerateGoResult;
+use Com\Kcl\Api\GenerateJavaArgs;
+use Com\Kcl\Api\GenerateJavaResult;
 use Com\Kcl\Api\GenerateKclArgs;
 use Com\Kcl\Api\GenerateKclResult;
 use Com\Kcl\Api\GenerateOpenAPIArgs;
 use Com\Kcl\Api\GenerateOpenAPIResult;
 use Com\Kcl\Api\GenerateProtoArgs;
 use Com\Kcl\Api\GenerateProtoResult;
+use Com\Kcl\Api\GeneratePythonArgs;
+use Com\Kcl\Api\GeneratePythonResult;
+use Com\Kcl\Api\GenerateRustArgs;
+use Com\Kcl\Api\GenerateRustResult;
 use Com\Kcl\Api\GenerateTomlArgs;
 use Com\Kcl\Api\GenerateTomlResult;
+use Com\Kcl\Api\GenerateTypeScriptArgs;
+use Com\Kcl\Api\GenerateTypeScriptResult;
 use Com\Kcl\Api\GetSchemaTypeMappingArgs;
 use Com\Kcl\Api\GetSchemaTypeMappingResult;
 use Com\Kcl\Api\GetSchemaTypeMappingUnderPathResult;
@@ -250,6 +260,48 @@ final class ServiceClient
         return $this->call('KclService.GenerateProto', $args, GenerateProtoResult::class);
     }
 
+    /** KclService.GenerateRust: Rust DTOs from package schemas. */
+    public function generateRust(GenerateRustArgs|array $args): GenerateRustResult
+    {
+        return $this->call('KclService.GenerateRust', $args, GenerateRustResult::class);
+    }
+
+    /** KclService.GeneratePython: Python DTOs from package schemas. */
+    public function generatePython(GeneratePythonArgs|array $args): GeneratePythonResult
+    {
+        return $this->call('KclService.GeneratePython', $args, GeneratePythonResult::class);
+    }
+
+    /**
+     * KclService.GenerateGo: Go DTOs from package schemas.
+     *
+     * The `package` field is the Go package name of the generated file's
+     * `package` clause, e.g. "dto"; an empty value defaults to "generated",
+     * since Go requires a package clause.
+     */
+    public function generateGo(GenerateGoArgs|array $args): GenerateGoResult
+    {
+        return $this->call('KclService.GenerateGo', $args, GenerateGoResult::class);
+    }
+
+    /**
+     * KclService.GenerateJava: Java DTOs from package schemas.
+     *
+     * The `package` field is the Java package name of the generated file's
+     * `package` clause, e.g. "com.example.dto"; an empty value omits the
+     * package clause entirely, which is valid Java.
+     */
+    public function generateJava(GenerateJavaArgs|array $args): GenerateJavaResult
+    {
+        return $this->call('KclService.GenerateJava', $args, GenerateJavaResult::class);
+    }
+
+    /** KclService.GenerateTypeScript: TypeScript DTOs from package schemas. */
+    public function generateTypeScript(GenerateTypeScriptArgs|array $args): GenerateTypeScriptResult
+    {
+        return $this->call('KclService.GenerateTypeScript', $args, GenerateTypeScriptResult::class);
+    }
+
     /** KclService.GenerateDoc: documentation from package schemas. */
     public function generateDoc(GenerateDocArgs|array $args): GenerateDocResult
     {
@@ -342,6 +394,11 @@ final class ServiceClient
             'KclService.GenerateKcl' => GenerateKclArgs::class,
             'KclService.GenerateOpenAPI' => GenerateOpenAPIArgs::class,
             'KclService.GenerateProto' => GenerateProtoArgs::class,
+            'KclService.GenerateRust' => GenerateRustArgs::class,
+            'KclService.GeneratePython' => GeneratePythonArgs::class,
+            'KclService.GenerateGo' => GenerateGoArgs::class,
+            'KclService.GenerateJava' => GenerateJavaArgs::class,
+            'KclService.GenerateTypeScript' => GenerateTypeScriptArgs::class,
             'KclService.GenerateDoc' => GenerateDocArgs::class,
             default => throw new KclException("unknown RPC: {$rpc}"),
         };
