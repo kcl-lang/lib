@@ -71,20 +71,9 @@ if [ "${exported}" != "${fingerprint}" ]; then
 fi
 echo "Exported ${exported} ($(wc -c < "$output" | tr -d ' ') bytes) to ${output}"
 
-# The HTTPS endpoint takes the armored key as the request body and needs no
-# credentials, so it works from a runner that cannot reach the HKP port.
-code="$(curl -sS --max-time 60 -o "$work/keyserver-add.out" -w '%{http_code}' \
-    -X POST --data-binary "@${output}" \
-    'https://keyserver.ubuntu.com/pks/add')" || code="000"
-echo "keyserver.ubuntu.com /pks/add: HTTP ${code}"
-if [ "${code}" != "200" ]; then
-    echo "--- response body:"
-    head -c 2000 "$work/keyserver-add.out" || true
-    echo
-fi
-
-# gpg --send-keys is the canonical path; keep it as a fallback for the case
-# where the endpoint above refuses the key.
+# gpg --send-keys is the canonical path: the HKP endpoint rejects an
+# armored key that is posted to it as a request body, and the key server
+# only serves the armored form it was given.
 gpg --homedir "$work/gnupg" --batch --yes \
     --keyserver hkps://keyserver.ubuntu.com \
     --send-keys "${fingerprint}" || echo "::warning::gpg --send-keys failed"
@@ -97,18 +86,24 @@ gpg --homedir "$work/gnupg" --batch --yes \
 
 ok=1
 for server in keyserver.ubuntu.com keys.openpgp.org; do
-    if curl -sS --max-time 60 -o "$work/fetched-${server}.asc" \
-        "https://${server}/pks/lookup?op=get&options=mr&search=0x${fingerprint}"; then
-        served="$(gpg --batch --with-colons --show-keys "$work/fetched-${server}.asc" 2>/dev/null |
-            awk -F: '/^fpr:/ { print $10; exit }')"
-        if [ "${served}" = "${fingerprint}" ]; then
-            echo "${server}: serves ${served}"
-        else
-            echo "::warning::${server}: serves '${served:-nothing}', expected ${fingerprint}"
-            ok=0
+    served=""
+    # A key server can answer "not found" for a key it was asked to serve a
+    # moment ago, so the lookup is retried before it is called a failure.
+    for attempt in 1 2 3; do
+        if curl -sS --max-time 60 -o "$work/fetched-${server}.asc" \
+            "https://${server}/pks/lookup?op=get&options=mr&search=0x${fingerprint}"; then
+            served="$(gpg --batch --with-colons --show-keys "$work/fetched-${server}.asc" 2>/dev/null |
+                awk -F: '/^fpr:/ { print $10; exit }')"
         fi
+        if [ "${served}" = "${fingerprint}" ]; then
+            break
+        fi
+        sleep 5
+    done
+    if [ "${served}" = "${fingerprint}" ]; then
+        echo "${server}: serves ${served}"
     else
-        echo "::warning::${server}: lookup failed"
+        echo "::warning::${server}: serves '${served:-nothing}', expected ${fingerprint}"
         ok=0
     fi
 done

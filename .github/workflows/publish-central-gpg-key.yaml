@@ -13,12 +13,14 @@ name: publish-central-gpg-key
 #   uploaded to one of the PGP servers we support.
 #
 # This workflow publishes the public half of the signing key and verifies
-# that the key servers hand it back. It runs on every push so the key stays
-# published - key servers do drop entries - and it can be triggered by hand
-# with the workflow_dispatch event.
+# that the key servers hand it back. The deploy job publishes the key too,
+# right before every upload, so a release cannot fail on a key that is not
+# published; this workflow is there to repair the state on demand.
 
 on:
   push:
+    branches:
+      - main
   workflow_dispatch:
 
 permissions:
