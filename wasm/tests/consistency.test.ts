@@ -8,10 +8,15 @@ import {
   formatPath,
   formatTestReport,
   generateDoc,
+  generateGo,
+  generateJava,
   generateKcl,
   generateOpenAPI,
   generateProto,
+  generatePython,
+  generateRust,
   generateToml,
+  generateTypeScript,
   getSchemaTypeMapping,
   getSchemaTypeMappingUnderPath,
   getVersion,
@@ -44,10 +49,15 @@ import type {
   GetSchemaTypeMappingResult,
   GetSchemaTypeMappingUnderPathResult,
   GetVersionResult,
+  GenerateGoResult,
+  GenerateJavaResult,
   GenerateKclResult,
   GenerateOpenAPIResult,
   GenerateProtoResult,
+  GeneratePythonResult,
+  GenerateRustResult,
   GenerateTomlResult,
+  GenerateTypeScriptResult,
   IndexSignature,
   KclType,
   ListMethodResult,
@@ -591,6 +601,16 @@ function expectedValue(result: any, field: string): unknown {
       return (result as GenerateProtoResult).proto;
     case "content":
       return (result as GenerateDocResult).content;
+    case "rust_source":
+      return (result as GenerateRustResult).rustSource;
+    case "python_source":
+      return (result as GeneratePythonResult).pythonSource;
+    case "go_source":
+      return (result as GenerateGoResult).goSource;
+    case "java_source":
+      return (result as GenerateJavaResult).javaSource;
+    case "typescript_source":
+      return (result as GenerateTypeScriptResult).typescriptSource;
     case "report":
       return (result as FormatTestReportResult).report;
     default:
@@ -824,6 +844,33 @@ function runCase(c: ConsistencyCase, instance: WebAssembly.Instance): unknown {
       return generateDoc(instance, {
         parseArgs: parseArgs(a["parse_args"] ?? {}, c),
         format: a["format"],
+      });
+
+    case "KclService.GenerateRust":
+      return generateRust(instance, {
+        parseArgs: parseArgs(a["parse_args"] ?? {}, c),
+      });
+
+    case "KclService.GeneratePython":
+      return generatePython(instance, {
+        parseArgs: parseArgs(a["parse_args"] ?? {}, c),
+      });
+
+    case "KclService.GenerateGo":
+      return generateGo(instance, {
+        parseArgs: parseArgs(a["parse_args"] ?? {}, c),
+        package: a["package"],
+      });
+
+    case "KclService.GenerateJava":
+      return generateJava(instance, {
+        parseArgs: parseArgs(a["parse_args"] ?? {}, c),
+        package: a["package"],
+      });
+
+    case "KclService.GenerateTypeScript":
+      return generateTypeScript(instance, {
+        parseArgs: parseArgs(a["parse_args"] ?? {}, c),
       });
 
     case "KclService.FormatTestReport": {

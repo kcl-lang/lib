@@ -71,6 +71,11 @@ class ConsistencyTest < Minitest::Test
     "KclService.GenerateOpenAPI" => :generate_openapi,
     "KclService.GenerateProto" => :generate_proto,
     "KclService.GenerateDoc" => :generate_doc,
+    "KclService.GenerateRust" => :generate_rust,
+    "KclService.GeneratePython" => :generate_python,
+    "KclService.GenerateGo" => :generate_go,
+    "KclService.GenerateJava" => :generate_java,
+    "KclService.GenerateTypeScript" => :generate_typescript,
     "KclService.UpdateDependencies" => :update_dependencies,
     "KclService.GetVersion" => :get_version,
     "BuiltinService.ListMethod" => :list_method
@@ -280,6 +285,28 @@ class ConsistencyTest < Minitest::Test
       KclLib::GenerateDocArgs.new(
         parse_args: build_parse_args(a.fetch("parse_args")),
         format: a.fetch("format", "")
+      )
+    when "KclService.GenerateRust"
+      KclLib::GenerateRustArgs.new(
+        parse_args: build_parse_args(a.fetch("parse_args"))
+      )
+    when "KclService.GeneratePython"
+      KclLib::GeneratePythonArgs.new(
+        parse_args: build_parse_args(a.fetch("parse_args"))
+      )
+    when "KclService.GenerateGo"
+      KclLib::GenerateGoArgs.new(
+        parse_args: build_parse_args(a.fetch("parse_args")),
+        package: a.fetch("package", "")
+      )
+    when "KclService.GenerateJava"
+      KclLib::GenerateJavaArgs.new(
+        parse_args: build_parse_args(a.fetch("parse_args")),
+        package: a.fetch("package", "")
+      )
+    when "KclService.GenerateTypeScript"
+      KclLib::GenerateTypeScriptArgs.new(
+        parse_args: build_parse_args(a.fetch("parse_args"))
       )
     else
       raise "no args builder for rpc #{rpc}"

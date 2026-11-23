@@ -849,6 +849,12 @@ pub fn format_test_report(args: FormatTestReportArgs) -> Result<FormatTestReport
 * fields otherwise, and each response is a single length-delimited string at
 * field 1, decoded with the same strict key/length/truncation checks as
 * `format_test_report`.
+*
+* The DTO generators below (`GenerateRust`, `GeneratePython`, `GenerateGo`,
+* `GenerateJava`, `GenerateTypeScript`) are dispatched the same way: the
+* nested `ParseProgramArgs` at field 1, an optional `package` string at
+* field 2 for the two generators that take one, and a single string at
+* field 1 in the response.
 */
 
 use ::prost::encoding::{
@@ -1124,5 +1130,191 @@ pub fn generate_doc(args: &GenerateDocArgs) -> Result<GenerateDocResult> {
     check_dispatcher_error(&raw)?;
     Ok(GenerateDocResult {
         content: decode_single_string_field(&raw, "GenerateDocResult")?,
+    })
+}
+
+/// Message for generate Rust request arguments.
+#[napi]
+pub struct GenerateRustArgs {
+    parse_args: Option<kcl_api::ParseProgramArgs>,
+}
+
+#[napi]
+impl GenerateRustArgs {
+    #[napi(constructor)]
+    pub fn new(parse_args: Option<&ParseProgramArgs>) -> Result<Self> {
+        Ok(Self {
+            parse_args: parse_args.map(|p| p.0.clone()),
+        })
+    }
+}
+
+/// Message for generate Rust response.
+#[napi(object)]
+pub struct GenerateRustResult {
+    /// The generated Rust source.
+    pub rust_source: String,
+}
+
+/// Generate Rust source from the schemas of a KCL package.
+#[napi]
+pub fn generate_rust(args: &GenerateRustArgs) -> Result<GenerateRustResult> {
+    let mut request = Vec::new();
+    encode_nested_message_field(&mut request, 1, &parse_program_args_to_wire(&args.parse_args));
+    let raw = kcl_api::call(b"KclService.GenerateRust", &request)
+        .map_err(|e| napi::bindgen_prelude::Error::from_reason(e.to_string()))?;
+    check_dispatcher_error(&raw)?;
+    Ok(GenerateRustResult {
+        rust_source: decode_single_string_field(&raw, "GenerateRustResult")?,
+    })
+}
+
+/// Message for generate Python request arguments.
+#[napi]
+pub struct GeneratePythonArgs {
+    parse_args: Option<kcl_api::ParseProgramArgs>,
+}
+
+#[napi]
+impl GeneratePythonArgs {
+    #[napi(constructor)]
+    pub fn new(parse_args: Option<&ParseProgramArgs>) -> Result<Self> {
+        Ok(Self {
+            parse_args: parse_args.map(|p| p.0.clone()),
+        })
+    }
+}
+
+/// Message for generate Python response.
+#[napi(object)]
+pub struct GeneratePythonResult {
+    /// The generated Python source.
+    pub python_source: String,
+}
+
+/// Generate Python source from the schemas of a KCL package.
+#[napi]
+pub fn generate_python(args: &GeneratePythonArgs) -> Result<GeneratePythonResult> {
+    let mut request = Vec::new();
+    encode_nested_message_field(&mut request, 1, &parse_program_args_to_wire(&args.parse_args));
+    let raw = kcl_api::call(b"KclService.GeneratePython", &request)
+        .map_err(|e| napi::bindgen_prelude::Error::from_reason(e.to_string()))?;
+    check_dispatcher_error(&raw)?;
+    Ok(GeneratePythonResult {
+        python_source: decode_single_string_field(&raw, "GeneratePythonResult")?,
+    })
+}
+
+/// Message for generate Go request arguments.
+#[napi]
+pub struct GenerateGoArgs {
+    parse_args: Option<kcl_api::ParseProgramArgs>,
+    package: String,
+}
+
+#[napi]
+impl GenerateGoArgs {
+    #[napi(constructor)]
+    pub fn new(parse_args: Option<&ParseProgramArgs>, package_name: Option<String>) -> Result<Self> {
+        Ok(Self {
+            parse_args: parse_args.map(|p| p.0.clone()),
+            package: package_name.unwrap_or_default(),
+        })
+    }
+}
+
+/// Message for generate Go response.
+#[napi(object)]
+pub struct GenerateGoResult {
+    /// The generated Go source.
+    pub go_source: String,
+}
+
+/// Generate Go source from the schemas of a KCL package.
+#[napi]
+pub fn generate_go(args: &GenerateGoArgs) -> Result<GenerateGoResult> {
+    let mut request = Vec::new();
+    encode_nested_message_field(&mut request, 1, &parse_program_args_to_wire(&args.parse_args));
+    encode_optional_string_field(&mut request, 2, &args.package);
+    let raw = kcl_api::call(b"KclService.GenerateGo", &request)
+        .map_err(|e| napi::bindgen_prelude::Error::from_reason(e.to_string()))?;
+    check_dispatcher_error(&raw)?;
+    Ok(GenerateGoResult {
+        go_source: decode_single_string_field(&raw, "GenerateGoResult")?,
+    })
+}
+
+/// Message for generate Java request arguments.
+#[napi]
+pub struct GenerateJavaArgs {
+    parse_args: Option<kcl_api::ParseProgramArgs>,
+    package: String,
+}
+
+#[napi]
+impl GenerateJavaArgs {
+    #[napi(constructor)]
+    pub fn new(parse_args: Option<&ParseProgramArgs>, package_name: Option<String>) -> Result<Self> {
+        Ok(Self {
+            parse_args: parse_args.map(|p| p.0.clone()),
+            package: package_name.unwrap_or_default(),
+        })
+    }
+}
+
+/// Message for generate Java response.
+#[napi(object)]
+pub struct GenerateJavaResult {
+    /// The generated Java source.
+    pub java_source: String,
+}
+
+/// Generate Java source from the schemas of a KCL package.
+#[napi]
+pub fn generate_java(args: &GenerateJavaArgs) -> Result<GenerateJavaResult> {
+    let mut request = Vec::new();
+    encode_nested_message_field(&mut request, 1, &parse_program_args_to_wire(&args.parse_args));
+    encode_optional_string_field(&mut request, 2, &args.package);
+    let raw = kcl_api::call(b"KclService.GenerateJava", &request)
+        .map_err(|e| napi::bindgen_prelude::Error::from_reason(e.to_string()))?;
+    check_dispatcher_error(&raw)?;
+    Ok(GenerateJavaResult {
+        java_source: decode_single_string_field(&raw, "GenerateJavaResult")?,
+    })
+}
+
+/// Message for generate TypeScript request arguments.
+#[napi]
+pub struct GenerateTypeScriptArgs {
+    parse_args: Option<kcl_api::ParseProgramArgs>,
+}
+
+#[napi]
+impl GenerateTypeScriptArgs {
+    #[napi(constructor)]
+    pub fn new(parse_args: Option<&ParseProgramArgs>) -> Result<Self> {
+        Ok(Self {
+            parse_args: parse_args.map(|p| p.0.clone()),
+        })
+    }
+}
+
+/// Message for generate TypeScript response.
+#[napi(object)]
+pub struct GenerateTypeScriptResult {
+    /// The generated TypeScript source.
+    pub typescript_source: String,
+}
+
+/// Generate TypeScript source from the schemas of a KCL package.
+#[napi(js_name = "generateTypeScript")]
+pub fn generate_typescript(args: &GenerateTypeScriptArgs) -> Result<GenerateTypeScriptResult> {
+    let mut request = Vec::new();
+    encode_nested_message_field(&mut request, 1, &parse_program_args_to_wire(&args.parse_args));
+    let raw = kcl_api::call(b"KclService.GenerateTypeScript", &request)
+        .map_err(|e| napi::bindgen_prelude::Error::from_reason(e.to_string()))?;
+    check_dispatcher_error(&raw)?;
+    Ok(GenerateTypeScriptResult {
+        typescript_source: decode_single_string_field(&raw, "GenerateTypeScriptResult")?,
     })
 }

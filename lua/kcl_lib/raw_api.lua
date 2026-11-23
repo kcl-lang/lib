@@ -145,7 +145,7 @@ RawAPI.update_dependencies = add_method(
   "UpdateDependenciesResult"
 )
 
--- The five `KclService.Generate*` RPCs below synthesize source in one
+-- The ten `KclService.Generate*` RPCs below synthesize source in one
 -- representation from another. They are declared after `UpdateDependencies` in
 -- `spec/spec.proto` and are grouped here in the same order.
 --
@@ -185,6 +185,55 @@ RawAPI.generate_proto = add_method(
   "GenerateProtoResult"
 )
 
+-- `GenerateRustArgs.parse_args` holds the arguments for parsing the program
+-- whose schemas are exported; the generated source comes back in
+-- `GenerateRustResult.rust_source`.
+RawAPI.generate_rust = add_method(
+  "KclService.GenerateRust",
+  "GenerateRustArgs",
+  "GenerateRustResult"
+)
+
+-- `GeneratePythonArgs.parse_args` holds the arguments for parsing the program
+-- whose schemas are exported; the generated source comes back in
+-- `GeneratePythonResult.python_source`.
+RawAPI.generate_python = add_method(
+  "KclService.GeneratePython",
+  "GeneratePythonArgs",
+  "GeneratePythonResult"
+)
+
+-- `GenerateGoArgs.parse_args` holds the arguments for parsing the program
+-- whose schemas are exported; `GenerateGoArgs.package` is the Go package name
+-- of the generated file's `package` clause, e.g. "dto". An empty package
+-- defaults to "generated" -- Go requires a package clause, unlike
+-- GenerateProto's optional `package` field. The generated source comes back
+-- in `GenerateGoResult.go_source`.
+RawAPI.generate_go =
+  add_method("KclService.GenerateGo", "GenerateGoArgs", "GenerateGoResult")
+
+-- `GenerateJavaArgs.parse_args` holds the arguments for parsing the program
+-- whose schemas are exported; `GenerateJavaArgs.package` is the Java package
+-- name of the generated file's `package` clause, e.g. "com.example.dto". An
+-- empty package omits the package clause entirely (valid Java -- the
+-- "default package") rather than defaulting to a synthetic name as
+-- GenerateGo does, since Java (unlike Go) does not require one. The
+-- generated source comes back in `GenerateJavaResult.java_source`.
+RawAPI.generate_java = add_method(
+  "KclService.GenerateJava",
+  "GenerateJavaArgs",
+  "GenerateJavaResult"
+)
+
+-- `GenerateTypeScriptArgs.parse_args` holds the arguments for parsing the
+-- program whose schemas are exported; the generated source comes back in
+-- `GenerateTypeScriptResult.typescript_source`.
+RawAPI.generate_typescript = add_method(
+  "KclService.GenerateTypeScript",
+  "GenerateTypeScriptArgs",
+  "GenerateTypeScriptResult"
+)
+
 -- `GenerateDocArgs.format` is `"md"` (default), `"openapi"` or
 -- `"json-schema"`; `"html"` is not supported yet. The rendered document comes
 -- back in `GenerateDocResult.content`.
@@ -204,6 +253,11 @@ RawAPI.generate_doc =
 -- `LoadPackageResult.imports` / `kcl_mod` / `apps`). v0.13.3 added
 -- `GenerateRust`, `GeneratePython`, `GenerateGo`, `GenerateJava` and
 -- `GenerateTypeScript`.
+--
+-- `BuildProgram` and `ExecArtifact` are the other way round: `spec.proto`
+-- declares them, but the core deliberately keeps them out of its registry,
+-- so the dispatcher answers `ERROR: unknown method name` for them. They have
+-- no wrapper here on purpose.
 RawAPI.list_method =
   add_method("BuiltinService.ListMethod", "ListMethodArgs", "ListMethodResult")
 

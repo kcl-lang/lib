@@ -512,6 +512,83 @@
       "expect": {
         "external_pkg_count": 0
       }
+    },
+    {
+      "name": "generate_rust",
+      "rpc": "KclService.GenerateRust",
+      "new_core": true,
+      "args": {
+        "parse_args": {
+          "paths": [
+            "tests/consistency/testdata/gen_openapi/main.k"
+          ]
+        }
+      },
+      "expect": {
+        "rust_source": "/// Base schema carrying the shared identifier.\n#[derive(Clone, Debug, PartialEq, serde::Serialize, serde::Deserialize)]\npub struct Base {\n    /// The unique identifier.\n    pub id: i64,\n}\nimpl Base {\n    pub fn validate(&self) -> Result<(), Vec<String>> {\n        let errors = Vec::new();\n        if errors.is_empty() {\n            Ok(())\n        } else {\n            Err(errors)\n        }\n    }\n}\n\n/// A postal address.\n#[derive(Clone, Debug, PartialEq, serde::Serialize, serde::Deserialize)]\npub struct Address {\n    /// Arbitrary float coordinates keyed by name.\n    pub geo: std::collections::HashMap<String, f64>,\n    /// The street name.\n    pub street: String,\n    /// The ZIP code.\n    #[serde(rename = \"zipCode\")]\n    pub zip_code: String,\n}\nimpl Address {\n    pub fn validate(&self) -> Result<(), Vec<String>> {\n        let errors = Vec::new();\n        if errors.is_empty() {\n            Ok(())\n        } else {\n            Err(errors)\n        }\n    }\n}\n\n/// A person in the address book.\n#[derive(Clone, Debug, PartialEq, serde::Serialize, serde::Deserialize)]\npub struct Person {\n    /// The home address.\n    pub address: Address,\n    /// The age in years.\n    /// KCL default: 18\n    #[serde(default)]\n    pub age: Option<i64>,\n    /// Known email addresses.\n    #[serde(default)]\n    pub emails: Option<Vec<String>>,\n    /// The unique identifier.\n    pub id: i64,\n    /// The full name.\n    pub name: String,\n}\nimpl Person {\n    pub fn validate(&self) -> Result<(), Vec<String>> {\n        let errors = Vec::new();\n        if errors.is_empty() {\n            Ok(())\n        } else {\n            Err(errors)\n        }\n    }\n}\n\n/// A schema with a union attribute.\n#[derive(Clone, Debug, PartialEq, serde::Serialize, serde::Deserialize)]\npub struct UnionS {\n    /// An int or a str.\n    pub val: serde_json::Value,\n}\nimpl UnionS {\n    pub fn validate(&self) -> Result<(), Vec<String>> {\n        let errors = Vec::new();\n        if errors.is_empty() {\n            Ok(())\n        } else {\n            Err(errors)\n        }\n    }\n}\n\n"
+      }
+    },
+    {
+      "name": "generate_python",
+      "rpc": "KclService.GeneratePython",
+      "new_core": true,
+      "args": {
+        "parse_args": {
+          "paths": [
+            "tests/consistency/testdata/gen_openapi/main.k"
+          ]
+        }
+      },
+      "expect": {
+        "python_source": "import dataclasses\nimport re\nimport typing\n\n\n@dataclasses.dataclass(kw_only=True)\nclass Base:\n    \"\"\"Base schema carrying the shared identifier.\"\"\"\n    # The unique identifier.\n    id: int\n\n    def validate(self) -> typing.List[str]:\n        errors: typing.List[str] = []\n        return errors\n\n\n@dataclasses.dataclass(kw_only=True)\nclass Address:\n    \"\"\"A postal address.\"\"\"\n    # Arbitrary float coordinates keyed by name.\n    geo: typing.Dict[str, float]\n    # The street name.\n    street: str\n    # The ZIP code.\n    # KCL name: zipCode\n    zip_code: str\n\n    def validate(self) -> typing.List[str]:\n        errors: typing.List[str] = []\n        return errors\n\n\n@dataclasses.dataclass(kw_only=True)\nclass Person:\n    \"\"\"A person in the address book.\"\"\"\n    # The home address.\n    address: Address\n    # The age in years.\n    # KCL default: 18\n    age: typing.Optional[int] = None\n    # Known email addresses.\n    emails: typing.Optional[typing.List[str]] = None\n    # The unique identifier.\n    id: int\n    # The full name.\n    name: str\n\n    def validate(self) -> typing.List[str]:\n        errors: typing.List[str] = []\n        return errors\n\n\n@dataclasses.dataclass(kw_only=True)\nclass UnionS:\n    \"\"\"A schema with a union attribute.\"\"\"\n    # An int or a str.\n    val: typing.Any\n\n    def validate(self) -> typing.List[str]:\n        errors: typing.List[str] = []\n        return errors\n\n\n"
+      }
+    },
+    {
+      "name": "generate_go",
+      "rpc": "KclService.GenerateGo",
+      "new_core": true,
+      "args": {
+        "parse_args": {
+          "paths": [
+            "tests/consistency/testdata/gen_openapi/main.k"
+          ]
+        },
+        "package": "dto"
+      },
+      "expect": {
+        "go_source": "package dto\n\n// Base schema carrying the shared identifier.\ntype Base struct {\n\t// The unique identifier.\n\tId int64 `json:\"id\"`\n}\nfunc (s *Base) Validate() []string {\n\terrors := []string{}\n\treturn errors\n}\n\n// A postal address.\ntype Address struct {\n\t// Arbitrary float coordinates keyed by name.\n\tGeo map[string]float64 `json:\"geo\"`\n\t// The street name.\n\tStreet string `json:\"street\"`\n\t// The ZIP code.\n\tZipCode string `json:\"zipCode\"`\n}\nfunc (s *Address) Validate() []string {\n\terrors := []string{}\n\treturn errors\n}\n\n// A person in the address book.\ntype Person struct {\n\t// The home address.\n\tAddress Address `json:\"address\"`\n\t// The age in years.\n\t// KCL default: 18\n\tAge *int64 `json:\"age,omitempty\"`\n\t// Known email addresses.\n\tEmails []string `json:\"emails,omitempty\"`\n\t// The unique identifier.\n\tId int64 `json:\"id\"`\n\t// The full name.\n\tName string `json:\"name\"`\n}\nfunc (s *Person) Validate() []string {\n\terrors := []string{}\n\treturn errors\n}\n\n// A schema with a union attribute.\ntype UnionS struct {\n\t// An int or a str.\n\tVal any `json:\"val\"`\n}\nfunc (s *UnionS) Validate() []string {\n\terrors := []string{}\n\treturn errors\n}\n\n"
+      }
+    },
+    {
+      "name": "generate_java",
+      "rpc": "KclService.GenerateJava",
+      "new_core": true,
+      "args": {
+        "parse_args": {
+          "paths": [
+            "tests/consistency/testdata/gen_openapi/main.k"
+          ]
+        },
+        "package": "com.example.dto"
+      },
+      "expect": {
+        "java_source": "package com.example.dto;\n\nimport java.util.ArrayList;\nimport java.util.List;\nimport java.util.Map;\nimport java.util.Objects;\n\n// Base schema carrying the shared identifier.\nclass Base {\n    // The unique identifier.\n    public long id;\n\n    @Override\n    public boolean equals(Object o) {\n        if (this == o) return true;\n        if (!(o instanceof Base)) return false;\n        Base other = (Base) o;\n        return Objects.equals(this.id, other.id);\n    }\n\n    @Override\n    public int hashCode() {\n        return Objects.hash(id);\n    }\n\n    public List<String> validate() {\n        List<String> errors = new ArrayList<>();\n        return errors;\n    }\n}\n\n// A postal address.\nclass Address {\n    // Arbitrary float coordinates keyed by name.\n    public Map<String, Double> geo;\n    // The street name.\n    public String street;\n    // The ZIP code.\n    public String zipCode;\n\n    @Override\n    public boolean equals(Object o) {\n        if (this == o) return true;\n        if (!(o instanceof Address)) return false;\n        Address other = (Address) o;\n        return Objects.equals(this.geo, other.geo)\n            && Objects.equals(this.street, other.street)\n            && Objects.equals(this.zipCode, other.zipCode);\n    }\n\n    @Override\n    public int hashCode() {\n        return Objects.hash(geo, street, zipCode);\n    }\n\n    public List<String> validate() {\n        List<String> errors = new ArrayList<>();\n        return errors;\n    }\n}\n\n// A person in the address book.\nclass Person {\n    // The home address.\n    public Address address;\n    // The age in years.\n    // KCL default: 18\n    public Long age;\n    // Known email addresses.\n    public List<String> emails;\n    // The unique identifier.\n    public long id;\n    // The full name.\n    public String name;\n\n    @Override\n    public boolean equals(Object o) {\n        if (this == o) return true;\n        if (!(o instanceof Person)) return false;\n        Person other = (Person) o;\n        return Objects.equals(this.address, other.address)\n            && Objects.equals(this.age, other.age)\n            && Objects.equals(this.emails, other.emails)\n            && Objects.equals(this.id, other.id)\n            && Objects.equals(this.name, other.name);\n    }\n\n    @Override\n    public int hashCode() {\n        return Objects.hash(address, age, emails, id, name);\n    }\n\n    public List<String> validate() {\n        List<String> errors = new ArrayList<>();\n        return errors;\n    }\n}\n\n// A schema with a union attribute.\nclass UnionS {\n    // An int or a str.\n    public Object val;\n\n    @Override\n    public boolean equals(Object o) {\n        if (this == o) return true;\n        if (!(o instanceof UnionS)) return false;\n        UnionS other = (UnionS) o;\n        return Objects.equals(this.val, other.val);\n    }\n\n    @Override\n    public int hashCode() {\n        return Objects.hash(val);\n    }\n\n    public List<String> validate() {\n        List<String> errors = new ArrayList<>();\n        return errors;\n    }\n}\n\n"
+      }
+    },
+    {
+      "name": "generate_typescript",
+      "rpc": "KclService.GenerateTypeScript",
+      "new_core": true,
+      "args": {
+        "parse_args": {
+          "paths": [
+            "tests/consistency/testdata/gen_openapi/main.k"
+          ]
+        }
+      },
+      "expect": {
+        "typescript_source": "// Base schema carrying the shared identifier.\nexport class Base {\n    // The unique identifier.\n    id!: number;\n\n    validate(): string[] {\n        const errors: string[] = [];\n        return errors;\n    }\n}\n\n// A postal address.\nexport class Address {\n    // Arbitrary float coordinates keyed by name.\n    geo!: Record<string, number>;\n    // The street name.\n    street!: string;\n    // The ZIP code.\n    zipCode!: string;\n\n    validate(): string[] {\n        const errors: string[] = [];\n        return errors;\n    }\n}\n\n// A person in the address book.\nexport class Person {\n    // The home address.\n    address!: Address;\n    // The age in years.\n    // KCL default: 18\n    age?: number;\n    // Known email addresses.\n    emails?: string[];\n    // The unique identifier.\n    id!: number;\n    // The full name.\n    name!: string;\n\n    validate(): string[] {\n        const errors: string[] = [];\n        return errors;\n    }\n}\n\n// A schema with a union attribute.\nexport class UnionS {\n    // An int or a str.\n    val!: any;\n\n    validate(): string[] {\n        const errors: string[] = [];\n        return errors;\n    }\n}\n\n"
+      }
     }
   ]
 }

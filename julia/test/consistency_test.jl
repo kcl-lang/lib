@@ -284,6 +284,18 @@ const _CONSISTENCY_ARG_BUILDERS = Dict{String,Function}(
     "KclService.GenerateProto" => node -> GenerateProtoArgs(
         parse_args = _consistency_parse_args(node["parse_args"]),
         package = _consistency_string(get(node, "package", ""))),
+    "KclService.GenerateRust" => node -> GenerateRustArgs(
+        parse_args = _consistency_parse_args(node["parse_args"])),
+    "KclService.GeneratePython" => node -> GeneratePythonArgs(
+        parse_args = _consistency_parse_args(node["parse_args"])),
+    "KclService.GenerateGo" => node -> GenerateGoArgs(
+        parse_args = _consistency_parse_args(node["parse_args"]),
+        package = _consistency_string(get(node, "package", ""))),
+    "KclService.GenerateJava" => node -> GenerateJavaArgs(
+        parse_args = _consistency_parse_args(node["parse_args"]),
+        package = _consistency_string(get(node, "package", ""))),
+    "KclService.GenerateTypeScript" => node -> GenerateTypeScriptArgs(
+        parse_args = _consistency_parse_args(node["parse_args"])),
     "KclService.GenerateDoc" => node -> GenerateDocArgs(
         parse_args = _consistency_parse_args(node["parse_args"]),
         format = _consistency_string(get(node, "format", ""))),
@@ -307,6 +319,11 @@ const _CONSISTENCY_RPCS = Dict(
     "KclService.GenerateKcl" => (GenerateKclArgs, generate_kcl),
     "KclService.GenerateOpenAPI" => (GenerateOpenAPIArgs, generate_openapi),
     "KclService.GenerateProto" => (GenerateProtoArgs, generate_proto),
+    "KclService.GenerateRust" => (GenerateRustArgs, generate_rust),
+    "KclService.GeneratePython" => (GeneratePythonArgs, generate_python),
+    "KclService.GenerateGo" => (GenerateGoArgs, generate_go),
+    "KclService.GenerateJava" => (GenerateJavaArgs, generate_java),
+    "KclService.GenerateTypeScript" => (GenerateTypeScriptArgs, generate_typescript),
     "KclService.GenerateDoc" => (GenerateDocArgs, generate_doc),
     "KclService.ParseFile" => (ParseFileArgs, parse_file),
     "KclService.ParseProgram" => (ParseProgramArgs, parse_program),
@@ -410,6 +427,11 @@ const _CONSISTENCY_DISPATCH = [
     "override_file",
     "load_settings_files",
     "update_dependencies_no_deps",
+    "generate_rust",
+    "generate_python",
+    "generate_go",
+    "generate_java",
+    "generate_typescript",
 ]
 
 """

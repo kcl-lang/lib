@@ -574,6 +574,41 @@ export interface GenerateDocResult {
 }
 /** Generate documentation from the schemas of a KCL package. */
 export declare function generateDoc(args: GenerateDocArgs): GenerateDocResult
+/** Message for generate Rust response. */
+export interface GenerateRustResult {
+  /** The generated Rust source. */
+  rustSource: string
+}
+/** Generate Rust source from the schemas of a KCL package. */
+export declare function generateRust(args: GenerateRustArgs): GenerateRustResult
+/** Message for generate Python response. */
+export interface GeneratePythonResult {
+  /** The generated Python source. */
+  pythonSource: string
+}
+/** Generate Python source from the schemas of a KCL package. */
+export declare function generatePython(args: GeneratePythonArgs): GeneratePythonResult
+/** Message for generate Go response. */
+export interface GenerateGoResult {
+  /** The generated Go source. */
+  goSource: string
+}
+/** Generate Go source from the schemas of a KCL package. */
+export declare function generateGo(args: GenerateGoArgs): GenerateGoResult
+/** Message for generate Java response. */
+export interface GenerateJavaResult {
+  /** The generated Java source. */
+  javaSource: string
+}
+/** Generate Java source from the schemas of a KCL package. */
+export declare function generateJava(args: GenerateJavaArgs): GenerateJavaResult
+/** Message for generate TypeScript response. */
+export interface GenerateTypeScriptResult {
+  /** The generated TypeScript source. */
+  typescriptSource: string
+}
+/** Generate TypeScript source from the schemas of a KCL package. */
+export declare function generateTypeScript(args: GenerateTypeScriptArgs): GenerateTypeScriptResult
 /**
  * Message for load package request arguments.
  * - paths: List of KCL files.
@@ -714,4 +749,24 @@ export declare class GenerateProtoArgs {
 /** Message for generate doc request arguments. */
 export declare class GenerateDocArgs {
   constructor(parseArgs?: ParseProgramArgs | undefined | null, format?: string | undefined | null)
+}
+/** Message for generate Rust request arguments. */
+export declare class GenerateRustArgs {
+  constructor(parseArgs?: ParseProgramArgs | undefined | null)
+}
+/** Message for generate Python request arguments. */
+export declare class GeneratePythonArgs {
+  constructor(parseArgs?: ParseProgramArgs | undefined | null)
+}
+/** Message for generate Go request arguments. */
+export declare class GenerateGoArgs {
+  constructor(parseArgs?: ParseProgramArgs | undefined | null, packageName?: string | undefined | null)
+}
+/** Message for generate Java request arguments. */
+export declare class GenerateJavaArgs {
+  constructor(parseArgs?: ParseProgramArgs | undefined | null, packageName?: string | undefined | null)
+}
+/** Message for generate TypeScript request arguments. */
+export declare class GenerateTypeScriptArgs {
+  constructor(parseArgs?: ParseProgramArgs | undefined | null)
 }
