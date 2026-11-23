@@ -1284,7 +1284,7 @@ test "consistency: the core advertises its RPC surface" {
     // Pin the registry size so a method cannot be dropped from the core
     // without this binding noticing -- `KclService.ListDepFiles` was removed
     // in v0.13.1, replaced by `LoadPackageResult.imports` / `kcl_mod` / `apps`.
-    try std.testing.expectEqual(@as(usize, 28), methods.count());
+    try std.testing.expectEqual(@as(usize, 33), methods.count());
 }
 
 test "consistency: ping" {

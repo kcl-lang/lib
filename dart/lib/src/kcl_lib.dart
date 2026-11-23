@@ -272,7 +272,7 @@ GenerateDocResult generateDoc(GenerateDocArgs args) => _invoke(
 PingResult ping(PingArgs args) =>
     _invoke('KclService.Ping', args, PingResult.fromBuffer);
 
-/// Lists every RPC name known to the dispatcher — 28 of them.
+/// Lists every RPC name known to the dispatcher — 33 of them.
 ///
 /// Reports the fully-qualified names, e.g. `KclService.ExecProgram` and
 /// `BuiltinService.ListMethod` — i.e. its own entry appears under the

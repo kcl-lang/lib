@@ -885,7 +885,7 @@ void main() {
       // Pin the registry size so a method cannot be dropped from the core
       // without this binding noticing -- `KclService.ListDepFiles` was removed
       // in v0.13.1, replaced by `LoadPackageResult.imports` / `kcl_mod` / `apps`.
-      expect(methods, hasLength(28));
+      expect(methods, hasLength(33));
     });
 
     // One test per manifest case, mirroring ConsistencyTest.java.

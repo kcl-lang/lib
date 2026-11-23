@@ -397,7 +397,7 @@
         "has_kclservice_ping": true,
         "has_kclservice_parse_program": true,
         "has_builtinservice_list_method": true,
-        "method_count": 28,
+        "method_count": 33,
         "has_empty_name": false
       }
     },
