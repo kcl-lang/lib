@@ -452,6 +452,30 @@ typedef struct _ExecProgramResult {
     pb_callback_t sourcemap;
 } ExecProgramResult;
 
+/* Message for build program request arguments. */
+typedef struct _BuildProgramArgs {
+    /* Arguments for executing the program. */
+    bool has_exec_args;
+    ExecProgramArgs exec_args;
+    /* Output path. */
+    pb_callback_t output;
+} BuildProgramArgs;
+
+/* Message for build program response. */
+typedef struct _BuildProgramResult {
+    /* Path of the built program. */
+    pb_callback_t path;
+} BuildProgramResult;
+
+/* Message for execute artifact request arguments. */
+typedef struct _ExecArtifactArgs {
+    /* Path of the artifact. */
+    pb_callback_t path;
+    /* Arguments for executing the program. */
+    bool has_exec_args;
+    ExecProgramArgs exec_args;
+} ExecArtifactArgs;
+
 /* Message for format code request arguments. */
 typedef struct _FormatCodeArgs {
     /* Source code to be formatted. */
@@ -764,6 +788,20 @@ typedef struct _TestArgs {
  the source file path and line number. The aggregated result is returned
  in [TestResult.coverage]. Defaults to false. */
     bool coverage;
+    /* Flag to evaluate each test package once and run all of its test cases in
+ that one evaluation, instead of evaluating the package again for every
+ case. Each case still reports its own result, error and log, and a case
+ that fails hands the next one a freshly evaluated package.
+ NOTE: cases share the values the package defines. A case that passes
+ after mutating one in place, e.g. a schema instance it got as a lambda
+ argument, changes what the cases after it see, and planning, which runs
+ before the cases, does not see the change; a suite whose cases rely on
+ starting from the package as it is defined must not set this flag.
+ Case durations then exclude the evaluation of the package, a planning
+ error is always reported at the end of the generated main file, and
+ that file selects no case, so the coverage counts each of its lines
+ once. Defaults to false. */
+    bool eval_once;
 } TestArgs;
 
 /* Message representing information about a single test case. */
@@ -932,6 +970,80 @@ typedef struct _GenerateProtoResult {
     pb_callback_t proto;
 } GenerateProtoResult;
 
+/* Message for Rust DTO generation request arguments. */
+typedef struct _GenerateRustArgs {
+    /* Arguments for parsing the program whose schemas are exported. */
+    bool has_parse_args;
+    ParseProgramArgs parse_args;
+} GenerateRustArgs;
+
+/* Message for Rust DTO generation response. */
+typedef struct _GenerateRustResult {
+    /* The generated Rust source. */
+    pb_callback_t rust_source;
+} GenerateRustResult;
+
+/* Message for Python DTO generation request arguments. */
+typedef struct _GeneratePythonArgs {
+    /* Arguments for parsing the program whose schemas are exported. */
+    bool has_parse_args;
+    ParseProgramArgs parse_args;
+} GeneratePythonArgs;
+
+/* Message for Python DTO generation response. */
+typedef struct _GeneratePythonResult {
+    /* The generated Python source. */
+    pb_callback_t python_source;
+} GeneratePythonResult;
+
+/* Message for Go DTO generation request arguments. */
+typedef struct _GenerateGoArgs {
+    /* Arguments for parsing the program whose schemas are exported. */
+    bool has_parse_args;
+    ParseProgramArgs parse_args;
+    /* Go package name for the generated file's `package` clause, e.g.
+ "dto". Empty defaults to "generated" — Go requires a package clause,
+ unlike GenerateProto's optional `package` field. */
+    pb_callback_t package;
+} GenerateGoArgs;
+
+/* Message for Go DTO generation response. */
+typedef struct _GenerateGoResult {
+    /* The generated Go source. */
+    pb_callback_t go_source;
+} GenerateGoResult;
+
+/* Message for Java DTO generation request arguments. */
+typedef struct _GenerateJavaArgs {
+    /* Arguments for parsing the program whose schemas are exported. */
+    bool has_parse_args;
+    ParseProgramArgs parse_args;
+    /* Java package name for the generated file's `package` clause, e.g.
+ "com.example.dto". Empty omits the package clause entirely (valid
+ Java — the "default package") rather than defaulting to a synthetic
+ name as GenerateGo does, since Java (unlike Go) does not require one. */
+    pb_callback_t package;
+} GenerateJavaArgs;
+
+/* Message for Java DTO generation response. */
+typedef struct _GenerateJavaResult {
+    /* The generated Java source. */
+    pb_callback_t java_source;
+} GenerateJavaResult;
+
+/* Message for TypeScript DTO generation request arguments. */
+typedef struct _GenerateTypeScriptArgs {
+    /* Arguments for parsing the program whose schemas are exported. */
+    bool has_parse_args;
+    ParseProgramArgs parse_args;
+} GenerateTypeScriptArgs;
+
+/* Message for TypeScript DTO generation response. */
+typedef struct _GenerateTypeScriptResult {
+    /* The generated TypeScript source. */
+    pb_callback_t typescript_source;
+} GenerateTypeScriptResult;
+
 /* Message for generate doc request arguments. */
 typedef struct _GenerateDocArgs {
     /* Arguments for parsing the program whose schemas are documented. */
@@ -987,6 +1099,8 @@ typedef struct _KclType {
     pb_callback_t function;
     /* Optional schema index signature */
     pb_callback_t index_signature;
+    /* Schema CheckExpr AST nodes serialized as JSON for code generators. */
+    pb_callback_t checks_json;
 } KclType;
 
 /* Message representing a symbol in KCL. */
@@ -1130,6 +1244,9 @@ extern "C" {
 #define ScopeIndex_init_default                  {0, 0, {{NULL}, NULL}}
 #define ExecProgramArgs_init_default             {{{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, 0, 0, 0, 0, 0, 0, 0, {{NULL}, NULL}, 0, 0, 0, {{NULL}, NULL}, 0, {{NULL}, NULL}, {{NULL}, NULL}, 0, {{NULL}, NULL}}
 #define ExecProgramResult_init_default           {{{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}}
+#define BuildProgramArgs_init_default            {false, ExecProgramArgs_init_default, {{NULL}, NULL}}
+#define BuildProgramResult_init_default          {{{NULL}, NULL}}
+#define ExecArtifactArgs_init_default            {{{NULL}, NULL}, false, ExecProgramArgs_init_default}
 #define FormatCodeArgs_init_default              {{{NULL}, NULL}}
 #define FormatCodeResult_init_default            {{{NULL}, NULL}}
 #define FormatPathArgs_init_default              {{{NULL}, NULL}, 0}
@@ -1164,7 +1281,7 @@ extern "C" {
 #define RenameCodeArgs_SourceCodesEntry_init_default {{{NULL}, NULL}, {{NULL}, NULL}}
 #define RenameCodeResult_init_default            {{{NULL}, NULL}}
 #define RenameCodeResult_ChangedCodesEntry_init_default {{{NULL}, NULL}, {{NULL}, NULL}}
-#define TestArgs_init_default                    {false, ExecProgramArgs_init_default, {{NULL}, NULL}, {{NULL}, NULL}, 0, 0}
+#define TestArgs_init_default                    {false, ExecProgramArgs_init_default, {{NULL}, NULL}, {{NULL}, NULL}, 0, 0, 0}
 #define TestResult_init_default                  {{{NULL}, NULL}, false, TestCoverageReport_init_default}
 #define TestCaseInfo_init_default                {{{NULL}, NULL}, {{NULL}, NULL}, 0, {{NULL}, NULL}, {{NULL}, NULL}}
 #define TestCaseInfo_LineHitsEntry_init_default  {{{NULL}, NULL}, 0}
@@ -1185,9 +1302,19 @@ extern "C" {
 #define GenerateOpenAPIResult_init_default       {{{NULL}, NULL}}
 #define GenerateProtoArgs_init_default           {false, ParseProgramArgs_init_default, {{NULL}, NULL}}
 #define GenerateProtoResult_init_default         {{{NULL}, NULL}}
+#define GenerateRustArgs_init_default            {false, ParseProgramArgs_init_default}
+#define GenerateRustResult_init_default          {{{NULL}, NULL}}
+#define GeneratePythonArgs_init_default          {false, ParseProgramArgs_init_default}
+#define GeneratePythonResult_init_default        {{{NULL}, NULL}}
+#define GenerateGoArgs_init_default              {false, ParseProgramArgs_init_default, {{NULL}, NULL}}
+#define GenerateGoResult_init_default            {{{NULL}, NULL}}
+#define GenerateJavaArgs_init_default            {false, ParseProgramArgs_init_default, {{NULL}, NULL}}
+#define GenerateJavaResult_init_default          {{{NULL}, NULL}}
+#define GenerateTypeScriptArgs_init_default      {false, ParseProgramArgs_init_default}
+#define GenerateTypeScriptResult_init_default    {{{NULL}, NULL}}
 #define GenerateDocArgs_init_default             {false, ParseProgramArgs_init_default, {{NULL}, NULL}}
 #define GenerateDocResult_init_default           {{{NULL}, NULL}}
-#define KclType_init_default                     {{{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}}
+#define KclType_init_default                     {{{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}}
 #define KclType_PropertiesEntry_init_default     {{{NULL}, NULL}, false, KclType_init_default}
 #define KclType_ExamplesEntry_init_default       {{{NULL}, NULL}, false, Example_init_default}
 #define FunctionType_init_default                {{{NULL}, NULL}, false, KclType_init_default}
@@ -1238,6 +1365,9 @@ extern "C" {
 #define ScopeIndex_init_zero                     {0, 0, {{NULL}, NULL}}
 #define ExecProgramArgs_init_zero                {{{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, 0, 0, 0, 0, 0, 0, 0, {{NULL}, NULL}, 0, 0, 0, {{NULL}, NULL}, 0, {{NULL}, NULL}, {{NULL}, NULL}, 0, {{NULL}, NULL}}
 #define ExecProgramResult_init_zero              {{{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}}
+#define BuildProgramArgs_init_zero               {false, ExecProgramArgs_init_zero, {{NULL}, NULL}}
+#define BuildProgramResult_init_zero             {{{NULL}, NULL}}
+#define ExecArtifactArgs_init_zero               {{{NULL}, NULL}, false, ExecProgramArgs_init_zero}
 #define FormatCodeArgs_init_zero                 {{{NULL}, NULL}}
 #define FormatCodeResult_init_zero               {{{NULL}, NULL}}
 #define FormatPathArgs_init_zero                 {{{NULL}, NULL}, 0}
@@ -1272,7 +1402,7 @@ extern "C" {
 #define RenameCodeArgs_SourceCodesEntry_init_zero {{{NULL}, NULL}, {{NULL}, NULL}}
 #define RenameCodeResult_init_zero               {{{NULL}, NULL}}
 #define RenameCodeResult_ChangedCodesEntry_init_zero {{{NULL}, NULL}, {{NULL}, NULL}}
-#define TestArgs_init_zero                       {false, ExecProgramArgs_init_zero, {{NULL}, NULL}, {{NULL}, NULL}, 0, 0}
+#define TestArgs_init_zero                       {false, ExecProgramArgs_init_zero, {{NULL}, NULL}, {{NULL}, NULL}, 0, 0, 0}
 #define TestResult_init_zero                     {{{NULL}, NULL}, false, TestCoverageReport_init_zero}
 #define TestCaseInfo_init_zero                   {{{NULL}, NULL}, {{NULL}, NULL}, 0, {{NULL}, NULL}, {{NULL}, NULL}}
 #define TestCaseInfo_LineHitsEntry_init_zero     {{{NULL}, NULL}, 0}
@@ -1293,9 +1423,19 @@ extern "C" {
 #define GenerateOpenAPIResult_init_zero          {{{NULL}, NULL}}
 #define GenerateProtoArgs_init_zero              {false, ParseProgramArgs_init_zero, {{NULL}, NULL}}
 #define GenerateProtoResult_init_zero            {{{NULL}, NULL}}
+#define GenerateRustArgs_init_zero               {false, ParseProgramArgs_init_zero}
+#define GenerateRustResult_init_zero             {{{NULL}, NULL}}
+#define GeneratePythonArgs_init_zero             {false, ParseProgramArgs_init_zero}
+#define GeneratePythonResult_init_zero           {{{NULL}, NULL}}
+#define GenerateGoArgs_init_zero                 {false, ParseProgramArgs_init_zero, {{NULL}, NULL}}
+#define GenerateGoResult_init_zero               {{{NULL}, NULL}}
+#define GenerateJavaArgs_init_zero               {false, ParseProgramArgs_init_zero, {{NULL}, NULL}}
+#define GenerateJavaResult_init_zero             {{{NULL}, NULL}}
+#define GenerateTypeScriptArgs_init_zero         {false, ParseProgramArgs_init_zero}
+#define GenerateTypeScriptResult_init_zero       {{{NULL}, NULL}}
 #define GenerateDocArgs_init_zero                {false, ParseProgramArgs_init_zero, {{NULL}, NULL}}
 #define GenerateDocResult_init_zero              {{{NULL}, NULL}}
-#define KclType_init_zero                        {{{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}}
+#define KclType_init_zero                        {{{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}}
 #define KclType_PropertiesEntry_init_zero        {{{NULL}, NULL}, false, KclType_init_zero}
 #define KclType_ExamplesEntry_init_zero          {{{NULL}, NULL}, false, Example_init_zero}
 #define FunctionType_init_zero                   {{{NULL}, NULL}, false, KclType_init_zero}
@@ -1439,6 +1579,11 @@ extern "C" {
 #define ExecProgramResult_log_message_tag        3
 #define ExecProgramResult_err_message_tag        4
 #define ExecProgramResult_sourcemap_tag          5
+#define BuildProgramArgs_exec_args_tag           1
+#define BuildProgramArgs_output_tag              2
+#define BuildProgramResult_path_tag              1
+#define ExecArtifactArgs_path_tag                1
+#define ExecArtifactArgs_exec_args_tag           2
 #define FormatCodeArgs_source_tag                1
 #define FormatCodeResult_formatted_tag           1
 #define FormatPathArgs_path_tag                  1
@@ -1527,6 +1672,7 @@ extern "C" {
 #define TestArgs_run_regexp_tag                  3
 #define TestArgs_fail_fast_tag                   4
 #define TestArgs_coverage_tag                    5
+#define TestArgs_eval_once_tag                   6
 #define TestCaseInfo_name_tag                    1
 #define TestCaseInfo_error_tag                   2
 #define TestCaseInfo_duration_tag                3
@@ -1567,6 +1713,18 @@ extern "C" {
 #define GenerateProtoArgs_parse_args_tag         1
 #define GenerateProtoArgs_package_tag            2
 #define GenerateProtoResult_proto_tag            1
+#define GenerateRustArgs_parse_args_tag          1
+#define GenerateRustResult_rust_source_tag       1
+#define GeneratePythonArgs_parse_args_tag        1
+#define GeneratePythonResult_python_source_tag   1
+#define GenerateGoArgs_parse_args_tag            1
+#define GenerateGoArgs_package_tag               2
+#define GenerateGoResult_go_source_tag           1
+#define GenerateJavaArgs_parse_args_tag          1
+#define GenerateJavaArgs_package_tag             2
+#define GenerateJavaResult_java_source_tag       1
+#define GenerateTypeScriptArgs_parse_args_tag    1
+#define GenerateTypeScriptResult_typescript_source_tag 1
 #define GenerateDocArgs_parse_args_tag           1
 #define GenerateDocArgs_format_tag               2
 #define GenerateDocResult_content_tag            1
@@ -1588,6 +1746,7 @@ extern "C" {
 #define KclType_base_schema_tag                  16
 #define KclType_function_tag                     17
 #define KclType_index_signature_tag              18
+#define KclType_checks_json_tag                  19
 #define Symbol_ty_tag                            1
 #define Symbol_name_tag                          2
 #define Symbol_owner_tag                         3
@@ -1976,6 +2135,25 @@ X(a, CALLBACK, OPTIONAL, STRING,   sourcemap,         5)
 #define ExecProgramResult_CALLBACK pb_default_field_callback
 #define ExecProgramResult_DEFAULT NULL
 
+#define BuildProgramArgs_FIELDLIST(X, a) \
+X(a, STATIC,   OPTIONAL, MESSAGE,  exec_args,         1) \
+X(a, CALLBACK, SINGULAR, STRING,   output,            2)
+#define BuildProgramArgs_CALLBACK pb_default_field_callback
+#define BuildProgramArgs_DEFAULT NULL
+#define BuildProgramArgs_exec_args_MSGTYPE ExecProgramArgs
+
+#define BuildProgramResult_FIELDLIST(X, a) \
+X(a, CALLBACK, SINGULAR, STRING,   path,              1)
+#define BuildProgramResult_CALLBACK pb_default_field_callback
+#define BuildProgramResult_DEFAULT NULL
+
+#define ExecArtifactArgs_FIELDLIST(X, a) \
+X(a, CALLBACK, SINGULAR, STRING,   path,              1) \
+X(a, STATIC,   OPTIONAL, MESSAGE,  exec_args,         2)
+#define ExecArtifactArgs_CALLBACK pb_default_field_callback
+#define ExecArtifactArgs_DEFAULT NULL
+#define ExecArtifactArgs_exec_args_MSGTYPE ExecProgramArgs
+
 #define FormatCodeArgs_FIELDLIST(X, a) \
 X(a, CALLBACK, SINGULAR, STRING,   source,            1)
 #define FormatCodeArgs_CALLBACK pb_default_field_callback
@@ -2220,7 +2398,8 @@ X(a, STATIC,   OPTIONAL, MESSAGE,  exec_args,         1) \
 X(a, CALLBACK, REPEATED, STRING,   pkg_list,          2) \
 X(a, CALLBACK, SINGULAR, STRING,   run_regexp,        3) \
 X(a, STATIC,   SINGULAR, BOOL,     fail_fast,         4) \
-X(a, STATIC,   SINGULAR, BOOL,     coverage,          5)
+X(a, STATIC,   SINGULAR, BOOL,     coverage,          5) \
+X(a, STATIC,   SINGULAR, BOOL,     eval_once,         6)
 #define TestArgs_CALLBACK pb_default_field_callback
 #define TestArgs_DEFAULT NULL
 #define TestArgs_exec_args_MSGTYPE ExecProgramArgs
@@ -2357,6 +2536,63 @@ X(a, CALLBACK, SINGULAR, STRING,   proto,             1)
 #define GenerateProtoResult_CALLBACK pb_default_field_callback
 #define GenerateProtoResult_DEFAULT NULL
 
+#define GenerateRustArgs_FIELDLIST(X, a) \
+X(a, STATIC,   OPTIONAL, MESSAGE,  parse_args,        1)
+#define GenerateRustArgs_CALLBACK NULL
+#define GenerateRustArgs_DEFAULT NULL
+#define GenerateRustArgs_parse_args_MSGTYPE ParseProgramArgs
+
+#define GenerateRustResult_FIELDLIST(X, a) \
+X(a, CALLBACK, SINGULAR, STRING,   rust_source,       1)
+#define GenerateRustResult_CALLBACK pb_default_field_callback
+#define GenerateRustResult_DEFAULT NULL
+
+#define GeneratePythonArgs_FIELDLIST(X, a) \
+X(a, STATIC,   OPTIONAL, MESSAGE,  parse_args,        1)
+#define GeneratePythonArgs_CALLBACK NULL
+#define GeneratePythonArgs_DEFAULT NULL
+#define GeneratePythonArgs_parse_args_MSGTYPE ParseProgramArgs
+
+#define GeneratePythonResult_FIELDLIST(X, a) \
+X(a, CALLBACK, SINGULAR, STRING,   python_source,     1)
+#define GeneratePythonResult_CALLBACK pb_default_field_callback
+#define GeneratePythonResult_DEFAULT NULL
+
+#define GenerateGoArgs_FIELDLIST(X, a) \
+X(a, STATIC,   OPTIONAL, MESSAGE,  parse_args,        1) \
+X(a, CALLBACK, SINGULAR, STRING,   package,           2)
+#define GenerateGoArgs_CALLBACK pb_default_field_callback
+#define GenerateGoArgs_DEFAULT NULL
+#define GenerateGoArgs_parse_args_MSGTYPE ParseProgramArgs
+
+#define GenerateGoResult_FIELDLIST(X, a) \
+X(a, CALLBACK, SINGULAR, STRING,   go_source,         1)
+#define GenerateGoResult_CALLBACK pb_default_field_callback
+#define GenerateGoResult_DEFAULT NULL
+
+#define GenerateJavaArgs_FIELDLIST(X, a) \
+X(a, STATIC,   OPTIONAL, MESSAGE,  parse_args,        1) \
+X(a, CALLBACK, SINGULAR, STRING,   package,           2)
+#define GenerateJavaArgs_CALLBACK pb_default_field_callback
+#define GenerateJavaArgs_DEFAULT NULL
+#define GenerateJavaArgs_parse_args_MSGTYPE ParseProgramArgs
+
+#define GenerateJavaResult_FIELDLIST(X, a) \
+X(a, CALLBACK, SINGULAR, STRING,   java_source,       1)
+#define GenerateJavaResult_CALLBACK pb_default_field_callback
+#define GenerateJavaResult_DEFAULT NULL
+
+#define GenerateTypeScriptArgs_FIELDLIST(X, a) \
+X(a, STATIC,   OPTIONAL, MESSAGE,  parse_args,        1)
+#define GenerateTypeScriptArgs_CALLBACK NULL
+#define GenerateTypeScriptArgs_DEFAULT NULL
+#define GenerateTypeScriptArgs_parse_args_MSGTYPE ParseProgramArgs
+
+#define GenerateTypeScriptResult_FIELDLIST(X, a) \
+X(a, CALLBACK, SINGULAR, STRING,   typescript_source,   1)
+#define GenerateTypeScriptResult_CALLBACK pb_default_field_callback
+#define GenerateTypeScriptResult_DEFAULT NULL
+
 #define GenerateDocArgs_FIELDLIST(X, a) \
 X(a, STATIC,   OPTIONAL, MESSAGE,  parse_args,        1) \
 X(a, CALLBACK, SINGULAR, STRING,   format,            2)
@@ -2387,7 +2623,8 @@ X(a, CALLBACK, SINGULAR, STRING,   description,      14) \
 X(a, CALLBACK, REPEATED, MESSAGE,  examples,         15) \
 X(a, CALLBACK, OPTIONAL, MESSAGE,  base_schema,      16) \
 X(a, CALLBACK, OPTIONAL, MESSAGE,  function,         17) \
-X(a, CALLBACK, OPTIONAL, MESSAGE,  index_signature,  18)
+X(a, CALLBACK, OPTIONAL, MESSAGE,  index_signature,  18) \
+X(a, CALLBACK, REPEATED, STRING,   checks_json,      19)
 #define KclType_CALLBACK pb_default_field_callback
 #define KclType_DEFAULT NULL
 #define KclType_union_types_MSGTYPE KclType
@@ -2502,6 +2739,9 @@ extern const pb_msgdesc_t SymbolIndex_msg;
 extern const pb_msgdesc_t ScopeIndex_msg;
 extern const pb_msgdesc_t ExecProgramArgs_msg;
 extern const pb_msgdesc_t ExecProgramResult_msg;
+extern const pb_msgdesc_t BuildProgramArgs_msg;
+extern const pb_msgdesc_t BuildProgramResult_msg;
+extern const pb_msgdesc_t ExecArtifactArgs_msg;
 extern const pb_msgdesc_t FormatCodeArgs_msg;
 extern const pb_msgdesc_t FormatCodeResult_msg;
 extern const pb_msgdesc_t FormatPathArgs_msg;
@@ -2557,6 +2797,16 @@ extern const pb_msgdesc_t GenerateOpenAPIArgs_msg;
 extern const pb_msgdesc_t GenerateOpenAPIResult_msg;
 extern const pb_msgdesc_t GenerateProtoArgs_msg;
 extern const pb_msgdesc_t GenerateProtoResult_msg;
+extern const pb_msgdesc_t GenerateRustArgs_msg;
+extern const pb_msgdesc_t GenerateRustResult_msg;
+extern const pb_msgdesc_t GeneratePythonArgs_msg;
+extern const pb_msgdesc_t GeneratePythonResult_msg;
+extern const pb_msgdesc_t GenerateGoArgs_msg;
+extern const pb_msgdesc_t GenerateGoResult_msg;
+extern const pb_msgdesc_t GenerateJavaArgs_msg;
+extern const pb_msgdesc_t GenerateJavaResult_msg;
+extern const pb_msgdesc_t GenerateTypeScriptArgs_msg;
+extern const pb_msgdesc_t GenerateTypeScriptResult_msg;
 extern const pb_msgdesc_t GenerateDocArgs_msg;
 extern const pb_msgdesc_t GenerateDocResult_msg;
 extern const pb_msgdesc_t KclType_msg;
@@ -2612,6 +2862,9 @@ extern const pb_msgdesc_t Example_msg;
 #define ScopeIndex_fields &ScopeIndex_msg
 #define ExecProgramArgs_fields &ExecProgramArgs_msg
 #define ExecProgramResult_fields &ExecProgramResult_msg
+#define BuildProgramArgs_fields &BuildProgramArgs_msg
+#define BuildProgramResult_fields &BuildProgramResult_msg
+#define ExecArtifactArgs_fields &ExecArtifactArgs_msg
 #define FormatCodeArgs_fields &FormatCodeArgs_msg
 #define FormatCodeResult_fields &FormatCodeResult_msg
 #define FormatPathArgs_fields &FormatPathArgs_msg
@@ -2667,6 +2920,16 @@ extern const pb_msgdesc_t Example_msg;
 #define GenerateOpenAPIResult_fields &GenerateOpenAPIResult_msg
 #define GenerateProtoArgs_fields &GenerateProtoArgs_msg
 #define GenerateProtoResult_fields &GenerateProtoResult_msg
+#define GenerateRustArgs_fields &GenerateRustArgs_msg
+#define GenerateRustResult_fields &GenerateRustResult_msg
+#define GeneratePythonArgs_fields &GeneratePythonArgs_msg
+#define GeneratePythonResult_fields &GeneratePythonResult_msg
+#define GenerateGoArgs_fields &GenerateGoArgs_msg
+#define GenerateGoResult_fields &GenerateGoResult_msg
+#define GenerateJavaArgs_fields &GenerateJavaArgs_msg
+#define GenerateJavaResult_fields &GenerateJavaResult_msg
+#define GenerateTypeScriptArgs_fields &GenerateTypeScriptArgs_msg
+#define GenerateTypeScriptResult_fields &GenerateTypeScriptResult_msg
 #define GenerateDocArgs_fields &GenerateDocArgs_msg
 #define GenerateDocResult_fields &GenerateDocResult_msg
 #define KclType_fields &KclType_msg
@@ -2720,6 +2983,9 @@ extern const pb_msgdesc_t Example_msg;
 /* ScopeIndex_size depends on runtime parameters */
 /* ExecProgramArgs_size depends on runtime parameters */
 /* ExecProgramResult_size depends on runtime parameters */
+/* BuildProgramArgs_size depends on runtime parameters */
+/* BuildProgramResult_size depends on runtime parameters */
+/* ExecArtifactArgs_size depends on runtime parameters */
 /* FormatCodeArgs_size depends on runtime parameters */
 /* FormatCodeResult_size depends on runtime parameters */
 /* FormatPathArgs_size depends on runtime parameters */
@@ -2772,6 +3038,16 @@ extern const pb_msgdesc_t Example_msg;
 /* GenerateOpenAPIResult_size depends on runtime parameters */
 /* GenerateProtoArgs_size depends on runtime parameters */
 /* GenerateProtoResult_size depends on runtime parameters */
+/* GenerateRustArgs_size depends on runtime parameters */
+/* GenerateRustResult_size depends on runtime parameters */
+/* GeneratePythonArgs_size depends on runtime parameters */
+/* GeneratePythonResult_size depends on runtime parameters */
+/* GenerateGoArgs_size depends on runtime parameters */
+/* GenerateGoResult_size depends on runtime parameters */
+/* GenerateJavaArgs_size depends on runtime parameters */
+/* GenerateJavaResult_size depends on runtime parameters */
+/* GenerateTypeScriptArgs_size depends on runtime parameters */
+/* GenerateTypeScriptResult_size depends on runtime parameters */
 /* GenerateDocArgs_size depends on runtime parameters */
 /* GenerateDocResult_size depends on runtime parameters */
 /* KclType_size depends on runtime parameters */

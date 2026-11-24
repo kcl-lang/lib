@@ -9,11 +9,6 @@ crate-type = ["cdylib", "staticlib"]
 doc = false
 
 [dependencies]
-# Pinned to the revision every other binding resolves to, rather than to an
-# older one. At 842b02b this crate predates the six RPCs added after
-# `FormatTestReport` (`GenerateToml`, `GenerateKcl`, `GenerateOpenAPI`,
-# `GenerateProto`, `GenerateDoc`, `FormatTestReport`), so the C binding could
-# not dispatch a third of `spec.proto` no matter what the caller asked for --
-# and the cross-language consistency manifest, which every runner reads, is
-# generated against a core that has them.
-kcl-api = { git = "https://github.com/kcl-lang/kcl", version = "0.13.0", rev = "3ec296a910e811945b384f2958ab352f148b571a" }
+# Same tag as every other binding. An older rev (this crate used to pin
+# 3ec296a / kcl 0.13.0) predates RPCs the consistency manifest calls.
+kcl-api = { git = "https://github.com/kcl-lang/kcl", version = "0.13.3", tag = "v0.13.3" }

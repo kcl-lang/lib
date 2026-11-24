@@ -775,6 +775,33 @@ final class ConsistencyTest extends TestCase
                     'format' => $case['args']['format'] ?? '',
                 ])->getContent(),
             ],
+            'KclService.GenerateRust' => fn (array $case): array => [
+                'rust_source' => $client->generateRust([
+                    'parse_args' => $this->parseArgs($case['args']['parse_args'] ?? []),
+                ])->getRustSource(),
+            ],
+            'KclService.GeneratePython' => fn (array $case): array => [
+                'python_source' => $client->generatePython([
+                    'parse_args' => $this->parseArgs($case['args']['parse_args'] ?? []),
+                ])->getPythonSource(),
+            ],
+            'KclService.GenerateGo' => fn (array $case): array => [
+                'go_source' => $client->generateGo([
+                    'parse_args' => $this->parseArgs($case['args']['parse_args'] ?? []),
+                    'package' => $case['args']['package'] ?? '',
+                ])->getGoSource(),
+            ],
+            'KclService.GenerateJava' => fn (array $case): array => [
+                'java_source' => $client->generateJava([
+                    'parse_args' => $this->parseArgs($case['args']['parse_args'] ?? []),
+                    'package' => $case['args']['package'] ?? '',
+                ])->getJavaSource(),
+            ],
+            'KclService.GenerateTypeScript' => fn (array $case): array => [
+                'typescript_source' => $client->generateTypeScript([
+                    'parse_args' => $this->parseArgs($case['args']['parse_args'] ?? []),
+                ])->getTypescriptSource(),
+            ],
             'KclService.ParseFile' => function (array $case) use ($client): array {
                 $result = $client->parseFile($this->parseFileArgs($case['args']));
                 return [
@@ -912,6 +939,7 @@ final class ConsistencyTest extends TestCase
                     'run_regexp' => $case['args']['run_regexp'] ?? '',
                     'fail_fast' => $case['args']['fail_fast'] ?? false,
                     'coverage' => $case['args']['coverage'] ?? false,
+                    'eval_once' => $case['args']['eval_once'] ?? false,
                 ]);
                 return [
                     'names' => self::sortedList($result->getInfo(), 'getName'),
@@ -1095,6 +1123,31 @@ final class ConsistencyTest extends TestCase
         $this->assertCase('generate_doc_md');
     }
 
+    public function testGenerateRust(): void
+    {
+        $this->assertCase('generate_rust');
+    }
+
+    public function testGeneratePython(): void
+    {
+        $this->assertCase('generate_python');
+    }
+
+    public function testGenerateGo(): void
+    {
+        $this->assertCase('generate_go');
+    }
+
+    public function testGenerateJava(): void
+    {
+        $this->assertCase('generate_java');
+    }
+
+    public function testGenerateTypeScript(): void
+    {
+        $this->assertCase('generate_typescript');
+    }
+
     public function testParseFile(): void
     {
         $this->assertCase('parse_file');
@@ -1195,7 +1248,8 @@ final class ConsistencyTest extends TestCase
             'get_schema_type_mapping_under_path', 'get_version', 'list_method',
             'lint_path_clean', 'lint_path_with_errors', 'format_path_dry_run',
             'test_run', 'override_file', 'load_settings_files',
-            'update_dependencies_no_deps',
+            'update_dependencies_no_deps', 'generate_rust', 'generate_python',
+            'generate_go', 'generate_java', 'generate_typescript',
         ];
         $missing = [];
         foreach (self::manifest()['cases'] as $case) {
@@ -1204,7 +1258,7 @@ final class ConsistencyTest extends TestCase
             }
         }
         sort($missing);
-        $this->assertCount(29, self::manifest()['cases']);
+        $this->assertCount(34, self::manifest()['cases']);
         $this->assertSame(
             [],
             $missing,

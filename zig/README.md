@@ -188,8 +188,10 @@ so the reply is identical either way.
   `KclService.Ping`. The core registers exactly two RPCs under the
   `BuiltinService` name `spec.proto` gives them — `Ping` and `ListMethod` —
   and every other RPC under `KclService`. There is no `KclService.ListMethod`
-  alias, so that wrapper cannot fall back to it; `listMethod` returns all 28
-  registered names.
+  alias, so that wrapper cannot fall back to it; `listMethod` returns all 33
+  names the v0.13.3 core registers. Five of those (`GenerateRust`,
+  `GeneratePython`, `GenerateGo`, `GenerateJava`, `GenerateTypeScript`) are
+  not wrapped by this binding.
 + `execProgram`, `validateCode`, and the `KclService.Test` wrapper
   (`@"test"`) are not thread safe, mirroring the spec. The plugin
   registry is process-wide for the same reason; the runtime releases its

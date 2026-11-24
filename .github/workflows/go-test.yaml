@@ -34,9 +34,10 @@ jobs:
             runner: macos-15-intel
             cgo_enabled: 0
 
-          - os: macos-14
-            runner: macos-14
-            cgo_enabled: 0
+          # macos-14 is not in this matrix. Hosted macos-14 cancels in a few
+          # seconds (the `test (macos-14, macos-14, 0)` cell) and does not run
+          # the suite. Intel coverage stays on macos-15-intel; Apple Silicon
+          # stays on macos-latest.
 
           - os: macos-latest
             runner: macos-latest

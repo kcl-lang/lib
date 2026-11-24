@@ -132,6 +132,15 @@ PB_BIND(ExecProgramArgs, ExecProgramArgs, 2)
 PB_BIND(ExecProgramResult, ExecProgramResult, AUTO)
 
 
+PB_BIND(BuildProgramArgs, BuildProgramArgs, 2)
+
+
+PB_BIND(BuildProgramResult, BuildProgramResult, AUTO)
+
+
+PB_BIND(ExecArtifactArgs, ExecArtifactArgs, 2)
+
+
 PB_BIND(FormatCodeArgs, FormatCodeArgs, AUTO)
 
 
@@ -295,6 +304,36 @@ PB_BIND(GenerateProtoArgs, GenerateProtoArgs, AUTO)
 
 
 PB_BIND(GenerateProtoResult, GenerateProtoResult, AUTO)
+
+
+PB_BIND(GenerateRustArgs, GenerateRustArgs, AUTO)
+
+
+PB_BIND(GenerateRustResult, GenerateRustResult, AUTO)
+
+
+PB_BIND(GeneratePythonArgs, GeneratePythonArgs, AUTO)
+
+
+PB_BIND(GeneratePythonResult, GeneratePythonResult, AUTO)
+
+
+PB_BIND(GenerateGoArgs, GenerateGoArgs, AUTO)
+
+
+PB_BIND(GenerateGoResult, GenerateGoResult, AUTO)
+
+
+PB_BIND(GenerateJavaArgs, GenerateJavaArgs, AUTO)
+
+
+PB_BIND(GenerateJavaResult, GenerateJavaResult, AUTO)
+
+
+PB_BIND(GenerateTypeScriptArgs, GenerateTypeScriptArgs, AUTO)
+
+
+PB_BIND(GenerateTypeScriptResult, GenerateTypeScriptResult, AUTO)
 
 
 PB_BIND(GenerateDocArgs, GenerateDocArgs, AUTO)

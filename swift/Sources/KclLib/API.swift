@@ -224,6 +224,48 @@ public class API: Service {
         name: "KclService.GenerateProto", args: try args.serializedBytes()))
   }
 
+  // Generates Rust DTOs from the schemas of a KCL package.
+  public func generateRust(_ args: GenerateRustArgs) throws -> GenerateRustResult {
+    return try GenerateRustResult(
+      serializedBytes: callNative(
+        name: "KclService.GenerateRust", args: try args.serializedBytes()))
+  }
+
+  // Generates Python DTOs from the schemas of a KCL package.
+  public func generatePython(_ args: GeneratePythonArgs) throws -> GeneratePythonResult {
+    return try GeneratePythonResult(
+      serializedBytes: callNative(
+        name: "KclService.GeneratePython", args: try args.serializedBytes()))
+  }
+
+  // Generates Go DTOs from the schemas of a KCL package. `package` is the Go
+  // package name for the generated file's `package` clause, e.g. "dto". Empty
+  // defaults to "generated" — Go requires a package clause, unlike
+  // generateProto's optional `package` field.
+  public func generateGo(_ args: GenerateGoArgs) throws -> GenerateGoResult {
+    return try GenerateGoResult(
+      serializedBytes: callNative(
+        name: "KclService.GenerateGo", args: try args.serializedBytes()))
+  }
+
+  // Generates Java DTOs from the schemas of a KCL package. `package` is the
+  // Java package name for the generated file's `package` clause, e.g.
+  // "com.example.dto". Empty omits the package clause entirely (valid Java —
+  // the "default package") rather than defaulting to a synthetic name as
+  // generateGo does, since Java (unlike Go) does not require one.
+  public func generateJava(_ args: GenerateJavaArgs) throws -> GenerateJavaResult {
+    return try GenerateJavaResult(
+      serializedBytes: callNative(
+        name: "KclService.GenerateJava", args: try args.serializedBytes()))
+  }
+
+  // Generates TypeScript DTOs from the schemas of a KCL package.
+  public func generateTypeScript(_ args: GenerateTypeScriptArgs) throws -> GenerateTypeScriptResult {
+    return try GenerateTypeScriptResult(
+      serializedBytes: callNative(
+        name: "KclService.GenerateTypeScript", args: try args.serializedBytes()))
+  }
+
   // Generates documentation from the schemas of a KCL package. `format` is
   // "md" (default), "openapi" or "json-schema"; "html" is not supported yet.
   public func generateDoc(_ args: GenerateDocArgs) throws -> GenerateDocResult {

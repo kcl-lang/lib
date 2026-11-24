@@ -397,7 +397,7 @@
         "has_kclservice_ping": true,
         "has_kclservice_parse_program": true,
         "has_builtinservice_list_method": true,
-        "method_count": 28,
+        "method_count": 33,
         "has_empty_name": false
       }
     },
@@ -511,6 +511,83 @@
       },
       "expect": {
         "external_pkg_count": 0
+      }
+    },
+    {
+      "name": "generate_rust",
+      "rpc": "KclService.GenerateRust",
+      "new_core": true,
+      "args": {
+        "parse_args": {
+          "paths": [
+            "tests/consistency/testdata/dto/main.k"
+          ]
+        }
+      },
+      "expect": {
+        "rust_source": "/// A user of the platform.\n#[derive(Clone, Debug, PartialEq, serde::Serialize, serde::Deserialize)]\npub struct User {\n    /// Whether the account is active.\n    /// KCL default: True\n    #[serde(default)]\n    pub active: Option<bool>,\n    /// The unique identifier.\n    pub id: i64,\n    /// The display name.\n    pub name: String,\n    /// An optional alias.\n    #[serde(default)]\n    pub nickname: Option<String>,\n    /// A numeric score.\n    /// KCL default: 1\n    #[serde(default)]\n    pub score: Option<f64>,\n}\nimpl User {\n    pub fn validate(&self) -> Result<(), Vec<String>> {\n        let errors = Vec::new();\n        if errors.is_empty() {\n            Ok(())\n        } else {\n            Err(errors)\n        }\n    }\n}\n\n/// Runtime settings of the platform.\n#[derive(Clone, Debug, PartialEq, serde::Serialize, serde::Deserialize)]\npub struct Settings {\n    /// Free-form key-value labels.\n    #[serde(default)]\n    pub labels: Option<std::collections::HashMap<String, String>>,\n    /// The run mode.\n    /// KCL default: \"auto\"\n    pub mode: serde_json::Value,\n    /// How many times a failed request is retried.\n    /// KCL default: 3\n    pub retries: i64,\n    /// Free-form tags.\n    #[serde(default)]\n    pub tags: Option<Vec<String>>,\n}\nimpl Settings {\n    pub fn validate(&self) -> Result<(), Vec<String>> {\n        let errors = Vec::new();\n        if errors.is_empty() {\n            Ok(())\n        } else {\n            Err(errors)\n        }\n    }\n}\n\n"
+      }
+    },
+    {
+      "name": "generate_python",
+      "rpc": "KclService.GeneratePython",
+      "new_core": true,
+      "args": {
+        "parse_args": {
+          "paths": [
+            "tests/consistency/testdata/dto/main.k"
+          ]
+        }
+      },
+      "expect": {
+        "python_source": "import dataclasses\nimport re\nimport typing\n\n\n@dataclasses.dataclass(kw_only=True)\nclass User:\n    \"\"\"A user of the platform.\"\"\"\n    # Whether the account is active.\n    # KCL default: True\n    active: typing.Optional[bool] = None\n    # The unique identifier.\n    id: int\n    # The display name.\n    name: str\n    # An optional alias.\n    nickname: typing.Optional[str] = None\n    # A numeric score.\n    # KCL default: 1\n    score: typing.Optional[float] = None\n\n    def validate(self) -> typing.List[str]:\n        errors: typing.List[str] = []\n        return errors\n\n\n@dataclasses.dataclass(kw_only=True)\nclass Settings:\n    \"\"\"Runtime settings of the platform.\"\"\"\n    # Free-form key-value labels.\n    labels: typing.Optional[typing.Dict[str, str]] = None\n    # The run mode.\n    # KCL default: \"auto\"\n    mode: typing.Any\n    # How many times a failed request is retried.\n    # KCL default: 3\n    retries: int\n    # Free-form tags.\n    tags: typing.Optional[typing.List[str]] = None\n\n    def validate(self) -> typing.List[str]:\n        errors: typing.List[str] = []\n        return errors\n\n\n"
+      }
+    },
+    {
+      "name": "generate_go",
+      "rpc": "KclService.GenerateGo",
+      "new_core": true,
+      "args": {
+        "parse_args": {
+          "paths": [
+            "tests/consistency/testdata/dto/main.k"
+          ]
+        },
+        "package": "dto"
+      },
+      "expect": {
+        "go_source": "package dto\n\n// A user of the platform.\ntype User struct {\n\t// Whether the account is active.\n\t// KCL default: True\n\tActive *bool `json:\"active,omitempty\"`\n\t// The unique identifier.\n\tId int64 `json:\"id\"`\n\t// The display name.\n\tName string `json:\"name\"`\n\t// An optional alias.\n\tNickname *string `json:\"nickname,omitempty\"`\n\t// A numeric score.\n\t// KCL default: 1\n\tScore *float64 `json:\"score,omitempty\"`\n}\nfunc (s *User) Validate() []string {\n\terrors := []string{}\n\treturn errors\n}\n\n// Runtime settings of the platform.\ntype Settings struct {\n\t// Free-form key-value labels.\n\tLabels map[string]string `json:\"labels,omitempty\"`\n\t// The run mode.\n\t// KCL default: \"auto\"\n\tMode any `json:\"mode\"`\n\t// How many times a failed request is retried.\n\t// KCL default: 3\n\tRetries int64 `json:\"retries\"`\n\t// Free-form tags.\n\tTags []string `json:\"tags,omitempty\"`\n}\nfunc (s *Settings) Validate() []string {\n\terrors := []string{}\n\treturn errors\n}\n\n"
+      }
+    },
+    {
+      "name": "generate_java",
+      "rpc": "KclService.GenerateJava",
+      "new_core": true,
+      "args": {
+        "parse_args": {
+          "paths": [
+            "tests/consistency/testdata/dto/main.k"
+          ]
+        },
+        "package": "com.example.dto"
+      },
+      "expect": {
+        "java_source": "package com.example.dto;\n\nimport java.util.ArrayList;\nimport java.util.List;\nimport java.util.Map;\nimport java.util.Objects;\n\n// A user of the platform.\nclass User {\n    // Whether the account is active.\n    // KCL default: True\n    public Boolean active;\n    // The unique identifier.\n    public long id;\n    // The display name.\n    public String name;\n    // An optional alias.\n    public String nickname;\n    // A numeric score.\n    // KCL default: 1\n    public Double score;\n\n    @Override\n    public boolean equals(Object o) {\n        if (this == o) return true;\n        if (!(o instanceof User)) return false;\n        User other = (User) o;\n        return Objects.equals(this.active, other.active)\n            && Objects.equals(this.id, other.id)\n            && Objects.equals(this.name, other.name)\n            && Objects.equals(this.nickname, other.nickname)\n            && Objects.equals(this.score, other.score);\n    }\n\n    @Override\n    public int hashCode() {\n        return Objects.hash(active, id, name, nickname, score);\n    }\n\n    public List<String> validate() {\n        List<String> errors = new ArrayList<>();\n        return errors;\n    }\n}\n\n// Runtime settings of the platform.\nclass Settings {\n    // Free-form key-value labels.\n    public Map<String, String> labels;\n    // The run mode.\n    // KCL default: \"auto\"\n    public Object mode;\n    // How many times a failed request is retried.\n    // KCL default: 3\n    public long retries;\n    // Free-form tags.\n    public List<String> tags;\n\n    @Override\n    public boolean equals(Object o) {\n        if (this == o) return true;\n        if (!(o instanceof Settings)) return false;\n        Settings other = (Settings) o;\n        return Objects.equals(this.labels, other.labels)\n            && Objects.equals(this.mode, other.mode)\n            && Objects.equals(this.retries, other.retries)\n            && Objects.equals(this.tags, other.tags);\n    }\n\n    @Override\n    public int hashCode() {\n        return Objects.hash(labels, mode, retries, tags);\n    }\n\n    public List<String> validate() {\n        List<String> errors = new ArrayList<>();\n        return errors;\n    }\n}\n\n"
+      }
+    },
+    {
+      "name": "generate_typescript",
+      "rpc": "KclService.GenerateTypeScript",
+      "new_core": true,
+      "args": {
+        "parse_args": {
+          "paths": [
+            "tests/consistency/testdata/dto/main.k"
+          ]
+        }
+      },
+      "expect": {
+        "typescript_source": "// A user of the platform.\nexport class User {\n    // Whether the account is active.\n    // KCL default: True\n    active?: boolean;\n    // The unique identifier.\n    id!: number;\n    // The display name.\n    name!: string;\n    // An optional alias.\n    nickname?: string;\n    // A numeric score.\n    // KCL default: 1\n    score?: number;\n\n    validate(): string[] {\n        const errors: string[] = [];\n        return errors;\n    }\n}\n\n// Runtime settings of the platform.\nexport class Settings {\n    // Free-form key-value labels.\n    labels?: Record<string, string>;\n    // The run mode.\n    // KCL default: \"auto\"\n    mode!: any;\n    // How many times a failed request is retried.\n    // KCL default: 3\n    retries!: number;\n    // Free-form tags.\n    tags?: string[];\n\n    validate(): string[] {\n        const errors: string[] = [];\n        return errors;\n    }\n}\n\n"
       }
     }
   ]

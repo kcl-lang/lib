@@ -71,6 +71,11 @@ class ConsistencyTest < Minitest::Test
     "KclService.GenerateOpenAPI" => :generate_openapi,
     "KclService.GenerateProto" => :generate_proto,
     "KclService.GenerateDoc" => :generate_doc,
+    "KclService.GenerateRust" => :generate_rust,
+    "KclService.GeneratePython" => :generate_python,
+    "KclService.GenerateGo" => :generate_go,
+    "KclService.GenerateJava" => :generate_java,
+    "KclService.GenerateTypeScript" => :generate_typescript,
     "KclService.UpdateDependencies" => :update_dependencies,
     "KclService.GetVersion" => :get_version,
     "BuiltinService.ListMethod" => :list_method
@@ -247,7 +252,8 @@ class ConsistencyTest < Minitest::Test
         pkg_list: resolve_paths(a.fetch("pkg_list", [])),
         run_regexp: a.fetch("run_regexp", ""),
         fail_fast: a.fetch("fail_fast", false),
-        coverage: a.fetch("coverage", false)
+        coverage: a.fetch("coverage", false),
+        eval_once: a.fetch("eval_once", false)
       )
     when "KclService.OverrideFile"
       KclLib::OverrideFileArgs.new(
@@ -279,6 +285,28 @@ class ConsistencyTest < Minitest::Test
       KclLib::GenerateDocArgs.new(
         parse_args: build_parse_args(a.fetch("parse_args")),
         format: a.fetch("format", "")
+      )
+    when "KclService.GenerateRust"
+      KclLib::GenerateRustArgs.new(
+        parse_args: build_parse_args(a.fetch("parse_args"))
+      )
+    when "KclService.GeneratePython"
+      KclLib::GeneratePythonArgs.new(
+        parse_args: build_parse_args(a.fetch("parse_args"))
+      )
+    when "KclService.GenerateGo"
+      KclLib::GenerateGoArgs.new(
+        parse_args: build_parse_args(a.fetch("parse_args")),
+        package: a.fetch("package", "")
+      )
+    when "KclService.GenerateJava"
+      KclLib::GenerateJavaArgs.new(
+        parse_args: build_parse_args(a.fetch("parse_args")),
+        package: a.fetch("package", "")
+      )
+    when "KclService.GenerateTypeScript"
+      KclLib::GenerateTypeScriptArgs.new(
+        parse_args: build_parse_args(a.fetch("parse_args"))
       )
     else
       raise "no args builder for rpc #{rpc}"

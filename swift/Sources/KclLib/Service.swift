@@ -75,6 +75,28 @@ public protocol Service {
   // Generates proto3 definitions from the schemas of a KCL package.
   func generateProto(_ args: GenerateProtoArgs) throws -> GenerateProtoResult
 
+  // Generates Rust DTOs from the schemas of a KCL package.
+  func generateRust(_ args: GenerateRustArgs) throws -> GenerateRustResult
+
+  // Generates Python DTOs from the schemas of a KCL package.
+  func generatePython(_ args: GeneratePythonArgs) throws -> GeneratePythonResult
+
+  // Generates Go DTOs from the schemas of a KCL package. `package` is the Go
+  // package name for the generated file's `package` clause, e.g. "dto". Empty
+  // defaults to "generated" — Go requires a package clause, unlike
+  // generateProto's optional `package` field.
+  func generateGo(_ args: GenerateGoArgs) throws -> GenerateGoResult
+
+  // Generates Java DTOs from the schemas of a KCL package. `package` is the
+  // Java package name for the generated file's `package` clause, e.g.
+  // "com.example.dto". Empty omits the package clause entirely (valid Java —
+  // the "default package") rather than defaulting to a synthetic name as
+  // generateGo does, since Java (unlike Go) does not require one.
+  func generateJava(_ args: GenerateJavaArgs) throws -> GenerateJavaResult
+
+  // Generates TypeScript DTOs from the schemas of a KCL package.
+  func generateTypeScript(_ args: GenerateTypeScriptArgs) throws -> GenerateTypeScriptResult
+
   // Generates documentation from the schemas of a KCL package.
   func generateDoc(_ args: GenerateDocArgs) throws -> GenerateDocResult
 

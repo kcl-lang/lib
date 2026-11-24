@@ -53,6 +53,16 @@ from .spec_pb2 import (
     GenerateProtoResult,
     GenerateDocArgs,
     GenerateDocResult,
+    GenerateRustArgs,
+    GenerateRustResult,
+    GeneratePythonArgs,
+    GeneratePythonResult,
+    GenerateGoArgs,
+    GenerateGoResult,
+    GenerateJavaArgs,
+    GenerateJavaResult,
+    GenerateTypeScriptArgs,
+    GenerateTypeScriptResult,
 )
 from google.protobuf import message as _message
 
@@ -765,6 +775,101 @@ class API:
         """
         return self.call("KclService.GenerateDoc", args)
 
+    def generate_rust(self, args: GenerateRustArgs) -> GenerateRustResult:
+        """Generate Rust source from the schemas of a KCL package.
+
+        ## Example
+
+        ```python
+        import kcl_lib.api as api
+        args = api.GenerateRustArgs(
+            parse_args=api.ParseProgramArgs(paths=["./tests/test_data/schema.k"]),
+        )
+        api_instance = api.API()
+        result = api_instance.generate_rust(args)
+        assert "struct" in result.rust_source
+        ```
+        """
+        return self.call("KclService.GenerateRust", args)
+
+    def generate_python(self, args: GeneratePythonArgs) -> GeneratePythonResult:
+        """Generate Python source from the schemas of a KCL package.
+
+        ## Example
+
+        ```python
+        import kcl_lib.api as api
+        args = api.GeneratePythonArgs(
+            parse_args=api.ParseProgramArgs(paths=["./tests/test_data/schema.k"]),
+        )
+        api_instance = api.API()
+        result = api_instance.generate_python(args)
+        assert result.python_source
+        ```
+        """
+        return self.call("KclService.GeneratePython", args)
+
+    def generate_go(self, args: GenerateGoArgs) -> GenerateGoResult:
+        """Generate Go source from the schemas of a KCL package.
+
+        The `package` field sets the `package` clause of the generated file,
+        e.g. "dto". It defaults to "generated" because Go requires a package
+        clause.
+
+        ## Example
+
+        ```python
+        import kcl_lib.api as api
+        args = api.GenerateGoArgs(
+            parse_args=api.ParseProgramArgs(paths=["./tests/test_data/schema.k"]),
+            package="dto",
+        )
+        api_instance = api.API()
+        result = api_instance.generate_go(args)
+        assert "package dto" in result.go_source
+        ```
+        """
+        return self.call("KclService.GenerateGo", args)
+
+    def generate_java(self, args: GenerateJavaArgs) -> GenerateJavaResult:
+        """Generate Java source from the schemas of a KCL package.
+
+        The `package` field sets the `package` clause of the generated file,
+        e.g. "com.example.dto". An empty package omits the clause entirely,
+        which is valid Java (the "default package").
+
+        ## Example
+
+        ```python
+        import kcl_lib.api as api
+        args = api.GenerateJavaArgs(
+            parse_args=api.ParseProgramArgs(paths=["./tests/test_data/schema.k"]),
+            package="com.example.dto",
+        )
+        api_instance = api.API()
+        result = api_instance.generate_java(args)
+        assert "package com.example.dto;" in result.java_source
+        ```
+        """
+        return self.call("KclService.GenerateJava", args)
+
+    def generate_typescript(self, args: GenerateTypeScriptArgs) -> GenerateTypeScriptResult:
+        """Generate TypeScript source from the schemas of a KCL package.
+
+        ## Example
+
+        ```python
+        import kcl_lib.api as api
+        args = api.GenerateTypeScriptArgs(
+            parse_args=api.ParseProgramArgs(paths=["./tests/test_data/schema.k"]),
+        )
+        api_instance = api.API()
+        result = api_instance.generate_typescript(args)
+        assert result.typescript_source
+        ```
+        """
+        return self.call("KclService.GenerateTypeScript", args)
+
     def get_version(self) -> GetVersionResult:
         """Return the KCL service version information.
 
@@ -871,6 +976,16 @@ class API:
             return GenerateProtoArgs()
         elif method in ["GenerateDoc", "KclService.GenerateDoc"]:
             return GenerateDocArgs()
+        elif method in ["GenerateRust", "KclService.GenerateRust"]:
+            return GenerateRustArgs()
+        elif method in ["GeneratePython", "KclService.GeneratePython"]:
+            return GeneratePythonArgs()
+        elif method in ["GenerateGo", "KclService.GenerateGo"]:
+            return GenerateGoArgs()
+        elif method in ["GenerateJava", "KclService.GenerateJava"]:
+            return GenerateJavaArgs()
+        elif method in ["GenerateTypeScript", "KclService.GenerateTypeScript"]:
+            return GenerateTypeScriptArgs()
         elif method in ["GetVersion", "KclService.GetVersion"]:
             return GetVersionArgs()
         raise Exception(f"unknown method: {method}")
@@ -926,6 +1041,16 @@ class API:
             return GenerateProtoResult()
         elif method in ["GenerateDoc", "KclService.GenerateDoc"]:
             return GenerateDocResult()
+        elif method in ["GenerateRust", "KclService.GenerateRust"]:
+            return GenerateRustResult()
+        elif method in ["GeneratePython", "KclService.GeneratePython"]:
+            return GeneratePythonResult()
+        elif method in ["GenerateGo", "KclService.GenerateGo"]:
+            return GenerateGoResult()
+        elif method in ["GenerateJava", "KclService.GenerateJava"]:
+            return GenerateJavaResult()
+        elif method in ["GenerateTypeScript", "KclService.GenerateTypeScript"]:
+            return GenerateTypeScriptResult()
         elif method in ["GetVersion", "KclService.GetVersion"]:
             return GetVersionResult()
         elif method in ["ListMethod", "BuiltinService.ListMethod"]:

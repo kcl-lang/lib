@@ -87,7 +87,7 @@ The library is published to Maven Central, so no extra repository configuration 
 <dependency>
     <groupId>io.kcl-lang</groupId>
     <artifactId>kcl-lib</artifactId>
-    <version>0.13.2</version>
+    <version>0.13.3</version>
 </dependency>
 ```
 
@@ -240,7 +240,7 @@ The library is published to Maven Central, so no extra repository configuration 
 <dependency>
     <groupId>io.kcl-lang</groupId>
     <artifactId>kcl-lib-kotlin</artifactId>
-    <version>0.13.2</version>
+    <version>0.13.3</version>
 </dependency>
 ```
 
@@ -340,7 +340,7 @@ For CMake, you can use FetchContent to add KCL C++ Lib to your project.
 FetchContent_Declare(
   kcl-lib
   GIT_REPOSITORY https://github.com/kcl-lang/lib.git
-  GIT_TAG        v0.13.2
+  GIT_TAG        v0.13.3
   SOURCE_SUBDIR  cpp
 )
 FetchContent_MakeAvailable(kcl-lib)

@@ -9,491 +9,536 @@
 -- treats as semantically irrelevant, so re-running the target on an unchanged
 -- `spec/spec.proto` is safe but produces a noisy diff.
 return "\
-ˆd2’\1\
-\14BuiltinService\0186\26\23.com.kcl.api.PingResult\18\21.com.kcl.api.PingArgs\
-\4Ping\18H\26\29.com.kcl.api.ListMethodResult\18\27.com.kcl.api.ListMethodArgs\
-\
-ListMethod2­\16\
-\
-KclService\0186\26\23.com.kcl.api.PingResult\18\21.com.kcl.api.PingArgs\
-\4Ping\18H\26\29.com.kcl.api.GetVersionResult\18\27.com.kcl.api.GetVersionArgs\
-\
-GetVersion\18N\26\31.com.kcl.api.ParseProgramResult\18\29.com.kcl.api.ParseProgramArgs\
-\12ParseProgram\18E\26\28.com.kcl.api.ParseFileResult\18\26.com.kcl.api.ParseFileArgs\
-\9ParseFile\18K\26\30.com.kcl.api.LoadPackageResult\18\28.com.kcl.api.LoadPackageArgs\
-\11LoadPackage\18L\26\30.com.kcl.api.ListOptionsResult\18\29.com.kcl.api.ParseProgramArgs\
-\11ListOptions\18Q\26 .com.kcl.api.ListVariablesResult\18\30.com.kcl.api.ListVariablesArgs\
-\13ListVariables\18K\26\30.com.kcl.api.ExecProgramResult\18\28.com.kcl.api.ExecProgramArgs\
-\11ExecProgram\18N\26\31.com.kcl.api.OverrideFileResult\18\29.com.kcl.api.OverrideFileArgs\
-\12OverrideFile\18f\26'.com.kcl.api.GetSchemaTypeMappingResult\18%.com.kcl.api.GetSchemaTypeMappingArgs\
-\20GetSchemaTypeMapping\18x\0260.com.kcl.api.GetSchemaTypeMappingUnderPathResult\18%.com.kcl.api.GetSchemaTypeMappingArgs\
-\29GetSchemaTypeMappingUnderPath\18H\26\29.com.kcl.api.FormatCodeResult\18\27.com.kcl.api.FormatCodeArgs\
-\
-FormatCode\18H\26\29.com.kcl.api.FormatPathResult\18\27.com.kcl.api.FormatPathArgs\
-\
-FormatPath\18B\26\27.com.kcl.api.LintPathResult\18\25.com.kcl.api.LintPathArgs\
-\8LintPath\18N\26\31.com.kcl.api.ValidateCodeResult\18\29.com.kcl.api.ValidateCodeArgs\
-\12ValidateCode\18]\26$.com.kcl.api.LoadSettingsFilesResult\18\".com.kcl.api.LoadSettingsFilesArgs\
-\17LoadSettingsFiles\18<\26\25.com.kcl.api.RenameResult\18\23.com.kcl.api.RenameArgs\
-\6Rename\18H\26\29.com.kcl.api.RenameCodeResult\18\27.com.kcl.api.RenameCodeArgs\
-\
-RenameCode\0186\26\23.com.kcl.api.TestResult\18\21.com.kcl.api.TestArgs\
-\4Test\18Z\26#.com.kcl.api.FormatTestReportResult\18!.com.kcl.api.FormatTestReportArgs\
-\16FormatTestReport\18`\26%.com.kcl.api.UpdateDependenciesResult\18#.com.kcl.api.UpdateDependenciesArgs\
-\18UpdateDependencies\18N\26\31.com.kcl.api.GenerateTomlResult\18\29.com.kcl.api.GenerateTomlArgs\
-\12GenerateToml\18K\26\30.com.kcl.api.GenerateKclResult\18\28.com.kcl.api.GenerateKclArgs\
-\11GenerateKcl\18W\26\".com.kcl.api.GenerateOpenAPIResult\18 .com.kcl.api.GenerateOpenAPIArgs\
-\15GenerateOpenAPI\18Q\26 .com.kcl.api.GenerateProtoResult\18\30.com.kcl.api.GenerateProtoArgs\
-\13GenerateProto\18K\26\30.com.kcl.api.GenerateDocResult\18\28.com.kcl.api.GenerateDocArgs\
-\11GenerateDocb\6proto3\18\11com.kcl.api\"1\
-\11ExternalPkg\18\16\24\1(\9\
-\8pkg_name \1\18\16\24\2(\9\
-\8pkg_path \1\"'\
-\8Argument\18\12\24\1(\9\
-\4name \1\18\13\24\2(\9\
-\5value \1\"L\
-\5Error\18\13\24\1(\9\
-\5level \1\18\12\24\2(\9\
-\4code \1\18&\24\0032\20.com.kcl.api.Message(\11\
-\8messages \3\":\
-\7Message\18\11\24\1(\9\
-\3msg \1\18\"\24\0022\21.com.kcl.api.Position(\11\
-\3pos \1\"\25\
-\8PingArgs\18\13\24\1(\9\
-\5value \1\"\27\
-\
-PingResult\18\13\24\1(\9\
-\5value \1\"\16\
-\14GetVersionArgs\"\\\
-\16GetVersionResult\18\15\24\1(\9\
-\7version \1\18\16\24\2(\9\
-\8checksum \1\18\15\24\3(\9\
-\7git_sha \1\18\20\24\4(\9\
-\12version_info \1\"\16\
-\14ListMethodArgs\",\
-\16ListMethodResult\18\24\24\1(\9\
-\16method_name_list \3\"^\
-\13ParseFileArgs\18\12\24\1(\9\
-\4path \1\18\14\24\2(\9\
-\6source \1\18/\24\0032\24.com.kcl.api.ExternalPkg(\11\
-\13external_pkgs \3\"U\
-\15ParseFileResult\18\16\24\1(\9\
-\8ast_json \1\18\12\24\2(\9\
-\4deps \3\18\"\24\0032\18.com.kcl.api.Error(\11\
-\6errors \3\"c\
-\16ParseProgramArgs\18\13\24\1(\9\
-\5paths \3\18\15\24\2(\9\
-\7sources \3\18/\24\0032\24.com.kcl.api.ExternalPkg(\11\
-\13external_pkgs \3\"Y\
-\18ParseProgramResult\18\16\24\1(\9\
-\8ast_json \1\18\13\24\2(\9\
-\5paths \3\18\"\24\0032\18.com.kcl.api.Error(\11\
-\6errors \3\"‡\1\
-\15LoadPackageArgs\0181\24\0012\29.com.kcl.api.ParseProgramArgs(\11\
-\
-parse_args \1\18\19\24\2(\8\
-\11resolve_ast \1\18\20\24\3(\8\
-\12load_builtin \1\18\22\24\4(\8\
-\14with_ast_index \1\"Â\9\18\15\24\1(\9\
-\7program \1\18\13\24\2(\9\
-\5paths \3\18(\24\0032\18.com.kcl.api.Error(\11\
-\12parse_errors \3\18'\24\0042\18.com.kcl.api.Error(\11\
-\11type_errors \3\18:2*.com.kcl.api.LoadPackageResult.ScopesEntry\24\5(\11\
-\6scopes \3\18<2+.com.kcl.api.LoadPackageResult.SymbolsEntry\24\6(\11\
-\7symbols \3\18J21.com.kcl.api.LoadPackageResult.NodeSymbolMapEntry\24\7(\11\
-\15node_symbol_map \3\18J21.com.kcl.api.LoadPackageResult.SymbolNodeMapEntry\24\8(\11\
-\15symbol_node_map \3\18[29.com.kcl.api.LoadPackageResult.FullyQualifiedNameMapEntry\24\9(\11\
-\24fully_qualified_name_map \3\18F2/.com.kcl.api.LoadPackageResult.PkgScopeMapEntry\24\
-(\11\
-\13pkg_scope_map \3\18<2+.com.kcl.api.LoadPackageResult.ImportsEntry\24\11(\11\
-\7imports \3\18$\24\0122\19.com.kcl.api.KclMod(\11\
-\7kcl_mod \1\18\"\24\0132\20.com.kcl.api.AppInfo(\11\
-\4apps \3\
-\17LoadPackageResult\26A\18\11\24\1(\9\
-\3key \1\18!\24\0022\18.com.kcl.api.Scope(\11\
+«o\"1\18\16(\9\24\1\
+\8pkg_name \1\18\16(\9\24\2\
+\8pkg_path \1\
+\11ExternalPkg\"'\18\12(\9\24\1\
+\4name \1\18\13(\9\24\2\
 \5value \1\
-\11ScopesEntry:\0028\1\26C\18\11\24\1(\9\
-\3key \1\18\"\24\0022\19.com.kcl.api.Symbol(\11\
+\8Argument\"L\18\13(\9\24\1\
+\5level \1\18\12(\9\24\2\
+\4code \1\18&(\11\24\3\
+\8messages2\20.com.kcl.api.Message \3\
+\5Error\":\18\11(\9\24\1\
+\3msg \1\18\"(\11\24\2\
+\3pos2\21.com.kcl.api.Position \1\
+\7Message\"\25\18\13(\9\24\1\
 \5value \1\
-\12SymbolsEntry:\0028\1\26N\18\11\24\1(\9\
-\3key \1\18'\24\0022\24.com.kcl.api.SymbolIndex(\11\
+\8PingArgs\"\27\18\13(\9\24\1\
 \5value \1\
-\18NodeSymbolMapEntry:\0028\1\0264\18\11\24\1(\9\
-\3key \1\18\13\24\2(\9\
-\5value \1\
-\18SymbolNodeMapEntry:\0028\1\26V\18\11\24\1(\9\
-\3key \1\18'\24\0022\24.com.kcl.api.SymbolIndex(\11\
-\5value \1\
-\26FullyQualifiedNameMapEntry:\0028\1\26K\18\11\24\1(\9\
-\3key \1\18&\24\0022\23.com.kcl.api.ScopeIndex(\11\
-\5value \1\
-\16PkgScopeMapEntry:\0028\1\26H\18\11\24\1(\9\
-\3key \1\18'\24\0022\24.com.kcl.api.FileImports(\11\
-\5value \1\
-\12ImportsEntry:\0028\1\"7\
-\11FileImports\18(\24\0012\23.com.kcl.api.ImportInfo(\11\
-\7imports \3\",\
 \
-ImportInfo\18\12\24\1(\9\
-\4path \1\18\16\24\2(\9\
-\8resolved \1\"ó\1\18+\24\0012\26.com.kcl.api.KclModPackage(\11\
-\7package \1\18+\24\0022\26.com.kcl.api.KclModProfile(\11\
-\7profile \1\18;2%.com.kcl.api.KclMod.DependenciesEntry\24\3(\11\
-\12dependencies \3\
-\6KclMod\26R\18\11\24\1(\9\
-\3key \1\18,\24\0022\29.com.kcl.api.KclModDependency(\11\
-\5value \1\
-\17DependenciesEntry:\0028\1\"v\
-\13KclModPackage\18\12\24\1(\9\
-\4name \1\18\15\24\2(\9\
-\7edition \1\18\15\24\3(\9\
-\7version \1\18\19\24\4(\9\
-\11description \1\18\15\24\5(\9\
-\7include \3\18\15\24\6(\9\
-\7exclude \3\"€\1\
-\13KclModProfile\18\15\24\1(\9\
-\7entries \3\18\20\24\2(\8\
-\12disable_none \1\18\17\24\3(\8\
-\9sort_keys \1\18\17\24\4(\9\
-\9selectors \3\18\17\24\5(\9\
-\9overrides \3\18\15\24\6(\9\
-\7options \3\"¨\1\
-\16KclModDependency\18\15\24\1(\9\
-\7version \1\18)\24\0022\28.com.kcl.api.KclModGitSource(\11\
-\3git \1\18)\24\0032\28.com.kcl.api.KclModOciSource(\11\
-\3oci \1\18-\24\0042\30.com.kcl.api.KclModLocalSource(\11\
-\5local \1\"\\\
-\15KclModGitSource\18\11\24\1(\9\
-\3git \1\18\14\24\2(\9\
-\6branch \1\18\14\24\3(\9\
-\6commit \1\18\11\24\4(\9\
-\3tag \1\18\15\24\5(\9\
-\7version \1\"+\
-\15KclModOciSource\18\11\24\1(\9\
-\3oci \1\18\11\24\2(\9\
-\3tag \1\"!\
-\17KclModLocalSource\18\12\24\1(\9\
-\4path \1\",\
-\7AppInfo\18\12\24\1(\9\
-\4path \1\18\19\24\2(\8\
-\11has_kcl_mod \1\"=\
-\17ListOptionsResult\18(\24\0022\23.com.kcl.api.OptionHelp(\11\
-\7options \3\"_\
+PingResult\"\16\
+\14GetVersionArgs\"\\\18\15(\9\24\1\
+\7version \1\18\16(\9\24\2\
+\8checksum \1\18\15(\9\24\3\
+\7git_sha \1\18\20(\9\24\4\
+\12version_info \1\
+\16GetVersionResult\"\16\
+\14ListMethodArgs\",\18\24(\9\24\1\
+\16method_name_list \3\
+\16ListMethodResult\"^\18\12(\9\24\1\
+\4path \1\18\14(\9\24\2\
+\6source \1\18/(\11\24\3\
+\13external_pkgs2\24.com.kcl.api.ExternalPkg \3\
+\13ParseFileArgs\"U\18\16(\9\24\1\
+\8ast_json \1\18\12(\9\24\2\
+\4deps \3\18\"(\11\24\3\
+\6errors2\18.com.kcl.api.Error \3\
+\15ParseFileResult\"c\18\13(\9\24\1\
+\5paths \3\18\15(\9\24\2\
+\7sources \3\18/(\11\24\3\
+\13external_pkgs2\24.com.kcl.api.ExternalPkg \3\
+\16ParseProgramArgs\"Y\18\16(\9\24\1\
+\8ast_json \1\18\13(\9\24\2\
+\5paths \3\18\"(\11\24\3\
+\6errors2\18.com.kcl.api.Error \3\
+\18ParseProgramResult\"‡\1\0181(\11\24\1\
 \
-OptionHelp\18\12\24\1(\9\
-\4name \1\18\12\24\2(\9\
-\4type \1\18\16\24\3(\8\
-\8required \1\18\21\24\4(\9\
-\13default_value \1\18\12\24\5(\9\
-\4help \1\"Ä\1\
-\6Symbol\18 \24\0012\20.com.kcl.api.KclType(\11\
-\2ty \1\18\12\24\2(\9\
-\4name \1\18'\24\0032\24.com.kcl.api.SymbolIndex(\11\
-\5owner \1\18%\24\0042\24.com.kcl.api.SymbolIndex(\11\
-\3def \1\18'\24\0052\24.com.kcl.api.SymbolIndex(\11\
-\5attrs \3\18\17\24\6(\8\
-\9is_global \1\"º\1\
-\5Scope\18\12\24\1(\9\
-\4kind \1\18'\24\0022\23.com.kcl.api.ScopeIndex(\11\
-\6parent \1\18'\24\0032\24.com.kcl.api.SymbolIndex(\11\
-\5owner \1\18)\24\0042\23.com.kcl.api.ScopeIndex(\11\
-\8children \3\18&\24\0052\24.com.kcl.api.SymbolIndex(\11\
-\4defs \3\"1\
-\11SymbolIndex\18\9\24\1(\4\
-\1i \1\18\9\24\2(\4\
-\1g \1\18\12\24\3(\9\
-\4kind \1\"0\
+parse_args2\29.com.kcl.api.ParseProgramArgs \1\18\19(\8\24\2\
+\11resolve_ast \1\18\20(\8\24\3\
+\12load_builtin \1\18\22(\8\24\4\
+\14with_ast_index \1\
+\15LoadPackageArgs\"Â\9\18\15(\9\24\1\
+\7program \1\18\13(\9\24\2\
+\5paths \3\18((\11\24\3\
+\12parse_errors2\18.com.kcl.api.Error \3\18'(\11\24\4\
+\11type_errors2\18.com.kcl.api.Error \3\18:(\11\24\5\
+\6scopes2*.com.kcl.api.LoadPackageResult.ScopesEntry \3\18<(\11\24\6\
+\7symbols2+.com.kcl.api.LoadPackageResult.SymbolsEntry \3\18J(\11\24\7\
+\15node_symbol_map21.com.kcl.api.LoadPackageResult.NodeSymbolMapEntry \3\18J(\11\24\8\
+\15symbol_node_map21.com.kcl.api.LoadPackageResult.SymbolNodeMapEntry \3\18[(\11\24\9\
+\24fully_qualified_name_map29.com.kcl.api.LoadPackageResult.FullyQualifiedNameMapEntry \3\18F(\11\24\
 \
-ScopeIndex\18\9\24\1(\4\
-\1i \1\18\9\24\2(\4\
-\1g \1\18\12\24\3(\9\
-\4kind \1\"Ç\4\18\16\24\1(\9\
-\8work_dir \1\18\23\24\2(\9\
-\15k_filename_list \3\18\19\24\3(\9\
-\11k_code_list \3\18#\24\0042\21.com.kcl.api.Argument(\11\
-\4args \3\18\17\24\5(\9\
-\9overrides \3\18\27\24\6(\8\
-\19disable_yaml_result \1\18\26\24\7(\8\
-\18print_override_ast \1\18\26\24\8(\8\
-\18strict_range_check \1\18\20\24\9(\8\
-\12disable_none \1\18\15\24\
-(\5\
-\7verbose \1\18\13\24\11(\5\
-\5debug \1\18\17\24\12(\8\
-\9sort_keys \1\18/\24\0132\24.com.kcl.api.ExternalPkg(\11\
-\13external_pkgs \3\18 \24\14(\8\
-\24include_schema_type_path \1\18\20\24\15(\8\
-\12compile_only \1\18\19\24\16(\8\
-\11show_hidden \1\18\21\24\17(\9\
-\13path_selector \3\18\17\24\18(\8\
-\9fast_eval \1\18\20\24\19(\9\
-\12error_format \1\18\14\24\20(\9\
-\6format \1\18\31\24\21(\8\
-\23emit_attribute_metadata \1\18\26H\0\24\22(\9\
-\16sourcemap_output \1B\19\
+\13pkg_scope_map2/.com.kcl.api.LoadPackageResult.PkgScopeMapEntry \3\18<(\11\24\11\
+\7imports2+.com.kcl.api.LoadPackageResult.ImportsEntry \3\18$(\11\24\12\
+\7kcl_mod2\19.com.kcl.api.KclMod \1\18\"(\11\24\13\
+\4apps2\20.com.kcl.api.AppInfo \3\26A\18\11(\9\24\1\
+\3key \1\18!(\11\24\2\
+\5value2\18.com.kcl.api.Scope \1:\0028\1\
+\11ScopesEntry\26C\18\11(\9\24\1\
+\3key \1\18\"(\11\24\2\
+\5value2\19.com.kcl.api.Symbol \1:\0028\1\
+\12SymbolsEntry\26N\18\11(\9\24\1\
+\3key \1\18'(\11\24\2\
+\5value2\24.com.kcl.api.SymbolIndex \1:\0028\1\
+\18NodeSymbolMapEntry\0264\18\11(\9\24\1\
+\3key \1\18\13(\9\24\2\
+\5value \1:\0028\1\
+\18SymbolNodeMapEntry\26V\18\11(\9\24\1\
+\3key \1\18'(\11\24\2\
+\5value2\24.com.kcl.api.SymbolIndex \1:\0028\1\
+\26FullyQualifiedNameMapEntry\26K\18\11(\9\24\1\
+\3key \1\18&(\11\24\2\
+\5value2\23.com.kcl.api.ScopeIndex \1:\0028\1\
+\16PkgScopeMapEntry\26H\18\11(\9\24\1\
+\3key \1\18'(\11\24\2\
+\5value2\24.com.kcl.api.FileImports \1:\0028\1\
+\12ImportsEntry\
+\17LoadPackageResult\"7\18((\11\24\1\
+\7imports2\23.com.kcl.api.ImportInfo \3\
+\11FileImports\",\18\12(\9\24\1\
+\4path \1\18\16(\9\24\2\
+\8resolved \1\
+\
+ImportInfo\"ó\1\18+(\11\24\1\
+\7package2\26.com.kcl.api.KclModPackage \1\18+(\11\24\2\
+\7profile2\26.com.kcl.api.KclModProfile \1\18;(\11\24\3\
+\12dependencies2%.com.kcl.api.KclMod.DependenciesEntry \3\26R\18\11(\9\24\1\
+\3key \1\18,(\11\24\2\
+\5value2\29.com.kcl.api.KclModDependency \1:\0028\1\
+\17DependenciesEntry\
+\6KclMod\"v\18\12(\9\24\1\
+\4name \1\18\15(\9\24\2\
+\7edition \1\18\15(\9\24\3\
+\7version \1\18\19(\9\24\4\
+\11description \1\18\15(\9\24\5\
+\7include \3\18\15(\9\24\6\
+\7exclude \3\
+\13KclModPackage\"€\1\18\15(\9\24\1\
+\7entries \3\18\20(\8\24\2\
+\12disable_none \1\18\17(\8\24\3\
+\9sort_keys \1\18\17(\9\24\4\
+\9selectors \3\18\17(\9\24\5\
+\9overrides \3\18\15(\9\24\6\
+\7options \3\
+\13KclModProfile\"¨\1\18\15(\9\24\1\
+\7version \1\18)(\11\24\2\
+\3git2\28.com.kcl.api.KclModGitSource \1\18)(\11\24\3\
+\3oci2\28.com.kcl.api.KclModOciSource \1\18-(\11\24\4\
+\5local2\30.com.kcl.api.KclModLocalSource \1\
+\16KclModDependency\"\\\18\11(\9\24\1\
+\3git \1\18\14(\9\24\2\
+\6branch \1\18\14(\9\24\3\
+\6commit \1\18\11(\9\24\4\
+\3tag \1\18\15(\9\24\5\
+\7version \1\
+\15KclModGitSource\"+\18\11(\9\24\1\
+\3oci \1\18\11(\9\24\2\
+\3tag \1\
+\15KclModOciSource\"!\18\12(\9\24\1\
+\4path \1\
+\17KclModLocalSource\",\18\12(\9\24\1\
+\4path \1\18\19(\8\24\2\
+\11has_kcl_mod \1\
+\7AppInfo\"=\18((\11\24\2\
+\7options2\23.com.kcl.api.OptionHelp \3\
+\17ListOptionsResult\"_\18\12(\9\24\1\
+\4name \1\18\12(\9\24\2\
+\4type \1\18\16(\8\24\3\
+\8required \1\18\21(\9\24\4\
+\13default_value \1\18\12(\9\24\5\
+\4help \1\
+\
+OptionHelp\"Ä\1\18 (\11\24\1\
+\2ty2\20.com.kcl.api.KclType \1\18\12(\9\24\2\
+\4name \1\18'(\11\24\3\
+\5owner2\24.com.kcl.api.SymbolIndex \1\18%(\11\24\4\
+\3def2\24.com.kcl.api.SymbolIndex \1\18'(\11\24\5\
+\5attrs2\24.com.kcl.api.SymbolIndex \3\18\17(\8\24\6\
+\9is_global \1\
+\6Symbol\"º\1\18\12(\9\24\1\
+\4kind \1\18'(\11\24\2\
+\6parent2\23.com.kcl.api.ScopeIndex \1\18'(\11\24\3\
+\5owner2\24.com.kcl.api.SymbolIndex \1\18)(\11\24\4\
+\8children2\23.com.kcl.api.ScopeIndex \3\18&(\11\24\5\
+\4defs2\24.com.kcl.api.SymbolIndex \3\
+\5Scope\"1\18\9(\4\24\1\
+\1i \1\18\9(\4\24\2\
+\1g \1\18\12(\9\24\3\
+\4kind \1\
+\11SymbolIndex\"0\18\9(\4\24\1\
+\1i \1\18\9(\4\24\2\
+\1g \1\18\12(\9\24\3\
+\4kind \1\
+\
+ScopeIndex\"Ç\4\18\16(\9\24\1\
+\8work_dir \1\18\23(\9\24\2\
+\15k_filename_list \3\18\19(\9\24\3\
+\11k_code_list \3\18#(\11\24\4\
+\4args2\21.com.kcl.api.Argument \3\18\17(\9\24\5\
+\9overrides \3\18\27(\8\24\6\
+\19disable_yaml_result \1\18\26(\8\24\7\
+\18print_override_ast \1\18\26(\8\24\8\
+\18strict_range_check \1\18\20(\8\24\9\
+\12disable_none \1\18\15(\5\24\
+\
+\7verbose \1\18\13(\5\24\11\
+\5debug \1\18\17(\8\24\12\
+\9sort_keys \1\18/(\11\24\13\
+\13external_pkgs2\24.com.kcl.api.ExternalPkg \3\18 (\8\24\14\
+\24include_schema_type_path \1\18\20(\8\24\15\
+\12compile_only \1\18\19(\8\24\16\
+\11show_hidden \1\18\21(\9\24\17\
+\13path_selector \3\18\17(\8\24\18\
+\9fast_eval \1\18\20(\9\24\19\
+\12error_format \1\18\14(\9\24\20\
+\6format \1\18\31(\8\24\21\
+\23emit_attribute_metadata \1\18\26(\9\24\22\
+\16sourcemap_outputH\0 \1B\19\
 \17_sourcemap_output\
-\15ExecProgramArgs\"Š\1\18\19\24\1(\9\
-\11json_result \1\18\19\24\2(\9\
-\11yaml_result \1\18\19\24\3(\9\
-\11log_message \1\18\19\24\4(\9\
-\11err_message \1\18\19H\0\24\5(\9\
-\9sourcemap \1B\12\
+\15ExecProgramArgs\"Š\1\18\19(\9\24\1\
+\11json_result \1\18\19(\9\24\2\
+\11yaml_result \1\18\19(\9\24\3\
+\11log_message \1\18\19(\9\24\4\
+\11err_message \1\18\19(\9\24\5\
+\9sourcemapH\0 \1B\12\
 \
 _sourcemap\
-\17ExecProgramResult\" \
-\14FormatCodeArgs\18\14\24\1(\9\
-\6source \1\"%\
-\16FormatCodeResult\18\17\24\1(\12\
-\9formatted \1\"/\
-\14FormatPathArgs\18\12\24\1(\9\
-\4path \1\18\15\24\2(\8\
-\7dry_run \1\")\
-\16FormatPathResult\18\21\24\1(\9\
-\13changed_paths \3\"\29\
-\12LintPathArgs\18\13\24\1(\9\
-\5paths \3\"!\
-\14LintPathResult\18\15\24\1(\9\
-\7results \3\"E\
-\16OverrideFileArgs\18\12\24\1(\9\
-\4file \1\18\13\24\2(\9\
-\5specs \3\18\20\24\3(\9\
-\12import_paths \3\"N\
-\18OverrideFileResult\18\14\24\1(\8\
-\6result \1\18(\24\0022\18.com.kcl.api.Error(\11\
-\12parse_errors \3\"-\
-\20ListVariablesOptions\18\21\24\1(\8\
-\13merge_program \1\"8\
-\12VariableList\18(\24\0012\21.com.kcl.api.Variable(\11\
-\9variables \3\"e\
-\17ListVariablesArgs\18\13\24\1(\9\
-\5files \3\18\13\24\2(\9\
-\5specs \3\0182\24\0032!.com.kcl.api.ListVariablesOptions(\11\
-\7options \1\"ë\1\18B2/.com.kcl.api.ListVariablesResult.VariablesEntry\24\1(\11\
-\9variables \3\18\25\24\2(\9\
-\17unsupported_codes \3\18(\24\0032\18.com.kcl.api.Error(\11\
-\12parse_errors \3\
-\19ListVariablesResult\26K\18\11\24\1(\9\
-\3key \1\18(\24\0022\25.com.kcl.api.VariableList(\11\
-\5value \1\
-\14VariablesEntry:\0028\1\"”\1\
-\8Variable\18\13\24\1(\9\
-\5value \1\18\17\24\2(\9\
-\9type_name \1\18\14\24\3(\9\
-\6op_sym \1\18)\24\0042\21.com.kcl.api.Variable(\11\
+\17ExecProgramResult\"S\18/(\11\24\1\
+\9exec_args2\28.com.kcl.api.ExecProgramArgs \1\18\14(\9\24\2\
+\6output \1\
+\16BuildProgramArgs\"\"\18\12(\9\24\1\
+\4path \1\
+\18BuildProgramResult\"Q\18\12(\9\24\1\
+\4path \1\18/(\11\24\2\
+\9exec_args2\28.com.kcl.api.ExecProgramArgs \1\
+\16ExecArtifactArgs\" \18\14(\9\24\1\
+\6source \1\
+\14FormatCodeArgs\"%\18\17(\12\24\1\
+\9formatted \1\
+\16FormatCodeResult\"/\18\12(\9\24\1\
+\4path \1\18\15(\8\24\2\
+\7dry_run \1\
+\14FormatPathArgs\")\18\21(\9\24\1\
+\13changed_paths \3\
+\16FormatPathResult\"\29\18\13(\9\24\1\
+\5paths \3\
+\12LintPathArgs\"!\18\15(\9\24\1\
+\7results \3\
+\14LintPathResult\"E\18\12(\9\24\1\
+\4file \1\18\13(\9\24\2\
+\5specs \3\18\20(\9\24\3\
+\12import_paths \3\
+\16OverrideFileArgs\"N\18\14(\8\24\1\
+\6result \1\18((\11\24\2\
+\12parse_errors2\18.com.kcl.api.Error \3\
+\18OverrideFileResult\"-\18\21(\8\24\1\
+\13merge_program \1\
+\20ListVariablesOptions\"8\18((\11\24\1\
+\9variables2\21.com.kcl.api.Variable \3\
+\12VariableList\"e\18\13(\9\24\1\
+\5files \3\18\13(\9\24\2\
+\5specs \3\0182(\11\24\3\
+\7options2!.com.kcl.api.ListVariablesOptions \1\
+\17ListVariablesArgs\"ë\1\18B(\11\24\1\
+\9variables2/.com.kcl.api.ListVariablesResult.VariablesEntry \3\18\25(\9\24\2\
+\17unsupported_codes \3\18((\11\24\3\
+\12parse_errors2\18.com.kcl.api.Error \3\26K\18\11(\9\24\1\
+\3key \1\18((\11\24\2\
+\5value2\25.com.kcl.api.VariableList \1:\0028\1\
+\14VariablesEntry\
+\19ListVariablesResult\"”\1\18\13(\9\24\1\
+\5value \1\18\17(\9\24\2\
+\9type_name \1\18\14(\9\24\3\
+\6op_sym \1\18)(\11\24\4\
 \
-list_items \3\18+\24\0052\21.com.kcl.api.MapEntry(\11\
-\12dict_entries \3\"=\
-\8MapEntry\18\11\24\1(\9\
-\3key \1\18$\24\0022\21.com.kcl.api.Variable(\11\
-\5value \1\"`\
-\24GetSchemaTypeMappingArgs\18/\24\0012\28.com.kcl.api.ExecProgramArgs(\11\
-\9exec_args \1\18\19\24\2(\9\
-\11schema_name \1\"É\1\18[2>.com.kcl.api.GetSchemaTypeMappingResult.SchemaTypeMappingEntry\24\1(\11\
-\19schema_type_mapping \3\
-\26GetSchemaTypeMappingResult\26N\18\11\24\1(\9\
-\3key \1\18#\24\0022\20.com.kcl.api.KclType(\11\
-\5value \1\
-\22SchemaTypeMappingEntry:\0028\1\"ß\1\18d2G.com.kcl.api.GetSchemaTypeMappingUnderPathResult.SchemaTypeMappingEntry\24\1(\11\
-\19schema_type_mapping \3\
-#GetSchemaTypeMappingUnderPathResult\26R\18\11\24\1(\9\
-\3key \1\18'\24\0022\24.com.kcl.api.SchemaTypes(\11\
-\5value \1\
-\22SchemaTypeMappingEntry:\0028\1\"8\
-\11SchemaTypes\18)\24\0012\20.com.kcl.api.KclType(\11\
-\11schema_type \3\"·\1\
-\16ValidateCodeArgs\18\16\24\1(\9\
-\8datafile \1\18\12\24\2(\9\
-\4data \1\18\12\24\3(\9\
-\4file \1\18\12\24\4(\9\
-\4code \1\18\14\24\5(\9\
-\6schema \1\18\22\24\6(\9\
-\14attribute_name \1\18\14\24\7(\9\
-\6format \1\18/\24\0082\24.com.kcl.api.ExternalPkg(\11\
-\13external_pkgs \3\":\
-\18ValidateCodeResult\18\15\24\1(\8\
-\7success \1\18\19\24\2(\9\
-\11err_message \1\":\
-\8Position\18\12\24\1(\3\
-\4line \1\18\14\24\2(\3\
-\6column \1\18\16\24\3(\9\
-\8filename \1\"8\
-\21LoadSettingsFilesArgs\18\16\24\1(\9\
-\8work_dir \1\18\13\24\2(\9\
-\5files \3\"z\
-\23LoadSettingsFilesResult\18/\24\0012\22.com.kcl.api.CliConfig(\11\
-\15kcl_cli_configs \1\18.\24\0022\25.com.kcl.api.KeyValuePair(\11\
-\11kcl_options \3\"ƒ\2\
-\9CliConfig\18\13\24\1(\9\
-\5files \3\18\14\24\2(\9\
-\6output \1\18\17\24\3(\9\
-\9overrides \3\18\21\24\4(\9\
-\13path_selector \3\18\26\24\5(\8\
-\18strict_range_check \1\18\20\24\6(\8\
-\12disable_none \1\18\15\24\7(\3\
-\7verbose \1\18\13\24\8(\8\
-\5debug \1\18\17\24\9(\8\
-\9sort_keys \1\18\19\24\
-(\8\
-\11show_hidden \1\18 \24\11(\8\
-\24include_schema_type_path \1\18\17\24\12(\8\
-\9fast_eval \1\"*\
-\12KeyValuePair\18\11\24\1(\9\
-\3key \1\18\13\24\2(\9\
-\5value \1\"]\
+list_items2\21.com.kcl.api.Variable \3\18+(\11\24\5\
+\12dict_entries2\21.com.kcl.api.MapEntry \3\
+\8Variable\"=\18\11(\9\24\1\
+\3key \1\18$(\11\24\2\
+\5value2\21.com.kcl.api.Variable \1\
+\8MapEntry\"`\18/(\11\24\1\
+\9exec_args2\28.com.kcl.api.ExecProgramArgs \1\18\19(\9\24\2\
+\11schema_name \1\
+\24GetSchemaTypeMappingArgs\"É\1\18[(\11\24\1\
+\19schema_type_mapping2>.com.kcl.api.GetSchemaTypeMappingResult.SchemaTypeMappingEntry \3\26N\18\11(\9\24\1\
+\3key \1\18#(\11\24\2\
+\5value2\20.com.kcl.api.KclType \1:\0028\1\
+\22SchemaTypeMappingEntry\
+\26GetSchemaTypeMappingResult\"ß\1\18d(\11\24\1\
+\19schema_type_mapping2G.com.kcl.api.GetSchemaTypeMappingUnderPathResult.SchemaTypeMappingEntry \3\26R\18\11(\9\24\1\
+\3key \1\18'(\11\24\2\
+\5value2\24.com.kcl.api.SchemaTypes \1:\0028\1\
+\22SchemaTypeMappingEntry\
+#GetSchemaTypeMappingUnderPathResult\"8\18)(\11\24\1\
+\11schema_type2\20.com.kcl.api.KclType \3\
+\11SchemaTypes\"·\1\18\16(\9\24\1\
+\8datafile \1\18\12(\9\24\2\
+\4data \1\18\12(\9\24\3\
+\4file \1\18\12(\9\24\4\
+\4code \1\18\14(\9\24\5\
+\6schema \1\18\22(\9\24\6\
+\14attribute_name \1\18\14(\9\24\7\
+\6format \1\18/(\11\24\8\
+\13external_pkgs2\24.com.kcl.api.ExternalPkg \3\
+\16ValidateCodeArgs\":\18\15(\8\24\1\
+\7success \1\18\19(\9\24\2\
+\11err_message \1\
+\18ValidateCodeResult\":\18\12(\3\24\1\
+\4line \1\18\14(\3\24\2\
+\6column \1\18\16(\9\24\3\
+\8filename \1\
+\8Position\"8\18\16(\9\24\1\
+\8work_dir \1\18\13(\9\24\2\
+\5files \3\
+\21LoadSettingsFilesArgs\"z\18/(\11\24\1\
+\15kcl_cli_configs2\22.com.kcl.api.CliConfig \1\18.(\11\24\2\
+\11kcl_options2\25.com.kcl.api.KeyValuePair \3\
+\23LoadSettingsFilesResult\"ƒ\2\18\13(\9\24\1\
+\5files \3\18\14(\9\24\2\
+\6output \1\18\17(\9\24\3\
+\9overrides \3\18\21(\9\24\4\
+\13path_selector \3\18\26(\8\24\5\
+\18strict_range_check \1\18\20(\8\24\6\
+\12disable_none \1\18\15(\3\24\7\
+\7verbose \1\18\13(\8\24\8\
+\5debug \1\18\17(\8\24\9\
+\9sort_keys \1\18\19(\8\24\
 \
-RenameArgs\18\20\24\1(\9\
-\12package_root \1\18\19\24\2(\9\
-\11symbol_path \1\18\18\24\3(\9\
+\11show_hidden \1\18 (\8\24\11\
+\24include_schema_type_path \1\18\17(\8\24\12\
+\9fast_eval \1\
+\9CliConfig\"*\18\11(\9\24\1\
+\3key \1\18\13(\9\24\2\
+\5value \1\
+\12KeyValuePair\"]\18\20(\9\24\1\
+\12package_root \1\18\19(\9\24\2\
+\11symbol_path \1\18\18(\9\24\3\
 \
-file_paths \3\18\16\24\4(\9\
-\8new_name \1\"%\
-\12RenameResult\18\21\24\1(\9\
-\13changed_files \3\"Å\1\18\20\24\1(\9\
-\12package_root \1\18\19\24\2(\9\
-\11symbol_path \1\18B2,.com.kcl.api.RenameCodeArgs.SourceCodesEntry\24\3(\11\
-\12source_codes \3\18\16\24\4(\9\
+file_paths \3\18\16(\9\24\4\
 \8new_name \1\
-\14RenameCodeArgs\0262\18\11\24\1(\9\
-\3key \1\18\13\24\2(\9\
-\5value \1\
-\16SourceCodesEntry:\0028\1\"\1\18F2/.com.kcl.api.RenameCodeResult.ChangedCodesEntry\24\1(\11\
-\13changed_codes \3\
-\16RenameCodeResult\0263\18\11\24\1(\9\
-\3key \1\18\13\24\2(\9\
-\5value \1\
-\17ChangedCodesEntry:\0028\1\"†\1\
-\8TestArgs\18/\24\0012\28.com.kcl.api.ExecProgramArgs(\11\
-\9exec_args \1\18\16\24\2(\9\
-\8pkg_list \3\18\18\24\3(\9\
 \
-run_regexp \1\18\17\24\4(\8\
-\9fail_fast \1\18\16\24\5(\8\
-\8coverage \1\"h\
+RenameArgs\"%\18\21(\9\24\1\
+\13changed_files \3\
+\12RenameResult\"Å\1\18\20(\9\24\1\
+\12package_root \1\18\19(\9\24\2\
+\11symbol_path \1\18B(\11\24\3\
+\12source_codes2,.com.kcl.api.RenameCodeArgs.SourceCodesEntry \3\18\16(\9\24\4\
+\8new_name \1\0262\18\11(\9\24\1\
+\3key \1\18\13(\9\24\2\
+\5value \1:\0028\1\
+\16SourceCodesEntry\
+\14RenameCodeArgs\"\1\18F(\11\24\1\
+\13changed_codes2/.com.kcl.api.RenameCodeResult.ChangedCodesEntry \3\0263\18\11(\9\24\1\
+\3key \1\18\13(\9\24\2\
+\5value \1:\0028\1\
+\17ChangedCodesEntry\
+\16RenameCodeResult\"™\1\18/(\11\24\1\
+\9exec_args2\28.com.kcl.api.ExecProgramArgs \1\18\16(\9\24\2\
+\8pkg_list \3\18\18(\9\24\3\
 \
-TestResult\18'\24\0022\25.com.kcl.api.TestCaseInfo(\11\
-\4info \3\0181\24\0032\31.com.kcl.api.TestCoverageReport(\11\
-\8coverage \1\"¿\1\18\12\24\1(\9\
-\4name \1\18\13\24\2(\9\
-\5error \1\18\16\24\3(\4\
-\8duration \1\18\19\24\4(\9\
-\11log_message \1\18:2'.com.kcl.api.TestCaseInfo.LineHitsEntry\24\5(\11\
-\9line_hits \3\
-\12TestCaseInfo\26/\18\11\24\1(\9\
-\3key \1\18\13\24\2(\4\
-\5value \1\
-\13LineHitsEntry:\0028\1\"¾\1\18\16\24\1(\9\
-\8filename \1\18\21\24\2(\4\
-\13covered_lines \3\18\24\24\3(\4\
-\16executable_lines \3\18:2'.com.kcl.api.FileCoverage.LineHitsEntry\24\4(\11\
-\9line_hits \3\
-\12FileCoverage\26/\18\11\24\1(\4\
-\3key \1\18\13\24\2(\4\
-\5value \1\
-\13LineHitsEntry:\0028\1\"Ç\1\01892*.com.kcl.api.TestCoverageReport.FilesEntry\24\1(\11\
-\5files \3\18-\24\0022\28.com.kcl.api.CoverageSummary(\11\
-\7summary \1\
-\18TestCoverageReport\26G\18\11\24\1(\9\
-\3key \1\18(\24\0022\25.com.kcl.api.FileCoverage(\11\
-\5value \1\
+run_regexp \1\18\17(\8\24\4\
+\9fail_fast \1\18\16(\8\24\5\
+\8coverage \1\18\17(\8\24\6\
+\9eval_once \1\
+\8TestArgs\"h\18'(\11\24\2\
+\4info2\25.com.kcl.api.TestCaseInfo \3\0181(\11\24\3\
+\8coverage2\31.com.kcl.api.TestCoverageReport \1\
 \
-FilesEntry:\0028\1\"G\
-\15CoverageSummary\18\15\24\1(\4\
-\7covered \1\18\18\24\2(\4\
+TestResult\"¿\1\18\12(\9\24\1\
+\4name \1\18\13(\9\24\2\
+\5error \1\18\16(\4\24\3\
+\8duration \1\18\19(\9\24\4\
+\11log_message \1\18:(\11\24\5\
+\9line_hits2'.com.kcl.api.TestCaseInfo.LineHitsEntry \3\26/\18\11(\9\24\1\
+\3key \1\18\13(\4\24\2\
+\5value \1:\0028\1\
+\13LineHitsEntry\
+\12TestCaseInfo\"¾\1\18\16(\9\24\1\
+\8filename \1\18\21(\4\24\2\
+\13covered_lines \3\18\24(\4\24\3\
+\16executable_lines \3\18:(\11\24\4\
+\9line_hits2'.com.kcl.api.FileCoverage.LineHitsEntry \3\26/\18\11(\4\24\1\
+\3key \1\18\13(\4\24\2\
+\5value \1:\0028\1\
+\13LineHitsEntry\
+\12FileCoverage\"Ç\1\0189(\11\24\1\
+\5files2*.com.kcl.api.TestCoverageReport.FilesEntry \3\18-(\11\24\2\
+\7summary2\28.com.kcl.api.CoverageSummary \1\26G\18\11(\9\24\1\
+\3key \1\18((\11\24\2\
+\5value2\25.com.kcl.api.FileCoverage \1:\0028\1\
 \
-executable \1\18\15\24\3(\1\
-\7percent \1\"?\
-\20FormatTestReportArgs\18'\24\0012\23.com.kcl.api.TestResult(\11\
-\6result \1\"(\
-\22FormatTestReportResult\18\14\24\1(\9\
-\6report \1\"?\
-\22UpdateDependenciesArgs\18\21\24\1(\9\
-\13manifest_path \1\18\14\24\2(\8\
-\6vendor \1\"K\
-\24UpdateDependenciesResult\18/\24\0032\24.com.kcl.api.ExternalPkg(\11\
-\13external_pkgs \3\"V\
-\16GenerateTomlArgs\18/\24\0012\28.com.kcl.api.ExecProgramArgs(\11\
-\9exec_args \1\18\17\24\2(\8\
-\9sort_keys \1\"\"\
-\18GenerateTomlResult\18\12\24\1(\9\
-\4toml \1\"C\
-\15GenerateKclArgs\18\14\24\1(\9\
-\6source \1\18\16\24\2(\9\
-\8filename \1\18\14\24\3(\9\
-\6format \1\" \
-\17GenerateKclResult\18\11\24\1(\9\
-\3kcl \1\"Y\
-\19GenerateOpenAPIArgs\0181\24\0012\29.com.kcl.api.ParseProgramArgs(\11\
+FilesEntry\
+\18TestCoverageReport\"G\18\15(\4\24\1\
+\7covered \1\18\18(\4\24\2\
 \
-parse_args \1\18\15\24\2(\9\
-\7version \1\"%\
-\21GenerateOpenAPIResult\18\12\24\1(\9\
-\4spec \1\"W\
-\17GenerateProtoArgs\0181\24\0012\29.com.kcl.api.ParseProgramArgs(\11\
+executable \1\18\15(\1\24\3\
+\7percent \1\
+\15CoverageSummary\"?\18'(\11\24\1\
+\6result2\23.com.kcl.api.TestResult \1\
+\20FormatTestReportArgs\"(\18\14(\9\24\1\
+\6report \1\
+\22FormatTestReportResult\"?\18\21(\9\24\1\
+\13manifest_path \1\18\14(\8\24\2\
+\6vendor \1\
+\22UpdateDependenciesArgs\"K\18/(\11\24\3\
+\13external_pkgs2\24.com.kcl.api.ExternalPkg \3\
+\24UpdateDependenciesResult\"V\18/(\11\24\1\
+\9exec_args2\28.com.kcl.api.ExecProgramArgs \1\18\17(\8\24\2\
+\9sort_keys \1\
+\16GenerateTomlArgs\"\"\18\12(\9\24\1\
+\4toml \1\
+\18GenerateTomlResult\"C\18\14(\9\24\1\
+\6source \1\18\16(\9\24\2\
+\8filename \1\18\14(\9\24\3\
+\6format \1\
+\15GenerateKclArgs\" \18\11(\9\24\1\
+\3kcl \1\
+\17GenerateKclResult\"Y\0181(\11\24\1\
 \
-parse_args \1\18\15\24\2(\9\
-\7package \1\"$\
-\19GenerateProtoResult\18\13\24\1(\9\
-\5proto \1\"T\
-\15GenerateDocArgs\0181\24\0012\29.com.kcl.api.ParseProgramArgs(\11\
+parse_args2\29.com.kcl.api.ParseProgramArgs \1\18\15(\9\24\2\
+\7version \1\
+\19GenerateOpenAPIArgs\"%\18\12(\9\24\1\
+\4spec \1\
+\21GenerateOpenAPIResult\"W\0181(\11\24\1\
 \
-parse_args \1\18\14\24\2(\9\
-\6format \1\"$\
-\17GenerateDocResult\18\15\24\1(\9\
-\7content \1\"û\5\18\12\24\1(\9\
-\4type \1\18)\24\0022\20.com.kcl.api.KclType(\11\
-\11union_types \3\18\15\24\3(\9\
-\7default \1\18\19\24\4(\9\
-\11schema_name \1\18\18\24\5(\9\
+parse_args2\29.com.kcl.api.ParseProgramArgs \1\18\15(\9\24\2\
+\7package \1\
+\17GenerateProtoArgs\"$\18\13(\9\24\1\
+\5proto \1\
+\19GenerateProtoResult\"E\0181(\11\24\1\
 \
-schema_doc \1\01882$.com.kcl.api.KclType.PropertiesEntry\24\6(\11\
+parse_args2\29.com.kcl.api.ParseProgramArgs \1\
+\16GenerateRustArgs\")\18\19(\9\24\1\
+\11rust_source \1\
+\18GenerateRustResult\"G\0181(\11\24\1\
 \
-properties \3\18\16\24\7(\9\
-\8required \3\18!\24\0082\20.com.kcl.api.KclType(\11\
-\3key \1\18\"\24\0092\20.com.kcl.api.KclType(\11\
-\4item \1\18\12\24\
-(\5\
-\4line \1\18*\24\0112\22.com.kcl.api.Decorator(\11\
+parse_args2\29.com.kcl.api.ParseProgramArgs \1\
+\18GeneratePythonArgs\"-\18\21(\9\24\1\
+\13python_source \1\
+\20GeneratePythonResult\"T\0181(\11\24\1\
 \
-decorators \3\18\16\24\12(\9\
-\8filename \1\18\16\24\13(\9\
-\8pkg_path \1\18\19\24\14(\9\
-\11description \1\01842\".com.kcl.api.KclType.ExamplesEntry\24\15(\11\
-\8examples \3\18)\24\0162\20.com.kcl.api.KclType(\11\
-\11base_schema \1\18-\24\17H\0002\25.com.kcl.api.FunctionType(\11\
-\8function \1\0186\24\18H\0012\27.com.kcl.api.IndexSignature(\11\
-\15index_signature \1B\11\
+parse_args2\29.com.kcl.api.ParseProgramArgs \1\18\15(\9\24\2\
+\7package \1\
+\14GenerateGoArgs\"%\18\17(\9\24\1\
+\9go_source \1\
+\16GenerateGoResult\"V\0181(\11\24\1\
+\
+parse_args2\29.com.kcl.api.ParseProgramArgs \1\18\15(\9\24\2\
+\7package \1\
+\16GenerateJavaArgs\")\18\19(\9\24\1\
+\11java_source \1\
+\18GenerateJavaResult\"K\0181(\11\24\1\
+\
+parse_args2\29.com.kcl.api.ParseProgramArgs \1\
+\22GenerateTypeScriptArgs\"5\18\25(\9\24\1\
+\17typescript_source \1\
+\24GenerateTypeScriptResult\"T\0181(\11\24\1\
+\
+parse_args2\29.com.kcl.api.ParseProgramArgs \1\18\14(\9\24\2\
+\6format \1\
+\15GenerateDocArgs\"$\18\15(\9\24\1\
+\7content \1\
+\17GenerateDocResult\"\6B\11\
 \9_functionB\18\
-\16_index_signature\
-\7KclType\26G\18\11\24\1(\9\
-\3key \1\18#\24\0022\20.com.kcl.api.KclType(\11\
-\5value \1\
-\15PropertiesEntry:\0028\1\26E\18\11\24\1(\9\
-\3key \1\18#\24\0022\20.com.kcl.api.Example(\11\
-\5value \1\
-\13ExamplesEntry:\0028\1\"_\
-\12FunctionType\18&\24\0012\22.com.kcl.api.Parameter(\11\
-\6params \3\18'\24\0022\20.com.kcl.api.KclType(\11\
-\9return_ty \1\";\
-\9Parameter\18\12\24\1(\9\
-\4name \1\18 \24\0022\20.com.kcl.api.KclType(\11\
-\2ty \1\"Š\1\18\18H\0\24\1(\9\
-\8key_name \1\18!\24\0022\20.com.kcl.api.KclType(\11\
-\3key \1\18!\24\0032\20.com.kcl.api.KclType(\11\
-\3val \1\18\17\24\4(\8\
+\16_index_signature\18\12(\9\24\1\
+\4type \1\18)(\11\24\2\
+\11union_types2\20.com.kcl.api.KclType \3\18\15(\9\24\3\
+\7default \1\18\19(\9\24\4\
+\11schema_name \1\18\18(\9\24\5\
+\
+schema_doc \1\0188(\11\24\6\
+\
+properties2$.com.kcl.api.KclType.PropertiesEntry \3\18\16(\9\24\7\
+\8required \3\18!(\11\24\8\
+\3key2\20.com.kcl.api.KclType \1\18\"(\11\24\9\
+\4item2\20.com.kcl.api.KclType \1\18\12(\5\24\
+\
+\4line \1\18*(\11\24\11\
+\
+decorators2\22.com.kcl.api.Decorator \3\18\16(\9\24\12\
+\8filename \1\18\16(\9\24\13\
+\8pkg_path \1\18\19(\9\24\14\
+\11description \1\0184(\11\24\15\
+\8examples2\".com.kcl.api.KclType.ExamplesEntry \3\18)(\11\24\16\
+\11base_schema2\20.com.kcl.api.KclType \1\18-(\11\24\17\
+\8function2\25.com.kcl.api.FunctionTypeH\0 \1\0186(\11\24\18\
+\15index_signature2\27.com.kcl.api.IndexSignatureH\1 \1\18\19(\9\24\19\
+\11checks_json \3\26G\18\11(\9\24\1\
+\3key \1\18#(\11\24\2\
+\5value2\20.com.kcl.api.KclType \1:\0028\1\
+\15PropertiesEntry\26E\18\11(\9\24\1\
+\3key \1\18#(\11\24\2\
+\5value2\20.com.kcl.api.Example \1:\0028\1\
+\13ExamplesEntry\
+\7KclType\"_\18&(\11\24\1\
+\6params2\22.com.kcl.api.Parameter \3\18'(\11\24\2\
+\9return_ty2\20.com.kcl.api.KclType \1\
+\12FunctionType\";\18\12(\9\24\1\
+\4name \1\18 (\11\24\2\
+\2ty2\20.com.kcl.api.KclType \1\
+\9Parameter\"Š\1\18\18(\9\24\1\
+\8key_nameH\0 \1\18!(\11\24\2\
+\3key2\20.com.kcl.api.KclType \1\18!(\11\24\3\
+\3val2\20.com.kcl.api.KclType \1\18\17(\8\24\4\
 \9any_other \1B\11\
 \9_key_name\
-\14IndexSignature\"•\1\18\12\24\1(\9\
-\4name \1\18\17\24\2(\9\
-\9arguments \3\01862$.com.kcl.api.Decorator.KeywordsEntry\24\3(\11\
-\8keywords \3\
-\9Decorator\26/\18\11\24\1(\9\
-\3key \1\18\13\24\2(\9\
+\14IndexSignature\"•\1\18\12(\9\24\1\
+\4name \1\18\17(\9\24\2\
+\9arguments \3\0186(\11\24\3\
+\8keywords2$.com.kcl.api.Decorator.KeywordsEntry \3\26/\18\11(\9\24\1\
+\3key \1\18\13(\9\24\2\
+\5value \1:\0028\1\
+\13KeywordsEntry\
+\9Decorator\">\18\15(\9\24\1\
+\7summary \1\18\19(\9\24\2\
+\11description \1\18\13(\9\24\3\
 \5value \1\
-\13KeywordsEntry:\0028\1\">\
-\7Example\18\15\24\1(\9\
-\7summary \1\18\19\24\2(\9\
-\11description \1\18\13\24\3(\9\
-\5value \1\
+\7ExampleB\20Z\5.;apiª\2\
+KclLib.API2’\1\0186\18\21.com.kcl.api.PingArgs\26\23.com.kcl.api.PingResult\
+\4Ping\18H\18\27.com.kcl.api.ListMethodArgs\26\29.com.kcl.api.ListMethodResult\
 \
-spec.protoB\20ª\2\
-KclLib.APIZ\5.;api"
+ListMethod\
+\14BuiltinService2î\20\0186\18\21.com.kcl.api.PingArgs\26\23.com.kcl.api.PingResult\
+\4Ping\18H\18\27.com.kcl.api.GetVersionArgs\26\29.com.kcl.api.GetVersionResult\
+\
+GetVersion\18N\18\29.com.kcl.api.ParseProgramArgs\26\31.com.kcl.api.ParseProgramResult\
+\12ParseProgram\18E\18\26.com.kcl.api.ParseFileArgs\26\28.com.kcl.api.ParseFileResult\
+\9ParseFile\18K\18\28.com.kcl.api.LoadPackageArgs\26\30.com.kcl.api.LoadPackageResult\
+\11LoadPackage\18L\18\29.com.kcl.api.ParseProgramArgs\26\30.com.kcl.api.ListOptionsResult\
+\11ListOptions\18Q\18\30.com.kcl.api.ListVariablesArgs\26 .com.kcl.api.ListVariablesResult\
+\13ListVariables\18K\18\28.com.kcl.api.ExecProgramArgs\26\30.com.kcl.api.ExecProgramResult\
+\11ExecProgram\18N\18\29.com.kcl.api.BuildProgramArgs\26\31.com.kcl.api.BuildProgramResult\
+\12BuildProgram\18M\18\29.com.kcl.api.ExecArtifactArgs\26\30.com.kcl.api.ExecProgramResult\
+\12ExecArtifact\18N\18\29.com.kcl.api.OverrideFileArgs\26\31.com.kcl.api.OverrideFileResult\
+\12OverrideFile\18f\18%.com.kcl.api.GetSchemaTypeMappingArgs\26'.com.kcl.api.GetSchemaTypeMappingResult\
+\20GetSchemaTypeMapping\18x\18%.com.kcl.api.GetSchemaTypeMappingArgs\0260.com.kcl.api.GetSchemaTypeMappingUnderPathResult\
+\29GetSchemaTypeMappingUnderPath\18H\18\27.com.kcl.api.FormatCodeArgs\26\29.com.kcl.api.FormatCodeResult\
+\
+FormatCode\18H\18\27.com.kcl.api.FormatPathArgs\26\29.com.kcl.api.FormatPathResult\
+\
+FormatPath\18B\18\25.com.kcl.api.LintPathArgs\26\27.com.kcl.api.LintPathResult\
+\8LintPath\18N\18\29.com.kcl.api.ValidateCodeArgs\26\31.com.kcl.api.ValidateCodeResult\
+\12ValidateCode\18]\18\".com.kcl.api.LoadSettingsFilesArgs\26$.com.kcl.api.LoadSettingsFilesResult\
+\17LoadSettingsFiles\18<\18\23.com.kcl.api.RenameArgs\26\25.com.kcl.api.RenameResult\
+\6Rename\18H\18\27.com.kcl.api.RenameCodeArgs\26\29.com.kcl.api.RenameCodeResult\
+\
+RenameCode\0186\18\21.com.kcl.api.TestArgs\26\23.com.kcl.api.TestResult\
+\4Test\18Z\18!.com.kcl.api.FormatTestReportArgs\26#.com.kcl.api.FormatTestReportResult\
+\16FormatTestReport\18`\18#.com.kcl.api.UpdateDependenciesArgs\26%.com.kcl.api.UpdateDependenciesResult\
+\18UpdateDependencies\18N\18\29.com.kcl.api.GenerateTomlArgs\26\31.com.kcl.api.GenerateTomlResult\
+\12GenerateToml\18K\18\28.com.kcl.api.GenerateKclArgs\26\30.com.kcl.api.GenerateKclResult\
+\11GenerateKcl\18W\18 .com.kcl.api.GenerateOpenAPIArgs\26\".com.kcl.api.GenerateOpenAPIResult\
+\15GenerateOpenAPI\18Q\18\30.com.kcl.api.GenerateProtoArgs\26 .com.kcl.api.GenerateProtoResult\
+\13GenerateProto\18N\18\29.com.kcl.api.GenerateRustArgs\26\31.com.kcl.api.GenerateRustResult\
+\12GenerateRust\18T\18\31.com.kcl.api.GeneratePythonArgs\26!.com.kcl.api.GeneratePythonResult\
+\14GeneratePython\18H\18\27.com.kcl.api.GenerateGoArgs\26\29.com.kcl.api.GenerateGoResult\
+\
+GenerateGo\18N\18\29.com.kcl.api.GenerateJavaArgs\26\31.com.kcl.api.GenerateJavaResult\
+\12GenerateJava\18`\18#.com.kcl.api.GenerateTypeScriptArgs\26%.com.kcl.api.GenerateTypeScriptResult\
+\18GenerateTypeScript\18K\18\28.com.kcl.api.GenerateDocArgs\26\30.com.kcl.api.GenerateDocResult\
+\11GenerateDoc\
+\
+KclService\
+\
+spec.protob\6proto3\18\11com.kcl.api"

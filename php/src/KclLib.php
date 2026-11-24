@@ -174,6 +174,11 @@ final class KclLib
         return match (PHP_OS_FAMILY) {
             'Darwin' => "darwin-{$arch}/libkcl.dylib",
             'Linux' => "linux-{$arch}/libkcl.so",
+            // PHP_OS_FAMILY is "BSD" for every BSD. Only FreeBSD has a
+            // libkcl.so layout in this repo.
+            'BSD' => PHP_OS === 'FreeBSD'
+                ? "freebsd-{$arch}/libkcl.so"
+                : throw new RuntimeException('unsupported operating system: ' . PHP_OS),
             'Windows' => "windows-{$arch}/kcl.dll",
             default => throw new RuntimeException('unsupported operating system: ' . PHP_OS_FAMILY),
         };

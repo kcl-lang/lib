@@ -180,6 +180,7 @@ def _build_args(case):
             run_regexp=a.get("run_regexp", ""),
             fail_fast=a.get("fail_fast", False),
             coverage=a.get("coverage", False),
+            eval_once=a.get("eval_once", False),
         )
     if rpc == "KclService.OverrideFile":
         return api.OverrideFileArgs(
@@ -209,6 +210,20 @@ def _build_args(case):
         return api.GenerateDocArgs(
             parse_args=_parse_args(a["parse_args"]), format=a.get("format", "")
         )
+    if rpc == "KclService.GenerateRust":
+        return api.GenerateRustArgs(parse_args=_parse_args(a["parse_args"]))
+    if rpc == "KclService.GeneratePython":
+        return api.GeneratePythonArgs(parse_args=_parse_args(a["parse_args"]))
+    if rpc == "KclService.GenerateGo":
+        return api.GenerateGoArgs(
+            parse_args=_parse_args(a["parse_args"]), package=a.get("package", "")
+        )
+    if rpc == "KclService.GenerateJava":
+        return api.GenerateJavaArgs(
+            parse_args=_parse_args(a["parse_args"]), package=a.get("package", "")
+        )
+    if rpc == "KclService.GenerateTypeScript":
+        return api.GenerateTypeScriptArgs(parse_args=_parse_args(a["parse_args"]))
     raise ValueError(f"no args builder for rpc {rpc}")
 
 
@@ -237,6 +252,11 @@ _METHOD_NAMES = {
     "KclService.GenerateOpenAPI": "generate_openapi",
     "KclService.GenerateProto": "generate_proto",
     "KclService.GenerateDoc": "generate_doc",
+    "KclService.GenerateRust": "generate_rust",
+    "KclService.GeneratePython": "generate_python",
+    "KclService.GenerateGo": "generate_go",
+    "KclService.GenerateJava": "generate_java",
+    "KclService.GenerateTypeScript": "generate_typescript",
     "KclService.UpdateDependencies": "update_dependencies",
     "KclService.GetVersion": "get_version",
     "BuiltinService.ListMethod": "list_method",

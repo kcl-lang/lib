@@ -118,12 +118,14 @@ const PLATFORM_KEYS = (
     ("darwin", "x86_64") => ("darwin-amd64", "dylib"),
     ("linux", "x86_64") => ("linux-amd64", "so"),
     ("linux", "aarch64") => ("linux-arm64", "so"),
+    ("freebsd", "x86_64") => ("freebsd-amd64", "so"),
+    ("freebsd", "aarch64") => ("freebsd-arm64", "so"),
     ("windows", "x86_64") => ("windows-amd64", "dll"),
     ("windows", "aarch64") => ("windows-arm64", "dll"),
 )
 
 function _platform_key()
-    os = Sys.isapple() ? "darwin" : Sys.islinux() ? "linux" : Sys.iswindows() ? "windows" : nothing
+    os = Sys.isapple() ? "darwin" : Sys.islinux() ? "linux" : Sys.iswindows() ? "windows" : Sys.isfreebsd() ? "freebsd" : nothing
     os === nothing && error("KclLib: unsupported operating system $(Sys.MACHINE)")
     arch = String(Sys.ARCH)
     for ((kos, karch), v) in PLATFORM_KEYS
@@ -241,7 +243,7 @@ function call(name::AbstractString, args::AbstractVector{UInt8}=UInt8[])::Vector
 end
 
 # ---------------------------------------------------------------------------
-# Typed wrappers over the 26 KclService RPCs + BuiltinService.ListMethod,
+# Typed wrappers over the 31 KclService RPCs + BuiltinService.ListMethod,
 # in spec order (spec/spec.proto)
 # ---------------------------------------------------------------------------
 
@@ -510,6 +512,86 @@ println(result.proto)
 generate_proto(args::GenerateProtoArgs) = _rpc("KclService.GenerateProto", args, GenerateProtoResult)
 
 """
+    generate_rust(args::GenerateRustArgs) -> GenerateRustResult
+
+Generate Rust DTOs from the schemas of the package selected by `args.parse_args`.
+Equivalent to `call("KclService.GenerateRust", bytes)`.
+
+```julia
+result = generate_rust(GenerateRustArgs(
+    parse_args=ParseProgramArgs(paths=["main.k"])))
+println(result.rust_source)
+```
+"""
+generate_rust(args::GenerateRustArgs) = _rpc("KclService.GenerateRust", args, GenerateRustResult)
+
+"""
+    generate_python(args::GeneratePythonArgs) -> GeneratePythonResult
+
+Generate Python DTOs from the schemas of the package selected by
+`args.parse_args`. Equivalent to `call("KclService.GeneratePython", bytes)`.
+
+```julia
+result = generate_python(GeneratePythonArgs(
+    parse_args=ParseProgramArgs(paths=["main.k"])))
+println(result.python_source)
+```
+"""
+generate_python(args::GeneratePythonArgs) =
+    _rpc("KclService.GeneratePython", args, GeneratePythonResult)
+
+"""
+    generate_go(args::GenerateGoArgs) -> GenerateGoResult
+
+Generate Go DTOs from the schemas of the package selected by `args.parse_args`.
+`args.package` is the Go package name of the generated file's `package`
+clause, e.g. `"dto"`; when it is empty the runtime defaults to `"generated"`,
+since Go requires a package clause. Equivalent to
+`call("KclService.GenerateGo", bytes)`.
+
+```julia
+result = generate_go(GenerateGoArgs(
+    parse_args=ParseProgramArgs(paths=["main.k"]), package="dto"))
+println(result.go_source)
+```
+"""
+generate_go(args::GenerateGoArgs) = _rpc("KclService.GenerateGo", args, GenerateGoResult)
+
+"""
+    generate_java(args::GenerateJavaArgs) -> GenerateJavaResult
+
+Generate Java DTOs from the schemas of the package selected by
+`args.parse_args`. `args.package` is the Java package name of the generated
+file's `package` clause, e.g. `"com.example.dto"`; when it is empty the
+package clause is omitted entirely (valid Java — the "default package")
+rather than defaulting to a synthetic name as `generate_go` does, since Java
+(unlike Go) does not require one. Equivalent to
+`call("KclService.GenerateJava", bytes)`.
+
+```julia
+result = generate_java(GenerateJavaArgs(
+    parse_args=ParseProgramArgs(paths=["main.k"]), package="com.example.dto"))
+println(result.java_source)
+```
+"""
+generate_java(args::GenerateJavaArgs) = _rpc("KclService.GenerateJava", args, GenerateJavaResult)
+
+"""
+    generate_typescript(args::GenerateTypeScriptArgs) -> GenerateTypeScriptResult
+
+Generate TypeScript DTOs from the schemas of the package selected by
+`args.parse_args`. Equivalent to `call("KclService.GenerateTypeScript", bytes)`.
+
+```julia
+result = generate_typescript(GenerateTypeScriptArgs(
+    parse_args=ParseProgramArgs(paths=["main.k"])))
+println(result.typescript_source)
+```
+"""
+generate_typescript(args::GenerateTypeScriptArgs) =
+    _rpc("KclService.GenerateTypeScript", args, GenerateTypeScriptResult)
+
+"""
     generate_doc(args::GenerateDocArgs) -> GenerateDocResult
 
 Generate documentation from the schemas of the package selected by
@@ -532,9 +614,14 @@ List the methods exposed by the native KCL dispatcher. Equivalent to
 `call("BuiltinService.ListMethod", bytes)`.
 
 `ListMethod` is the one RPC the core registers under the service name
-`spec.proto` gives it, rather than under `KclService` like the other 26.
+`spec.proto` gives it, rather than under `KclService` like the other 31.
 `KclService.ListMethod` is not registered and makes the dispatcher raise
 `unknown method name`.
+
+`BuildProgram` and `ExecArtifact` are the other way round: `spec.proto`
+declares them, but the core deliberately keeps them out of its registry, so
+the dispatcher raises `unknown method name` for them. They have no wrapper
+here on purpose.
 """
 list_method() = _rpc("BuiltinService.ListMethod", ListMethodArgs(), ListMethodResult)
 
@@ -953,7 +1040,9 @@ export call, KclError,
     get_schema_type_mapping_under_path, format_code, format_path, lint_path,
     validate_code, load_settings_files, rename, rename_code, test,
     format_test_report, update_dependencies,
-    generate_toml, generate_kcl, generate_openapi, generate_proto, generate_doc,
+    generate_toml, generate_kcl, generate_openapi, generate_proto, generate_rust,
+    generate_python, generate_go, generate_java, generate_typescript,
+    generate_doc,
     list_method,
     register_plugin, plugin_registered, disable_plugins, has_plugins,
     PluginMethod,

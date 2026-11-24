@@ -426,6 +426,53 @@ Map<String, Object?> _dispatch(String rpc, Map<String, Object?> args) {
         )).proto,
       };
 
+    case 'KclService.GenerateRust':
+      return {
+        'rust_source': generateRust(GenerateRustArgs(
+          parseArgs: _parseArgs(
+            _obj(args['parse_args'] ?? const <String, Object?>{}, 'parse_args'),
+          ),
+        )).rustSource,
+      };
+
+    case 'KclService.GeneratePython':
+      return {
+        'python_source': generatePython(GeneratePythonArgs(
+          parseArgs: _parseArgs(
+            _obj(args['parse_args'] ?? const <String, Object?>{}, 'parse_args'),
+          ),
+        )).pythonSource,
+      };
+
+    case 'KclService.GenerateGo':
+      return {
+        'go_source': generateGo(GenerateGoArgs(
+          parseArgs: _parseArgs(
+            _obj(args['parse_args'] ?? const <String, Object?>{}, 'parse_args'),
+          ),
+          package: _optStr(args, 'package'),
+        )).goSource,
+      };
+
+    case 'KclService.GenerateJava':
+      return {
+        'java_source': generateJava(GenerateJavaArgs(
+          parseArgs: _parseArgs(
+            _obj(args['parse_args'] ?? const <String, Object?>{}, 'parse_args'),
+          ),
+          package: _optStr(args, 'package'),
+        )).javaSource,
+      };
+
+    case 'KclService.GenerateTypeScript':
+      return {
+        'typescript_source': generateTypeScript(GenerateTypeScriptArgs(
+          parseArgs: _parseArgs(
+            _obj(args['parse_args'] ?? const <String, Object?>{}, 'parse_args'),
+          ),
+        )).typescriptSource,
+      };
+
     case 'KclService.GenerateDoc':
       return {
         'content': generateDoc(GenerateDocArgs(
@@ -585,6 +632,7 @@ Map<String, Object?> _dispatch(String rpc, Map<String, Object?> args) {
         runRegexp: _optStr(args, 'run_regexp'),
         failFast: _optBool(args, 'fail_fast'),
         coverage: _optBool(args, 'coverage'),
+        evalOnce: _optBool(args, 'eval_once'),
       ));
       // Durations are wall-clock and would make the case fail at random, so
       // only the names are pinned.
@@ -884,7 +932,7 @@ void main() {
       // Pin the registry size so a method cannot be dropped from the core
       // without this binding noticing -- `KclService.ListDepFiles` was removed
       // in v0.13.1, replaced by `LoadPackageResult.imports` / `kcl_mod` / `apps`.
-      expect(methods, hasLength(28));
+      expect(methods, hasLength(33));
     });
 
     // One test per manifest case, mirroring ConsistencyTest.java.
@@ -919,6 +967,11 @@ void main() {
     test('load_settings_files', () => _runCase('load_settings_files'));
     test('update_dependencies_no_deps',
         () => _runCase('update_dependencies_no_deps'));
+    test('generate_rust', () => _runCase('generate_rust'));
+    test('generate_python', () => _runCase('generate_python'));
+    test('generate_go', () => _runCase('generate_go'));
+    test('generate_java', () => _runCase('generate_java'));
+    test('generate_typescript', () => _runCase('generate_typescript'));
 
     // Every case in the manifest must be dispatched by a test above. Without
     // this, a runner that covers half the spec passes silently — which is how

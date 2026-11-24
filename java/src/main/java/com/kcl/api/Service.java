@@ -74,6 +74,21 @@ public interface Service {
     // Service for generating proto3 definitions from the schemas of a KCL package.
     GenerateProtoResult generateProto(GenerateProtoArgs args) throws Exception;
 
+    // Service for generating Rust DTOs from the schemas of a KCL package.
+    GenerateRustResult generateRust(GenerateRustArgs args) throws Exception;
+
+    // Service for generating Python DTOs from the schemas of a KCL package.
+    GeneratePythonResult generatePython(GeneratePythonArgs args) throws Exception;
+
+    // Service for generating Go DTOs from the schemas of a KCL package.
+    GenerateGoResult generateGo(GenerateGoArgs args) throws Exception;
+
+    // Service for generating Java DTOs from the schemas of a KCL package.
+    GenerateJavaResult generateJava(GenerateJavaArgs args) throws Exception;
+
+    // Service for generating TypeScript DTOs from the schemas of a KCL package.
+    GenerateTypeScriptResult generateTypeScript(GenerateTypeScriptArgs args) throws Exception;
+
     // Service for generating documentation from the schemas of a KCL package.
     GenerateDocResult generateDoc(GenerateDocArgs args) throws Exception;
 

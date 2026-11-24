@@ -284,6 +284,16 @@ func buildConsistencyArgs(t *testing.T, c consistencyCase) interface{} {
 		return &api.GenerateProtoArgs{ParseArgs: parseArgs(t, jsonMap(a, "parse_args")), Package: jsonString(a, "package")}
 	case "KclService.GenerateDoc":
 		return &api.GenerateDocArgs{ParseArgs: parseArgs(t, jsonMap(a, "parse_args")), Format: jsonString(a, "format")}
+	case "KclService.GenerateRust":
+		return &api.GenerateRustArgs{ParseArgs: parseArgs(t, jsonMap(a, "parse_args"))}
+	case "KclService.GeneratePython":
+		return &api.GeneratePythonArgs{ParseArgs: parseArgs(t, jsonMap(a, "parse_args"))}
+	case "KclService.GenerateGo":
+		return &api.GenerateGoArgs{ParseArgs: parseArgs(t, jsonMap(a, "parse_args")), Package: jsonString(a, "package")}
+	case "KclService.GenerateJava":
+		return &api.GenerateJavaArgs{ParseArgs: parseArgs(t, jsonMap(a, "parse_args")), Package: jsonString(a, "package")}
+	case "KclService.GenerateTypeScript":
+		return &api.GenerateTypeScriptArgs{ParseArgs: parseArgs(t, jsonMap(a, "parse_args"))}
 
 	// The cases added for the remaining RPCs. Every one of their arguments is a
 	// string, a list of strings or a bool, so each is a straight field read --
@@ -325,6 +335,7 @@ func buildConsistencyArgs(t *testing.T, c consistencyCase) interface{} {
 			RunRegexp: jsonString(a, "run_regexp"),
 			FailFast:  jsonBool(a, "fail_fast"),
 			Coverage:  jsonBool(a, "coverage"),
+			EvalOnce:  jsonBool(a, "eval_once"),
 		}
 	case "KclService.OverrideFile":
 		return &api.OverrideFileArgs{
@@ -706,6 +717,16 @@ func callConsistencyRPC(client api.ServiceClient, c consistencyCase, args interf
 		return client.GenerateProto(args.(*api.GenerateProtoArgs))
 	case "KclService.GenerateDoc":
 		return client.GenerateDoc(args.(*api.GenerateDocArgs))
+	case "KclService.GenerateRust":
+		return client.GenerateRust(args.(*api.GenerateRustArgs))
+	case "KclService.GeneratePython":
+		return client.GeneratePython(args.(*api.GeneratePythonArgs))
+	case "KclService.GenerateGo":
+		return client.GenerateGo(args.(*api.GenerateGoArgs))
+	case "KclService.GenerateJava":
+		return client.GenerateJava(args.(*api.GenerateJavaArgs))
+	case "KclService.GenerateTypeScript":
+		return client.GenerateTypeScript(args.(*api.GenerateTypeScriptArgs))
 	case "KclService.ParseFile":
 		return client.ParseFile(args.(*api.ParseFileArgs))
 	case "KclService.ParseProgram":
