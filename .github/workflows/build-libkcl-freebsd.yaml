@@ -1,0 +1,111 @@
+name: build-libkcl-freebsd
+
+# GitHub-hosted runners have no FreeBSD VM, so this workflow does not execute
+# libkcl.so. It proves the Go install and loader packages compile for
+# freebsd/amd64 and freebsd/arm64. The failure in
+# https://github.com/kcl-lang/cli/issues/147 and
+# https://github.com/kcl-lang/kcl/issues/1029 was `undefined: installLib`
+# before the native loader ever ran.
+#
+# Produce the shared library with hack/build-freebsd-lib.sh (native cargo on
+# FreeBSD, cargo-zigbuild elsewhere). See docs/lib-vendoring.md.
+
+on:
+  push:
+    branches:
+      - main
+      - master
+    paths:
+      - "go/install/**"
+      - "go/lib/**"
+      - "go/native/**"
+      - "go/include/**"
+      - "c/src/lib.rs"
+      - "c/include/kcl_ffi.h"
+      - "hack/build-freebsd-lib.sh"
+      - "hack/download-libs.sh"
+      - ".github/workflows/build-libkcl-freebsd.yaml"
+      - ".github/workflows/vendor-libs.yaml"
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "go/install/**"
+      - "go/lib/**"
+      - "go/native/**"
+      - "go/include/**"
+      - "c/src/lib.rs"
+      - "c/include/kcl_ffi.h"
+      - "hack/build-freebsd-lib.sh"
+      - "hack/download-libs.sh"
+      - ".github/workflows/build-libkcl-freebsd.yaml"
+      - ".github/workflows/vendor-libs.yaml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  go:
+    name: Go install path (freebsd/${{ matrix.arch }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        arch: [amd64, arm64]
+    env:
+      # The purego loader is the !cgo path. Match go-test.yaml's non-musl legs.
+      CGO_ENABLED: "0"
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-go@v7
+        with:
+          go-version: "1.25"
+          cache: true
+
+      - name: Check the build scripts
+        if: matrix.arch == 'amd64'
+        run: |
+          set -euo pipefail
+          bash -n hack/build-freebsd-lib.sh
+          bash -n hack/download-libs.sh
+          hack/build-freebsd-lib.sh --help >/dev/null
+          hack/download-libs.sh --help >/dev/null
+          # Unknown platform must fail before any download.
+          if hack/download-libs.sh --version v0.0.0-not-a-release not-a-platform; then
+            echo "expected unknown platform to fail"
+            exit 1
+          fi
+
+      - name: Unit tests without a vendored libkcl
+        run: |
+          set -euo pipefail
+          go test -tags no_libembed -count=1 \
+            ./go/install/ ./go/native/ \
+            -run 'TestLibFileName|TestLibObjectName|TestMissingPrebuilt|TestInstallLib'
+
+      - name: Cross-compile the install and loader packages
+        run: |
+          set -euo pipefail
+          # //go:embed requires the file to exist. A placeholder is enough to
+          # type-check; it is not a loadable libkcl.so. The real library is
+          # produced by hack/build-freebsd-lib.sh and is gitignored.
+          dir="go/lib/freebsd-${{ matrix.arch }}"
+          mkdir -p "$dir"
+          printf 'placeholder' > "$dir/libkcl.so"
+          # CGO_ENABLED=0 pulls in purego's fakecgo, whose FreeBSD file uses
+          # //go:cgo_export_dynamic. That directive is rejected unless the
+          # package is compiled as cgo-generated code. purego documents -std
+          # for this case. A FreeBSD host with CGO_ENABLED=1 does not need it.
+          GOOS=freebsd GOARCH=${{ matrix.arch }} go build \
+            -gcflags=github.com/ebitengine/purego/internal/fakecgo=-std \
+            ./go/install/ ./go/native/ ./go/lib/
+
+      - name: no_libembed still builds with no FreeBSD binary on disk
+        run: |
+          set -euo pipefail
+          rm -f "go/lib/freebsd-${{ matrix.arch }}/libkcl.so"
+          GOOS=freebsd GOARCH=${{ matrix.arch }} go build -tags no_libembed \
+            -gcflags=github.com/ebitengine/purego/internal/fakecgo=-std \
+            ./go/install/ ./go/native/ ./go/lib/

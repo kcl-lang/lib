@@ -46,6 +46,16 @@ from .api.spec_pb2 import (
     GenerateProtoResult,
     GenerateTomlArgs,
     GenerateTomlResult,
+    GenerateRustArgs,
+    GenerateRustResult,
+    GeneratePythonArgs,
+    GeneratePythonResult,
+    GenerateGoArgs,
+    GenerateGoResult,
+    GenerateJavaArgs,
+    GenerateJavaResult,
+    GenerateTypeScriptArgs,
+    GenerateTypeScriptResult,
     GetSchemaTypeMappingArgs,
     GetVersionArgs,
     GetVersionResult,
@@ -107,6 +117,11 @@ __all__ = [
     "generate_openapi",
     "generate_proto",
     "generate_toml",
+    "generate_rust",
+    "generate_python",
+    "generate_go",
+    "generate_java",
+    "generate_typescript",
     "lint_path",
     "override_file",
     "validate_code",
@@ -1039,6 +1054,8 @@ class TestOptions:
     pkg_list: List[str] = field(default_factory=list)
     run_regexp: str = ""
     fail_fast: bool = False
+    # Opt-in. Defaults to false; cases then share the values the package defines.
+    eval_once: bool = False
 
 
 def test(
@@ -1072,6 +1089,7 @@ def test(
         pkg_list=list(test_opts.pkg_list),
         run_regexp=test_opts.run_regexp,
         fail_fast=test_opts.fail_fast,
+        eval_once=test_opts.eval_once,
     )
     return api.test(args)
 
@@ -1382,6 +1400,36 @@ def generate_doc(args: GenerateDocArgs) -> GenerateDocResult:
     """Generate documentation from the schemas of a KCL package."""
     api = API(plugin_agent=_plugin.plugin_agent_addr)
     return api.generate_doc(args)
+
+
+def generate_rust(args: GenerateRustArgs) -> GenerateRustResult:
+    """Generate Rust source from the schemas of a KCL package."""
+    api = API(plugin_agent=_plugin.plugin_agent_addr)
+    return api.generate_rust(args)
+
+
+def generate_python(args: GeneratePythonArgs) -> GeneratePythonResult:
+    """Generate Python source from the schemas of a KCL package."""
+    api = API(plugin_agent=_plugin.plugin_agent_addr)
+    return api.generate_python(args)
+
+
+def generate_go(args: GenerateGoArgs) -> GenerateGoResult:
+    """Generate Go source from the schemas of a KCL package."""
+    api = API(plugin_agent=_plugin.plugin_agent_addr)
+    return api.generate_go(args)
+
+
+def generate_java(args: GenerateJavaArgs) -> GenerateJavaResult:
+    """Generate Java source from the schemas of a KCL package."""
+    api = API(plugin_agent=_plugin.plugin_agent_addr)
+    return api.generate_java(args)
+
+
+def generate_typescript(args: GenerateTypeScriptArgs) -> GenerateTypeScriptResult:
+    """Generate TypeScript source from the schemas of a KCL package."""
+    api = API(plugin_agent=_plugin.plugin_agent_addr)
+    return api.generate_typescript(args)
 
 
 def rename(

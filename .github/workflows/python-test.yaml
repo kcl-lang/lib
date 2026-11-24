@@ -1,7 +1,8 @@
 # Derived from `maturin generate-ci github`, but hand-maintained since:
-# the wheel jobs gained a Python-version dimension and the `test` job carries
-# comments explaining why it builds in place. Re-running the generator would
-# drop both, so edit this file directly and keep it in sync with maturin's shape.
+# the wheel jobs gained a Python-version dimension, the musllinux job is not
+# in the generator output, and the `test` job carries comments explaining why
+# it builds in place. Re-running the generator would drop all of that, so
+# edit this file directly and keep it in sync with maturin's shape.
 name: python-test
 
 on:
@@ -120,6 +121,84 @@ jobs:
           name: wheels-linux-${{ matrix.target }}-${{ github.run_id }}
           path: python/dist
 
+  # musllinux_1_2 wheels for Alpine and other musl images (#418). The image
+  # named in that issue is python:3.13.15-alpine3.24, which is musl 1.2.
+  #
+  # maturin-action has no musllinux image with interpreters installed. Both
+  # architectures run in ghcr.io/rust-cross/rust-musl-cross, a glibc container
+  # with a musl cross compiler and no CPython under /opt/python, so
+  # --find-interpreter cannot see the versions the manylinux images ship.
+  # Naming them makes maturin build from its bundled sysconfig and tag the
+  # wheels musllinux_1_2. v1.15.0's table stops at 3.14, which would drop the
+  # cp315 and cp315t wheels the glibc jobs ship, so this job pins v1.16.0
+  # (the first release whose bundled table includes 3.15). The other jobs
+  # stay on v1.15.0: they discover 3.15 from a real interpreter.
+  #
+  # The list matches the glibc set this repo already publishes: CPython
+  # 3.10-3.15, free-threaded 3.14t/3.15t, and PyPy 3.11. requires-python
+  # skips anything older, and the manylinux images do not ship a newer PyPy.
+  # CPython before 3.11 keeps a linux-gnu EXT_SUFFIX even on musl; maturin
+  # does that on purpose, and PyPy's bundled suffix is linux-gnu too.
+  musllinux:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        target: [ x86_64, aarch64 ]
+    steps:
+      - uses: actions/checkout@v7
+      - uses: PyO3/maturin-action@v1
+        with:
+          maturin-version: v1.16.0
+          target: ${{ matrix.target }}
+          manylinux: musllinux_1_2
+          working-directory: "python"
+          command: build
+          args: >-
+            --release -o dist
+            -i 3.10 -i 3.11 -i 3.12 -i 3.13 -i 3.14 -i 3.15
+            -i 3.14t -i 3.15t
+            -i pypy3.11
+        env:
+          # Same ring 0.17 workaround as the glibc aarch64 leg, for the musl triple.
+          CFLAGS_aarch64_unknown_linux_musl: "-D__ARM_ARCH=8"
+      - name: Upload wheels-musllinux-${{ matrix.target }}-${{ github.run_id }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: wheels-musllinux-${{ matrix.target }}-${{ github.run_id }}
+          path: python/dist
+
+  # The reported install is an x86_64 Alpine image. aarch64 wheels are built
+  # above but not imported here: this runner cannot start an arm64 container.
+  # Run even when the aarch64 leg failed so the x86_64 wheel is still checked.
+  musllinux-alpine:
+    name: Import musllinux wheel on Alpine
+    runs-on: ubuntu-latest
+    needs: musllinux
+    if: ${{ !cancelled() }}
+    steps:
+      - uses: actions/download-artifact@v8
+        with:
+          name: wheels-musllinux-x86_64-${{ github.run_id }}
+          path: dist
+      - name: Install and import on python:3.13.15-alpine3.24
+        run: |
+          docker run --rm -i -v "$PWD/dist:/dist:ro" python:3.13.15-alpine3.24 python - <<'PY'
+          import glob
+          import subprocess
+          import sys
+
+          wheels = sorted(glob.glob("/dist/*-cp313-cp313-musllinux_1_2_x86_64.whl"))
+          if len(wheels) != 1:
+              raise SystemExit(
+                  "expected one cp313 musllinux wheel, found: " + repr(wheels)
+              )
+          subprocess.check_call([sys.executable, "-m", "pip", "install", wheels[0]])
+          from kcl_lib import API
+
+          print(API().get_version().version_info)
+          PY
+
   windows:
     runs-on: windows-latest
     steps:
@@ -218,7 +297,7 @@ jobs:
     permissions:
       contents: read
       id-token: write
-    needs: [ macos, linux, windows ]
+    needs: [ macos, linux, windows, musllinux, musllinux-alpine ]
     steps:
       # Collect every wheel leg in one step. The explicit per-name list this
       # replaces had to be hand-edited for every new target, platform, or

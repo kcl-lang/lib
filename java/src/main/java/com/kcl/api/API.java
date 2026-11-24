@@ -740,6 +740,90 @@ public class API implements Service {
     }
 
     /**
+     * Generates Rust DTOs from the schemas of a KCL package.
+     *
+     * @param args
+     *            the arguments for parsing the program whose schemas are exported.
+     * 
+     * @return the generated Rust source.
+     * 
+     * @throws Exception
+     *             if the underlying RPC fails.
+     */
+    @Override
+    public GenerateRustResult generateRust(GenerateRustArgs args) throws Exception {
+        return GenerateRustResult.parseFrom(call("KclService.GenerateRust", args.toByteArray()));
+    }
+
+    /**
+     * Generates Python DTOs from the schemas of a KCL package.
+     *
+     * @param args
+     *            the arguments for parsing the program whose schemas are exported.
+     * 
+     * @return the generated Python source.
+     * 
+     * @throws Exception
+     *             if the underlying RPC fails.
+     */
+    @Override
+    public GeneratePythonResult generatePython(GeneratePythonArgs args) throws Exception {
+        return GeneratePythonResult.parseFrom(call("KclService.GeneratePython", args.toByteArray()));
+    }
+
+    /**
+     * Generates Go DTOs from the schemas of a KCL package.
+     *
+     * @param args
+     *            the arguments for parsing the program whose schemas are exported and the Go package name for the
+     *            generated file's `package` clause, e.g. "dto". Empty defaults to "generated" — Go requires a package
+     *            clause.
+     * 
+     * @return the generated Go source.
+     * 
+     * @throws Exception
+     *             if the underlying RPC fails.
+     */
+    @Override
+    public GenerateGoResult generateGo(GenerateGoArgs args) throws Exception {
+        return GenerateGoResult.parseFrom(call("KclService.GenerateGo", args.toByteArray()));
+    }
+
+    /**
+     * Generates Java DTOs from the schemas of a KCL package.
+     *
+     * @param args
+     *            the arguments for parsing the program whose schemas are exported and the Java package name for the
+     *            generated file's `package` clause, e.g. "com.example.dto". Empty omits the package clause entirely —
+     *            Java does not require one.
+     * 
+     * @return the generated Java source.
+     * 
+     * @throws Exception
+     *             if the underlying RPC fails.
+     */
+    @Override
+    public GenerateJavaResult generateJava(GenerateJavaArgs args) throws Exception {
+        return GenerateJavaResult.parseFrom(call("KclService.GenerateJava", args.toByteArray()));
+    }
+
+    /**
+     * Generates TypeScript DTOs from the schemas of a KCL package.
+     *
+     * @param args
+     *            the arguments for parsing the program whose schemas are exported.
+     * 
+     * @return the generated TypeScript source.
+     * 
+     * @throws Exception
+     *             if the underlying RPC fails.
+     */
+    @Override
+    public GenerateTypeScriptResult generateTypeScript(GenerateTypeScriptArgs args) throws Exception {
+        return GenerateTypeScriptResult.parseFrom(call("KclService.GenerateTypeScript", args.toByteArray()));
+    }
+
+    /**
      * Generates documentation from the schemas of a KCL package.
      *
      * @param args

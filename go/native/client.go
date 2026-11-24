@@ -172,6 +172,37 @@ func (c *NativeServiceClient) GenerateProto(in *api.GenerateProtoArgs) (*api.Gen
 	return cApiCall[*api.GenerateProtoArgs, *api.GenerateProtoResult](c, "KclService.GenerateProto", in)
 }
 
+// GenerateRust generates Rust DTOs from the schemas of a KCL package.
+func (c *NativeServiceClient) GenerateRust(in *api.GenerateRustArgs) (*api.GenerateRustResult, error) {
+	return cApiCall[*api.GenerateRustArgs, *api.GenerateRustResult](c, "KclService.GenerateRust", in)
+}
+
+// GeneratePython generates Python DTOs from the schemas of a KCL package.
+func (c *NativeServiceClient) GeneratePython(in *api.GeneratePythonArgs) (*api.GeneratePythonResult, error) {
+	return cApiCall[*api.GeneratePythonArgs, *api.GeneratePythonResult](c, "KclService.GeneratePython", in)
+}
+
+// GenerateGo generates Go DTOs from the schemas of a KCL package. The
+// `package` field is the Go package name of the generated file's `package`
+// clause, e.g. "dto"; an empty value defaults to "generated", since Go
+// requires a package clause.
+func (c *NativeServiceClient) GenerateGo(in *api.GenerateGoArgs) (*api.GenerateGoResult, error) {
+	return cApiCall[*api.GenerateGoArgs, *api.GenerateGoResult](c, "KclService.GenerateGo", in)
+}
+
+// GenerateJava generates Java DTOs from the schemas of a KCL package. The
+// `package` field is the Java package name of the generated file's `package`
+// clause, e.g. "com.example.dto"; an empty value omits the package clause
+// entirely, which is valid Java.
+func (c *NativeServiceClient) GenerateJava(in *api.GenerateJavaArgs) (*api.GenerateJavaResult, error) {
+	return cApiCall[*api.GenerateJavaArgs, *api.GenerateJavaResult](c, "KclService.GenerateJava", in)
+}
+
+// GenerateTypeScript generates TypeScript DTOs from the schemas of a KCL package.
+func (c *NativeServiceClient) GenerateTypeScript(in *api.GenerateTypeScriptArgs) (*api.GenerateTypeScriptResult, error) {
+	return cApiCall[*api.GenerateTypeScriptArgs, *api.GenerateTypeScriptResult](c, "KclService.GenerateTypeScript", in)
+}
+
 // GenerateDoc generates documentation from the schemas of a KCL package.
 func (c *NativeServiceClient) GenerateDoc(in *api.GenerateDocArgs) (*api.GenerateDocResult, error) {
 	return cApiCall[*api.GenerateDocArgs, *api.GenerateDocResult](c, "KclService.GenerateDoc", in)

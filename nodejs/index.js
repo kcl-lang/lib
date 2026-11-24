@@ -336,6 +336,16 @@ const {
   generateProto,
   GenerateDocArgs,
   generateDoc,
+  GenerateRustArgs,
+  generateRust,
+  GeneratePythonArgs,
+  generatePython,
+  GenerateGoArgs,
+  generateGo,
+  GenerateJavaArgs,
+  generateJava,
+  GenerateTypeScriptArgs,
+  generateTypeScript,
 } = nativeBinding
 
 module.exports.registerPlugin = registerPlugin
@@ -389,3 +399,13 @@ module.exports.GenerateProtoArgs = GenerateProtoArgs
 module.exports.generateProto = generateProto
 module.exports.GenerateDocArgs = GenerateDocArgs
 module.exports.generateDoc = generateDoc
+module.exports.GenerateRustArgs = GenerateRustArgs
+module.exports.generateRust = generateRust
+module.exports.GeneratePythonArgs = GeneratePythonArgs
+module.exports.generatePython = generatePython
+module.exports.GenerateGoArgs = GenerateGoArgs
+module.exports.generateGo = generateGo
+module.exports.GenerateJavaArgs = GenerateJavaArgs
+module.exports.generateJava = generateJava
+module.exports.GenerateTypeScriptArgs = GenerateTypeScriptArgs
+module.exports.generateTypeScript = generateTypeScript

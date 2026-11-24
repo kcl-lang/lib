@@ -50,6 +50,21 @@ type ServiceClient interface {
 	GenerateOpenAPI(in *GenerateOpenAPIArgs) (out *GenerateOpenAPIResult, err error)
 	// Generate proto3 definitions from the schemas of a KCL package.
 	GenerateProto(in *GenerateProtoArgs) (out *GenerateProtoResult, err error)
+	// Generate Rust DTOs from the schemas of a KCL package.
+	GenerateRust(in *GenerateRustArgs) (out *GenerateRustResult, err error)
+	// Generate Python DTOs from the schemas of a KCL package.
+	GeneratePython(in *GeneratePythonArgs) (out *GeneratePythonResult, err error)
+	// Generate Go DTOs from the schemas of a KCL package. `package` is the Go
+	// package name of the generated file's `package` clause, e.g. "dto"; an
+	// empty value defaults to "generated", since Go requires a package clause.
+	GenerateGo(in *GenerateGoArgs) (out *GenerateGoResult, err error)
+	// Generate Java DTOs from the schemas of a KCL package. `package` is the
+	// Java package name of the generated file's `package` clause, e.g.
+	// "com.example.dto"; an empty value omits the package clause entirely,
+	// which is valid Java.
+	GenerateJava(in *GenerateJavaArgs) (out *GenerateJavaResult, err error)
+	// Generate TypeScript DTOs from the schemas of a KCL package.
+	GenerateTypeScript(in *GenerateTypeScriptArgs) (out *GenerateTypeScriptResult, err error)
 	// Generate documentation from the schemas of a KCL package.
 	GenerateDoc(in *GenerateDocArgs) (out *GenerateDocResult, err error)
 	// Download and update dependencies defined in the `kcl.mod` file and return the external package name and location list.

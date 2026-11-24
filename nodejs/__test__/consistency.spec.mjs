@@ -177,6 +177,26 @@ const CALLS = {
     fn: () => kcl.generateDoc,
     build: (a) => new kcl.GenerateDocArgs(parseArgs(a.parse_args), a.format ?? ''),
   },
+  'KclService.GenerateRust': {
+    fn: () => kcl.generateRust,
+    build: (a) => new kcl.GenerateRustArgs(parseArgs(a.parse_args)),
+  },
+  'KclService.GeneratePython': {
+    fn: () => kcl.generatePython,
+    build: (a) => new kcl.GeneratePythonArgs(parseArgs(a.parse_args)),
+  },
+  'KclService.GenerateGo': {
+    fn: () => kcl.generateGo,
+    build: (a) => new kcl.GenerateGoArgs(parseArgs(a.parse_args), a.package ?? ''),
+  },
+  'KclService.GenerateJava': {
+    fn: () => kcl.generateJava,
+    build: (a) => new kcl.GenerateJavaArgs(parseArgs(a.parse_args), a.package ?? ''),
+  },
+  'KclService.GenerateTypeScript': {
+    fn: () => kcl.generateTypeScript,
+    build: (a) => new kcl.GenerateTypeScriptArgs(parseArgs(a.parse_args)),
+  },
   'KclService.ParseFile': {
     fn: () => kcl.parseFile,
     build: (a) => new kcl.ParseFileArgs(a.path ?? '', a.source ?? undefined, resolveExternalPkgs(a.external_pkgs)),
@@ -246,6 +266,7 @@ const CALLS = {
         e.work_dir === undefined ? null : resolvePath(e.work_dir),
         execFileNames(e),
         a.coverage ?? false,
+        a.eval_once ?? false,
       )
     },
   },
@@ -277,6 +298,11 @@ const EXPECT_GETTERS = {
   spec: (r) => r.spec,
   proto: (r) => r.proto,
   content: (r) => r.content,
+  rust_source: (r) => r.rustSource,
+  python_source: (r) => r.pythonSource,
+  go_source: (r) => r.goSource,
+  java_source: (r) => r.javaSource,
+  typescript_source: (r) => r.typescriptSource,
 }
 
 // Per-case projections, mirroring the `extract` of each definition in
@@ -359,6 +385,8 @@ const EXTRACTORS = {
     has_kclservice_ping: r.methodNameList.includes('KclService.Ping'),
     has_kclservice_parse_program: r.methodNameList.includes('KclService.ParseProgram'),
     has_builtinservice_list_method: r.methodNameList.includes('BuiltinService.ListMethod'),
+    // The shared manifest pins the v0.13.3 registry (33). Every binding links
+    // kcl v0.13.3 now, so the count is compared as the core reports it.
     method_count: r.methodNameList.length,
     has_empty_name: r.methodNameList.some((name) => !name),
   }),

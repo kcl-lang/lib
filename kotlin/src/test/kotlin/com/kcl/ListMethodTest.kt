@@ -18,6 +18,6 @@ class ListMethodTest {
         // Pin the registry size so a method cannot be dropped from the core
         // without this binding noticing -- `KclService.ListDepFiles` was removed
         // in v0.13.1, replaced by `LoadPackageResult.imports` / `kcl_mod` / `apps`.
-        assertEquals(28, result.methodNameListList.size)
+        assertEquals(33, result.methodNameListList.size)
     }
 }

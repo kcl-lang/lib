@@ -893,7 +893,105 @@ public object KclTypeKt {
 
     public val KclTypeKt.Dsl.indexSignatureOrNull: com.kcl.api.Spec.IndexSignature?
       get() = _builder.indexSignatureOrNull
-  }
+
+    /**
+     * An uninstantiable, behaviorless type to represent the field in
+     * generics.
+     */
+    @kotlin.OptIn(com.google.protobuf.kotlin.OnlyForUseByGeneratedProtoCode::class)
+    public class ChecksJsonProxy private constructor() : com.google.protobuf.kotlin.DslProxy()
+    /**
+     * ```
+     * Schema CheckExpr AST nodes serialized as JSON for code generators.
+     * ```
+     *
+     * `repeated string checks_json = 19;`
+     * @return A list containing the checksJson.
+     */
+    public val checksJson: com.google.protobuf.kotlin.DslList<kotlin.String, ChecksJsonProxy>
+    @kotlin.OptIn(com.google.protobuf.kotlin.OnlyForUseByGeneratedProtoCode::class)
+      get() = com.google.protobuf.kotlin.DslList(
+        _builder.checksJsonList
+      )
+    /**
+     * ```
+     * Schema CheckExpr AST nodes serialized as JSON for code generators.
+     * ```
+     *
+     * `repeated string checks_json = 19;`
+     * @param value The checksJson to add.
+     */
+    @kotlin.jvm.JvmSynthetic
+@kotlin.jvm.JvmName("addChecksJson")
+    public fun com.google.protobuf.kotlin.DslList<kotlin.String, ChecksJsonProxy>.add(value: kotlin.String) {
+      _builder.addChecksJson(value)
+    }
+    /**
+     * ```
+     * Schema CheckExpr AST nodes serialized as JSON for code generators.
+     * ```
+     *
+     * `repeated string checks_json = 19;`
+     * @param value The checksJson to add.
+     */
+    @kotlin.jvm.JvmSynthetic
+@kotlin.jvm.JvmName("plusAssignChecksJson")
+    @Suppress("NOTHING_TO_INLINE")
+    public inline operator fun com.google.protobuf.kotlin.DslList<kotlin.String, ChecksJsonProxy>.plusAssign(value: kotlin.String) {
+      add(value)
+    }
+    /**
+     * ```
+     * Schema CheckExpr AST nodes serialized as JSON for code generators.
+     * ```
+     *
+     * `repeated string checks_json = 19;`
+     * @param values The checksJson to add.
+     */
+    @kotlin.jvm.JvmSynthetic
+@kotlin.jvm.JvmName("addAllChecksJson")
+    public fun com.google.protobuf.kotlin.DslList<kotlin.String, ChecksJsonProxy>.addAll(values: kotlin.collections.Iterable<kotlin.String>) {
+      _builder.addAllChecksJson(values)
+    }
+    /**
+     * ```
+     * Schema CheckExpr AST nodes serialized as JSON for code generators.
+     * ```
+     *
+     * `repeated string checks_json = 19;`
+     * @param values The checksJson to add.
+     */
+    @kotlin.jvm.JvmSynthetic
+@kotlin.jvm.JvmName("plusAssignAllChecksJson")
+    @Suppress("NOTHING_TO_INLINE")
+    public inline operator fun com.google.protobuf.kotlin.DslList<kotlin.String, ChecksJsonProxy>.plusAssign(values: kotlin.collections.Iterable<kotlin.String>) {
+      addAll(values)
+    }
+    /**
+     * ```
+     * Schema CheckExpr AST nodes serialized as JSON for code generators.
+     * ```
+     *
+     * `repeated string checks_json = 19;`
+     * @param index The index to set the value at.
+     * @param value The checksJson to set.
+     */
+    @kotlin.jvm.JvmSynthetic
+@kotlin.jvm.JvmName("setChecksJson")
+    public operator fun com.google.protobuf.kotlin.DslList<kotlin.String, ChecksJsonProxy>.set(index: kotlin.Int, value: kotlin.String) {
+      _builder.setChecksJson(index, value)
+    }/**
+     * ```
+     * Schema CheckExpr AST nodes serialized as JSON for code generators.
+     * ```
+     *
+     * `repeated string checks_json = 19;`
+     */
+    @kotlin.jvm.JvmSynthetic
+@kotlin.jvm.JvmName("setChecksJson")
+    public fun com.google.protobuf.kotlin.DslList<kotlin.String, ChecksJsonProxy>.clear() {
+      _builder.clearChecksJson()
+    }}
 }
 @kotlin.jvm.JvmSynthetic
 public inline fun com.kcl.api.Spec.KclType.copy(block: `com.kcl.api`.KclTypeKt.Dsl.() -> kotlin.Unit): com.kcl.api.Spec.KclType =

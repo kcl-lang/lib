@@ -16,13 +16,22 @@ func libPath() (path string, err error) {
 }
 
 func fullLibName() string {
-	fullLibName := "lib" + libName + ".so"
-	if runtime.GOOS == "darwin" {
-		fullLibName = "lib" + libName + ".dylib"
-	} else if runtime.GOOS == "windows" {
-		fullLibName = libName + ".dll"
+	return libObjectName(runtime.GOOS)
+}
+
+// libObjectName is the filename dlopen/LoadLibrary expects. FreeBSD shares
+// the ELF name with Linux: libkcl.so. The Go loader resolves kcl_service_new
+// from that file (see native_nonmusl.go); it does not look up the retired
+// kclvm_service_new symbol.
+func libObjectName(goos string) string {
+	switch goos {
+	case "darwin":
+		return "lib" + libName + ".dylib"
+	case "windows":
+		return libName + ".dll"
+	default:
+		return "lib" + libName + ".so"
 	}
-	return fullLibName
 }
 
 func loadServiceNativeLib() (uintptr, error) {

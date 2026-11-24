@@ -262,6 +262,47 @@ pub fn generateProto(allocator: std.mem.Allocator, args: spec.GenerateProtoArgs)
     return rpc(allocator, "KclService.GenerateProto", args, spec.GenerateProtoResult);
 }
 
+/// Generate Rust DTOs from the schemas of the package selected by
+/// `parse_args`. Equivalent to
+/// `call(allocator, "KclService.GenerateRust", encoded)`.
+pub fn generateRust(allocator: std.mem.Allocator, args: spec.GenerateRustArgs) Error!spec.GenerateRustResult {
+    return rpc(allocator, "KclService.GenerateRust", args, spec.GenerateRustResult);
+}
+
+/// Generate Python DTOs from the schemas of the package selected by
+/// `parse_args`. Equivalent to
+/// `call(allocator, "KclService.GeneratePython", encoded)`.
+pub fn generatePython(allocator: std.mem.Allocator, args: spec.GeneratePythonArgs) Error!spec.GeneratePythonResult {
+    return rpc(allocator, "KclService.GeneratePython", args, spec.GeneratePythonResult);
+}
+
+/// Generate Go DTOs from the schemas of the package selected by `parse_args`.
+/// `package` is the Go package name for the generated file's `package` clause,
+/// e.g. "dto". Empty defaults to "generated" — Go requires a package clause,
+/// unlike generateProto's optional `package` field. Equivalent to
+/// `call(allocator, "KclService.GenerateGo", encoded)`.
+pub fn generateGo(allocator: std.mem.Allocator, args: spec.GenerateGoArgs) Error!spec.GenerateGoResult {
+    return rpc(allocator, "KclService.GenerateGo", args, spec.GenerateGoResult);
+}
+
+/// Generate Java DTOs from the schemas of the package selected by `parse_args`.
+/// `package` is the Java package name for the generated file's `package`
+/// clause, e.g. "com.example.dto". Empty omits the package clause entirely
+/// (valid Java — the "default package") rather than defaulting to a
+/// synthetic name as generateGo does, since Java (unlike Go) does not
+/// require one. Equivalent to
+/// `call(allocator, "KclService.GenerateJava", encoded)`.
+pub fn generateJava(allocator: std.mem.Allocator, args: spec.GenerateJavaArgs) Error!spec.GenerateJavaResult {
+    return rpc(allocator, "KclService.GenerateJava", args, spec.GenerateJavaResult);
+}
+
+/// Generate TypeScript DTOs from the schemas of the package selected by
+/// `parse_args`. Equivalent to
+/// `call(allocator, "KclService.GenerateTypeScript", encoded)`.
+pub fn generateTypeScript(allocator: std.mem.Allocator, args: spec.GenerateTypeScriptArgs) Error!spec.GenerateTypeScriptResult {
+    return rpc(allocator, "KclService.GenerateTypeScript", args, spec.GenerateTypeScriptResult);
+}
+
 /// Generate documentation from the schemas of the package selected by
 /// `parse_args`. `format` is `"md"` (default), `"openapi"` (Swagger 2.0) or
 /// `"json-schema"`; `"html"` is not supported yet. Equivalent to
@@ -414,7 +455,7 @@ test "ExecProgramArgs emit_attribute_metadata round-trip on the wire" {
 test "TestArgs coverage round-trips on the wire" {
     const allocator = testing.allocator;
 
-    var args: spec.TestArgs = .{ .coverage = true };
+    var args: spec.TestArgs = .{ .coverage = true, .eval_once = true };
 
     var writer: std.Io.Writer.Allocating = .init(allocator);
     defer writer.deinit();
@@ -425,6 +466,9 @@ test "TestArgs coverage round-trips on the wire" {
     defer decoded.deinit(allocator);
 
     try testing.expect(decoded.coverage);
+    try testing.expect(decoded.eval_once);
+    const unset: spec.TestArgs = .{};
+    try testing.expect(!unset.eval_once);
 }
 
 // Pure protobuf round-trip for TestResult.coverage (3) carrying a full
