@@ -170,6 +170,8 @@ bindings load at run time:
 | `go/lib/linux-musl-amd64/`   | `libkcl.a`     | Linux, x86-64 (musl) |
 | `go/lib/windows-arm64/`      | `kcl.dll`      | Windows, arm64       |
 | `go/lib/windows-amd64/`      | `kcl.dll`      | Windows, x86-64      |
+| `go/lib/freebsd-arm64/`      | `libkcl.so`    | FreeBSD, arm64       |
+| `go/lib/freebsd-amd64/`      | `libkcl.so`    | FreeBSD, x86-64      |
 
 They are vendored onto `release/*` branches and onto release tags, **not** onto
 the development branches. Fetch them for a local build with
@@ -179,4 +181,14 @@ instead.
 
 The C/C++ bindings instead build the cdylib from `c/` (`cargo build -r`
 produces `target/release/libkcl_lib_c.{so,dylib}`), which re-exports the
-same symbols through `kcl-api`.
+same symbols through `kcl-api` and also defines `kcl_free`, the symbol the
+Go loader frees buffers with.
+
+FreeBSD is not in the kcl-lang/kcl release matrix yet
+([kcl-lang/kcl#1029](https://github.com/kcl-lang/kcl/issues/1029)).
+`hack/download-libs.sh freebsd-amd64` fetches `libkcl.so` once that archive
+exists. Until then, `hack/build-freebsd-lib.sh` builds it from `c/` (native
+`cargo` on FreeBSD, `cargo-zigbuild` elsewhere) and stages
+`go/lib/freebsd-<arch>/libkcl.so`. The Go loader dlopens that file and
+resolves `kcl_service_new`, not the older `kclvm_service_new` name. See
+[lib-vendoring.md](lib-vendoring.md).

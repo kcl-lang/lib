@@ -2235,6 +2235,281 @@ done:
     return status;
 }
 
+// Export the Rust DTOs of the schemas declared by the program described by
+// `request`. Returns false and copies the error message into out on
+// failure.
+static inline bool kcl_generate_rust(const struct KclParseProgramArgs* request, char* out, size_t out_size)
+{
+    uint8_t* buffer = (uint8_t*)malloc(BUFFER_SIZE);
+    uint8_t* result_buffer = (uint8_t*)malloc(BUFFER_SIZE);
+    uint8_t* source_buffer = (uint8_t*)calloc(1, BUFFER_SIZE);
+    struct KclStringList paths = { 0 };
+    struct KclStringList sources = { 0 };
+    struct RepeatedExternalPkg pkgs = { 0 };
+    bool status = false;
+    if (buffer == NULL || result_buffer == NULL || source_buffer == NULL)
+        goto done;
+
+    GenerateRustArgs args = GenerateRustArgs_init_zero;
+    args.has_parse_args = true;
+    if (!kcl_bind_parse_program_args(&args.parse_args, request, &paths, &sources, &pkgs))
+        goto done;
+
+    pb_ostream_t stream = pb_ostream_from_buffer(buffer, BUFFER_SIZE);
+    // Encode manually: the static nested ParseProgramArgs would
+    // otherwise trigger nanopb's two-pass submessage encoding, which
+    // breaks the stateful encode_str_list callback.
+    if (!kcl_encode_tagged_submsg(&stream, GenerateRustArgs_parse_args_tag, ParseProgramArgs_fields, &args.parse_args))
+        goto done;
+
+    size_t result_length = kcl_call("KclService.GenerateRust", buffer, stream.bytes_written, result_buffer);
+    if (check_error_prefix(result_buffer)) {
+        kcl_copy_string(out, out_size, result_buffer);
+        goto done;
+    }
+
+    pb_istream_t istream = pb_istream_from_buffer(result_buffer, result_length);
+    GenerateRustResult result = GenerateRustResult_init_default;
+    result.rust_source.funcs.decode = decode_string;
+    result.rust_source.arg = source_buffer;
+    if (!pb_decode(&istream, GenerateRustResult_fields, &result))
+        goto done;
+
+    kcl_copy_string(out, out_size, source_buffer);
+    status = true;
+
+done:
+    free(buffer);
+    free(result_buffer);
+    free(source_buffer);
+    kcl_string_list_free(&paths);
+    kcl_string_list_free(&sources);
+    return status;
+}
+
+// Export the Python DTOs of the schemas declared by the program described
+// by `request`. Returns false and copies the error message into out on
+// failure.
+static inline bool kcl_generate_python(const struct KclParseProgramArgs* request, char* out, size_t out_size)
+{
+    uint8_t* buffer = (uint8_t*)malloc(BUFFER_SIZE);
+    uint8_t* result_buffer = (uint8_t*)malloc(BUFFER_SIZE);
+    uint8_t* source_buffer = (uint8_t*)calloc(1, BUFFER_SIZE);
+    struct KclStringList paths = { 0 };
+    struct KclStringList sources = { 0 };
+    struct RepeatedExternalPkg pkgs = { 0 };
+    bool status = false;
+    if (buffer == NULL || result_buffer == NULL || source_buffer == NULL)
+        goto done;
+
+    GeneratePythonArgs args = GeneratePythonArgs_init_zero;
+    args.has_parse_args = true;
+    if (!kcl_bind_parse_program_args(&args.parse_args, request, &paths, &sources, &pkgs))
+        goto done;
+
+    pb_ostream_t stream = pb_ostream_from_buffer(buffer, BUFFER_SIZE);
+    // Encode manually: the static nested ParseProgramArgs would
+    // otherwise trigger nanopb's two-pass submessage encoding, which
+    // breaks the stateful encode_str_list callback.
+    if (!kcl_encode_tagged_submsg(&stream, GeneratePythonArgs_parse_args_tag, ParseProgramArgs_fields, &args.parse_args))
+        goto done;
+
+    size_t result_length = kcl_call("KclService.GeneratePython", buffer, stream.bytes_written, result_buffer);
+    if (check_error_prefix(result_buffer)) {
+        kcl_copy_string(out, out_size, result_buffer);
+        goto done;
+    }
+
+    pb_istream_t istream = pb_istream_from_buffer(result_buffer, result_length);
+    GeneratePythonResult result = GeneratePythonResult_init_default;
+    result.python_source.funcs.decode = decode_string;
+    result.python_source.arg = source_buffer;
+    if (!pb_decode(&istream, GeneratePythonResult_fields, &result))
+        goto done;
+
+    kcl_copy_string(out, out_size, source_buffer);
+    status = true;
+
+done:
+    free(buffer);
+    free(result_buffer);
+    free(source_buffer);
+    kcl_string_list_free(&paths);
+    kcl_string_list_free(&sources);
+    return status;
+}
+
+// Export the Go DTOs of the schemas declared by the program described by
+// `request`. `package` is the Go package name for the generated file's
+// `package` clause, e.g. "dto"; NULL or empty defaults to "generated".
+// Returns false and copies the error message into out on failure.
+static inline bool kcl_generate_go(const struct KclParseProgramArgs* request, const char* package, char* out, size_t out_size)
+{
+    uint8_t* buffer = (uint8_t*)malloc(BUFFER_SIZE);
+    uint8_t* result_buffer = (uint8_t*)malloc(BUFFER_SIZE);
+    uint8_t* source_buffer = (uint8_t*)calloc(1, BUFFER_SIZE);
+    struct KclStringList paths = { 0 };
+    struct KclStringList sources = { 0 };
+    struct RepeatedExternalPkg pkgs = { 0 };
+    bool status = false;
+    if (buffer == NULL || result_buffer == NULL || source_buffer == NULL)
+        goto done;
+
+    GenerateGoArgs args = GenerateGoArgs_init_zero;
+    args.has_parse_args = true;
+    if (!kcl_bind_parse_program_args(&args.parse_args, request, &paths, &sources, &pkgs))
+        goto done;
+    if (package != NULL) {
+        args.package.funcs.encode = encode_string;
+        args.package.arg = (void*)package;
+    }
+
+    pb_ostream_t stream = pb_ostream_from_buffer(buffer, BUFFER_SIZE);
+    // Encode manually: the static nested ParseProgramArgs would
+    // otherwise trigger nanopb's two-pass submessage encoding, which
+    // breaks the stateful encode_str_list callback.
+    if (!kcl_encode_tagged_submsg(&stream, GenerateGoArgs_parse_args_tag, ParseProgramArgs_fields, &args.parse_args))
+        goto done;
+    if (package != NULL && !kcl_encode_tagged_string(&stream, GenerateGoArgs_package_tag, package))
+        goto done;
+
+    size_t result_length = kcl_call("KclService.GenerateGo", buffer, stream.bytes_written, result_buffer);
+    if (check_error_prefix(result_buffer)) {
+        kcl_copy_string(out, out_size, result_buffer);
+        goto done;
+    }
+
+    pb_istream_t istream = pb_istream_from_buffer(result_buffer, result_length);
+    GenerateGoResult result = GenerateGoResult_init_default;
+    result.go_source.funcs.decode = decode_string;
+    result.go_source.arg = source_buffer;
+    if (!pb_decode(&istream, GenerateGoResult_fields, &result))
+        goto done;
+
+    kcl_copy_string(out, out_size, source_buffer);
+    status = true;
+
+done:
+    free(buffer);
+    free(result_buffer);
+    free(source_buffer);
+    kcl_string_list_free(&paths);
+    kcl_string_list_free(&sources);
+    return status;
+}
+
+// Export the Java DTOs of the schemas declared by the program described by
+// `request`. `package` is the Java package name for the generated file's
+// `package` clause, e.g. "com.example.dto"; NULL or empty omits the package
+// clause entirely (valid Java — the "default package"). Returns false and
+// copies the error message into out on failure.
+static inline bool kcl_generate_java(const struct KclParseProgramArgs* request, const char* package, char* out, size_t out_size)
+{
+    uint8_t* buffer = (uint8_t*)malloc(BUFFER_SIZE);
+    uint8_t* result_buffer = (uint8_t*)malloc(BUFFER_SIZE);
+    uint8_t* source_buffer = (uint8_t*)calloc(1, BUFFER_SIZE);
+    struct KclStringList paths = { 0 };
+    struct KclStringList sources = { 0 };
+    struct RepeatedExternalPkg pkgs = { 0 };
+    bool status = false;
+    if (buffer == NULL || result_buffer == NULL || source_buffer == NULL)
+        goto done;
+
+    GenerateJavaArgs args = GenerateJavaArgs_init_zero;
+    args.has_parse_args = true;
+    if (!kcl_bind_parse_program_args(&args.parse_args, request, &paths, &sources, &pkgs))
+        goto done;
+    if (package != NULL) {
+        args.package.funcs.encode = encode_string;
+        args.package.arg = (void*)package;
+    }
+
+    pb_ostream_t stream = pb_ostream_from_buffer(buffer, BUFFER_SIZE);
+    // Encode manually: the static nested ParseProgramArgs would
+    // otherwise trigger nanopb's two-pass submessage encoding, which
+    // breaks the stateful encode_str_list callback.
+    if (!kcl_encode_tagged_submsg(&stream, GenerateJavaArgs_parse_args_tag, ParseProgramArgs_fields, &args.parse_args))
+        goto done;
+    if (package != NULL && !kcl_encode_tagged_string(&stream, GenerateJavaArgs_package_tag, package))
+        goto done;
+
+    size_t result_length = kcl_call("KclService.GenerateJava", buffer, stream.bytes_written, result_buffer);
+    if (check_error_prefix(result_buffer)) {
+        kcl_copy_string(out, out_size, result_buffer);
+        goto done;
+    }
+
+    pb_istream_t istream = pb_istream_from_buffer(result_buffer, result_length);
+    GenerateJavaResult result = GenerateJavaResult_init_default;
+    result.java_source.funcs.decode = decode_string;
+    result.java_source.arg = source_buffer;
+    if (!pb_decode(&istream, GenerateJavaResult_fields, &result))
+        goto done;
+
+    kcl_copy_string(out, out_size, source_buffer);
+    status = true;
+
+done:
+    free(buffer);
+    free(result_buffer);
+    free(source_buffer);
+    kcl_string_list_free(&paths);
+    kcl_string_list_free(&sources);
+    return status;
+}
+
+// Export the TypeScript DTOs of the schemas declared by the program
+// described by `request`. Returns false and copies the error message into
+// out on failure.
+static inline bool kcl_generate_typescript(const struct KclParseProgramArgs* request, char* out, size_t out_size)
+{
+    uint8_t* buffer = (uint8_t*)malloc(BUFFER_SIZE);
+    uint8_t* result_buffer = (uint8_t*)malloc(BUFFER_SIZE);
+    uint8_t* source_buffer = (uint8_t*)calloc(1, BUFFER_SIZE);
+    struct KclStringList paths = { 0 };
+    struct KclStringList sources = { 0 };
+    struct RepeatedExternalPkg pkgs = { 0 };
+    bool status = false;
+    if (buffer == NULL || result_buffer == NULL || source_buffer == NULL)
+        goto done;
+
+    GenerateTypeScriptArgs args = GenerateTypeScriptArgs_init_zero;
+    args.has_parse_args = true;
+    if (!kcl_bind_parse_program_args(&args.parse_args, request, &paths, &sources, &pkgs))
+        goto done;
+
+    pb_ostream_t stream = pb_ostream_from_buffer(buffer, BUFFER_SIZE);
+    // Encode manually: the static nested ParseProgramArgs would
+    // otherwise trigger nanopb's two-pass submessage encoding, which
+    // breaks the stateful encode_str_list callback.
+    if (!kcl_encode_tagged_submsg(&stream, GenerateTypeScriptArgs_parse_args_tag, ParseProgramArgs_fields, &args.parse_args))
+        goto done;
+
+    size_t result_length = kcl_call("KclService.GenerateTypeScript", buffer, stream.bytes_written, result_buffer);
+    if (check_error_prefix(result_buffer)) {
+        kcl_copy_string(out, out_size, result_buffer);
+        goto done;
+    }
+
+    pb_istream_t istream = pb_istream_from_buffer(result_buffer, result_length);
+    GenerateTypeScriptResult result = GenerateTypeScriptResult_init_default;
+    result.typescript_source.funcs.decode = decode_string;
+    result.typescript_source.arg = source_buffer;
+    if (!pb_decode(&istream, GenerateTypeScriptResult_fields, &result))
+        goto done;
+
+    kcl_copy_string(out, out_size, source_buffer);
+    status = true;
+
+done:
+    free(buffer);
+    free(result_buffer);
+    free(source_buffer);
+    kcl_string_list_free(&paths);
+    kcl_string_list_free(&sources);
+    return status;
+}
+
 #ifdef __cplusplus
 } /* extern "C" */
 #endif

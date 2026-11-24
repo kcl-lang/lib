@@ -381,6 +381,33 @@ final class ConsistencyTest: XCTestCase {
             request.package = string(args, "package")
             return ["proto": try api.generateProto(request).proto]
 
+        case "KclService.GenerateRust":
+            var request = GenerateRustArgs()
+            request.parseArgs = try parseArgs(args["parse_args"] as? [String: Any] ?? [:])
+            return ["rust_source": try api.generateRust(request).rustSource]
+
+        case "KclService.GeneratePython":
+            var request = GeneratePythonArgs()
+            request.parseArgs = try parseArgs(args["parse_args"] as? [String: Any] ?? [:])
+            return ["python_source": try api.generatePython(request).pythonSource]
+
+        case "KclService.GenerateGo":
+            var request = GenerateGoArgs()
+            request.parseArgs = try parseArgs(args["parse_args"] as? [String: Any] ?? [:])
+            request.package = string(args, "package")
+            return ["go_source": try api.generateGo(request).goSource]
+
+        case "KclService.GenerateJava":
+            var request = GenerateJavaArgs()
+            request.parseArgs = try parseArgs(args["parse_args"] as? [String: Any] ?? [:])
+            request.package = string(args, "package")
+            return ["java_source": try api.generateJava(request).javaSource]
+
+        case "KclService.GenerateTypeScript":
+            var request = GenerateTypeScriptArgs()
+            request.parseArgs = try parseArgs(args["parse_args"] as? [String: Any] ?? [:])
+            return ["typescript_source": try api.generateTypeScript(request).typescriptSource]
+
         case "KclService.GenerateDoc":
             var request = GenerateDocArgs()
             request.parseArgs = try parseArgs(args["parse_args"] as? [String: Any] ?? [:])
@@ -513,6 +540,7 @@ final class ConsistencyTest: XCTestCase {
             request.runRegexp = string(args, "run_regexp")
             request.failFast = boolean(args, "fail_fast")
             request.coverage = boolean(args, "coverage")
+            request.evalOnce = boolean(args, "eval_once")
             let info = try api.test(request).info
             return [
                 "names": info.map(\.name).sorted(),
@@ -810,6 +838,26 @@ final class ConsistencyTest: XCTestCase {
         try runCase("generate_proto")
     }
 
+    func testGenerateRust() throws {
+        try runCase("generate_rust")
+    }
+
+    func testGeneratePython() throws {
+        try runCase("generate_python")
+    }
+
+    func testGenerateGo() throws {
+        try runCase("generate_go")
+    }
+
+    func testGenerateJava() throws {
+        try runCase("generate_java")
+    }
+
+    func testGenerateTypeScript() throws {
+        try runCase("generate_typescript")
+    }
+
     func testGenerateDocMd() throws {
         try runCase("generate_doc_md")
     }
@@ -895,6 +943,11 @@ final class ConsistencyTest: XCTestCase {
             "format_test_report",
             "generate_openapi_v3",
             "generate_proto",
+            "generate_rust",
+            "generate_python",
+            "generate_go",
+            "generate_java",
+            "generate_typescript",
             "generate_doc_md",
             "parse_file",
             "parse_program",

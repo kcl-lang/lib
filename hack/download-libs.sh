@@ -12,11 +12,14 @@
 #   hack/download-libs.sh                          # host platform only
 #   hack/download-libs.sh linux-arm64 darwin-arm64 # named platforms
 #   hack/download-libs.sh --wasm                   # kcl.wasm (npm package)
-#   hack/download-libs.sh --all                    # every platform, incl. iOS
-#   hack/download-libs.sh --version v0.13.2        # pin a version
+#   hack/download-libs.sh --all                    # every published platform, incl. iOS
+#   hack/download-libs.sh --version v0.13.3        # pin a version
+#   hack/download-libs.sh freebsd-amd64            # 404s until kcl-lang/kcl#1029
 #
 # --all includes the two iOS static archives, which have no prebuilt source
-# and are cross-compiled from c/ with cargo (macOS hosts only).
+# and are cross-compiled from c/ with cargo (macOS hosts only). It does not
+# include freebsd-amd64 or freebsd-arm64: kcl-lang/kcl does not publish those
+# archives yet. Build them with hack/build-freebsd-lib.sh.
 
 set -euo pipefail
 
@@ -38,6 +41,8 @@ platform_dest() {
         darwin-arm64)     echo "go/lib/darwin-arm64:libkcl.dylib" ;;
         windows-amd64)    echo "go/lib/windows-amd64:kcl.dll" ;;
         windows-arm64)    echo "go/lib/windows-arm64:kcl.dll" ;;
+        freebsd-amd64)    echo "go/lib/freebsd-amd64:libkcl.so" ;;
+        freebsd-arm64)    echo "go/lib/freebsd-arm64:libkcl.so" ;;
         wasm32-wasip1)    echo "wasm:kcl.wasm" ;;
         ios-arm64)        echo "go/lib/ios-arm64:libkcl.a" ;;
         ios-arm64-sim)    echo "go/lib/ios-arm64-sim:libkcl.a" ;;
@@ -53,7 +58,7 @@ PREBUILT_PLATFORMS=(
 )
 
 usage() {
-    sed -n '3,19p' "${BASH_SOURCE[0]}" | sed 's/^# \{0,1\}//'
+    sed -n '3,22p' "${BASH_SOURCE[0]}" | sed 's/^# \{0,1\}//'
     exit "${1:-0}"
 }
 
@@ -68,6 +73,7 @@ host_platform() {
     case "$(uname -s)" in
         Darwin) os=darwin ;;
         Linux)  os=linux ;;
+        FreeBSD) os=freebsd ;;
         # Git Bash on the Windows runners, where this script runs.
         MINGW*|MSYS*|CYGWIN*) os=windows ;;
         *) echo "unsupported host $(uname -s); pass a platform explicitly" >&2; exit 1 ;;
@@ -197,13 +203,24 @@ if [ "${#PLATFORMS[@]}" -gt 0 ]; then
     for platform in "${PLATFORMS[@]}"; do
         if ! dest="$(platform_dest "$platform")"; then
             echo "error: unknown platform '${platform}'" >&2
-            echo "       known: ${PREBUILT_PLATFORMS[*]} wasm32-wasip1 ios-arm64 ios-arm64-sim" >&2
+            echo "       known: ${PREBUILT_PLATFORMS[*]} wasm32-wasip1 ios-arm64 ios-arm64-sim freebsd-amd64 freebsd-arm64" >&2
             exit 1
         fi
         case "$platform" in
             ios-arm64)     build_ios "$dest" aarch64-apple-ios ;;
             ios-arm64-sim) build_ios "$dest" aarch64-apple-ios-sim ;;
-            *)             stage "$platform" "$dest" ;;
+            *)
+                if ! stage "$platform" "$dest"; then
+                    case "$platform" in
+                        freebsd-*)
+                            echo "       FreeBSD libkcl archives are not published yet:" >&2
+                            echo "       https://github.com/kcl-lang/kcl/issues/1029" >&2
+                            echo "       Build one with: hack/build-freebsd-lib.sh ${platform}" >&2
+                            ;;
+                    esac
+                    exit 1
+                fi
+                ;;
         esac
     done
 fi

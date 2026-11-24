@@ -10,7 +10,7 @@ The library is published to Maven Central, so no extra repository configuration 
 <dependency>
     <groupId>io.kcl-lang</groupId>
     <artifactId>kcl-lib</artifactId>
-    <version>0.13.2</version>
+    <version>0.13.3</version>
 </dependency>
 ```
 
@@ -38,7 +38,7 @@ This way you'll be able to import the above dependency to use the SDK.
 <dependency>
     <groupId>io.kcl-lang</groupId>
     <artifactId>kcl-lib</artifactId>
-    <version>0.13.2</version>
+    <version>0.13.3</version>
 </dependency>
 ```
 

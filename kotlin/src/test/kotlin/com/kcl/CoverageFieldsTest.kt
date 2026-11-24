@@ -40,6 +40,13 @@ class CoverageFieldsTest {
         assertEquals(args, parsed)
         assertTrue(parsed.coverage)
         assertFalse(Spec.TestArgs.getDefaultInstance().coverage)
+        assertFalse(parsed.evalOnce)
+        assertFalse(Spec.TestArgs.getDefaultInstance().evalOnce)
+
+        val once = testArgs { evalOnce = true }
+        val onceParsed = Spec.TestArgs.parseFrom(once.toByteArray())
+        assertTrue(onceParsed.evalOnce)
+        assertEquals(6, Spec.TestArgs.getDescriptor().findFieldByName("eval_once").number)
     }
 
     @Test

@@ -8,10 +8,15 @@ import {
   formatPath,
   formatTestReport,
   generateDoc,
+  generateGo,
+  generateJava,
   generateKcl,
   generateOpenAPI,
   generateProto,
+  generatePython,
+  generateRust,
   generateToml,
+  generateTypeScript,
   getSchemaTypeMapping,
   getSchemaTypeMappingUnderPath,
   getVersion,
@@ -44,10 +49,15 @@ import type {
   GetSchemaTypeMappingResult,
   GetSchemaTypeMappingUnderPathResult,
   GetVersionResult,
+  GenerateGoResult,
+  GenerateJavaResult,
   GenerateKclResult,
   GenerateOpenAPIResult,
   GenerateProtoResult,
+  GeneratePythonResult,
+  GenerateRustResult,
   GenerateTomlResult,
+  GenerateTypeScriptResult,
   IndexSignature,
   KclType,
   ListMethodResult,
@@ -209,11 +219,17 @@ function hostTestdataFingerprint(): string {
  * Fixtures live at the sandbox root: v0.13.1's loader emits every schema
  * twice for a module mounted one level down (`Name___main__` and
  * `Name_<dirpath>`), which is what makes `generate_openapi_v3` agree with
- * the native runners. The two different `main.k` fixtures would collide at
- * the root, so the variables one keeps its parent directory.
+ * the native runners. The three different `main.k` fixtures would collide at
+ * the root, so the variables one keeps its parent directory and the DTO one
+ * — which the five generator cases read — takes a name of its own.
+ *
+ * The DTO fixture has to sit at the root for the same reason: mounted one
+ * level down, the loader qualifies every schema name (`User___main__`), so
+ * the generated source would not match the native runners' byte for byte.
  */
 const MOUNTS: Record<string, string> = {
   "tests/consistency/testdata/gen_openapi/main.k": "/main.k",
+  "tests/consistency/testdata/dto/main.k": "/dto.k",
   "tests/consistency/testdata/variables/main.k": "/variables/main.k",
   "tests/consistency/testdata/pkg": "/sandbox/pkg",
 };
@@ -591,6 +607,16 @@ function expectedValue(result: any, field: string): unknown {
       return (result as GenerateProtoResult).proto;
     case "content":
       return (result as GenerateDocResult).content;
+    case "rust_source":
+      return (result as GenerateRustResult).rustSource;
+    case "python_source":
+      return (result as GeneratePythonResult).pythonSource;
+    case "go_source":
+      return (result as GenerateGoResult).goSource;
+    case "java_source":
+      return (result as GenerateJavaResult).javaSource;
+    case "typescript_source":
+      return (result as GenerateTypeScriptResult).typescriptSource;
     case "report":
       return (result as FormatTestReportResult).report;
     default:
@@ -824,6 +850,33 @@ function runCase(c: ConsistencyCase, instance: WebAssembly.Instance): unknown {
       return generateDoc(instance, {
         parseArgs: parseArgs(a["parse_args"] ?? {}, c),
         format: a["format"],
+      });
+
+    case "KclService.GenerateRust":
+      return generateRust(instance, {
+        parseArgs: parseArgs(a["parse_args"] ?? {}, c),
+      });
+
+    case "KclService.GeneratePython":
+      return generatePython(instance, {
+        parseArgs: parseArgs(a["parse_args"] ?? {}, c),
+      });
+
+    case "KclService.GenerateGo":
+      return generateGo(instance, {
+        parseArgs: parseArgs(a["parse_args"] ?? {}, c),
+        package: a["package"],
+      });
+
+    case "KclService.GenerateJava":
+      return generateJava(instance, {
+        parseArgs: parseArgs(a["parse_args"] ?? {}, c),
+        package: a["package"],
+      });
+
+    case "KclService.GenerateTypeScript":
+      return generateTypeScript(instance, {
+        parseArgs: parseArgs(a["parse_args"] ?? {}, c),
       });
 
     case "KclService.FormatTestReport": {

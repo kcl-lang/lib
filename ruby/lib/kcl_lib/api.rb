@@ -237,6 +237,36 @@ module KclLib
       call("KclService.GenerateProto", args)
     end
 
+    # Generate Rust DTOs from the schemas of a KCL package.
+    def generate_rust(args)
+      call("KclService.GenerateRust", args)
+    end
+
+    # Generate Python DTOs from the schemas of a KCL package.
+    def generate_python(args)
+      call("KclService.GeneratePython", args)
+    end
+
+    # Generate Go DTOs from the schemas of a KCL package. `package` is the Go
+    # package name of the generated file's `package` clause, e.g. `"dto"`; an
+    # empty value defaults to `"generated"`, since Go requires a package clause.
+    def generate_go(args)
+      call("KclService.GenerateGo", args)
+    end
+
+    # Generate Java DTOs from the schemas of a KCL package. `package` is the
+    # Java package name of the generated file's `package` clause, e.g.
+    # `"com.example.dto"`; an empty value omits the package clause entirely,
+    # which is valid Java.
+    def generate_java(args)
+      call("KclService.GenerateJava", args)
+    end
+
+    # Generate TypeScript DTOs from the schemas of a KCL package.
+    def generate_typescript(args)
+      call("KclService.GenerateTypeScript", args)
+    end
+
     # Generate documentation from the schemas of a KCL package. `format` is
     # `"md"` (the default), `"openapi"` or `"json-schema"`; `"html"` is not
     # supported.
@@ -307,6 +337,11 @@ module KclLib
         "GenerateKcl" => Com::Kcl::Api::GenerateKclArgs,
         "GenerateOpenAPI" => Com::Kcl::Api::GenerateOpenAPIArgs,
         "GenerateProto" => Com::Kcl::Api::GenerateProtoArgs,
+        "GenerateRust" => Com::Kcl::Api::GenerateRustArgs,
+        "GeneratePython" => Com::Kcl::Api::GeneratePythonArgs,
+        "GenerateGo" => Com::Kcl::Api::GenerateGoArgs,
+        "GenerateJava" => Com::Kcl::Api::GenerateJavaArgs,
+        "GenerateTypeScript" => Com::Kcl::Api::GenerateTypeScriptArgs,
         "GenerateDoc" => Com::Kcl::Api::GenerateDocArgs,
         "UpdateDependencies" => Com::Kcl::Api::UpdateDependenciesArgs,
         "GetVersion" => Com::Kcl::Api::GetVersionArgs,
@@ -343,6 +378,11 @@ module KclLib
         "GenerateKcl" => Com::Kcl::Api::GenerateKclResult,
         "GenerateOpenAPI" => Com::Kcl::Api::GenerateOpenAPIResult,
         "GenerateProto" => Com::Kcl::Api::GenerateProtoResult,
+        "GenerateRust" => Com::Kcl::Api::GenerateRustResult,
+        "GeneratePython" => Com::Kcl::Api::GeneratePythonResult,
+        "GenerateGo" => Com::Kcl::Api::GenerateGoResult,
+        "GenerateJava" => Com::Kcl::Api::GenerateJavaResult,
+        "GenerateTypeScript" => Com::Kcl::Api::GenerateTypeScriptResult,
         "GenerateDoc" => Com::Kcl::Api::GenerateDocResult,
         "UpdateDependencies" => Com::Kcl::Api::UpdateDependenciesResult,
         "GetVersion" => Com::Kcl::Api::GetVersionResult,

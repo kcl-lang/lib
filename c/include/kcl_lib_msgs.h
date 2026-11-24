@@ -134,7 +134,8 @@ struct KclStringPairList {
 /* ------------------------------------------------------------------ */
 /* Request structs for the wrappers that nest ExecProgramArgs or      */
 /* ParseProgramArgs (GenerateToml, GenerateOpenAPI, GenerateProto,     */
-/* GenerateDoc)                                                       */
+/* GenerateDoc, GenerateRust, GeneratePython, GenerateGo, GenerateJava, */
+/* GenerateTypeScript)                                                */
 /* ------------------------------------------------------------------ */
 
 /* Plain-C view of ExecProgramArgs. Only the fields the typed wrappers
@@ -154,7 +155,9 @@ struct KclExecProgramArgs {
 };
 
 /* Plain-C view of ParseProgramArgs, the `parse_args` field shared by
- * GenerateOpenAPI / GenerateProto / GenerateDoc. */
+ * GenerateOpenAPI / GenerateProto / GenerateDoc and the five DTO
+ * generators (GenerateRust / GeneratePython / GenerateGo / GenerateJava /
+ * GenerateTypeScript). */
 struct KclParseProgramArgs {
     const char* const* paths;
     size_t path_count;

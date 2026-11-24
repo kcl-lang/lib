@@ -358,7 +358,7 @@ schema Person:
         // Pin the registry size so a method cannot be dropped from the core
         // without this binding noticing -- `KclService.ListDepFiles` was removed
         // in v0.13.1, replaced by `LoadPackageResult.imports` / `kcl_mod` / `apps`.
-        Assert.AreEqual(28, result.MethodNameList.Count);
+        Assert.AreEqual(33, result.MethodNameList.Count);
     }
 
     // Pure protobuf round-trip — does not require the native runtime.
@@ -420,6 +420,12 @@ schema Person:
 
         var unset = new TestArgs();
         Assert.AreEqual(false, unset.Coverage);
+        Assert.AreEqual(false, unset.EvalOnce);
+
+        var once = new TestArgs { EvalOnce = true };
+        var onceDecoded = TestArgs.Parser.ParseFrom(once.ToByteArray());
+        Assert.AreEqual(true, onceDecoded.EvalOnce);
+        Assert.AreEqual(6, TestArgs.Descriptor.FindFieldByName("eval_once").FieldNumber);
     }
 
     // Pure protobuf round-trip — covers TestResult.coverage (field 3,
