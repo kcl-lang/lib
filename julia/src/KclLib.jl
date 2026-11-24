@@ -118,12 +118,14 @@ const PLATFORM_KEYS = (
     ("darwin", "x86_64") => ("darwin-amd64", "dylib"),
     ("linux", "x86_64") => ("linux-amd64", "so"),
     ("linux", "aarch64") => ("linux-arm64", "so"),
+    ("freebsd", "x86_64") => ("freebsd-amd64", "so"),
+    ("freebsd", "aarch64") => ("freebsd-arm64", "so"),
     ("windows", "x86_64") => ("windows-amd64", "dll"),
     ("windows", "aarch64") => ("windows-arm64", "dll"),
 )
 
 function _platform_key()
-    os = Sys.isapple() ? "darwin" : Sys.islinux() ? "linux" : Sys.iswindows() ? "windows" : nothing
+    os = Sys.isapple() ? "darwin" : Sys.islinux() ? "linux" : Sys.iswindows() ? "windows" : Sys.isfreebsd() ? "freebsd" : nothing
     os === nothing && error("KclLib: unsupported operating system $(Sys.MACHINE)")
     arch = String(Sys.ARCH)
     for ((kos, karch), v) in PLATFORM_KEYS
